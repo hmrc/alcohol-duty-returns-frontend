@@ -32,11 +32,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class CacheConnectorSpec extends SpecBase with ScalaFutures {
 
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  protected implicit val hc: HeaderCarrier = HeaderCarrier()
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val connector = new CacheConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val dateVal: LocalDateTime = LocalDateTime.now
-  val answers: UserAnswers = UserAnswers("id")
+  protected implicit val hc: HeaderCarrier    = HeaderCarrier()
+  val mockConfig: FrontendAppConfig           = mock[FrontendAppConfig]
+  val connector                               = new CacheConnector(config = mockConfig, httpClient = mock[HttpClient])
+  val dateVal: LocalDateTime                  = LocalDateTime.now
+  val answers: UserAnswers                    = UserAnswers("id")
 
   "GET" - {
     "successfully fetch cache" in {
