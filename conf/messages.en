@@ -55,3 +55,7 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+draughtReliefQuestion.title = Is this product eligible for Draught Relief?
+draughtReliefQuestion.heading = Is this product eligible for Draught Relief?
+draughtReliefQuestion.error.required = Select yes if this product is eligible for Draught Relief
