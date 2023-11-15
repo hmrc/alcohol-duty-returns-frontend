@@ -32,41 +32,42 @@ import views.html.DraughtReliefQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DraughtReliefQuestionController @Inject()(
-                                                 override val messagesApi: MessagesApi,
-                                                 cacheConnector: CacheConnector,
-                                                 navigator: Navigator,
-                                                 identify: IdentifierAction,
-                                                 getData: DataRetrievalAction,
-                                                 requireData: DataRequiredAction,
-                                                 formProvider: DraughtReliefQuestionFormProvider,
-                                                 val controllerComponents: MessagesControllerComponents,
-                                                 view: DraughtReliefQuestionView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class DraughtReliefQuestionController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: DraughtReliefQuestionFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: DraughtReliefQuestionView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
-    implicit request =>
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
+    val preparedForm = request.userAnswers.flatMap(_.get(DraughtReliefQuestionPage)) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.flatMap(_.get(DraughtReliefQuestionPage)) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(DraughtReliefQuestionPage, value))
+            updatedAnswers <-
+              Future.fromTry(
+                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(DraughtReliefQuestionPage, value)
+              )
             _              <- cacheConnector.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(DraughtReliefQuestionPage, mode, updatedAnswers))
       )

@@ -39,7 +39,7 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DraughtReliefQuestionFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val draughtReliefQuestionRoute = routes.DraughtReliefQuestionController.onPageLoad(NormalMode).url
 
@@ -124,7 +124,7 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
         contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
       }
     }
-      //uncomment tests when we bring back requiredData:
+    //uncomment tests when we bring back requiredData:
 //    "must redirect to Journey Recovery for a GET if no existing data is found" in {
 //
 //      val application = applicationBuilder(userAnswers = None).build()

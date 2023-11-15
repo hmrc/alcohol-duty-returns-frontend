@@ -22,7 +22,7 @@ import play.api.data.FormError
 class DraughtReliefQuestionFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "draughtReliefQuestion.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new DraughtReliefQuestionFormProvider()()
 
