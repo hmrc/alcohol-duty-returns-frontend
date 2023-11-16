@@ -29,15 +29,17 @@
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("draughtReliefQuestion.title"))) {
+
     <h1 class="govuk-heading-l">@messages("draughtReliefQuestion.heading")</h1>
-<p class="govuk-body">
-    @link(
-        id = "draught-relief-guidance-link",
-        text = messages("draughtReliefQuestion.guidance.link.text"),
-        href = messages("draughtReliefQuestion.guidance.link.url"),
-        newTab = true
-    )
-</p>
+
+    <p class="govuk-body">
+        @link(
+            id = "draught-relief-guidance-link",
+            text = messages("draughtReliefQuestion.guidance.link.text"),
+            href = messages("draughtReliefQuestion.guidance.link.url"),
+            newTab = true
+        )
+    </p>
 
     @formHelper(action = routes.DraughtReliefQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
