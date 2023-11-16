@@ -14,33 +14,53 @@
  * limitations under the License.
  *@
 
+@import components.{Link, SectionHeading, PageHeading}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    link: Link,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("smallProducerReliefQuestion.title"))) {
 
-    @formHelper(action = routes.SmallProducerReliefQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+    @sectionHeading(
+        id = "small-producer-relief-question-section",
+        text = messages("section.alcoholDutyReturn"),
+    )
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+    @pageHeading(messages("smallProducerReliefQuestion.heading"))
+
+    <p class="govuk-body">
+        @link(
+            id = "small-producer-relief-question-guidance-link",
+            text = messages("smallProducerReliefQuestion.guidance.link.text"),
+            href = messages("smallProducerReliefQuestion.guidance.link.url"),
+            newTab = true
+    )
+    </p>
+    @formHelper(action = routes.SmallProducerReliefQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("smallProducerReliefQuestion.heading")).asPageHeading()
+                legend = LegendViewModel(Empty)
             )
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.continue"))
+            ButtonViewModel(messages("site.saveAndContinue"))
         )
     }
 }
