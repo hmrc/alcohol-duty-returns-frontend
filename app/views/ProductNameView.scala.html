@@ -15,18 +15,32 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components.{SectionHeading, PageHeading}
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("productName.title"))) {
+
+    @sectionHeading(
+        id = "product-name-section",
+        text = messages("section.alcoholDutyReturn"),
+    )
+
+    @pageHeading(messages("productName.heading"))
+
+    <p class="govuk-body">@messages("productName.p1")</p>
+
+    <p class="govuk-body">@messages("productName.p2")</p>
 
     @formHelper(action = routes.ProductNameController.onSubmit(mode)) {
 
@@ -37,7 +51,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("productName.heading")).asPageHeading()
+                label = LabelViewModel(Empty)
             )
             .withWidth(Fixed10)
         )
