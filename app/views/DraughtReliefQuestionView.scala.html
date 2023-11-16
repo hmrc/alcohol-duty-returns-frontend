@@ -32,6 +32,9 @@
 
 @layout(pageTitle = title(form, messages("draughtReliefQuestion.title"))) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
     @sectionHeading(
         id = "draught-relief-question-section",
         text = messages("section.alcoholDutyReturn"),
@@ -50,9 +53,7 @@
 
     @formHelper(action = routes.DraughtReliefQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+
 
         @govukRadios(
             RadiosViewModel.yesNo(
