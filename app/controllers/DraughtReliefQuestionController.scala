@@ -22,7 +22,6 @@ import forms.DraughtReliefQuestionFormProvider
 
 import javax.inject.Inject
 import models.{Mode, UserAnswers}
-import models.requests.DataRequest
 import navigation.Navigator
 import pages.DraughtReliefQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -38,7 +37,6 @@ class DraughtReliefQuestionController @Inject() (
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   formProvider: DraughtReliefQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DraughtReliefQuestionView
