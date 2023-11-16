@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.Link
+@import components.{Link, SectionHeading, PageHeading}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
 @this(
@@ -23,18 +23,25 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    link: Link
+    link: Link,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("draughtReliefQuestion.title"))) {
 
-    <h1 class="govuk-heading-l">@messages("draughtReliefQuestion.heading")</h1>
+    @sectionHeading(
+        id = "draught-relief-question-section",
+        text = messages("section.alcoholDutyReturn"),
+    )
+
+    @pageHeading(messages("draughtReliefQuestion.heading"))
 
     <p class="govuk-body">
         @link(
-            id = "draught-relief-guidance-link",
+            id = "draught-relief-question--guidance-link",
             text = messages("draughtReliefQuestion.guidance.link.text"),
             href = messages("draughtReliefQuestion.guidance.link.url"),
             newTab = true

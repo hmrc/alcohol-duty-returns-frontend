@@ -57,9 +57,11 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
+section.visuallyHidden = This section is:
+section.alcoholDutyReturn = Alcohol Duty return
+
 draughtReliefQuestion.title = Is this product eligible for Draught Relief?
 draughtReliefQuestion.heading = Is this product eligible for Draught Relief?
 draughtReliefQuestion.error.required = Select yes if this product is eligible for Draught Relief
-alcohol.duty.caption = Alcohol Duty return
 draughtReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-you-can-pay-less-alcohol-duty-on-draught-products
 draughtReliefQuestion.guidance.link.text = You can get a reduced rate of duty on some draught products (opens in a new tab)
