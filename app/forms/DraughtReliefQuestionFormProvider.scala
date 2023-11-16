@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
-trait ModelGenerators {}
+import javax.inject.Inject
+
+import forms.mappings.Mappings
+import play.api.data.Form
+
+class DraughtReliefQuestionFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("draughtReliefQuestion.error.required")
+    )
+}

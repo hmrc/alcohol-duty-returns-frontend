@@ -81,4 +81,4 @@ lazy val itSettings = Defaults.itSettings ++ Seq(
   fork := true
 )
 
-addCommandAlias("runAllChecks", ";clean;compile;scalafmtCheckAll;coverage;test;it:test;scalastyle;coverageReport")
+addCommandAlias("runAllChecks", ";clean;compile;scalafmtAll;coverage;test;it:test;scalastyle;coverageReport")
