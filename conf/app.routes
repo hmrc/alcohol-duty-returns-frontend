@@ -24,3 +24,8 @@ GET        /draughtReliefQuestion                        controllers.DraughtReli
 POST       /draughtReliefQuestion                        controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
+
+GET        /smallProducerReliefQuestion                        controllers.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /smallProducerReliefQuestion                        controllers.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeSmallProducerReliefQuestion                  controllers.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeSmallProducerReliefQuestion                  controllers.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
