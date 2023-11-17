@@ -41,15 +41,15 @@ class AlcoholByVolumeQuestionFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "alcoholByVolumeQuestion.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "alcoholByVolumeQuestion.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "alcoholByVolumeQuestion.error.wholeNumber")
     )
 
     behave like intFieldWithRange(
       form,
       fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
+      minimum = minimum,
+      maximum = maximum,
       expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.outOfRange", Seq(minimum, maximum))
     )
 

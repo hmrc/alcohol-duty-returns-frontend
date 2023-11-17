@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AlcoholByVolumeQuestionSummary  {
+object AlcoholByVolumeQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AlcoholByVolumeQuestionPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "alcoholByVolumeQuestion.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.AlcoholByVolumeQuestionController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("alcoholByVolumeQuestion.change.hidden"))
-          )
+    answers.get(AlcoholByVolumeQuestionPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "alcoholByVolumeQuestion.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AlcoholByVolumeQuestionController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("alcoholByVolumeQuestion.change.hidden"))
         )
+      )
     }
 }

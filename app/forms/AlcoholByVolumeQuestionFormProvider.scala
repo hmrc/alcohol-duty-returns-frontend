@@ -27,7 +27,8 @@ class AlcoholByVolumeQuestionFormProvider @Inject() extends Mappings {
       "value" -> int(
         "alcoholByVolumeQuestion.error.required",
         "alcoholByVolumeQuestion.error.wholeNumber",
-        "alcoholByVolumeQuestion.error.nonNumeric")
-          .verifying(inRange(0, 100, "alcoholByVolumeQuestion.error.outOfRange"))
+        "alcoholByVolumeQuestion.error.nonNumeric"
+      )
+        .verifying(inRange(0, 100, "alcoholByVolumeQuestion.error.outOfRange"))
     )
 }

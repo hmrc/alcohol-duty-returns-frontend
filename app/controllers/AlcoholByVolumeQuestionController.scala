@@ -16,8 +16,10 @@
 
 package controllers
 
+import connectors.CacheConnector
 import controllers.actions._
 import forms.AlcoholByVolumeQuestionFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
@@ -30,43 +32,42 @@ import views.html.AlcoholByVolumeQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AlcoholByVolumeQuestionController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        navigator: Navigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: AlcoholByVolumeQuestionFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: AlcoholByVolumeQuestionView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class AlcoholByVolumeQuestionController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: AlcoholByVolumeQuestionFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: AlcoholByVolumeQuestionView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.get(AlcoholByVolumeQuestionPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(AlcoholByVolumeQuestionPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AlcoholByVolumeQuestionPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(AlcoholByVolumeQuestionPage, value))
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers))
+        )
   }
 }
