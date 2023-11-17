@@ -35,6 +35,15 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
       }
 
+      "must go from Alcohol by volume page to Draught relief question page" in {
+
+        navigator.nextPage(
+          AlcoholByVolumeQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+      }
+
       "must go from the Draught relief question page to Small producer relief question page" in {
 
         navigator.nextPage(
