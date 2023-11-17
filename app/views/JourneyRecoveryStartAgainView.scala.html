@@ -29,7 +29,7 @@
 
     <p class="govuk-body">
         @govukButton(
-            ButtonViewModel(messages("site.startAgain"))
+            ButtonViewModel("saveAndContinueId", messages("site.startAgain"))
                 .asLink(routes.IndexController.onPageLoad.url)
         )
     </p>
