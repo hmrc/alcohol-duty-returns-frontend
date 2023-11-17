@@ -31,6 +31,10 @@
 
 @layout(pageTitle = title(form, messages("productName.title"))) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @sectionHeading(
         id = "product-name-section",
         text = messages("section.alcoholDutyReturn"),
@@ -43,10 +47,6 @@
     <p class="govuk-body">@messages("productName.p2")</p>
 
     @formHelper(action = routes.ProductNameController.onSubmit(mode)) {
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
         @govukInput(
             InputViewModel(
