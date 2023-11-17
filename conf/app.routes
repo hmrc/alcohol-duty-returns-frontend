@@ -24,3 +24,8 @@ GET        /draughtReliefQuestion                        controllers.DraughtReli
 POST       /draughtReliefQuestion                        controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
+
+GET        /alcoholByVolumeQuestion                  controllers.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /alcoholByVolumeQuestion                  controllers.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
