@@ -34,6 +34,15 @@ class NavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
       }
+
+      "must go from the Draught relief question page to Small producer relief question page" in {
+
+        navigator.nextPage(
+          DraughtReliefQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+      }
     }
 
     "in Check mode" - {
