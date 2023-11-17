@@ -65,6 +65,13 @@ draughtReliefQuestion.heading = Is this product eligible for Draught Relief?
 draughtReliefQuestion.error.required = Select yes if this product is eligible for Draught Relief
 draughtReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-you-can-pay-less-alcohol-duty-on-draught-products
 draughtReliefQuestion.guidance.link.text = You can get a reduced rate of duty on some draught products (opens in a new tab)
+
+smallProducerReliefQuestion.title = Is this product eligible for Small Producer Relief?
+smallProducerReliefQuestion.heading = Is this product eligible for Small Producer Relief?
+smallProducerReliefQuestion.error.required = Select yes if this product is eligible for Small Producer Relief
+smallProducerReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-youre-eligible-for-small-producer-relief-on-alcohol-duty
+smallProducerReliefQuestion.guidance.link.text = If you're a small producer you may be able to pay a lower rate of duty on this product.
+
 alcoholByVolumeQuestion.title = AlcoholByVolumeQuestion
 alcoholByVolumeQuestion.heading = AlcoholByVolumeQuestion
 alcoholByVolumeQuestion.checkYourAnswersLabel = AlcoholByVolumeQuestion
