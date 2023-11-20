@@ -22,13 +22,13 @@ import play.api.data.Form
 
 class AlcoholByVolumeQuestionFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  def apply(): Form[BigDecimal] =
     Form(
-      "value" -> int(
+      "value" -> bigDecimal(
         "alcoholByVolumeQuestion.error.required",
-        "alcoholByVolumeQuestion.error.wholeNumber",
+        "alcoholByVolumeQuestion.error.twoDecimalPlaces",
         "alcoholByVolumeQuestion.error.nonNumeric"
       )
-        .verifying(inRange(0, 100, "alcoholByVolumeQuestion.error.outOfRange"))
+        .verifying(inRange(BigDecimal(0), BigDecimal(100), "alcoholByVolumeQuestion.error.minimumRequired"))
     )
 }

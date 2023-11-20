@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.AlcoholByVolumeQuestionFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.Navigator
 import pages.AlcoholByVolumeQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -47,8 +47,8 @@ class AlcoholByVolumeQuestionController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(AlcoholByVolumeQuestionPage) match {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
+    val preparedForm = request.userAnswers.flatMap(_.get(AlcoholByVolumeQuestionPage)) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -56,17 +56,19 @@ class AlcoholByVolumeQuestionController @Inject() (
     Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(AlcoholByVolumeQuestionPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers))
-        )
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        value =>
+          for {
+            updatedAnswers <-
+              Future.fromTry(
+                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(AlcoholByVolumeQuestionPage, value)
+              )
+            _              <- cacheConnector.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers))
+      )
   }
 }

@@ -16,10 +16,10 @@
 
 package forms
 
-import forms.behaviours.IntFieldBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
-class AlcoholByVolumeQuestionFormProviderSpec extends IntFieldBehaviours {
+class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new AlcoholByVolumeQuestionFormProvider()()
 
@@ -38,19 +38,34 @@ class AlcoholByVolumeQuestionFormProviderSpec extends IntFieldBehaviours {
       validDataGenerator
     )
 
-    behave like intField(
+    behave like bigDecimalField(
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "alcoholByVolumeQuestion.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "alcoholByVolumeQuestion.error.wholeNumber")
+      twoDecimalPlacesError = FormError(fieldName, "alcoholByVolumeQuestion.error.twoDecimalPlaces")
     )
 
-    behave like intFieldWithRange(
+    //don't currently have error message for out of range:
+    behave like bigDecimalFieldWithRange(
       form,
       fieldName,
       minimum = minimum,
       maximum = maximum,
       expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.outOfRange", Seq(minimum, maximum))
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.minimumRequired")
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.maximumRequired")
     )
 
     behave like mandatoryField(
