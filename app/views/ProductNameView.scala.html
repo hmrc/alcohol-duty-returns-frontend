@@ -51,7 +51,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Empty)
+                label = LabelViewModel(messages("productName.heading")).asVisuallyHidden()
             )
             .withWidth(Fixed30)
         )
