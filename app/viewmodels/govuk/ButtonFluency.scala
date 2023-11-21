@@ -25,8 +25,9 @@ trait ButtonFluency {
 
   object ButtonViewModel {
 
-    def apply(content: Content): Button =
+    def apply(id: String, content: Content): Button =
       Button(
+        id = Some(id),
         element = Some("button"),
         content = content
       )

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: templates.Layout,
-    govukButton: GovukButton
-)
+package forms
 
-@(continueUrl: String)(implicit request: Request[_], messages: Messages)
+import javax.inject.Inject
 
-@layout(pageTitle = titleNoForm(messages("journeyRecovery.continue.title"))) {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-    <h1 class="govuk-heading-xl">@messages("journeyRecovery.continue.heading")</h1>
+class ProductNameFormProvider @Inject() extends Mappings {
 
-    <p class="govuk-body">@messages("journeyRecovery.continue.guidance")</p>
-
-    <p class="govuk-body">
-        @govukButton(
-            ButtonViewModel("continueButton", messages("site.continue"))
-                .asLink(continueUrl)
-        )
-    </p>
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("productName.error.required")
+        .verifying(maxLength(50, "productName.error.length"))
+    )
 }

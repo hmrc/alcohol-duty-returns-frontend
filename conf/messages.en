@@ -66,6 +66,15 @@ draughtReliefQuestion.error.required = Select yes if this product is eligible fo
 draughtReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-you-can-pay-less-alcohol-duty-on-draught-products
 draughtReliefQuestion.guidance.link.text = You can get a reduced rate of duty on some draught products (opens in a new tab)
 
+productName.title = What name do you want to give this product?
+productName.heading = What name do you want to give this product?
+productName.p1 = Give your product a name so you can identify it on your return.
+productName.p2 = You may want to use an internal reference number or a description of the product's alcohol type and ABV strength. For example, ‘Beer, 5.3%’
+productName.checkYourAnswersLabel = Name
+productName.error.required = Enter the name you want to give this product
+productName.error.length = Product name must be 50 characters or less
+productName.change.hidden = name
+
 smallProducerReliefQuestion.title = Is this product eligible for Small Producer Relief?
 smallProducerReliefQuestion.heading = Is this product eligible for Small Producer Relief?
 smallProducerReliefQuestion.error.required = Select yes if this product is eligible for Small Producer Relief

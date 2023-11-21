@@ -14,49 +14,46 @@
  * limitations under the License.
  *@
 
-@import components.{Link, SectionHeading, PageHeading}
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
+@import viewmodels.InputWidth._
+@import components.{SectionHeading, PageHeading}
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
+    govukInput: GovukInput,
     govukButton: GovukButton,
-    link: Link,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("smallProducerReliefQuestion.title"))) {
+@layout(pageTitle = title(form, messages("productName.title"))) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
+
     @sectionHeading(
-        id = "small-producer-relief-question-section",
+        id = "product-name-section",
         text = messages("section.alcoholDutyReturn"),
     )
 
-    @pageHeading(messages("smallProducerReliefQuestion.heading"))
+    @pageHeading(messages("productName.heading"))
 
-    <p class="govuk-body">
-        @link(
-            id = "small-producer-relief-question-guidance-link",
-            text = messages("smallProducerReliefQuestion.guidance.link.text"),
-            href = messages("smallProducerReliefQuestion.guidance.link.url"),
-            newTab = true
-    )
-    </p>
-    @formHelper(action = routes.SmallProducerReliefQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    <p class="govuk-body">@messages("productName.p1")</p>
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
+    <p class="govuk-body">@messages("productName.p2")</p>
+
+    @formHelper(action = routes.ProductNameController.onSubmit(mode)) {
+
+        @govukInput(
+            InputViewModel(
                 field = form("value"),
-                legend = LegendViewModel(messages("smallProducerReliefQuestion.heading")).asVisuallyHidden()
+                label = LabelViewModel(messages("productName.heading")).asVisuallyHidden()
             )
+            .withWidth(Fixed30)
         )
 
         @govukButton(
