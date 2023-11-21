@@ -55,7 +55,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Empty)
+                legend = LegendViewModel(messages("smallProducerReliefQuestion.heading")).asVisuallyHidden()
             )
         )
 
