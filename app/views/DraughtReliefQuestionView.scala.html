@@ -58,12 +58,12 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Empty)
+                legend = LegendViewModel(messages("draughtReliefQuestion.heading")).asVisuallyHidden()
             )
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }
