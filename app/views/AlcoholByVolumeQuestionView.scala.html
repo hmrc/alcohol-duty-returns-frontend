@@ -15,13 +15,18 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components.{Link, SectionHeading, PageHeading}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
+
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -33,12 +38,17 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
+        @sectionHeading(
+        id = "draught-relief-question-section",
+        text = messages("section.alcoholDutyReturn"),
+        )
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
                 label = LabelViewModel(messages("alcoholByVolumeQuestion.heading")).asPageHeading()
-            )
+                )
+            .withSuffix(PrefixOrSuffix(content = "%"))
             .asNumeric()
             .withWidth(Fixed10)
         )
