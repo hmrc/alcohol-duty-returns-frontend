@@ -167,4 +167,49 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
       result.errors must contain(FormError("value", "error.required"))
     }
   }
+
+  "bigDecimal" - {
+
+    val testForm: Form[BigDecimal] =
+      Form(
+        "value" -> bigDecimal()
+      )
+
+    "must bind a valid bigDecimal" - {
+      "without decimal points" in {
+        val result = testForm.bind(Map("value" -> "1"))
+        result.get mustEqual BigDecimal(1)
+      }
+      "with decimal points" in {
+        val result = testForm.bind(Map("value" -> "1.1"))
+        result.get mustEqual BigDecimal(1.1)
+      }
+    }
+
+    "must not bind an empty value" in {
+      val result = testForm.bind(Map("value" -> ""))
+      result.errors must contain(FormError("value", "error.required"))
+    }
+
+    "must not bind a non numeric value" in {
+      val result = testForm.bind(Map("value" -> "abc"))
+      result.errors must contain(FormError("value", "error.nonNumeric"))
+    }
+
+    "must not bind a non numeric value with multiple dots" in {
+      val result = testForm.bind(Map("value" -> "10.12.1"))
+      result.errors must contain(FormError("value", "error.nonNumeric"))
+    }
+
+    "must not bind a numeric value with commas" in {
+      val result = testForm.bind(Map("value" -> "10,1"))
+      result.errors must contain(FormError("value", "error.nonNumeric"))
+    }
+
+    "must not bind a non numeric value with 3 decimal digits" in {
+      val result = testForm.bind(Map("value" -> "1.349"))
+      result.errors must contain(FormError("value", "error.twoDecimalPlaces"))
+    }
+
+  }
 }

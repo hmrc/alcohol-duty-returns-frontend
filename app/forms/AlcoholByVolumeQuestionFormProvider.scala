@@ -26,8 +26,8 @@ class AlcoholByVolumeQuestionFormProvider @Inject() extends Mappings {
     Form(
       "value" -> bigDecimal(
         "alcoholByVolumeQuestion.error.required",
-        "alcoholByVolumeQuestion.error.twoDecimalPlaces",
-        "alcoholByVolumeQuestion.error.nonNumeric"
+        "alcoholByVolumeQuestion.error.nonNumeric",
+        "alcoholByVolumeQuestion.error.twoDecimalPlaces"
       )
         .verifying(inRange(BigDecimal(0), BigDecimal(100), "alcoholByVolumeQuestion.error.minimumRequired"))
     )
