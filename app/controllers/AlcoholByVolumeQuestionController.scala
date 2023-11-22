@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.AlcoholByVolumeQuestionFormProvider
 
 import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.Navigator
 import pages.AlcoholByVolumeQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
