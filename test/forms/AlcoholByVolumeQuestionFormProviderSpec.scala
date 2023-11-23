@@ -30,7 +30,7 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
     val minimum = 0
     val maximum = 100
 
-    val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
     behave like fieldThatBindsValidData(
       form,
@@ -43,15 +43,6 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
       fieldName,
       nonNumericError = FormError(fieldName, "alcoholByVolumeQuestion.error.nonNumeric"),
       twoDecimalPlacesError = FormError(fieldName, "alcoholByVolumeQuestion.error.twoDecimalPlaces")
-    )
-
-    //don't currently have error message for out of range:
-    behave like bigDecimalFieldWithRange(
-      form,
-      fieldName,
-      minimum = minimum,
-      maximum = maximum,
-      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.outOfRange", Seq(minimum, maximum))
     )
 
     behave like bigDecimalFieldWithMinimum(

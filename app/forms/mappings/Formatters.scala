@@ -53,7 +53,7 @@ trait Formatters {
       override def bind(key: String, data: Map[String, String]) =
         baseFormatter
           .bind(key, data)
-//          .map(_.replace(",", "")) //we might want to have this line
+          .map(_.replace(",", ""))
           .flatMap { s =>
             nonFatalCatch
               .either(BigDecimal(s))

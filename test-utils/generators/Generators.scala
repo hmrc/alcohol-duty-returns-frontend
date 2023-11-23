@@ -68,6 +68,31 @@ trait Generators extends ModelGenerators {
       .suchThat(!_.isValidInt)
       .map("%f".format(_))
 
+  val to2dp: BigDecimal => BigDecimal = _.setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  def bigDecimalsBelowValue(value: BigDecimal): Gen[BigDecimal] =
+    arbitrary[BigDecimal]
+      .suchThat(_ < value)
+      .map(to2dp)
+
+  def bigDecimalsAboveValue(value: BigDecimal): Gen[BigDecimal] =
+    arbitrary[BigDecimal] suchThat (_ > value)
+
+  def bigDecimalsOutsideRange(min: BigDecimal, max: BigDecimal): Gen[BigDecimal] =
+    arbitrary[BigDecimal] suchThat (x => x < min || x > max)
+
+//  def bigDecimalsInRangeWithCommas(min: BigDecimal, max: BigDecimal): Gen[String] = {
+//    val numberGen = arbitrary[BigDecimal]
+//      .suchThat(x => x > min || x < max)
+//      .map(to2dp)
+//      .map(_.toString)
+//    genIntersperseString(numberGen, ",")
+//  }
+
+  def bigDecimalsInRangeWithCommas(min: BigDecimal, max: BigDecimal): Gen[String] = {
+    val numberGen = choose[BigDecimal](min, max).map(to2dp).map(_.toString)
+    genIntersperseString(numberGen, ",")
+  }
+
   def intsBelowValue(value: Int): Gen[Int] =
     arbitrary[Int] suchThat (_ < value)
 
