@@ -79,7 +79,7 @@ smallProducerReliefQuestion.title = Is this product eligible for Small Producer 
 smallProducerReliefQuestion.heading = Is this product eligible for Small Producer Relief?
 smallProducerReliefQuestion.error.required = Select yes if this product is eligible for Small Producer Relief
 smallProducerReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-youre-eligible-for-small-producer-relief-on-alcohol-duty
-smallProducerReliefQuestion.guidance.link.text = If you're a small producer you may be able to pay a lower rate of duty on this product.
+smallProducerReliefQuestion.guidance.link.text = If you’re a small producer you may be able to pay a lower rate of duty on this product.
 
 alcoholByVolumeQuestion.title = What is this product’s Alcohol by Volume (ABV) strength?
 alcoholByVolumeQuestion.heading = What is this product’s Alcohol by Volume (ABV) strength?
