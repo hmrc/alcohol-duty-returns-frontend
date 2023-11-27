@@ -188,6 +188,10 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
         val result = testForm.bind(Map("value" -> "1,001.1"))
         result.get mustEqual BigDecimal(1001.1)
       }
+      "with minus" in {
+        val result = testForm.bind(Map("value" -> "-102.12"))
+        result.get mustEqual BigDecimal(-102.12)
+      }
     }
 
     "must not bind an empty value" in {

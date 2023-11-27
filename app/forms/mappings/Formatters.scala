@@ -45,8 +45,7 @@ trait Formatters {
     args: Seq[String] = Seq.empty
   ): Formatter[BigDecimal] =
     new Formatter[BigDecimal] {
-//      val decimalRegexp = """^[+-]?[0-9]*(\.[0-9]{0,2})?$""" // if minus and plus are needed
-      val decimalRegexp = """^[0-9]*(\.[0-9]{0,2})?$"""
+      val decimalRegexp = """^[+-]?[0-9]*(\.[0-9]{0,2})?$""" // if minus and plus are needed
 
       private val baseFormatter = stringFormatter(requiredKey, args)
 

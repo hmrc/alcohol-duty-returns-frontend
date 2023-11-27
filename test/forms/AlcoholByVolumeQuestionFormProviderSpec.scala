@@ -19,6 +19,8 @@ package forms
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
+import scala.collection.immutable.ArraySeq
+
 class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new AlcoholByVolumeQuestionFormProvider()()
@@ -27,8 +29,8 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
 
     val fieldName = "value"
 
-    val minimum = 0
-    val maximum = 100
+    val minimum = 0.01
+    val maximum = 100.01
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
@@ -49,14 +51,14 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
       form,
       fieldName,
       minimum = minimum,
-      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.minimumRequired")
+      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.maximumRequired")
+      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.maximumRequired", ArraySeq(100))
     )
 
     behave like mandatoryField(

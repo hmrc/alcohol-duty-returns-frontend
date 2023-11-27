@@ -29,8 +29,7 @@ class AlcoholByVolumeQuestionFormProvider @Inject() extends Mappings {
         "alcoholByVolumeQuestion.error.nonNumeric",
         "alcoholByVolumeQuestion.error.twoDecimalPlaces"
       )
-        //.verifying(inRange(BigDecimal(0), BigDecimal(100), "alcoholByVolumeQuestion.error.minimumRequired"),
-        .verifying(minimumValue(BigDecimal(0), "alcoholByVolumeQuestion.error.minimumRequired"))
+        .verifying(minimumValue(BigDecimal(0.01), "alcoholByVolumeQuestion.error.minimumRequired"))
         .verifying(maximumValue(BigDecimal(100), "alcoholByVolumeQuestion.error.maximumRequired"))
     )
 

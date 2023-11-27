@@ -41,7 +41,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal(0)
+  val validAnswer = BigDecimal(10.23)
 
   lazy val alcoholByVolumeQuestionRoute = routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode).url
 
