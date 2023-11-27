@@ -184,6 +184,10 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
         val result = testForm.bind(Map("value" -> "1.1"))
         result.get mustEqual BigDecimal(1.1)
       }
+      "with commas" in {
+        val result = testForm.bind(Map("value" -> "1,001.1"))
+        result.get mustEqual BigDecimal(1001.1)
+      }
     }
 
     "must not bind an empty value" in {
@@ -198,11 +202,6 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
 
     "must not bind a non numeric value with multiple dots" in {
       val result = testForm.bind(Map("value" -> "10.12.1"))
-      result.errors must contain(FormError("value", "error.nonNumeric"))
-    }
-
-    "must not bind a numeric value with commas" in {
-      val result = testForm.bind(Map("value" -> "10,1"))
       result.errors must contain(FormError("value", "error.nonNumeric"))
     }
 

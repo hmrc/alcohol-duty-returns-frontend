@@ -68,7 +68,7 @@ trait Generators extends ModelGenerators {
       .suchThat(!_.isValidInt)
       .map("%f".format(_))
 
-  val to2dp: BigDecimal => BigDecimal = _.setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  val to2dp: BigDecimal => BigDecimal                           = _.setScale(2, BigDecimal.RoundingMode.HALF_UP)
   def bigDecimalsBelowValue(value: BigDecimal): Gen[BigDecimal] =
     arbitrary[BigDecimal]
       .suchThat(_ < value)
