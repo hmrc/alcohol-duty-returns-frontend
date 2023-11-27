@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.DraughtReliefQuestionFormProvider
 
 import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.Navigator
 import pages.DraughtReliefQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -37,6 +37,7 @@ class DraughtReliefQuestionController @Inject() (
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
   formProvider: DraughtReliefQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DraughtReliefQuestionView
@@ -46,8 +47,8 @@ class DraughtReliefQuestionController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = request.userAnswers.flatMap(_.get(DraughtReliefQuestionPage)) match {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.get(DraughtReliefQuestionPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -55,19 +56,20 @@ class DraughtReliefQuestionController @Inject() (
     Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          for {
-            updatedAnswers <-
-              Future.fromTry(
-                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(DraughtReliefQuestionPage, value)
-              )
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(DraughtReliefQuestionPage, mode, updatedAnswers))
-      )
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(DraughtReliefQuestionPage, value)
+                )
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DraughtReliefQuestionPage, mode, updatedAnswers))
+        )
   }
 }
