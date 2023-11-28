@@ -43,10 +43,14 @@
         text = messages("section.alcoholDutyReturn"),
         )
 
+        @pageHeading(messages("productVolumeQuestion.heading"))
+
+        <p class="govuk-body">@messages("productVolumeQuestion.p1")</p>
+
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("productVolumeQuestion.heading")).asPageHeading()
+                label = LabelViewModel(messages("productVolumeQuestion.heading")).asVisuallyHidden()
             )
             .asNumeric()
             .withWidth(Fixed10)

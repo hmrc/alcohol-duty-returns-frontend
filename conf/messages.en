@@ -93,6 +93,7 @@ alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
 
 productVolumeQuestion.title = How much of this product do you need to declare?
 productVolumeQuestion.heading = How much of this product do you need to declare?
+productVolumeQuestion.p1 = Give your answers in litres, to 2 decimal places. For example, 500.50
 productVolumeQuestion.checkYourAnswersLabel = ProductVolumeQuestion
 productVolumeQuestion.error.nonNumeric = The product volume must be a number
 productVolumeQuestion.error.required = Enter how much of this product you need to declare
