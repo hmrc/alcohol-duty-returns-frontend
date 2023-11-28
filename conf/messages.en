@@ -90,3 +90,12 @@ alcoholByVolumeQuestion.error.minimumRequired = This product’s Alcohol by Volu
 alcoholByVolumeQuestion.error.maximumRequired = This product’s Alcohol by Volume (ABV) strength must be 100 or less
 alcoholByVolumeQuestion.error.twoDecimalPlaces = This product’s Alcohol by Volume (ABV) must be a number to two decimal places
 alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
+
+productVolumeQuestion.title = ProductVolumeQuestion
+productVolumeQuestion.heading = ProductVolumeQuestion
+productVolumeQuestion.checkYourAnswersLabel = ProductVolumeQuestion
+productVolumeQuestion.error.nonNumeric = Enter your productVolumeQuestion using numbers
+productVolumeQuestion.error.required = Enter your productVolumeQuestion
+productVolumeQuestion.error.wholeNumber = Enter your productVolumeQuestion using whole numbers
+productVolumeQuestion.error.outOfRange = ProductVolumeQuestion must be between {0} and {1}
+productVolumeQuestion.change.hidden = ProductVolumeQuestion
