@@ -41,7 +41,7 @@ class ProductVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = 0
+  val validAnswer = BigDecimal(10.23)
 
   lazy val productVolumeQuestionRoute = routes.ProductVolumeQuestionController.onPageLoad(NormalMode).url
 
