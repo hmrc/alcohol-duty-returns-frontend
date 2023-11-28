@@ -41,15 +41,15 @@ class ProductVolumeQuestionFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "productVolumeQuestion.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "productVolumeQuestion.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "productVolumeQuestion.error.wholeNumber")
     )
 
     behave like intFieldWithRange(
       form,
       fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
+      minimum = minimum,
+      maximum = maximum,
       expectedError = FormError(fieldName, "productVolumeQuestion.error.outOfRange", Seq(minimum, maximum))
     )
 

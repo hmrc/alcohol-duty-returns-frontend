@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ProductVolumeQuestionSummary  {
+object ProductVolumeQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ProductVolumeQuestionPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "productVolumeQuestion.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.ProductVolumeQuestionController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("productVolumeQuestion.change.hidden"))
-          )
+    answers.get(ProductVolumeQuestionPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "productVolumeQuestion.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.ProductVolumeQuestionController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("productVolumeQuestion.change.hidden"))
         )
+      )
     }
 }

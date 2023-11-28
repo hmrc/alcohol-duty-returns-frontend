@@ -27,7 +27,8 @@ class ProductVolumeQuestionFormProvider @Inject() extends Mappings {
       "value" -> int(
         "productVolumeQuestion.error.required",
         "productVolumeQuestion.error.wholeNumber",
-        "productVolumeQuestion.error.nonNumeric")
-          .verifying(inRange(0, 999999999, "productVolumeQuestion.error.outOfRange"))
+        "productVolumeQuestion.error.nonNumeric"
+      )
+        .verifying(inRange(0, 999999999, "productVolumeQuestion.error.outOfRange"))
     )
 }
