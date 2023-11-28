@@ -22,13 +22,14 @@ import play.api.data.Form
 
 class ProductVolumeQuestionFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  def apply(): Form[BigDecimal] =
     Form(
-      "value" -> int(
+      "value" -> bigDecimal(
         "productVolumeQuestion.error.required",
-        "productVolumeQuestion.error.wholeNumber",
-        "productVolumeQuestion.error.nonNumeric"
+        "productVolumeQuestion.error.nonNumeric",
+        "productVolumeQuestion.error.twoDecimalPlaces"
       )
-        .verifying(inRange(0, 999999999, "productVolumeQuestion.error.outOfRange"))
+        .verifying(minimumValue(BigDecimal(0.01), "productVolumeQuestion.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999.99), "productVolumeQuestion.error.maximumRequired"))
     )
 }

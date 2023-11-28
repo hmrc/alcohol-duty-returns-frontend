@@ -73,7 +73,7 @@ trait Generators extends ModelGenerators {
     bigDecimalsInRangeWithCommas(Double.MinValue, value)
 
   def bigDecimalsAboveValue(value: BigDecimal): Gen[String] =
-    bigDecimalsInRangeWithCommas(value, 10000)
+    bigDecimalsInRangeWithCommas(value, 999999999)
 
   def bigDecimalsOutsideRange(min: BigDecimal, max: BigDecimal): Gen[BigDecimal] =
     arbitrary[BigDecimal] suchThat (x => x < min || x > max)

@@ -16,10 +16,10 @@
 
 package forms
 
-import forms.behaviours.IntFieldBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
-
-class ProductVolumeQuestionFormProviderSpec extends IntFieldBehaviours {
+import scala.collection.immutable.ArraySeq
+class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new ProductVolumeQuestionFormProvider()()
 
@@ -27,10 +27,10 @@ class ProductVolumeQuestionFormProviderSpec extends IntFieldBehaviours {
 
     val fieldName = "value"
 
-    val minimum = 0
-    val maximum = 999999999
+    val minimum = 0.01
+    val maximum = 999999.99
 
-    val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
     behave like fieldThatBindsValidData(
       form,
@@ -38,19 +38,25 @@ class ProductVolumeQuestionFormProviderSpec extends IntFieldBehaviours {
       validDataGenerator
     )
 
-    behave like intField(
+    behave like bigDecimalField(
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "productVolumeQuestion.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "productVolumeQuestion.error.wholeNumber")
+      twoDecimalPlacesError = FormError(fieldName, "productVolumeQuestion.error.twoDecimalPlaces")
     )
 
-    behave like intFieldWithRange(
+    behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
+      expectedError = FormError(fieldName, "productVolumeQuestion.error.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "productVolumeQuestion.error.outOfRange", Seq(minimum, maximum))
+      expectedError = FormError(fieldName, "productVolumeQuestion.error.maximumRequired", ArraySeq(999999.99))
     )
 
     behave like mandatoryField(
