@@ -18,29 +18,29 @@ package controllers
 
 import connectors.CacheConnector
 import controllers.actions._
-import forms.DraughtReliefQuestionFormProvider
+import forms.AlcoholByVolumeQuestionFormProvider
 
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.DraughtReliefQuestionPage
+import pages.AlcoholByVolumeQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.DraughtReliefQuestionView
+import views.html.AlcoholByVolumeQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DraughtReliefQuestionController @Inject() (
+class AlcoholByVolumeQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: DraughtReliefQuestionFormProvider,
+  formProvider: AlcoholByVolumeQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: DraughtReliefQuestionView
+  view: AlcoholByVolumeQuestionView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -48,7 +48,7 @@ class DraughtReliefQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DraughtReliefQuestionPage) match {
+    val preparedForm = request.userAnswers.get(AlcoholByVolumeQuestionPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -66,10 +66,10 @@ class DraughtReliefQuestionController @Inject() (
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(DraughtReliefQuestionPage, value)
+                  request.userAnswers.set(AlcoholByVolumeQuestionPage, value)
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DraughtReliefQuestionPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers))
         )
   }
 }

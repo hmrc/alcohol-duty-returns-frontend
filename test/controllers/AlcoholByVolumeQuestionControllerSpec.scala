@@ -18,43 +18,45 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.DraughtReliefQuestionFormProvider
+import forms.AlcoholByVolumeQuestionFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.DraughtReliefQuestionPage
+import pages.AlcoholByVolumeQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.DraughtReliefQuestionView
+import views.html.AlcoholByVolumeQuestionView
 
 import scala.concurrent.Future
 
-class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
+class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
+
+  val formProvider = new AlcoholByVolumeQuestionFormProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DraughtReliefQuestionFormProvider()
-  val form         = formProvider()
+  val validAnswer = BigDecimal(10.23)
 
-  lazy val draughtReliefQuestionRoute = routes.DraughtReliefQuestionController.onPageLoad(NormalMode).url
+  lazy val alcoholByVolumeQuestionRoute = routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode).url
 
-  "DraughtReliefQuestion Controller" - {
+  "AlcoholByVolumeQuestion Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, draughtReliefQuestionRoute)
+        val request = FakeRequest(GET, alcoholByVolumeQuestionRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DraughtReliefQuestionView]
+        val view = application.injector.instanceOf[AlcoholByVolumeQuestionView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -63,19 +65,22 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(DraughtReliefQuestionPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(AlcoholByVolumeQuestionPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, draughtReliefQuestionRoute)
+        val request = FakeRequest(GET, alcoholByVolumeQuestionRoute)
 
-        val view = application.injector.instanceOf[DraughtReliefQuestionView]
+        val view = application.injector.instanceOf[AlcoholByVolumeQuestionView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -95,8 +100,8 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, draughtReliefQuestionRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(POST, alcoholByVolumeQuestionRoute)
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -111,12 +116,12 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, draughtReliefQuestionRoute)
-            .withFormUrlEncodedBody(("value", ""))
+          FakeRequest(POST, alcoholByVolumeQuestionRoute)
+            .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[DraughtReliefQuestionView]
+        val view = application.injector.instanceOf[AlcoholByVolumeQuestionView]
 
         val result = route(application, request).value
 
@@ -130,7 +135,7 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, draughtReliefQuestionRoute)
+        val request = FakeRequest(GET, alcoholByVolumeQuestionRoute)
 
         val result = route(application, request).value
 
@@ -145,12 +150,13 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, draughtReliefQuestionRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(POST, alcoholByVolumeQuestionRoute)
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
+
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
