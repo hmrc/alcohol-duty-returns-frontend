@@ -28,7 +28,7 @@ class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
     val fieldName = "value"
 
     val minimum = 0.01
-    val maximum = 999999.99
+    val maximum = 999999999.99
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
@@ -56,7 +56,7 @@ class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "productVolumeQuestion.error.maximumRequired", ArraySeq(999999.99))
+      expectedError = FormError(fieldName, "productVolumeQuestion.error.maximumRequired", ArraySeq(999999999.99))
     )
 
     behave like mandatoryField(
