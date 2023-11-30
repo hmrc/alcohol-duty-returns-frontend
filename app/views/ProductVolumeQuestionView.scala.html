@@ -49,8 +49,8 @@
 
         @govukInput(
             InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("productVolumeQuestion.heading")).asVisuallyHidden()
+                field = form("product-volume-input"),
+                label = LabelViewModel(messages("productVolumeQuestion.heading")).asVisuallyHidden(),
             )
             .asNumeric()
             .withWidth(Fixed10)

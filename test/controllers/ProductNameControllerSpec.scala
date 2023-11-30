@@ -96,7 +96,7 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, productNameRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("product-name-input", "answer"))
 
         val result = route(application, request).value
 

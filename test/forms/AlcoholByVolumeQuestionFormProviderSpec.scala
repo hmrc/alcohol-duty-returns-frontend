@@ -27,7 +27,7 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "alcohol-by-volume-input"
 
     val minimum = 0.01
     val maximum = 100.01

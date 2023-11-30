@@ -25,7 +25,7 @@ class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "product-volume-input"
 
     val minimum = 0.01
     val maximum = 999999999.99

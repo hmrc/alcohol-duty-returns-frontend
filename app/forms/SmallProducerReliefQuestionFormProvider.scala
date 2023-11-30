@@ -25,6 +25,6 @@ class SmallProducerReliefQuestionFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
-      "value" -> boolean("smallProducerReliefQuestion.error.required")
+      "small-producer-relief-input" -> boolean("smallProducerReliefQuestion.error.required")
     )
 }

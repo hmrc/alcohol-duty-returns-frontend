@@ -25,6 +25,6 @@ class DraughtReliefQuestionFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
-      "value" -> boolean("draughtReliefQuestion.error.required")
+      "draught-relief-input" -> boolean("draughtReliefQuestion.error.required")
     )
 }

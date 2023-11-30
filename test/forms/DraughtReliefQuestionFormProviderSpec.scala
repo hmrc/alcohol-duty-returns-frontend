@@ -28,7 +28,7 @@ class DraughtReliefQuestionFormProviderSpec extends BooleanFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "draught-relief-input"
 
     behave like booleanField(
       form,
