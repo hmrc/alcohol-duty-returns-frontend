@@ -24,4 +24,11 @@
 @layout(pageTitle = titleNoForm(messages("dutySuspendedDeliveriesGuidance.title"))) {
 
     <h1 class="govuk-heading-xl">@messages("dutySuspendedDeliveriesGuidance.heading")</h1>
+
+    <p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p1")</p>
+    <p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p2")</p>
+
+@govukButton(
+ButtonViewModel("continueButton", messages("site.continue"))
+)
 }

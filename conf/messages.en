@@ -91,5 +91,8 @@ alcoholByVolumeQuestion.error.maximumRequired = This product’s Alcohol by Volu
 alcoholByVolumeQuestion.error.twoDecimalPlaces = This product’s Alcohol by Volume (ABV) must be a number to two decimal places
 alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
 
-dutySuspendedDeliveriesGuidance.title = dutySuspendedDeliveriesGuidance
-dutySuspendedDeliveriesGuidance.heading = dutySuspendedDeliveriesGuidance
+dutySuspendedDeliveriesGuidance.title = Tell us about any duty suspended deliveries and receipts
+dutySuspendedDeliveriesGuidance.heading = Tell us about any duty suspended deliveries and receipts
+dutySuspendedDeliveriesGuidance.p1 = You need to tell us about any duty suspended deliveries and receipts that you have had.
+dutySuspendedDeliveriesGuidance.p2 = This won't affect your duty calculation.
+
