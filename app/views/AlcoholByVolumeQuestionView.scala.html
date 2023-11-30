@@ -48,7 +48,7 @@
                 field = form("alcohol-by-volume-input"),
                 label = LabelViewModel(messages("alcoholByVolumeQuestion.heading")).asPageHeading()
                 )
-            .withSuffix(PrefixOrSuffix(content = "alcoholByVolumeQuestion.p1"))
+            .withSuffix(PrefixOrSuffix(content = "alcoholByVolumeQuestion.inputSuffix"))
             .asNumeric()
             .withWidth(Fixed10)
         )

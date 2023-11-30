@@ -83,7 +83,7 @@ smallProducerReliefQuestion.guidance.link.text = If you’re a small producer yo
 
 alcoholByVolumeQuestion.title = What is this product’s Alcohol by Volume (ABV) strength?
 alcoholByVolumeQuestion.heading = What is this product’s Alcohol by Volume (ABV) strength?
-alcoholByVolumeQuestion.p1 = %
+alcoholByVolumeQuestion.inputSuffix = %
 alcoholByVolumeQuestion.checkYourAnswersLabel = AlcoholByVolumeQuestion
 alcoholByVolumeQuestion.error.nonNumeric = This product’s Alcohol by Volume (ABV) strength must be a number
 alcoholByVolumeQuestion.error.required = Enter this product’s Alcohol by Volume (ABV) strength
@@ -95,7 +95,7 @@ alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
 productVolumeQuestion.title = How much of this product do you need to declare?
 productVolumeQuestion.heading = How much of this product do you need to declare?
 productVolumeQuestion.p1 = Give your answers in litres, to 2 decimal places. For example, 500.50
-productVolumeQuestion.p2 = litres
+productVolumeQuestion.inputSuffix = litres
 productVolumeQuestion.checkYourAnswersLabel = ProductVolumeQuestion
 productVolumeQuestion.error.nonNumeric = The product volume must be a number
 productVolumeQuestion.error.required = Enter how much of this product you need to declare
