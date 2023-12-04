@@ -96,7 +96,7 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, draughtReliefQuestionRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+            .withFormUrlEncodedBody(("draught-relief-input", "true"))
 
         val result = route(application, request).value
 

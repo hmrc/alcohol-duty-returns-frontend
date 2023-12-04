@@ -18,19 +18,17 @@ package forms
 
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
-
 import scala.collection.immutable.ArraySeq
+class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
 
-class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
-
-  val form = new AlcoholByVolumeQuestionFormProvider()()
+  val form = new ProductVolumeQuestionFormProvider()()
 
   ".value" - {
 
-    val fieldName = "alcohol-by-volume-input"
+    val fieldName = "product-volume-input"
 
     val minimum = 0.01
-    val maximum = 100.01
+    val maximum = 999999999.99
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
@@ -43,28 +41,28 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "alcoholByVolumeQuestion.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "alcoholByVolumeQuestion.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "productVolumeQuestion.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "productVolumeQuestion.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
-      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "productVolumeQuestion.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.maximumRequired", ArraySeq(100))
+      expectedError = FormError(fieldName, "productVolumeQuestion.error.maximumRequired", ArraySeq(999999999.99))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "alcoholByVolumeQuestion.error.required")
+      requiredError = FormError(fieldName, "productVolumeQuestion.error.required")
     )
   }
 }

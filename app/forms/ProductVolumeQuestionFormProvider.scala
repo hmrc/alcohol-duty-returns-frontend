@@ -16,30 +16,20 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
-import play.api.data.FormError
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-class DraughtReliefQuestionFormProviderSpec extends BooleanFieldBehaviours {
+class ProductVolumeQuestionFormProvider @Inject() extends Mappings {
 
-  val requiredKey = "draughtReliefQuestion.error.required"
-  val invalidKey  = "error.boolean"
-
-  val form = new DraughtReliefQuestionFormProvider()()
-
-  ".value" - {
-
-    val fieldName = "draught-relief-input"
-
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+  def apply(): Form[BigDecimal] =
+    Form(
+      "product-volume-input" -> bigDecimal(
+        "productVolumeQuestion.error.required",
+        "productVolumeQuestion.error.nonNumeric",
+        "productVolumeQuestion.error.twoDecimalPlaces"
+      )
+        .verifying(minimumValue(BigDecimal(0.01), "productVolumeQuestion.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "productVolumeQuestion.error.maximumRequired"))
     )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-  }
 }

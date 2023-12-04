@@ -96,7 +96,7 @@ class SmallProducerReliefQuestionControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, smallProducerReliefQuestionRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+            .withFormUrlEncodedBody(("small-producer-relief-input", "true"))
 
         val result = route(application, request).value
 

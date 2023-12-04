@@ -18,7 +18,6 @@
 @import components.{Link, SectionHeading, PageHeading}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
-
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -31,30 +30,36 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("alcoholByVolumeQuestion.title"))) {
+@layout(pageTitle = title(form, messages("productVolumeQuestion.title"))) {
 
-    @formHelper(action = routes.AlcoholByVolumeQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ProductVolumeQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
+
         @sectionHeading(
-        id = "alcohol-by-volume-question-section",
-        text = messages("section.alcoholDutyReturn"),
+            id = "product-volume-question-section",
+            text = messages("section.alcoholDutyReturn"),
         )
+
+        @pageHeading(messages("productVolumeQuestion.heading"))
+
+        <p class="govuk-body">@messages("productVolumeQuestion.p1")</p>
 
         @govukInput(
             InputViewModel(
-                field = form("alcohol-by-volume-input"),
-                label = LabelViewModel(messages("alcoholByVolumeQuestion.heading")).asPageHeading()
-                )
-            .withSuffix(PrefixOrSuffix(content = "alcoholByVolumeQuestion.inputSuffix"))
+                field = form("product-volume-input"),
+                label = LabelViewModel(messages("productVolumeQuestion.heading")).asVisuallyHidden(),
+            )
             .asNumeric()
             .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("productVolumeQuestion.inputSuffix")))
+
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }
