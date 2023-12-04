@@ -104,7 +104,7 @@ productVolumeQuestion.error.maximumRequired = This product’s volume must be 99
 productVolumeQuestion.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
 productVolumeQuestion.change.hidden = Product volume
 
-declareDutySuspendedDeliveriesQuestion.title = Do you need to declare alcohol that you delivered or received duty suspended?
-declareDutySuspendedDeliveriesQuestion.heading = Do you need to declare alcohol that you delivered or received duty suspended?
+declareDutySuspendedDeliveriesQuestion.title = Do you need to declare alcohol you delivered or received duty suspended?
+declareDutySuspendedDeliveriesQuestion.heading = Do you need to declare alcohol you delivered or received duty suspended?
 declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to declare any Duty Suspended Deliveries
-declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered it to a duty suspended warehouse. This will not change your duty calculation.
+declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered it to a duty suspended warehouse.
