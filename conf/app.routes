@@ -45,3 +45,8 @@ GET        /productVolumeQuestion                  controllers.ProductVolumeQues
 POST       /productVolumeQuestion                  controllers.ProductVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductVolumeQuestion                        controllers.ProductVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeProductVolumeQuestion                        controllers.ProductVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
+
+GET        /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
