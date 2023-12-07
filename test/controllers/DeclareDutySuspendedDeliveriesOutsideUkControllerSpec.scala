@@ -20,13 +20,14 @@ import scala.concurrent.Future
 class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new DeclareDutySuspendedDeliveriesOutsideUkFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = 0
 
-  lazy val declareDutySuspendedDeliveriesOutsideUkRoute = routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url
+  lazy val declareDutySuspendedDeliveriesOutsideUkRoute =
+    routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url
 
   "DeclareDutySuspendedDeliveriesOutsideUk Controller" - {
 
@@ -48,7 +49,8 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase wit
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(DeclareDutySuspendedDeliveriesOutsideUkPage, validAnswer).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(DeclareDutySuspendedDeliveriesOutsideUkPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -60,7 +62,10 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase wit
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

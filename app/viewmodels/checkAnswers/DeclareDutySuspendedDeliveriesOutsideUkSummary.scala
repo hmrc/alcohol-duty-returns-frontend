@@ -24,19 +24,20 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareDutySuspendedDeliveriesOutsideUkSummary  {
+object DeclareDutySuspendedDeliveriesOutsideUkSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareDutySuspendedDeliveriesOutsideUkPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("declareDutySuspendedDeliveriesOutsideUk.change.hidden"))
+    answers.get(DeclareDutySuspendedDeliveriesOutsideUkPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(CheckMode).url
           )
+            .withVisuallyHiddenText(messages("declareDutySuspendedDeliveriesOutsideUk.change.hidden"))
         )
+      )
     }
 }

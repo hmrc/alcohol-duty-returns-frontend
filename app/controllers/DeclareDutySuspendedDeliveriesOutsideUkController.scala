@@ -63,7 +63,8 @@ class DeclareDutySuspendedDeliveriesOutsideUkController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareDutySuspendedDeliveriesOutsideUkPage, value))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(DeclareDutySuspendedDeliveriesOutsideUkPage, value))
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesOutsideUkPage, mode, updatedAnswers))
         )

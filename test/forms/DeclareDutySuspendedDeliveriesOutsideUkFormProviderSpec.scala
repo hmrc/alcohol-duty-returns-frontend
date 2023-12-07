@@ -25,16 +25,17 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends IntFieldBe
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.wholeNumber")
     )
 
     behave like intFieldWithRange(
       form,
       fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
-      expectedError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.outOfRange", Seq(minimum, maximum))
+      minimum = minimum,
+      maximum = maximum,
+      expectedError =
+        FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.outOfRange", Seq(minimum, maximum))
     )
 
     behave like mandatoryField(

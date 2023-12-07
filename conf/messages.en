@@ -110,10 +110,12 @@ declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need t
 declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered it to a duty suspended warehouse.
 
 declareDutySuspendedDeliveriesOutsideUk.title = How much have you delivered duty suspended outside of the UK?
-declareDutySuspendedDeliveriesOutsideUk.heading = DeclareDutySuspendedDeliveriesOutsideUk
+declareDutySuspendedDeliveriesOutsideUk.heading = How much have you delivered duty suspended outside of the UK?
 declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = DeclareDutySuspendedDeliveriesOutsideUk
-declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric = Enter your declareDutySuspendedDeliveriesOutsideUk using numbers
-declareDutySuspendedDeliveriesOutsideUk.error.required = Enter your declareDutySuspendedDeliveriesOutsideUk
-declareDutySuspendedDeliveriesOutsideUk.error.wholeNumber = Enter your declareDutySuspendedDeliveriesOutsideUk using whole numbers
+declareDutySuspendedDeliveriesOutsideUk.error.required = Enter how much you have delivered duty suspended
+declareDutySuspendedDeliveriesOutsideUk.error.wholeNumber = How much you have delivered duty suspended must be a number
 declareDutySuspendedDeliveriesOutsideUk.error.outOfRange = DeclareDutySuspendedDeliveriesOutsideUk must be between {0} and {1}
 declareDutySuspendedDeliveriesOutsideUk.change.hidden = DeclareDutySuspendedDeliveriesOutsideUk
+declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.01 or more
+declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
+declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
