@@ -50,3 +50,8 @@ GET        /declareDutySuspendedDeliveriesQuestion                        contro
 POST       /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
+
+GET        /declareDutySuspendedDeliveriesOutsideUk                  controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareDutySuspendedDeliveriesOutsideUk                  controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = CheckMode)

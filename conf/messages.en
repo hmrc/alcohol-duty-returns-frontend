@@ -108,3 +108,12 @@ declareDutySuspendedDeliveriesQuestion.title = Do you need to declare alcohol yo
 declareDutySuspendedDeliveriesQuestion.heading = Do you need to declare alcohol you delivered or received duty suspended?
 declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to declare any Duty Suspended Deliveries
 declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered it to a duty suspended warehouse.
+
+declareDutySuspendedDeliveriesOutsideUk.title = How much have you delivered duty suspended outside of the UK?
+declareDutySuspendedDeliveriesOutsideUk.heading = DeclareDutySuspendedDeliveriesOutsideUk
+declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = DeclareDutySuspendedDeliveriesOutsideUk
+declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric = Enter your declareDutySuspendedDeliveriesOutsideUk using numbers
+declareDutySuspendedDeliveriesOutsideUk.error.required = Enter your declareDutySuspendedDeliveriesOutsideUk
+declareDutySuspendedDeliveriesOutsideUk.error.wholeNumber = Enter your declareDutySuspendedDeliveriesOutsideUk using whole numbers
+declareDutySuspendedDeliveriesOutsideUk.error.outOfRange = DeclareDutySuspendedDeliveriesOutsideUk must be between {0} and {1}
+declareDutySuspendedDeliveriesOutsideUk.change.hidden = DeclareDutySuspendedDeliveriesOutsideUk
