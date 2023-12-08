@@ -26,7 +26,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProvider @Inject() extends Mapp
     Form(
       "declare-duty-suspended-deliveries-outside-uk-input" -> bigDecimal(
         "declareDutySuspendedDeliveriesOutsideUk.error.required",
-        "declareDutySuspendedDeliveriesOutsideUk.error.wholeNumber",
+        "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric",
         "declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces"
       )
         .verifying(minimumValue(BigDecimal(0.01), "declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired"))
