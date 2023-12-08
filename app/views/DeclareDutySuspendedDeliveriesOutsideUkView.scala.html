@@ -43,13 +43,10 @@
           text = messages("section.alcoholDutyReturn"),
       )
 
-        <h1 class="govuk-heading-l">@messages("declareDutySuspendedDeliveriesOutsideUk.heading")</h1>
+      @pageHeading(messages("declareDutySuspendedDeliveriesOutsideUk.heading"))
 
           <p class="govuk-body">
               @messages("declareDutySuspendedDeliveriesOutsideUk.p1")
-          </p>
-          <p class="govuk-hint">
-              @messages("declareDutySuspendedDeliveriesOutsideUk.p2")
           </p>
 
       @govukInput(
@@ -59,7 +56,7 @@
           )
          .asNumeric()
          .withWidth(Fixed10)
-         .withSuffix(PrefixOrSuffix(content = messages("declareDutySuspendedDeliveriesOutsideUk.inputSuffix")))
+         .withSuffix(PrefixOrSuffix(content = messages("declareDutySuspendedDeliveriesOutsideUk.inputSuffix"))).withHint(Hint(content =  messages("declareDutySuspendedDeliveriesOutsideUk.hint")))
 
       )
 
