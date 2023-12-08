@@ -19,9 +19,9 @@ package forms
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 import scala.collection.immutable.ArraySeq
-class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
+class ProductVolumeFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new ProductVolumeQuestionFormProvider()()
+  val form = new ProductVolumeFormProvider()()
 
   ".value" - {
 
@@ -41,28 +41,28 @@ class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "productVolumeQuestion.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "productVolumeQuestion.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "productVolume.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "productVolume.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
-      expectedError = FormError(fieldName, "productVolumeQuestion.error.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "productVolume.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "productVolumeQuestion.error.maximumRequired", ArraySeq(999999999.99))
+      expectedError = FormError(fieldName, "productVolume.error.maximumRequired", ArraySeq(999999999.99))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "productVolumeQuestion.error.required")
+      requiredError = FormError(fieldName, "productVolume.error.required")
     )
   }
 }

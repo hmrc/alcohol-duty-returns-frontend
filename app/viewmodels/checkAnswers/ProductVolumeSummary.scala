@@ -18,22 +18,22 @@ package viewmodels.checkAnswers
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import pages.ProductVolumeQuestionPage
+import pages.ProductVolumePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ProductVolumeQuestionSummary {
+object ProductVolumeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ProductVolumeQuestionPage).map { answer =>
+    answers.get(ProductVolumePage).map { answer =>
       SummaryListRowViewModel(
-        key = "productVolumeQuestion.checkYourAnswersLabel",
+        key = "productVolume.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ProductVolumeQuestionController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("productVolumeQuestion.change.hidden"))
+          ActionItemViewModel("site.change", routes.ProductVolumeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("productVolume.change.hidden"))
         )
       )
     }

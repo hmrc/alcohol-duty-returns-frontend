@@ -18,28 +18,28 @@ package controllers
 
 import connectors.CacheConnector
 import controllers.actions._
-import forms.ProductVolumeQuestionFormProvider
+import forms.ProductVolumeFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.ProductVolumeQuestionPage
+import pages.ProductVolumePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ProductVolumeQuestionView
+import views.html.ProductVolumeView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ProductVolumeQuestionController @Inject() (
+class ProductVolumeController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: ProductVolumeQuestionFormProvider,
+  formProvider: ProductVolumeFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: ProductVolumeQuestionView
+  view: ProductVolumeView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -47,7 +47,7 @@ class ProductVolumeQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(ProductVolumeQuestionPage) match {
+    val preparedForm = request.userAnswers.get(ProductVolumePage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -63,9 +63,9 @@ class ProductVolumeQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ProductVolumeQuestionPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ProductVolumePage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ProductVolumeQuestionPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(ProductVolumePage, mode, updatedAnswers))
         )
   }
 }

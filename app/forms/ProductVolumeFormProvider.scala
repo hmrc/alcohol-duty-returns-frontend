@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-case object ProductVolumeQuestionPage extends QuestionPage[BigDecimal] {
+class ProductVolumeFormProvider @Inject() extends Mappings {
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "productVolumeQuestion"
+  def apply(): Form[BigDecimal] =
+    Form(
+      "product-volume-input" -> bigDecimal(
+        "productVolume.error.required",
+        "productVolume.error.nonNumeric",
+        "productVolume.error.twoDecimalPlaces"
+      )
+        .verifying(minimumValue(BigDecimal(0.01), "productVolume.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "productVolume.error.maximumRequired"))
+    )
 }
