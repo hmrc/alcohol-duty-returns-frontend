@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import connectors.CacheConnector
 import forms.DeclareDutySuspendedDeliveriesOutsideUkFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -28,7 +29,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import uk.gov.hmrc.http.HttpResponse
 import views.html.DeclareDutySuspendedDeliveriesOutsideUkView
 
 import scala.concurrent.Future
@@ -87,15 +88,15 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase wit
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockCacheConnector = mock[CacheConnector]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
 
