@@ -45,7 +45,7 @@ class DutySuspendedDeliveriesControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val dutySuspendedDeliveriesRoute = routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode).url
 
-  "ProductVolumeQuestion Controller" - {
+  "DutySuspendedDeliveries Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
@@ -101,7 +101,7 @@ class DutySuspendedDeliveriesControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedDeliveriesRoute)
-            .withFormUrlEncodedBody(("product-volume-input", validAnswer.toString))
+            .withFormUrlEncodedBody(("duty-suspended-deliveries-input", validAnswer.toString))
 
         val result = route(application, request).value
 
