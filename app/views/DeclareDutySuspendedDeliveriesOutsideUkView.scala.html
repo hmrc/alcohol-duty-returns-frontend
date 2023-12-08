@@ -19,47 +19,52 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
 @this(
-layout: templates.Layout,
-formHelper: FormWithCSRF,
-govukErrorSummary: GovukErrorSummary,
-govukInput: GovukInput,
-govukButton: GovukButton,
-sectionHeading: SectionHeading,
-pageHeading: PageHeading
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("declareDutySuspendedDeliveriesOutsideUk.title"))) {
 
-@formHelper(action = routes.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+     @formHelper(action = routes.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
-@if(form.errors.nonEmpty) {
-@govukErrorSummary(ErrorSummaryViewModel(form))
-}
+      @if(form.errors.nonEmpty) {
+          @govukErrorSummary(ErrorSummaryViewModel(form))
+      }
 
-@sectionHeading(
-id = "declare-duty-suspended-deliveries-outside-uk-section",
-text = messages("section.alcoholDutyReturn"),
-)
+      @sectionHeading(
+          id = "declare-duty-suspended-deliveries-outside-uk-section",
+          text = messages("section.alcoholDutyReturn"),
+      )
 
-@pageHeading(messages("declareDutySuspendedDeliveriesOutsideUk.heading"))
-<p class="govuk-body">@messages("declareDutySuspendedDeliveriesOutsideUk.p2")</p>
-<p class="govuk-hint">@messages("declareDutySuspendedDeliveriesOutsideUk.p1")</p>
+        <h1 class="govuk-heading-l">@messages("declareDutySuspendedDeliveriesOutsideUk.heading")</h1>
 
-@govukInput(
-InputViewModel(
-field = form("declare-duty-suspended-deliveries-outside-uk-input"),
-label = LabelViewModel(messages("declareDutySuspendedDeliveriesOutsideUk.heading")).asVisuallyHidden(),
-)
-.asNumeric()
-.withWidth(Fixed10)
-.withSuffix(PrefixOrSuffix(content = messages("declareDutySuspendedDeliveriesOutsideUk.inputSuffix")))
+          <p class="govuk-body">
+              @messages("declareDutySuspendedDeliveriesOutsideUk.p1")
+          </p>
+          <p class="govuk-hint">
+              @messages("declareDutySuspendedDeliveriesOutsideUk.p2")
+          </p>
 
-)
+      @govukInput(
+          InputViewModel(
+          field = form("declare-duty-suspended-deliveries-outside-uk-input"),
+          label = LabelViewModel(messages("declareDutySuspendedDeliveriesOutsideUk.heading")).asVisuallyHidden(),
+          )
+         .asNumeric()
+         .withWidth(Fixed10)
+         .withSuffix(PrefixOrSuffix(content = messages("declareDutySuspendedDeliveriesOutsideUk.inputSuffix")))
 
-@govukButton(
-ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
-)
-}
+      )
+
+      @govukButton(
+          ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+      )
+     }
 }
