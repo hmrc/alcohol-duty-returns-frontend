@@ -45,18 +45,19 @@
 
       @pageHeading(messages("declareDutySuspendedDeliveriesOutsideUk.heading"))
 
-          <p class="govuk-body">
+      <p class="govuk-body">
               @messages("declareDutySuspendedDeliveriesOutsideUk.p1")
-          </p>
+      </p>
 
       @govukInput(
           InputViewModel(
-          field = form("declare-duty-suspended-deliveries-outside-uk-input"),
-          label = LabelViewModel(messages("declareDutySuspendedDeliveriesOutsideUk.heading")).asVisuallyHidden(),
+              field = form("declare-duty-suspended-deliveries-outside-uk-input"),
+              label = LabelViewModel(messages("declareDutySuspendedDeliveriesOutsideUk.heading")).asVisuallyHidden(),
           )
          .asNumeric()
          .withWidth(Fixed10)
-         .withSuffix(PrefixOrSuffix(content = messages("declareDutySuspendedDeliveriesOutsideUk.inputSuffix"))).withHint(Hint(content =  messages("declareDutySuspendedDeliveriesOutsideUk.hint")))
+         .withSuffix(PrefixOrSuffix(content = messages("declareDutySuspendedDeliveriesOutsideUk.inputSuffix")))
+         .withHint(Hint(content =  messages("declareDutySuspendedDeliveriesOutsideUk.hint")))
 
       )
 
