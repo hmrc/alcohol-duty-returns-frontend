@@ -58,7 +58,7 @@ class DutySuspendedDeliveriesFormProviderSpec extends BigDecimalFieldBehaviours 
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "dutySuspendedDeliveries.error.maximumRequired", ArraySeq(999999999.99))
+      expectedError = FormError(fieldName, "dutySuspendedDeliveries.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
