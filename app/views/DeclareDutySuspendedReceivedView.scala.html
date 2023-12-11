@@ -45,9 +45,12 @@
 
         @pageHeading(messages("declareDutySuspendedReceived.heading"))
 
-        <p class="govuk-body">
-            @messages("declareDutySuspendedReceived.p1")
-        </p>
+        <p class="govuk-body">@messages("declareDutySuspendedReceived.p1")</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@messages("declareDutySuspendedReceived.para.list.1")</li>
+            <li>@messages("declareDutySuspendedReceived.para.list.2")</li>
+        </ul>
+        <p class="govuk-body">@messages("declareDutySuspendedReceived.p2")</p>
 
         @govukInput(
             InputViewModel(

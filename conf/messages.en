@@ -133,3 +133,7 @@ declareDutySuspendedReceived.change.hidden = DeclareDutySuspendedReceived
 declareDutySuspendedReceived.hint = Give your answers in litres, to 2 decimal places.
 declareDutySuspendedReceived.error.minimumRequired = How much you have received duty suspended must be 0.00 or more
 declareDutySuspendedReceived.error.maximumRequired = How much you have received duty suspended must be 999999999.99 or less
+declareDutySuspendedReceived.p1 = For example, because:
+declareDutySuspendedReceived.p2 = This will not change your duty calculation.
+declareDutySuspendedReceived.para.list.1 = you received it from a UK site that is registered to send it duty suspended
+declareDutySuspendedReceived.para.list.2 = the beer is imported and all duties have already been paid
