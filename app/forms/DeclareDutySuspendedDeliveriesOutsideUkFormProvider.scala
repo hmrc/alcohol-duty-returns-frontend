@@ -16,15 +16,22 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
+import javax.inject.Inject
 import play.api.data.Form
 
-class DraughtReliefQuestionFormProvider @Inject() extends Mappings {
+class DeclareDutySuspendedDeliveriesOutsideUkFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(): Form[BigDecimal] =
     Form(
-      "draught-relief-input" -> boolean("draughtReliefQuestion.error.required")
+      "declare-duty-suspended-deliveries-outside-uk-input" -> bigDecimal(
+        "declareDutySuspendedDeliveriesOutsideUk.error.required",
+        "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric",
+        "declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces"
+      )
+        .verifying(minimumValue(BigDecimal(0.01), "declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired"))
+        .verifying(
+          maximumValue(BigDecimal(999999999.99), "declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired")
+        )
     )
 }

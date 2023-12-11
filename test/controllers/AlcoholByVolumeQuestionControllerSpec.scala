@@ -101,7 +101,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, alcoholByVolumeQuestionRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+            .withFormUrlEncodedBody(("alcohol-by-volume-input", validAnswer.toString))
 
         val result = route(application, request).value
 

@@ -18,19 +18,18 @@ package forms
 
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
-
 import scala.collection.immutable.ArraySeq
 
-class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
+class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new AlcoholByVolumeQuestionFormProvider()()
+  val form = new DeclareDutySuspendedDeliveriesOutsideUkFormProvider()()
 
   ".value" - {
 
-    val fieldName = "alcohol-by-volume-input"
+    val fieldName = "declare-duty-suspended-deliveries-outside-uk-input"
 
     val minimum = 0.01
-    val maximum = 100.01
+    val maximum = 999999999.99
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
@@ -43,28 +42,30 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "alcoholByVolumeQuestion.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "alcoholByVolumeQuestion.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
-      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.minimumRequired", ArraySeq(minimum))
+      expectedError =
+        FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.maximumRequired", ArraySeq(100))
+      expectedError =
+        FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "alcoholByVolumeQuestion.error.required")
+      requiredError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.required")
     )
   }
 }

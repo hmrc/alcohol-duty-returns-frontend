@@ -28,7 +28,7 @@ class SmallProducerReliefQuestionFormProviderSpec extends BooleanFieldBehaviours
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "small-producer-relief-input"
 
     behave like booleanField(
       form,

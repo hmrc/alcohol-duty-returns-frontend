@@ -24,7 +24,7 @@ class AlcoholByVolumeQuestionFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BigDecimal] =
     Form(
-      "value" -> bigDecimal(
+      "alcohol-by-volume-input" -> bigDecimal(
         "alcoholByVolumeQuestion.error.required",
         "alcoholByVolumeQuestion.error.nonNumeric",
         "alcoholByVolumeQuestion.error.twoDecimalPlaces"

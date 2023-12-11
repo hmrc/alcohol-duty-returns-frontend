@@ -18,43 +18,44 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.ProductNameFormProvider
+import forms.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ProductNamePage
+import pages.DeclareDutySuspendedDeliveriesQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.ProductNameView
+import views.html.DeclareDutySuspendedDeliveriesQuestionView
 
 import scala.concurrent.Future
 
-class ProductNameControllerSpec extends SpecBase with MockitoSugar {
+class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new ProductNameFormProvider()
+  val formProvider = new DeclareDutySuspendedDeliveriesQuestionFormProvider()
   val form         = formProvider()
 
-  lazy val productNameRoute = routes.ProductNameController.onPageLoad(NormalMode).url
+  lazy val declareDutySuspendedDeliveriesQuestionRoute =
+    routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
 
-  "ProductName Controller" - {
+  "DeclareDutySuspendedDeliveriesQuestion Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, productNameRoute)
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ProductNameView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -63,19 +64,19 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ProductNamePage, "answer").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, productNameRoute)
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
 
-        val view = application.injector.instanceOf[ProductNameView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -95,8 +96,8 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, productNameRoute)
-            .withFormUrlEncodedBody(("product-name-input", "answer"))
+          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+            .withFormUrlEncodedBody(("declare-duty-suspended-deliveries-input", "true"))
 
         val result = route(application, request).value
 
@@ -111,12 +112,12 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, productNameRoute)
+          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[ProductNameView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionView]
 
         val result = route(application, request).value
 
@@ -125,35 +126,34 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    //uncomment tests when we bring back requiredData:
-//    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, productNameRoute)
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, productNameRoute)
-//            .withFormUrlEncodedBody(("value", "answer"))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
   }
 }

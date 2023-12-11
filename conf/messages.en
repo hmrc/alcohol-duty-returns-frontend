@@ -83,6 +83,7 @@ smallProducerReliefQuestion.guidance.link.text = If you’re a small producer yo
 
 alcoholByVolumeQuestion.title = What is this product’s Alcohol by Volume (ABV) strength?
 alcoholByVolumeQuestion.heading = What is this product’s Alcohol by Volume (ABV) strength?
+alcoholByVolumeQuestion.inputSuffix = %
 alcoholByVolumeQuestion.checkYourAnswersLabel = AlcoholByVolumeQuestion
 alcoholByVolumeQuestion.error.nonNumeric = This product’s Alcohol by Volume (ABV) strength must be a number
 alcoholByVolumeQuestion.error.required = Enter this product’s Alcohol by Volume (ABV) strength
@@ -90,6 +91,36 @@ alcoholByVolumeQuestion.error.minimumRequired = This product’s Alcohol by Volu
 alcoholByVolumeQuestion.error.maximumRequired = This product’s Alcohol by Volume (ABV) strength must be 100 or less
 alcoholByVolumeQuestion.error.twoDecimalPlaces = This product’s Alcohol by Volume (ABV) must be a number to two decimal places
 alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
+
+productVolume.title = How much of this product do you need to declare?
+productVolume.heading = How much of this product do you need to declare?
+productVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
+productVolume.inputSuffix = litres
+productVolume.checkYourAnswersLabel = ProductVolume
+productVolume.error.nonNumeric = This product’s volume must be a number
+productVolume.error.required = Enter how much of this product you need to declare
+productVolume.error.minimumRequired = This product’s volume must be 0.01 or more
+productVolume.error.maximumRequired = This product’s volume must be 999999999.99 or less
+productVolume.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
+productVolume.change.hidden = Product volume
+
+declareDutySuspendedDeliveriesQuestion.title = Do you need to declare alcohol you delivered or received duty suspended?
+declareDutySuspendedDeliveriesQuestion.heading = Do you need to declare alcohol you delivered or received duty suspended?
+declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to declare any Duty Suspended Deliveries
+declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered it to a duty suspended warehouse.
+
+declareDutySuspendedDeliveriesOutsideUk.title = How much have you delivered duty suspended outside of the UK?
+declareDutySuspendedDeliveriesOutsideUk.heading = How much have you delivered duty suspended outside of the UK?
+declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = DeclareDutySuspendedDeliveriesOutsideUk
+declareDutySuspendedDeliveriesOutsideUk.error.required = Enter how much you have delivered duty suspended
+declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric = How much you have delivered duty suspended must be a number
+declareDutySuspendedDeliveriesOutsideUk.change.hidden = DeclareDutySuspendedDeliveriesOutsideUk
+declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.01 or more
+declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
+declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
+declareDutySuspendedDeliveriesOutsideUk.inputSuffix = litres
+declareDutySuspendedDeliveriesOutsideUk.p1 = This includes to sites in EU countries, sites in countries outside of the EU and ship stores. This will not change your duty calculation.
+declareDutySuspendedDeliveriesOutsideUk.hint = Give your answers in litres, to 2 decimal places.
 
 dutySuspendedDeliveriesGuidance.title = Tell us about any duty suspended deliveries and receipts
 dutySuspendedDeliveriesGuidance.heading = Tell us about any duty suspended deliveries and receipts

@@ -14,47 +14,50 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components.{Link, SectionHeading, PageHeading}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
-
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
+    govukRadios: GovukRadios,
     govukButton: GovukButton,
+    link: Link,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("alcoholByVolumeQuestion.title"))) {
+@layout(pageTitle = title(form, messages("declareDutySuspendedDeliveriesQuestion.title"))) {
 
-    @formHelper(action = routes.AlcoholByVolumeQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
-        @sectionHeading(
-        id = "alcohol-by-volume-question-section",
+    @sectionHeading(
+        id = "declare-dsd-question-section",
         text = messages("section.alcoholDutyReturn"),
-        )
+    )
 
-        @govukInput(
-            InputViewModel(
-                field = form("alcohol-by-volume-input"),
-                label = LabelViewModel(messages("alcoholByVolumeQuestion.heading")).asPageHeading()
-                )
-            .withSuffix(PrefixOrSuffix(content = "alcoholByVolumeQuestion.inputSuffix"))
-            .asNumeric()
-            .withWidth(Fixed10)
+    @pageHeading(messages("declareDutySuspendedDeliveriesQuestion.heading"))
+
+    <p class="govuk-body">
+        @messages("declareDutySuspendedDeliveriesQuestion.p1")
+    </p>
+
+    @formHelper(action = routes.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("declare-duty-suspended-deliveries-input"),
+                legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestion.heading")).asVisuallyHidden()
+            )
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }

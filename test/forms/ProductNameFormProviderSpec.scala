@@ -29,7 +29,7 @@ class ProductNameFormProviderSpec extends StringFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "product-name-input"
 
     behave like fieldThatBindsValidData(
       form,

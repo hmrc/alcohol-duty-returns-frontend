@@ -16,30 +16,15 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
-import play.api.data.FormError
+import javax.inject.Inject
 
-class DraughtReliefQuestionFormProviderSpec extends BooleanFieldBehaviours {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  val requiredKey = "draughtReliefQuestion.error.required"
-  val invalidKey  = "error.boolean"
+class DeclareDutySuspendedDeliveriesQuestionFormProvider @Inject() extends Mappings {
 
-  val form = new DraughtReliefQuestionFormProvider()()
-
-  ".value" - {
-
-    val fieldName = "draught-relief-input"
-
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+  def apply(): Form[Boolean] =
+    Form(
+      "declare-duty-suspended-deliveries-input" -> boolean("declareDutySuspendedDeliveriesQuestion.error.required")
     )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-  }
 }

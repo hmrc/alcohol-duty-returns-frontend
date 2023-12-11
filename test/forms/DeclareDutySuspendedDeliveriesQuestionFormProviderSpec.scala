@@ -19,16 +19,16 @@ package forms
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class DraughtReliefQuestionFormProviderSpec extends BooleanFieldBehaviours {
+class DeclareDutySuspendedDeliveriesQuestionFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "draughtReliefQuestion.error.required"
+  val requiredKey = "declareDutySuspendedDeliveriesQuestion.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new DraughtReliefQuestionFormProvider()()
+  val form = new DeclareDutySuspendedDeliveriesQuestionFormProvider()()
 
   ".value" - {
 
-    val fieldName = "draught-relief-input"
+    val fieldName = "declare-duty-suspended-deliveries-input"
 
     behave like booleanField(
       form,
