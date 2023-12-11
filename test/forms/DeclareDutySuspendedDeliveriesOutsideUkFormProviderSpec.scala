@@ -19,13 +19,14 @@ package forms
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 import scala.collection.immutable.ArraySeq
-class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new ProductVolumeQuestionFormProvider()()
+class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimalFieldBehaviours {
+
+  val form = new DeclareDutySuspendedDeliveriesOutsideUkFormProvider()()
 
   ".value" - {
 
-    val fieldName = "product-volume-input"
+    val fieldName = "declare-duty-suspended-deliveries-outside-uk-input"
 
     val minimum = 0.01
     val maximum = 999999999.99
@@ -41,28 +42,30 @@ class ProductVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "productVolumeQuestion.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "productVolumeQuestion.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
-      expectedError = FormError(fieldName, "productVolumeQuestion.error.minimumRequired", ArraySeq(minimum))
+      expectedError =
+        FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "productVolumeQuestion.error.maximumRequired", ArraySeq(999999999.99))
+      expectedError =
+        FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "productVolumeQuestion.error.required")
+      requiredError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.required")
     )
   }
 }

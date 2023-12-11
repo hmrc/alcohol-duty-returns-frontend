@@ -30,9 +30,9 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("productVolumeQuestion.title"))) {
+@layout(pageTitle = title(form, messages("productVolume.title"))) {
 
-    @formHelper(action = routes.ProductVolumeQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ProductVolumeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -43,19 +43,15 @@
             text = messages("section.alcoholDutyReturn"),
         )
 
-        @pageHeading(messages("productVolumeQuestion.heading"))
-
-        <p class="govuk-body">@messages("productVolumeQuestion.p1")</p>
-
         @govukInput(
             InputViewModel(
                 field = form("product-volume-input"),
-                label = LabelViewModel(messages("productVolumeQuestion.heading")).asVisuallyHidden(),
+                label = LabelViewModel(messages("productVolume.heading")).asPageHeading(),
             )
             .asNumeric()
             .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("productVolumeQuestion.inputSuffix")))
-
+            .withSuffix(PrefixOrSuffix(content = messages("productVolume.inputSuffix")))
+            .withHint(Hint(content = HtmlContent(messages("productVolume.hint"))))
         )
 
         @govukButton(

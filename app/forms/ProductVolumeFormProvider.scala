@@ -20,16 +20,16 @@ import forms.mappings.Mappings
 import javax.inject.Inject
 import play.api.data.Form
 
-class ProductVolumeQuestionFormProvider @Inject() extends Mappings {
+class ProductVolumeFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BigDecimal] =
     Form(
       "product-volume-input" -> bigDecimal(
-        "productVolumeQuestion.error.required",
-        "productVolumeQuestion.error.nonNumeric",
-        "productVolumeQuestion.error.twoDecimalPlaces"
+        "productVolume.error.required",
+        "productVolume.error.nonNumeric",
+        "productVolume.error.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.01), "productVolumeQuestion.error.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "productVolumeQuestion.error.maximumRequired"))
+        .verifying(minimumValue(BigDecimal(0.01), "productVolume.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "productVolume.error.maximumRequired"))
     )
 }
