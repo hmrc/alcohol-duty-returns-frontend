@@ -121,3 +121,12 @@ declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces = How much you ha
 declareDutySuspendedDeliveriesOutsideUk.inputSuffix = litres
 declareDutySuspendedDeliveriesOutsideUk.p1 = This includes to sites in EU countries, sites in countries outside of the EU and ship stores. This will not change your duty calculation.
 declareDutySuspendedDeliveriesOutsideUk.hint = Give your answers in litres, to 2 decimal places.
+
+declareDutySuspendedReceived.title = DeclareDutySuspendedReceived
+declareDutySuspendedReceived.heading = DeclareDutySuspendedReceived
+declareDutySuspendedReceived.checkYourAnswersLabel = DeclareDutySuspendedReceived
+declareDutySuspendedReceived.error.nonNumeric = Enter your declareDutySuspendedReceived using numbers
+declareDutySuspendedReceived.error.required = Enter your declareDutySuspendedReceived
+declareDutySuspendedReceived.error.wholeNumber = Enter your declareDutySuspendedReceived using whole numbers
+declareDutySuspendedReceived.error.outOfRange = DeclareDutySuspendedReceived must be between {0} and {1}
+declareDutySuspendedReceived.change.hidden = DeclareDutySuspendedReceived
