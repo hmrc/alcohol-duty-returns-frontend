@@ -130,3 +130,4 @@ declareDutySuspendedReceived.error.required = Enter your declareDutySuspendedRec
 declareDutySuspendedReceived.error.wholeNumber = Enter your declareDutySuspendedReceived using whole numbers
 declareDutySuspendedReceived.error.outOfRange = DeclareDutySuspendedReceived must be between {0} and {1}
 declareDutySuspendedReceived.change.hidden = DeclareDutySuspendedReceived
+declareDutySuspendedReceived.hint = Give your answers in litres, to 2 decimal places.

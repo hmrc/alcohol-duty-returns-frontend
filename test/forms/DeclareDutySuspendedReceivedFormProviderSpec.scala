@@ -25,15 +25,15 @@ class DeclareDutySuspendedReceivedFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "declareDutySuspendedReceived.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "declareDutySuspendedReceived.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "declareDutySuspendedReceived.error.wholeNumber")
     )
 
     behave like intFieldWithRange(
       form,
       fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
+      minimum = minimum,
+      maximum = maximum,
       expectedError = FormError(fieldName, "declareDutySuspendedReceived.error.outOfRange", Seq(minimum, maximum))
     )
 

@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareDutySuspendedReceivedSummary  {
+object DeclareDutySuspendedReceivedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareDutySuspendedReceivedPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "declareDutySuspendedReceived.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DeclareDutySuspendedReceivedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("declareDutySuspendedReceived.change.hidden"))
-          )
+    answers.get(DeclareDutySuspendedReceivedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "declareDutySuspendedReceived.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DeclareDutySuspendedReceivedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("declareDutySuspendedReceived.change.hidden"))
         )
+      )
     }
 }

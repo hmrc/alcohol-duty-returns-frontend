@@ -27,7 +27,8 @@ class DeclareDutySuspendedReceivedFormProvider @Inject() extends Mappings {
       "value" -> int(
         "declareDutySuspendedReceived.error.required",
         "declareDutySuspendedReceived.error.wholeNumber",
-        "declareDutySuspendedReceived.error.nonNumeric")
-          .verifying(inRange(0, 999999999, "declareDutySuspendedReceived.error.outOfRange"))
+        "declareDutySuspendedReceived.error.nonNumeric"
+      )
+        .verifying(inRange(0, 999999999, "declareDutySuspendedReceived.error.outOfRange"))
     )
 }
