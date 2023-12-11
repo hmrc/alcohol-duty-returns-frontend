@@ -18,45 +18,45 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.ProductVolumeQuestionFormProvider
+import forms.ProductVolumeFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ProductVolumeQuestionPage
+import pages.ProductVolumePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.ProductVolumeQuestionView
+import views.html.ProductVolumeView
 
 import scala.concurrent.Future
 
-class ProductVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
+class ProductVolumeControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new ProductVolumeQuestionFormProvider()
+  val formProvider = new ProductVolumeFormProvider()
   val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = BigDecimal(10.23)
 
-  lazy val productVolumeQuestionRoute = routes.ProductVolumeQuestionController.onPageLoad(NormalMode).url
+  lazy val productVolumeRoute = routes.ProductVolumeController.onPageLoad(NormalMode).url
 
-  "ProductVolumeQuestion Controller" - {
+  "ProductVolume Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, productVolumeQuestionRoute)
+        val request = FakeRequest(GET, productVolumeRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ProductVolumeQuestionView]
+        val view = application.injector.instanceOf[ProductVolumeView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -65,14 +65,14 @@ class ProductVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ProductVolumeQuestionPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ProductVolumePage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, productVolumeQuestionRoute)
+        val request = FakeRequest(GET, productVolumeRoute)
 
-        val view = application.injector.instanceOf[ProductVolumeQuestionView]
+        val view = application.injector.instanceOf[ProductVolumeView]
 
         val result = route(application, request).value
 
@@ -100,7 +100,7 @@ class ProductVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, productVolumeQuestionRoute)
+          FakeRequest(POST, productVolumeRoute)
             .withFormUrlEncodedBody(("product-volume-input", validAnswer.toString))
 
         val result = route(application, request).value
@@ -116,12 +116,12 @@ class ProductVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, productVolumeQuestionRoute)
+          FakeRequest(POST, productVolumeRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[ProductVolumeQuestionView]
+        val view = application.injector.instanceOf[ProductVolumeView]
 
         val result = route(application, request).value
 
@@ -135,7 +135,7 @@ class ProductVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, productVolumeQuestionRoute)
+        val request = FakeRequest(GET, productVolumeRoute)
 
         val result = route(application, request).value
 
@@ -150,7 +150,7 @@ class ProductVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, productVolumeQuestionRoute)
+          FakeRequest(POST, productVolumeRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
