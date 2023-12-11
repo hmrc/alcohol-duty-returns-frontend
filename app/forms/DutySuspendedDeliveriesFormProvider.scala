@@ -30,7 +30,7 @@ class DutySuspendedDeliveriesFormProvider @Inject() extends Mappings {
         "dutySuspendedDeliveries.error.nonNumeric",
         "dutySuspendedDeliveries.error.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.01), "dutySuspendedDeliveries.error.minimumRequired"))
+        .verifying(minimumValue(BigDecimal(0.00), "dutySuspendedDeliveries.error.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedDeliveries.error.maximumRequired"))
     )
 }

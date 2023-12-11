@@ -29,7 +29,7 @@ class DutySuspendedDeliveriesFormProviderSpec extends BigDecimalFieldBehaviours 
 
     val fieldName = "duty-suspended-deliveries-input"
 
-    val minimum = 0.01
+    val minimum = 0.00
     val maximum = 999999999.99
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)

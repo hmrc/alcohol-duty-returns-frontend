@@ -28,7 +28,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimal
 
     val fieldName = "declare-duty-suspended-deliveries-outside-uk-input"
 
-    val minimum = 0.01
+    val minimum = 0.00
     val maximum = 999999999.99
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)

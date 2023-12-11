@@ -29,7 +29,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProvider @Inject() extends Mapp
         "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric",
         "declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.01), "declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired"))
+        .verifying(minimumValue(BigDecimal(0.00), "declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired"))
         .verifying(
           maximumValue(BigDecimal(999999999.99), "declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired")
         )
