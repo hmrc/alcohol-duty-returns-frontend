@@ -22,13 +22,16 @@ import play.api.data.Form
 
 class DeclareDutySuspendedReceivedFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  def apply(): Form[BigDecimal] =
     Form(
-      "value" -> int(
+      "declare-duty-suspended-received-input" -> bigDecimal(
         "declareDutySuspendedReceived.error.required",
-        "declareDutySuspendedReceived.error.wholeNumber",
-        "declareDutySuspendedReceived.error.nonNumeric"
+        "declareDutySuspendedReceived.error.nonNumeric",
+        "declareDutySuspendedReceived.error.twoDecimalPlaces"
       )
-        .verifying(inRange(0, 999999999, "declareDutySuspendedReceived.error.outOfRange"))
+        .verifying(minimumValue(BigDecimal(0.00), "declareDutySuspendedReceived.error.minimumRequired"))
+        .verifying(
+          maximumValue(BigDecimal(999999999.99), "declareDutySuspendedReceived.error.maximumRequired")
+        )
     )
 }

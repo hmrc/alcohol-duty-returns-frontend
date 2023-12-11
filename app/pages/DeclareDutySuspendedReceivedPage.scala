@@ -18,7 +18,7 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object DeclareDutySuspendedReceivedPage extends QuestionPage[Int] {
+case object DeclareDutySuspendedReceivedPage extends QuestionPage[BigDecimal] {
 
   override def path: JsPath = JsPath \ toString
 
