@@ -21,13 +21,13 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierA
 import models.{CheckDutySuspendedDeliveriesMode, CheckMode, Mode, UserAnswers}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.{DeclareDutySuspendedDeliveriesOutsideUkSummary, DeclareDutySuspendedDeliveriesQuestionSummary}
 import viewmodels.govuk.summarylist._
 import views.html.{CheckYourAnswersDutySuspendedDeliveriesView, CheckYourAnswersView}
 
-class CheckYourAnswersDutySuspendedDeliveriesController @Inject()(
+class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -40,7 +40,9 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject()(
   // This is to validate that the answers are ready to be checked, if they are it returns their summary rows, else None.
   // For example, if the user somehow misses a question, this should be handled appropriately.
   // A simple case, here, is that we want to validate all questions in our subjourney have been answered.
-  private def getSummaryRowsIfAnswersAreValid(userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] = {
+  private def getSummaryListIfAnswersAreValid(
+    userAnswers: UserAnswers
+  )(implicit messages: Messages): Option[SummaryList] = {
     val rows = Seq(
       DeclareDutySuspendedDeliveriesQuestionSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode),
       DeclareDutySuspendedDeliveriesOutsideUkSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode),
@@ -50,23 +52,20 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject()(
     if (rows.contains(None) || rows.isEmpty) {
       None
     } else {
-      println(rows)
-      Some(rows)
+      Some(SummaryListViewModel(
+        rows = rows
+      ))
     }
   }
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    getSummaryRowsIfAnswersAreValid(request.userAnswers) match {
-      case Some(rows) =>
-//        println(rows)
-        // Same code as regular check your answers to show view.
-        val list = SummaryListViewModel(
-          rows = rows
-        )
+    getSummaryListIfAnswersAreValid(request.userAnswers) match {
+      case Some(list) =>
+        // Show the view if the answers are valid
         Ok(view(list))
-      case None =>
-      // The appropriate handling might be to redirect them to the question. This is up for debate.
-      // For now, I'm just going to give a bad request instead.
+      case None       =>
+        // The appropriate handling might be to redirect them to the question. This is up for debate.
+        // For now, I'm just going to give a bad request instead.
         BadRequest
     }
   }

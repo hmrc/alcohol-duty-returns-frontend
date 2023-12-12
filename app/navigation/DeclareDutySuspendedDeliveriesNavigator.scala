@@ -24,17 +24,17 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeclareDutySuspendedDeliveriesNavigator @Inject()() {
+class DeclareDutySuspendedDeliveriesNavigator @Inject() () {
 
   // Defines the regular flow of this subjourney
   private val normalRoutes: Page => UserAnswers => Call = {
-    case DeclareDutySuspendedDeliveriesQuestionPage =>
+    case DeclareDutySuspendedDeliveriesQuestionPage  =>
       _ => routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode)
     case DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
-    case DutySuspendedDeliveriesPage =>
+    case DutySuspendedDeliveriesPage                 =>
       _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
-    case _ =>
+    case _                                           =>
       _ => routes.IndexController.onPageLoad
   }
 
@@ -52,14 +52,14 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject()() {
   // For when the user has navigated from this subjourney's check answers page.
   // It will navigate them back to that subjourney check page unless otherwise stated, similar to before.
   private val checkDutySuspendedDeliveriesRouteMap: Page => UserAnswers => Call = { case _ =>
-      _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+    _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
   }
 
   // The method that is called by the controller has been modified to accept a new mode
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
+    case NormalMode                       =>
       normalRoutes(page)(userAnswers)
-    case CheckMode  =>
+    case CheckMode                        =>
       checkRouteMap(page)(userAnswers)
     case CheckDutySuspendedDeliveriesMode =>
       checkDutySuspendedDeliveriesRouteMap(page)(userAnswers)
