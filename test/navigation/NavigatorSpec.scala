@@ -61,6 +61,15 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       }
+
+      "must go from the Declare duty suspended deliveries question page to Duty suspended deliveries guidance page" in {
+
+        navigator.nextPage(
+          DeclareDutySuspendedDeliveriesQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+      }
     }
 
     "in Check mode" - {
