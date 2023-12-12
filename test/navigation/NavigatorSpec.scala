@@ -70,6 +70,15 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
       }
+
+      "must go from theDeclare duty suspended deliveries inside UK page to Declare duty suspended received page" in {
+
+        navigator.nextPage(
+          DutySuspendedDeliveriesPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
+      }
     }
 
     "in Check mode" - {
