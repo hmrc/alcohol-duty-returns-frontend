@@ -115,7 +115,7 @@ declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = DeclareDutySuspe
 declareDutySuspendedDeliveriesOutsideUk.error.required = Enter how much you have delivered duty suspended
 declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric = How much you have delivered duty suspended must be a number
 declareDutySuspendedDeliveriesOutsideUk.change.hidden = DeclareDutySuspendedDeliveriesOutsideUk
-declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.01 or more
+declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.00 or more
 declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
 declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 declareDutySuspendedDeliveriesOutsideUk.inputSuffix = litres
@@ -127,3 +127,16 @@ dutySuspendedDeliveriesGuidance.heading = Tell us about any duty suspended deliv
 dutySuspendedDeliveriesGuidance.p1 = You need to tell us about any duty suspended deliveries and receipts that you have had.
 dutySuspendedDeliveriesGuidance.p2 = This won't affect your duty calculation.
 
+
+dutySuspendedDeliveries.title = How much have you delivered duty suspended within the UK?
+dutySuspendedDeliveries.heading = How much have you delivered duty suspended within the UK?
+dutySuspendedDeliveries.p1 = For example, to UK sites that are registered to hold it duty suspended. This will not change your duty calculation.
+dutySuspendedDeliveries.hint = Give your answers in litres, to 2 decimal places.
+dutySuspendedDeliveries.inputSuffix = litres
+dutySuspendedDeliveries.checkYourAnswersLabel = DutySuspendedDeliveries
+dutySuspendedDeliveries.error.nonNumeric = How much you have delivered duty suspended must be a number
+dutySuspendedDeliveries.error.required = Enter how much you have delivered duty suspended
+dutySuspendedDeliveries.error.minimumRequired = How much you have delivered duty suspended must be 0.00 or more
+dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
+dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
+dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries

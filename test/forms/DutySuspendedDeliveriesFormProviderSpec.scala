@@ -18,15 +18,16 @@ package forms
 
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
+
 import scala.collection.immutable.ArraySeq
 
-class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimalFieldBehaviours {
+class DutySuspendedDeliveriesFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new DeclareDutySuspendedDeliveriesOutsideUkFormProvider()()
+  val form = new DutySuspendedDeliveriesFormProvider()()
 
   ".value" - {
 
-    val fieldName = "declare-duty-suspended-deliveries-outside-uk-input"
+    val fieldName = "duty-suspended-deliveries-input"
 
     val minimum = 0.00
     val maximum = 999999999.99
@@ -42,30 +43,28 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimal
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "dutySuspendedDeliveries.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedDeliveries.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
-      expectedError =
-        FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "dutySuspendedDeliveries.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError =
-        FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "dutySuspendedDeliveries.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.required")
+      requiredError = FormError(fieldName, "dutySuspendedDeliveries.error.required")
     )
   }
 }
