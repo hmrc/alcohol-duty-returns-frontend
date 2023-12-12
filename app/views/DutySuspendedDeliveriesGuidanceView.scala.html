@@ -14,16 +14,21 @@
  * limitations under the License.
  *@
 
+@import components.PageHeading
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        pageHeading: PageHeading
+
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("dutySuspendedDeliveriesGuidance.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("dutySuspendedDeliveriesGuidance.heading")</h1>
+@pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
+
 
     <p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p1")</p>
     <p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p2")</p>
