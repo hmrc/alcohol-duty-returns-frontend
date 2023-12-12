@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models
+@*
+* A new view for the subjourney's check your answers page ensures that
+* changes to view like this are decoupled and can be modified seperately
+*@
 
-import play.api.mvc.JavascriptLiteral
+@this(
+    layout: templates.Layout,
+    govukSummaryList: GovukSummaryList
+)
 
-sealed trait Mode
+@(list: SummaryList)(implicit request: Request[_], messages: Messages)
 
-case object CheckMode extends Mode
-case object NormalMode extends Mode
-case object CheckDutySuspendedDeliveriesMode extends Mode
+@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-object Mode {
+    <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
 
-  implicit val jsLiteral: JavascriptLiteral[Mode] = new JavascriptLiteral[Mode] {
-    override def to(value: Mode): String = value match {
-      case NormalMode                       => "NormalMode"
-      case CheckMode                        => "CheckMode"
-      case CheckDutySuspendedDeliveriesMode => "CheckDutySuspendedDeliveriesMode"
-    }
-  }
+    @govukSummaryList(list)
 }

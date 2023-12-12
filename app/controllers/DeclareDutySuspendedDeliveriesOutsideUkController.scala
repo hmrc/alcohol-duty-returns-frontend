@@ -19,9 +19,10 @@ package controllers
 import connectors.CacheConnector
 import controllers.actions._
 import forms.DeclareDutySuspendedDeliveriesOutsideUkFormProvider
+
 import javax.inject.Inject
 import models.Mode
-import navigation.Navigator
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, Navigator}
 import pages.DeclareDutySuspendedDeliveriesOutsideUkPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,7 +34,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeclareDutySuspendedDeliveriesOutsideUkController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: Navigator,
+  // Use the subjourney's navigator
+  navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,

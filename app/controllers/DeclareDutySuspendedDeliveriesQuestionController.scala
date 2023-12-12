@@ -22,7 +22,7 @@ import forms.DeclareDutySuspendedDeliveriesQuestionFormProvider
 
 import javax.inject.Inject
 import models.Mode
-import navigation.Navigator
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, Navigator}
 import pages.DeclareDutySuspendedDeliveriesQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -34,7 +34,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: Navigator,
+  // Use the subjourney's navigator
+  navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,

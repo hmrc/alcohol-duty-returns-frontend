@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, Mode, UserAnswers}
 import pages.DeclareDutySuspendedDeliveriesQuestionPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,7 +26,9 @@ import viewmodels.implicits._
 
 object DeclareDutySuspendedDeliveriesQuestionSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  // Default the summaries to use the final check mode, but allow them to be used for other modes.
+  // This allows us to just change the mode so the links in the actions are correct.
+  def row(answers: UserAnswers, mode: Mode = CheckMode)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DeclareDutySuspendedDeliveriesQuestionPage).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
@@ -36,7 +38,8 @@ object DeclareDutySuspendedDeliveriesQuestionSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+            // pass in the mode here, so that the controller can pass it to the journey's navigator.
+            routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode).url
           )
             .withVisuallyHiddenText(messages("declareDutySuspendedDeliveriesQuestion.change.hidden"))
         )

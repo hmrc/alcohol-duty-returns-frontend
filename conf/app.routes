@@ -14,6 +14,9 @@ GET         /there-is-a-problem                          controllers.JourneyReco
 
 GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
 
+# A new route for our subjourney's check your answers
+GET         /check-your-answers-duty-suspended-deliveries                  controllers.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+
 GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut
 GET         /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
@@ -46,17 +49,29 @@ POST       /productVolume                  controllers.ProductVolumeController.o
 GET        /changeProductVolume                        controllers.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeProductVolume                        controllers.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
 
+
+
 GET        /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
+# A new route for our subjourney's check mode
+GET        /checkDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckDutySuspendedDeliveriesMode)
+POST       /checkDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckDutySuspendedDeliveriesMode)
+
 
 GET        /declareDutySuspendedDeliveriesOutsideUk                  controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
 POST       /declareDutySuspendedDeliveriesOutsideUk                  controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = CheckMode)
+# A new route for our subjourney's check mode
+GET        /checkDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckDutySuspendedDeliveriesMode)
+POST       /checkDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = CheckDutySuspendedDeliveriesMode)
 
 GET        /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = NormalMode)
 POST       /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = NormalMode)
 GET        /dutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
 POST       /dutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
+# A new route for our subjourney's check mode
+GET        /checkDutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckDutySuspendedDeliveriesMode)
+POST       /checkDutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckDutySuspendedDeliveriesMode)
