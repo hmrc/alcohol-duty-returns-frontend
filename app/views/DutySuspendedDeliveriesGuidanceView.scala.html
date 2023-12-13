@@ -29,9 +29,13 @@
 
 @pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
 
-
-    <p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p1")</p>
-    <p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p2")</p>
+<p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p1")</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>@messages("dutySuspendedDeliveriesGuidance.para.list.1")</li>
+    <li>@messages("dutySuspendedDeliveriesGuidance.para.list.2")</li>
+    <li>@messages("dutySuspendedDeliveriesGuidance.para.list.3")</li>
+</ul>
+<p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p2")</p>
 
 @govukButton(
 ButtonViewModel("continueButton", messages("site.continue"))
