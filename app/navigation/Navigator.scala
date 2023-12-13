@@ -34,6 +34,7 @@ class Navigator @Inject() () {
       _ => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
     case DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
+    case DutySuspendedDeliveriesPage                 => _ => routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
     case _                                           =>
       _ => routes.IndexController.onPageLoad
 
