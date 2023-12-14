@@ -151,3 +151,12 @@ dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty
 dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries
 
+
+declareSpiritsTotal.title = DeclareSpiritsTotal
+declareSpiritsTotal.heading = DeclareSpiritsTotal
+declareSpiritsTotal.checkYourAnswersLabel = DeclareSpiritsTotal
+declareSpiritsTotal.error.nonNumeric = Enter your declareSpiritsTotal using numbers
+declareSpiritsTotal.error.required = Enter your declareSpiritsTotal
+declareSpiritsTotal.error.wholeNumber = Enter your declareSpiritsTotal using whole numbers
+declareSpiritsTotal.error.outOfRange = DeclareSpiritsTotal must be between {0} and {1}
+declareSpiritsTotal.change.hidden = DeclareSpiritsTotal
