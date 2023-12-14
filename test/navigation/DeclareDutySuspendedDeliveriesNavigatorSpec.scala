@@ -57,6 +57,19 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
       }
     }
 
+    "in CheckDutySuspendedDeliveriesMode mode" - {
+
+      "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
+
+        case object UnknownPage extends Page
+        navigator.nextPage(
+          UnknownPage,
+          CheckDutySuspendedDeliveriesMode,
+          UserAnswers("id")
+        ) mustBe routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+      }
+    }
+
     "in Check mode" - {
 
       "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
