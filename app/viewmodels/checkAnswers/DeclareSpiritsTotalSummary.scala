@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareSpiritsTotalSummary  {
+object DeclareSpiritsTotalSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareSpiritsTotalPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "declareSpiritsTotal.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DeclareSpiritsTotalController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("declareSpiritsTotal.change.hidden"))
-          )
+    answers.get(DeclareSpiritsTotalPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "declareSpiritsTotal.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DeclareSpiritsTotalController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("declareSpiritsTotal.change.hidden"))
         )
+      )
     }
 }

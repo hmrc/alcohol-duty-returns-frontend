@@ -15,13 +15,17 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components.{Link, SectionHeading, PageHeading}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -34,17 +38,27 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @sectionHeading(
+            id = "declare-spirits-total-section",
+            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
+        )
+
+        @pageHeading(messages("declareSpiritsTotal.heading"))
+
         @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("declareSpiritsTotal.heading")).asPageHeading()
+        InputViewModel(
+            field = form("declare-spirits-total-input"),
+            label = LabelViewModel(messages("declareSpiritsTotal.heading")).asVisuallyHidden(),
             )
             .asNumeric()
             .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("declareSpiritsTotal.inputSuffix")))
+            .withHint(Hint(content =  messages("declareSpiritsTotal.hint")))
+
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+        ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }

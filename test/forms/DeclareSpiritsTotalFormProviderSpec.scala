@@ -25,15 +25,15 @@ class DeclareSpiritsTotalFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "declareSpiritsTotal.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "declareSpiritsTotal.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "declareSpiritsTotal.error.wholeNumber")
     )
 
     behave like intFieldWithRange(
       form,
       fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
+      minimum = minimum,
+      maximum = maximum,
       expectedError = FormError(fieldName, "declareSpiritsTotal.error.outOfRange", Seq(minimum, maximum))
     )
 

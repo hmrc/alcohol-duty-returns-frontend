@@ -22,12 +22,14 @@ import play.api.data.Form
 
 class DeclareSpiritsTotalFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  def apply(): Form[BigDecimal] =
     Form(
-      "value" -> int(
+      "declare-spirits-total-input" -> bigDecimal(
         "declareSpiritsTotal.error.required",
-        "declareSpiritsTotal.error.wholeNumber",
-        "declareSpiritsTotal.error.nonNumeric")
-          .verifying(inRange(0, 999999999, "declareSpiritsTotal.error.outOfRange"))
+        "declareSpiritsTotal.error.nonNumeric",
+        "declareSpiritsTotal.error.twoDecimalPlaces"
+      )
+        .verifying(minimumValue(BigDecimal(0.00), "declareSpiritsTotal.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "declareSpiritsTotal.error.maximumRequired"))
     )
 }

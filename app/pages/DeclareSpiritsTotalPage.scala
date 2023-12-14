@@ -18,7 +18,7 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object DeclareSpiritsTotalPage extends QuestionPage[Int] {
+case object DeclareSpiritsTotalPage extends QuestionPage[BigDecimal] {
 
   override def path: JsPath = JsPath \ toString
 
