@@ -72,4 +72,9 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
     }
   }
 
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    // when continue is clicked, redirects to index for now.
+    Redirect(routes.IndexController.onPageLoad)
+  }
+
 }
