@@ -122,6 +122,30 @@ declareDutySuspendedDeliveriesOutsideUk.inputSuffix = litres
 declareDutySuspendedDeliveriesOutsideUk.p1 = This includes to sites in EU countries, sites in countries outside of the EU and ship stores. This will not change your duty calculation.
 declareDutySuspendedDeliveriesOutsideUk.hint = Give your answers in litres, to 2 decimal places.
 
+dutySuspendedDeliveriesGuidance.title = Tell us about alcohol you delivered or received duty suspended
+dutySuspendedDeliveriesGuidance.heading = Tell us about alcohol you delivered or received duty suspended
+dutySuspendedDeliveriesGuidance.p1 = You need to tell us how much alcohol you have:
+dutySuspendedDeliveriesGuidance.p2 = Your answers will not change your duty calculation.
+dutySuspendedDeliveriesGuidance.para.list.1 = delivered duty suspended outside of the UK
+dutySuspendedDeliveriesGuidance.para.list.2 = delivered duty suspended within the UK
+dutySuspendedDeliveriesGuidance.para.list.3 = received duty suspended
+
+declareDutySuspendedReceived.title = How much have you received duty suspended?
+declareDutySuspendedReceived.heading = How much have you received duty suspended?
+declareDutySuspendedReceived.checkYourAnswersLabel = DeclareDutySuspendedReceived
+declareDutySuspendedReceived.error.nonNumeric = How much you have received duty suspended must be a number
+declareDutySuspendedReceived.error.required = Enter how much you have received duty suspended
+declareDutySuspendedReceived.error.twoDecimalPlaces = How much you have received duty suspended must be a number to 2 decimal places
+declareDutySuspendedReceived.inputSuffix = litres
+declareDutySuspendedReceived.change.hidden = DeclareDutySuspendedReceived
+declareDutySuspendedReceived.hint = Give your answers in litres, to 2 decimal places.
+declareDutySuspendedReceived.error.minimumRequired = How much you have received duty suspended must be 0.00 or more
+declareDutySuspendedReceived.error.maximumRequired = How much you have received duty suspended must be 999999999.99 or less
+declareDutySuspendedReceived.p1 = For example, because:
+declareDutySuspendedReceived.p2 = This will not change your duty calculation.
+declareDutySuspendedReceived.para.list.1 = you received it from a UK site that is registered to send it duty suspended
+declareDutySuspendedReceived.para.list.2 = the beer is imported and all duties have already been paid
+
 dutySuspendedDeliveries.title = How much have you delivered duty suspended within the UK?
 dutySuspendedDeliveries.heading = How much have you delivered duty suspended within the UK?
 dutySuspendedDeliveries.p1 = For example, to UK sites that are registered to hold it duty suspended. This will not change your duty calculation.
@@ -134,3 +158,4 @@ dutySuspendedDeliveries.error.minimumRequired = How much you have delivered duty
 dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
 dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries
+

@@ -62,6 +62,15 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       }
 
+      "must go from the Declare duty suspended deliveries question page to Duty suspended deliveries guidance page" in {
+
+        navigator.nextPage(
+          DeclareDutySuspendedDeliveriesQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+      }
+
       "must go from the Declare duty suspended deliveries outside UK page to Declare duty suspended deliveries inside UK page" in {
 
         navigator.nextPage(
@@ -69,6 +78,15 @@ class NavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers("id")
         ) mustBe routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
+      }
+
+      "must go from theDeclare duty suspended deliveries inside UK page to Declare duty suspended received page" in {
+
+        navigator.nextPage(
+          DutySuspendedDeliveriesPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
       }
     }
 
