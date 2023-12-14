@@ -30,7 +30,6 @@ class Navigator @Inject() () {
     case ProductNamePage             => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
     case AlcoholByVolumeQuestionPage => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
     case DraughtReliefQuestionPage   => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
-    // NOTE: Relocated DSD journey to DSD navigator
     case _                           =>
       _ => routes.IndexController.onPageLoad
 

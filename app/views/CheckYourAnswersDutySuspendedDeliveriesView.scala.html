@@ -21,7 +21,8 @@
 
 @this(
     layout: templates.Layout,
-    govukSummaryList: GovukSummaryList
+    govukSummaryList: GovukSummaryList,
+    govukButton: GovukButton
 )
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
@@ -31,4 +32,9 @@
     <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
 
     @govukSummaryList(list)
+
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.continue"))
+            .asLink(routes.IndexController.onPageLoad.url)
+    )
 }

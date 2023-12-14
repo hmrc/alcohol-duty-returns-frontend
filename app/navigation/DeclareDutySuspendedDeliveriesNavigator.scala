@@ -26,13 +26,9 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DeclareDutySuspendedDeliveriesNavigator @Inject() () {
 
-  // Defines the regular flow of this subjourney
   private val normalRoutes: Page => UserAnswers => Call = {
     case DeclareDutySuspendedDeliveriesQuestionPage  =>
-      _ =>
-        routes.DutySuspendedDeliveriesGuidanceController.onPageLoad
-      // Why dont we do this as on submit instead of link?
-    // guidance page -> dsd outside uk controller
+      _ => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad
     case DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
     case DutySuspendedDeliveriesPage                 =>
@@ -43,24 +39,14 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () {
       _ => routes.IndexController.onPageLoad
   }
 
-  // For when the user has navigated from the final check ALL your answers page.
-  // It will navigate them back to the final check page, unless otherwise stated as a case.
-  // For example, a user might navigate to a question that requires the next to also be changed.
-  // Or, as well, there may need to be some logic - e.g. to delete other answers if a yes no question is changed.
-  // Keeping this simple is important, the original navigator relies on modes, and so should we.
-  // The modes are picked by visiting slightly different urls defined in the routes file.
-  // So we should do the same.
   private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
     _ => routes.CheckYourAnswersController.onPageLoad
   }
 
-  // For when the user has navigated from this subjourney's check answers page.
-  // It will navigate them back to that subjourney check page unless otherwise stated, similar to before.
   private val checkDutySuspendedDeliveriesRouteMap: Page => UserAnswers => Call = { case _ =>
     _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
   }
 
-  // The method that is called by the controller has been modified to accept a new mode
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode                       =>
       normalRoutes(page)(userAnswers)

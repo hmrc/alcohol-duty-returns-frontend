@@ -26,8 +26,6 @@ import viewmodels.implicits._
 
 object DeclareDutySuspendedDeliveriesOutsideUkSummary {
 
-  // Default the summaries to use the final check mode, but allow them to be used for other modes.
-  // This allows us to just change the mode so the links in the actions are correct.
   def row(answers: UserAnswers, mode: Mode = CheckMode)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DeclareDutySuspendedDeliveriesOutsideUkPage).map { answer =>
       SummaryListRowViewModel(
@@ -36,7 +34,6 @@ object DeclareDutySuspendedDeliveriesOutsideUkSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            // pass in the mode here, so that the controller can pass it to the journey's navigator.
             routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode).url
           )
             .withVisuallyHiddenText(messages("declareDutySuspendedDeliveriesOutsideUk.change.hidden"))

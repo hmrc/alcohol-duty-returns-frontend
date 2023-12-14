@@ -37,9 +37,6 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  // This is to validate that the answers are ready to be checked, if they are it returns their summary rows, else None.
-  // For example, if the user somehow misses a question, this should be handled appropriately.
-  // A simple case, here, is that we want to validate all questions in our subjourney have been answered.
   private def getSummaryListIfAnswersAreValid(
     userAnswers: UserAnswers
   )(implicit messages: Messages): Option[SummaryList] = {
@@ -63,18 +60,10 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     getSummaryListIfAnswersAreValid(request.userAnswers) match {
       case Some(list) =>
-        // Show the view if the answers are valid
         Ok(view(list))
       case None       =>
-        // The appropriate handling might be to redirect them to the question. This is up for debate.
-        // For now, I'm just going to redirect them to the journey recovery (something went wrong).
         Redirect(routes.JourneyRecoveryController.onPageLoad())
     }
-  }
-
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    // when continue is clicked, redirects to index for now.
-    Redirect(routes.IndexController.onPageLoad)
   }
 
 }

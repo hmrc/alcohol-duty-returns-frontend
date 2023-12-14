@@ -33,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class DutySuspendedDeliveriesController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  // Use the subjourney's navigator
   navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
