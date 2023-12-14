@@ -32,7 +32,7 @@ object DutySuspendedDeliveriesSummary {
         key = "dutySuspendedDeliveries.checkYourAnswersLabel",
         value = ValueViewModel(s"${answer.toString} ${messages("unit.litres")}"),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.DutySuspendedDeliveriesController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.DutySuspendedDeliveriesController.onPageLoad(mode).url)
             .withVisuallyHiddenText(messages("dutySuspendedDeliveries.change.hidden"))
         )
       )
