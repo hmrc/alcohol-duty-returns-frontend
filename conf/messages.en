@@ -40,6 +40,8 @@ index.title = alcohol-duty-returns-frontend
 index.heading = alcohol-duty-returns-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
+unit.litres = litres
+
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
 

@@ -32,7 +32,7 @@ object DutySuspendedDeliveriesSummary {
     answers.get(DutySuspendedDeliveriesPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedDeliveries.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"${answer.toString} ${messages("unit.litres")}"),
         actions = Seq(
           // pass in the mode here, so that the controller can pass it to the journey's navigator.
           ActionItemViewModel("site.change", routes.DutySuspendedDeliveriesController.onPageLoad(CheckMode).url)

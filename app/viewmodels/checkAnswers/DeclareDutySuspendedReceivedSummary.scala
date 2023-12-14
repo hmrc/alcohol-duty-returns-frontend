@@ -32,7 +32,7 @@ object DeclareDutySuspendedReceivedSummary {
     answers.get(DeclareDutySuspendedReceivedPage).map { answer =>
       SummaryListRowViewModel(
         key = "declareDutySuspendedReceived.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"${answer.toString} ${messages("unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DeclareDutySuspendedReceivedController.onPageLoad(mode).url)
             .withVisuallyHiddenText(messages("declareDutySuspendedReceived.change.hidden"))
