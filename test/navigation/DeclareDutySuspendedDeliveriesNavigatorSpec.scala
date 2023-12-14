@@ -18,48 +18,42 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import pages._
 import models._
+import pages._
 
-class NavigatorSpec extends SpecBase {
+class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
 
-  val navigator = new Navigator
+  val navigator = new DeclareDutySuspendedDeliveriesNavigator
 
   "Navigator" - {
 
     "in Normal mode" - {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
-      }
-
-      "must go from Product name page to Alcohol by volume page" in {
+      "must go from the Declare duty suspended deliveries question page to Duty suspended deliveries guidance page" in {
 
         navigator.nextPage(
-          ProductNamePage,
+          DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
+        ) mustBe routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
       }
 
-      "must go from Alcohol by volume page to Draught relief question page" in {
+      "must go from the Declare duty suspended deliveries outside UK page to Declare duty suspended deliveries inside UK page" in {
 
         navigator.nextPage(
-          AlcoholByVolumeQuestionPage,
+          DeclareDutySuspendedDeliveriesOutsideUkPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+        ) mustBe routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
       }
 
-      "must go from the Draught relief question page to Small producer relief question page" in {
+      "must go from the Declare duty suspended deliveries inside UK page to Declare duty suspended received page" in {
 
         navigator.nextPage(
-          DraughtReliefQuestionPage,
+          DutySuspendedDeliveriesPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+        ) mustBe routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
       }
     }
 

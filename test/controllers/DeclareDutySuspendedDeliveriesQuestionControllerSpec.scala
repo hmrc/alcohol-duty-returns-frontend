@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.CacheConnector
 import forms.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator, FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -89,7 +89,9 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase with
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(
+              new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)
+            ),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

@@ -67,8 +67,8 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
         Ok(view(list))
       case None       =>
         // The appropriate handling might be to redirect them to the question. This is up for debate.
-        // For now, I'm just going to give a bad request instead.
-        BadRequest
+        // For now, I'm just going to redirect them to the journey recovery (something went wrong).
+        Redirect(routes.JourneyRecoveryController.onPageLoad())
     }
   }
 
