@@ -22,9 +22,9 @@
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswersDutySuspendedDeliveries.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
+    <h1 class="govuk-heading-xl">@messages("checkYourAnswersDutySuspendedDeliveries.heading")</h1>
 
     @govukSummaryList(list)
 
