@@ -23,7 +23,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.{DeclareDutySuspendedDeliveriesOutsideUkSummary, DeclareDutySuspendedDeliveriesQuestionSummary, DeclareDutySuspendedReceivedSummary}
+import viewmodels.checkAnswers.{DeclareDutySuspendedDeliveriesOutsideUkSummary, DeclareDutySuspendedDeliveriesQuestionSummary, DeclareDutySuspendedReceivedSummary, DutySuspendedDeliveriesSummary}
 import viewmodels.govuk.summarylist._
 import views.html.{CheckYourAnswersDutySuspendedDeliveriesView, CheckYourAnswersView}
 
@@ -45,16 +45,18 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   )(implicit messages: Messages): Option[SummaryList] = {
     val rows = Seq(
       DeclareDutySuspendedDeliveriesOutsideUkSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode),
-      DeclareDutySuspendedDeliveriesQuestionSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode),
+      DutySuspendedDeliveriesSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode),
       DeclareDutySuspendedReceivedSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode)
     ).flatten
 
     if (rows.contains(None) || rows.isEmpty) {
       None
     } else {
-      Some(SummaryListViewModel(
-        rows = rows
-      ))
+      Some(
+        SummaryListViewModel(
+          rows = rows
+        )
+      )
     }
   }
 

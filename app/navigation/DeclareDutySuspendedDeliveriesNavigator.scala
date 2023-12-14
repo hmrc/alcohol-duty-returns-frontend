@@ -28,15 +28,16 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () {
 
   // Defines the regular flow of this subjourney
   private val normalRoutes: Page => UserAnswers => Call = {
-    case DeclareDutySuspendedDeliveriesQuestionPage =>
-      _ => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad
-    // Why dont we do this as on submit instead of link?
+    case DeclareDutySuspendedDeliveriesQuestionPage  =>
+      _ =>
+        routes.DutySuspendedDeliveriesGuidanceController.onPageLoad
+      // Why dont we do this as on submit instead of link?
     // guidance page -> dsd outside uk controller
     case DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
-    case DutySuspendedDeliveriesPage =>
+    case DutySuspendedDeliveriesPage                 =>
       _ => routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
-    case DeclareDutySuspendedReceivedPage                 =>
+    case DeclareDutySuspendedReceivedPage            =>
       _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
     case _                                           =>
       _ => routes.IndexController.onPageLoad
