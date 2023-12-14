@@ -1,6 +1,23 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package controllers
 
 import base.SpecBase
+import connectors.CacheConnector
 import forms.DeclareSpiritsTotalFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -12,7 +29,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import uk.gov.hmrc.http.HttpResponse
 import views.html.DeclareSpiritsTotalView
 
 import scala.concurrent.Future
@@ -24,9 +41,10 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = 0
+  val validAnswer = BigDecimal(10.23)
 
-  lazy val declareSpiritsTotalRoute = routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
+  lazy val declareSpiritsTotalRoute =
+    routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
 
   "DeclareSpiritsTotal Controller" - {
 
@@ -48,7 +66,8 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(DeclareSpiritsTotalPage, validAnswer).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(DeclareSpiritsTotalPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -69,22 +88,22 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockCacheConnector = mock[CacheConnector]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
 
       running(application) {
         val request =
           FakeRequest(POST, declareSpiritsTotalRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+            .withFormUrlEncodedBody(("declare-spirits-total-input", validAnswer.toString))
 
         val result = route(application, request).value
 

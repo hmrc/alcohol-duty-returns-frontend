@@ -20,7 +20,7 @@ import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 import scala.collection.immutable.ArraySeq
 
-class DDeclareDutySuspendedReceivedFormProviderSpec extends BigDecimalFieldBehaviours {
+class DeclareDutySuspendedReceivedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new DeclareDutySuspendedReceivedFormProvider()()
 
