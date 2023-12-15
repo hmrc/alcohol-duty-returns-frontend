@@ -122,6 +122,14 @@ declareDutySuspendedDeliveriesOutsideUk.inputSuffix = litres
 declareDutySuspendedDeliveriesOutsideUk.p1 = This includes to sites in EU countries, sites in countries outside of the EU and ship stores. This will not change your duty calculation.
 declareDutySuspendedDeliveriesOutsideUk.hint = Give your answers in litres, to 2 decimal places.
 
+dutySuspendedDeliveriesGuidance.title = Tell us about alcohol you delivered or received duty suspended
+dutySuspendedDeliveriesGuidance.heading = Tell us about alcohol you delivered or received duty suspended
+dutySuspendedDeliveriesGuidance.p1 = You need to tell us how much alcohol you have:
+dutySuspendedDeliveriesGuidance.p2 = Your answers will not change your duty calculation.
+dutySuspendedDeliveriesGuidance.para.list.1 = delivered duty suspended outside of the UK
+dutySuspendedDeliveriesGuidance.para.list.2 = delivered duty suspended within the UK
+dutySuspendedDeliveriesGuidance.para.list.3 = received duty suspended
+
 declareDutySuspendedReceived.title = How much have you received duty suspended?
 declareDutySuspendedReceived.heading = How much have you received duty suspended?
 declareDutySuspendedReceived.checkYourAnswersLabel = DeclareDutySuspendedReceived

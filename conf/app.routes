@@ -41,6 +41,8 @@ POST       /alcoholByVolumeQuestion                  controllers.AlcoholByVolume
 GET        /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
 
+GET        /dutySuspendedDeliveriesGuidance                       controllers.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+
 GET        /productVolume                  controllers.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
 POST       /productVolume                  controllers.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductVolume                        controllers.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
