@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.CacheConnector
 import forms.DutySuspendedDeliveriesFormProvider
 import models.{NormalMode, UserAnswers}
-import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator, FakeNavigator, Navigator}
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
