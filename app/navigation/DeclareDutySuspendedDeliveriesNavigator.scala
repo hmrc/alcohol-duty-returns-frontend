@@ -40,19 +40,13 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () {
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
-  }
-
-  private val checkDutySuspendedDeliveriesRouteMap: Page => UserAnswers => Call = { case _ =>
     _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode                       =>
+    case NormalMode =>
       normalRoutes(page)(userAnswers)
-    case CheckMode                        =>
+    case CheckMode  =>
       checkRouteMap(page)(userAnswers)
-    case CheckDutySuspendedDeliveriesMode =>
-      checkDutySuspendedDeliveriesRouteMap(page)(userAnswers)
   }
 }

@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, Mode, UserAnswers}
+import models.{CheckMode, UserAnswers}
 import pages.DeclareDutySuspendedDeliveriesQuestionPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,7 +26,7 @@ import viewmodels.implicits._
 
 object DeclareDutySuspendedDeliveriesQuestionSummary {
 
-  def row(answers: UserAnswers, mode: Mode = CheckMode)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DeclareDutySuspendedDeliveriesQuestionPage).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
@@ -36,7 +36,7 @@ object DeclareDutySuspendedDeliveriesQuestionSummary {
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode).url
+            routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
           )
             .withVisuallyHiddenText(messages("declareDutySuspendedDeliveriesQuestion.change.hidden"))
         )

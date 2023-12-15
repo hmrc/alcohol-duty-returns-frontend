@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import models.{CheckDutySuspendedDeliveriesMode, UserAnswers}
+import models.UserAnswers
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -41,9 +41,9 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
     userAnswers: UserAnswers
   )(implicit messages: Messages): Option[SummaryList] = {
     val rows = Seq(
-      DeclareDutySuspendedDeliveriesOutsideUkSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode),
-      DutySuspendedDeliveriesSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode),
-      DeclareDutySuspendedReceivedSummary.row(userAnswers, CheckDutySuspendedDeliveriesMode)
+      DeclareDutySuspendedDeliveriesOutsideUkSummary.row(userAnswers),
+      DutySuspendedDeliveriesSummary.row(userAnswers),
+      DeclareDutySuspendedReceivedSummary.row(userAnswers)
     ).flatten
 
     if (rows.contains(None) || rows.isEmpty) {
