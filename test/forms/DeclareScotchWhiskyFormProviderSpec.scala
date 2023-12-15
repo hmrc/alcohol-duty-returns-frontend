@@ -20,13 +20,13 @@ import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 import scala.collection.immutable.ArraySeq
 
-class DeclareDutySuspendedReceivedFormProviderSpec extends BigDecimalFieldBehaviours {
+class DeclareScotchWhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new DeclareDutySuspendedReceivedFormProvider()()
+  val form = new DeclareScotchWhiskyFormProvider()()
 
   ".value" - {
 
-    val fieldName = "declare-duty-suspended-received-input"
+    val fieldName = "declare-scotch-whisky-input"
 
     val minimum = 0.00
     val maximum = 999999999.99
@@ -42,28 +42,28 @@ class DeclareDutySuspendedReceivedFormProviderSpec extends BigDecimalFieldBehavi
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "declareDutySuspendedReceived.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "declareDutySuspendedReceived.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "declareScotchWhisky.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "declareScotchWhisky.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
-      expectedError = FormError(fieldName, "declareDutySuspendedReceived.error.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "declareScotchWhisky.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "declareDutySuspendedReceived.error.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "declareScotchWhisky.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "declareDutySuspendedReceived.error.required")
+      requiredError = FormError(fieldName, "declareScotchWhisky.error.required")
     )
   }
 }
