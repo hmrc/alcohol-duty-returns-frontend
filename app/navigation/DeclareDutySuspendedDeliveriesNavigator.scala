@@ -24,9 +24,9 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeclareDutySuspendedDeliveriesNavigator @Inject() () {
+class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  override val normalRoutes: Page => UserAnswers => Call = {
     case DeclareDutySuspendedDeliveriesQuestionPage  =>
       _ => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad
     case DeclareDutySuspendedDeliveriesOutsideUkPage =>
@@ -39,14 +39,7 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () {
       _ => routes.IndexController.onPageLoad
   }
 
-  private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
+  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
     _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
-  }
-
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
-    case CheckMode  =>
-      checkRouteMap(page)(userAnswers)
   }
 }

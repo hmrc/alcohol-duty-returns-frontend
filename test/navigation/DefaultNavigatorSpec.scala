@@ -21,7 +21,7 @@ import controllers.routes
 import pages._
 import models._
 
-class NavigatorSpec extends SpecBase {
+class DefaultNavigatorSpec extends SpecBase {
 
   val navigator = new Navigator
 

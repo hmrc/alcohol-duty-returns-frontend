@@ -24,9 +24,9 @@ import pages._
 import models._
 
 @Singleton
-class Navigator @Inject() () {
+class Navigator @Inject() () extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  override val normalRoutes: Page => UserAnswers => Call = {
     case ProductNamePage             => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
     case AlcoholByVolumeQuestionPage => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
     case DraughtReliefQuestionPage   => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
@@ -35,14 +35,7 @@ class Navigator @Inject() () {
 
   }
 
-  private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
+  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
     _ => routes.CheckYourAnswersController.onPageLoad
-  }
-
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
-    case CheckMode  =>
-      checkRouteMap(page)(userAnswers)
   }
 }
