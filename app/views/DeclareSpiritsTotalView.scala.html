@@ -43,12 +43,10 @@
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
-        @pageHeading(messages("declareSpiritsTotal.heading"))
-
         @govukInput(
         InputViewModel(
             field = form("declare-spirits-total-input"),
-            label = LabelViewModel(messages("declareSpiritsTotal.heading")).asVisuallyHidden(),
+            label = LabelViewModel(messages("declareSpiritsTotal.heading")).asPageHeading(),
             )
             .asNumeric()
             .withWidth(Fixed10)
