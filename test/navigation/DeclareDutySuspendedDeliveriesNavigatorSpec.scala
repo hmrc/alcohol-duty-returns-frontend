@@ -25,7 +25,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
 
   val navigator = new DeclareDutySuspendedDeliveriesNavigator
 
-  "Navigator" - {
+  "DeclareDutySuspendedDeliveriesNavigator" - {
 
     "in Normal mode" - {
 

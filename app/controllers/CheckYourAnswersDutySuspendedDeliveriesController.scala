@@ -18,14 +18,14 @@ package controllers
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import models.{CheckDutySuspendedDeliveriesMode, CheckMode, Mode, UserAnswers}
+import models.{CheckDutySuspendedDeliveriesMode, UserAnswers}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.{DeclareDutySuspendedDeliveriesOutsideUkSummary, DeclareDutySuspendedDeliveriesQuestionSummary, DeclareDutySuspendedReceivedSummary, DutySuspendedDeliveriesSummary}
+import viewmodels.checkAnswers.{DeclareDutySuspendedDeliveriesOutsideUkSummary, DeclareDutySuspendedReceivedSummary, DutySuspendedDeliveriesSummary}
 import viewmodels.govuk.summarylist._
-import views.html.{CheckYourAnswersDutySuspendedDeliveriesView, CheckYourAnswersView}
+import views.html.CheckYourAnswersDutySuspendedDeliveriesView
 
 class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   override val messagesApi: MessagesApi,

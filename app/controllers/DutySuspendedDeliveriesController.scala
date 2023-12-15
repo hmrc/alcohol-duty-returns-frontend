@@ -20,7 +20,7 @@ import connectors.CacheConnector
 import controllers.actions._
 import forms.DutySuspendedDeliveriesFormProvider
 import models.Mode
-import navigation.{DeclareDutySuspendedDeliveriesNavigator, Navigator}
+import navigation.DeclareDutySuspendedDeliveriesNavigator
 import pages.DutySuspendedDeliveriesPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
