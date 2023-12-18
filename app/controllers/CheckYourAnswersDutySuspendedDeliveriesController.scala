@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.{DeclareDutySuspendedDeliveriesOutsideUkSummary, DeclareDutySuspendedReceivedSummary, DutySuspendedDeliveriesSummary}
 import viewmodels.govuk.summarylist._
 import views.html.CheckYourAnswersDutySuspendedDeliveriesView
+import viewmodels.checkAnswers.CheckYourAnswersSummaryListHelper
 
 class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   override val messagesApi: MessagesApi,
@@ -37,33 +38,26 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  private def getSummaryListIfAnswersAreValid(
+  private def summaryList(
     userAnswers: UserAnswers
-  )(implicit messages: Messages): Option[SummaryList] = {
-    val rows = Seq(
-      DeclareDutySuspendedDeliveriesOutsideUkSummary.row(userAnswers),
-      DutySuspendedDeliveriesSummary.row(userAnswers),
-      DeclareDutySuspendedReceivedSummary.row(userAnswers)
-    ).flatten
-
-    if (rows.contains(None) || rows.isEmpty) {
-      None
-    } else {
-      Some(
-        SummaryListViewModel(
-          rows = rows
-        )
+  )(implicit messages: Messages): Option[SummaryList] =
+    for {
+      deliveredOutsideUkSummaryRow <- DeclareDutySuspendedDeliveriesOutsideUkSummary.row(userAnswers)
+      deliveredWithinUkSummaryRow  <- DutySuspendedDeliveriesSummary.row(userAnswers)
+      receivedSummaryRow           <- DeclareDutySuspendedReceivedSummary.row(userAnswers)
+    } yield SummaryListViewModel(
+      Seq(
+        deliveredOutsideUkSummaryRow,
+        deliveredWithinUkSummaryRow,
+        receivedSummaryRow
       )
-    }
-  }
+    )
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    getSummaryListIfAnswersAreValid(request.userAnswers) match {
-      case Some(list) =>
-        Ok(view(list))
-      case None       =>
-        Redirect(routes.JourneyRecoveryController.onPageLoad())
+    val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper(request.userAnswers)
+    checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList match {
+      case Some(summaryList) => Ok(view(summaryList))
+      case None              => Redirect(routes.JourneyRecoveryController.onPageLoad())
     }
   }
-
 }
