@@ -31,18 +31,18 @@ import views.html.DeclareScotchWhiskyView
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclareScotchWhiskyController @Inject() (
-   override val messagesApi: MessagesApi,
-   cacheConnector: CacheConnector,
-   navigator: Navigator,
-   identify: IdentifierAction,
-   getData: DataRetrievalAction,
-   requireData: DataRequiredAction,
-   formProvider: DeclareScotchWhiskyFormProvider,
-   val controllerComponents: MessagesControllerComponents,
-   view: DeclareScotchWhiskyView
- )(implicit ec: ExecutionContext)
-      extends FrontendBaseController
-      with I18nSupport {
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: DeclareScotchWhiskyFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: DeclareScotchWhiskyView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
