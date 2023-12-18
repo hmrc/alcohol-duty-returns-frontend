@@ -24,11 +24,8 @@ import play.api.i18n.Messages
 case class TaxTypePageViewModel(abv: String)
 
 object TaxTypePageViewModel {
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): Option[TaxTypePageViewModel] = {
-    for{
+  def apply(userAnswers: UserAnswers)(implicit messages: Messages): Option[TaxTypePageViewModel] =
+    for {
       abvBigDecimal <- userAnswers.get(AlcoholByVolumeQuestionPage)
-    } yield{
-      TaxTypePageViewModel(withPercentage(abvBigDecimal))
-    }
-  }
+    } yield TaxTypePageViewModel(withPercentage(abvBigDecimal))
 }

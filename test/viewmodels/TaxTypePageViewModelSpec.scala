@@ -24,9 +24,9 @@ import pages.AlcoholByVolumeQuestionPage
 import play.api.Application
 import play.api.i18n.Messages
 
-class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators{
+class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
 
-  val application: Application = applicationBuilder().build()
+  val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = messages(application)
 
   "TaxTypePageViewModel apply" - {
@@ -34,7 +34,9 @@ class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks wi
       "should return Some TaxTypePageViewModel" in {
         forAll(genAlcoholByVolumeValue) { alcoholByVolume: BigDecimal =>
           val userAnswers = UserAnswers(userAnswersId).set(AlcoholByVolumeQuestionPage, alcoholByVolume).success.value
-          TaxTypePageViewModel(userAnswers) mustBe Some(TaxTypePageViewModel(alcoholByVolume.toString + messages("site.percentage")))
+          TaxTypePageViewModel(userAnswers) mustBe Some(
+            TaxTypePageViewModel(alcoholByVolume.toString + messages("site.percentage"))
+          )
         }
       }
     }
