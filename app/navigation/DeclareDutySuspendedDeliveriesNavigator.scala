@@ -27,8 +27,7 @@ import javax.inject.{Inject, Singleton}
 class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case DeclareDutySuspendedDeliveriesQuestionPage  =>
-      _ => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+    case DeclareDutySuspendedDeliveriesQuestionPage  => declareDutySuspendedDeliveriesQuestionPageRoute
     case DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
     case DutySuspendedDeliveriesPage                 =>
@@ -42,4 +41,12 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
     _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
   }
+
+  private def declareDutySuspendedDeliveriesQuestionPageRoute(answers: UserAnswers): Call =
+    answers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
+      case Some(true)  => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+      case Some(false) => routes.IndexController.onPageLoad
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
+
 }

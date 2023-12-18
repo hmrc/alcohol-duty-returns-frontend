@@ -29,13 +29,31 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
-      "must go from the Declare duty suspended deliveries question page to Duty suspended deliveries guidance page" in {
+      "must go from the Declare duty suspended deliveries question page to Duty suspended deliveries guidance page if the answer is Yes" in {
+
+        navigator.nextPage(
+          DeclareDutySuspendedDeliveriesQuestionPage,
+          NormalMode,
+          UserAnswers("id").set(DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
+        ) mustBe routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+      }
+
+      "must go from the Declare duty suspended deliveries question page to task list page if the answer is No" in {
+
+        navigator.nextPage(
+          DeclareDutySuspendedDeliveriesQuestionPage,
+          NormalMode,
+          UserAnswers("id").set(DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
+        ) mustBe routes.IndexController.onPageLoad
+      }
+
+      "must go from the Declare duty suspended deliveries question page to journey recovery page if the answer there is not an answer" in {
 
         navigator.nextPage(
           DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+        ) mustBe routes.JourneyRecoveryController.onPageLoad(None)
       }
 
       "must go from the Declare duty suspended deliveries outside UK page to Declare duty suspended deliveries inside UK page" in {
