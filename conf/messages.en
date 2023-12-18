@@ -159,3 +159,12 @@ dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty
 dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries
 
+
+declareIrishWhisky.title = DeclareIrishWhisky
+declareIrishWhisky.heading = DeclareIrishWhisky
+declareIrishWhisky.checkYourAnswersLabel = DeclareIrishWhisky
+declareIrishWhisky.error.nonNumeric = Enter your declareIrishWhisky using numbers
+declareIrishWhisky.error.required = Enter your declareIrishWhisky
+declareIrishWhisky.error.wholeNumber = Enter your declareIrishWhisky using whole numbers
+declareIrishWhisky.error.outOfRange = DeclareIrishWhisky must be between {0} and {1}
+declareIrishWhisky.change.hidden = DeclareIrishWhisky
