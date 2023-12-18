@@ -24,7 +24,7 @@ import pages._
 import models._
 
 @Singleton
-class Navigator @Inject() () extends BaseNavigator {
+class ProductEntryNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
     case ProductNamePage             => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)

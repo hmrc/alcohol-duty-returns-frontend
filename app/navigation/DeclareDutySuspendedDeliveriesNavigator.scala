@@ -28,7 +28,7 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
 
   override val normalRoutes: Page => UserAnswers => Call = {
     case DeclareDutySuspendedDeliveriesQuestionPage  =>
-      _ => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad
+      _ => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
     case DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
     case DutySuspendedDeliveriesPage                 =>

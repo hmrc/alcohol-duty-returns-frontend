@@ -21,11 +21,11 @@ import controllers.routes
 import pages._
 import models._
 
-class DefaultNavigatorSpec extends SpecBase {
+class ProductEntryNavigatorSpec extends SpecBase {
 
-  val navigator = new Navigator
+  val navigator = new ProductEntryNavigator
 
-  "Navigator" - {
+  "ProductEntryNavigator" - {
 
     "in Normal mode" - {
 
