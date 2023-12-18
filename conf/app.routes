@@ -72,3 +72,5 @@ GET        /declareIrishWhisky                  controllers.DeclareIrishWhiskyCo
 POST       /declareIrishWhisky                  controllers.DeclareIrishWhiskyController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareIrishWhisky                        controllers.DeclareIrishWhiskyController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareIrishWhisky                        controllers.DeclareIrishWhiskyController.onSubmit(mode: Mode = CheckMode)
+
+GET        /quarterlySpiritsGuidance                       controllers.QuarterlySpiritsGuidanceController.onPageLoad()
