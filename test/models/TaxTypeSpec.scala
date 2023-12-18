@@ -32,10 +32,8 @@ class TaxTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
       val gen = Gen.oneOf(TaxType.values.toSeq)
 
-      forAll(gen) {
-        taxType =>
-
-          JsString(taxType.toString).validate[TaxType].asOpt.value mustEqual taxType
+      forAll(gen) { taxType =>
+        JsString(taxType.toString).validate[TaxType].asOpt.value mustEqual taxType
       }
     }
 
@@ -43,10 +41,8 @@ class TaxTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
       val gen = arbitrary[String] suchThat (!TaxType.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[TaxType] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[TaxType] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,10 +50,8 @@ class TaxTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
       val gen = Gen.oneOf(TaxType.values.toSeq)
 
-      forAll(gen) {
-        taxType =>
-
-          Json.toJson(taxType) mustEqual JsString(taxType.toString)
+      forAll(gen) { taxType =>
+        Json.toJson(taxType) mustEqual JsString(taxType.toString)
       }
     }
   }

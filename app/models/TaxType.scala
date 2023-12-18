@@ -28,16 +28,16 @@ object TaxType extends Enumerable.Implicits {
   case object Taxtyperadio2 extends WithName("taxTypeRadio2") with TaxType
 
   val values: Seq[TaxType] = Seq(
-    Taxtyperadio1, Taxtyperadio2
+    Taxtyperadio1,
+    Taxtyperadio2
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"taxType.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
-      )
+  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
+    RadioItem(
+      content = Text(messages(s"taxType.${value.toString}")),
+      value = Some(value.toString),
+      id = Some(s"value_$index")
+    )
   }
 
   implicit val enumerable: Enumerable[TaxType] =

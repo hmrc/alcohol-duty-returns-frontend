@@ -40,7 +40,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
   lazy val taxTypeRoute = routes.TaxTypeController.onPageLoad(NormalMode).url
 
   val formProvider = new TaxTypeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   "TaxType Controller" - {
 
@@ -74,7 +74,10 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(TaxType.values.head), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(TaxType.values.head), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

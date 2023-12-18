@@ -26,25 +26,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TaxTypeSummary  {
+object TaxTypeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TaxTypePage).map {
-      answer =>
-
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"taxType.$answer"))
-          )
+    answers.get(TaxTypePage).map { answer =>
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"taxType.$answer"))
         )
+      )
 
-        SummaryListRowViewModel(
-          key     = "taxType.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.TaxTypeController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("taxType.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "taxType.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.TaxTypeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("taxType.change.hidden"))
         )
+      )
     }
 }
