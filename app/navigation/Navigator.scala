@@ -30,6 +30,8 @@ class Navigator @Inject() () {
     case ProductNamePage                             => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
     case AlcoholByVolumeQuestionPage                 => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
     case DraughtReliefQuestionPage                   => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+    case SmallProducerReliefQuestionPage             => _ => routes.TaxTypeController.onPageLoad(NormalMode)
+    case TaxTypePage                                 => _ => routes.ProductVolumeController.onPageLoad(NormalMode)
     case DeclareDutySuspendedDeliveriesQuestionPage  =>
       _ => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
     case DeclareDutySuspendedDeliveriesOutsideUkPage =>

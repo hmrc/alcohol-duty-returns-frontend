@@ -62,6 +62,24 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       }
 
+      "must go from the Small producer relief question page to Tax Type page" in {
+
+        navigator.nextPage(
+          SmallProducerReliefQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.TaxTypeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Tax type page to Product volume page" in {
+
+        navigator.nextPage(
+          TaxTypePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ProductVolumeController.onPageLoad(NormalMode)
+      }
+
       "must go from the Declare duty suspended deliveries question page to Duty suspended deliveries guidance page" in {
 
         navigator.nextPage(
