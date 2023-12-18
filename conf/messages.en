@@ -11,6 +11,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.percentage = %
 
 date.day = Day
 date.month = Month
@@ -83,7 +84,6 @@ smallProducerReliefQuestion.guidance.link.text = If you’re a small producer yo
 
 alcoholByVolumeQuestion.title = What is this product’s Alcohol by Volume (ABV) strength?
 alcoholByVolumeQuestion.heading = What is this product’s Alcohol by Volume (ABV) strength?
-alcoholByVolumeQuestion.inputSuffix = %
 alcoholByVolumeQuestion.checkYourAnswersLabel = AlcoholByVolumeQuestion
 alcoholByVolumeQuestion.error.nonNumeric = This product’s Alcohol by Volume (ABV) strength must be a number
 alcoholByVolumeQuestion.error.required = Enter this product’s Alcohol by Volume (ABV) strength
@@ -163,6 +163,7 @@ dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries
 taxType.title = Your product’s tax type
 taxType.heading = Your product’s tax type
 taxType.p1 = Based on your answers, we have found your product’s possible tax types. We found these tax types because you told us that this product is:
+taxType.bulletList.abv = Alcohol by Volume (ABV) strength
 taxType.guidance.link.url = #
 taxType.guidance.link.text = Find out more about Alcohol Duty tax types (opens in a new tab).
 taxType.radioHeading = Which tax type matches your product?
