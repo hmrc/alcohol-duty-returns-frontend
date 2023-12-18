@@ -41,6 +41,8 @@ POST       /alcoholByVolumeQuestion                  controllers.AlcoholByVolume
 GET        /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
 
+GET        /dutySuspendedDeliveriesGuidance                       controllers.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+
 GET        /productVolume                  controllers.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
 POST       /productVolume                  controllers.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductVolume                        controllers.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
@@ -66,7 +68,13 @@ POST       /dutySuspendedDeliveries                  controllers.DutySuspendedDe
 GET        /dutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
 POST       /dutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
 
+
 GET        /declareScotchWhisky                  controllers.DeclareScotchWhiskyController.onPageLoad(mode: Mode = NormalMode)
 POST       /declareScotchWhisky                  controllers.DeclareScotchWhiskyController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareScotchWhisky                        controllers.DeclareScotchWhiskyController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareScotchWhisky                        controllers.DeclareScotchWhiskyController.onSubmit(mode: Mode = CheckMode)
+
+GET        /declareSpiritsTotal                  controllers.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareSpiritsTotal                  controllers.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareSpiritsTotal                        controllers.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareSpiritsTotal                        controllers.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
