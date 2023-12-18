@@ -30,7 +30,7 @@ object DeclareDutySuspendedDeliveriesOutsideUkSummary {
     answers.get(DeclareDutySuspendedDeliveriesOutsideUkPage).map { answer =>
       SummaryListRowViewModel(
         key = "declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.toString} ${messages("unit.litres")}"),
+        value = ValueViewModel(s"${answer.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel(
             "site.change",

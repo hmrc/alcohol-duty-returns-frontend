@@ -11,6 +11,8 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.unit.litres = litres
+site.unit.percentage = %
 
 date.day = Day
 date.month = Month
@@ -39,8 +41,6 @@ error.summary.title = There is a problem
 index.title = alcohol-duty-returns-frontend
 index.heading = alcohol-duty-returns-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
-unit.litres = litres
 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
@@ -88,7 +88,6 @@ smallProducerReliefQuestion.guidance.link.text = If you’re a small producer yo
 
 alcoholByVolumeQuestion.title = What is this product’s Alcohol by Volume (ABV) strength?
 alcoholByVolumeQuestion.heading = What is this product’s Alcohol by Volume (ABV) strength?
-alcoholByVolumeQuestion.inputSuffix = %
 alcoholByVolumeQuestion.checkYourAnswersLabel = AlcoholByVolumeQuestion
 alcoholByVolumeQuestion.error.nonNumeric = This product’s Alcohol by Volume (ABV) strength must be a number
 alcoholByVolumeQuestion.error.required = Enter this product’s Alcohol by Volume (ABV) strength
@@ -100,7 +99,6 @@ alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
 productVolume.title = How much of this product do you need to declare?
 productVolume.heading = How much of this product do you need to declare?
 productVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
-productVolume.inputSuffix = litres
 productVolume.checkYourAnswersLabel = ProductVolume
 productVolume.error.nonNumeric = This product’s volume must be a number
 productVolume.error.required = Enter how much of this product you need to declare
@@ -123,7 +121,6 @@ declareDutySuspendedDeliveriesOutsideUk.change.hidden = DeclareDutySuspendedDeli
 declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.00 or more
 declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
 declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
-declareDutySuspendedDeliveriesOutsideUk.inputSuffix = litres
 declareDutySuspendedDeliveriesOutsideUk.p1 = This includes to sites in EU countries, sites in countries outside of the EU and ship stores. This will not change your duty calculation.
 declareDutySuspendedDeliveriesOutsideUk.hint = Give your answers in litres, to 2 decimal places.
 
@@ -141,7 +138,6 @@ declareDutySuspendedReceived.checkYourAnswersLabel = Amount received under duty 
 declareDutySuspendedReceived.error.nonNumeric = How much you have received duty suspended must be a number
 declareDutySuspendedReceived.error.required = Enter how much you have received duty suspended
 declareDutySuspendedReceived.error.twoDecimalPlaces = How much you have received duty suspended must be a number to 2 decimal places
-declareDutySuspendedReceived.inputSuffix = litres
 declareDutySuspendedReceived.change.hidden = DeclareDutySuspendedReceived
 declareDutySuspendedReceived.hint = Give your answers in litres, to 2 decimal places.
 declareDutySuspendedReceived.error.minimumRequired = How much you have received duty suspended must be 0.00 or more
@@ -155,7 +151,6 @@ dutySuspendedDeliveries.title = How much have you delivered duty suspended withi
 dutySuspendedDeliveries.heading = How much have you delivered duty suspended within the UK?
 dutySuspendedDeliveries.p1 = For example, to UK sites that are registered to hold it duty suspended. This will not change your duty calculation.
 dutySuspendedDeliveries.hint = Give your answers in litres, to 2 decimal places.
-dutySuspendedDeliveries.inputSuffix = litres
 dutySuspendedDeliveries.checkYourAnswersLabel = Amount delivered duty suspended in the UK
 dutySuspendedDeliveries.error.nonNumeric = How much you have delivered duty suspended must be a number
 dutySuspendedDeliveries.error.required = Enter how much you have delivered duty suspended
