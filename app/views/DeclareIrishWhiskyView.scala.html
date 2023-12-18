@@ -19,45 +19,44 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
 @this(
-layout: templates.Layout,
-formHelper: FormWithCSRF,
-govukErrorSummary: GovukErrorSummary,
-govukInput: GovukInput,
-govukButton: GovukButton,
-sectionHeading: SectionHeading,
-pageHeading: PageHeading
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("declareIrishWhisky.title"))) {
 
-@formHelper(action = routes.DeclareIrishWhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.DeclareIrishWhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
-@if(form.errors.nonEmpty) {
-@govukErrorSummary(ErrorSummaryViewModel(form))
-}
+       @if(form.errors.nonEmpty) {
+         @govukErrorSummary(ErrorSummaryViewModel(form))
+       }
 
-@sectionHeading(
-id = "declare-irish-whisky-section",
-text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
-)
+       @sectionHeading(
+         id = "declare-irish-whisky-section",
+         text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
+       )
 
-@govukInput(
-InputViewModel(
-field = form("declare-irish-whisky-input"),
-label = LabelViewModel(messages("declareIrishWhisky.heading")).asPageHeading(),
-)
-.asNumeric()
-.withWidth(Fixed10)
-.withSuffix(PrefixOrSuffix(content = messages("declareIrishWhisky.inputSuffix")))
-.withHint(Hint(content =  messages("declareIrishWhisky.hint")))
+       @govukInput(
+         InputViewModel(
+            field = form("declare-irish-whisky-input"),
+            label = LabelViewModel(messages("declareIrishWhisky.heading")).asPageHeading(),
+       )
+       .asNumeric()
+       .withWidth(Fixed10)
+       .withSuffix(PrefixOrSuffix(content = messages("declareIrishWhisky.inputSuffix")))
+       .withHint(Hint(content =  messages("declareIrishWhisky.hint")))
 
-)
+       )
 
-@govukButton(
-ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
-)
-
-}
+       @govukButton(
+       ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+       )
+    }
 }

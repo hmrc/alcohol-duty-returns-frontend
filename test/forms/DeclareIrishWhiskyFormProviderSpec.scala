@@ -1,20 +1,37 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package forms
 
-import forms.behaviours.IntFieldBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
+import scala.collection.immutable.ArraySeq
 
-class DeclareIrishWhiskyFormProviderSpec extends IntFieldBehaviours {
+class DeclareIrishWhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new DeclareIrishWhiskyFormProvider()()
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "declare-irish-whisky-input"
 
-    val minimum = 0
-    val maximum = 999999999
+    val minimum = 0.00
+    val maximum = 999999999.99
 
-    val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
     behave like fieldThatBindsValidData(
       form,
@@ -22,19 +39,25 @@ class DeclareIrishWhiskyFormProviderSpec extends IntFieldBehaviours {
       validDataGenerator
     )
 
-    behave like intField(
+    behave like bigDecimalField(
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "declareIrishWhisky.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "declareIrishWhisky.error.wholeNumber")
+      twoDecimalPlacesError = FormError(fieldName, "declareIrishWhisky.error.twoDecimalPlaces")
     )
 
-    behave like intFieldWithRange(
+    behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
+      expectedError = FormError(fieldName, "declareIrishWhisky.error.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "declareIrishWhisky.error.outOfRange", Seq(minimum, maximum))
+      expectedError = FormError(fieldName, "declareIrishWhisky.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
