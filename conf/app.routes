@@ -14,60 +14,63 @@ GET         /there-is-a-problem                          controllers.JourneyReco
 
 GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
 
-GET         /check-your-answers-duty-suspended-deliveries                  controllers.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
-
 GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut
 GET         /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET        /draughtReliefQuestion                        controllers.DraughtReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /draughtReliefQuestion                        controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
-
+# Beginning of product entry sub-journey
 GET        /productName                        controllers.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /productName                        controllers.ProductNameController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductName                  controllers.ProductNameController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeProductName                  controllers.ProductNameController.onSubmit(mode: Mode = CheckMode)
-
-GET        /smallProducerReliefQuestion                        controllers.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /smallProducerReliefQuestion                        controllers.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeSmallProducerReliefQuestion                  controllers.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeSmallProducerReliefQuestion                  controllers.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /alcoholByVolumeQuestion                  controllers.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /alcoholByVolumeQuestion                  controllers.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /dutySuspendedDeliveriesGuidance                       controllers.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+GET        /draughtReliefQuestion                        controllers.DraughtReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /draughtReliefQuestion                        controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
+
+GET        /smallProducerReliefQuestion                        controllers.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /smallProducerReliefQuestion                        controllers.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeSmallProducerReliefQuestion                  controllers.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeSmallProducerReliefQuestion                  controllers.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /productVolume                  controllers.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
 POST       /productVolume                  controllers.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductVolume                        controllers.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeProductVolume                        controllers.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
+# End of product entry sub-journey
 
-
+# Beginning of duty suspended deliveries sub-journey
 GET        /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
 
+GET        /dutySuspendedDeliveriesGuidance                       controllers.DutySuspendedDeliveriesGuidanceController.onPageLoad()
 
 GET        /declareDutySuspendedDeliveriesOutsideUk                  controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
 POST       /declareDutySuspendedDeliveriesOutsideUk                  controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = CheckMode)
 
+GET        /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = NormalMode)
+POST       /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
+
 GET        /declareDutySuspendedReceived                  controllers.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = NormalMode)
 POST       /declareDutySuspendedReceived                  controllers.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareDutySuspendedReceived                        controllers.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareDutySuspendedReceived                        controllers.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
 
-GET        /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = NormalMode)
-POST       /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
+GET         /check-your-answers-duty-suspended-deliveries                  controllers.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+# End of of duty suspended deliveries sub-journey
+
 
