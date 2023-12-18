@@ -25,15 +25,15 @@ class DeclareIrishWhiskyFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "declareIrishWhisky.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "declareIrishWhisky.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "declareIrishWhisky.error.wholeNumber")
     )
 
     behave like intFieldWithRange(
       form,
       fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
+      minimum = minimum,
+      maximum = maximum,
       expectedError = FormError(fieldName, "declareIrishWhisky.error.outOfRange", Seq(minimum, maximum))
     )
 

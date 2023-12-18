@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareIrishWhiskySummary  {
+object DeclareIrishWhiskySummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareIrishWhiskyPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "declareIrishWhisky.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DeclareIrishWhiskyController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("declareIrishWhisky.change.hidden"))
-          )
+    answers.get(DeclareIrishWhiskyPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "declareIrishWhisky.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DeclareIrishWhiskyController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("declareIrishWhisky.change.hidden"))
         )
+      )
     }
 }

@@ -22,12 +22,16 @@ import play.api.data.Form
 
 class DeclareIrishWhiskyFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  def apply(): Form[BigDecimal] =
     Form(
-      "value" -> int(
+      "declare-irish-whisky-input" -> bigDecimal(
         "declareIrishWhisky.error.required",
-        "declareIrishWhisky.error.wholeNumber",
-        "declareIrishWhisky.error.nonNumeric")
-          .verifying(inRange(0, 999999999, "declareIrishWhisky.error.outOfRange"))
+        "declareIrishWhisky.error.nonNumeric",
+        "declareIrishWhisky.error.twoDecimalPlaces"
+      )
+        .verifying(minimumValue(BigDecimal(0.00), "declareIrishWhisky.error.minimumRequired"))
+        .verifying(
+          maximumValue(BigDecimal(999999999.99), "declareIrishWhisky.error.maximumRequired")
+        )
     )
 }

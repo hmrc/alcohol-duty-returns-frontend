@@ -20,7 +20,7 @@ import scala.concurrent.Future
 class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new DeclareIrishWhiskyFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -60,7 +60,10 @@ class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
