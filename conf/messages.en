@@ -162,8 +162,12 @@ dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries
 
 taxType.title = Your product’s tax type
 taxType.heading = Your product’s tax type
+taxType.p1 = Based on your answers, we have found your product’s possible tax types. We found these tax types because you told us that this product is:
+taxType.guidance.link.url = #
+taxType.guidance.link.text = Find out more about Alcohol Duty tax types (opens in a new tab).
+taxType.radioHeading = Which tax type matches your product?
 taxType.taxTypeRadio1 = Tax TypeRadio 1
 taxType.taxTypeRadio2 = Tax TypeRadio 2
 taxType.checkYourAnswersLabel = Your product’s tax type
-taxType.error.required = Select taxType
+taxType.error.required = Select this product’s tax type
 taxType.change.hidden = TaxType

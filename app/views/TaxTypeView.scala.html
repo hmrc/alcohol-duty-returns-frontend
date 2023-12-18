@@ -14,12 +14,18 @@
  * limitations under the License.
  *@
 
+@import components.{Link, SectionHeading, PageHeading}
+@import viewmodels.LegendSize
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading,
+    link: Link
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -32,10 +38,28 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        @sectionHeading(
+            id = "tax-type-section",
+            text = messages("section.alcoholDutyReturn"),
+        )
+
+        @pageHeading(messages("taxType.heading"))
+
+        <p class="govuk-body">@messages("taxType.p1")</p>
+
+        <p class="govuk-body">
+            @link(
+                id = "tax-type-guidance-link",
+                text = messages("taxType.guidance.link.text"),
+                href = messages("taxType.guidance.link.url"),
+                newTab = true
+            )
+        </p>
+
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("taxType.heading")).asPageHeading(),
+                legend = LegendViewModel(messages("taxType.radioHeading")).withSize(LegendSize.Medium),
                 items  = TaxType.options
             )
         )
