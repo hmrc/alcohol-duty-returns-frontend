@@ -67,3 +67,8 @@ GET        /dutySuspendedDeliveries                  controllers.DutySuspendedDe
 POST       /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = NormalMode)
 GET        /dutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
 POST       /dutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
+
+GET        /taxType                        controllers.TaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /taxType                        controllers.TaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeTaxType                  controllers.TaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeTaxType                  controllers.TaxTypeController.onSubmit(mode: Mode = CheckMode)

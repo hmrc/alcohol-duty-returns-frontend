@@ -14,15 +14,32 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
+import forms.behaviours.OptionFieldBehaviours
 import models.TaxType
-import org.scalacheck.{Arbitrary, Gen}
+import play.api.data.FormError
 
-trait ModelGenerators {
+class TaxTypeFormProviderSpec extends OptionFieldBehaviours {
 
-  implicit lazy val arbitraryTaxType: Arbitrary[TaxType] =
-    Arbitrary {
-      Gen.oneOf(TaxType.values)
-    }
+  val form = new TaxTypeFormProvider()()
+
+  ".value" - {
+
+    val fieldName = "value"
+    val requiredKey = "taxType.error.required"
+
+    behave like optionsField[TaxType](
+      form,
+      fieldName,
+      validValues  = TaxType.values,
+      invalidError = FormError(fieldName, "error.invalid")
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

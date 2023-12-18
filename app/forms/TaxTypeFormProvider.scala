@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
+import javax.inject.Inject
+
+import forms.mappings.Mappings
+import play.api.data.Form
 import models.TaxType
-import org.scalacheck.{Arbitrary, Gen}
 
-trait ModelGenerators {
+class TaxTypeFormProvider @Inject() extends Mappings {
 
-  implicit lazy val arbitraryTaxType: Arbitrary[TaxType] =
-    Arbitrary {
-      Gen.oneOf(TaxType.values)
-    }
+  def apply(): Form[TaxType] =
+    Form(
+      "value" -> enumerable[TaxType]("taxType.error.required")
+    )
 }

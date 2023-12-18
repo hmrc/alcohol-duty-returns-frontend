@@ -159,3 +159,11 @@ dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty
 dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries
 
+
+taxType.title = Your product’s tax type
+taxType.heading = Your product’s tax type
+taxType.taxTypeRadio1 = Tax TypeRadio 1
+taxType.taxTypeRadio2 = Tax TypeRadio 2
+taxType.checkYourAnswersLabel = Your product’s tax type
+taxType.error.required = Select taxType
+taxType.change.hidden = TaxType

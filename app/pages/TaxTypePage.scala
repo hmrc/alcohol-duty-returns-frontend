@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
 import models.TaxType
-import org.scalacheck.{Arbitrary, Gen}
+import play.api.libs.json.JsPath
 
-trait ModelGenerators {
+case object TaxTypePage extends QuestionPage[TaxType] {
 
-  implicit lazy val arbitraryTaxType: Arbitrary[TaxType] =
-    Arbitrary {
-      Gen.oneOf(TaxType.values)
-    }
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "taxType"
 }
