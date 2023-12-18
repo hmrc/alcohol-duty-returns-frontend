@@ -32,4 +32,6 @@ object ViewUtils {
 
   def errorPrefix(form: Form[_])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
+
+  def withPercentage(percentage: BigDecimal)(implicit messages: Messages) = percentage + messages("site.percentage")
 }
