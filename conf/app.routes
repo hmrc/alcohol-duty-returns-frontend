@@ -68,7 +68,7 @@ POST       /dutySuspendedDeliveries                  controllers.DutySuspendedDe
 GET        /dutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
 POST       /dutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
 
-GET        /declareIrishWhisky                  controllers.DeclareIrishWhiskyController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareIrishWhisky                  controllers.DeclareIrishWhiskyController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareIrishWhisky                        controllers.DeclareIrishWhiskyController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareIrishWhisky                        controllers.DeclareIrishWhiskyController.onSubmit(mode: Mode = CheckMode)
+GET        /declareIrishWhiskey                  controllers.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareIrishWhiskey                  controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)

@@ -18,46 +18,46 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.DeclareIrishWhiskyFormProvider
+import forms.DeclareIrishWhiskeyFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.DeclareIrishWhiskyPage
+import pages.DeclareIrishWhiskeyPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.DeclareIrishWhiskyView
+import views.html.DeclareIrishWhiskeyView
 
 import scala.concurrent.Future
 
-class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
+class DeclareIrishWhiskeyControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new DeclareIrishWhiskyFormProvider()
+  val formProvider = new DeclareIrishWhiskeyFormProvider()
   val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = BigDecimal(10.23)
 
-  lazy val declareIrishWhiskyRoute =
-    routes.DeclareIrishWhiskyController.onPageLoad(NormalMode).url
+  lazy val declareIrishWhiskeyRoute =
+    routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode).url
 
-  "DeclareIrishWhisky Controller" - {
+  "DeclareIrishWhiskey Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareIrishWhiskyRoute)
+        val request = FakeRequest(GET, declareIrishWhiskeyRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DeclareIrishWhiskyView]
+        val view = application.injector.instanceOf[DeclareIrishWhiskeyView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -67,14 +67,14 @@ class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(DeclareIrishWhiskyPage, validAnswer).success.value
+        UserAnswers(userAnswersId).set(DeclareIrishWhiskeyPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareIrishWhiskyRoute)
+        val request = FakeRequest(GET, declareIrishWhiskeyRoute)
 
-        val view = application.injector.instanceOf[DeclareIrishWhiskyView]
+        val view = application.injector.instanceOf[DeclareIrishWhiskeyView]
 
         val result = route(application, request).value
 
@@ -102,8 +102,8 @@ class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareIrishWhiskyRoute)
-            .withFormUrlEncodedBody(("declare-irish-whisky-input", validAnswer.toString))
+          FakeRequest(POST, declareIrishWhiskeyRoute)
+            .withFormUrlEncodedBody(("declare-irish-whiskey-input", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -118,12 +118,12 @@ class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareIrishWhiskyRoute)
+          FakeRequest(POST, declareIrishWhiskeyRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[DeclareIrishWhiskyView]
+        val view = application.injector.instanceOf[DeclareIrishWhiskeyView]
 
         val result = route(application, request).value
 
@@ -137,7 +137,7 @@ class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareIrishWhiskyRoute)
+        val request = FakeRequest(GET, declareIrishWhiskeyRoute)
 
         val result = route(application, request).value
 
@@ -152,7 +152,7 @@ class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareIrishWhiskyRoute)
+          FakeRequest(POST, declareIrishWhiskeyRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value

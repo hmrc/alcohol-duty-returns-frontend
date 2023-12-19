@@ -161,14 +161,14 @@ dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered dut
 dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries
 
 
-declareIrishWhisky.title = How much Irish Whisky have you made?
-declareIrishWhisky.heading = How much Irish Whisky have you made?
-declareIrishWhisky.checkYourAnswersLabel = DeclareIrishWhisky
-declareIrishWhisky.hint = Give your answers in litres, to 2 decimal places.
-declareIrishWhisky.inputSuffix = litres
-declareIrishWhisky.error.nonNumeric = The volume of Irish Whiskey you need to declare must be a number
-declareIrishWhisky.error.required = Enter how much Irish Whiskey you need to declare this quarter
-declareIrishWhisky.error.minimumRequired = The volume of Irish Whiskey you need to declare must be 0.00 or more
-declareIrishWhisky.error.maximumRequired = The volume of Irish Whiskey you need to declare must be 999999999.99 or less
-declareIrishWhisky.error.twoDecimalPlaces = The volume of Irish Whiskey you need to declare must be a number to 2 decimal places
-declareIrishWhisky.change.hidden = Declare Irish Whisky
+declareIrishWhiskey.title = How much Irish Whiskey have you made?
+declareIrishWhiskey.heading = How much Irish Whiskey have you made?
+declareIrishWhiskey.checkYourAnswersLabel = DeclareIrishWhiskey
+declareIrishWhiskey.hint = Give your answers in litres, to 2 decimal places.
+declareIrishWhiskey.inputSuffix = litres
+declareIrishWhiskey.error.nonNumeric = The volume of Irish Whiskey you need to declare must be a number
+declareIrishWhiskey.error.required = Enter how much Irish Whiskey you need to declare this quarter
+declareIrishWhiskey.error.minimumRequired = The volume of Irish Whiskey you need to declare must be 0.00 or more
+declareIrishWhiskey.error.maximumRequired = The volume of Irish Whiskey you need to declare must be 999999999.99 or less
+declareIrishWhiskey.error.twoDecimalPlaces = The volume of Irish Whiskey you need to declare must be a number to 2 decimal places
+declareIrishWhiskey.change.hidden = Declare Irish Whiskey

@@ -20,18 +20,18 @@ import forms.mappings.Mappings
 import javax.inject.Inject
 import play.api.data.Form
 
-class DeclareIrishWhiskyFormProvider @Inject() extends Mappings {
+class DeclareIrishWhiskeyFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BigDecimal] =
     Form(
-      "declare-irish-whisky-input" -> bigDecimal(
-        "declareIrishWhisky.error.required",
-        "declareIrishWhisky.error.nonNumeric",
-        "declareIrishWhisky.error.twoDecimalPlaces"
+      "declare-irish-whiskey-input" -> bigDecimal(
+        "declareIrishWhiskey.error.required",
+        "declareIrishWhiskey.error.nonNumeric",
+        "declareIrishWhiskey.error.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.00), "declareIrishWhisky.error.minimumRequired"))
+        .verifying(minimumValue(BigDecimal(0.00), "declareIrishWhiskey.error.minimumRequired"))
         .verifying(
-          maximumValue(BigDecimal(999999999.99), "declareIrishWhisky.error.maximumRequired")
+          maximumValue(BigDecimal(999999999.99), "declareIrishWhiskey.error.maximumRequired")
         )
     )
 }

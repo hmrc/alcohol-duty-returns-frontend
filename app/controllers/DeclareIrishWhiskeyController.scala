@@ -18,28 +18,28 @@ package controllers
 
 import connectors.CacheConnector
 import controllers.actions._
-import forms.DeclareIrishWhiskyFormProvider
+import forms.DeclareIrishWhiskeyFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.DeclareIrishWhiskyPage
+import pages.DeclareIrishWhiskeyPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.DeclareIrishWhiskyView
+import views.html.DeclareIrishWhiskeyView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeclareIrishWhiskyController @Inject() (
+class DeclareIrishWhiskeyController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: DeclareIrishWhiskyFormProvider,
+  formProvider: DeclareIrishWhiskeyFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: DeclareIrishWhiskyView
+  view: DeclareIrishWhiskeyView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -47,7 +47,7 @@ class DeclareIrishWhiskyController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeclareIrishWhiskyPage) match {
+    val preparedForm = request.userAnswers.get(DeclareIrishWhiskeyPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -64,9 +64,9 @@ class DeclareIrishWhiskyController @Inject() (
           value =>
             for {
               updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(DeclareIrishWhiskyPage, value))
+                Future.fromTry(request.userAnswers.set(DeclareIrishWhiskeyPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DeclareIrishWhiskyPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(DeclareIrishWhiskeyPage, mode, updatedAnswers))
         )
   }
 }
