@@ -30,16 +30,16 @@ import views.html.DeclareIrishWhiskeyView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeclareIrishWhiskeyController @Inject()(
-                                               override val messagesApi: MessagesApi,
-                                               cacheConnector: CacheConnector,
-                                               navigator: Navigator,
-                                               identify: IdentifierAction,
-                                               getData: DataRetrievalAction,
-                                               requireData: DataRequiredAction,
-                                               formProvider: DeclareIrishWhiskeyFormProvider,
-                                               val controllerComponents: MessagesControllerComponents,
-                                               view: DeclareIrishWhiskeyView
+class DeclareIrishWhiskeyController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: DeclareIrishWhiskeyFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: DeclareIrishWhiskeyView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
