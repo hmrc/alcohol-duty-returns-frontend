@@ -70,7 +70,13 @@ POST       /declareDutySuspendedReceived                  controllers.DeclareDut
 GET        /changeDeclareDutySuspendedReceived                        controllers.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareDutySuspendedReceived                        controllers.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
 
+
 GET         /check-your-answers-duty-suspended-deliveries                  controllers.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
 # End of of duty suspended deliveries sub-journey
 
-
+# Beginning of quarterly spirits questions sub-journey
+GET        /declareSpiritsTotal                  controllers.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareSpiritsTotal                  controllers.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareSpiritsTotal                        controllers.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareSpiritsTotal                        controllers.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
+# End of quarterly spirits questions sub-journey

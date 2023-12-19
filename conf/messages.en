@@ -64,6 +64,7 @@ unauthorised.heading = You can’t access this service with this account
 
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty return
+section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits return
 
 draughtReliefQuestion.title = Is this product eligible for Draught Relief?
 draughtReliefQuestion.heading = Is this product eligible for Draught Relief?
@@ -159,3 +160,15 @@ dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty
 dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 dutySuspendedDeliveries.change.hidden = amount delivered duty suspended in the UK
 
+
+declareSpiritsTotal.title = What is the total volume of spirits you made this quarter?
+declareSpiritsTotal.heading = What is the total volume of spirits you made this quarter?
+declareSpiritsTotal.checkYourAnswersLabel = DeclareSpiritsTotal
+declareSpiritsTotal.error.nonNumeric = The volume of spirits you need to declare must be a number
+declareSpiritsTotal.error.required = Enter the volume of spirits you need to declare for this quarter
+declareSpiritsTotal.change.hidden = DeclareSpiritsTotal
+declareSpiritsTotal.error.minimumRequired = The volume of spirits you need to declare must be 0.00 or more
+declareSpiritsTotal.error.maximumRequired = The volume of spirits you need to declare must be 999999999.99 or less
+declareSpiritsTotal.error.twoDecimalPlaces = The volume of spirits you need to declare must be a number to 2 decimal places
+declareSpiritsTotal.hint = Give your answers in litres, to 2 decimal places.
+declareSpiritsTotal.inputSuffix = litres
