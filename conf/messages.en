@@ -42,8 +42,8 @@ index.title = alcohol-duty-returns-frontend
 index.heading = alcohol-duty-returns-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
-checkYourAnswers.title = Check Your Answers
-checkYourAnswers.heading = Check Your Answers
+checkYourAnswers.title = Check your answers
+checkYourAnswers.heading = Check your answers
 
 checkYourAnswersDutySuspendedDeliveries.title = Duty suspended deliveries
 checkYourAnswersDutySuspendedDeliveries.heading = Duty suspended deliveries
@@ -115,10 +115,10 @@ declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered i
 
 declareDutySuspendedDeliveriesOutsideUk.title = How much have you delivered duty suspended outside of the UK?
 declareDutySuspendedDeliveriesOutsideUk.heading = How much have you delivered duty suspended outside of the UK?
-declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = Amount exported outside of the UK
+declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = Amount delivered duty suspended outside the UK
 declareDutySuspendedDeliveriesOutsideUk.error.required = Enter how much you have delivered duty suspended
 declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric = How much you have delivered duty suspended must be a number
-declareDutySuspendedDeliveriesOutsideUk.change.hidden = amount exported outside of the UK
+declareDutySuspendedDeliveriesOutsideUk.change.hidden = amount delivered duty suspended outside the UK
 declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.00 or more
 declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
 declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
@@ -135,11 +135,11 @@ dutySuspendedDeliveriesGuidance.para.list.3 = received duty suspended
 
 declareDutySuspendedReceived.title = How much have you received duty suspended?
 declareDutySuspendedReceived.heading = How much have you received duty suspended?
-declareDutySuspendedReceived.checkYourAnswersLabel = Amount received under duty suspense
+declareDutySuspendedReceived.checkYourAnswersLabel = Amount received duty suspended
 declareDutySuspendedReceived.error.nonNumeric = How much you have received duty suspended must be a number
 declareDutySuspendedReceived.error.required = Enter how much you have received duty suspended
 declareDutySuspendedReceived.error.twoDecimalPlaces = How much you have received duty suspended must be a number to 2 decimal places
-declareDutySuspendedReceived.change.hidden = amount received under duty suspense
+declareDutySuspendedReceived.change.hidden = amount received duty suspended
 declareDutySuspendedReceived.hint = Give your answers in litres, to 2 decimal places.
 declareDutySuspendedReceived.error.minimumRequired = How much you have received duty suspended must be 0.00 or more
 declareDutySuspendedReceived.error.maximumRequired = How much you have received duty suspended must be 999999999.99 or less

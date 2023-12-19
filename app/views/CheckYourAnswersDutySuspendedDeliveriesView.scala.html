@@ -14,17 +14,28 @@
  * limitations under the License.
  *@
 
+@import components.{SectionHeading, PageHeading}
+
 @this(
     layout: templates.Layout,
     govukSummaryList: GovukSummaryList,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswersDutySuspendedDeliveries.title"))) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("checkYourAnswersDutySuspendedDeliveries.heading")</h1>
+    @sectionHeading(
+        id = "alcohol-by-volume-question-section",
+        text = messages("section.alcoholDutyReturn"),
+    )
+
+    @pageHeading(messages("checkYourAnswers.heading"))
+
+    <h2 class="govuk-heading-m">@messages("checkYourAnswersDutySuspendedDeliveries.heading")</h2>
 
     @govukSummaryList(list)
 
