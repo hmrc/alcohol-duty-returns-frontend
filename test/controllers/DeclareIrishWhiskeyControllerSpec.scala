@@ -18,13 +18,13 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.DeclareIrishWhiskyFormProvider
+import forms.DeclareIrishWhiskeyFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.DeclareIrishWhiskyPage
+import pages.DeclareIrishWhiskeyPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -34,9 +34,9 @@ import views.html.DeclareIrishWhiskyView
 
 import scala.concurrent.Future
 
-class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
+class DeclareIrishWhiskeyControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new DeclareIrishWhiskyFormProvider()
+  val formProvider = new DeclareIrishWhiskeyFormProvider()
   val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
@@ -67,7 +67,7 @@ class DeclareIrishWhiskyControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(DeclareIrishWhiskyPage, validAnswer).success.value
+        UserAnswers(userAnswersId).set(DeclareIrishWhiskeyPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

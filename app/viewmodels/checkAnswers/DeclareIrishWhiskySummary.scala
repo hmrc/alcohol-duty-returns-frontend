@@ -18,7 +18,7 @@ package viewmodels.checkAnswers
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import pages.DeclareIrishWhiskyPage
+import pages.DeclareIrishWhiskeyPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -27,7 +27,7 @@ import viewmodels.implicits._
 object DeclareIrishWhiskySummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareIrishWhiskyPage).map { answer =>
+    answers.get(DeclareIrishWhiskeyPage).map { answer =>
       SummaryListRowViewModel(
         key = "declareIrishWhisky.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),

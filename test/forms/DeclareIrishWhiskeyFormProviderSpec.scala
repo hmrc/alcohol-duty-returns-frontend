@@ -20,13 +20,13 @@ import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 import scala.collection.immutable.ArraySeq
 
-class DeclareIrishWhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
+class DeclareIrishWhiskeyFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new DeclareIrishWhiskyFormProvider()()
+  val form = new DeclareIrishWhiskeyFormProvider()()
 
   ".value" - {
 
-    val fieldName = "declare-irish-whisky-input"
+    val fieldName = "declare-irish-whiskey-input"
 
     val minimum = 0.00
     val maximum = 999999999.99
@@ -42,28 +42,28 @@ class DeclareIrishWhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "declareIrishWhisky.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "declareIrishWhisky.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "declareIrishWhiskey.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "declareIrishWhiskey.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
-      expectedError = FormError(fieldName, "declareIrishWhisky.error.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "declareIrishWhiskey.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "declareIrishWhisky.error.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "declareIrishWhiskey.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "declareIrishWhisky.error.required")
+      requiredError = FormError(fieldName, "declareIrishWhiskey.error.required")
     )
   }
 }
