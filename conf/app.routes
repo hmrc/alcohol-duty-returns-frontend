@@ -77,4 +77,3 @@ GET        /declareSpiritsTotal                  controllers.DeclareSpiritsTotal
 POST       /declareSpiritsTotal                  controllers.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareSpiritsTotal                        controllers.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareSpiritsTotal                        controllers.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
-
