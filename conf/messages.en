@@ -160,6 +160,17 @@ dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty
 dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 dutySuspendedDeliveries.change.hidden = Duty Suspended Deliveries
 
+declareScotchWhisky.title = How much Scotch Whisky have you made?
+declareScotchWhisky.heading = How much Scotch Whisky have you made?
+declareScotchWhisky.checkYourAnswersLabel = DeclareScotchWhisky
+declareScotchWhisky.error.nonNumeric = The volume of Scotch Whisky you need to declare must be a number
+declareScotchWhisky.error.required = Enter how much Scotch Whisky you need to declare this quarter
+declareScotchWhisky.change.hidden = DeclareScotchWhisky
+declareScotchWhisky.hint = Give your answers in litres, to 2 decimal places.
+declareScotchWhisky.inputSuffix = litres
+declareScotchWhisky.error.maximumRequired = The volume of Scotch Whisky you need to declare must be 999999999.99 or less
+declareScotchWhisky.error.minimumRequired = The volume of Scotch Whisky you need to declare must be 0.00 or more
+declareScotchWhisky.error.twoDecimalPlaces = The volume of Scotch Whisky you need to declare must be a number to 2 decimal places
 
 declareSpiritsTotal.title = What is the total volume of spirits you made this quarter?
 declareSpiritsTotal.heading = What is the total volume of spirits you made this quarter?
@@ -172,3 +183,4 @@ declareSpiritsTotal.error.maximumRequired = The volume of spirits you need to de
 declareSpiritsTotal.error.twoDecimalPlaces = The volume of spirits you need to declare must be a number to 2 decimal places
 declareSpiritsTotal.hint = Give your answers in litres, to 2 decimal places.
 declareSpiritsTotal.inputSuffix = litres
+
