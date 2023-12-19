@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package navigation
+package pages
 
-import controllers.routes
-import models._
-import pages._
-import play.api.mvc.Call
+import play.api.libs.json.JsPath
 
-import javax.inject.{Inject, Singleton}
+case object DeclareScotchWhiskyPage extends QuestionPage[BigDecimal] {
 
-@Singleton
-class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
+  override def path: JsPath = JsPath \ toString
 
-  override val normalRoutes: Page => UserAnswers => Call = {
-    case DeclareSpiritsTotalPage => _ => routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
-    case _                       => _ => routes.IndexController.onPageLoad
-
-  }
-
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
-  }
+  override def toString: String = "declareScotchWhisky"
 }
