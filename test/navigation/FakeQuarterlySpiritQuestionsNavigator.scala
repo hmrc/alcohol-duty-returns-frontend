@@ -13,3 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package navigation
+
+import models.{Mode, UserAnswers}
+import pages._
+import play.api.mvc.Call
+
+class FakeQuarterlySpiritQuestionsNavigator(desiredRoute: Call) extends QuarterlySpiritsQuestionsNavigator {
+
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    desiredRoute
+}

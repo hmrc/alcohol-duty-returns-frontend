@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.DeclareSpiritsTotalFormProvider
 import javax.inject.Inject
 import models.Mode
-import navigation.Navigator
+import navigation.QuarterlySpiritsQuestionsNavigator
 import pages.DeclareSpiritsTotalPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeclareSpiritsTotalController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: Navigator,
+  navigator: QuarterlySpiritsQuestionsNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,

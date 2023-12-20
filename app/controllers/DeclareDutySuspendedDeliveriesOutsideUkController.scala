@@ -19,21 +19,21 @@ package controllers
 import connectors.CacheConnector
 import controllers.actions._
 import forms.DeclareDutySuspendedDeliveriesOutsideUkFormProvider
-import javax.inject.Inject
 import models.Mode
-import navigation.Navigator
+import navigation.DeclareDutySuspendedDeliveriesNavigator
 import pages.DeclareDutySuspendedDeliveriesOutsideUkPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DeclareDutySuspendedDeliveriesOutsideUkView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclareDutySuspendedDeliveriesOutsideUkController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: Navigator,
+  navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,

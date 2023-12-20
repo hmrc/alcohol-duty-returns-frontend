@@ -13,3 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package navigation
+
+import play.api.mvc.Call
+import pages._
+import models.{Mode, UserAnswers}
+
+class FakeProductEntryNavigator(desiredRoute: Call) extends ProductEntryNavigator {
+
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    desiredRoute
+}

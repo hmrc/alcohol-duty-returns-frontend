@@ -13,3 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package navigation
+
+import models._
+import pages._
+import play.api.mvc.Call
+
+trait BaseNavigator {
+
+  val normalRoutes: Page => UserAnswers => Call
+
+  val checkRouteMap: Page => UserAnswers => Call
+
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode  =>
+      checkRouteMap(page)(userAnswers)
+  }
+}
