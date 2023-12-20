@@ -18,17 +18,24 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @sectionHeading(
+        id = "$className;format="decap"$-section",
+        text = messages("section.sectionName"),
+        )
+
         @govukInput(
             InputViewModel(
-                field = form("value"),
+                field = form("$className;format="decap"$-input"),
                 label = LabelViewModel(messages("$className;format="decap"$.heading")).asPageHeading()
             )
             .asNumeric()
             .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("$className;format="decap"$.inputSuffix")))
+            .withHint(Hint(content =  messages("$className;format="decap"$.hint")))
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
         )
     }
 }

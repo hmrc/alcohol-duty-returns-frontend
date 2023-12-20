@@ -1,20 +1,21 @@
 package forms
 
-import forms.behaviours.IntFieldBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
+import scala.collection.immutable.ArraySeq
 
-class $className$FormProviderSpec extends IntFieldBehaviours {
+class $className$FormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new $className$FormProvider()()
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "$className;format="decap"$-input"
 
     val minimum = $minimum$
     val maximum = $maximum$
 
-    val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
     behave like fieldThatBindsValidData(
       form,
@@ -22,19 +23,24 @@ class $className$FormProviderSpec extends IntFieldBehaviours {
       validDataGenerator
     )
 
-    behave like intField(
+    behave like bigDecimalField(
       form,
       fieldName,
       nonNumericError  = FormError(fieldName, "$className;format="decap"$.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "$className;format="decap"$.error.wholeNumber")
+      twoDecimalPlacesError = FormError(fieldName, "$className;format="decap"$.error.twoDecimalPlaces")
     )
 
-    behave like intFieldWithRange(
+    behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum       = minimum,
-      maximum       = maximum,
-      expectedError = FormError(fieldName, "$className;format="decap"$.error.outOfRange", Seq(minimum, maximum))
+      expectedError = FormError(fieldName, "$className;format="decap"$.error.minimumRequired", ArraySeq(minimum))
+    )
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      expectedError = FormError(fieldName, "$className;format="decap"$.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
