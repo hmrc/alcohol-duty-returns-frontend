@@ -1,11 +1,14 @@
 @import viewmodels.InputWidth._
+@import components.{SectionHeading, PageHeading}
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -18,7 +21,12 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("$className;format="decap"$.heading")</h1>
+        @sectionHeading(
+            id = "$className;format="decap"$-section",
+            text = messages("section.sectionName"),
+        )
+
+        @pageHeading(messages("$className;format="decap"$.heading"))
 
         @govukInput(
             InputViewModel(
@@ -37,7 +45,7 @@
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
         )
     }
 }
