@@ -1,11 +1,21 @@
+@import components.{SectionHeading, PageHeading}
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        sectionHeading: SectionHeading,
+        pageHeading: PageHeading
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("$className;format="decap"$.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("$className;format="decap"$.heading")</h1>
+    @sectionHeading(
+        id = "$className;format="decap"$-section",
+        text = messages("section.sectionName"),
+    )
+
+    @pageHeading(messages("$className;format="decap"$.heading"))
+
 }

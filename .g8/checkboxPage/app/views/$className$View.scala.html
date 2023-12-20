@@ -18,6 +18,7 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
+
         @sectionHeading(
             id = "$className;format="decap"$-section",
             text = messages("section.sectionName"),
