@@ -9,6 +9,6 @@ class $className$FormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
-      "value" -> boolean("$className;format="decap"$.error.required")
+      "$className;format="decap"$-yesNoValue" -> boolean("$className;format="decap"$.error.required")
     )
 }
