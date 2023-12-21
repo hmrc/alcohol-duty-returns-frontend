@@ -9,7 +9,7 @@ class $className$FormProviderSpec extends IntFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "$className;format="decap"$-input"
 
     val minimum = $minimum$
     val maximum = $maximum$

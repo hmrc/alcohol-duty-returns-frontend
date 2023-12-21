@@ -8,7 +8,7 @@ class $className$FormProvider @Inject() extends Mappings {
 
   def apply(): Form[Int] =
     Form(
-      "value" -> int(
+      "$className;format="decap"$-input" -> int(
         "$className;format="decap"$.error.required",
         "$className;format="decap"$.error.wholeNumber",
         "$className;format="decap"$.error.nonNumeric")
