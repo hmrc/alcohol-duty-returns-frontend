@@ -13,7 +13,7 @@ class $className$FormProviderSpec extends StringFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "$className;format="decap"$-input"
 
     behave like fieldThatBindsValidData(
       form,

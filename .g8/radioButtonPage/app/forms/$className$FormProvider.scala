@@ -10,6 +10,6 @@ class $className$FormProvider @Inject() extends Mappings {
 
   def apply(): Form[$className$] =
     Form(
-      "$className;format="decap"$-yesNoValue" -> enumerable[$className$]("$className;format="decap"$.error.required")
+      "$className;format="decap"$-value" -> enumerable[$className$]("$className;format="decap"$.error.required")
     )
 }

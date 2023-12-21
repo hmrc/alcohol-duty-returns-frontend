@@ -26,7 +26,7 @@
 
         @govukRadios(
             RadiosViewModel(
-                field  = form("$className;format="decap"$-yesNoValue"),
+                field  = form("$className;format="decap"$-value"),
                 legend = LegendViewModel(messages("$className;format="decap"$.heading")).asPageHeading(),
                 items  = $className$.options
             )
