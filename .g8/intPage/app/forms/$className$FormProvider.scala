@@ -6,14 +6,12 @@ import play.api.data.Form
 
 class $className$FormProvider @Inject() extends Mappings {
 
-  def apply(): Form[BigDecimal] =
+  def apply(): Form[Int] =
     Form(
-      "$className;format="decap"$-input" -> bigDecimal(
+      "value" -> int(
         "$className;format="decap"$.error.required",
-        "$className;format="decap"$.error.nonNumeric",
-        "$className;format="decap"$.error.twoDecimalPlaces"
-        )
-          .verifying(minimumValue(BigDecimal(0.00), "$className;format="decap"$.error.minimumRequired"))
-          .verifying(maximumValue(BigDecimal(999999999.99), "$className;format="decap"$.error.maximumRequired"))
+        "$className;format="decap"$.error.wholeNumber",
+        "$className;format="decap"$.error.nonNumeric")
+          .verifying(inRange($minimum$, $maximum$, "$className;format="decap"$.error.outOfRange"))
     )
 }
