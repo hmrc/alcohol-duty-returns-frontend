@@ -189,7 +189,6 @@ declareIrishWhiskey.title = How much Irish Whiskey have you made?
 declareIrishWhiskey.heading = How much Irish Whiskey have you made?
 declareIrishWhiskey.checkYourAnswersLabel = DeclareIrishWhiskey
 declareIrishWhiskey.hint = Give your answers in litres, to 2 decimal places.
-declareIrishWhiskey.inputSuffix = litres
 declareIrishWhiskey.error.nonNumeric = The volume of Irish Whiskey you need to declare must be a number
 declareIrishWhiskey.error.required = Enter how much Irish Whiskey you need to declare this quarter
 declareIrishWhiskey.error.minimumRequired = The volume of Irish Whiskey you need to declare must be 0.00 or more
