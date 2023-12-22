@@ -1,9 +1,11 @@
+@import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading}
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukDateInput: GovukDateInput,
+    govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading
 )
@@ -15,19 +17,23 @@
     @formHelper(action = routes.$className$Controller.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))
+            @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
             id = "$className;format="decap"$-section",
             text = messages("section.sectionName"),
         )
-        @govukDateInput(
-            DateViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(messages("$className;format="decap"$.heading")).asPageHeading()
+
+        @govukInput(
+            InputViewModel(
+                field = form("$className;format="decap"$-input"),
+                label = LabelViewModel(messages("$className;format="decap"$.heading")).asPageHeading()
             )
-            .withHint(HintViewModel(messages("$className;format="decap"$.hint")))
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("$className;format="decap"$.inputSuffix")))
+            .withHint(Hint(content =  messages("$className;format="decap"$.hint")))
         )
 
         @govukButton(
