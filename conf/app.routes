@@ -91,3 +91,5 @@ GET        /changeDeclareIrishWhiskey                        controllers.Declare
 POST       /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
 
 # End of quarterly spirits questions sub-journey
+
+GET        /quarterlySpiritsReturnGuidance                       controllers.QuarterlySpiritsReturnGuidanceController.onPageLoad()
