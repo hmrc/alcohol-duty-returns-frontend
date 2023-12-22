@@ -84,4 +84,10 @@ GET        /declareScotchWhisky                  controllers.DeclareScotchWhisky
 POST       /declareScotchWhisky                  controllers.DeclareScotchWhiskyController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareScotchWhisky                        controllers.DeclareScotchWhiskyController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareScotchWhisky                        controllers.DeclareScotchWhiskyController.onSubmit(mode: Mode = CheckMode)
+
+GET        /declareIrishWhiskey                  controllers.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareIrishWhiskey                  controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
+
 # End of quarterly spirits questions sub-journey
