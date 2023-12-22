@@ -22,7 +22,7 @@ import forms.AlcoholByVolumeQuestionFormProvider
 
 import javax.inject.Inject
 import models.Mode
-import navigation.Navigator
+import navigation.ProductEntryNavigator
 import pages.AlcoholByVolumeQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AlcoholByVolumeQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: Navigator,
+  navigator: ProductEntryNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,

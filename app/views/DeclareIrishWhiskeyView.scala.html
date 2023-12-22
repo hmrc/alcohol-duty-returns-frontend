@@ -50,12 +50,12 @@
        )
        .asNumeric()
        .withWidth(Fixed10)
-       .withSuffix(PrefixOrSuffix(content = messages("declareIrishWhiskey.inputSuffix")))
+       .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
        .withHint(Hint(content =  messages("declareIrishWhiskey.hint")))
        )
 
        @govukButton(
-       ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
        )
     }
 }
