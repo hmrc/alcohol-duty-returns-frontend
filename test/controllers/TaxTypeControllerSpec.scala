@@ -23,12 +23,13 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.TaxTypePage
+import pages.{AlcoholByVolumeQuestionPage, DraughtReliefQuestionPage, SmallProducerReliefQuestionPage, TaxTypePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import viewmodels.TaxTypePageViewModel
 import views.html.TaxTypeView
 
 import scala.concurrent.Future
@@ -42,11 +43,22 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new TaxTypeFormProvider()
   val form         = formProvider()
 
+  val fullUserAnswers = UserAnswers(userAnswersId)
+    .set(AlcoholByVolumeQuestionPage, BigDecimal(3.5))
+    .success
+    .value
+    .set(DraughtReliefQuestionPage, true)
+    .success
+    .value
+    .set(SmallProducerReliefQuestionPage, false)
+    .success
+    .value
+
   "TaxType Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(fullUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, taxTypeRoute)
@@ -55,14 +67,16 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[TaxTypeView]
 
+        val viewModel = TaxTypePageViewModel(fullUserAnswers)(messages(application)).get
+
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, viewModel)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(TaxTypePage, TaxType.values.head).success.value
+      val userAnswers = fullUserAnswers.set(TaxTypePage, TaxType.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,8 +87,10 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
+        val viewModel = TaxTypePageViewModel(userAnswers)(messages(application)).get
+
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(TaxType.values.head), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(TaxType.values.head), NormalMode, viewModel)(
           request,
           messages(application)
         ).toString
@@ -109,7 +125,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(fullUserAnswers)).build()
 
       running(application) {
         val request =
@@ -122,39 +138,80 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
+        val viewModel = TaxTypePageViewModel(fullUserAnswers)(messages(application)).get
+
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, viewModel)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET" - {
+      "if no existing data is found" in {
+        val application = applicationBuilder(userAnswers = None).build()
 
-      val application = applicationBuilder(userAnswers = None).build()
+        running(application) {
+          val request = FakeRequest(GET, taxTypeRoute)
 
-      running(application) {
-        val request = FakeRequest(GET, taxTypeRoute)
+          val result = route(application, request).value
 
-        val result = route(application, request).value
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      "if one of the necessary userAnswer data are missing" in {
+        val userAnswers = fullUserAnswers.remove(AlcoholByVolumeQuestionPage).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        running(application) {
+          val request = FakeRequest(GET, taxTypeRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
 
-    "redirect to Journey Recovery for a POST if no existing data is found" in {
+    "redirect to Journey Recovery for a POST" - {
+      "if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(userAnswers = None).build()
 
-      running(application) {
-        val request =
-          FakeRequest(POST, taxTypeRoute)
-            .withFormUrlEncodedBody(("value", TaxType.values.head.toString))
+        running(application) {
+          val request =
+            FakeRequest(POST, taxTypeRoute)
+              .withFormUrlEncodedBody(("value", TaxType.values.head.toString))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+          status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+      "if one of the necessary userAnswer data are missing" in {
+
+        val userAnswers = fullUserAnswers.remove(DraughtReliefQuestionPage).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, taxTypeRoute)
+              .withFormUrlEncodedBody(("value", "invalid value"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
   }

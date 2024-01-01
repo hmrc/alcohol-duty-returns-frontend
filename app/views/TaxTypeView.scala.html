@@ -15,7 +15,7 @@
  *@
 
 @import components.{Link, SectionHeading, PageHeading}
-@import viewmodels.LegendSize
+@import viewmodels.{LegendSize, TaxTypePageViewModel}
 
 @this(
     layout: templates.Layout,
@@ -28,7 +28,7 @@
     link: Link
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, viewModel: TaxTypePageViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("taxType.title"))) {
 
@@ -46,6 +46,16 @@
         @pageHeading(messages("taxType.heading"))
 
         <p class="govuk-body">@messages("taxType.p1")</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@{viewModel.abv} @messages("taxType.bulletList.abv")</li>
+            @if(viewModel.eligibleForDraughtRelief) {
+                <li>@messages("taxType.bulletList.draughtRelief")</li>
+            }
+            @if(viewModel.eligibleForSmallProducerRelief) {
+                <li>@messages("taxType.bulletList.smallProducerRelief")</li>
+            }
+        </ul>
 
         <p class="govuk-body">
             @link(

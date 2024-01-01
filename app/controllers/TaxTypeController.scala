@@ -18,14 +18,17 @@ package controllers
 
 import controllers.actions._
 import forms.TaxTypeFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
 import pages.TaxTypePage
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.Results.Redirect
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.TaxTypePageViewModel
 import views.html.TaxTypeView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -52,7 +55,10 @@ class TaxTypeController @Inject() (
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode))
+    TaxTypePageViewModel(request.userAnswers) match {
+      case None     => Redirect(routes.JourneyRecoveryController.onPageLoad())
+      case Some(vm) => Ok(view(preparedForm, mode, vm))
+    }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -60,7 +66,13 @@ class TaxTypeController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors =>
+            Future.successful(
+              TaxTypePageViewModel(request.userAnswers) match {
+                case None     => Redirect(routes.JourneyRecoveryController.onPageLoad())
+                case Some(vm) => BadRequest(view(formWithErrors, mode, vm))
+              }
+            ),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxTypePage, value))

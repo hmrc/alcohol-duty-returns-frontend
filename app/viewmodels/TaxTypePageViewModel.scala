@@ -17,15 +17,21 @@
 package viewmodels
 
 import models.UserAnswers
-import pages.AlcoholByVolumeQuestionPage
+import pages.{AlcoholByVolumeQuestionPage, DraughtReliefQuestionPage, SmallProducerReliefQuestionPage}
 import views.ViewUtils.withPercentage
 import play.api.i18n.Messages
 
-case class TaxTypePageViewModel(abv: String)
+case class TaxTypePageViewModel(abv: String, eligibleForDraughtRelief: Boolean, eligibleForSmallProducerRelief: Boolean)
 
 object TaxTypePageViewModel {
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): Option[TaxTypePageViewModel] =
     for {
-      abvBigDecimal <- userAnswers.get(AlcoholByVolumeQuestionPage)
-    } yield TaxTypePageViewModel(withPercentage(abvBigDecimal))
+      abvBigDecimal                  <- userAnswers.get(AlcoholByVolumeQuestionPage)
+      eligibleForDraughtRelief       <- userAnswers.get(DraughtReliefQuestionPage)
+      eligibleForSmallProducerRelief <- userAnswers.get(SmallProducerReliefQuestionPage)
+    } yield TaxTypePageViewModel(
+      withPercentage(abvBigDecimal),
+      eligibleForDraughtRelief,
+      eligibleForSmallProducerRelief
+    )
 }
