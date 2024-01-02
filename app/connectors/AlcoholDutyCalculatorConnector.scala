@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package forms
+package connectors
+
+import config.FrontendAppConfig
+import models.RatePeriod
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances}
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-import forms.mappings.Mappings
-import play.api.data.Form
+class AlcoholDutyCalculatorConnector @Inject()(
+  config: FrontendAppConfig,
+  implicit val httpClient: HttpClient
+)(implicit ec: ExecutionContext)
+    extends HttpReadsInstances {
 
-class TaxTypeFormProvider @Inject() extends Mappings {
+  def rates()(implicit hc: HeaderCarrier): Future[Seq[RatePeriod]] =
+    httpClient.GET[Seq[RatePeriod]](config.adrCalculatorRatesUrl())
 
-  def apply(): Form[String] =
-    Form(
-      "value" -> text("taxType.error.required")
-    )
 }

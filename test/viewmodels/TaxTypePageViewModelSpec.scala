@@ -18,13 +18,14 @@ package viewmodels
 
 import base.SpecBase
 import generators.ModelGenerators
-import models.UserAnswers
+import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, UserAnswers}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.{AlcoholByVolumeQuestionPage, DraughtReliefQuestionPage, SmallProducerReliefQuestionPage}
 import play.api.Application
 import play.api.i18n.Messages
-import org.scalacheck.Arbitrary.arbBool
-import org.scalacheck.Gen
+import uk.gov.hmrc.govukfrontend.views.Aliases.{RadioItem, Text}
+
+import java.time.YearMonth
 
 class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
 
@@ -34,26 +35,57 @@ class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks wi
   "TaxTypePageViewModel apply" - {
     "should return Some TaxTypePageViewModel" - {
       "when there is Alcohol By Volume value, draught relief eligibility and small producer relief eligibility in UserAnswers" in {
-        forAll(genAlcoholByVolumeValue, arbBool.arbitrary, arbBool.arbitrary) {
-          (alcoholByVolume: BigDecimal, eligibleForDraughtRelief: Boolean, eligibleForSmallProducerRelief: Boolean) =>
-            val userAnswers = UserAnswers(userAnswersId)
-              .set(AlcoholByVolumeQuestionPage, alcoholByVolume)
-              .success
-              .value
-              .set(DraughtReliefQuestionPage, eligibleForDraughtRelief)
-              .success
-              .value
-              .set(SmallProducerReliefQuestionPage, eligibleForSmallProducerRelief)
-              .success
-              .value
-            TaxTypePageViewModel(userAnswers) mustBe Some(
-              TaxTypePageViewModel(
-                alcoholByVolume.toString + messages("site.percentage"),
-                eligibleForDraughtRelief,
-                eligibleForSmallProducerRelief
+
+        val ratePeriodList = Seq(
+          RatePeriod(
+            "period1",
+            isLatest = true,
+            YearMonth.of(2023, 1),
+            None,
+            Seq(
+              RateBand(
+                "310",
+                "some band",
+                RateType.DraughtRelief,
+                Set(AlcoholRegime.Beer),
+                AlcoholByVolume(0.1),
+                AlcoholByVolume(5.8),
+                Some(BigDecimal(10.99))
               )
             )
-        }
+          )
+        )
+        val userAnswers    = UserAnswers(userAnswersId)
+          .set(AlcoholByVolumeQuestionPage, BigDecimal(10.1))
+          .success
+          .value
+          .set(DraughtReliefQuestionPage, true)
+          .success
+          .value
+          .set(SmallProducerReliefQuestionPage, false)
+          .success
+          .value
+        TaxTypePageViewModel(userAnswers, ratePeriodList) mustBe Some(
+          TaxTypePageViewModel(
+            s"10.1${messages("site.percentage")}",
+            true,
+            false,
+            List(
+              RadioItem(
+                Text("Set(Beer), tax type 310"),
+                Some("value_310"),
+                Some("310"),
+                None,
+                None,
+                None,
+                false,
+                None,
+                false,
+                Map()
+              )
+            )
+          )
+        )
       }
     }
     "should return None" - {
@@ -69,15 +101,15 @@ class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks wi
         .value
       "when there is no Alcohol By Volume value in UserAnswers" in {
         val userAnswers = fullUserAnswers.remove(AlcoholByVolumeQuestionPage).success.value
-        TaxTypePageViewModel(userAnswers) mustBe None
+        TaxTypePageViewModel(userAnswers, Seq.empty) mustBe None
       }
       "when there is no draught relief eligibility in UserAnswers" in {
         val userAnswers = fullUserAnswers.remove(DraughtReliefQuestionPage).success.value
-        TaxTypePageViewModel(userAnswers) mustBe None
+        TaxTypePageViewModel(userAnswers, Seq.empty) mustBe None
       }
       "when there is no small producer relief eligibility in UserAnswers" in {
         val userAnswers = fullUserAnswers.remove(SmallProducerReliefQuestionPage).success.value
-        TaxTypePageViewModel(userAnswers) mustBe None
+        TaxTypePageViewModel(userAnswers, Seq.empty) mustBe None
       }
     }
   }

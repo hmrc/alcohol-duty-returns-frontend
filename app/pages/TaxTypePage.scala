@@ -16,10 +16,9 @@
 
 package pages
 
-import models.TaxType
 import play.api.libs.json.JsPath
 
-case object TaxTypePage extends QuestionPage[TaxType] {
+case object TaxTypePage extends QuestionPage[String] {
 
   override def path: JsPath = JsPath \ toString
 

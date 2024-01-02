@@ -31,12 +31,18 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       "should return the correct string representation" in {
         Json.toJson[RateType](RateType.Core) mustEqual JsString("Core")
         Json.toJson[RateType](RateType.DraughtRelief) mustEqual JsString("DraughtRelief")
+        Json.toJson[RateType](RateType.SmallProducerRelief) mustEqual JsString("SmallProducerRelief")
+        Json.toJson[RateType](RateType.DraughtAndSmallProducerRelief) mustEqual JsString(
+          "DraughtAndSmallProducerRelief"
+        )
       }
     }
     "when reading from json" - {
       "should translate from the string rep, to the correct case object" in {
         JsString("Core").as[RateType] mustEqual RateType.Core
         JsString("DraughtRelief").as[RateType] mustEqual RateType.DraughtRelief
+        JsString("SmallProducerRelief").as[RateType] mustEqual RateType.SmallProducerRelief
+        JsString("DraughtAndSmallProducerRelief").as[RateType] mustEqual RateType.DraughtAndSmallProducerRelief
       }
       "should return an exception in response to an unrecognised string" in {
         JsString("some-other").validate[RateType] mustEqual JsError("some-other is not a valid RateType")

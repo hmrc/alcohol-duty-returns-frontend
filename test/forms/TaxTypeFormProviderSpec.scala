@@ -17,7 +17,6 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.TaxType
 import play.api.data.FormError
 
 class TaxTypeFormProviderSpec extends OptionFieldBehaviours {
@@ -29,11 +28,10 @@ class TaxTypeFormProviderSpec extends OptionFieldBehaviours {
     val fieldName   = "value"
     val requiredKey = "taxType.error.required"
 
-    behave like optionsField[TaxType](
+    behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validValues = TaxType.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      nonEmptyString
     )
 
     behave like mandatoryField(

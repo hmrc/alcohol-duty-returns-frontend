@@ -16,22 +16,41 @@
 
 package viewmodels
 
-import models.UserAnswers
+import models.{RatePeriod, UserAnswers}
 import pages.{AlcoholByVolumeQuestionPage, DraughtReliefQuestionPage, SmallProducerReliefQuestionPage}
 import views.ViewUtils.withPercentage
 import play.api.i18n.Messages
-
-case class TaxTypePageViewModel(abv: String, eligibleForDraughtRelief: Boolean, eligibleForSmallProducerRelief: Boolean)
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+case class TaxTypePageViewModel(
+  abv: String,
+  eligibleForDraughtRelief: Boolean,
+  eligibleForSmallProducerRelief: Boolean,
+  radioItems: Seq[RadioItem]
+)
 
 object TaxTypePageViewModel {
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): Option[TaxTypePageViewModel] =
+  def apply(userAnswers: UserAnswers, rates: Seq[RatePeriod])(implicit
+    messages: Messages
+  ): Option[TaxTypePageViewModel] =
     for {
       abvBigDecimal                  <- userAnswers.get(AlcoholByVolumeQuestionPage)
       eligibleForDraughtRelief       <- userAnswers.get(DraughtReliefQuestionPage)
       eligibleForSmallProducerRelief <- userAnswers.get(SmallProducerReliefQuestionPage)
-    } yield TaxTypePageViewModel(
-      withPercentage(abvBigDecimal),
-      eligibleForDraughtRelief,
-      eligibleForSmallProducerRelief
-    )
+      ratePeriod                     <- rates.headOption
+    } yield {
+      val radioItems = ratePeriod.rateBands.map { rateBand =>
+        RadioItem(
+          content = Text(s"${rateBand.alcoholRegime}, ${messages("taxType.taxTypeRadio.taxType")} ${rateBand.taxType}"),
+          value = Some(rateBand.taxType),
+          id = Some(s"value_${rateBand.taxType}")
+        )
+      }
+      TaxTypePageViewModel(
+        withPercentage(abvBigDecimal),
+        eligibleForDraughtRelief,
+        eligibleForSmallProducerRelief,
+        radioItems
+      )
+    }
 }

@@ -27,14 +27,18 @@ object RateType {
 
   case object Core extends RateType
   case object DraughtRelief extends RateType
+  case object SmallProducerRelief extends RateType
+  case object DraughtAndSmallProducerRelief extends RateType
 
   implicit val format: Format[RateType] = new Format[RateType] {
     override def reads(json: JsValue): JsResult[RateType] = json.validate[String] match {
       case JsSuccess(value, _) =>
         value match {
-          case "Core"          => JsSuccess(Core)
-          case "DraughtRelief" => JsSuccess(DraughtRelief)
-          case s               => JsError(s"$s is not a valid RateType")
+          case "Core"                          => JsSuccess(Core)
+          case "DraughtRelief"                 => JsSuccess(DraughtRelief)
+          case "SmallProducerRelief"           => JsSuccess(SmallProducerRelief)
+          case "DraughtAndSmallProducerRelief" => JsSuccess(DraughtAndSmallProducerRelief)
+          case s                               => JsError(s"$s is not a valid RateType")
         }
       case e: JsError          => e
     }
@@ -99,7 +103,7 @@ case class RateBand(
   alcoholRegime: Set[AlcoholRegime],
   minABV: AlcoholByVolume,
   maxABV: AlcoholByVolume,
-  rate: BigDecimal
+  rate: Option[BigDecimal]
 )
 
 object RateBand {

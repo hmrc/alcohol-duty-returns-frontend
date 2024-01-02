@@ -16,18 +16,13 @@
 
 package generators
 
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, TaxType}
+import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 
 import java.time.YearMonth
 
 trait ModelGenerators {
-
-  implicit lazy val arbitraryTaxType: Arbitrary[TaxType] =
-    Arbitrary {
-      Gen.oneOf(TaxType.values)
-    }
 
   implicit val arbitraryYearMonth: Arbitrary[YearMonth] = Arbitrary {
     for {
@@ -89,7 +84,7 @@ trait ModelGenerators {
       alcoholRegime <- Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
       minABV        <- arbitraryAlcoholByVolume.arbitrary
       maxABV        <- arbitraryAlcoholByVolume.arbitrary
-      rate          <- Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_))
+      rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
     } yield RateBand(taxType, description, rateType, alcoholRegime, minABV, maxABV, rate)
   }
 
@@ -103,7 +98,7 @@ trait ModelGenerators {
     } yield RatePeriod(name, isLatest, validityStartDate, validityEndDate, rateBands)
   }
 
-  implicit val arbitraryListRatePeriod: Arbitrary[Seq[RatePeriod]] = Arbitrary {
+  implicit val arbitraryListOfRatePeriod: Arbitrary[Seq[RatePeriod]] = Arbitrary {
     Gen.listOf(arbitraryRatePeriod.arbitrary)
   }
 }

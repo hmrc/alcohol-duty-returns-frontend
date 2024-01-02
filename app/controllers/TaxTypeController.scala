@@ -16,26 +16,25 @@
 
 package controllers
 
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.TaxTypeFormProvider
-
-import javax.inject.Inject
-import models.Mode
+import models.{Mode, RatePeriod}
 import navigation.Navigator
 import pages.TaxTypePage
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Results.Redirect
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.TaxTypePageViewModel
 import views.html.TaxTypeView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  cacheConnector: CacheConnector,
+  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -49,16 +48,19 @@ class TaxTypeController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(TaxTypePage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(TaxTypePage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    TaxTypePageViewModel(request.userAnswers) match {
-      case None     => Redirect(routes.JourneyRecoveryController.onPageLoad())
-      case Some(vm) => Ok(view(preparedForm, mode, vm))
-    }
+      alcoholDutyCalculatorConnector.rates().map { rates: Seq[RatePeriod] =>
+        TaxTypePageViewModel(request.userAnswers, rates) match {
+          case None     => Redirect(routes.JourneyRecoveryController.onPageLoad())
+          case Some(vm) => Ok(view(preparedForm, mode, vm))
+        }
+      }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -67,16 +69,16 @@ class TaxTypeController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors =>
-            Future.successful(
-              TaxTypePageViewModel(request.userAnswers) match {
+            alcoholDutyCalculatorConnector.rates().map { rates: Seq[RatePeriod] =>
+              TaxTypePageViewModel(request.userAnswers, rates) match {
                 case None     => Redirect(routes.JourneyRecoveryController.onPageLoad())
                 case Some(vm) => BadRequest(view(formWithErrors, mode, vm))
               }
-            ),
+            },
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxTypePage, value))
-              _              <- sessionRepository.set(updatedAnswers)
+              _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers))
         )
   }

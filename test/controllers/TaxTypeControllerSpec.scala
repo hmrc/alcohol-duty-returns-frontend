@@ -17,8 +17,9 @@
 package controllers
 
 import base.SpecBase
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.TaxTypeFormProvider
-import models.{NormalMode, TaxType, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RatePeriod, RateType, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -28,10 +29,11 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import uk.gov.hmrc.http.HttpResponse
 import viewmodels.TaxTypePageViewModel
 import views.html.TaxTypeView
 
+import java.time.YearMonth
 import scala.concurrent.Future
 
 class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
@@ -54,11 +56,39 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     .success
     .value
 
+  val ratePeriodList = Seq(
+    RatePeriod(
+      "period1",
+      isLatest = true,
+      YearMonth.of(2023, 1),
+      None,
+      Seq(
+        RateBand(
+          "310",
+          "some band",
+          RateType.DraughtRelief,
+          Set(AlcoholRegime.Beer),
+          AlcoholByVolume(0.1),
+          AlcoholByVolume(5.8),
+          Some(BigDecimal(10.99))
+        )
+      )
+    )
+  )
+
   "TaxType Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(fullUserAnswers)).build()
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rates()(any())) thenReturn Future.successful(ratePeriodList)
+
+      val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
+        .overrides(
+          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+        )
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, taxTypeRoute)
@@ -67,7 +97,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[TaxTypeView]
 
-        val viewModel = TaxTypePageViewModel(fullUserAnswers)(messages(application)).get
+        val viewModel = TaxTypePageViewModel(fullUserAnswers, ratePeriodList)(messages(application)).get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, viewModel)(request, messages(application)).toString
@@ -76,9 +106,17 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = fullUserAnswers.set(TaxTypePage, TaxType.values.head).success.value
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rates()(any())) thenReturn Future.successful(ratePeriodList)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val userAnswers = fullUserAnswers.set(TaxTypePage, "some value").success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+        )
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, taxTypeRoute)
@@ -87,10 +125,10 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val viewModel = TaxTypePageViewModel(userAnswers)(messages(application)).get
+        val viewModel = TaxTypePageViewModel(userAnswers, ratePeriodList)(messages(application)).get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(TaxType.values.head), NormalMode, viewModel)(
+        contentAsString(result) mustEqual view(form.fill("some value"), NormalMode, viewModel)(
           request,
           messages(application)
         ).toString
@@ -99,22 +137,21 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      val mockCacheConnector = mock[CacheConnector]
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
 
       running(application) {
         val request =
           FakeRequest(POST, taxTypeRoute)
-            .withFormUrlEncodedBody(("value", TaxType.values.head.toString))
+            .withFormUrlEncodedBody(("value", "some value"))
 
         val result = route(application, request).value
 
@@ -125,20 +162,28 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(fullUserAnswers)).build()
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rates()(any())) thenReturn Future.successful(ratePeriodList)
+
+      val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
+        .overrides(
+          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+        )
+        .build()
 
       running(application) {
         val request =
           FakeRequest(POST, taxTypeRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+            .withFormUrlEncodedBody(("value", ""))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(Map("value" -> ""))
 
         val view = application.injector.instanceOf[TaxTypeView]
 
         val result = route(application, request).value
 
-        val viewModel = TaxTypePageViewModel(fullUserAnswers)(messages(application)).get
+        val viewModel = TaxTypePageViewModel(fullUserAnswers, ratePeriodList)(messages(application)).get
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, viewModel)(
@@ -163,9 +208,17 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       }
 
       "if one of the necessary userAnswer data are missing" in {
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates()(any())) thenReturn Future.successful(ratePeriodList)
+
         val userAnswers = fullUserAnswers.remove(AlcoholByVolumeQuestionPage).success.value
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
 
         running(application) {
           val request = FakeRequest(GET, taxTypeRoute)
@@ -186,7 +239,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
         running(application) {
           val request =
             FakeRequest(POST, taxTypeRoute)
-              .withFormUrlEncodedBody(("value", TaxType.values.head.toString))
+              .withFormUrlEncodedBody(("value", "some value"))
 
           val result = route(application, request).value
 
@@ -195,16 +248,24 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
           redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
         }
       }
-      "if one of the necessary userAnswer data are missing" in {
+      "if one of the necessary userAnswer data are missing and invalid data is submitted" in {
+
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates()(any())) thenReturn Future.successful(ratePeriodList)
 
         val userAnswers = fullUserAnswers.remove(DraughtReliefQuestionPage).success.value
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
 
         running(application) {
           val request =
             FakeRequest(POST, taxTypeRoute)
-              .withFormUrlEncodedBody(("value", "invalid value"))
+              .withFormUrlEncodedBody(("value", ""))
 
           val result = route(application, request).value
 
