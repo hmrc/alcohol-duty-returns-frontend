@@ -196,3 +196,9 @@ declareIrishWhiskey.error.maximumRequired = The volume of Irish Whiskey you need
 declareIrishWhiskey.error.twoDecimalPlaces = The volume of Irish Whiskey you need to declare must be a number to 2 decimal places
 declareIrishWhiskey.change.hidden = Declare Irish Whiskey
 
+
+declareAlcoholDutyQuestion.title = declareAlcoholDutyQuestion
+declareAlcoholDutyQuestion.heading = declareAlcoholDutyQuestion
+declareAlcoholDutyQuestion.checkYourAnswersLabel = declareAlcoholDutyQuestion
+declareAlcoholDutyQuestion.error.required = Select yes if declareAlcoholDutyQuestion
+declareAlcoholDutyQuestion.change.hidden = DeclareAlcoholDutyQuestion
