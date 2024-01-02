@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AlcoholDutyCalculatorConnector @Inject()(
+class AlcoholDutyCalculatorConnector @Inject() (
   config: FrontendAppConfig,
   implicit val httpClient: HttpClient
 )(implicit ec: ExecutionContext)

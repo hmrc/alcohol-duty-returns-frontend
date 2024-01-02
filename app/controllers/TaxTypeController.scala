@@ -20,7 +20,7 @@ import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.TaxTypeFormProvider
 import models.{Mode, RatePeriod}
-import navigation.Navigator
+import navigation.ProductEntryNavigator
 import pages.TaxTypePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -35,7 +35,7 @@ class TaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
-  navigator: Navigator,
+  navigator: ProductEntryNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,

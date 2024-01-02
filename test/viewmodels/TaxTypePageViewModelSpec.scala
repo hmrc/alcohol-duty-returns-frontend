@@ -67,7 +67,7 @@ class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks wi
           .value
         TaxTypePageViewModel(userAnswers, ratePeriodList) mustBe Some(
           TaxTypePageViewModel(
-            s"10.1${messages("site.percentage")}",
+            s"10.1${messages("site.unit.percentage")}",
             true,
             false,
             List(

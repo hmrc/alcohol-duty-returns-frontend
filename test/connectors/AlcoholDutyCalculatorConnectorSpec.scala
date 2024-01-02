@@ -33,7 +33,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures {
   protected implicit val hc: HeaderCarrier    = HeaderCarrier()
   val mockConfig: FrontendAppConfig           = mock[FrontendAppConfig]
   val connector                               = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val ratePeriodList: Seq[RatePeriod] = Seq(
+  val ratePeriodList: Seq[RatePeriod]         = Seq(
     RatePeriod(
       "period1",
       isLatest = true,
