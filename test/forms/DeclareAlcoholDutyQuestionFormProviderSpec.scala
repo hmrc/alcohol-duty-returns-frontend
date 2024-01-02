@@ -6,7 +6,7 @@ import play.api.data.FormError
 class DeclareAlcoholDutyQuestionFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "declareAlcoholDutyQuestion.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new DeclareAlcoholDutyQuestionFormProvider()()
 

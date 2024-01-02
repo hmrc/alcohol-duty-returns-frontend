@@ -22,7 +22,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DeclareAlcoholDutyQuestionFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val declareAlcoholDutyQuestionRoute = routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
 

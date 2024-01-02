@@ -24,21 +24,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareAlcoholDutyQuestionSummary  {
+object DeclareAlcoholDutyQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareAlcoholDutyQuestionPage).map {
-      answer =>
+    answers.get(DeclareAlcoholDutyQuestionPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        val value = if (answer) "site.yes" else "site.no"
-
-        SummaryListRowViewModel(
-          key     = "declareAlcoholDutyQuestion.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("declareAlcoholDutyQuestion.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "declareAlcoholDutyQuestion.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("declareAlcoholDutyQuestion.change.hidden"))
         )
+      )
     }
 }

@@ -27,10 +27,15 @@ import models._
 class ProductEntryNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case ProductNamePage             => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
-    case AlcoholByVolumeQuestionPage => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
-    case DraughtReliefQuestionPage   => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
-    case _                           =>
+    case ProductNamePage                => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
+    case AlcoholByVolumeQuestionPage    => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+    case DraughtReliefQuestionPage      => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+    case DeclareAlcoholDutyQuestionPage =>
+      _ =>
+        routes.SmallProducerReliefQuestionController.onPageLoad(
+          NormalMode
+        ) //change it to product entry guidance once 753 is merged
+    case _                              =>
       _ => routes.IndexController.onPageLoad
 
   }
