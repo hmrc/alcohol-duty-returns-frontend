@@ -92,6 +92,8 @@ POST       /changeDeclareIrishWhiskey                        controllers.Declare
 
 # End of quarterly spirits questions sub-journey
 
+GET        /productEntryGuidance                       controllers.ProductEntryGuidanceController.onPageLoad()
+
 GET        /declareAlcoholDutyQuestion                        controllers.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /declareAlcoholDutyQuestion                        controllers.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareAlcoholDutyQuestion                  controllers.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
