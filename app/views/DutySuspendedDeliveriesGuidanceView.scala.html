@@ -14,11 +14,12 @@
  * limitations under the License.
  *@
 
-@import components.PageHeading
+@import components.{PageHeading, SectionHeading}
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
+        sectionHeading: SectionHeading,
         pageHeading: PageHeading
 
 )
@@ -26,6 +27,11 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("dutySuspendedDeliveriesGuidance.title"))) {
+
+@sectionHeading(
+    id = "duty-suspended-deliveries-guidance-section",
+    text = messages("section.alcoholDutyReturn"),
+)
 
 @pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
 

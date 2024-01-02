@@ -21,11 +21,11 @@ import controllers.routes
 import pages._
 import models._
 
-class NavigatorSpec extends SpecBase {
+class ProductEntryNavigatorSpec extends SpecBase {
 
-  val navigator = new Navigator
+  val navigator = new ProductEntryNavigator
 
-  "Navigator" - {
+  "ProductEntryNavigator" - {
 
     "in Normal mode" - {
 
@@ -78,33 +78,6 @@ class NavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers("id")
         ) mustBe routes.ProductVolumeController.onPageLoad(NormalMode)
-      }
-
-      "must go from the Declare duty suspended deliveries question page to Duty suspended deliveries guidance page" in {
-
-        navigator.nextPage(
-          DeclareDutySuspendedDeliveriesQuestionPage,
-          NormalMode,
-          UserAnswers("id")
-        ) mustBe routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
-      }
-
-      "must go from the Declare duty suspended deliveries outside UK page to Declare duty suspended deliveries inside UK page" in {
-
-        navigator.nextPage(
-          DeclareDutySuspendedDeliveriesOutsideUkPage,
-          NormalMode,
-          UserAnswers("id")
-        ) mustBe routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
-      }
-
-      "must go from theDeclare duty suspended deliveries inside UK page to Declare duty suspended received page" in {
-
-        navigator.nextPage(
-          DutySuspendedDeliveriesPage,
-          NormalMode,
-          UserAnswers("id")
-        ) mustBe routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
       }
     }
 

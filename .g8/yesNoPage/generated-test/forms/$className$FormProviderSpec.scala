@@ -12,7 +12,7 @@ class $className$FormProviderSpec extends BooleanFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "$className;format="decap"$-yesNoValue"
 
     behave like booleanField(
       form,

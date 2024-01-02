@@ -1,9 +1,12 @@
+@import components.{SectionHeading, PageHeading}
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukCheckboxes: GovukCheckboxes,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -16,6 +19,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        @sectionHeading(
+            id = "$className;format="decap"$-section",
+            text = messages("section.sectionName"),
+        )
+
         @govukCheckboxes(
             CheckboxesViewModel(
                 form   = form,
@@ -26,7 +34,7 @@
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
         )
     }
 }

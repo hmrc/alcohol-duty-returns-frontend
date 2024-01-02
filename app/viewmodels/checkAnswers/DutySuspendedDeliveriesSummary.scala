@@ -30,7 +30,7 @@ object DutySuspendedDeliveriesSummary {
     answers.get(DutySuspendedDeliveriesPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedDeliveries.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"${answer.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedDeliveriesController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedDeliveries.change.hidden"))

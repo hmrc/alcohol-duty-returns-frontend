@@ -22,7 +22,7 @@ import forms.ProductNameFormProvider
 
 import javax.inject.Inject
 import models.{Mode, UserAnswers}
-import navigation.Navigator
+import navigation.ProductEntryNavigator
 import pages.ProductNamePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ProductNameController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: Navigator,
+  navigator: ProductEntryNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   formProvider: ProductNameFormProvider,
