@@ -19,12 +19,18 @@
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
+        sectionHeading: SectionHeading,
         pageHeading: PageHeading
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("productEntryGuidance.title"))) {
+
+    @sectionHeading(
+        id = "duty-suspended-deliveries-guidance-section",
+        text = messages("section.alcoholDutyReturn"),
+    )
 
     @pageHeading(messages("productEntryGuidance.heading"))
 
