@@ -39,13 +39,17 @@ object TaxTypePageViewModel {
       eligibleForSmallProducerRelief <- userAnswers.get(SmallProducerReliefQuestionPage)
       ratePeriod                     <- rates.headOption
     } yield {
-      val radioItems = ratePeriod.rateBands.map { rateBand =>
-        RadioItem(
-          content = Text(s"${rateBand.alcoholRegime}, ${messages("taxType.taxTypeRadio.taxType")} ${rateBand.taxType}"),
-          value = Some(rateBand.taxType),
-          id = Some(s"value_${rateBand.taxType}")
-        )
-      }
+      val radioItems = for {
+        rateBand <- ratePeriod.rateBands
+        regime   <- rateBand.alcoholRegime
+      } yield RadioItem(
+        content = Text(
+          s"${messages("taxType.taxTypeRadio.regime." + regime)}, ${messages("taxType.taxTypeRadio.taxType")} ${rateBand.taxType}"
+        ),
+        value = Some(s"${rateBand.taxType}_$regime"),
+        id = Some(s"value_${rateBand.taxType}")
+      )
+
       TaxTypePageViewModel(
         withPercentage(abvBigDecimal),
         eligibleForDraughtRelief,
