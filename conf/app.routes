@@ -93,3 +93,8 @@ POST       /changeDeclareIrishWhiskey                        controllers.Declare
 # End of quarterly spirits questions sub-journey
 
 GET        /productEntryGuidance                       controllers.ProductEntryGuidanceController.onPageLoad()
+
+GET        /declareSmallProducerReliefDutyRate                  controllers.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareSmallProducerReliefDutyRate                  controllers.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareSmallProducerReliefDutyRate                        controllers.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
