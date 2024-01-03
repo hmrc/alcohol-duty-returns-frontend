@@ -21,6 +21,8 @@ GET         /account/signed-out                          controllers.auth.Signed
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 # Beginning of product entry sub-journey
+GET        /productEntryGuidance                       controllers.ProductEntryGuidanceController.onPageLoad()
+
 GET        /productName                        controllers.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /productName                        controllers.ProductNameController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductName                  controllers.ProductNameController.onPageLoad(mode: Mode = CheckMode)
@@ -90,11 +92,12 @@ POST       /declareIrishWhiskey                  controllers.DeclareIrishWhiskey
 GET        /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
 
-# End of quarterly spirits questions sub-journey
+GET        /quarterlySpiritsReturnGuidance                       controllers.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
-GET        /productEntryGuidance                       controllers.ProductEntryGuidanceController.onPageLoad()
+# End of quarterly spirits questions sub-journey
 
 GET        /declareAlcoholDutyQuestion                        controllers.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /declareAlcoholDutyQuestion                        controllers.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDeclareAlcoholDutyQuestion                  controllers.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareAlcoholDutyQuestion                  controllers.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+
