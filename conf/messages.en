@@ -196,7 +196,6 @@ declareIrishWhiskey.error.maximumRequired = The volume of Irish Whiskey you need
 declareIrishWhiskey.error.twoDecimalPlaces = The volume of Irish Whiskey you need to declare must be a number to 2 decimal places
 declareIrishWhiskey.change.hidden = Declare Irish Whiskey
 
-
 quarterlySpiritsReturnGuidance.title = Tell us about your ingredients and spirits
 quarterlySpiritsReturnGuidance.heading = Tell us about your ingredients and spirits
 quarterlySpiritsReturnGuidance.p1 = You need to tell us how much:
@@ -227,3 +226,13 @@ quarterlySpiritsReturnGuidance.para3.list11 = made-wine
 quarterlySpiritsReturnGuidance.para3.list12 = cider or perry
 quarterlySpiritsReturnGuidance.para3.list13 = any other materials
 quarterlySpiritsReturnGuidance.p4 = Your answers will not change your duty calculation.
+
+productEntryGuidance.title = Tell us about your alcohol
+productEntryGuidance.heading = Tell us about your alcohol
+productEntryGuidance.p1 = For every alcoholic product you declare, we need to know
+productEntryGuidance.para1.list1 = its Alcohol by Volume (ABV) strength
+productEntryGuidance.para1.list2 = its tax type
+productEntryGuidance.para1.list3 = how much of it you need to declare
+productEntryGuidance.p2 = We will also ask you to give each product a name so you can identify it on your return.
+productEntryGuidance.p3 = You can group different products together as a single item on your return as long as they have the same ABV strength and tax type.
+productEntryGuidance.p4 = You do not need to list each item by brand or Stock Keeping Unit (SKU).
