@@ -1,4 +1,4 @@
-package pages
+package pages.$section$
 
 import play.api.libs.json.JsPath
 

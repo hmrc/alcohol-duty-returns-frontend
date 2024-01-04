@@ -1,4 +1,4 @@
-package forms
+package forms.$section$
 
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError

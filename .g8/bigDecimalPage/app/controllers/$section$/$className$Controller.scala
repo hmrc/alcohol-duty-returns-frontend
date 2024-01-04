@@ -1,4 +1,4 @@
-package controllers
+package controllers.$section$
 
 import controllers.actions._
 import forms.$className$FormProvider
