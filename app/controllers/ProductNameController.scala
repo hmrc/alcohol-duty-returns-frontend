@@ -37,6 +37,7 @@ class ProductNameController @Inject() (
   navigator: ProductEntryNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
   formProvider: ProductNameFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ProductNameView
@@ -46,8 +47,8 @@ class ProductNameController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = request.userAnswers.flatMap(_.get(ProductNamePage)) match {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.get(ProductNamePage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -55,17 +56,18 @@ class ProductNameController @Inject() (
     Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          for {
-            updatedAnswers <-
-              Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(ProductNamePage, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ProductNamePage, mode, updatedAnswers))
-      )
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(ProductNamePage, value))
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(ProductNamePage, mode, updatedAnswers))
+        )
   }
 }

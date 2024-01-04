@@ -38,7 +38,6 @@ class DeclareAlcoholDutyQuestionController @Inject() (
   navigator: ProductEntryNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   formProvider: DeclareAlcoholDutyQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DeclareAlcoholDutyQuestionView
@@ -48,8 +47,8 @@ class DeclareAlcoholDutyQuestionController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
+    val preparedForm = request.userAnswers.flatMap(_.get(DeclareAlcoholDutyQuestionPage)) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -57,19 +56,21 @@ class DeclareAlcoholDutyQuestionController @Inject() (
     Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers   <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
-              filterUserAnswer <- Future.fromTry(filterAlcoholDutyQuestionAnswer(updatedAnswers, value))
-              _                <- cacheConnector.set(filterUserAnswer)
-            } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer))
-        )
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        value =>
+          for {
+            updatedAnswers   <-
+              Future.fromTry(
+                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(DeclareAlcoholDutyQuestionPage, value)
+              )
+            filterUserAnswer <- Future.fromTry(filterAlcoholDutyQuestionAnswer(updatedAnswers, value))
+            _                <- cacheConnector.set(filterUserAnswer)
+          } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer))
+      )
   }
 
   def filterAlcoholDutyQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
