@@ -21,12 +21,14 @@ import forms.DeclareAlcoholDutyQuestionFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.ProductEntryNavigator
-import pages.DeclareAlcoholDutyQuestionPage
+import pages.{AlcoholByVolumeQuestionPage, DeclareAlcoholDutyQuestionPage, DraughtReliefQuestionPage, ProductNamePage, SmallProducerReliefQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DeclareAlcoholDutyQuestionView
+import scala.util.Try
+import models.UserAnswers
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -63,9 +65,22 @@ class DeclareAlcoholDutyQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, updatedAnswers))
+              updatedAnswers   <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
+              filterUserAnswer <- Future.fromTry(filterAlcoholDutyQuestionAnswer(updatedAnswers, value))
+              _                <- cacheConnector.set(filterUserAnswer)
+            } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer))
         )
   }
+
+  def filterAlcoholDutyQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
+    if (value) Try(userAnswer)
+    else
+      userAnswer.remove(
+        List(
+          AlcoholByVolumeQuestionPage,
+          ProductNamePage,
+          DraughtReliefQuestionPage,
+          SmallProducerReliefQuestionPage
+        )
+      )
 }
