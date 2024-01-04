@@ -21,6 +21,8 @@ GET         /account/signed-out                          controllers.auth.Signed
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 # Beginning of product entry sub-journey
+GET        /productEntryGuidance                       controllers.ProductEntryGuidanceController.onPageLoad()
+
 GET        /productName                        controllers.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /productName                        controllers.ProductNameController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductName                  controllers.ProductNameController.onPageLoad(mode: Mode = CheckMode)
@@ -45,6 +47,12 @@ GET        /productVolume                  controllers.ProductVolumeController.o
 POST       /productVolume                  controllers.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductVolume                        controllers.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeProductVolume                        controllers.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /declareSmallProducerReliefDutyRate                  controllers.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareSmallProducerReliefDutyRate                  controllers.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareSmallProducerReliefDutyRate                        controllers.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
+
 # End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
@@ -90,11 +98,6 @@ POST       /declareIrishWhiskey                  controllers.DeclareIrishWhiskey
 GET        /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
 
+GET        /quarterlySpiritsReturnGuidance                       controllers.QuarterlySpiritsReturnGuidanceController.onPageLoad()
+
 # End of quarterly spirits questions sub-journey
-
-GET        /productEntryGuidance                       controllers.ProductEntryGuidanceController.onPageLoad()
-
-GET        /declareSmallProducerReliefDutyRate                  controllers.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareSmallProducerReliefDutyRate                  controllers.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareSmallProducerReliefDutyRate                        controllers.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)

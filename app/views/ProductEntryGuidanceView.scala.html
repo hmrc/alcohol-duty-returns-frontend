@@ -47,6 +47,7 @@
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(routes.ProductNameController.onPageLoad(NormalMode).url)
     )
 
 }
