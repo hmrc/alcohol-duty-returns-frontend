@@ -15,14 +15,17 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading}
+@import components.{Link, SectionHeading, PageHeading, Paragraph}
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
+    link: Link,
+    paragraph: Paragraph,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    pageHeading: PageHeading,
     sectionHeading: SectionHeading
 )
 
@@ -37,23 +40,37 @@
         }
 
         @sectionHeading(
-            id = "declareSmallProducerReliefDutyRate-section",
-            text = messages("section.sectionName"),
+            id = "declare-small-producer-relief-duty-rate-section",
+            text = messages("section.alcoholDutyReturn"),
+        )
+
+      @pageHeading(messages("declareSmallProducerReliefDutyRate.heading"))
+
+      @paragraph( content =
+            HtmlContent(
+                messages("declareSmallProducerReliefDutyRate.guidance.link.prefix") +
+                link(
+                    id = "declare-small-producer-relief-duty-rate-link",
+                    text = messages("declareSmallProducerReliefDutyRate.guidance.link.text"),
+                    href = messages("declareSmallProducerReliefDutyRate.guidance.link.url"),
+                    newTab = true
+                ) +
+                messages("site.dot"))
         )
 
         @govukInput(
             InputViewModel(
                 field = form("declareSmallProducerReliefDutyRate-input"),
-                label = LabelViewModel(messages("declareSmallProducerReliefDutyRate.heading")).asPageHeading()
+                label = LabelViewModel(messages("declareSmallProducerReliefDutyRate.heading")).asVisuallyHidden()
             )
             .asNumeric()
             .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("declareSmallProducerReliefDutyRate.inputSuffix")))
+            .withPoundPrefix
             .withHint(Hint(content =  messages("declareSmallProducerReliefDutyRate.hint")))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }

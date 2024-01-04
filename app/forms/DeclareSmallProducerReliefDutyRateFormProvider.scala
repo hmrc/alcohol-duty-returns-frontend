@@ -28,8 +28,8 @@ class DeclareSmallProducerReliefDutyRateFormProvider @Inject() extends Mappings 
         "declareSmallProducerReliefDutyRate.error.required",
         "declareSmallProducerReliefDutyRate.error.nonNumeric",
         "declareSmallProducerReliefDutyRate.error.twoDecimalPlaces"
-        )
-          .verifying(minimumValue(BigDecimal(0.00), "declareSmallProducerReliefDutyRate.error.minimumRequired"))
-          .verifying(maximumValue(BigDecimal(999999999.99), "declareSmallProducerReliefDutyRate.error.maximumRequired"))
+      )
+        .verifying(minimumValue(BigDecimal(0.01), "declareSmallProducerReliefDutyRate.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "declareSmallProducerReliefDutyRate.error.maximumRequired"))
     )
 }

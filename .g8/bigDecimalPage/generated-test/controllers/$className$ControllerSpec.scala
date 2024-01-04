@@ -24,7 +24,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = $minimum$
+  val validAnswer = BigDecimal($minimum$)
 
   lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(NormalMode).url
 
