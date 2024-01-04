@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import viewmodels.checkAnswers.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
-import views.html.CheckYourAnswersDutySuspendedDeliveriesView
+import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 
 class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase with SummaryListFluency {
 

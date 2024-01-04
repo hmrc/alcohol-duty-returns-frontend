@@ -18,45 +18,46 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.DutySuspendedDeliveriesFormProvider
+import forms.DeclareDutySuspendedDeliveriesOutsideUkFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.DutySuspendedDeliveriesPage
+import pages.DeclareDutySuspendedDeliveriesOutsideUkPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.DutySuspendedDeliveriesView
+import views.html.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkView
 
 import scala.concurrent.Future
 
-class DutySuspendedDeliveriesControllerSpec extends SpecBase with MockitoSugar {
+class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new DutySuspendedDeliveriesFormProvider()
+  val formProvider = new DeclareDutySuspendedDeliveriesOutsideUkFormProvider()
   val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = BigDecimal(10.23)
 
-  lazy val dutySuspendedDeliveriesRoute = routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode).url
+  lazy val declareDutySuspendedDeliveriesOutsideUkRoute =
+    routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url
 
-  "DutySuspendedDeliveries Controller" - {
+  "DeclareDutySuspendedDeliveriesOutsideUk Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, dutySuspendedDeliveriesRoute)
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesOutsideUkRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DutySuspendedDeliveriesView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesOutsideUkView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -65,14 +66,15 @@ class DutySuspendedDeliveriesControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(DutySuspendedDeliveriesPage, validAnswer).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(DeclareDutySuspendedDeliveriesOutsideUkPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, dutySuspendedDeliveriesRoute)
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesOutsideUkRoute)
 
-        val view = application.injector.instanceOf[DutySuspendedDeliveriesView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesOutsideUkView]
 
         val result = route(application, request).value
 
@@ -102,8 +104,8 @@ class DutySuspendedDeliveriesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, dutySuspendedDeliveriesRoute)
-            .withFormUrlEncodedBody(("duty-suspended-deliveries-input", validAnswer.toString))
+          FakeRequest(POST, declareDutySuspendedDeliveriesOutsideUkRoute)
+            .withFormUrlEncodedBody(("declare-duty-suspended-deliveries-outside-uk-input", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -118,12 +120,12 @@ class DutySuspendedDeliveriesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, dutySuspendedDeliveriesRoute)
+          FakeRequest(POST, declareDutySuspendedDeliveriesOutsideUkRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[DutySuspendedDeliveriesView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesOutsideUkView]
 
         val result = route(application, request).value
 
@@ -137,7 +139,7 @@ class DutySuspendedDeliveriesControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, dutySuspendedDeliveriesRoute)
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesOutsideUkRoute)
 
         val result = route(application, request).value
 
@@ -152,7 +154,7 @@ class DutySuspendedDeliveriesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, dutySuspendedDeliveriesRoute)
+          FakeRequest(POST, declareDutySuspendedDeliveriesOutsideUkRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value

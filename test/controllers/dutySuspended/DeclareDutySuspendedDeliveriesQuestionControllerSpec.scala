@@ -18,46 +18,44 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.DeclareDutySuspendedReceivedFormProvider
+import forms.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.DeclareDutySuspendedReceivedPage
+import pages.DeclareDutySuspendedDeliveriesQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.DeclareDutySuspendedReceivedView
+import views.html.dutySuspended.DeclareDutySuspendedDeliveriesQuestionView
 
 import scala.concurrent.Future
 
-class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSugar {
-
-  val formProvider = new DeclareDutySuspendedReceivedFormProvider()
-  val form         = formProvider()
+class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal(10.23)
+  val formProvider = new DeclareDutySuspendedDeliveriesQuestionFormProvider()
+  val form         = formProvider()
 
-  lazy val declareDutySuspendedReceivedRoute =
-    routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode).url
+  lazy val declareDutySuspendedDeliveriesQuestionRoute =
+    routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
 
-  "DeclareDutySuspendedReceived Controller" - {
+  "DeclareDutySuspendedDeliveriesQuestion Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedReceivedRoute)
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedReceivedView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -66,23 +64,19 @@ class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSu
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers =
-        UserAnswers(userAnswersId).set(DeclareDutySuspendedReceivedPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedReceivedRoute)
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedReceivedView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -104,8 +98,8 @@ class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSu
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedReceivedRoute)
-            .withFormUrlEncodedBody(("declare-duty-suspended-received-input", validAnswer.toString))
+          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+            .withFormUrlEncodedBody(("declare-duty-suspended-deliveries-input", "true"))
 
         val result = route(application, request).value
 
@@ -120,12 +114,12 @@ class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSu
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedReceivedRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+            .withFormUrlEncodedBody(("value", ""))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedReceivedView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionView]
 
         val result = route(application, request).value
 
@@ -139,7 +133,7 @@ class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSu
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedReceivedRoute)
+        val request = FakeRequest(GET, declareDutySuspendedDeliveriesQuestionRoute)
 
         val result = route(application, request).value
 
@@ -154,13 +148,12 @@ class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSu
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedReceivedRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+          FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }

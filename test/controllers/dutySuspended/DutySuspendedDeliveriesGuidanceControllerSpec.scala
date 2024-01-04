@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.DutySuspendedDeliveriesGuidanceView
+import views.html.dutySuspended.DutySuspendedDeliveriesGuidanceView
 
 class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
 

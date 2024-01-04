@@ -18,28 +18,28 @@ package controllers
 
 import connectors.CacheConnector
 import controllers.actions._
-import forms.DeclareDutySuspendedReceivedFormProvider
+import forms.DeclareDutySuspendedDeliveriesOutsideUkFormProvider
 import models.Mode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
-import pages.DeclareDutySuspendedReceivedPage
+import pages.DeclareDutySuspendedDeliveriesOutsideUkPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.DeclareDutySuspendedReceivedView
+import views.html.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeclareDutySuspendedReceivedController @Inject() (
+class DeclareDutySuspendedDeliveriesOutsideUkController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: DeclareDutySuspendedReceivedFormProvider,
+  formProvider: DeclareDutySuspendedDeliveriesOutsideUkFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: DeclareDutySuspendedReceivedView
+  view: DeclareDutySuspendedDeliveriesOutsideUkView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -47,7 +47,7 @@ class DeclareDutySuspendedReceivedController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeclareDutySuspendedReceivedPage) match {
+    val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesOutsideUkPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -64,9 +64,9 @@ class DeclareDutySuspendedReceivedController @Inject() (
           value =>
             for {
               updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(DeclareDutySuspendedReceivedPage, value))
+                Future.fromTry(request.userAnswers.set(DeclareDutySuspendedDeliveriesOutsideUkPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DeclareDutySuspendedReceivedPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesOutsideUkPage, mode, updatedAnswers))
         )
   }
 }

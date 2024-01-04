@@ -18,46 +18,46 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.DeclareDutySuspendedDeliveriesOutsideUkFormProvider
+import forms.DeclareDutySuspendedReceivedFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.DeclareDutySuspendedDeliveriesOutsideUkPage
+import pages.DeclareDutySuspendedReceivedPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.DeclareDutySuspendedDeliveriesOutsideUkView
+import views.html.dutySuspended.DeclareDutySuspendedReceivedView
 
 import scala.concurrent.Future
 
-class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase with MockitoSugar {
+class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new DeclareDutySuspendedDeliveriesOutsideUkFormProvider()
+  val formProvider = new DeclareDutySuspendedReceivedFormProvider()
   val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = BigDecimal(10.23)
 
-  lazy val declareDutySuspendedDeliveriesOutsideUkRoute =
-    routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url
+  lazy val declareDutySuspendedReceivedRoute =
+    routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode).url
 
-  "DeclareDutySuspendedDeliveriesOutsideUk Controller" - {
+  "DeclareDutySuspendedReceived Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedDeliveriesOutsideUkRoute)
+        val request = FakeRequest(GET, declareDutySuspendedReceivedRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesOutsideUkView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedReceivedView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -67,14 +67,14 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase wit
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(DeclareDutySuspendedDeliveriesOutsideUkPage, validAnswer).success.value
+        UserAnswers(userAnswersId).set(DeclareDutySuspendedReceivedPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedDeliveriesOutsideUkRoute)
+        val request = FakeRequest(GET, declareDutySuspendedReceivedRoute)
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesOutsideUkView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedReceivedView]
 
         val result = route(application, request).value
 
@@ -104,8 +104,8 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase wit
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedDeliveriesOutsideUkRoute)
-            .withFormUrlEncodedBody(("declare-duty-suspended-deliveries-outside-uk-input", validAnswer.toString))
+          FakeRequest(POST, declareDutySuspendedReceivedRoute)
+            .withFormUrlEncodedBody(("declare-duty-suspended-received-input", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -120,12 +120,12 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase wit
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedDeliveriesOutsideUkRoute)
+          FakeRequest(POST, declareDutySuspendedReceivedRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesOutsideUkView]
+        val view = application.injector.instanceOf[DeclareDutySuspendedReceivedView]
 
         val result = route(application, request).value
 
@@ -139,7 +139,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase wit
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareDutySuspendedDeliveriesOutsideUkRoute)
+        val request = FakeRequest(GET, declareDutySuspendedReceivedRoute)
 
         val result = route(application, request).value
 
@@ -154,7 +154,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase wit
 
       running(application) {
         val request =
-          FakeRequest(POST, declareDutySuspendedDeliveriesOutsideUkRoute)
+          FakeRequest(POST, declareDutySuspendedReceivedRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value

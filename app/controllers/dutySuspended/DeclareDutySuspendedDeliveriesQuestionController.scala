@@ -18,28 +18,28 @@ package controllers
 
 import connectors.CacheConnector
 import controllers.actions._
-import forms.DutySuspendedDeliveriesFormProvider
+import forms.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.Mode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
-import pages.DutySuspendedDeliveriesPage
+import pages.DeclareDutySuspendedDeliveriesQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.DutySuspendedDeliveriesView
+import views.html.dutySuspended.DeclareDutySuspendedDeliveriesQuestionView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DutySuspendedDeliveriesController @Inject() (
+class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: DutySuspendedDeliveriesFormProvider,
+  formProvider: DeclareDutySuspendedDeliveriesQuestionFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: DutySuspendedDeliveriesView
+  view: DeclareDutySuspendedDeliveriesQuestionView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -47,7 +47,7 @@ class DutySuspendedDeliveriesController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DutySuspendedDeliveriesPage) match {
+    val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -63,9 +63,12 @@ class DutySuspendedDeliveriesController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedDeliveriesPage, value))
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(DeclareDutySuspendedDeliveriesQuestionPage, value)
+                )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DutySuspendedDeliveriesPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, updatedAnswers))
         )
   }
 }
