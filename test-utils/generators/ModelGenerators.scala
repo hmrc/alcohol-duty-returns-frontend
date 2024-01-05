@@ -44,6 +44,10 @@ trait ModelGenerators {
     )
   }
 
+  implicit val arbitrarySetOfAlcoholRegimes = Arbitrary {
+    Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
+  }
+
   val genAlcoholByVolumeValue: Gen[BigDecimal] =
     for {
       value <- Gen.choose(0.001, 100.00)
@@ -81,7 +85,7 @@ trait ModelGenerators {
       taxType       <- Gen.alphaStr
       description   <- Gen.alphaStr
       rateType      <- arbitraryRateType.arbitrary
-      alcoholRegime <- Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
+      alcoholRegime <- arbitrarySetOfAlcoholRegimes.arbitrary
       minABV        <- arbitraryAlcoholByVolume.arbitrary
       maxABV        <- arbitraryAlcoholByVolume.arbitrary
       rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))

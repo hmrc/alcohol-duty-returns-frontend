@@ -16,12 +16,11 @@
 
 package viewmodels
 
-import models.{RatePeriod, UserAnswers}
-import pages.{AlcoholByVolumeQuestionPage, DraughtReliefQuestionPage, SmallProducerReliefQuestionPage}
-import views.ViewUtils.withPercentage
+import models.{AlcoholByVolume, RateBand}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import views.ViewUtils.withPercentage
 case class TaxTypePageViewModel(
   abv: String,
   eligibleForDraughtRelief: Boolean,
@@ -30,31 +29,31 @@ case class TaxTypePageViewModel(
 )
 
 object TaxTypePageViewModel {
-  def apply(userAnswers: UserAnswers, rates: Seq[RatePeriod])(implicit
+  def apply(
+    abv: AlcoholByVolume,
+    eligibleForDraughtRelief: Boolean,
+    eligibleForSmallProducerRelief: Boolean,
+    rateBands: Seq[RateBand]
+  )(implicit
     messages: Messages
-  ): Option[TaxTypePageViewModel] =
-    for {
-      abvBigDecimal                  <- userAnswers.get(AlcoholByVolumeQuestionPage)
-      eligibleForDraughtRelief       <- userAnswers.get(DraughtReliefQuestionPage)
-      eligibleForSmallProducerRelief <- userAnswers.get(SmallProducerReliefQuestionPage)
-      ratePeriod                     <- rates.headOption
-    } yield {
-      val radioItems = for {
-        rateBand <- ratePeriod.rateBands
-        regime   <- rateBand.alcoholRegime
-      } yield RadioItem(
-        content = Text(
-          s"${messages("taxType.taxTypeRadio.regime." + regime)}, ${messages("taxType.taxTypeRadio.taxType")} ${rateBand.taxType}"
-        ),
-        value = Some(s"${rateBand.taxType}_$regime"),
-        id = Some(s"value_${rateBand.taxType}")
-      )
+  ): TaxTypePageViewModel = {
 
-      TaxTypePageViewModel(
-        withPercentage(abvBigDecimal),
-        eligibleForDraughtRelief,
-        eligibleForSmallProducerRelief,
-        radioItems
-      )
-    }
+    val radioItems: Seq[RadioItem] = for {
+      rateBand <- rateBands
+      regime   <- rateBand.alcoholRegime
+    } yield RadioItem(
+      content = Text(
+        s"${messages("taxType.taxTypeRadio.regime." + regime)}, ${messages("taxType.taxTypeRadio.taxType")} ${rateBand.taxType}"
+      ),
+      value = Some(s"${rateBand.taxType}_$regime"),
+      id = Some(s"value_${rateBand.taxType}")
+    )
+
+    TaxTypePageViewModel(
+      withPercentage(abv.value),
+      eligibleForDraughtRelief,
+      eligibleForSmallProducerRelief,
+      radioItems
+    )
+  }
 }

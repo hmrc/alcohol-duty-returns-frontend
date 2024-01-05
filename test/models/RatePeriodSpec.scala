@@ -27,6 +27,17 @@ import java.time.YearMonth
 
 class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyChecks with ModelGenerators {
   "RateType" - {
+    "when apply is called" - {
+      "should create correct instances" in {
+        RateType(hasDraughtRelief = false, hasSmallProducerRelief = false) mustEqual RateType.Core
+        RateType(hasDraughtRelief = true, hasSmallProducerRelief = false) mustEqual RateType.DraughtRelief
+        RateType(hasDraughtRelief = false, hasSmallProducerRelief = true) mustEqual RateType.SmallProducerRelief
+        RateType(
+          hasDraughtRelief = true,
+          hasSmallProducerRelief = true
+        ) mustEqual RateType.DraughtAndSmallProducerRelief
+      }
+    }
     "when writing to json" - {
       "should return the correct string representation" in {
         Json.toJson[RateType](RateType.Core) mustEqual JsString("Core")

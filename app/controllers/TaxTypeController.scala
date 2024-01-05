@@ -19,15 +19,18 @@ package controllers
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.TaxTypeFormProvider
-import models.{Mode, RatePeriod}
+import models.AlcoholRegime.{Beer, Cider, Spirits, Wine}
+import models.requests.DataRequest
+import models.{AlcoholByVolume, AlcoholRegime, Mode, RateBand, RateType}
 import navigation.ProductEntryNavigator
-import pages.TaxTypePage
+import pages.{AlcoholByVolumeQuestionPage, DraughtReliefQuestionPage, SmallProducerReliefQuestionPage, TaxTypePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.TaxTypePageViewModel
 import views.html.TaxTypeView
 
+import java.time.YearMonth
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -55,11 +58,24 @@ class TaxTypeController @Inject() (
         case Some(value) => form.fill(value)
       }
 
-      alcoholDutyCalculatorConnector.rates().map { rates: Seq[RatePeriod] =>
-        TaxTypePageViewModel(request.userAnswers, rates) match {
-          case None     => Redirect(routes.JourneyRecoveryController.onPageLoad())
-          case Some(vm) => Ok(view(preparedForm, mode, vm))
-        }
+      val (
+        abv: AlcoholByVolume,
+        eligibleForDraughtRelief: Boolean,
+        eligibleForSmallProducerRelief: Boolean,
+        rateType: RateType,
+        ratePeriod: YearMonth,
+        approvedAlcoholRegimes: Set[AlcoholRegime]
+      ) = rateParameters(request)
+
+      alcoholDutyCalculatorConnector.rates(rateType, abv, ratePeriod, approvedAlcoholRegimes).map {
+        rates: Seq[RateBand] =>
+          Ok(
+            view(
+              preparedForm,
+              mode,
+              TaxTypePageViewModel(abv, eligibleForDraughtRelief, eligibleForSmallProducerRelief, rates)
+            )
+          )
       }
   }
 
@@ -68,18 +84,58 @@ class TaxTypeController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
-            alcoholDutyCalculatorConnector.rates().map { rates: Seq[RatePeriod] =>
-              TaxTypePageViewModel(request.userAnswers, rates) match {
-                case None     => Redirect(routes.JourneyRecoveryController.onPageLoad())
-                case Some(vm) => BadRequest(view(formWithErrors, mode, vm))
-              }
-            },
+          formWithErrors => {
+            val (
+              abv: AlcoholByVolume,
+              eligibleForDraughtRelief: Boolean,
+              eligibleForSmallProducerRelief: Boolean,
+              rateType: RateType,
+              ratePeriod: YearMonth,
+              approvedAlcoholRegimes: Set[AlcoholRegime]
+            ) = rateParameters(request)
+
+            alcoholDutyCalculatorConnector.rates(rateType, abv, ratePeriod, approvedAlcoholRegimes).map {
+              rates: Seq[RateBand] =>
+                BadRequest(
+                  view(
+                    formWithErrors,
+                    mode,
+                    TaxTypePageViewModel(abv, eligibleForDraughtRelief, eligibleForSmallProducerRelief, rates)
+                  )
+                )
+
+            }
+          },
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxTypePage, value))
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers))
         )
+  }
+
+  private def rateParameters(
+    request: DataRequest[AnyContent]
+  ): (AlcoholByVolume, Boolean, Boolean, RateType, YearMonth, Set[AlcoholRegime]) = {
+    val abv: AlcoholByVolume                    = AlcoholByVolume(
+      request.userAnswers
+        .get(AlcoholByVolumeQuestionPage)
+        .getOrElse(throw new RuntimeException("Couldn't fetch abv value from cache"))
+    )
+    val eligibleForDraughtRelief: Boolean       = request.userAnswers
+      .get(DraughtReliefQuestionPage)
+      .getOrElse(throw new RuntimeException("Couldn't fetch eligibleForDraughtRelief value from cache"))
+    val eligibleForSmallProducerRelief: Boolean = request.userAnswers
+      .get(SmallProducerReliefQuestionPage)
+      .getOrElse(throw new RuntimeException("Couldn't fetch eligibleForSmallProducerRelief value from cache"))
+
+    val rateType: RateType = RateType(eligibleForDraughtRelief, eligibleForSmallProducerRelief)
+
+    //hardcoded for now, will need to get this from obligation period
+    val ratePeriod: YearMonth = YearMonth.of(2024, 1)
+
+    //hardcoded for now, will need to get this from subscription data
+    val approvedAlcoholRegimes: Set[AlcoholRegime] = Set(Beer, Wine, Cider, Spirits)
+    (abv, eligibleForDraughtRelief, eligibleForSmallProducerRelief, rateType, ratePeriod, approvedAlcoholRegimes)
   }
 }

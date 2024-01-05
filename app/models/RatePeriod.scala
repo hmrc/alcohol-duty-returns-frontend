@@ -30,6 +30,14 @@ object RateType {
   case object SmallProducerRelief extends RateType
   case object DraughtAndSmallProducerRelief extends RateType
 
+  def apply(hasDraughtRelief: Boolean, hasSmallProducerRelief: Boolean): RateType =
+    (hasDraughtRelief, hasSmallProducerRelief) match {
+      case (true, true)  => RateType.DraughtAndSmallProducerRelief
+      case (true, false) => RateType.DraughtRelief
+      case (false, true) => RateType.SmallProducerRelief
+      case _             => RateType.Core
+    }
+
   implicit val format: Format[RateType] = new Format[RateType] {
     override def reads(json: JsValue): JsResult[RateType] = json.validate[String] match {
       case JsSuccess(value, _) =>
