@@ -30,7 +30,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.DeclareIrishWhiskeyView
+import views.html.spiritsQuestions.DeclareIrishWhiskeyView
 
 import scala.concurrent.Future
 
