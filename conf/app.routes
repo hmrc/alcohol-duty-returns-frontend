@@ -21,32 +21,32 @@ GET         /account/signed-out                          controllers.auth.Signed
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 # Beginning of product entry sub-journey
-GET        /productEntryGuidance                       controllers.ProductEntryGuidanceController.onPageLoad()
+GET        /productEntryGuidance                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
 
-GET        /productName                        controllers.ProductNameController.onPageLoad(mode: Mode = NormalMode)
-POST       /productName                        controllers.ProductNameController.onSubmit(mode: Mode = NormalMode)
-GET        /changeProductName                  controllers.ProductNameController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeProductName                  controllers.ProductNameController.onSubmit(mode: Mode = CheckMode)
+GET        /productName                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
+POST       /productName                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)
+GET        /changeProductName                  controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeProductName                  controllers.productEntry.ProductNameController.onSubmit(mode: Mode = CheckMode)
 
-GET        /alcoholByVolumeQuestion                  controllers.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /alcoholByVolumeQuestion                  controllers.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeAlcoholByVolumeQuestion                        controllers.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /alcoholByVolumeQuestion                  controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /alcoholByVolumeQuestion                  controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeAlcoholByVolumeQuestion                        controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeAlcoholByVolumeQuestion                        controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /draughtReliefQuestion                        controllers.DraughtReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /draughtReliefQuestion                        controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDraughtReliefQuestion                  controllers.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /draughtReliefQuestion                        controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /draughtReliefQuestion                        controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDraughtReliefQuestion                  controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDraughtReliefQuestion                  controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /smallProducerReliefQuestion                        controllers.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /smallProducerReliefQuestion                        controllers.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeSmallProducerReliefQuestion                  controllers.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeSmallProducerReliefQuestion                  controllers.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /smallProducerReliefQuestion                        controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /smallProducerReliefQuestion                        controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeSmallProducerReliefQuestion                  controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeSmallProducerReliefQuestion                  controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /productVolume                  controllers.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /productVolume                  controllers.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /changeProductVolume                        controllers.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeProductVolume                        controllers.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
+GET        /productVolume                  controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
+POST       /productVolume                  controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeProductVolume                        controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeProductVolume                        controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
 # End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey

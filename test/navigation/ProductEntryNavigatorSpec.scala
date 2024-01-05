@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import controllers.routes
+import controllers._
 import pages._
 import models._
 
@@ -38,28 +38,28 @@ class ProductEntryNavigatorSpec extends SpecBase {
       "must go from Product name page to Alcohol by volume page" in {
 
         navigator.nextPage(
-          ProductNamePage,
+          pages.productEntry.ProductNamePage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
+        ) mustBe controllers.productEntry.routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
       }
 
       "must go from Alcohol by volume page to Draught relief question page" in {
 
         navigator.nextPage(
-          AlcoholByVolumeQuestionPage,
+          pages.productEntry.AlcoholByVolumeQuestionPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+        ) mustBe controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
       }
 
       "must go from the Draught relief question page to Small producer relief question page" in {
 
         navigator.nextPage(
-          DraughtReliefQuestionPage,
+          pages.productEntry.DraughtReliefQuestionPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+        ) mustBe controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       }
     }
 

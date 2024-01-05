@@ -19,7 +19,7 @@ package navigation
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.Call
-import controllers.routes
+import controllers._
 import pages._
 import models._
 
@@ -27,10 +27,13 @@ import models._
 class ProductEntryNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case ProductNamePage             => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
-    case AlcoholByVolumeQuestionPage => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
-    case DraughtReliefQuestionPage   => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
-    case _                           =>
+    case pages.productEntry.ProductNamePage             =>
+      _ => controllers.productEntry.routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
+    case pages.productEntry.AlcoholByVolumeQuestionPage =>
+      _ => controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+    case pages.productEntry.DraughtReliefQuestionPage   =>
+      _ => controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+    case _                                              =>
       _ => routes.IndexController.onPageLoad
 
   }
