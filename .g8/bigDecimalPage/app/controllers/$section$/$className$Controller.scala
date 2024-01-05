@@ -1,23 +1,23 @@
 package controllers.$section$
 
 import controllers.actions._
-import forms.$className$FormProvider
+import forms.$section$.$className$FormProvider
 import javax.inject.Inject
 import models.Mode
-import navigation.Navigator
-import pages.$className$Page
+import navigation.$section$Navigator
+import pages.$section$.$className$Page
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.$className$View
+import views.html.$section$.$className$View
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class $className$Controller @Inject()(
                                         override val messagesApi: MessagesApi,
                                         cacheConnector: CacheConnector,
-                                        navigator: Navigator,
+                                        navigator: $section$Navigator,
                                         identify: IdentifierAction,
                                         getData: DataRetrievalAction,
                                         requireData: DataRequiredAction,

@@ -1,6 +1,6 @@
 package viewmodels.checkAnswers.$section$
 
-import controllers.routes
+import controllers.$section$.routes
 import models.{CheckMode, UserAnswers}
 import pages.$section$.$className$Page
 import play.api.i18n.Messages

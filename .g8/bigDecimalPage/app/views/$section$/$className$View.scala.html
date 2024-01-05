@@ -14,7 +14,7 @@
 
 @layout(pageTitle = title(form, messages("$className;format="decap"$.title"))) {
 
-    @formHelper(action = routes.$className$Controller.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.$section$.routes.$className$Controller.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -22,7 +22,7 @@
 
         @sectionHeading(
             id = "$className;format="decap"$-section",
-            text = messages("section.sectionName"),
+            text = messages("section.$section$"),
         )
 
         @govukInput(
