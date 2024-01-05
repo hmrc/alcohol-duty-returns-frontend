@@ -71,16 +71,34 @@ class ProductEntryNavigatorSpec extends SpecBase {
         ) mustBe routes.TaxTypeController.onPageLoad(NormalMode)
       }
 
-      "must go from the Tax type page to Product volume page" in {
+      "must go from the Tax type page to Product volume page if the trader is not eligible for Small Producer Relief" in {
+
+        navigator.nextPage(
+          TaxTypePage,
+          NormalMode,
+          UserAnswers("id").set(SmallProducerReliefQuestionPage, false).success.value
+        ) mustBe routes.ProductVolumeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Tax type page to SPR Duty Rate entry page if the trader is eligible for Small Producer Relief" in {
+
+        navigator.nextPage(
+          TaxTypePage,
+          NormalMode,
+          UserAnswers("id").set(SmallProducerReliefQuestionPage, true).success.value
+        ) mustBe routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Tax type page to Journey Recovery page if there is no answer for Small Producer Relief question" in {
 
         navigator.nextPage(
           TaxTypePage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ProductVolumeController.onPageLoad(NormalMode)
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
-      "must go from the Declare SPR Duty Rate question page to the Product Volume page" in {
+      "must go from the Declare SPR Duty Rate entry page to the Product Volume page" in {
 
         navigator.nextPage(
           DeclareSmallProducerReliefDutyRatePage,
