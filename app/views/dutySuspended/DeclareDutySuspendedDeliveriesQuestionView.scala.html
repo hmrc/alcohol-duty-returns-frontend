@@ -47,7 +47,7 @@
         @messages("declareDutySuspendedDeliveriesQuestion.p1")
     </p>
 
-    @formHelper(action = routes.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(

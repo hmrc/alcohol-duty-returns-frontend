@@ -32,7 +32,7 @@
 
 @layout(pageTitle = title(form, messages("dutySuspendedDeliveries.title"))) {
 
-    @formHelper(action = routes.DutySuspendedDeliveriesController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

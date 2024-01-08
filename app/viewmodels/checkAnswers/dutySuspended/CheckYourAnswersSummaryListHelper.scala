@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.checkAnswers.dutySuspended
 
 import models.UserAnswers
 import play.api.i18n.Messages

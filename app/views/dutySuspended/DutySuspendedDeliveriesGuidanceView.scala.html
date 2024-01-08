@@ -45,6 +45,6 @@
 
 @govukButton(
 ButtonViewModel("continueButton", messages("site.continue"))
-    .asLink(routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url)
+    .asLink(controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url)
 )
 }

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.dutySuspended
 
 import base.SpecBase
 import models.UserAnswers
-import pages.{DeclareDutySuspendedDeliveriesOutsideUkPage, DeclareDutySuspendedReceivedPage, DutySuspendedDeliveriesPage}
+import pages.dutySuspended.{DeclareDutySuspendedDeliveriesOutsideUkPage, DeclareDutySuspendedReceivedPage, DutySuspendedDeliveriesPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import viewmodels.checkAnswers.CheckYourAnswersSummaryListHelper
+import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
 import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 
@@ -34,7 +34,11 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
       val application = applicationBuilder(userAnswers = Some(completeDutySuspendedDeliveriesUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url)
+        val request =
+          FakeRequest(
+            GET,
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
+          )
 
         val result = route(application, request).value
 
@@ -55,12 +59,16 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
         val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url)
+          val request =
+            FakeRequest(
+              GET,
+              controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
+            )
 
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }
       "if all necessary questions are answered are not answered" in {
@@ -77,12 +85,16 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
           val application = applicationBuilder(Some(incompleteUserAnswers)).build()
 
           running(application) {
-            val request = FakeRequest(GET, routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url)
+            val request =
+              FakeRequest(
+                GET,
+                controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
+              )
 
             val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+            redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
           }
         }
       }

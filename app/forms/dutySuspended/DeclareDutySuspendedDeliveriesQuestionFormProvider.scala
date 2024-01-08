@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package forms
+package forms.dutySuspended
 
 import javax.inject.Inject
 

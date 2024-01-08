@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import controllers.routes
+import controllers._
 import models._
 import pages._
 
@@ -32,25 +32,25 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
       "must go from the Declare duty suspended deliveries question page to Duty suspended deliveries guidance page if the answer is Yes" in {
 
         navigator.nextPage(
-          DeclareDutySuspendedDeliveriesQuestionPage,
+          pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
-          UserAnswers("id").set(DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
-        ) mustBe routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+          UserAnswers("id").set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
+        ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
       }
 
       "must go from the Declare duty suspended deliveries question page to task list page if the answer is No" in {
 
         navigator.nextPage(
-          DeclareDutySuspendedDeliveriesQuestionPage,
+          pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
-          UserAnswers("id").set(DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
+          UserAnswers("id").set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
         ) mustBe routes.IndexController.onPageLoad
       }
 
       "must go from the Declare duty suspended deliveries question page to journey recovery page if the answer there is not an answer" in {
 
         navigator.nextPage(
-          DeclareDutySuspendedDeliveriesQuestionPage,
+          pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
           UserAnswers("id")
         ) mustBe routes.JourneyRecoveryController.onPageLoad(None)
@@ -59,19 +59,19 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
       "must go from the Declare duty suspended deliveries outside UK page to Declare duty suspended deliveries inside UK page" in {
 
         navigator.nextPage(
-          DeclareDutySuspendedDeliveriesOutsideUkPage,
+          pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
+        ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
       }
 
       "must go from the Declare duty suspended deliveries inside UK page to Declare duty suspended received page" in {
 
         navigator.nextPage(
-          DutySuspendedDeliveriesPage,
+          pages.dutySuspended.DutySuspendedDeliveriesPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
+        ) mustBe controllers.dutySuspended.routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
       }
     }
 
@@ -84,7 +84,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
-        ) mustBe routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
       }
     }
   }

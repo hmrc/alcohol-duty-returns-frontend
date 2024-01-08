@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.dutySuspended
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.DeclareDutySuspendedReceivedFormProvider
+import forms.dutySuspended.DeclareDutySuspendedReceivedFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.DeclareDutySuspendedReceivedPage
+import pages.dutySuspended.DeclareDutySuspendedReceivedPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -144,7 +144,7 @@ class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -161,7 +161,7 @@ class DeclareDutySuspendedReceivedControllerSpec extends SpecBase with MockitoSu
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

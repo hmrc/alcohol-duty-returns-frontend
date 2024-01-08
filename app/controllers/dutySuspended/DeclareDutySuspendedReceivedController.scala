@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.dutySuspended
 
 import connectors.CacheConnector
 import controllers.actions._
-import forms.DeclareDutySuspendedReceivedFormProvider
+import forms.dutySuspended.DeclareDutySuspendedReceivedFormProvider
 import models.Mode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
-import pages.DeclareDutySuspendedReceivedPage
+import pages.dutySuspended.DeclareDutySuspendedReceivedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController

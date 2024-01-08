@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package pages
+package pages.dutySuspended
 
 import play.api.libs.json.JsPath
+import pages.QuestionPage
 
 case object DeclareDutySuspendedReceivedPage extends QuestionPage[BigDecimal] {
 

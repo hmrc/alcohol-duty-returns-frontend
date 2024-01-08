@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.dutySuspended
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.CheckYourAnswersSummaryListHelper
+import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
 import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 
 class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
@@ -38,7 +38,7 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
     val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper(request.userAnswers)
     checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList match {
       case Some(summaryList) => Ok(view(summaryList))
-      case None              => Redirect(routes.JourneyRecoveryController.onPageLoad())
+      case None              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

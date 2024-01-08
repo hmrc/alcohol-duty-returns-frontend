@@ -50,30 +50,29 @@ POST       /changeProductVolume                        controllers.productEntry.
 # End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
-GET        /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareDutySuspendedDeliveriesQuestion                        controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /declareDutySuspendedDeliveriesQuestion                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareDutySuspendedDeliveriesQuestion                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /dutySuspendedDeliveriesGuidance                       controllers.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+GET        /dutySuspendedDeliveriesGuidance                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onPageLoad()
 
-GET        /declareDutySuspendedDeliveriesOutsideUk                  controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareDutySuspendedDeliveriesOutsideUk                  controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = CheckMode)
+GET        /declareDutySuspendedDeliveriesOutsideUk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareDutySuspendedDeliveriesOutsideUk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = CheckMode)
 
-GET        /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = NormalMode)
-POST       /dutySuspendedDeliveries                  controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDutySuspendedDeliveries                        controllers.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
+GET        /dutySuspendedDeliveries                  controllers.dutySuspended.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = NormalMode)
+POST       /dutySuspendedDeliveries                  controllers.dutySuspended.DutySuspendedDeliveriesController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDutySuspendedDeliveries                        controllers.dutySuspended.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDutySuspendedDeliveries                        controllers.dutySuspended.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
 
-GET        /declareDutySuspendedReceived                  controllers.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareDutySuspendedReceived                  controllers.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareDutySuspendedReceived                        controllers.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareDutySuspendedReceived                        controllers.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
+GET        /declareDutySuspendedReceived                  controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareDutySuspendedReceived                  controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareDutySuspendedReceived                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareDutySuspendedReceived                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
 
-
-GET         /check-your-answers-duty-suspended-deliveries                  controllers.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+GET         /check-your-answers-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
 # End of of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
