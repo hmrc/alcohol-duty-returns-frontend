@@ -243,6 +243,7 @@ declareSmallProducerReliefDutyRate.heading = What is your Small Producer Relief 
 declareSmallProducerReliefDutyRate.hint = Give your answer in pounds and pence
 declareSmallProducerReliefDutyRate.guidance.link.prefix = You can
 declareSmallProducerReliefDutyRate.guidance.link.text = work out your Small Producer Relief duty rate (opens in a new tab)
+declareSmallProducerReliefDutyRate.guidance.link.url = https://www.gov.uk/guidance/find-out-your-alcohol-duty-rates-if-youre-eligible-for-small-producer-relief
 declareSmallProducerReliefDutyRate.checkYourAnswersLabel = DeclareSmallProducerReliefDutyRate
 declareSmallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
 declareSmallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
