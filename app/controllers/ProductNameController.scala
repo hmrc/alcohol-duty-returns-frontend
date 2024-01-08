@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.ProductNameFormProvider
 
 import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.ProductEntryNavigator
 import pages.ProductNamePage
 import play.api.i18n.{I18nSupport, MessagesApi}

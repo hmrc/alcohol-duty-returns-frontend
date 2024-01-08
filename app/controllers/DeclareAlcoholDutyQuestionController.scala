@@ -74,14 +74,16 @@ class DeclareAlcoholDutyQuestionController @Inject() (
   }
 
   def filterAlcoholDutyQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
-    if (value) Try(userAnswer)
-    else
+    if (value) {
+      Try(userAnswer)
+    } else {
       userAnswer.remove(
         List(
-          AlcoholByVolumeQuestionPage,
           ProductNamePage,
+          AlcoholByVolumeQuestionPage,
           DraughtReliefQuestionPage,
           SmallProducerReliefQuestionPage
         )
       )
+    }
 }
