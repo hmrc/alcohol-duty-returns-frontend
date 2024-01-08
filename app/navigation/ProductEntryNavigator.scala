@@ -27,11 +27,12 @@ import models._
 class ProductEntryNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case ProductNamePage                => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
-    case AlcoholByVolumeQuestionPage    => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
-    case DraughtReliefQuestionPage      => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
-    case DeclareAlcoholDutyQuestionPage => declareAlcoholDutyQuestionPageRoute
-    case _                              =>
+    case ProductNamePage                        => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
+    case AlcoholByVolumeQuestionPage            => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+    case DraughtReliefQuestionPage              => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+    case DeclareSmallProducerReliefDutyRatePage => _ => routes.ProductVolumeController.onPageLoad(NormalMode)
+    case DeclareAlcoholDutyQuestionPage         => declareAlcoholDutyQuestionPageRoute
+    case _                                      =>
       _ => routes.IndexController.onPageLoad
 
   }

@@ -21,6 +21,11 @@ GET         /account/signed-out                          controllers.auth.Signed
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 # Beginning of product entry sub-journey
+GET        /declareAlcoholDutyQuestion                        controllers.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareAlcoholDutyQuestion                        controllers.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareAlcoholDutyQuestion                  controllers.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareAlcoholDutyQuestion                  controllers.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+
 GET        /productEntryGuidance                       controllers.ProductEntryGuidanceController.onPageLoad()
 
 GET        /productName                        controllers.ProductNameController.onPageLoad(mode: Mode = NormalMode)
@@ -47,6 +52,12 @@ GET        /productVolume                  controllers.ProductVolumeController.o
 POST       /productVolume                  controllers.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductVolume                        controllers.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeProductVolume                        controllers.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /declareSmallProducerReliefDutyRate                  controllers.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareSmallProducerReliefDutyRate                  controllers.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareSmallProducerReliefDutyRate                        controllers.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
+
 # End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
@@ -95,9 +106,3 @@ POST       /changeDeclareIrishWhiskey                        controllers.Declare
 GET        /quarterlySpiritsReturnGuidance                       controllers.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 # End of quarterly spirits questions sub-journey
-
-GET        /declareAlcoholDutyQuestion                        controllers.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareAlcoholDutyQuestion                        controllers.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareAlcoholDutyQuestion                  controllers.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareAlcoholDutyQuestion                  controllers.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
-
