@@ -3,7 +3,10 @@
 
 This is the frontend microservice that handles Returns related operations for Alcohol Duty Service.
 
-## API Endpoints
+## Creating pages
+This project uses [hmrc-frontend-scaffold.g8](https://github.com/hmrc/hmrc-frontend-scaffold.g8) to create frontend pages. 
+
+Please see this [wiki page](https://github.com/hmrc/hmrc-frontend-scaffold.g8/wiki/Usage) for guidance around how to create new pages.
 
 ## Running the service
 
@@ -32,13 +35,14 @@ To format all the scala files in the project correctly:
 To check if there are any scalastyle errors, warnings or infos:
 > `sbt scalastyle`
 >
-> ### All tests and checks
+
+## All tests and checks
 
 This is an sbt command alias specific to this project. It will run a scala format
 check, run a scala style check, run unit tests, run integration tests and produce a coverage report:
 > `sbt runAllChecks`
 
-### License
+## License
 
 This code is open source software licensed under
 the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
