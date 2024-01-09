@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.checkAnswers.spiritsQuestions
 
-import controllers.routes
+import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
-import pages.DeclareScotchWhiskyPage
+import pages.spiritsQuestions.DeclareScotchWhiskyPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._

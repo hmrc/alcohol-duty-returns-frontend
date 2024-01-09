@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package forms
+package forms.spiritsQuestions
 
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError

@@ -72,7 +72,7 @@
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue")
         )
-        .asLink(routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url)
+        .asLink(controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url)
     )
 
 }

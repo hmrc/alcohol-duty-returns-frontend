@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.spiritsQuestions
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.DeclareScotchWhiskyFormProvider
+import forms.spiritsQuestions.DeclareScotchWhiskyFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.DeclareScotchWhiskyPage
+import pages.spiritsQuestions.DeclareScotchWhiskyPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -143,7 +143,7 @@ class DeclareScotchWhiskyControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -160,7 +160,7 @@ class DeclareScotchWhiskyControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

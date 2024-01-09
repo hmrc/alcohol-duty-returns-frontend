@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.spiritsQuestions
 
 import connectors.CacheConnector
 import controllers.actions._
-import forms.DeclareScotchWhiskyFormProvider
+import forms.spiritsQuestions.DeclareScotchWhiskyFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.DeclareScotchWhiskyPage
+import pages.spiritsQuestions.DeclareScotchWhiskyPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController

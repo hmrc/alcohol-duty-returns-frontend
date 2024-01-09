@@ -76,22 +76,22 @@ GET         /check-your-answers-duty-suspended-deliveries                  contr
 # End of of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
-GET        /declareSpiritsTotal                  controllers.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareSpiritsTotal                  controllers.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareSpiritsTotal                        controllers.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareSpiritsTotal                        controllers.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
+GET        /declareSpiritsTotal                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareSpiritsTotal                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareSpiritsTotal                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareSpiritsTotal                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
 
-GET        /declareScotchWhisky                  controllers.DeclareScotchWhiskyController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareScotchWhisky                  controllers.DeclareScotchWhiskyController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareScotchWhisky                        controllers.DeclareScotchWhiskyController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareScotchWhisky                        controllers.DeclareScotchWhiskyController.onSubmit(mode: Mode = CheckMode)
+GET        /declareScotchWhisky                  controllers.spiritsQuestions.DeclareScotchWhiskyController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareScotchWhisky                  controllers.spiritsQuestions.DeclareScotchWhiskyController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareScotchWhisky                        controllers.spiritsQuestions.DeclareScotchWhiskyController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareScotchWhisky                        controllers.spiritsQuestions.DeclareScotchWhiskyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /declareIrishWhiskey                  controllers.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareIrishWhiskey                  controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareIrishWhiskey                        controllers.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
+GET        /declareIrishWhiskey                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareIrishWhiskey                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareIrishWhiskey                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareIrishWhiskey                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /quarterlySpiritsReturnGuidance                       controllers.QuarterlySpiritsReturnGuidanceController.onPageLoad()
+GET        /quarterlySpiritsReturnGuidance                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 # End of quarterly spirits questions sub-journey
 

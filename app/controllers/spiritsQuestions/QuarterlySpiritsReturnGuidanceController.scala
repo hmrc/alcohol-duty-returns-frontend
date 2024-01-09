@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.spiritsQuestions
 
 import controllers.actions._
 import javax.inject.Inject

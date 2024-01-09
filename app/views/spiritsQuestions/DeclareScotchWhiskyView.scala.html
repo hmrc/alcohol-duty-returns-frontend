@@ -32,7 +32,7 @@
 
 @layout(pageTitle = title(form, messages("declareScotchWhisky.title"))) {
 
-    @formHelper(action = routes.DeclareScotchWhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
