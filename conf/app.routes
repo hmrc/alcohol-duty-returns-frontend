@@ -21,7 +21,13 @@ GET         /account/signed-out                          controllers.auth.Signed
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 # Beginning of product entry sub-journey
+
 GET        /productEntryGuidance                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
+
+GET        /declareAlcoholDutyQuestion                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareAlcoholDutyQuestion                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareAlcoholDutyQuestion                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareAlcoholDutyQuestion                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /productName                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /productName                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)

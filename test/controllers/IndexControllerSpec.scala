@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.IndexView
+import models.NormalMode
 
 class IndexControllerSpec extends SpecBase {
 
@@ -34,11 +34,11 @@ class IndexControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[IndexView]
+        status(result) mustEqual SEE_OTHER
 
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.DeclareAlcoholDutyQuestionController
+          .onPageLoad(NormalMode)
+          .url
       }
     }
   }
