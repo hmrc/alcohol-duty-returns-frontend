@@ -61,6 +61,15 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       }
+
+      "must go from the Declare SPR Duty Rate question page to the Product Volume page" in {
+
+        navigator.nextPage(
+          pages.productEntry.DeclareSmallProducerReliefDutyRatePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
+      }
     }
 
     "in Check mode" - {

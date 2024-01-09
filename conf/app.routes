@@ -47,6 +47,12 @@ GET        /productVolume                  controllers.productEntry.ProductVolum
 POST       /productVolume                  controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductVolume                        controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeProductVolume                        controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /declareSmallProducerReliefDutyRate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
+POST       /declareSmallProducerReliefDutyRate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
+
 # End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
@@ -94,4 +100,3 @@ POST       /changeDeclareIrishWhiskey                        controllers.spirits
 GET        /quarterlySpiritsReturnGuidance                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 # End of quarterly spirits questions sub-journey
-
