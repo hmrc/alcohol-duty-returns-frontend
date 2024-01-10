@@ -98,8 +98,8 @@ alcoholByVolumeQuestion.error.maximumRequired = This product’s Alcohol by Volu
 alcoholByVolumeQuestion.error.twoDecimalPlaces = This product’s Alcohol by Volume (ABV) must be a number to two decimal places
 alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
 
-taxType.title = Your product’s tax type
-taxType.heading = Your product’s tax type
+taxType.title = Your product’s tax type code
+taxType.heading = Your product’s tax type code
 taxType.p1 = Based on your answers, we have found your product’s possible tax types. We found these tax types because you told us that this product is:
 taxType.bulletList.abv = Alcohol by Volume (ABV) strength
 taxType.bulletList.draughtRelief = eligible for Draught Relief
