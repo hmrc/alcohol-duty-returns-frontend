@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,30 @@
 
 package controllers
 
-import connectors.CacheConnector
 import controllers.actions._
-import forms.ProductNameFormProvider
-
+import forms.DeclareSmallProducerReliefDutyRateFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.ProductEntryNavigator
-import pages.ProductNamePage
+import pages.DeclareSmallProducerReliefDutyRatePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import connectors.CacheConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ProductNameView
+import views.html.DeclareSmallProducerReliefDutyRateView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ProductNameController @Inject() (
+class DeclareSmallProducerReliefDutyRateController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: ProductEntryNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: ProductNameFormProvider,
+  formProvider: DeclareSmallProducerReliefDutyRateFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: ProductNameView
+  view: DeclareSmallProducerReliefDutyRateView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -48,7 +47,7 @@ class ProductNameController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(ProductNamePage) match {
+    val preparedForm = request.userAnswers.get(DeclareSmallProducerReliefDutyRatePage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -64,10 +63,9 @@ class ProductNameController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(ProductNamePage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareSmallProducerReliefDutyRatePage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ProductNamePage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(DeclareSmallProducerReliefDutyRatePage, mode, updatedAnswers))
         )
   }
 }

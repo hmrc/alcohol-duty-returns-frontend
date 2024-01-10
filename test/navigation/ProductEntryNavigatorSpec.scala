@@ -35,6 +35,24 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
       }
 
+      "must go from the Alcohol to declare to Product Entry Guidance page if the answer is Yes" in {
+
+        navigator.nextPage(
+          DeclareAlcoholDutyQuestionPage,
+          NormalMode,
+          UserAnswers("id").set(DeclareAlcoholDutyQuestionPage, true).success.value
+        ) mustBe routes.ProductEntryGuidanceController.onPageLoad()
+      }
+
+      "must go from the Alcohol to declare to task list page if the answer is No" in {
+
+        navigator.nextPage(
+          DeclareAlcoholDutyQuestionPage,
+          NormalMode,
+          UserAnswers("id").set(DeclareAlcoholDutyQuestionPage, false).success.value
+        ) mustBe routes.IndexController.onPageLoad
+      }
+
       "must go from Product name page to Alcohol by volume page" in {
 
         navigator.nextPage(
@@ -60,6 +78,15 @@ class ProductEntryNavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers("id")
         ) mustBe routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Declare SPR Duty Rate question page to the Product Volume page" in {
+
+        navigator.nextPage(
+          DeclareSmallProducerReliefDutyRatePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ProductVolumeController.onPageLoad(NormalMode)
       }
     }
 

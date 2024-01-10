@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,44 +17,44 @@
 package controllers
 
 import base.SpecBase
-import connectors.CacheConnector
-import forms.ProductNameFormProvider
+import forms.DeclareAlcoholDutyQuestionFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ProductNamePage
+import pages.DeclareAlcoholDutyQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.ProductNameView
+import connectors.CacheConnector
+import views.html.DeclareAlcoholDutyQuestionView
 
 import scala.concurrent.Future
 
-class ProductNameControllerSpec extends SpecBase with MockitoSugar {
+class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new ProductNameFormProvider()
+  val formProvider = new DeclareAlcoholDutyQuestionFormProvider()
   val form         = formProvider()
 
-  lazy val productNameRoute = routes.ProductNameController.onPageLoad(NormalMode).url
+  lazy val declareAlcoholDutyQuestionRoute = routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
 
-  "ProductName Controller" - {
+  "DeclareAlcoholDutyQuestion Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, productNameRoute)
+        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ProductNameView]
+        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -63,19 +63,19 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ProductNamePage, "answer").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(DeclareAlcoholDutyQuestionPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, productNameRoute)
+        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
 
-        val view = application.injector.instanceOf[ProductNameView]
+        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -95,8 +95,8 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, productNameRoute)
-            .withFormUrlEncodedBody(("product-name-input", "answer"))
+          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
+            .withFormUrlEncodedBody(("declareAlcoholDutyQuestion-yesNoValue", "true"))
 
         val result = route(application, request).value
 
@@ -111,12 +111,12 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, productNameRoute)
+          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[ProductNameView]
+        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
 
         val result = route(application, request).value
 
@@ -124,13 +124,13 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
         contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
       }
     }
-
+    /* commenting out tests as requireData was removed
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, productNameRoute)
+        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
 
         val result = route(application, request).value
 
@@ -145,8 +145,8 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, productNameRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -154,5 +154,6 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+     */
   }
 }
