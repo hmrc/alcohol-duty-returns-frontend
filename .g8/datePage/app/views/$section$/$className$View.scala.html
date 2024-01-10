@@ -1,0 +1,37 @@
+@import components.{SectionHeading, PageHeading}
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukDateInput: GovukDateInput,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("$className;format="decap"$.title"))) {
+
+    @formHelper(action = controllers.$section$.routes.$className$Controller.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))
+        }
+
+        @sectionHeading(
+            id = "$className;format="decap"$-section",
+            text = messages("section.sectionName"),
+        )
+        @govukDateInput(
+            DateViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(messages("$className;format="decap"$.heading")).asPageHeading()
+            )
+            .withHint(HintViewModel(messages("$className;format="decap"$.hint")))
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+        )
+    }
+}

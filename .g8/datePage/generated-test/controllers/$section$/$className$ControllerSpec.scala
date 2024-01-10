@@ -1,5 +1,7 @@
 package controllers.$section$
 
+import java.time.{LocalDate, ZoneOffset}
+
 import base.SpecBase
 import forms.$section$.$className$FormProvider
 import models.{NormalMode, UserAnswers}
@@ -9,25 +11,37 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.$section$.$className$Page
 import play.api.inject.bind
-import play.api.mvc.Call
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import uk.gov.hmrc.http.HttpResponse
 import views.html.$section$.$className$View
 
 import scala.concurrent.Future
 
-class $className$ControllerSpec extends SpecBase with MockitoSugar with Logg {
+class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new $className$FormProvider()
-  val form = formProvider()
+  private def form = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal($minimum$)
+  val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
   lazy val $className;format="decap"$Route = controllers.$section$.routes.$className$Controller.onPageLoad(NormalMode).url
+
+  override val emptyUserAnswers = UserAnswers(userAnswersId)
+
+  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(GET, $className;format="decap"$Route)
+
+  def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest(POST, $className;format="decap"$Route)
+      .withFormUrlEncodedBody(
+        "value.day"   -> validAnswer.getDayOfMonth.toString,
+        "value.month" -> validAnswer.getMonthValue.toString,
+        "value.year"  -> validAnswer.getYear.toString
+      )
 
   "$className$ Controller" - {
 
@@ -36,14 +50,12 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar with Logg {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, $className;format="decap"$Route)
-
-        val result = route(application, request).value
+        val result = route(application, getRequest()).value
 
         val view = application.injector.instanceOf[$className$View]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(getRequest, messages(application)).toString
       }
     }
 
@@ -54,14 +66,12 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar with Logg {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, $className;format="decap"$Route)
-
         val view = application.injector.instanceOf[$className$View]
 
-        val result = route(application, request).value
+        val result = route(application, getRequest()).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(getRequest, messages(application)).toString
       }
     }
 
@@ -80,11 +90,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar with Logg {
           .build()
 
       running(application) {
-        val request =
-          FakeRequest(POST, $className;format="decap"$Route)
-            .withFormUrlEncodedBody(("$className;format="decap"$-input", validAnswer.toString))
-
-        val result = route(application, request).value
+        val result = route(application, postRequest()).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
@@ -95,11 +101,11 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar with Logg {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      running(application) {
-        val request =
-          FakeRequest(POST, $className;format="decap"$Route)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+      val request =
+        FakeRequest(POST, $className;format="decap"$Route)
+          .withFormUrlEncodedBody(("value", "invalid value"))
 
+      running(application) {
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
         val view = application.injector.instanceOf[$className$View]
@@ -116,12 +122,10 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar with Logg {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, $className;format="decap"$Route)
-
-        val result = route(application, request).value
+        val result = route(application, getRequest).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -130,15 +134,10 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar with Logg {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request =
-          FakeRequest(POST, $className;format="decap"$Route)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
-
-        val result = route(application, request).value
+        val result = route(application, postRequest()).value
 
         status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

@@ -24,4 +24,12 @@ echo "$className;format="decap"$.error.required = The $className;format="decap"$
 echo "$className;format="decap"$.error.invalid = Enter a real $className$" >> ../conf/messages.en
 echo "$className;format="decap"$.change.hidden = $className$" >> ../conf/messages.en
 
+echo "Adding page to the section page list"
+awk '/sectionPages/ {\
+      if(/Seq\(\)/)
+              sub(/\)\$/, "$className$Page&");
+      else
+              sub(/\)\$/, ", $className$Page&");
+} 1' ../app/pages/$section$/package.scala > tmp_file && mv tmp_file ../app/pages/$section$/package.scala
+
 echo "Migration $className;format="snake"$ completed"
