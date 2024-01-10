@@ -57,7 +57,7 @@ class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks wi
             eligibleForSmallProducerRelief = false,
             List(
               RadioItem(
-                Text("Beer, tax type 310"),
+                Text("Beer, tax type code 310"),
                 Some("value_310"),
                 Some("310_Beer"),
                 None,
