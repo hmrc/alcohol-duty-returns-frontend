@@ -16,7 +16,7 @@
 
 package navigation
 
-import controllers.routes
+import controllers._
 import models._
 import pages._
 import play.api.mvc.Call
@@ -27,24 +27,25 @@ import javax.inject.{Inject, Singleton}
 class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case DeclareDutySuspendedDeliveriesQuestionPage  => declareDutySuspendedDeliveriesQuestionPageRoute
-    case DeclareDutySuspendedDeliveriesOutsideUkPage =>
-      _ => routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
-    case DutySuspendedDeliveriesPage                 =>
-      _ => routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
-    case DeclareDutySuspendedReceivedPage            =>
-      _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
-    case _                                           =>
+    case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage  =>
+      declareDutySuspendedDeliveriesQuestionPageRoute
+    case pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage =>
+      _ => controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
+    case pages.dutySuspended.DutySuspendedDeliveriesPage                 =>
+      _ => controllers.dutySuspended.routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
+    case pages.dutySuspended.DeclareDutySuspendedReceivedPage            =>
+      _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+    case _                                                               =>
       _ => routes.IndexController.onPageLoad
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+    _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
   }
 
   private def declareDutySuspendedDeliveriesQuestionPageRoute(answers: UserAnswers): Call =
-    answers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
-      case Some(true)  => routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+    answers.get(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage) match {
+      case Some(true)  => controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
       case Some(false) => routes.IndexController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }

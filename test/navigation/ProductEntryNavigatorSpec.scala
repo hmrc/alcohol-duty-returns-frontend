@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import controllers.routes
+import controllers._
 import pages._
 import models._
 
@@ -38,55 +38,55 @@ class ProductEntryNavigatorSpec extends SpecBase {
       "must go from the Alcohol to declare to Product Entry Guidance page if the answer is Yes" in {
 
         navigator.nextPage(
-          DeclareAlcoholDutyQuestionPage,
+          pages.productEntry.DeclareAlcoholDutyQuestionPage,
           NormalMode,
-          UserAnswers("id").set(DeclareAlcoholDutyQuestionPage, true).success.value
-        ) mustBe routes.ProductEntryGuidanceController.onPageLoad()
+          UserAnswers("id").set(pages.productEntry.DeclareAlcoholDutyQuestionPage, true).success.value
+        ) mustBe controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
       }
 
       "must go from the Alcohol to declare to task list page if the answer is No" in {
 
         navigator.nextPage(
-          DeclareAlcoholDutyQuestionPage,
+          pages.productEntry.DeclareAlcoholDutyQuestionPage,
           NormalMode,
-          UserAnswers("id").set(DeclareAlcoholDutyQuestionPage, false).success.value
+          UserAnswers("id").set(pages.productEntry.DeclareAlcoholDutyQuestionPage, false).success.value
         ) mustBe routes.IndexController.onPageLoad
       }
 
       "must go from Product name page to Alcohol by volume page" in {
 
         navigator.nextPage(
-          ProductNamePage,
+          pages.productEntry.ProductNamePage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
+        ) mustBe controllers.productEntry.routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
       }
 
       "must go from Alcohol by volume page to Draught relief question page" in {
 
         navigator.nextPage(
-          AlcoholByVolumeQuestionPage,
+          pages.productEntry.AlcoholByVolumeQuestionPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+        ) mustBe controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
       }
 
       "must go from the Draught relief question page to Small producer relief question page" in {
 
         navigator.nextPage(
-          DraughtReliefQuestionPage,
+          pages.productEntry.DraughtReliefQuestionPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+        ) mustBe controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       }
 
       "must go from the Declare SPR Duty Rate question page to the Product Volume page" in {
 
         navigator.nextPage(
-          DeclareSmallProducerReliefDutyRatePage,
+          pages.productEntry.DeclareSmallProducerReliefDutyRatePage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ProductVolumeController.onPageLoad(NormalMode)
+        ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
       }
     }
 
