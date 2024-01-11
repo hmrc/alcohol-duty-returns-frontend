@@ -62,18 +62,18 @@ object AlcoholRegime {
   case object Cider extends AlcoholRegime
   case object Wine extends AlcoholRegime
   case object Spirits extends AlcoholRegime
-  case object Other extends AlcoholRegime
+  case object OtherFermentedProduct extends AlcoholRegime
 
   implicit val format: Format[AlcoholRegime] = new Format[AlcoholRegime] {
     override def reads(json: JsValue): JsResult[AlcoholRegime] = json.validate[String] match {
       case JsSuccess(value, _) =>
         value match {
-          case "Beer"    => JsSuccess(Beer)
-          case "Cider"   => JsSuccess(Cider)
-          case "Wine"    => JsSuccess(Wine)
-          case "Spirits" => JsSuccess(Spirits)
-          case "Other"   => JsSuccess(Other)
-          case s         => JsError(s"$s is not a valid AlcoholRegime")
+          case "Beer"                  => JsSuccess(Beer)
+          case "Cider"                 => JsSuccess(Cider)
+          case "Wine"                  => JsSuccess(Wine)
+          case "Spirits"               => JsSuccess(Spirits)
+          case "OtherFermentedProduct" => JsSuccess(OtherFermentedProduct)
+          case s                       => JsError(s"$s is not a valid AlcoholRegime")
         }
       case e: JsError          => e
     }

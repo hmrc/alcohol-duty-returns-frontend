@@ -19,7 +19,7 @@ package controllers
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.TaxTypeFormProvider
-import models.AlcoholRegime.{Beer, Cider, Other, Spirits, Wine}
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.requests.DataRequest
 import models.{AlcoholByVolume, AlcoholRegime, Mode, RateBand, RateType}
 import navigation.ProductEntryNavigator
@@ -135,7 +135,7 @@ class TaxTypeController @Inject() (
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
 
     //hardcoded for now, will need to get this from subscription data
-    val approvedAlcoholRegimes: Set[AlcoholRegime] = Set(Beer, Wine, Cider, Spirits, Other)
+    val approvedAlcoholRegimes: Set[AlcoholRegime] = Set(Beer, Wine, Cider, Spirits, OtherFermentedProduct)
     (abv, eligibleForDraughtRelief, eligibleForSmallProducerRelief, rateType, ratePeriod, approvedAlcoholRegimes)
   }
 }
