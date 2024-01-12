@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import controllers.routes
+import controllers._
 import models._
 import pages._
 
@@ -32,10 +32,10 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
       "must go from the Declare Spirits Total page to Declare Scotch whisky page" in {
 
         navigator.nextPage(
-          DeclareSpiritsTotalPage,
+          pages.spiritsQuestions.DeclareSpiritsTotalPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
+        ) mustBe controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
       }
 
     }
@@ -45,10 +45,10 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
       "must go from the Declare Scotch whisky page to Declare Irish whiskey page" in {
 
         navigator.nextPage(
-          DeclareScotchWhiskyPage,
+          pages.spiritsQuestions.DeclareScotchWhiskyPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
+        ) mustBe controllers.spiritsQuestions.routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
       }
 
     }

@@ -16,7 +16,7 @@
 
 package navigation
 
-import controllers.routes
+import controllers._
 import models._
 import pages._
 import play.api.mvc.Call
@@ -27,9 +27,11 @@ import javax.inject.{Inject, Singleton}
 class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case DeclareSpiritsTotalPage => _ => routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
-    case DeclareScotchWhiskyPage => _ => routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
-    case _                       => _ => routes.IndexController.onPageLoad
+    case pages.spiritsQuestions.DeclareSpiritsTotalPage =>
+      _ => controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
+    case pages.spiritsQuestions.DeclareScotchWhiskyPage =>
+      _ => controllers.spiritsQuestions.routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
+    case _                                              => _ => routes.IndexController.onPageLoad
 
   }
 

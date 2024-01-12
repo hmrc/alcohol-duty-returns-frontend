@@ -19,7 +19,7 @@ package navigation
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.Call
-import controllers.routes
+import controllers._
 import pages._
 import models._
 
@@ -27,22 +27,28 @@ import models._
 class ProductEntryNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case ProductNamePage                        => _ => routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
-    case AlcoholByVolumeQuestionPage            => _ => routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
-    case DraughtReliefQuestionPage              => _ => routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
-    case SmallProducerReliefQuestionPage        => _ => routes.TaxTypeController.onPageLoad(NormalMode)
-    case TaxTypePage                            => taxTypePageRoute
-    case DeclareSmallProducerReliefDutyRatePage => _ => routes.ProductVolumeController.onPageLoad(NormalMode)
-    case DeclareAlcoholDutyQuestionPage         => declareAlcoholDutyQuestionPageRoute
-    case _                                      =>
+    case pages.productEntry.ProductNamePage                        =>
+      _ => controllers.productEntry.routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
+    case pages.productEntry.AlcoholByVolumeQuestionPage            =>
+      _ => controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+    case pages.productEntry.DraughtReliefQuestionPage              =>
+      _ => controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+    case pages.productEntry.SmallProducerReliefQuestionPage        =>
+      _ => controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+    case pages.productEntry.TaxTypePage                            => taxTypePageRoute
+    case pages.productEntry.DeclareSmallProducerReliefDutyRatePage =>
+      _ => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
+    case pages.productEntry.DeclareAlcoholDutyQuestionPage         => declareAlcoholDutyQuestionPageRoute
+    case _                                                         =>
       _ => routes.IndexController.onPageLoad
 
   }
 
   private def taxTypePageRoute(answers: UserAnswers): Call =
-    answers.get(SmallProducerReliefQuestionPage) match {
-      case Some(true)  => routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
-      case Some(false) => routes.ProductVolumeController.onPageLoad(NormalMode)
+    answers.get(pages.productEntry.SmallProducerReliefQuestionPage) match {
+      case Some(true)  =>
+        controllers.productEntry.routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+      case Some(false) => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
 
@@ -50,8 +56,8 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
     _ => routes.CheckYourAnswersController.onPageLoad
   }
   private def declareAlcoholDutyQuestionPageRoute(answers: UserAnswers): Call =
-    answers.get(DeclareAlcoholDutyQuestionPage) match {
-      case Some(true)  => routes.ProductEntryGuidanceController.onPageLoad()
+    answers.get(pages.productEntry.DeclareAlcoholDutyQuestionPage) match {
+      case Some(true)  => controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
       case Some(false) => routes.IndexController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
