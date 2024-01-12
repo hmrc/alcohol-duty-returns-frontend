@@ -46,7 +46,7 @@ object TaxTypePageViewModel {
         s"${messages("taxType.taxTypeRadio.regime." + regime)}, ${messages("taxType.taxTypeRadio.taxType")} ${rateBand.taxType}"
       ),
       value = Some(s"${rateBand.taxType}_$regime"),
-      id = Some(s"value_${rateBand.taxType}")
+      id = Some(s"${rateBand.taxType}_$regime")
     )
 
     TaxTypePageViewModel(

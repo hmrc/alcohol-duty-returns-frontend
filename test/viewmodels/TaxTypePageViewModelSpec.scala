@@ -58,7 +58,7 @@ class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks wi
             List(
               RadioItem(
                 Text("Beer, tax type code 310"),
-                Some("value_310"),
+                Some("310_Beer"),
                 Some("310_Beer"),
                 None,
                 None,
