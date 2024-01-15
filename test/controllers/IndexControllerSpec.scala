@@ -36,7 +36,9 @@ class IndexControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.DeclareAlcoholDutyQuestionController
+          .onPageLoad(NormalMode)
+          .url
       }
     }
   }
