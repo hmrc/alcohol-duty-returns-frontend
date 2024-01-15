@@ -112,3 +112,8 @@ POST       /changeDeclareIrishWhiskey                        controllers.spirits
 GET        /quarterlySpiritsReturnGuidance                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 # End of quarterly spirits questions sub-journey
+
+GET        /ryeIngredient                  controllers.RyeIngredientController.onPageLoad(mode: Mode = NormalMode)
+POST       /ryeIngredient                  controllers.RyeIngredientController.onSubmit(mode: Mode = NormalMode)
+GET        /changeRyeIngredient                        controllers.RyeIngredientController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeRyeIngredient                        controllers.RyeIngredientController.onSubmit(mode: Mode = CheckMode)
