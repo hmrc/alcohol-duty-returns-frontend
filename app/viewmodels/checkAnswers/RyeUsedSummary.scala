@@ -1,25 +1,25 @@
-package viewmodels.checkAnswers.spiritsQuestions
+package viewmodels.checkAnswers
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import pages.spiritsQuestions.RyeIngredientPage
+import pages.RyeUsedPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object RyeIngredientSummary  {
+object RyeUsedSummary  {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(RyeIngredientPage).map {
+    answers.get(RyeUsedPage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "ryeIngredient.checkYourAnswersLabel",
+          key     = "ryeUsed.checkYourAnswersLabel",
           value   = ValueViewModel(answer.toString),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.RyeIngredientController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("ryeIngredient.change.hidden"))
+            ActionItemViewModel("site.change", routes.RyeUsedController.onPageLoad(CheckMode).url)
+              .withVisuallyHiddenText(messages("ryeUsed.change.hidden"))
           )
         )
     }

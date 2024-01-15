@@ -12,23 +12,23 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("ryeIngredient.title"))) {
+@layout(pageTitle = title(form, messages("ryeUsed.title"))) {
 
-    @formHelper(action = routes.RyeIngredientController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.RyeUsedController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
-            id = "ryeIngredient-section",
+            id = "ryeUsed-section",
             text = messages("section.sectionName"),
         )
 
         @govukInput(
             InputViewModel(
-                field = form("ryeIngredient-input"),
-                label = LabelViewModel(messages("ryeIngredient.heading")).asPageHeading()
+                field = form("ryeUsed-input"),
+                label = LabelViewModel(messages("ryeUsed.heading")).asPageHeading()
             )
             .asNumeric()
             .withWidth(Fixed10)

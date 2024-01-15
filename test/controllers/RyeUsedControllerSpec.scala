@@ -1,42 +1,45 @@
-package controllers.spiritsQuestions
+package controllers
 
 import base.SpecBase
-import connectors.CacheConnector
-import controllers.routes
+import forms.RyeUsedFormProvider
 import models.{NormalMode, UserAnswers}
+import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import pages.RyeUsedPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import connectors.CacheConnector
+import views.html.RyeUsedView
 
 import scala.concurrent.Future
 
-class RyeIngredientControllerSpec extends SpecBase with MockitoSugar {
+class RyeUsedControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new RyeIngredientFormProvider()
+  val formProvider = new RyeUsedFormProvider()
   val form = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = 0
 
-  lazy val ryeIngredientRoute = routes.RyeIngredientController.onPageLoad(NormalMode).url
+  lazy val ryeUsedRoute = routes.RyeUsedController.onPageLoad(NormalMode).url
 
-  "RyeIngredient Controller" - {
+  "RyeUsed Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, ryeIngredientRoute)
+        val request = FakeRequest(GET, ryeUsedRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[RyeIngredientView]
+        val view = application.injector.instanceOf[RyeUsedView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -45,14 +48,14 @@ class RyeIngredientControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(RyeIngredientPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(RyeUsedPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, ryeIngredientRoute)
+        val request = FakeRequest(GET, ryeUsedRoute)
 
-        val view = application.injector.instanceOf[RyeIngredientView]
+        val view = application.injector.instanceOf[RyeUsedView]
 
         val result = route(application, request).value
 
@@ -77,8 +80,8 @@ class RyeIngredientControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, ryeIngredientRoute)
-            .withFormUrlEncodedBody(("ryeIngredient-input", validAnswer.toString))
+          FakeRequest(POST, ryeUsedRoute)
+            .withFormUrlEncodedBody(("ryeUsed-input", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -93,12 +96,12 @@ class RyeIngredientControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, ryeIngredientRoute)
+          FakeRequest(POST, ryeUsedRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[RyeIngredientView]
+        val view = application.injector.instanceOf[RyeUsedView]
 
         val result = route(application, request).value
 
@@ -112,7 +115,7 @@ class RyeIngredientControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, ryeIngredientRoute)
+        val request = FakeRequest(GET, ryeUsedRoute)
 
         val result = route(application, request).value
 
@@ -127,7 +130,7 @@ class RyeIngredientControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, ryeIngredientRoute)
+          FakeRequest(POST, ryeUsedRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value

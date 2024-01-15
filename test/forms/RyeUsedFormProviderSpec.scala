@@ -1,15 +1,15 @@
-package forms.spiritsQuestions
+package forms
 
 import forms.behaviours.IntFieldBehaviours
 import play.api.data.FormError
 
-class RyeIngredientFormProviderSpec extends IntFieldBehaviours {
+class RyeUsedFormProviderSpec extends IntFieldBehaviours {
 
-  val form = new RyeIngredientFormProvider()()
+  val form = new RyeUsedFormProvider()()
 
   ".value" - {
 
-    val fieldName = "ryeIngredient-input"
+    val fieldName = "ryeUsed-input"
 
     val minimum = 0
     val maximum = 999999999.99
@@ -25,8 +25,8 @@ class RyeIngredientFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "ryeIngredient.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "ryeIngredient.error.wholeNumber")
+      nonNumericError  = FormError(fieldName, "ryeUsed.error.nonNumeric"),
+      wholeNumberError = FormError(fieldName, "ryeUsed.error.wholeNumber")
     )
 
     behave like intFieldWithRange(
@@ -34,13 +34,13 @@ class RyeIngredientFormProviderSpec extends IntFieldBehaviours {
       fieldName,
       minimum       = minimum,
       maximum       = maximum,
-      expectedError = FormError(fieldName, "ryeIngredient.error.outOfRange", Seq(minimum, maximum))
+      expectedError = FormError(fieldName, "ryeUsed.error.outOfRange", Seq(minimum, maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "ryeIngredient.error.required")
+      requiredError = FormError(fieldName, "ryeUsed.error.required")
     )
   }
 }

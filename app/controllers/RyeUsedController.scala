@@ -1,27 +1,29 @@
-package controllers.spiritsQuestions
+package controllers
 
-import connectors.CacheConnector
 import controllers.actions._
-import forms.spiritsQuestions.RyeIngredientFormProvider
+import forms.RyeUsedFormProvider
+import javax.inject.Inject
 import models.Mode
-import pages.spiritsQuestions.RyeIngredientPage
+import navigation.Navigator
+import pages.RyeUsedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import connectors.CacheConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.RyeUsedView
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RyeIngredientController @Inject()(
+class RyeUsedController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        cacheConnector: CacheConnector,
                                        navigator: Navigator,
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
-                                       formProvider: RyeIngredientFormProvider,
+                                       formProvider: RyeUsedFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: RyeIngredientView
+                                       view: RyeUsedView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -29,7 +31,7 @@ class RyeIngredientController @Inject()(
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(RyeIngredientPage) match {
+      val preparedForm = request.userAnswers.get(RyeUsedPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -46,9 +48,9 @@ class RyeIngredientController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RyeIngredientPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(RyeUsedPage, value))
             _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(RyeIngredientPage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(RyeUsedPage, mode, updatedAnswers))
       )
   }
 }

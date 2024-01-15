@@ -277,11 +277,13 @@ declareSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer R
 declareSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
 declareSmallProducerReliefDutyRate.change.hidden = DeclareSmallProducerReliefDutyRate
 
-ryeIngredient.title = RyeIngredient
-ryeIngredient.heading = RyeIngredient
-ryeIngredient.checkYourAnswersLabel = RyeIngredient
-ryeIngredient.error.nonNumeric = Enter your ryeIngredient using numbers
-ryeIngredient.error.required = Enter your ryeIngredient
-ryeIngredient.error.wholeNumber = Enter your ryeIngredient using whole numbers
-ryeIngredient.error.outOfRange = RyeIngredient must be between {0} and {1}
-ryeIngredient.change.hidden = RyeIngredient
+
+
+ryeUsed.title = RyeUsed
+ryeUsed.heading = RyeUsed
+ryeUsed.checkYourAnswersLabel = RyeUsed
+ryeUsed.error.nonNumeric = Enter your ryeUsed using numbers
+ryeUsed.error.required = Enter your ryeUsed
+ryeUsed.error.wholeNumber = Enter your ryeUsed using whole numbers
+ryeUsed.error.outOfRange = RyeUsed must be between {0} and {1}
+ryeUsed.change.hidden = RyeUsed
