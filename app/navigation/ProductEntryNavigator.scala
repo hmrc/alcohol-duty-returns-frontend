@@ -33,6 +33,9 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
       _ => controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
     case pages.productEntry.DraughtReliefQuestionPage              =>
       _ => controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+    case pages.productEntry.SmallProducerReliefQuestionPage        =>
+      _ => controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+    case pages.productEntry.TaxTypePage                            => taxTypePageRoute
     case pages.productEntry.DeclareSmallProducerReliefDutyRatePage =>
       _ => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
     case pages.productEntry.DeclareAlcoholDutyQuestionPage         => declareAlcoholDutyQuestionPageRoute
@@ -40,6 +43,14 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
       _ => routes.IndexController.onPageLoad
 
   }
+
+  private def taxTypePageRoute(answers: UserAnswers): Call =
+    answers.get(pages.productEntry.SmallProducerReliefQuestionPage) match {
+      case Some(true)  =>
+        controllers.productEntry.routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+      case Some(false) => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
 
   override val checkRouteMap: Page => UserAnswers => Call                     = { case _ =>
     _ => routes.CheckYourAnswersController.onPageLoad
