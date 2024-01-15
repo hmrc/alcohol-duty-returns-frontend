@@ -4,7 +4,7 @@ import controllers.actions._
 import forms.$section$.$className$FormProvider
 import javax.inject.Inject
 import models.Mode
-import navigation.$section$Navigator
+import navigation.$section;format="cap"$Navigator
 import pages.$section$.$className$Page
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -17,7 +17,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class $className$Controller @Inject()(
                                        override val messagesApi: MessagesApi,
                                        cacheConnector: CacheConnector,
-                                       navigator: $section$Navigator,
+                                       navigator: $section;format="cap"$Navigator,
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
