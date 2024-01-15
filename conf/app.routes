@@ -114,7 +114,7 @@ GET        /quarterlySpiritsReturnGuidance                       controllers.spi
 # End of quarterly spirits questions sub-journey
 
 
-GET        /ryeUsed                  controllers.RyeUsedController.onPageLoad(mode: Mode = NormalMode)
-POST       /ryeUsed                  controllers.RyeUsedController.onSubmit(mode: Mode = NormalMode)
-GET        /changeRyeUsed                        controllers.RyeUsedController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeRyeUsed                        controllers.RyeUsedController.onSubmit(mode: Mode = CheckMode)
+GET        /ryeUsed                  controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /ryeUsed                  controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /changeRyeUsed                        controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeRyeUsed                        controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = CheckMode)
