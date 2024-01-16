@@ -279,11 +279,14 @@ declareSmallProducerReliefDutyRate.change.hidden = DeclareSmallProducerReliefDut
 
 
 
-ryeUsed.title = RyeUsed
-ryeUsed.heading = RyeUsed
+ryeUsed.title = How much rye have you used?
+ryeUsed.heading = How much rye have you used?
 ryeUsed.checkYourAnswersLabel = RyeUsed
-ryeUsed.error.nonNumeric = Enter your ryeUsed using numbers
-ryeUsed.error.required = Enter your ryeUsed
-ryeUsed.error.wholeNumber = Enter your ryeUsed using whole numbers
-ryeUsed.error.outOfRange = RyeUsed must be between {0} and {1}
-ryeUsed.change.hidden = RyeUsed
+ryeUsed.hint = Give your answers in tonnes, to 2 decimal places.
+ryeUsed.inputSuffix = tonnes
+ryeUsed.error.nonNumeric = How much rye you have used must be a number
+ryeUsed.error.required = Enter how much rye you have used
+ryeUsed.error.minimumRequired = How much rye you have used must be 999999999.99 or less
+ryeUsed.error.maximumRequired = How much rye you have used must be 0.00 or more
+ryeUsed.error.twoDecimalPlaces = How much rye you have used must be a number to 2 decimal places
+ryeUsed.change.hidden = Rye Used

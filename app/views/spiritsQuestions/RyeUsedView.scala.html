@@ -38,7 +38,7 @@
 
         @sectionHeading(
             id = "ryeUsed-section",
-            text = messages("section.sectionName"),
+            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
         @govukInput(
@@ -48,10 +48,12 @@
             )
             .asNumeric()
             .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("ryeUsed.inputSuffix")))
+            .withHint(Hint(content =  messages("ryeUsed.hint")))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }
