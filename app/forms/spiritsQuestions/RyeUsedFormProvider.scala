@@ -25,7 +25,11 @@ class RyeUsedFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BigDecimal] =
     Form(
-      "ryeUsed-input" -> bigDecimal("ryeUsed.error.required", "ryeUsed.error.wholeNumber", "ryeUsed.error.nonNumeric")
+      "ryeUsed-input" -> bigDecimal(
+        "ryeUsed.error.required",
+        "ryeUsed.error.nonNumeric",
+        "ryeUsed.error.twoDecimalPlaces"
+      )
         .verifying(minimumValue(BigDecimal(0.00), "ryeUsed.error.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "ryeUsed.error.maximumRequired"))
     )
