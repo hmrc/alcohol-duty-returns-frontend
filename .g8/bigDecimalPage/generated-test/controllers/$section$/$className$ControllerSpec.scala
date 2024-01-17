@@ -18,7 +18,7 @@ import views.html.$section$.$className$View
 
 import scala.concurrent.Future
 
-class $className$ControllerSpec extends SpecBase with MockitoSugar with Logg {
+class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new $className$FormProvider()
   val form = formProvider()

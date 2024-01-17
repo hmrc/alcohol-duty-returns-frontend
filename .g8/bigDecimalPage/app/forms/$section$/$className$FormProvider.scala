@@ -13,7 +13,7 @@ class $className$FormProvider @Inject() extends Mappings {
         "$className;format="decap"$.error.nonNumeric",
         "$className;format="decap"$.error.twoDecimalPlaces"
         )
-          .verifying(minimumValue(BigDecimal(0.00), "$className;format="decap"$.error.minimumRequired"))
-          .verifying(maximumValue(BigDecimal(999999999.99), "$className;format="decap"$.error.maximumRequired"))
+          .verifying(minimumValue(BigDecimal($minimum$), "$className;format="decap"$.error.minimumRequired"))
+          .verifying(maximumValue(BigDecimal($maximum$), "$className;format="decap"$.error.maximumRequired"))
     )
 }

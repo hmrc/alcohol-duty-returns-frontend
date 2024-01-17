@@ -49,6 +49,9 @@ check, run a scala style check, run unit tests, run integration tests and produc
 - The g8Scaffolding will prompt for values to properties. Such as the `sectionName`. Enter appropriate values for each prompt.
 
 
+- Run the script `./migrate.sh` to run the migrations _(this creates the messages entries)_.
+
+
 ### Create a new page
 
 - Once the sbt shell has initialised enter the command `g8Scaffold template` where `template` is replaced with one of the following available scaffolding templates:

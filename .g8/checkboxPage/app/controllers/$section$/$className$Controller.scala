@@ -1,7 +1,7 @@
 package controllers.$section$
 
 import controllers.actions._
-import forms.$className$FormProvider
+import forms.$section$.$className$FormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.$section;format="cap"$Navigator
