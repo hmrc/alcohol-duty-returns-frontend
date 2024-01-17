@@ -101,7 +101,7 @@ class UnmaltedGrainUsedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, unmaltedGrainUsedRoute)
-            .withFormUrlEncodedBody(("unmaltedGrainUsed-input", validAnswer.toString))
+            .withFormUrlEncodedBody(("unmalted-grain-used-input", validAnswer.toString))
 
         val result = route(application, request).value
 

@@ -38,20 +38,22 @@
 
         @sectionHeading(
             id = "unmaltedGrainUsed-section",
-            text = messages("section.sectionName"),
+            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
         @govukInput(
             InputViewModel(
-                field = form("unmaltedGrainUsed-input"),
+                field = form("unmalted-grain-used-input"),
                 label = LabelViewModel(messages("unmaltedGrainUsed.heading")).asPageHeading()
             )
             .asNumeric()
             .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("unmaltedGrainUsed.inputSuffix")))
+            .withHint(Hint(content =  messages("unmaltedGrainUsed.hint")))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }

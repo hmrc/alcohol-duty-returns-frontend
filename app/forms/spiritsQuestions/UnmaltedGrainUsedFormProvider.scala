@@ -25,7 +25,7 @@ class UnmaltedGrainUsedFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BigDecimal] =
     Form(
-      "unmaltedGrainUsed-input" -> bigDecimal(
+      "unmalted-grain-used-input" -> bigDecimal(
         "unmaltedGrainUsed.error.required",
         "unmaltedGrainUsed.error.nonNumeric",
         "unmaltedGrainUsed.error.twoDecimalPlaces"

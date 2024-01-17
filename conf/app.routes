@@ -111,9 +111,10 @@ POST       /changeDeclareIrishWhiskey                        controllers.spirits
 
 GET        /quarterlySpiritsReturnGuidance                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
+GET        /how-much-unmalted-grain-have-you-used                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-unmalted-grain-have-you-used                 controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-unmalted-grain-have-you-used                         controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-unmalted-grain-have-you-used                         controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey
 
-GET        /unmaltedGrainUsed                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = NormalMode)
-POST       /unmaltedGrainUsed                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = NormalMode)
-GET        /changeUnmaltedGrainUsed                        controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeUnmaltedGrainUsed                        controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = CheckMode)
+

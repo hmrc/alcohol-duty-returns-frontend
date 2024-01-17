@@ -26,7 +26,7 @@ class UnmaltedGrainUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "unmaltedGrainUsed-input"
+    val fieldName = "unmalted-grain-used-input"
 
     val minimum = 0.00
     val maximum = 999999999.99
