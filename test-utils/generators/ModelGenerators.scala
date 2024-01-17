@@ -16,13 +16,18 @@
 
 package generators
 
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
+import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, SpiritType}
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 
 import java.time.YearMonth
 
 trait ModelGenerators {
+
+  implicit lazy val arbitrarySpiritType: Arbitrary[SpiritType] =
+    Arbitrary {
+      Gen.oneOf(SpiritType.values)
+    }
 
   implicit val arbitraryYearMonth: Arbitrary[YearMonth] = Arbitrary {
     for {

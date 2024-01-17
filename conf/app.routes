@@ -112,3 +112,8 @@ POST       /changeDeclareIrishWhiskey                        controllers.spirits
 GET        /quarterlySpiritsReturnGuidance                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 # End of quarterly spirits questions sub-journey
+
+GET        /spiritType                        controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /spiritType                        controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeSpiritType                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeSpiritType                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
