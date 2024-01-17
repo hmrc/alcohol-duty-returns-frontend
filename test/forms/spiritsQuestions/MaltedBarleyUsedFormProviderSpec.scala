@@ -42,14 +42,14 @@ class MaltedBarleyUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "maltedBarleyUsed.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "maltedBarleyUsed.error.nonNumeric"),
       twoDecimalPlacesError = FormError(fieldName, "maltedBarleyUsed.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
-      minimum       = minimum,
+      minimum = minimum,
       expectedError = FormError(fieldName, "maltedBarleyUsed.error.minimumRequired", ArraySeq(minimum))
     )
     behave like bigDecimalFieldWithMaximum(

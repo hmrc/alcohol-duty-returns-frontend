@@ -107,7 +107,7 @@ GET        /quarterlySpiritsReturnGuidance                       controllers.spi
 
 GET        /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = NormalMode)
-GET        /changeMaltedBarleyUsed                        controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeMaltedBarleyUsed                        controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = CheckMode)
+GET        /change-how-much-malted-barley-have-you-used                       controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-malted-barley-have-you-used                        controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = CheckMode)
 
 # End of quarterly spirits questions sub-journey

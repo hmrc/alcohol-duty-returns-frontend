@@ -28,8 +28,8 @@ class MaltedBarleyUsedFormProvider @Inject() extends Mappings {
         "maltedBarleyUsed.error.required",
         "maltedBarleyUsed.error.nonNumeric",
         "maltedBarleyUsed.error.twoDecimalPlaces"
-        )
-          .verifying(minimumValue(BigDecimal(0.00), "maltedBarleyUsed.error.minimumRequired"))
-          .verifying(maximumValue(BigDecimal(999999999.99), "maltedBarleyUsed.error.maximumRequired"))
+      )
+        .verifying(minimumValue(BigDecimal(0.00), "maltedBarleyUsed.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "maltedBarleyUsed.error.maximumRequired"))
     )
 }
