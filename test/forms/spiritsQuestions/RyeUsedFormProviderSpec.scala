@@ -27,7 +27,7 @@ class RyeUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "ryeUsed-input"
+    val fieldName = "rye-used-input"
 
     val minimum = 0.00
     val maximum = 999999999.99

@@ -25,7 +25,7 @@ class RyeUsedFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BigDecimal] =
     Form(
-      "ryeUsed-input" -> bigDecimal(
+      "rye-used-input" -> bigDecimal(
         "ryeUsed.error.required",
         "ryeUsed.error.nonNumeric",
         "ryeUsed.error.twoDecimalPlaces"

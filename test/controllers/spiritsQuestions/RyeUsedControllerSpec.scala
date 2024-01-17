@@ -101,7 +101,7 @@ class RyeUsedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, ryeUsedRoute)
-            .withFormUrlEncodedBody(("ryeUsed-input", validAnswer.toString))
+            .withFormUrlEncodedBody(("rye-used-input", validAnswer.toString))
 
         val result = route(application, request).value
 
