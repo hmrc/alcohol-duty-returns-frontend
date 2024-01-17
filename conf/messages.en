@@ -276,3 +276,12 @@ declareSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer R
 declareSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be 999999999.99 or less
 declareSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
 declareSmallProducerReliefDutyRate.change.hidden = DeclareSmallProducerReliefDutyRate
+
+unmaltedGrainUsed.title = UnmaltedGrainUsed
+unmaltedGrainUsed.heading = UnmaltedGrainUsed
+unmaltedGrainUsed.checkYourAnswersLabel = UnmaltedGrainUsed
+unmaltedGrainUsed.error.nonNumeric = Enter your unmaltedGrainUsed using numbers
+unmaltedGrainUsed.error.required = Enter your unmaltedGrainUsed
+unmaltedGrainUsed.error.wholeNumber = Enter your unmaltedGrainUsed using whole numbers
+unmaltedGrainUsed.error.outOfRange = UnmaltedGrainUsed must be between {0} and {1}
+unmaltedGrainUsed.change.hidden = UnmaltedGrainUsed
