@@ -1,9 +1,26 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package forms.spiritsQuestions
 
-import forms.behaviours.IntFieldBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
+import scala.collection.immutable.ArraySeq
 
-class UnmaltedGrainUsedFormProviderSpec extends IntFieldBehaviours {
+class UnmaltedGrainUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new UnmaltedGrainUsedFormProvider()()
 
@@ -11,10 +28,10 @@ class UnmaltedGrainUsedFormProviderSpec extends IntFieldBehaviours {
 
     val fieldName = "unmaltedGrainUsed-input"
 
-    val minimum = 0
+    val minimum = 0.00
     val maximum = 999999999.99
 
-    val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
 
     behave like fieldThatBindsValidData(
       form,
@@ -22,19 +39,25 @@ class UnmaltedGrainUsedFormProviderSpec extends IntFieldBehaviours {
       validDataGenerator
     )
 
-    behave like intField(
+    behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "unmaltedGrainUsed.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "unmaltedGrainUsed.error.wholeNumber")
+      nonNumericError = FormError(fieldName, "unmaltedGrainUsed.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "unmaltedGrainUsed.error.twoDecimalPlaces")
     )
 
-    behave like intFieldWithRange(
+    behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
-      expectedError = FormError(fieldName, "unmaltedGrainUsed.error.outOfRange", Seq(minimum, maximum))
+      minimum = minimum,
+      expectedError = FormError(fieldName, "unmaltedGrainUsed.error.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      expectedError = FormError(fieldName, "unmaltedGrainUsed.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(

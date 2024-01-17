@@ -23,12 +23,14 @@ import javax.inject.Inject
 
 class UnmaltedGrainUsedFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  def apply(): Form[BigDecimal] =
     Form(
-      "unmaltedGrainUsed-input" -> int(
+      "unmaltedGrainUsed-input" -> bigDecimal(
         "unmaltedGrainUsed.error.required",
-        "unmaltedGrainUsed.error.wholeNumber",
-        "unmaltedGrainUsed.error.nonNumeric")
-          .verifying(inRange(0, 999999999.99, "unmaltedGrainUsed.error.outOfRange"))
+        "unmaltedGrainUsed.error.nonNumeric",
+        "unmaltedGrainUsed.error.twoDecimalPlaces"
+      )
+        .verifying(minimumValue(BigDecimal(0.00), "unmaltedGrainUsed.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "unmaltedGrainUsed.error.maximumRequired"))
     )
 }

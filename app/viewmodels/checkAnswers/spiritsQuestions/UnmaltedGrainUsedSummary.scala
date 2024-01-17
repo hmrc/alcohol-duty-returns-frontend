@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.spiritsQuestions
 
-import controllers.routes
+import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
 import pages.spiritsQuestions.UnmaltedGrainUsedPage
 import play.api.i18n.Messages
@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object UnmaltedGrainUsedSummary  {
+object UnmaltedGrainUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(UnmaltedGrainUsedPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "unmaltedGrainUsed.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.UnmaltedGrainUsedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("unmaltedGrainUsed.change.hidden"))
-          )
+    answers.get(UnmaltedGrainUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "unmaltedGrainUsed.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.UnmaltedGrainUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("unmaltedGrainUsed.change.hidden"))
         )
+      )
     }
 }

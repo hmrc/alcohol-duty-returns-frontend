@@ -19,7 +19,7 @@ package pages.spiritsQuestions
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object UnmaltedGrainUsedPage extends QuestionPage[Int] {
+case object UnmaltedGrainUsedPage extends QuestionPage[BigDecimal] {
 
   override def path: JsPath = JsPath \ toString
 
