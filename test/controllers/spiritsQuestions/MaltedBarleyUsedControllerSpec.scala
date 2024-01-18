@@ -101,7 +101,7 @@ class MaltedBarleyUsedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, maltedBarleyUsedRoute)
-            .withFormUrlEncodedBody(("maltedBarleyUsed-input", validAnswer.toString))
+            .withFormUrlEncodedBody(("malted-barley-used-input", validAnswer.toString))
 
         val result = route(application, request).value
 

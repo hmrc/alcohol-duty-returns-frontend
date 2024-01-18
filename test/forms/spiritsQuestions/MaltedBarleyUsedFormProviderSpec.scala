@@ -26,7 +26,7 @@ class MaltedBarleyUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "maltedBarleyUsed-input"
+    val fieldName = "malted-barley-used-input"
 
     val minimum = 0.0
     val maximum = 999999999.99

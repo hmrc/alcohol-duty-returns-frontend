@@ -37,13 +37,13 @@
         }
 
         @sectionHeading(
-            id = "maltedBarleyUsed-section",
+            id = "malted-barley-used-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
         @govukInput(
             InputViewModel(
-                field = form("maltedBarleyUsed-input"),
+                field = form("malted-barley-used-input"),
                 label = LabelViewModel(messages("maltedBarleyUsed.heading")).asPageHeading()
             )
             .asNumeric()
