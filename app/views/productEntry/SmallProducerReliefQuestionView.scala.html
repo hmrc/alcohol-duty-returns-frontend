@@ -35,6 +35,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
+
     @sectionHeading(
         id = "small-producer-relief-question-section",
         text = messages("section.alcoholDutyReturn"),
@@ -48,7 +49,7 @@
             text = messages("smallProducerReliefQuestion.guidance.link.text"),
             href = messages("smallProducerReliefQuestion.guidance.link.url"),
             newTab = true
-    )
+        )
     </p>
     @formHelper(action = controllers.productEntry.routes.SmallProducerReliefQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

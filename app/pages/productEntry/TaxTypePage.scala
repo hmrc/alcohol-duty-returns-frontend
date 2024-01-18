@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package pages.productEntry
 
-@(id: String, text: String)(implicit request: Request[_], messages: Messages)
+import play.api.libs.json.JsPath
+import pages.QuestionPage
 
-<h2 id = @id class="govuk-caption-xl hmrc-caption-xl govuk-!-margin-top-0">
-  <span class="govuk-visually-hidden">@messages("section.visuallyHidden")</span>
-  @text
-</h2>
+case object TaxTypePage extends QuestionPage[String] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "taxType"
+}

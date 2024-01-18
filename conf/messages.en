@@ -98,6 +98,25 @@ alcoholByVolumeQuestion.error.maximumRequired = This product’s Alcohol by Volu
 alcoholByVolumeQuestion.error.twoDecimalPlaces = This product’s Alcohol by Volume (ABV) must be a number to two decimal places
 alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
 
+taxType.title = Your product’s tax type code
+taxType.heading = Your product’s tax type code
+taxType.p1 = Based on your answers, we have found your product’s possible tax type codes. We found these tax type codes because you told us that this product is:
+taxType.bulletList.abv = Alcohol by Volume (ABV) strength
+taxType.bulletList.draughtRelief = eligible for Draught Relief
+taxType.bulletList.smallProducerRelief = eligible for Small Producer Relief
+taxType.guidance.link.url = #
+taxType.guidance.link.text = Find out more about Alcohol Duty tax type codes (opens in a new tab).
+taxType.radioHeading = Which tax type code matches your product?
+taxType.taxTypeRadio.taxType = tax type code
+taxType.taxTypeRadio.regime.Beer = Beer
+taxType.taxTypeRadio.regime.Wine = Wine
+taxType.taxTypeRadio.regime.Cider = Cider
+taxType.taxTypeRadio.regime.Spirits = Spirits
+taxType.taxTypeRadio.regime.OtherFermentedProduct = Other fermented products
+taxType.checkYourAnswersLabel = Your product’s tax type
+taxType.error.required = Select this product’s tax type
+taxType.change.hidden = TaxType
+
 productVolume.title = How much of this product do you need to declare?
 productVolume.heading = How much of this product do you need to declare?
 productVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
