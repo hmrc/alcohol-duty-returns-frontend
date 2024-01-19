@@ -26,28 +26,27 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object SpiritTypeSummary  {
+object SpiritTypeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SpiritTypePage).map {
-      answers =>
-
-        val value = ValueViewModel(
-          HtmlContent(
-            answers.map {
-              answer => HtmlFormat.escape(messages(s"spiritType.$answer")).toString
+    answers.get(SpiritTypePage).map { answers =>
+      val value = ValueViewModel(
+        HtmlContent(
+          answers
+            .map { answer =>
+              HtmlFormat.escape(messages(s"spiritType.$answer")).toString
             }
             .mkString(",<br>")
-          )
         )
+      )
 
-        SummaryListRowViewModel(
-          key     = "spiritType.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.SpiritTypeController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("spiritType.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "spiritType.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.SpiritTypeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("spiritType.change.hidden"))
         )
+      )
     }
 }

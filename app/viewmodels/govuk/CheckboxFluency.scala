@@ -65,6 +65,9 @@ trait CheckboxFluency {
 
     def describedBy(value: String): Checkboxes =
       checkboxes.copy(describedBy = Some(value))
+
+    def withHint(hint: Hint): Checkboxes =
+      checkboxes copy (hint = Some(hint))
   }
 
   object CheckboxItemViewModel {
@@ -77,7 +80,7 @@ trait CheckboxFluency {
     ): CheckboxItem =
       CheckboxItem(
         content = content,
-        id = Some(s"${fieldId}_$index"),
+        id = Some(s"${fieldId}_$value"),
         name = Some(s"$fieldId[$index]"),
         value = value
       )

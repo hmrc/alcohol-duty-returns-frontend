@@ -113,7 +113,7 @@ GET        /quarterlySpiritsReturnGuidance                       controllers.spi
 
 # End of quarterly spirits questions sub-journey
 
-GET        /spiritType                        controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /spiritType                        controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /changeSpiritType                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeSpiritType                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /which-of-these-spirits-have-you-made                        controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /which-of-these-spirits-have-you-made                        controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)

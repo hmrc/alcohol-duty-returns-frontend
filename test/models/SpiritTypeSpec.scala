@@ -24,7 +24,12 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.OptionValues
 import play.api.libs.json.{JsError, JsString, Json}
 
-class SpiritTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
+class SpiritTypeSpec
+    extends AnyFreeSpec
+    with Matchers
+    with ScalaCheckPropertyChecks
+    with OptionValues
+    with ModelGenerators {
 
   "SpiritType" - {
 
@@ -32,10 +37,8 @@ class SpiritTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = arbitrary[SpiritType]
 
-      forAll(gen) {
-        spiritType =>
-
-          JsString(spiritType.toString).validate[SpiritType].asOpt.value mustEqual spiritType
+      forAll(gen) { spiritType =>
+        JsString(spiritType.toString).validate[SpiritType].asOpt.value mustEqual spiritType
       }
     }
 
@@ -43,10 +46,8 @@ class SpiritTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = arbitrary[String] suchThat (!SpiritType.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[SpiritType] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[SpiritType] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,10 +55,8 @@ class SpiritTypeSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = arbitrary[SpiritType]
 
-      forAll(gen) {
-        spiritType =>
-
-          Json.toJson(spiritType) mustEqual JsString(spiritType.toString)
+      forAll(gen) { spiritType =>
+        Json.toJson(spiritType) mustEqual JsString(spiritType.toString)
       }
     }
   }

@@ -27,6 +27,7 @@ class SpiritTypeFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Set[SpiritType]] =
     Form(
-      "value" -> set(enumerable[SpiritType]("spiritType.error.required")).verifying(nonEmptySet("spiritType.error.required"))
+      "value" -> set(enumerable[SpiritType]("spiritType.error.required"))
+        .verifying(nonEmptySet("spiritType.error.required"))
     )
 }

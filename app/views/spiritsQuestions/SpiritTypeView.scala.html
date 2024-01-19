@@ -37,7 +37,7 @@
 
         @sectionHeading(
             id = "spiritType-section",
-            text = messages("section.sectionName"),
+            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
         @govukCheckboxes(
@@ -47,6 +47,7 @@
                 legend = LegendViewModel(messages("spiritType.heading")).asPageHeading(),
                 items  = SpiritType.checkboxItems
             )
+            .withHint(Hint(content =  messages("spiritType.hint")))
         )
 
         @govukButton(

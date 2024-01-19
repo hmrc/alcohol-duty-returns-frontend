@@ -27,21 +27,32 @@ object SpiritType extends Enumerable.Implicits {
 
   case object Maltspirits extends WithName("maltSpirits") with SpiritType
   case object Grainspirits extends WithName("grainSpirits") with SpiritType
+  case object NeutralAgriculturalOrigin extends WithName("neutralAgriculturalOrigin") with SpiritType
+  case object NeutralIndustrialOrigin extends WithName("neutralIndustrialOrigin") with SpiritType
+  case object Beer extends WithName("beer") with SpiritType
+  case object WineOrMadeWine extends WithName("wineOrMadeWine") with SpiritType
+  case object CiderOrPerry extends WithName("ciderOrPerry") with SpiritType
+  case object Other extends WithName("other") with SpiritType
 
   val values: Seq[SpiritType] = Seq(
     Maltspirits,
-    Grainspirits
+    Grainspirits,
+    NeutralAgriculturalOrigin,
+    NeutralIndustrialOrigin,
+    Beer,
+    WineOrMadeWine,
+    CiderOrPerry,
+    Other
   )
 
   def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
-    values.zipWithIndex.map {
-      case (value, index) =>
-        CheckboxItemViewModel(
-          content = Text(messages(s"spiritType.${value.toString}")),
-          fieldId = "value",
-          index   = index,
-          value   = value.toString
-        )
+    values.zipWithIndex.map { case (value, index) =>
+      CheckboxItemViewModel(
+        content = Text(messages(s"spiritType.${value.toString}")),
+        fieldId = "value",
+        index = index,
+        value = value.toString
+      )
     }
 
   implicit val enumerable: Enumerable[SpiritType] =

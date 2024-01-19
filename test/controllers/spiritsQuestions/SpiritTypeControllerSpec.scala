@@ -41,7 +41,7 @@ class SpiritTypeControllerSpec extends SpecBase with MockitoSugar {
   lazy val spiritTypeRoute = routes.SpiritTypeController.onPageLoad(NormalMode).url
 
   val formProvider = new SpiritTypeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   "SpiritType Controller" - {
 
@@ -76,7 +76,10 @@ class SpiritTypeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(SpiritType.values.toSet), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(SpiritType.values.toSet), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

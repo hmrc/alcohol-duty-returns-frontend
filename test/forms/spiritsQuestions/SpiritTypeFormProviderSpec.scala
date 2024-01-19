@@ -26,13 +26,13 @@ class SpiritTypeFormProviderSpec extends CheckboxFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "spiritType.error.required"
 
     behave like checkboxField[SpiritType](
       form,
       fieldName,
-      validValues  = SpiritType.values,
+      validValues = SpiritType.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 
