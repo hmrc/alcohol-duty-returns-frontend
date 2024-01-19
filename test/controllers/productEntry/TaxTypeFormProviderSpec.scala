@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,32 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package forms.productEntry
 
-@(id: String, text: String)(implicit request: Request[_], messages: Messages)
+import forms.behaviours.OptionFieldBehaviours
+import play.api.data.FormError
 
-<h2 id = @id class="govuk-caption-xl hmrc-caption-xl govuk-!-margin-top-0">
-  <span class="govuk-visually-hidden">@messages("section.visuallyHidden")</span>
-  @text
-</h2>
+class TaxTypeFormProviderSpec extends OptionFieldBehaviours {
+
+  val form = new TaxTypeFormProvider()()
+
+  ".value" - {
+
+    val fieldName   = "value"
+    val requiredKey = "taxType.error.required"
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      nonEmptyString
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+}

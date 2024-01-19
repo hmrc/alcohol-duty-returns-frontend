@@ -61,17 +61,23 @@
 
 @beforeContent = {
 
-    @if(appConfig.languageTranslationEnabled) {
-        @hmrcLanguageSelect(LanguageSelect(
-            if (messages.lang.code == "cy") Cy else En,
-            (En, routes.LanguageSwitchController.switchToLanguage("en").url),
-            (Cy, routes.LanguageSwitchController.switchToLanguage("cy").url)
-        ))
-    }
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @if(showBackLink) {
+            @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
+        }
+    </div>
 
-    @if(showBackLink) {
-        @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
-    }
+    <div class="govuk-grid-column-one-third">
+        @if(appConfig.languageTranslationEnabled) {
+            @hmrcLanguageSelect(LanguageSelect(
+                if (messages.lang.code == "cy") Cy else En,
+                (En, routes.LanguageSwitchController.switchToLanguage("en").url),
+                (Cy, routes.LanguageSwitchController.switchToLanguage("cy").url)
+            ))
+    </div>
+</div>
+            }
 }
 
 @content = {
@@ -80,6 +86,7 @@
     <div class="govuk-!-margin-top-8">
         @hmrcReportTechnicalIssueHelper()
     </div>
+
 }
 
 @govukLayout(

@@ -44,10 +44,16 @@ POST       /draughtReliefQuestion                        controllers.productEntr
 GET        /changeDraughtReliefQuestion                  controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDraughtReliefQuestion                  controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
 
+GET        /taxType                        controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /taxType                        controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeTaxType                  controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeTaxType                  controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = CheckMode)
+
 GET        /smallProducerReliefQuestion                        controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /smallProducerReliefQuestion                        controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /changeSmallProducerReliefQuestion                  controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeSmallProducerReliefQuestion                  controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
+
 
 GET        /productVolume                  controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
 POST       /productVolume                  controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
@@ -109,5 +115,10 @@ GET        /how-much-malted-barley-have-you-used                  controllers.sp
 POST       /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-malted-barley-have-you-used                       controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-malted-barley-have-you-used                        controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = CheckMode)
 
 # End of quarterly spirits questions sub-journey
