@@ -144,11 +144,11 @@ class TaxTypeController @Inject() (
     for {
       Array(code, regimeStr) <- value.split("_") match {
                                   case Array(code: String, regime: String) => Future.successful(Array(code, regime))
-                                  case _                                   => Future.failed(new RuntimeException("Couldn't parse tax type"))
+                                  case _                                   => Future.failed(new RuntimeException("Couldn't parse tax type code"))
                                 }
       regime: AlcoholRegime  <- AlcoholRegime.fromString(regimeStr) match {
                                   case Some(regime) => Future.successful(regime)
-                                  case _            => Future.failed(new RuntimeException("Couldn't parse tax type"))
+                                  case _            => Future.failed(new RuntimeException("Couldn't parse alcohol regime"))
                                 }
       rate                   <- getRate(code, regime, rates)
     } yield TaxType(code, regime, rate)
