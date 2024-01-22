@@ -53,6 +53,18 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
     }
 
+    "in Normal mode" - {
+
+      "must go from the Declare Irish whiskey page to Spirit type page" in {
+
+        navigator.nextPage(
+          pages.spiritsQuestions.DeclareIrishWhiskeyPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
+      }
+
+    }
     "in Check mode" - {
 
       "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
