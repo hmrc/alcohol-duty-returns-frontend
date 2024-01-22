@@ -277,7 +277,17 @@ declareSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer R
 declareSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
 declareSmallProducerReliefDutyRate.change.hidden = DeclareSmallProducerReliefDutyRate
 
-
+maltedBarleyUsed.title = How much malted barley have you used?
+maltedBarleyUsed.heading = How much malted barley have you used?
+maltedBarleyUsed.hint = Give your answer in tonnes, to 2 decimal places.
+maltedBarleyUsed.checkYourAnswersLabel = MaltedBarleyUsed
+maltedBarleyUsed.error.nonNumeric = How much malted barley you have used must be a number
+maltedBarleyUsed.error.required = Enter how much malted barley you have used
+maltedBarleyUsed.error.minimumRequired = How much malted barley you have used must be 0.00 or more
+maltedBarleyUsed.error.maximumRequired = How much malted barley you have used must be 999999999.99 or less
+maltedBarleyUsed.error.twoDecimalPlaces = How much malted barley you have used must be a number to 2 decimal places
+maltedBarleyUsed.change.hidden = MaltedBarleyUsed
+maltedBarleyUsed.inputSuffix = tonnes
 
 ryeUsed.title = How much rye have you used?
 ryeUsed.heading = How much rye have you used?

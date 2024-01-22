@@ -111,12 +111,14 @@ POST       /changeDeclareIrishWhiskey                        controllers.spirits
 
 GET        /quarterlySpiritsReturnGuidance                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
+GET        /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-malted-barley-have-you-used                       controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-malted-barley-have-you-used                        controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = CheckMode)
+
 GET        /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = CheckMode)
 
 # End of quarterly spirits questions sub-journey
-
-
-
