@@ -16,7 +16,7 @@
 
 package generators
 
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
+import models._
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 
