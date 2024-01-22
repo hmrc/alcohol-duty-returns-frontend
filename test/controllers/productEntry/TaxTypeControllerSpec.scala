@@ -19,6 +19,7 @@ package controllers.productEntry
 import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
+import models.productEntry.TaxType
 import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -56,18 +57,20 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     .success
     .value
 
-  val rateBandList =
-    Seq(
-      RateBand(
-        "310",
-        "some band",
-        RateType.DraughtRelief,
-        Set(AlcoholRegime.Beer),
-        AlcoholByVolume(0.1),
-        AlcoholByVolume(5.8),
-        Some(BigDecimal(10.99))
-      )
-    )
+  val taxCode       = "310"
+  val alcoholRegime = AlcoholRegime.Beer
+  val rate          = Some(BigDecimal(10.99))
+
+  val rateBand     = RateBand(
+    taxCode,
+    "some band",
+    RateType.DraughtRelief,
+    Set(alcoholRegime),
+    AlcoholByVolume(0.1),
+    AlcoholByVolume(5.8),
+    rate
+  )
+  val rateBandList = Seq(rateBand)
 
   "TaxType Controller" - {
 
@@ -111,7 +114,11 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
         rateBandList
       )
 
-      val userAnswers = fullUserAnswers.set(TaxTypePage, "some value").success.value
+      val userAnswers =
+        fullUserAnswers
+          .set(TaxTypePage, TaxType(taxCode, alcoholRegime, rate))
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
@@ -135,7 +142,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
         )(messages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("some value"), NormalMode, viewModel)(
+        contentAsString(result) mustEqual view(form.fill(s"${taxCode}_$alcoholRegime"), NormalMode, viewModel)(
           request,
           messages(application)
         ).toString
@@ -144,13 +151,19 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future.successful(
+        rateBandList
+      )
+
       val mockCacheConnector = mock[CacheConnector]
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
             bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -158,7 +171,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, taxTypeRoute)
-            .withFormUrlEncodedBody(("value", "some value"))
+            .withFormUrlEncodedBody(("value", s"${taxCode}_$alcoholRegime"))
 
         val result = route(application, request).value
 

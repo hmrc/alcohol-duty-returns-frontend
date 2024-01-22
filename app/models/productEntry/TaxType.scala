@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,3 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package models.productEntry
+
+import models.AlcoholRegime
+import play.api.libs.json.{Json, OFormat}
+
+case class TaxType(code: String, regime: AlcoholRegime, taxRate: Option[BigDecimal]) {
+  def taxCode = s"${code}_${regime.toString}"
+}
+
+object TaxType {
+  implicit val formats: OFormat[TaxType] = Json.format[TaxType]
+}
