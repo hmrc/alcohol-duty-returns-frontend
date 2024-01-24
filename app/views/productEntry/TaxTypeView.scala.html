@@ -35,7 +35,7 @@
     @formHelper(action = controllers.productEntry.routes.TaxTypeController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides =  Map("value" -> viewModel.radioItems.headOption.flatMap(_.id).getOrElse(""))))
         }
 
         @sectionHeading(

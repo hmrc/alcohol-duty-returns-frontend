@@ -32,7 +32,7 @@
     @formHelper(action = controllers.spiritsQuestions.routes.SpiritTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> SpiritType.checkboxItems.headOption.flatMap(_.id).getOrElse(""))))
         }
 
         @sectionHeading(

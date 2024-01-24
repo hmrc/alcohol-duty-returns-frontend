@@ -292,6 +292,18 @@ spiritType.error.required = Select the spirits you have made this quarter
 spiritType.change.hidden = SpiritType
 spiritType.hint = Select all that apply in the past quarter.
 
+maltedBarleyUsed.title = How much malted barley have you used?
+maltedBarleyUsed.heading = How much malted barley have you used?
+maltedBarleyUsed.hint = Give your answer in tonnes, to 2 decimal places.
+maltedBarleyUsed.checkYourAnswersLabel = MaltedBarleyUsed
+maltedBarleyUsed.error.nonNumeric = How much malted barley you have used must be a number
+maltedBarleyUsed.error.required = Enter how much malted barley you have used
+maltedBarleyUsed.error.minimumRequired = How much malted barley you have used must be 0.00 or more
+maltedBarleyUsed.error.maximumRequired = How much malted barley you have used must be 999999999.99 or less
+maltedBarleyUsed.error.twoDecimalPlaces = How much malted barley you have used must be a number to 2 decimal places
+maltedBarleyUsed.change.hidden = MaltedBarleyUsed
+maltedBarleyUsed.inputSuffix = tonnes
+
 ryeUsed.title = How much rye have you used?
 ryeUsed.heading = How much rye have you used?
 ryeUsed.checkYourAnswersLabel = RyeUsed
