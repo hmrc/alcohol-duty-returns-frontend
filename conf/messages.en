@@ -313,3 +313,12 @@ ryeUsed.error.maximumRequired = How much rye you have used must be 999999999.99 
 ryeUsed.error.twoDecimalPlaces = How much rye you have used must be a number to 2 decimal places
 ryeUsed.change.hidden = Rye Used
 
+
+wheatUsed.title = WheatUsed
+wheatUsed.heading = WheatUsed
+wheatUsed.checkYourAnswersLabel = WheatUsed
+wheatUsed.error.nonNumeric = Enter your wheatUsed using numbers
+wheatUsed.error.required = Enter your wheatUsed
+wheatUsed.error.wholeNumber = Enter your wheatUsed using whole numbers
+wheatUsed.error.outOfRange = WheatUsed must be between {0} and {1}
+wheatUsed.change.hidden = WheatUsed

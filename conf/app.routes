@@ -126,6 +126,12 @@ POST       /how-much-rye-have-you-used                 controllers.spiritsQuesti
 GET        /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = CheckMode)
 
+GET        /how-much-wheat-have-you-used                  controllers.spiritsQuestions.WheatUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-wheat-have-you-used                  controllers.spiritsQuestions.WheatUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-wheat-have-you-used                        controllers.spiritsQuestions.WheatUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-wheat-have-you-used                        controllers.spiritsQuestions.WheatUsedController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey
+
+
 
 
