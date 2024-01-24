@@ -292,6 +292,18 @@ spiritType.error.required = Select the spirits you have made this quarter
 spiritType.change.hidden = SpiritType
 spiritType.hint = Select all that apply in the past quarter.
 
+unmaltedGrainUsed.title = How much unmalted grain have you used?
+unmaltedGrainUsed.heading = How much unmalted grain have you used?
+unmaltedGrainUsed.checkYourAnswersLabel = UnmaltedGrainUsed
+unmaltedGrainUsed.hint = Give your answers in tonnes, to 2 decimal places.
+unmaltedGrainUsed.inputSuffix = tonnes
+unmaltedGrainUsed.error.nonNumeric = How much unmalted grain you have used must be a number
+unmaltedGrainUsed.error.required = Enter how much unmalted grain you have used
+unmaltedGrainUsed.error.minimumRequired = How much unmalted grain you have used must be 0.00 or more
+unmaltedGrainUsed.error.maximumRequired = How much unmalted grain you have used must be 999999999.99 or less
+unmaltedGrainUsed.error.twoDecimalPlaces =How much unmalted grain you have used must be a number to 2 decimal places
+unmaltedGrainUsed.change.hidden = Unmalted Grain Used
+
 maltedBarleyUsed.title = How much malted barley have you used?
 maltedBarleyUsed.heading = How much malted barley have you used?
 maltedBarleyUsed.hint = Give your answer in tonnes, to 2 decimal places.
@@ -315,3 +327,4 @@ ryeUsed.error.minimumRequired = How much rye you have used must be 0.00 or more
 ryeUsed.error.maximumRequired = How much rye you have used must be 999999999.99 or less
 ryeUsed.error.twoDecimalPlaces = How much rye you have used must be a number to 2 decimal places
 ryeUsed.change.hidden = Rye Used
+
