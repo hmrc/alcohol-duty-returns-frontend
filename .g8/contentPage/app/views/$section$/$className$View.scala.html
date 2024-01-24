@@ -1,0 +1,25 @@
+@import components.{SectionHeading, PageHeading}
+
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        sectionHeading: SectionHeading,
+        pageHeading: PageHeading
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("$className;format="decap"$.title"))) {
+
+    @sectionHeading(
+        id = "$className;format="decap"$-section",
+        text = messages("section.$section$"),
+    )
+
+    @pageHeading(messages("$className;format="decap"$.heading"))
+
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.continue"))
+    )
+
+}
