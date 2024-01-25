@@ -313,7 +313,6 @@ ryeUsed.error.maximumRequired = How much rye you have used must be 999999999.99 
 ryeUsed.error.twoDecimalPlaces = How much rye you have used must be a number to 2 decimal places
 ryeUsed.change.hidden = Rye Used
 
-
 wheatUsed.title = How much wheat have you used?
 wheatUsed.heading = How much wheat have you used?
 wheatUsed.checkYourAnswersLabel = WheatUsed
@@ -325,3 +324,18 @@ wheatUsed.error.minimumRequired = How much wheat you have used must be 0.00 or m
 wheatUsed.error.maximumRequired = How much wheat you have used must be 999999999.99 or less
 wheatUsed.error.twoDecimalPlaces = How much wheat you have used must be a number to 2 decimal places
 wheatUsed.change.hidden = Wheat Used
+
+spiritType.title = Which of these spirits have you made?
+spiritType.heading = Which of these spirits have you made?
+spiritType.maltSpirits = Malt spirits
+spiritType.grainSpirits = Grain spirits
+spiritType.neutralAgriculturalOrigin = Neutral spirits of agricultural origin
+spiritType.neutralIndustrialOrigin = Neutral spirits of industrial origin
+spiritType.beer = Spirits produced from beer
+spiritType.wineOrMadeWine = Spirits produced from wine or made-wine
+spiritType.ciderOrPerry = Spirits produced from cider or perry
+spiritType.other = Other
+spiritType.checkYourAnswersLabel = Which of these spirits have you made?
+spiritType.error.required = Select the spirits you have made this quarter
+spiritType.change.hidden = SpiritType
+spiritType.hint = Select all that apply in the past quarter.
