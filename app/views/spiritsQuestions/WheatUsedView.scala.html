@@ -37,21 +37,23 @@
         }
 
         @sectionHeading(
-            id = "wheatUsed-section",
-            text = messages("section.sectionName"),
+            id = "wheat-used-section",
+            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
         @govukInput(
             InputViewModel(
-                field = form("wheatUsed-input"),
+                field = form("wheat-used-input"),
                 label = LabelViewModel(messages("wheatUsed.heading")).asPageHeading()
             )
             .asNumeric()
             .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("wheatUsed.inputSuffix")))
+            .withHint(Hint(content =  messages("wheatUsed.hint")))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }

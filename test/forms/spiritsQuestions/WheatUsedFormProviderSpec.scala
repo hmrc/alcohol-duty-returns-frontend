@@ -27,7 +27,7 @@ class WheatUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "wheatUsed-input"
+    val fieldName = "wheat-used-input"
 
     val minimum = 0.00
     val maximum = 999999999.99
@@ -43,7 +43,7 @@ class WheatUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "wheatUsed.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "wheatUsed.error.nonNumeric"),
       twoDecimalPlacesError = FormError(fieldName, "wheatUsed.error.twoDecimalPlaces")
     )
 

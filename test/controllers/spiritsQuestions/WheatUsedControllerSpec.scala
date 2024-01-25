@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class WheatUsedControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new WheatUsedFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -77,7 +77,10 @@ class WheatUsedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -98,7 +101,7 @@ class WheatUsedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, wheatUsedRoute)
-            .withFormUrlEncodedBody(("wheatUsed-input", validAnswer.toString))
+            .withFormUrlEncodedBody(("wheat-used-input", validAnswer.toString))
 
         val result = route(application, request).value
 
