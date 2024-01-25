@@ -34,52 +34,48 @@
 
     @formHelper(action = controllers.productEntry.routes.TaxTypeController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @defining("value") { id =>
-            @if(form.errors.nonEmpty) {
-                @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> s"${viewModel.radioItems.head.id.get}")))
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> viewModel.radioItems.headOption.flatMap(_.id).getOrElse(""))))
+        }
+
+        @sectionHeading(
+            id = "tax-type-section",
+            text = messages("section.alcoholDutyReturn"),
+        )
+
+        @pageHeading(messages("taxType.heading"))
+
+        <p class="govuk-body">@messages("taxType.p1")</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@{viewModel.abv} @messages("taxType.bulletList.abv")</li>
+            @if(viewModel.eligibleForDraughtRelief) {
+                <li>@messages("taxType.bulletList.draughtRelief")</li>
             }
+            @if(viewModel.eligibleForSmallProducerRelief) {
+                <li>@messages("taxType.bulletList.smallProducerRelief")</li>
+            }
+        </ul>
 
-            @sectionHeading(
-                id = "tax-type-section",
-                text = messages("section.alcoholDutyReturn"),
-            )
-
-            @pageHeading(messages("taxType.heading"))
-
-            <p class="govuk-body">@messages("taxType.p1")</p>
-
-            <ul class="govuk-list govuk-list--bullet">
-                <li>@{
-                    viewModel.abv
-                } @messages("taxType.bulletList.abv")</li>
-                @if(viewModel.eligibleForDraughtRelief) {
-                    <li>@messages("taxType.bulletList.draughtRelief")</li>
-                }
-                @if(viewModel.eligibleForSmallProducerRelief) {
-                    <li>@messages("taxType.bulletList.smallProducerRelief")</li>
-                }
-            </ul>
-
-            <p class="govuk-body">
+        <p class="govuk-body">
             @link(
                 id = "tax-type-guidance-link",
                 text = messages("taxType.guidance.link.text"),
                 href = messages("taxType.guidance.link.url"),
                 newTab = true
             )
-            </p>
+        </p>
 
-            @govukRadios(
-                RadiosViewModel(
-                    field = form("value"),
-                    legend = LegendViewModel(messages("taxType.radioHeading")).withSize(LegendSize.Medium),
-                    items = viewModel.radioItems
-                )
+        @govukRadios(
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(messages("taxType.radioHeading")).withSize(LegendSize.Medium),
+                items  = viewModel.radioItems
             )
+        )
 
-            @govukButton(
-                ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
-            )
-        }
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+        )
     }
 }

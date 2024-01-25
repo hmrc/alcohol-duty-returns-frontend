@@ -24,6 +24,11 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitrarySpiritType: Arbitrary[SpiritType] =
+    Arbitrary {
+      Gen.oneOf(SpiritType.values)
+    }
+
   implicit val arbitraryYearMonth: Arbitrary[YearMonth] = Arbitrary {
     for {
       year  <- Gen.choose(1900, 2200)

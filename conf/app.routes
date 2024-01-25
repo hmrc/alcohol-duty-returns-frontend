@@ -114,9 +114,24 @@ POST       /changeDeclareIrishWhiskey                        controllers.spirits
 
 GET        /quarterlySpiritsReturnGuidance                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
+GET        /how-much-unmalted-grain-have-you-used                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-unmalted-grain-have-you-used                 controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-unmalted-grain-have-you-used                         controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-unmalted-grain-have-you-used                         controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-malted-barley-have-you-used                       controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-malted-barley-have-you-used                        controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = CheckMode)
+
 GET        /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /which-of-these-spirits-have-you-made                        controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /which-of-these-spirits-have-you-made                        controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
 
 # End of quarterly spirits questions sub-journey
