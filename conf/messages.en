@@ -290,3 +290,10 @@ ryeUsed.error.minimumRequired = How much rye you have used must be 0.00 or more
 ryeUsed.error.maximumRequired = How much rye you have used must be 999999999.99 or less
 ryeUsed.error.twoDecimalPlaces = How much rye you have used must be a number to 2 decimal places
 ryeUsed.change.hidden = Rye Used
+
+pureAlcohol.title = This product has {0} litres of pure alcohol
+pureAlcohol.heading = This product has {0} litres of pure alcohol
+pureAlcohol.paragraph = This is because you told us:
+pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
+pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
+

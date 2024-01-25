@@ -65,6 +65,9 @@ POST       /declareSmallProducerReliefDutyRate                  controllers.prod
 GET        /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /you-have-declared-this-many-litres-of-pure-alcohol                       controllers.productEntry.PureAlcoholController.onPageLoad()
+
 # End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
@@ -117,6 +120,3 @@ GET        /change-how-much-rye-have-you-used                       controllers.
 POST       /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = CheckMode)
 
 # End of quarterly spirits questions sub-journey
-
-
-
