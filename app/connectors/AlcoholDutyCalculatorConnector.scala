@@ -19,22 +19,12 @@ package connectors
 import config.FrontendAppConfig
 import models.productEntry.TaxDuty
 import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances}
 
 import java.time.YearMonth
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-
-case class DutyCalculationRequest(
-  abv: BigDecimal,
-  volume: BigDecimal,
-  rate: BigDecimal
-)
-
-object DutyCalculationRequest {
-  implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
-}
 
 class AlcoholDutyCalculatorConnector @Inject() (
   config: FrontendAppConfig,
