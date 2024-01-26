@@ -135,3 +135,5 @@ GET        /change-which-of-these-spirits-have-you-made                  control
 POST       /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
 
 # End of quarterly spirits questions sub-journey
+
+GET        /the-duty-due-on-this-product                       controllers.productEntry.DutyDueController.onPageLoad()

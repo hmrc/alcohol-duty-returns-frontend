@@ -333,3 +333,6 @@ pureAlcohol.heading = This product has {0} litres of pure alcohol
 pureAlcohol.paragraph = This is because you told us:
 pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
 pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
+
+dutyDue.title = dutyDue
+dutyDue.heading = dutyDue
