@@ -147,6 +147,106 @@ class ProductEntryServiceSpec extends SpecBase {
 
       exception.getLocalizedMessage must include("Failed to get rate, neither tax rate nor spr duty rate are defined.")
     }
-  }
 
+    "must throw an Exception if UserAnswer doesn't contain value for AlcoholByVolumeQuestionPage" in {
+
+      val userAnswerWithoutABV = userAnswers
+        .remove(AlcoholByVolumeQuestionPage)
+        .success
+        .value
+
+      val mockConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+
+      val service = new ProductEntryServiceImpl(mockConnector)
+
+      val exception = intercept[RuntimeException] {
+        service.createProduct(userAnswerWithoutABV).futureValue
+      }
+
+      exception.getLocalizedMessage must include("Failed to get value for page alcoholByVolumeQuestion.")
+    }
+
+    "must throw an Exception if UserAnswer doesn't contain value for ProductVolumePage" in {
+
+      val userAnswerWithoutVolume = userAnswers
+        .remove(ProductVolumePage)
+        .success
+        .value
+
+      val mockConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+
+      val service = new ProductEntryServiceImpl(mockConnector)
+
+      val exception = intercept[RuntimeException] {
+        service.createProduct(userAnswerWithoutVolume).futureValue
+      }
+
+      exception.getLocalizedMessage must include("Failed to get value for page productVolume.")
+    }
+
+    "must throw an Exception if UserAnswer doesn't contain value for DraughtReliefQuestionPage" in {
+
+      val userAnswerWithoutDraughtRelief = userAnswers
+        .remove(DraughtReliefQuestionPage)
+        .success
+        .value
+
+      val mockConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+
+      val service = new ProductEntryServiceImpl(mockConnector)
+
+      val exception = intercept[RuntimeException] {
+        service.createProduct(userAnswerWithoutDraughtRelief).futureValue
+      }
+
+      exception.getLocalizedMessage must include("Failed to get value for page draughtReliefQuestion.")
+    }
+
+    "must throw an Exception if UserAnswer doesn't contain value for SmallProducerReliefQuestionPage" in {
+
+      val userAnswerWithoutSmallProducerRelief = userAnswers
+        .remove(SmallProducerReliefQuestionPage)
+        .success
+        .value
+
+      val mockConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+
+      val service = new ProductEntryServiceImpl(mockConnector)
+
+      val exception = intercept[RuntimeException] {
+        service.createProduct(userAnswerWithoutSmallProducerRelief).futureValue
+      }
+
+      exception.getLocalizedMessage must include("Failed to get value for page smallProducerReliefQuestion.")
+    }
+
+    "must throw an Exception if UserAnswer doesn't contain value for TaxTypePage" in {
+
+      val userAnswerWithoutTaxType = userAnswers
+        .remove(TaxTypePage)
+        .success
+        .value
+
+      val mockConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+
+      val service = new ProductEntryServiceImpl(mockConnector)
+
+      val exception = intercept[RuntimeException] {
+        service.createProduct(userAnswerWithoutTaxType).futureValue
+      }
+
+      exception.getLocalizedMessage must include("Failed to get value for page taxType.")
+    }
+
+  }
 }
