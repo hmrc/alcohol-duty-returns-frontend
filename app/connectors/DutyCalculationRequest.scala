@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package pages.productEntry
+package connectors
 
-import models.productEntry.TaxType
-import play.api.libs.json.JsPath
-import pages.QuestionPage
+import play.api.libs.json.{Json, OFormat}
 
-case object TaxTypePage extends QuestionPage[TaxType] {
+case class DutyCalculationRequest(
+  abv: BigDecimal,
+  volume: BigDecimal,
+  rate: BigDecimal
+)
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "taxType"
+object DutyCalculationRequest {
+  implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
 }

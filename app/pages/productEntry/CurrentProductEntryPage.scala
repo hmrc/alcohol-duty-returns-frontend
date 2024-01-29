@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,3 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package pages.productEntry
+
+import models.productEntry.ProductEntry
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+
+case object CurrentProductEntryPage extends QuestionPage[ProductEntry] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "currentProductEntry"
+}

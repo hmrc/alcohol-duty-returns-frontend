@@ -339,3 +339,9 @@ spiritType.checkYourAnswersLabel = Which of these spirits have you made?
 spiritType.error.required = Select the spirits you have made this quarter
 spiritType.change.hidden = SpiritType
 spiritType.hint = Select all that apply in the past quarter.
+
+pureAlcohol.title = This product has {0} litres of pure alcohol
+pureAlcohol.heading = This product has {0} litres of pure alcohol
+pureAlcohol.paragraph = This is because you told us:
+pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
+pureAlcohol.bulletList.2 = you need to declare {0} litres of this product

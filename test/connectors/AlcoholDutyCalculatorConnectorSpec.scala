@@ -21,6 +21,7 @@ import config.FrontendAppConfig
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
+import models.productEntry.TaxDuty
 import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -73,6 +74,24 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
               ),
               any()
             )(any(), any(), any())
+      }
+    }
+  }
+
+  "calculateTaxDuty" - {
+    "successfully retrieve tax duty" in {
+      when {
+        connector.httpClient.POST[DutyCalculationRequest, TaxDuty](any(), any(), any())(any(), any(), any(), any())
+      } thenReturn Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1)))
+
+      whenReady(connector.calculateTaxDuty(BigDecimal(3.5), BigDecimal(1), BigDecimal(1))) { result =>
+        result mustBe TaxDuty(BigDecimal(1), BigDecimal(1))
+        verify(connector.httpClient, atLeastOnce)
+          .POST[DutyCalculationRequest, TaxDuty](
+            any(),
+            ArgumentMatchers.eq(DutyCalculationRequest(BigDecimal(3.5), BigDecimal(1), BigDecimal(1))),
+            any()
+          )(any(), any(), any(), any())
       }
     }
   }

@@ -80,6 +80,16 @@ object AlcoholRegime {
 
     override def writes(o: AlcoholRegime): JsValue = JsString(o.toString)
   }
+
+  def fromString(str: String): Option[AlcoholRegime] =
+    str match {
+      case "Beer"                  => Some(Beer)
+      case "Cider"                 => Some(Cider)
+      case "Wine"                  => Some(Wine)
+      case "Spirits"               => Some(Spirits)
+      case "OtherFermentedProduct" => Some(OtherFermentedProduct)
+      case _                       => None
+    }
 }
 
 case class AlcoholByVolume private (value: BigDecimal) {

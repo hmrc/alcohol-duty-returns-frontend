@@ -42,6 +42,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private val adrCalculatorRatesUrlPart: String =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.ratesUrl")
 
+  private val adrCalculatorCalculateDutyUrlPart: String =
+    configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateDutyUrl")
+
   def feedbackUrl(implicit request: RequestHeader): java.net.URL =
     url"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
@@ -74,4 +77,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart
 
+  def adrCalculatorCalculateDutyUrl(): String =
+    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateDutyUrlPart
 }
