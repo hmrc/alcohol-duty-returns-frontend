@@ -45,6 +45,7 @@
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(controllers.productEntry.routes.DutyDueController.onPageLoad().url)
     )
 
 }

@@ -25,7 +25,8 @@ case class ProductEntry(
   smallProduceRelief: Boolean,
   rate: BigDecimal,
   pureAlcoholVolume: BigDecimal,
-  duty: BigDecimal
+  duty: BigDecimal,
+  taxCode: String
 )
 
 object ProductEntry {

@@ -14,25 +14,38 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
+@import models.productEntry.ProductEntry
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
-        pageHeading: PageHeading
+        pageHeading: PageHeading,
+        paragraph: Paragraph,
+        bulletList: BulletList
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(productEntry: ProductEntry)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("dutyDue.title"))) {
+@layout(pageTitle = titleNoForm(messages("dutyDue.title", f"${productEntry.duty}%.2f"))) {
 
     @sectionHeading(
         id = "dutyDue-section",
-        text = messages("section.productEntry"),
+        text = messages("section.alcoholDutyReturn"),
     )
 
-    @pageHeading(messages("dutyDue.heading"))
+    @pageHeading(messages("dutyDue.heading", f"${productEntry.duty}%.2f"))
+
+    @paragraph(messages("dutyDue.paragraph1"))
+
+    @bulletList(Seq(
+        messages("dutyDue.bulletList.1", productEntry.pureAlcoholVolume),
+        messages("dutyDue.bulletList.2", productEntry.taxCode),
+        messages("dutyDue.bulletList.3", f"${productEntry.rate}%.2f")
+    ))
+
+    @paragraph(messages("dutyDue.paragraph2",  f"${productEntry.duty}%.2f"))
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
