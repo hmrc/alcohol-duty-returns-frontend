@@ -325,6 +325,87 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
           }
         }
       }
+
+      "for a POST if the tax type code cannot be parsed" in {
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future.successful(
+          rateBandList
+        )
+
+        val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
+          .overrides(
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, taxTypeRoute)
+              .withFormUrlEncodedBody(("value", "some"))
+
+          val result = route(application, request).value
+
+          whenReady(result.failed) { exception =>
+            exception mustBe a[RuntimeException]
+            exception.getMessage mustEqual "Couldn't parse tax type code"
+          }
+        }
+      }
+
+      "for a POST if the tax type regime cannot be parsed" in {
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future.successful(
+          rateBandList
+        )
+
+        val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
+          .overrides(
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, taxTypeRoute)
+              .withFormUrlEncodedBody(("value", "310_some"))
+
+          val result = route(application, request).value
+
+          whenReady(result.failed) { exception =>
+            exception mustBe a[RuntimeException]
+            exception.getMessage mustEqual "Couldn't parse alcohol regime"
+          }
+        }
+      }
+
+      "for a POST if the tax type regime is not approved" in {
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future.successful(
+          rateBandList
+        )
+
+        val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
+          .overrides(
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, taxTypeRoute)
+              .withFormUrlEncodedBody(("value", "310_Whisky"))
+
+          val result = route(application, request).value
+
+          whenReady(result.failed) { exception =>
+            exception mustBe a[RuntimeException]
+            exception.getMessage mustEqual "Couldn't parse alcohol regime"
+          }
+        }
+      }
     }
   }
 }

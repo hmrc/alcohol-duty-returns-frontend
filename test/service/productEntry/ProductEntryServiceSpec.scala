@@ -25,8 +25,10 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import pages.QuestionPage
 import services.productEntry.ProductEntryServiceImpl
 import uk.gov.hmrc.http.HeaderCarrier
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
@@ -77,7 +79,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
     }
 
-    "must create a product entry when TaxType does not contain rate" in {
+    "must create a product entry when TaxType does not contain rate but the Small Producer Relief duty rate is present" in {
 
       val userAnswerWithRate = userAnswers
         .set(TaxTypePage, TaxType("ALC", AlcoholRegime.Beer, None))
@@ -105,48 +107,83 @@ class ProductEntryServiceSpec extends SpecBase {
       result.duty               shouldBe BigDecimal(1)
     }
 
-    "must throw an Exception if both, TaxType and DeclareSmallProducerReliefDutyRatePage contain rate" in {
+    "must throw an Exception" - {
 
-      val userAnswerWithRate = userAnswers
-        .set(TaxTypePage, TaxType("ALC", AlcoholRegime.Beer, Some(BigDecimal(1))))
-        .success
-        .value
-        .set(DeclareSmallProducerReliefDutyRatePage, BigDecimal(2))
-        .success
-        .value
+      "if both, TaxType and DeclareSmallProducerReliefDutyRatePage contain rate" in {
 
-      val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        val userAnswerWithRate = userAnswers
+          .set(TaxTypePage, TaxType("ALC", AlcoholRegime.Beer, Some(BigDecimal(1))))
+          .success
+          .value
+          .set(DeclareSmallProducerReliefDutyRatePage, BigDecimal(2))
+          .success
+          .value
 
-      val service = new ProductEntryServiceImpl(mockConnector)
+        val mockConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
 
-      val exception = intercept[RuntimeException] {
-        service.createProduct(userAnswerWithRate).futureValue
+        val service = new ProductEntryServiceImpl(mockConnector)
+
+        val exception = intercept[RuntimeException] {
+          service.createProduct(userAnswerWithRate).futureValue
+        }
+
+        exception.getLocalizedMessage must include("Failed to get rate, both tax rate and spr duty rate are defined.")
       }
 
-      exception.getLocalizedMessage must include("Failed to get rate, both tax rate and spr duty rate are defined.")
-    }
+      "if neither TaxType or DeclareSmallProducerReliefDutyRatePage contain rate" in {
 
-    "must throw an Exception if neither TaxType or DeclareSmallProducerReliefDutyRatePage contain rate" in {
+        val userAnswerWithRate = userAnswers
+          .set(TaxTypePage, TaxType("ALC", AlcoholRegime.Beer, None))
+          .success
+          .value
 
-      val userAnswerWithRate = userAnswers
-        .set(TaxTypePage, TaxType("ALC", AlcoholRegime.Beer, None))
-        .success
-        .value
+        val mockConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
 
-      val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        val service = new ProductEntryServiceImpl(mockConnector)
 
-      val service = new ProductEntryServiceImpl(mockConnector)
+        val exception = intercept[RuntimeException] {
+          service.createProduct(userAnswerWithRate).futureValue
+        }
 
-      val exception = intercept[RuntimeException] {
-        service.createProduct(userAnswerWithRate).futureValue
+        exception.getLocalizedMessage must include(
+          "Failed to get rate, neither tax rate nor spr duty rate are defined."
+        )
       }
 
-      exception.getLocalizedMessage must include("Failed to get rate, neither tax rate nor spr duty rate are defined.")
+      val pagesToRemove: Seq[QuestionPage[_]] = Seq(
+        AlcoholByVolumeQuestionPage,
+        ProductVolumePage,
+        DraughtReliefQuestionPage,
+        SmallProducerReliefQuestionPage,
+        TaxTypePage
+      )
+
+      pagesToRemove.foreach { page =>
+        s"if UserAnswer doesn't contain value for $page" in {
+
+          val userAnswerWithoutPage = userAnswers
+            .remove(page)
+            .success
+            .value
+
+          val mockConnector = mock[AlcoholDutyCalculatorConnector]
+          when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+            .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+
+          val service = new ProductEntryServiceImpl(mockConnector)
+
+          val exception = intercept[RuntimeException] {
+            service.createProduct(userAnswerWithoutPage).futureValue
+          }
+
+          exception.getLocalizedMessage must include(s"Failed to get value for page $page.")
+        }
+      }
     }
+
   }
-
 }

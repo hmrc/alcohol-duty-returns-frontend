@@ -26,6 +26,8 @@ import views.html.productEntry.DutyDueView
 
 class DutyDueControllerSpec extends SpecBase {
 
+  lazy val dutyDueRoute = controllers.productEntry.routes.DutyDueController.onPageLoad().url
+
   "DutyDue Controller" - {
 
     "must return OK and the correct view for a GET" in {
@@ -41,7 +43,7 @@ class DutyDueControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.productEntry.routes.DutyDueController.onPageLoad().url)
+        val request = FakeRequest(GET, dutyDueRoute)
 
         val result = route(application, request).value
 
@@ -52,6 +54,20 @@ class DutyDueControllerSpec extends SpecBase {
           request,
           messages(application)
         ).toString
+      }
+    }
+    "must redirect to Journey Recovery if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, dutyDueRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
