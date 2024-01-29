@@ -124,6 +124,16 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
       }
+
+      "must go from the Product Volume page to Pure Alcohol Volume page" in {
+
+        navigator.nextPage(
+          pages.productEntry.ProductVolumePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.productEntry.routes.PureAlcoholController.onPageLoad()
+      }
+
     }
 
     "in Check mode" - {
