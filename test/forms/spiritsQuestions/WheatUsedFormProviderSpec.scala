@@ -29,7 +29,7 @@ class WheatUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName = "wheat-used-input"
 
-    val minimum = 0.00
+    val minimum = 0.01
     val maximum = 999999999.99
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
