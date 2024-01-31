@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package models.productEntry
+package forms.spiritsQuestions
 
-import play.api.libs.json.{Json, OFormat}
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-case class ProductEntry(
-  abv: BigDecimal,
-  volume: BigDecimal,
-  draughtRelief: Boolean,
-  smallProduceRelief: Boolean,
-  rate: BigDecimal,
-  pureAlcoholVolume: BigDecimal,
-  duty: BigDecimal,
-  taxCode: String
-)
+class WheatUsedFormProvider @Inject() extends Mappings {
 
-object ProductEntry {
-  implicit val formats: OFormat[ProductEntry] = Json.format[ProductEntry]
+  def apply(): Form[BigDecimal] =
+    Form(
+      "wheat-used-input" -> bigDecimal(
+        "wheatUsed.error.required",
+        "wheatUsed.error.nonNumeric",
+        "wheatUsed.error.twoDecimalPlaces"
+      )
+        .verifying(minimumValue(BigDecimal(0.00), "wheatUsed.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "wheatUsed.error.maximumRequired"))
+    )
 }

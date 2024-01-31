@@ -54,7 +54,6 @@ POST       /smallProducerReliefQuestion                        controllers.produ
 GET        /changeSmallProducerReliefQuestion                  controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeSmallProducerReliefQuestion                  controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
 
-
 GET        /productVolume                  controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
 POST       /productVolume                  controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeProductVolume                        controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
@@ -66,6 +65,8 @@ GET        /changeDeclareSmallProducerReliefDutyRate                        cont
 POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 
 GET        /you-have-declared-this-many-litres-of-pure-alcohol                       controllers.productEntry.PureAlcoholController.onPageLoad()
+
+GET        /the-duty-due-on-this-product                       controllers.productEntry.DutyDueController.onPageLoad()
 
 GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad()
 
@@ -129,6 +130,11 @@ GET        /how-much-rye-have-you-used                 controllers.spiritsQuesti
 POST       /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /how-much-wheat-have-you-used                  controllers.spiritsQuestions.WheatUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-wheat-have-you-used                  controllers.spiritsQuestions.WheatUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-wheat-have-you-used                        controllers.spiritsQuestions.WheatUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-wheat-have-you-used                        controllers.spiritsQuestions.WheatUsedController.onSubmit(mode: Mode = CheckMode)
 
 GET        /which-of-these-spirits-have-you-made                        controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = NormalMode)
 POST       /which-of-these-spirits-have-you-made                        controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = NormalMode)

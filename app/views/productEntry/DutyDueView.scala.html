@@ -14,38 +14,42 @@
  * limitations under the License.
  *@
 
-@import components.{BulletList, SectionHeading, PageHeading, Paragraph}
+@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
+@import models.productEntry.ProductEntry
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
-        bulletList: BulletList,
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
-        paragraph: Paragraph
+        paragraph: Paragraph,
+        bulletList: BulletList
 )
 
-@(abv:BigDecimal, volume:BigDecimal, pureAlcohol:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(productEntry: ProductEntry)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("pureAlcohol.title", pureAlcohol))) {
+@layout(pageTitle = titleNoForm(messages("dutyDue.title", f"${productEntry.duty}%.2f"))) {
 
     @sectionHeading(
-        id = "pureAlcohol-section",
+        id = "dutyDue-section",
         text = messages("section.alcoholDutyReturn"),
     )
 
-    @pageHeading(messages("pureAlcohol.heading", pureAlcohol))
+    @pageHeading(messages("dutyDue.heading", f"${productEntry.duty}%.2f"))
 
-    @paragraph(messages("pureAlcohol.paragraph"))
+    @paragraph(messages("dutyDue.paragraph1"))
 
     @bulletList(Seq(
-        messages("pureAlcohol.bulletList.1", abv),
-        messages("pureAlcohol.bulletList.2", volume)
+        messages("dutyDue.bulletList.1", productEntry.pureAlcoholVolume),
+        messages("dutyDue.bulletList.2", productEntry.taxCode),
+        messages("dutyDue.bulletList.3", f"${productEntry.rate}%.2f")
     ))
+
+    @paragraph(messages("dutyDue.paragraph2",  f"${productEntry.duty}%.2f"))
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
-        .asLink(controllers.productEntry.routes.DutyDueController.onPageLoad().url)
+        .asLink(controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
     )
 
 }

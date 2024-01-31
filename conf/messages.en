@@ -318,6 +318,18 @@ ryeUsed.error.maximumRequired = How much rye you have used must be 999999999.99 
 ryeUsed.error.twoDecimalPlaces = How much rye you have used must be a number to 2 decimal places
 ryeUsed.change.hidden = Rye Used
 
+wheatUsed.title = How much wheat have you used?
+wheatUsed.heading = How much wheat have you used?
+wheatUsed.checkYourAnswersLabel = WheatUsed
+wheatUsed.hint = Give your answers in tonnes, to 2 decimal places.
+wheatUsed.inputSuffix = tonnes
+wheatUsed.error.nonNumeric = How much wheat you have used must be a number
+wheatUsed.error.required = Enter how much wheat you have used
+wheatUsed.error.minimumRequired = How much wheat you have used must be 0.00 or more
+wheatUsed.error.maximumRequired = How much wheat you have used must be 999999999.99 or less
+wheatUsed.error.twoDecimalPlaces = How much wheat you have used must be a number to 2 decimal places
+wheatUsed.change.hidden = Wheat Used
+
 spiritType.title = Which of these spirits have you made?
 spiritType.heading = Which of these spirits have you made?
 spiritType.maltSpirits = Malt spirits
@@ -340,5 +352,12 @@ pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
 pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
 pureAlcohol.checkYourAnswersLabel = Pure alcohol
 
+dutyDue.title = The duty due on this product is £{0}
+dutyDue.heading = The duty due on this product is £{0}
+dutyDue.paragraph1 = Based on the following details:
+dutyDue.bulletList.1 = Litres of pure alcohol: {0}
+dutyDue.bulletList.2 = Tax type: {0}
+dutyDue.bulletList.3 = Duty rate per litre: {0}
+dutyDue.paragraph2 = The duty due on this product is £{0}.
 dutyDue.rate.checkYourAnswersLabel = Duty rate
 dutyDue.duty.checkYourAnswersLabel = Duty due

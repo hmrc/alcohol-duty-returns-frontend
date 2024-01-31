@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package models.productEntry
+package pages.spiritsQuestions
 
-import play.api.libs.json.{Json, OFormat}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case class ProductEntry(
-  abv: BigDecimal,
-  volume: BigDecimal,
-  draughtRelief: Boolean,
-  smallProduceRelief: Boolean,
-  rate: BigDecimal,
-  pureAlcoholVolume: BigDecimal,
-  duty: BigDecimal,
-  taxCode: String
-)
+case object WheatUsedPage extends QuestionPage[BigDecimal] {
 
-object ProductEntry {
-  implicit val formats: OFormat[ProductEntry] = Json.format[ProductEntry]
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "wheatUsed"
 }
