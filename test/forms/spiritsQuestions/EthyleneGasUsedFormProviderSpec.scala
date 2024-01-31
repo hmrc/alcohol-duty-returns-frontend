@@ -42,14 +42,14 @@ class EthyleneGasUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "ethyleneGasUsed.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "ethyleneGasUsed.error.nonNumeric"),
       twoDecimalPlacesError = FormError(fieldName, "ethyleneGasUsed.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
-      minimum       = minimum,
+      minimum = minimum,
       expectedError = FormError(fieldName, "ethyleneGasUsed.error.minimumRequired", ArraySeq(minimum))
     )
     behave like bigDecimalFieldWithMaximum(

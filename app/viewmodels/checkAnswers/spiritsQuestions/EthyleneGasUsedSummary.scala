@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object EthyleneGasUsedSummary  {
+object EthyleneGasUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(EthyleneGasUsedPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "ethyleneGasUsed.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.EthyleneGasUsedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("ethyleneGasUsed.change.hidden"))
-          )
+    answers.get(EthyleneGasUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "ethyleneGasUsed.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.EthyleneGasUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("ethyleneGasUsed.change.hidden"))
         )
+      )
     }
 }

@@ -37,13 +37,14 @@ import scala.concurrent.Future
 class EthyleneGasUsedControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new EthyleneGasUsedFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = BigDecimal(0.01)
 
-  lazy val ethyleneGasUsedRoute = controllers.spiritsQuestions.routes.EthyleneGasUsedController.onPageLoad(NormalMode).url
+  lazy val ethyleneGasUsedRoute =
+    controllers.spiritsQuestions.routes.EthyleneGasUsedController.onPageLoad(NormalMode).url
 
   "EthyleneGasUsed Controller" - {
 
@@ -77,7 +78,10 @@ class EthyleneGasUsedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
