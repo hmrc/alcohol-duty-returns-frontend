@@ -51,7 +51,8 @@ class ProductEntryServiceImpl @Inject() (
       draughtRelief = draughtRelief,
       smallProduceRelief = smallProduceRelief,
       pureAlcoholVolume = taxDuty.pureAlcoholVolume,
-      duty = taxDuty.duty
+      duty = taxDuty.duty,
+      taxCode = taxType.code
     )
   def getRate(taxType: TaxType, sprDutyRate: Option[BigDecimal]): Try[BigDecimal] = Try {
     (taxType.taxRate, sprDutyRate) match {
