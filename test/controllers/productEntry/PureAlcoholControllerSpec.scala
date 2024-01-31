@@ -48,7 +48,8 @@ class PureAlcoholControllerSpec extends SpecBase with MockitoSugar {
         smallProduceRelief = false,
         rate = BigDecimal(1),
         pureAlcoholVolume = pureAlcoholVolume,
-        duty = BigDecimal(1)
+        duty = BigDecimal(1),
+        taxCode = "311"
       )
 
       val mockCacheConnector = mock[CacheConnector]
