@@ -351,5 +351,5 @@ dutyDue.heading = The duty due on this product is £{0}
 dutyDue.paragraph1 = Based on the following details:
 dutyDue.bulletList.1 = Litres of pure alcohol: {0}
 dutyDue.bulletList.2 = Tax type: {0}
-dutyDue.bulletList.3 = Duty rate per litre: {0}
+dutyDue.bulletList.3 = Duty rate per litre: £{0}
 dutyDue.paragraph2 = The duty due on this product is £{0}.
