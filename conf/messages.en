@@ -128,6 +128,14 @@ productVolume.error.maximumRequired = This product’s volume must be 999999999.
 productVolume.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
 productVolume.change.hidden = Product volume
 
+dutyDue.title = The duty due on this product is £{0}
+dutyDue.heading = The duty due on this product is £{0}
+dutyDue.paragraph1 = Based on the following details:
+dutyDue.bulletList.1 = Litres of pure alcohol: {0}
+dutyDue.bulletList.2 = Tax type: {0}
+dutyDue.bulletList.3 = Duty rate per litre: {0}
+dutyDue.paragraph2 = The duty due on this product is £{0}.
+
 declareDutySuspendedDeliveriesQuestion.title = Do you need to declare alcohol you delivered or received duty suspended?
 declareDutySuspendedDeliveriesQuestion.heading = Do you need to declare alcohol you delivered or received duty suspended?
 declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to declare any Duty Suspended Deliveries

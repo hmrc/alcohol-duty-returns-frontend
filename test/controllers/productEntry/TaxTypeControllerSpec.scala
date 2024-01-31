@@ -288,7 +288,6 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
           }
         }
       }
-
       "for a POST if one of the necessary userAnswer data are missing" in {
 
         val errorMapping = Seq(
