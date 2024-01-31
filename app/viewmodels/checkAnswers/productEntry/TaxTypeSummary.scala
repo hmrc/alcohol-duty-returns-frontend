@@ -32,7 +32,7 @@ object TaxTypeSummary {
     answers.get(TaxTypePage).map { answer =>
       val value = ValueViewModel(
         HtmlContent(
-          HtmlFormat.escape(messages(s"taxType.$answer"))
+          HtmlFormat.escape(messages(s"${answer.code}"))
         )
       )
 

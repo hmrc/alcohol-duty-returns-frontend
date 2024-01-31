@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,28 @@ package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
 import models.{CheckMode, UserAnswers}
-import pages.productEntry.AlcoholByVolumeQuestionPage
+import pages.productEntry.DraughtReliefQuestionPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-
-object AlcoholByVolumeQuestionSummary {
+object DraughtReliefQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AlcoholByVolumeQuestionPage).map { answer =>
+    answers.get(DraughtReliefQuestionPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
+
       SummaryListRowViewModel(
-        key = "alcoholByVolumeQuestion.checkYourAnswersLabel.label",
-        value = ValueViewModel(messages("alcoholByVolumeQuestion.checkYourAnswersLabel.value", answer.toString)),
+        key = "draughtReliefQuestion.checkYourAnswersLabel",
+        value = ValueViewModel(messages(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.AlcoholByVolumeQuestionController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("alcoholByVolumeQuestion.change.hidden"))
+          ActionItemViewModel(
+            "site.change",
+            routes.DraughtReliefQuestionController.onPageLoad(CheckMode).url
+          )
+            .withVisuallyHiddenText(messages("draughtReliefQuestion.change.hidden"))
         )
       )
     }
+
 }

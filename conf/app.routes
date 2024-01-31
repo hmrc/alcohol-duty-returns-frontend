@@ -65,8 +65,9 @@ POST       /declareSmallProducerReliefDutyRate                  controllers.prod
 GET        /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 
-
 GET        /you-have-declared-this-many-litres-of-pure-alcohol                       controllers.productEntry.PureAlcoholController.onPageLoad()
+
+GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad()
 
 # End of product entry sub-journey
 

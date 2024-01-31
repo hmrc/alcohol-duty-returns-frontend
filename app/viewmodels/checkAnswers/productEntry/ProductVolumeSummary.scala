@@ -30,7 +30,7 @@ object ProductVolumeSummary {
     answers.get(ProductVolumePage).map { answer =>
       SummaryListRowViewModel(
         key = "productVolume.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"${answer.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.ProductVolumeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("productVolume.change.hidden"))

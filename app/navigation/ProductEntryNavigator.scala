@@ -55,7 +55,7 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
     }
 
   override val checkRouteMap: Page => UserAnswers => Call                     = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
+    _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
   }
   private def declareAlcoholDutyQuestionPageRoute(answers: UserAnswers): Call =
     answers.get(pages.productEntry.DeclareAlcoholDutyQuestionPage) match {

@@ -14,6 +14,8 @@ site.signIn = Sign in
 site.govuk = GOV.UK
 site.unit.litres = litres
 site.unit.percentage = %
+site.rate.litre = per litre
+site.2DP = {0,number,#,##0.00}
 
 date.day = Day
 date.month = Month
@@ -69,6 +71,7 @@ section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits retur
 
 draughtReliefQuestion.title = Is this product eligible for Draught Relief?
 draughtReliefQuestion.heading = Is this product eligible for Draught Relief?
+draughtReliefQuestion.checkYourAnswersLabel = Eligible for Draught Relief
 draughtReliefQuestion.error.required = Select yes if this product is eligible for Draught Relief
 draughtReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-you-can-pay-less-alcohol-duty-on-draught-products
 draughtReliefQuestion.guidance.link.text = You can get a reduced rate of duty on some draught products (opens in a new tab)
@@ -84,13 +87,15 @@ productName.change.hidden = name
 
 smallProducerReliefQuestion.title = Is this product eligible for Small Producer Relief?
 smallProducerReliefQuestion.heading = Is this product eligible for Small Producer Relief?
+smallProducerReliefQuestion.checkYourAnswersLabel = Eligible for Small Producer Relief
 smallProducerReliefQuestion.error.required = Select yes if this product is eligible for Small Producer Relief
 smallProducerReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-youre-eligible-for-small-producer-relief-on-alcohol-duty
 smallProducerReliefQuestion.guidance.link.text = If you’re a small producer you may be able to pay a lower rate of duty on this product.
 
 alcoholByVolumeQuestion.title = What is this product’s Alcohol by Volume (ABV) strength?
 alcoholByVolumeQuestion.heading = What is this product’s Alcohol by Volume (ABV) strength?
-alcoholByVolumeQuestion.checkYourAnswersLabel = AlcoholByVolumeQuestion
+alcoholByVolumeQuestion.checkYourAnswersLabel.label = Alcohol strength
+alcoholByVolumeQuestion.checkYourAnswersLabel.value = {0}% ABV
 alcoholByVolumeQuestion.error.nonNumeric = This product’s Alcohol by Volume (ABV) strength must be a number
 alcoholByVolumeQuestion.error.required = Enter this product’s Alcohol by Volume (ABV) strength
 alcoholByVolumeQuestion.error.minimumRequired = This product’s Alcohol by Volume (ABV) strength must be 0.01 or more
@@ -120,7 +125,7 @@ taxType.change.hidden = TaxType
 productVolume.title = How much of this product do you need to declare?
 productVolume.heading = How much of this product do you need to declare?
 productVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
-productVolume.checkYourAnswersLabel = ProductVolume
+productVolume.checkYourAnswersLabel = Volume
 productVolume.error.nonNumeric = This product’s volume must be a number
 productVolume.error.required = Enter how much of this product you need to declare
 productVolume.error.minimumRequired = This product’s volume must be 0.01 or more
@@ -333,3 +338,7 @@ pureAlcohol.heading = This product has {0} litres of pure alcohol
 pureAlcohol.paragraph = This is because you told us:
 pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
 pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
+pureAlcohol.checkYourAnswersLabel = Pure alcohol
+
+dutyDue.rate.checkYourAnswersLabel = Duty rate
+dutyDue.duty.checkYourAnswersLabel = Duty due
