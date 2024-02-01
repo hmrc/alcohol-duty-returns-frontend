@@ -28,7 +28,7 @@ class MaltedBarleyUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName = "malted-barley-used-input"
 
-    val minimum = 0.0
+    val minimum = 0.01
     val maximum = 999999999.99
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
