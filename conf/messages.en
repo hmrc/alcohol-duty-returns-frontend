@@ -128,6 +128,14 @@ productVolume.error.maximumRequired = This product’s volume must be 999999999.
 productVolume.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
 productVolume.change.hidden = Product volume
 
+dutyDue.title = The duty due on this product is £{0}
+dutyDue.heading = The duty due on this product is £{0}
+dutyDue.paragraph1 = Based on the following details:
+dutyDue.bulletList.1 = Litres of pure alcohol: {0}
+dutyDue.bulletList.2 = Tax type: {0}
+dutyDue.bulletList.3 = Duty rate per litre: £{0}
+dutyDue.paragraph2 = The duty due on this product is £{0}.
+
 declareDutySuspendedDeliveriesQuestion.title = Do you need to declare alcohol you delivered or received duty suspended?
 declareDutySuspendedDeliveriesQuestion.heading = Do you need to declare alcohol you delivered or received duty suspended?
 declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to declare any Duty Suspended Deliveries
@@ -346,10 +354,14 @@ pureAlcohol.paragraph = This is because you told us:
 pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
 pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
 
-dutyDue.title = The duty due on this product is £{0}
-dutyDue.heading = The duty due on this product is £{0}
-dutyDue.paragraph1 = Based on the following details:
-dutyDue.bulletList.1 = Litres of pure alcohol: {0}
-dutyDue.bulletList.2 = Tax type: {0}
-dutyDue.bulletList.3 = Duty rate per litre: £{0}
-dutyDue.paragraph2 = The duty due on this product is £{0}.
+ethyleneGasUsed.title = How much ethylene gas have you used?
+ethyleneGasUsed.heading = How much ethylene gas have you used?
+ethyleneGasUsed.checkYourAnswersLabel = EthyleneGasUsed
+ethyleneGasUsed.error.nonNumeric = How much ethylene gas you have used must be a number
+ethyleneGasUsed.error.required = Enter how much ethylene gas you have used
+ethyleneGasUsed.error.minimumRequired = How much ethylene gas you have used must be 0.01 or more
+ethyleneGasUsed.error.maximumRequired = How much ethylene gas you have used must be 999999999.99 or less
+ethyleneGasUsed.error.twoDecimalPlaces = How much ethylene gas you have used must be a number to 2 decimal places
+ethyleneGasUsed.change.hidden = EthyleneGasUsed
+ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
+ethyleneGasUsed.inputSuffix = tonnes
