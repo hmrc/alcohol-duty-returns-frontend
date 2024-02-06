@@ -30,7 +30,7 @@ class RyeUsedFormProvider @Inject() extends Mappings {
         "ryeUsed.error.nonNumeric",
         "ryeUsed.error.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.00), "ryeUsed.error.minimumRequired"))
+        .verifying(minimumValue(BigDecimal(0.01), "ryeUsed.error.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "ryeUsed.error.maximumRequired"))
     )
 }

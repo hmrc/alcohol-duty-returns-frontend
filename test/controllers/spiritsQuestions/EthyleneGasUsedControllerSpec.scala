@@ -17,46 +17,47 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
-import forms.spiritsQuestions.MaltedBarleyUsedFormProvider
+import forms.spiritsQuestions.EthyleneGasUsedFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.spiritsQuestions.MaltedBarleyUsedPage
+import pages.spiritsQuestions.EthyleneGasUsedPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
-import views.html.spiritsQuestions.MaltedBarleyUsedView
+import views.html.spiritsQuestions.EthyleneGasUsedView
 
 import scala.concurrent.Future
 
-class MaltedBarleyUsedControllerSpec extends SpecBase with MockitoSugar {
+class EthyleneGasUsedControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new MaltedBarleyUsedFormProvider()
+  val formProvider = new EthyleneGasUsedFormProvider()
   val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal(10.23)
+  val validAnswer = BigDecimal(0.01)
 
-  lazy val maltedBarleyUsedRoute = routes.MaltedBarleyUsedController.onPageLoad(NormalMode).url
+  lazy val ethyleneGasUsedRoute =
+    controllers.spiritsQuestions.routes.EthyleneGasUsedController.onPageLoad(NormalMode).url
 
-  "MaltedBarleyUsed Controller" - {
+  "EthyleneGasUsed Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, maltedBarleyUsedRoute)
+        val request = FakeRequest(GET, ethyleneGasUsedRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[MaltedBarleyUsedView]
+        val view = application.injector.instanceOf[EthyleneGasUsedView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -65,14 +66,14 @@ class MaltedBarleyUsedControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(MaltedBarleyUsedPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(EthyleneGasUsedPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, maltedBarleyUsedRoute)
+        val request = FakeRequest(GET, ethyleneGasUsedRoute)
 
-        val view = application.injector.instanceOf[MaltedBarleyUsedView]
+        val view = application.injector.instanceOf[EthyleneGasUsedView]
 
         val result = route(application, request).value
 
@@ -100,8 +101,8 @@ class MaltedBarleyUsedControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, maltedBarleyUsedRoute)
-            .withFormUrlEncodedBody(("malted-barley-used-input", validAnswer.toString))
+          FakeRequest(POST, ethyleneGasUsedRoute)
+            .withFormUrlEncodedBody(("ethylene-gas-used-input", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -116,12 +117,12 @@ class MaltedBarleyUsedControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, maltedBarleyUsedRoute)
+          FakeRequest(POST, ethyleneGasUsedRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[MaltedBarleyUsedView]
+        val view = application.injector.instanceOf[EthyleneGasUsedView]
 
         val result = route(application, request).value
 
@@ -135,7 +136,7 @@ class MaltedBarleyUsedControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, maltedBarleyUsedRoute)
+        val request = FakeRequest(GET, ethyleneGasUsedRoute)
 
         val result = route(application, request).value
 
@@ -150,7 +151,7 @@ class MaltedBarleyUsedControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, maltedBarleyUsedRoute)
+          FakeRequest(POST, ethyleneGasUsedRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value

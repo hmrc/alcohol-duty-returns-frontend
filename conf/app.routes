@@ -142,4 +142,8 @@ POST       /which-of-these-spirits-have-you-made                        controll
 GET        /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /how-much-ethylene-gas-have-you-used                  controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-ethylene-gas-have-you-used                  controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey

@@ -30,7 +30,7 @@ class UnmaltedGrainUsedFormProvider @Inject() extends Mappings {
         "unmaltedGrainUsed.error.nonNumeric",
         "unmaltedGrainUsed.error.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.00), "unmaltedGrainUsed.error.minimumRequired"))
+        .verifying(minimumValue(BigDecimal(0.01), "unmaltedGrainUsed.error.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "unmaltedGrainUsed.error.maximumRequired"))
     )
 }
