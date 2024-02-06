@@ -22,8 +22,9 @@ import forms.productEntry.DraughtReliefQuestionFormProvider
 
 import javax.inject.Inject
 import models.Mode
+import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
-import pages.productEntry.DraughtReliefQuestionPage
+import pages.productEntry.{CurrentProductEntryPage, DraughtReliefQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -48,7 +49,12 @@ class DraughtReliefQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DraughtReliefQuestionPage) match {
+    val draughtRelief = for {
+      product       <- request.userAnswers.get(CurrentProductEntryPage)
+      draughtRelief <- product.draughtRelief
+    } yield draughtRelief
+
+    val preparedForm = draughtRelief match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -62,14 +68,16 @@ class DraughtReliefQuestionController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(DraughtReliefQuestionPage, value)
+                  request.userAnswers.set(CurrentProductEntryPage, product.copy(draughtRelief = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DraughtReliefQuestionPage, mode, updatedAnswers))
+          }
         )
   }
 }

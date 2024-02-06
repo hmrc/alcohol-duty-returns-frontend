@@ -16,7 +16,9 @@
 
 package controllers.productEntry
 
+import connectors.CacheConnector
 import controllers.actions._
+import pages.productEntry.{CurrentProductEntryPage, ProductEntryListPage}
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -25,14 +27,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.productEntry.CheckYourAnswersSummaryListHelper
 import views.html.productEntry.CheckYourAnswersView
 
+import scala.concurrent.{ExecutionContext, Future}
+
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
@@ -42,4 +48,17 @@ class CheckYourAnswersController @Inject() (
       case None              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
+
+  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    request.userAnswers.get(CurrentProductEntryPage) match {
+      case Some(productEntry) if productEntry.isComplete =>
+        for {
+          updatedAnswers <- Future.fromTry(request.userAnswers.addToSeq(ProductEntryListPage, productEntry))
+          _              <- cacheConnector.set(updatedAnswers)
+        } yield Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case _                                             => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+    }
+
+  }
+
 }

@@ -18,6 +18,7 @@ package controllers.productEntry
 
 import base.SpecBase
 import connectors.CacheConnector
+import models.AlcoholByVolume
 import models.productEntry.ProductEntry
 import org.mockito.ArgumentMatchers.any
 import org.scalatestplus.mockito.MockitoSugar
@@ -37,19 +38,19 @@ class PureAlcoholControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" in {
 
-      val abv               = BigDecimal(1)
+      val abv               = AlcoholByVolume(1)
       val volume            = BigDecimal(1)
       val pureAlcoholVolume = BigDecimal(1)
 
       val productEntry = ProductEntry(
-        abv = abv,
-        volume = volume,
-        draughtRelief = false,
-        smallProduceRelief = false,
-        rate = BigDecimal(1),
-        pureAlcoholVolume = pureAlcoholVolume,
-        duty = BigDecimal(1),
-        taxCode = "311"
+        abv = Some(abv),
+        volume = Some(volume),
+        draughtRelief = Some(false),
+        smallProducerRelief = Some(false),
+        taxRate = Some(BigDecimal(1)),
+        pureAlcoholVolume = Some(pureAlcoholVolume),
+        duty = Some(BigDecimal(1)),
+        taxCode = Some("311")
       )
 
       val mockCacheConnector = mock[CacheConnector]
@@ -77,7 +78,10 @@ class PureAlcoholControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(abv, volume, pureAlcoholVolume)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(abv.value, volume, pureAlcoholVolume)(
+          request,
+          messages(application)
+        ).toString
       }
     }
   }

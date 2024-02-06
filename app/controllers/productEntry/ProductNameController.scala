@@ -22,8 +22,9 @@ import forms.productEntry.ProductNameFormProvider
 
 import javax.inject.Inject
 import models.Mode
+import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
-import pages.productEntry.ProductNamePage
+import pages.productEntry.{CurrentProductEntryPage, ProductNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -48,7 +49,12 @@ class ProductNameController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(ProductNamePage) match {
+    val name = for {
+      product <- request.userAnswers.get(CurrentProductEntryPage)
+      name    <- product.name
+    } yield name
+
+    val preparedForm = name match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -62,12 +68,14 @@ class ProductNameController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             for {
               updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(ProductNamePage, value))
+                Future.fromTry(request.userAnswers.set(CurrentProductEntryPage, product.copy(name = Some(value))))
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(ProductNamePage, mode, updatedAnswers))
+          }
         )
   }
 }

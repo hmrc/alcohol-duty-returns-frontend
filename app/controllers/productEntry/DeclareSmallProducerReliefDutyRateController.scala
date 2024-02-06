@@ -18,13 +18,15 @@ package controllers.productEntry
 
 import controllers.actions._
 import forms.productEntry.DeclareSmallProducerReliefDutyRateFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.ProductEntryNavigator
-import pages.productEntry.DeclareSmallProducerReliefDutyRatePage
+import pages.productEntry.{CurrentProductEntryPage, DeclareSmallProducerReliefDutyRatePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import models.productEntry.ProductEntry
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.productEntry.DeclareSmallProducerReliefDutyRateView
 
@@ -47,7 +49,12 @@ class DeclareSmallProducerReliefDutyRateController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeclareSmallProducerReliefDutyRatePage) match {
+    val sprDutyRate = for {
+      product     <- request.userAnswers.get(CurrentProductEntryPage)
+      sprDutyRate <- product.sprDutyRate
+    } yield sprDutyRate
+
+    val preparedForm = sprDutyRate match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -61,11 +68,15 @@ class DeclareSmallProducerReliefDutyRateController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareSmallProducerReliefDutyRatePage, value))
+              updatedAnswers <-
+                Future
+                  .fromTry(request.userAnswers.set(CurrentProductEntryPage, product.copy(sprDutyRate = Some(value))))
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DeclareSmallProducerReliefDutyRatePage, mode, updatedAnswers))
+          }
         )
   }
 }

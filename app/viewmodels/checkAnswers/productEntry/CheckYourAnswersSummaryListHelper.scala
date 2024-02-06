@@ -25,9 +25,9 @@ class CheckYourAnswersSummaryListHelper(userAnswers: UserAnswers)(implicit messa
 
   def currentProductEntrySummaryList: Option[SummaryList] = {
 
-    val productName: Seq[SummaryListRow] = getOptionalRow(ProductNameSummary.row(userAnswers))
-    val draughtRelief                    = getOptionalRow(DraughtReliefQuestionSummary.row(userAnswers))
-    val smallProducerRelief              = getOptionalRow(SmallProducerReliefQuestionSummary.row(userAnswers))
+    val productName         = getOptionalRow(ProductNameSummary.row(userAnswers))
+    val draughtRelief       = getOptionalRow(DraughtReliefQuestionSummary.row(userAnswers))
+    val smallProducerRelief = getOptionalRow(SmallProducerReliefQuestionSummary.row(userAnswers))
 
     for {
       alcoholByVolume <- AlcoholByVolumeQuestionSummary.row(userAnswers)

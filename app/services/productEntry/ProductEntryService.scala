@@ -19,14 +19,11 @@ package services.productEntry
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
-import models.productEntry.{ProductEntry, TaxType}
-import pages.QuestionPage
-import pages.productEntry.{AlcoholByVolumeQuestionPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductVolumePage, SmallProducerReliefQuestionPage, TaxTypePage}
-import play.api.libs.json.Reads
+import models.productEntry.ProductEntry
+import pages.productEntry.CurrentProductEntryPage
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 @Singleton
 class ProductEntryServiceImpl @Inject() (
@@ -35,41 +32,30 @@ class ProductEntryServiceImpl @Inject() (
 
   override def createProduct(
     userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ProductEntry]       =
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ProductEntry] = {
+
+    val productEntry =
+      userAnswers
+        .get(CurrentProductEntryPage)
+        .getOrElse(throw new RuntimeException("Can't fetch product entry from cache"))
+    val abv          = productEntry.abv.getOrElse(throw new RuntimeException("Can't fetch ABV from cache"))
+    val volume       = productEntry.volume.getOrElse(throw new RuntimeException("Can't fetch volume from cache"))
+    val rate         = productEntry.rate.getOrElse(throw getError(productEntry))
+
     for {
-      abv                <- Future.fromTry(extractValueForPage(userAnswers, AlcoholByVolumeQuestionPage))
-      volume             <- Future.fromTry(extractValueForPage(userAnswers, ProductVolumePage))
-      draughtRelief      <- Future.fromTry(extractValueForPage(userAnswers, DraughtReliefQuestionPage))
-      smallProduceRelief <- Future.fromTry(extractValueForPage(userAnswers, SmallProducerReliefQuestionPage))
-      taxType            <- Future.fromTry(extractValueForPage(userAnswers, TaxTypePage))
-      rate               <- Future.fromTry(getRate(taxType, userAnswers.get(DeclareSmallProducerReliefDutyRatePage)))
-      taxDuty            <- alcoholDutyCalculatorConnector.calculateTaxDuty(abv, volume, rate)
-    } yield ProductEntry(
-      abv = abv,
-      volume = volume,
-      rate = rate,
-      draughtRelief = draughtRelief,
-      smallProduceRelief = smallProduceRelief,
-      pureAlcoholVolume = taxDuty.pureAlcoholVolume,
-      duty = taxDuty.duty,
-      taxCode = taxType.code
+      taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(abv, volume, rate)
+    } yield productEntry.copy(
+      pureAlcoholVolume = Some(taxDuty.pureAlcoholVolume),
+      duty = Some(taxDuty.duty)
     )
-  def getRate(taxType: TaxType, sprDutyRate: Option[BigDecimal]): Try[BigDecimal] = Try {
-    (taxType.taxRate, sprDutyRate) match {
-      case (Some(value), None)       => value
-      case (None, Some(sprDutyRate)) => sprDutyRate
-      case (Some(_), Some(_))        =>
-        throw new RuntimeException("Failed to get rate, both tax rate and spr duty rate are defined")
-      case _                         => throw new RuntimeException("Failed to get rate, neither tax rate nor spr duty rate are defined")
-    }
   }
 
-  private def extractValueForPage[T](userAnswers: UserAnswers, page: QuestionPage[T])(implicit rds: Reads[T]): Try[T] =
-    Try {
-      userAnswers.get(page) match {
-        case Some(value) => value
-        case _           => throw new RuntimeException(s"Failed to get value for page ${page.toString}")
-      }
+  private def getError(productEntry: ProductEntry): RuntimeException =
+    (productEntry.taxRate, productEntry.sprDutyRate) match {
+      case (Some(_), Some(_)) =>
+        new RuntimeException("Failed to get rate, both tax rate and spr duty rate are defined.")
+      case (None, None)       => new RuntimeException("Failed to get rate, neither tax rate nor spr duty rate are defined.")
+      case (_, _)             => new RuntimeException("Failed to get rate.")
     }
 }
 

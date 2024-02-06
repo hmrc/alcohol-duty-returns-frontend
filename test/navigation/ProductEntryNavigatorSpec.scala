@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers._
 import pages._
 import models._
+import models.productEntry.ProductEntry
 
 class ProductEntryNavigatorSpec extends SpecBase {
 
@@ -94,7 +95,10 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.TaxTypePage,
           NormalMode,
-          UserAnswers("id").set(pages.productEntry.SmallProducerReliefQuestionPage, false).success.value
+          UserAnswers("id")
+            .set(pages.productEntry.CurrentProductEntryPage, ProductEntry(smallProducerRelief = Some(false)))
+            .success
+            .value
         ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
       }
 
@@ -103,7 +107,10 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.TaxTypePage,
           NormalMode,
-          UserAnswers("id").set(pages.productEntry.SmallProducerReliefQuestionPage, true).success.value
+          UserAnswers("id")
+            .set(pages.productEntry.CurrentProductEntryPage, ProductEntry(smallProducerRelief = Some(true)))
+            .success
+            .value
         ) mustBe controllers.productEntry.routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
       }
 
@@ -145,7 +152,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad
       }
     }
   }

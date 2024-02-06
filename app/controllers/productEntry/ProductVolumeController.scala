@@ -19,10 +19,12 @@ package controllers.productEntry
 import connectors.CacheConnector
 import controllers.actions._
 import forms.productEntry.ProductVolumeFormProvider
+
 import javax.inject.Inject
 import models.Mode
+import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
-import pages.productEntry.ProductVolumePage
+import pages.productEntry.{CurrentProductEntryPage, ProductVolumePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -47,7 +49,12 @@ class ProductVolumeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(ProductVolumePage) match {
+    val volume = for {
+      product <- request.userAnswers.get(CurrentProductEntryPage)
+      volume  <- product.volume
+    } yield volume
+
+    val preparedForm = volume match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -61,11 +68,14 @@ class ProductVolumeController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ProductVolumePage, value))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(CurrentProductEntryPage, product.copy(volume = Some(value))))
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(ProductVolumePage, mode, updatedAnswers))
+          }
         )
   }
 }

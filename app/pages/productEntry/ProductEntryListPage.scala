@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package connectors
+package pages.productEntry
 
-import models.AlcoholByVolume
-import play.api.libs.json.{Json, OFormat}
+import models.productEntry.ProductEntry
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case class DutyCalculationRequest(
-  abv: AlcoholByVolume,
-  volume: BigDecimal,
-  rate: BigDecimal
-)
+case object ProductEntryListPage extends QuestionPage[Seq[ProductEntry]] {
+  override def path: JsPath = JsPath \ toString
 
-object DutyCalculationRequest {
-  implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
+  override def toString: String = "productEntryList"
 }

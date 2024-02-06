@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
 import models.{CheckMode, UserAnswers}
-import pages.productEntry.AlcoholByVolumeQuestionPage
+import pages.productEntry.CurrentProductEntryPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -27,14 +27,15 @@ import viewmodels.implicits._
 object AlcoholByVolumeQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AlcoholByVolumeQuestionPage).map { answer =>
-      SummaryListRowViewModel(
-        key = "alcoholByVolumeQuestion.checkYourAnswersLabel.label",
-        value = ValueViewModel(messages("alcoholByVolumeQuestion.checkYourAnswersLabel.value", answer.toString)),
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.AlcoholByVolumeQuestionController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("alcoholByVolumeQuestion.change.hidden"))
-        )
+    for {
+      product <- answers.get(CurrentProductEntryPage)
+      abv     <- product.abv
+    } yield SummaryListRowViewModel(
+      key = "alcoholByVolumeQuestion.checkYourAnswersLabel.label",
+      value = ValueViewModel(messages("alcoholByVolumeQuestion.checkYourAnswersLabel.value", abv)),
+      actions = Seq(
+        ActionItemViewModel("site.change", routes.AlcoholByVolumeQuestionController.onPageLoad(CheckMode).url)
+          .withVisuallyHiddenText(messages("alcoholByVolumeQuestion.change.hidden"))
       )
-    }
+    )
 }

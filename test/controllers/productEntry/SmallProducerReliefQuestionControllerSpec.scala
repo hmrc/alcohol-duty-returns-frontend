@@ -23,12 +23,13 @@ import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.SmallProducerReliefQuestionPage
+import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.productEntry.ProductEntry
 import uk.gov.hmrc.http.HttpResponse
 import views.html.productEntry.SmallProducerReliefQuestionView
 
@@ -63,7 +64,10 @@ class SmallProducerReliefQuestionControllerSpec extends SpecBase with MockitoSug
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(SmallProducerReliefQuestionPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(CurrentProductEntryPage, ProductEntry(smallProducerRelief = Some(true)))
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

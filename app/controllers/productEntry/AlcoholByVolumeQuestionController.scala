@@ -21,9 +21,10 @@ import controllers.actions._
 import forms.productEntry.AlcoholByVolumeQuestionFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{AlcoholByVolume, Mode}
+import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
-import pages.productEntry.AlcoholByVolumeQuestionPage
+import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -48,9 +49,14 @@ class AlcoholByVolumeQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(AlcoholByVolumeQuestionPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+    val abv = for {
+      product <- request.userAnswers.get(CurrentProductEntryPage)
+      abv     <- product.abv
+    } yield abv
+
+    val preparedForm = abv match {
+      case Some(abvValue) => form.fill(abvValue.value)
+      case None           => form
     }
 
     Ok(view(preparedForm, mode))
@@ -62,14 +68,16 @@ class AlcoholByVolumeQuestionController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(AlcoholByVolumeQuestionPage, value)
+                  request.userAnswers.set(CurrentProductEntryPage, product.copy(abv = Some(AlcoholByVolume(value))))
                 )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers))
+          }
         )
   }
 }
