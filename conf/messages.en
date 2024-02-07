@@ -373,3 +373,10 @@ ethyleneGasUsed.error.twoDecimalPlaces = How much ethylene gas you have used mus
 ethyleneGasUsed.change.hidden = EthyleneGasUsed
 ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
 ethyleneGasUsed.inputSuffix = tonnes
+
+productList.title = Products to declare
+productList.heading = Products to declare
+productList.question = Do you want to add another product?
+productList.checkYourAnswersLabel = productList
+productList.error.required = Select yes if productList
+productList.change.hidden = ProductList

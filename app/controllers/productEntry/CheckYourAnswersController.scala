@@ -57,7 +57,7 @@ class CheckYourAnswersController @Inject() (
         for {
           updatedAnswers <- Future.fromTry(request.userAnswers.addToSeq(ProductEntryListPage, productEntry))
           _              <- cacheConnector.set(updatedAnswers)
-        } yield Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        } yield Redirect(controllers.productEntry.routes.ProductListController.onPageLoad())
       case Some(productEntry) if !productEntry.isComplete =>
         logger.logger.error("Product Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))

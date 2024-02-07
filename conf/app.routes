@@ -147,3 +147,8 @@ POST       /how-much-ethylene-gas-have-you-used                  controllers.spi
 GET        /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey
+
+GET        /return-products                        controllers.productEntry.ProductListController.onPageLoad()
+POST       /return-products                        controllers.productEntry.ProductListController.onSubmit()
+GET        /change-return-products                  controllers.productEntry.ProductListController.onPageLoad()
+POST       /change-return-products                  controllers.productEntry.ProductListController.onSubmit()
