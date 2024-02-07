@@ -30,7 +30,7 @@ object AlcoholByVolumeQuestionSummary {
     answers.get(CurrentProductEntryPage).flatMap(_.abv).map { abv =>
       SummaryListRowViewModel(
         key = "alcoholByVolumeQuestion.checkYourAnswersLabel.label",
-        value = ValueViewModel(messages("alcoholByVolumeQuestion.checkYourAnswersLabel.value", abv)),
+        value = ValueViewModel(messages("alcoholByVolumeQuestion.checkYourAnswersLabel.value", abv.value)),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AlcoholByVolumeQuestionController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("alcoholByVolumeQuestion.change.hidden"))
