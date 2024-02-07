@@ -49,10 +49,7 @@ class ProductNameController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val name = for {
-      product <- request.userAnswers.get(CurrentProductEntryPage)
-      name    <- product.name
-    } yield name
+    val name = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.name)
 
     val preparedForm = name match {
       case None        => form

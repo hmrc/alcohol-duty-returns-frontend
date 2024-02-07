@@ -287,23 +287,23 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
           }
         }
       }
+
       "for a POST if one of the necessary userAnswer data are missing" in {
 
         val errorMapping = Seq(
-          (productEntry.copy(abv = None), "abv"),
-          (productEntry.copy(draughtRelief = None), "eligibleForDraughtRelief"),
-          (productEntry.copy(smallProducerRelief = None), "eligibleForSmallProducerRelief")
+          (fullUserAnswers.remove(CurrentProductEntryPage).success.value, "currentProductEntry"),
+          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(abv = None)).success.value, "abv"),
+          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(draughtRelief = None)).success.value, "eligibleForDraughtRelief"),
+          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(smallProducerRelief = None)).success.value, "eligibleForSmallProducerRelief")
         )
-        errorMapping.foreach { case (incompleteProductEntry, expectedMessageKey) =>
+        errorMapping.foreach { case (incompleteUserAnswers, expectedMessageKey) =>
           val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
           when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
             .successful(
               rateBandList
             )
 
-          val userAnswers = fullUserAnswers.set(CurrentProductEntryPage, incompleteProductEntry).success.value
-
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
+          val application = applicationBuilder(userAnswers = Some(incompleteUserAnswers))
             .overrides(
               bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
               bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)

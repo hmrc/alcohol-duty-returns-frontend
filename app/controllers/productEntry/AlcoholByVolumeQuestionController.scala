@@ -49,10 +49,7 @@ class AlcoholByVolumeQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val abv = for {
-      product <- request.userAnswers.get(CurrentProductEntryPage)
-      abv     <- product.abv
-    } yield abv
+    val abv = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.abv)
 
     val preparedForm = abv match {
       case Some(abvValue) => form.fill(abvValue.value)

@@ -28,10 +28,10 @@ import viewmodels.implicits._
 object ProductNameSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CurrentProductEntryPage).map { answer =>
+    answers.get(CurrentProductEntryPage).flatMap(_.name).map { answer =>
       SummaryListRowViewModel(
         key = "productName.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlFormat.escape(answer.name.getOrElse("")).toString),
+        value = ValueViewModel(HtmlFormat.escape(answer).toString),
         actions = Seq(
           ActionItemViewModel("site.change", routes.ProductNameController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("productName.change.hidden"))

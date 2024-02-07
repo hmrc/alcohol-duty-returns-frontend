@@ -29,15 +29,14 @@ import viewmodels.implicits._
 object TaxTypeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    for {
-      product <- answers.get(CurrentProductEntryPage)
-      taxCode <- product.taxCode
-    } yield SummaryListRowViewModel(
-      key = "taxType.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlContent(HtmlFormat.escape(messages(taxCode)))),
-      actions = Seq(
-        ActionItemViewModel("site.change", routes.TaxTypeController.onPageLoad(CheckMode).url)
-          .withVisuallyHiddenText(messages("taxType.change.hidden"))
+    answers.get(CurrentProductEntryPage).flatMap(_.taxCode).map { taxCode =>
+      SummaryListRowViewModel(
+        key = "taxType.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(HtmlFormat.escape(messages(taxCode)))),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.TaxTypeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("taxType.change.hidden"))
+        )
       )
-    )
+    }
 }

@@ -32,7 +32,17 @@ case class ProductEntry(
   duty: Option[BigDecimal] = None,
   pureAlcoholVolume: Option[BigDecimal] = None
 ) {
-  def isComplete: Boolean      = true
+  def isComplete: Boolean =
+    abv.isDefined &&
+      volume.isDefined &&
+      draughtRelief.isDefined &&
+      smallProducerRelief.isDefined &&
+      taxCode.isDefined &&
+      regime.isDefined &&
+      (taxRate.isDefined || sprDutyRate.isDefined) &&
+      duty.isDefined &&
+      pureAlcoholVolume.isDefined
+
   def rate: Option[BigDecimal] = (taxRate, sprDutyRate) match {
     case (Some(_), None) => taxRate
     case (None, Some(_)) => sprDutyRate

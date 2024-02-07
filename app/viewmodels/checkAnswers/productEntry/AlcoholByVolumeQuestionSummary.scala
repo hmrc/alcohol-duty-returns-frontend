@@ -27,15 +27,14 @@ import viewmodels.implicits._
 object AlcoholByVolumeQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    for {
-      product <- answers.get(CurrentProductEntryPage)
-      abv     <- product.abv
-    } yield SummaryListRowViewModel(
-      key = "alcoholByVolumeQuestion.checkYourAnswersLabel.label",
-      value = ValueViewModel(messages("alcoholByVolumeQuestion.checkYourAnswersLabel.value", abv)),
-      actions = Seq(
-        ActionItemViewModel("site.change", routes.AlcoholByVolumeQuestionController.onPageLoad(CheckMode).url)
-          .withVisuallyHiddenText(messages("alcoholByVolumeQuestion.change.hidden"))
+    answers.get(CurrentProductEntryPage).flatMap(_.abv).map { abv =>
+      SummaryListRowViewModel(
+        key = "alcoholByVolumeQuestion.checkYourAnswersLabel.label",
+        value = ValueViewModel(messages("alcoholByVolumeQuestion.checkYourAnswersLabel.value", abv)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AlcoholByVolumeQuestionController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("alcoholByVolumeQuestion.change.hidden"))
+        )
       )
-    )
+    }
 }

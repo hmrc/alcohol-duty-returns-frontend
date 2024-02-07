@@ -19,6 +19,7 @@ package controllers.productEntry
 import connectors.CacheConnector
 import controllers.actions._
 import pages.productEntry.{CurrentProductEntryPage, ProductEntryListPage}
+import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -39,7 +40,8 @@ class CheckYourAnswersController @Inject() (
   view: CheckYourAnswersView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper(request.userAnswers)
@@ -56,7 +58,13 @@ class CheckYourAnswersController @Inject() (
           updatedAnswers <- Future.fromTry(request.userAnswers.addToSeq(ProductEntryListPage, productEntry))
           _              <- cacheConnector.set(updatedAnswers)
         } yield Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case _                                             => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case Some(productEntry) if !productEntry.isComplete =>
+        logger.logger.error("Product Entry not completed")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case _                                             =>
+        logger.logger.error("Can't fetch product entry from cache")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+
     }
 
   }

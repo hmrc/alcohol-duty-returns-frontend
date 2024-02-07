@@ -19,7 +19,7 @@ package controllers.productEntry
 import base.SpecBase
 import connectors.CacheConnector
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.MockitoSugar.mock
@@ -49,6 +49,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     volume = Some(volume),
     draughtRelief = Some(false),
     smallProducerRelief = Some(true),
+    regime = Some(AlcoholRegime.Beer),
     sprDutyRate = Some(rate),
     pureAlcoholVolume = Some(pureAlcoholVolume),
     taxCode = Some(taxCode),
@@ -251,5 +252,63 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       }
     }
 
+    "must redirect to the Journey Recovery page when uncompleted data is submitted" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val incompleteProductEntryUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+        .set(CurrentProductEntryPage, currentProductEntry.copy(abv = None))
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(incompleteProductEntryUserAnswers))
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, controllers.productEntry.routes.CheckYourAnswersController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockCacheConnector, times(0)).set(any())(any())
+      }
+    }
+
+    "must redirect to the Journey Recovery page when product entry is absent" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val incompleteProductEntryUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+
+      val application =
+        applicationBuilder(userAnswers = Some(incompleteProductEntryUserAnswers))
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, controllers.productEntry.routes.CheckYourAnswersController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockCacheConnector, times(0)).set(any())(any())
+      }
+    }
   }
 }

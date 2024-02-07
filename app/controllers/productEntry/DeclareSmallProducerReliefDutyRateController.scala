@@ -49,10 +49,7 @@ class DeclareSmallProducerReliefDutyRateController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val sprDutyRate = for {
-      product     <- request.userAnswers.get(CurrentProductEntryPage)
-      sprDutyRate <- product.sprDutyRate
-    } yield sprDutyRate
+    val sprDutyRate = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.sprDutyRate)
 
     val preparedForm = sprDutyRate match {
       case None        => form

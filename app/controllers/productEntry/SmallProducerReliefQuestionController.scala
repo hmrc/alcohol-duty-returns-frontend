@@ -49,10 +49,7 @@ class SmallProducerReliefQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val smallProducerRelief = for {
-      product             <- request.userAnswers.get(CurrentProductEntryPage)
-      smallProducerRelief <- product.smallProducerRelief
-    } yield smallProducerRelief
+    val smallProducerRelief = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.smallProducerRelief)
 
     val preparedForm = smallProducerRelief match {
       case None        => form

@@ -49,10 +49,7 @@ class ProductVolumeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val volume = for {
-      product <- request.userAnswers.get(CurrentProductEntryPage)
-      volume  <- product.volume
-    } yield volume
+    val volume = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.volume)
 
     val preparedForm = volume match {
       case None        => form

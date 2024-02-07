@@ -49,10 +49,7 @@ class DraughtReliefQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val draughtRelief = for {
-      product       <- request.userAnswers.get(CurrentProductEntryPage)
-      draughtRelief <- product.draughtRelief
-    } yield draughtRelief
+    val draughtRelief = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.draughtRelief)
 
     val preparedForm = draughtRelief match {
       case None        => form
