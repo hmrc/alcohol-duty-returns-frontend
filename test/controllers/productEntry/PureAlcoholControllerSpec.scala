@@ -86,22 +86,22 @@ class PureAlcoholControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-        val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val request = FakeRequest(GET, controllers.productEntry.routes.PureAlcoholController.onPageLoad().url)
+      running(application) {
+        val request = FakeRequest(GET, controllers.productEntry.routes.PureAlcoholController.onPageLoad().url)
 
-          val result = route(application, request).value
+        val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
+    }
 
     val incompleteProductEntries = List(
-      (productEntry.copy(abv=None), "abv"),
-      (productEntry.copy(volume=None), "volume"),
-      (productEntry.copy(pureAlcoholVolume=None), "pureAlcoholVolume")
+      (productEntry.copy(abv = None), "abv"),
+      (productEntry.copy(volume = None), "volume"),
+      (productEntry.copy(pureAlcoholVolume = None), "pureAlcoholVolume")
     )
 
     incompleteProductEntries.foreach { incompleteProductEntry =>

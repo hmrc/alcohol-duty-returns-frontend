@@ -293,8 +293,14 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
         val errorMapping = Seq(
           (fullUserAnswers.remove(CurrentProductEntryPage).success.value, "currentProductEntry"),
           (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(abv = None)).success.value, "abv"),
-          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(draughtRelief = None)).success.value, "eligibleForDraughtRelief"),
-          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(smallProducerRelief = None)).success.value, "eligibleForSmallProducerRelief")
+          (
+            fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(draughtRelief = None)).success.value,
+            "eligibleForDraughtRelief"
+          ),
+          (
+            fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(smallProducerRelief = None)).success.value,
+            "eligibleForSmallProducerRelief"
+          )
         )
         errorMapping.foreach { case (incompleteUserAnswers, expectedMessageKey) =>
           val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]

@@ -53,7 +53,7 @@ class CheckYourAnswersController @Inject() (
 
   def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     request.userAnswers.get(CurrentProductEntryPage) match {
-      case Some(productEntry) if productEntry.isComplete =>
+      case Some(productEntry) if productEntry.isComplete  =>
         for {
           updatedAnswers <- Future.fromTry(request.userAnswers.addToSeq(ProductEntryListPage, productEntry))
           _              <- cacheConnector.set(updatedAnswers)
@@ -61,7 +61,7 @@ class CheckYourAnswersController @Inject() (
       case Some(productEntry) if !productEntry.isComplete =>
         logger.logger.error("Product Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      case _                                             =>
+      case _                                              =>
         logger.logger.error("Can't fetch product entry from cache")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
 
