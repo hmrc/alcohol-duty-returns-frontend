@@ -19,6 +19,8 @@ package models
 import base.SpecBase
 import generators.ModelGenerators
 import models.productEntry.ProductEntry
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -51,6 +53,108 @@ class ProductEntrySpec extends SpecBase with MockitoSugar with ScalaCheckPropert
 
       productEntry.rate shouldBe None
     }
+
+    "isComplete" - {
+      "returns true when all fields are defined" in {
+        forAll(productEntryGen) { productEntry =>
+          productEntry.isComplete shouldBe true
+        }
+      }
+
+      "returns false when abv is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoAbv = productEntry.copy(abv = None)
+          productEntryWithNoAbv.isComplete shouldBe false
+        }
+      }
+
+      "return false when volume is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoVolume = productEntry.copy(volume = None)
+          productEntryWithNoVolume.isComplete shouldBe false
+        }
+      }
+
+      "returns false when draughtRelief is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(draughtRelief = None)
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when smallProducerRelief is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(smallProducerRelief = None)
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when taxCode is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(taxCode = None)
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when regime is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(regime = None)
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when taxRate and sprDutyRate are not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(taxRate = None, sprDutyRate = None)
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when duty is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(duty = None)
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when pureAlcoholVolume is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(pureAlcoholVolume = None)
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when any field is not defined" in {
+        val productEntry = ProductEntry()
+        productEntry.isComplete shouldBe false
+      }
+    }
+
+    def productEntryGen: Gen[ProductEntry] = for {
+      name                <- Gen.alphaStr
+      abv                 <- arbitrary[AlcoholByVolume]
+      volume              <- Gen.posNum[BigDecimal]
+      draughtRelief       <- Gen.oneOf(true, false)
+      smallProducerRelief <- Gen.oneOf(true, false)
+      taxCode             <- Gen.alphaStr
+      regime              <- arbitrary[AlcoholRegime]
+      taxRate             <- Gen.posNum[BigDecimal]
+      sprDutyRate         <- Gen.posNum[BigDecimal]
+      duty                <- Gen.posNum[BigDecimal]
+      pureAlcoholVolume   <- Gen.posNum[BigDecimal]
+    } yield ProductEntry(
+      name = Some(name),
+      abv = Some(abv),
+      volume = Some(volume),
+      draughtRelief = Some(draughtRelief),
+      smallProducerRelief = Some(smallProducerRelief),
+      taxCode = Some(taxCode),
+      regime = Some(regime),
+      taxRate = if (!smallProducerRelief) Some(taxRate) else None,
+      sprDutyRate = if (smallProducerRelief) Some(sprDutyRate) else None,
+      duty = Some(duty),
+      pureAlcoholVolume = Some(pureAlcoholVolume)
+    )
   }
 
 }
