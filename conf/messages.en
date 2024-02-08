@@ -118,7 +118,7 @@ taxType.taxTypeRadio.regime.Wine = Wine
 taxType.taxTypeRadio.regime.Cider = Cider
 taxType.taxTypeRadio.regime.Spirits = Spirits
 taxType.taxTypeRadio.regime.OtherFermentedProduct = Other fermented products
-taxType.checkYourAnswersLabel = Your product’s tax type
+taxType.checkYourAnswersLabel = Tax type code
 taxType.error.required = Select this product’s tax type
 taxType.change.hidden = TaxType
 
