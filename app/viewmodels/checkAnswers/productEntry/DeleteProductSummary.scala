@@ -26,25 +26,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeleteProductSummary  {
+object DeleteProductSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeleteProductPage).map {
-      answer =>
-
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"deleteProduct.$answer"))
-          )
+    answers.get(DeleteProductPage).map { answer =>
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"deleteProduct.$answer"))
         )
+      )
 
-        SummaryListRowViewModel(
-          key     = "deleteProduct.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DeleteProductController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("deleteProduct.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "deleteProduct.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DeleteProductController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("deleteProduct.change.hidden"))
         )
+      )
     }
 }

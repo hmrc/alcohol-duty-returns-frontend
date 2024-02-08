@@ -42,7 +42,7 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
   lazy val deleteProductRoute = routes.DeleteProductController.onPageLoad(NormalMode).url
 
   val formProvider = new DeleteProductFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   "DeleteProduct Controller" - {
 
@@ -76,7 +76,10 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(DeleteProduct.values.head), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(DeleteProduct.values.head), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

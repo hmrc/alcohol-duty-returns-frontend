@@ -32,10 +32,8 @@ class DeleteProductSpec extends AnyFreeSpec with Matchers with ScalaCheckPropert
 
       val gen = Gen.oneOf(DeleteProduct.values.toSeq)
 
-      forAll(gen) {
-        deleteProduct =>
-
-          JsString(deleteProduct.toString).validate[DeleteProduct].asOpt.value mustEqual deleteProduct
+      forAll(gen) { deleteProduct =>
+        JsString(deleteProduct.toString).validate[DeleteProduct].asOpt.value mustEqual deleteProduct
       }
     }
 
@@ -43,10 +41,8 @@ class DeleteProductSpec extends AnyFreeSpec with Matchers with ScalaCheckPropert
 
       val gen = arbitrary[String] suchThat (!DeleteProduct.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[DeleteProduct] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[DeleteProduct] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,10 +50,8 @@ class DeleteProductSpec extends AnyFreeSpec with Matchers with ScalaCheckPropert
 
       val gen = Gen.oneOf(DeleteProduct.values.toSeq)
 
-      forAll(gen) {
-        deleteProduct =>
-
-          Json.toJson(deleteProduct) mustEqual JsString(deleteProduct.toString)
+      forAll(gen) { deleteProduct =>
+        Json.toJson(deleteProduct) mustEqual JsString(deleteProduct.toString)
       }
     }
   }

@@ -26,13 +26,13 @@ class DeleteProductFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "deleteProduct-value"
+    val fieldName   = "deleteProduct-value"
     val requiredKey = "deleteProduct.error.required"
 
     behave like optionsField[DeleteProduct](
       form,
       fieldName,
-      validValues  = DeleteProduct.values,
+      validValues = DeleteProduct.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 
