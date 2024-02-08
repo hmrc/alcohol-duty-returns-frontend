@@ -142,3 +142,7 @@ GET        /change-which-of-these-spirits-have-you-made                  control
 POST       /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
 
 # End of quarterly spirits questions sub-journey
+GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = NormalMode)
+POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = NormalMode)
+GET        /change-delete-return-product                  controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-delete-return-product                  controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = CheckMode)
