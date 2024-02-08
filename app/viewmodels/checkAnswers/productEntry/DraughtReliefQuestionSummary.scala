@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
 import models.{CheckMode, UserAnswers}
-import pages.productEntry.DraughtReliefQuestionPage
+import pages.productEntry.CurrentProductEntryPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -26,8 +26,8 @@ import viewmodels.implicits._
 object DraughtReliefQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DraughtReliefQuestionPage).map { answer =>
-      val value = if (answer) "site.yes" else "site.no"
+    answers.get(CurrentProductEntryPage).map { answer =>
+      val value = if (answer.draughtRelief.getOrElse(false)) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "draughtReliefQuestion.checkYourAnswersLabel",

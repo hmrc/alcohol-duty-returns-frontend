@@ -20,11 +20,11 @@ import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.productEntry.TaxTypeFormProvider
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.productEntry.TaxType
+import models.productEntry.{ProductEntry, TaxType}
 import models.requests.DataRequest
 import models.{AlcoholByVolume, AlcoholRegime, Mode, RateBand, RateType}
 import navigation.ProductEntryNavigator
-import pages.productEntry.{AlcoholByVolumeQuestionPage, DraughtReliefQuestionPage, SmallProducerReliefQuestionPage, TaxTypePage}
+import pages.productEntry.{CurrentProductEntryPage, TaxTypePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -106,29 +106,36 @@ class TaxTypeController @Inject() (
               )
 
             },
-          value =>
+          value => {
+            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             for {
               taxType        <- taxTypeFromValue(value, rates)
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxTypePage, taxType))
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(
+                    CurrentProductEntryPage,
+                    product.copy(taxCode = Some(taxType.code), taxRate = taxType.taxRate, regime = Some(taxType.regime))
+                  )
+                )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers))
+          }
         )
   }
 
   private def rateParameters(
     request: DataRequest[AnyContent]
   ): (AlcoholByVolume, Boolean, Boolean, RateType, YearMonth, Set[AlcoholRegime]) = {
-    val abv: AlcoholByVolume                    = AlcoholByVolume(
-      request.userAnswers
-        .get(AlcoholByVolumeQuestionPage)
-        .getOrElse(throw new RuntimeException("Couldn't fetch abv value from cache"))
+    val productEntry: ProductEntry     = request.userAnswers
+      .get(CurrentProductEntryPage)
+      .getOrElse(throw new RuntimeException("Couldn't fetch currentProductEntry value from cache"))
+    val abv                            = productEntry.abv.getOrElse(throw new RuntimeException("Couldn't fetch abv value from cache"))
+    val eligibleForDraughtRelief       = productEntry.draughtRelief.getOrElse(
+      throw new RuntimeException("Couldn't fetch eligibleForDraughtRelief value from cache")
     )
-    val eligibleForDraughtRelief: Boolean       = request.userAnswers
-      .get(DraughtReliefQuestionPage)
-      .getOrElse(throw new RuntimeException("Couldn't fetch eligibleForDraughtRelief value from cache"))
-    val eligibleForSmallProducerRelief: Boolean = request.userAnswers
-      .get(SmallProducerReliefQuestionPage)
-      .getOrElse(throw new RuntimeException("Couldn't fetch eligibleForSmallProducerRelief value from cache"))
+    val eligibleForSmallProducerRelief = productEntry.smallProducerRelief.getOrElse(
+      throw new RuntimeException("Couldn't fetch eligibleForSmallProducerRelief value from cache")
+    )
 
     val rateType: RateType = RateType(eligibleForDraughtRelief, eligibleForSmallProducerRelief)
 

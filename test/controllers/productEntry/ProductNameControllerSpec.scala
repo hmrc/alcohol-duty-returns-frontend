@@ -19,12 +19,13 @@ package controllers.productEntry
 import base.SpecBase
 import connectors.CacheConnector
 import forms.productEntry.ProductNameFormProvider
+import models.productEntry.ProductEntry
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.ProductNamePage
+import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -63,7 +64,8 @@ class ProductNameControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ProductNamePage, "answer").success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(CurrentProductEntryPage, ProductEntry(name = Some("answer"))).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

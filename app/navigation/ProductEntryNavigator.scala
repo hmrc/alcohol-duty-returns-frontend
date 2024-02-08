@@ -46,13 +46,19 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
 
   }
 
-  private def taxTypePageRoute(answers: UserAnswers): Call =
-    answers.get(pages.productEntry.SmallProducerReliefQuestionPage) match {
+  private def taxTypePageRoute(answers: UserAnswers): Call = {
+    val eligibleForSPR = for {
+      product             <- answers.get(pages.productEntry.CurrentProductEntryPage)
+      smallProducerRelief <- product.smallProducerRelief
+    } yield smallProducerRelief
+
+    eligibleForSPR match {
       case Some(true)  =>
         controllers.productEntry.routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
       case Some(false) => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
+  }
 
   override val checkRouteMap: Page => UserAnswers => Call                     = { case _ =>
     _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()

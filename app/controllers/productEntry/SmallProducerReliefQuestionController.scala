@@ -22,8 +22,9 @@ import forms.productEntry.SmallProducerReliefQuestionFormProvider
 
 import javax.inject.Inject
 import models.Mode
+import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
-import pages.productEntry.SmallProducerReliefQuestionPage
+import pages.productEntry.{CurrentProductEntryPage, SmallProducerReliefQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -48,7 +49,9 @@ class SmallProducerReliefQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(SmallProducerReliefQuestionPage) match {
+    val smallProducerRelief = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.smallProducerRelief)
+
+    val preparedForm = smallProducerRelief match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -62,11 +65,16 @@ class SmallProducerReliefQuestionController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(SmallProducerReliefQuestionPage, value))
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(CurrentProductEntryPage, product.copy(smallProducerRelief = Some(value)))
+                )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(SmallProducerReliefQuestionPage, mode, updatedAnswers))
+          }
         )
   }
 }

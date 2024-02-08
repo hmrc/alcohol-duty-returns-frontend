@@ -14,51 +14,50 @@
  * limitations under the License.
  */
 
-package controllers.productEntry
+package controllers.spiritsQuestions
 
 import base.SpecBase
-import forms.productEntry.DeclareSmallProducerReliefDutyRateFormProvider
+import forms.spiritsQuestions.EthyleneGasUsedFormProvider
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.CurrentProductEntryPage
+import pages.spiritsQuestions.EthyleneGasUsedPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import models.productEntry.ProductEntry
 import uk.gov.hmrc.http.HttpResponse
-import views.html.productEntry.DeclareSmallProducerReliefDutyRateView
+import views.html.spiritsQuestions.EthyleneGasUsedView
 
 import scala.concurrent.Future
 
-class DeclareSmallProducerReliefDutyRateControllerSpec extends SpecBase with MockitoSugar {
+class EthyleneGasUsedControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new DeclareSmallProducerReliefDutyRateFormProvider()
+  val formProvider = new EthyleneGasUsedFormProvider()
   val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = BigDecimal(0.01)
 
-  lazy val declareSmallProducerReliefDutyRateRoute =
-    routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode).url
+  lazy val ethyleneGasUsedRoute =
+    controllers.spiritsQuestions.routes.EthyleneGasUsedController.onPageLoad(NormalMode).url
 
-  "DeclareSmallProducerReliefDutyRate Controller" - {
+  "EthyleneGasUsed Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareSmallProducerReliefDutyRateRoute)
+        val request = FakeRequest(GET, ethyleneGasUsedRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DeclareSmallProducerReliefDutyRateView]
+        val view = application.injector.instanceOf[EthyleneGasUsedView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -67,18 +66,14 @@ class DeclareSmallProducerReliefDutyRateControllerSpec extends SpecBase with Moc
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers =
-        UserAnswers(userAnswersId)
-          .set(CurrentProductEntryPage, ProductEntry(sprDutyRate = Some(validAnswer)))
-          .success
-          .value
+      val userAnswers = UserAnswers(userAnswersId).set(EthyleneGasUsedPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareSmallProducerReliefDutyRateRoute)
+        val request = FakeRequest(GET, ethyleneGasUsedRoute)
 
-        val view = application.injector.instanceOf[DeclareSmallProducerReliefDutyRateView]
+        val view = application.injector.instanceOf[EthyleneGasUsedView]
 
         val result = route(application, request).value
 
@@ -99,15 +94,15 @@ class DeclareSmallProducerReliefDutyRateControllerSpec extends SpecBase with Moc
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator].toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, declareSmallProducerReliefDutyRateRoute)
-            .withFormUrlEncodedBody(("declareSmallProducerReliefDutyRate-input", validAnswer.toString))
+          FakeRequest(POST, ethyleneGasUsedRoute)
+            .withFormUrlEncodedBody(("ethylene-gas-used-input", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -122,12 +117,12 @@ class DeclareSmallProducerReliefDutyRateControllerSpec extends SpecBase with Moc
 
       running(application) {
         val request =
-          FakeRequest(POST, declareSmallProducerReliefDutyRateRoute)
+          FakeRequest(POST, ethyleneGasUsedRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[DeclareSmallProducerReliefDutyRateView]
+        val view = application.injector.instanceOf[EthyleneGasUsedView]
 
         val result = route(application, request).value
 
@@ -141,7 +136,7 @@ class DeclareSmallProducerReliefDutyRateControllerSpec extends SpecBase with Moc
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareSmallProducerReliefDutyRateRoute)
+        val request = FakeRequest(GET, ethyleneGasUsedRoute)
 
         val result = route(application, request).value
 
@@ -156,7 +151,7 @@ class DeclareSmallProducerReliefDutyRateControllerSpec extends SpecBase with Moc
 
       running(application) {
         val request =
-          FakeRequest(POST, declareSmallProducerReliefDutyRateRoute)
+          FakeRequest(POST, ethyleneGasUsedRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value

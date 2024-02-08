@@ -17,44 +17,51 @@
 package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
+import models.productEntry.ProductEntry
 import models.{CheckMode, UserAnswers}
-import pages.productEntry.{CurrentProductEntryPage, DeclareSmallProducerReliefDutyRatePage, TaxTypePage}
+import pages.productEntry.CurrentProductEntryPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 object CurrentProductEntrySummary {
 
-  def calculations(userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] = {
-    val dutyRateAction: Seq[ActionItem] =
-      (userAnswers.get(TaxTypePage), userAnswers.get(DeclareSmallProducerReliefDutyRatePage)) match {
-        case (Some(value), Some(_)) if value.taxRate.isEmpty =>
-          Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("declareSmallProducerReliefDutyRate.change.hidden"))
+  def calculations(userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
+    userAnswers.get(CurrentProductEntryPage) match {
+      case Some(productEntry) if productEntry.sprDutyRate.isDefined =>
+        val action = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
           )
-        case (_, _)                                          => Seq.empty
-      }
-
-    userAnswers.get(CurrentProductEntryPage).map { answer =>
-      Seq(
-        SummaryListRowViewModel(
-          key = "pureAlcohol.checkYourAnswersLabel",
-          value = ValueViewModel(s"${answer.pureAlcoholVolume.toString} ${messages("site.unit.litres")}")
-        ),
-        SummaryListRowViewModel(
-          key = "dutyDue.rate.checkYourAnswersLabel",
-          value = ValueViewModel(s"£${messages("site.2DP", answer.rate)} ${messages("site.rate.litre")}"),
-          actions = dutyRateAction
-        ),
-        SummaryListRowViewModel(
-          key = "dutyDue.duty.checkYourAnswersLabel",
-          value = ValueViewModel(s"£${messages("site.2DP", answer.duty)}")
+            .withVisuallyHiddenText(messages("declareSmallProducerReliefDutyRate.change.hidden"))
         )
-      )
+        getRowElements(productEntry, action)
+      case Some(productEntry) if productEntry.taxRate.isDefined     =>
+        getRowElements(productEntry, Seq.empty)
+      case _                                                        => None
     }
-  }
+
+  def getRowElements(productEntry: ProductEntry, dutyRateAction: Seq[ActionItem])(implicit
+    messages: Messages
+  ): Option[Seq[SummaryListRow]] =
+    for {
+      pureAlcoholVolume <- productEntry.pureAlcoholVolume
+      rate              <- productEntry.rate
+      duty              <- productEntry.duty
+    } yield Seq(
+      SummaryListRowViewModel(
+        key = "pureAlcohol.checkYourAnswersLabel",
+        value = ValueViewModel(s"${pureAlcoholVolume.toString} ${messages("site.unit.litres")}")
+      ),
+      SummaryListRowViewModel(
+        key = "dutyDue.rate.checkYourAnswersLabel",
+        value = ValueViewModel(s"£${messages("site.2DP", rate)} ${messages("site.rate.litre")}"),
+        actions = dutyRateAction
+      ),
+      SummaryListRowViewModel(
+        key = "dutyDue.duty.checkYourAnswersLabel",
+        value = ValueViewModel(s"£${messages("site.2DP", duty)}")
+      )
+    )
 }

@@ -69,6 +69,7 @@ GET        /you-have-declared-this-many-litres-of-pure-alcohol                  
 GET        /the-duty-due-on-this-product                       controllers.productEntry.DutyDueController.onPageLoad()
 
 GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad()
+POST       /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onSubmit()
 
 # End of product entry sub-journey
 
@@ -141,8 +142,13 @@ POST       /which-of-these-spirits-have-you-made                        controll
 GET        /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /how-much-ethylene-gas-have-you-used                  controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-ethylene-gas-have-you-used                  controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey
 GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = NormalMode)
 POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = NormalMode)
 GET        /change-delete-return-product                  controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-delete-return-product                  controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = CheckMode)
+

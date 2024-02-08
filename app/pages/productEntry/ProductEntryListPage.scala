@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package forms.spiritsQuestions
+package pages.productEntry
 
-import forms.mappings.Mappings
-import javax.inject.Inject
-import play.api.data.Form
+import models.productEntry.ProductEntry
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class WheatUsedFormProvider @Inject() extends Mappings {
+case object ProductEntryListPage extends QuestionPage[Seq[ProductEntry]] {
+  override def path: JsPath = JsPath \ toString
 
-  def apply(): Form[BigDecimal] =
-    Form(
-      "wheat-used-input" -> bigDecimal(
-        "wheatUsed.error.required",
-        "wheatUsed.error.nonNumeric",
-        "wheatUsed.error.twoDecimalPlaces"
-      )
-        .verifying(minimumValue(BigDecimal(0.01), "wheatUsed.error.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "wheatUsed.error.maximumRequired"))
-    )
+  override def toString: String = "productEntryList"
 }

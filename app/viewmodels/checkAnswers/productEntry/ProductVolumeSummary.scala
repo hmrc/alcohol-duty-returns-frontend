@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
 import models.{CheckMode, UserAnswers}
-import pages.productEntry.ProductVolumePage
+import pages.productEntry.CurrentProductEntryPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -27,10 +27,10 @@ import viewmodels.implicits._
 object ProductVolumeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ProductVolumePage).map { answer =>
+    answers.get(CurrentProductEntryPage).flatMap(_.volume).map { volume =>
       SummaryListRowViewModel(
         key = "productVolume.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"$volume ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.ProductVolumeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("productVolume.change.hidden"))

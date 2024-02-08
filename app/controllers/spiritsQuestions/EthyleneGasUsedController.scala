@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,32 @@
  * limitations under the License.
  */
 
-package controllers.productEntry
+package controllers.spiritsQuestions
 
-import connectors.CacheConnector
 import controllers.actions._
-import forms.productEntry.ProductVolumeFormProvider
-
+import forms.spiritsQuestions.EthyleneGasUsedFormProvider
 import javax.inject.Inject
 import models.Mode
-import models.productEntry.ProductEntry
-import navigation.ProductEntryNavigator
-import pages.productEntry.{CurrentProductEntryPage, ProductVolumePage}
+import navigation.QuarterlySpiritsQuestionsNavigator
+import pages.spiritsQuestions.EthyleneGasUsedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import connectors.CacheConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.productEntry.ProductVolumeView
+import views.html.spiritsQuestions.EthyleneGasUsedView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ProductVolumeController @Inject() (
+class EthyleneGasUsedController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: ProductEntryNavigator,
+  navigator: QuarterlySpiritsQuestionsNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: ProductVolumeFormProvider,
+  formProvider: EthyleneGasUsedFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: ProductVolumeView
+  view: EthyleneGasUsedView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -49,9 +47,7 @@ class ProductVolumeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val volume = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.volume)
-
-    val preparedForm = volume match {
+    val preparedForm = request.userAnswers.get(EthyleneGasUsedPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -65,14 +61,11 @@ class ProductVolumeController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value => {
-            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+          value =>
             for {
-              updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(CurrentProductEntryPage, product.copy(volume = Some(value))))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(EthyleneGasUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ProductVolumePage, mode, updatedAnswers))
-          }
+            } yield Redirect(navigator.nextPage(EthyleneGasUsedPage, mode, updatedAnswers))
         )
   }
 }

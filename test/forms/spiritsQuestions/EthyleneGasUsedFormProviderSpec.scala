@@ -18,16 +18,15 @@ package forms.spiritsQuestions
 
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
-
 import scala.collection.immutable.ArraySeq
 
-class WheatUsedFormProviderSpec extends BigDecimalFieldBehaviours {
+class EthyleneGasUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new WheatUsedFormProvider()()
+  val form = new EthyleneGasUsedFormProvider()()
 
   ".value" - {
 
-    val fieldName = "wheat-used-input"
+    val fieldName = "ethylene-gas-used-input"
 
     val minimum = 0.01
     val maximum = 999999999.99
@@ -43,28 +42,27 @@ class WheatUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "wheatUsed.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "wheatUsed.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "ethyleneGasUsed.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "ethyleneGasUsed.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
       minimum = minimum,
-      expectedError = FormError(fieldName, "wheatUsed.error.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "ethyleneGasUsed.error.minimumRequired", ArraySeq(minimum))
     )
-
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
-      expectedError = FormError(fieldName, "wheatUsed.error.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "ethyleneGasUsed.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "wheatUsed.error.required")
+      requiredError = FormError(fieldName, "ethyleneGasUsed.error.required")
     )
   }
 }

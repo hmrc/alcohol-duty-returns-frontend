@@ -16,10 +16,11 @@
 
 package connectors
 
+import models.AlcoholByVolume
 import play.api.libs.json.{Json, OFormat}
 
 case class DutyCalculationRequest(
-  abv: BigDecimal,
+  abv: AlcoholByVolume,
   volume: BigDecimal,
   rate: BigDecimal
 )

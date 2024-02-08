@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.productEntry
+package viewmodels.checkAnswers.spiritsQuestions
 
-import controllers.productEntry.routes
+import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
-import pages.productEntry.CurrentProductEntryPage
+import pages.spiritsQuestions.EthyleneGasUsedPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TaxTypeSummary {
+object EthyleneGasUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CurrentProductEntryPage).flatMap(_.taxCode).map { taxCode =>
+    answers.get(EthyleneGasUsedPage).map { answer =>
       SummaryListRowViewModel(
-        key = "taxType.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(HtmlFormat.escape(messages(taxCode)))),
+        key = "ethyleneGasUsed.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.TaxTypeController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("taxType.change.hidden"))
+          ActionItemViewModel("site.change", routes.EthyleneGasUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("ethyleneGasUsed.change.hidden"))
         )
       )
     }
