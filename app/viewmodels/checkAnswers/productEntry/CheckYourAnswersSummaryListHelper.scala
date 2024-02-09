@@ -17,23 +17,26 @@
 package viewmodels.checkAnswers.productEntry
 
 import models.UserAnswers
+import models.productEntry.ProductEntry
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.govuk.summarylist._
 
-class CheckYourAnswersSummaryListHelper(userAnswers: UserAnswers)(implicit messages: Messages) {
+object CheckYourAnswersSummaryListHelper {
 
-  def currentProductEntrySummaryList: Option[SummaryList] = {
+  def currentProductEntrySummaryList(
+    productEntry: ProductEntry
+  )(implicit messages: Messages): Option[SummaryList] = {
 
-    val productName         = getOptionalRow(ProductNameSummary.row(userAnswers))
-    val draughtRelief       = getOptionalRow(DraughtReliefQuestionSummary.row(userAnswers))
-    val smallProducerRelief = getOptionalRow(SmallProducerReliefQuestionSummary.row(userAnswers))
+    val productName         = getOptionalRow(ProductNameSummary.row(productEntry))
+    val draughtRelief       = getOptionalRow(DraughtReliefQuestionSummary.row(productEntry))
+    val smallProducerRelief = getOptionalRow(SmallProducerReliefQuestionSummary.row(productEntry))
 
     for {
-      alcoholByVolume <- AlcoholByVolumeQuestionSummary.row(userAnswers)
-      taxType         <- TaxTypeSummary.row(userAnswers)
-      productVolume   <- ProductVolumeSummary.row(userAnswers)
-      calculations    <- CurrentProductEntrySummary.calculations(userAnswers)
+      alcoholByVolume <- AlcoholByVolumeQuestionSummary.row(productEntry)
+      taxType         <- TaxTypeSummary.row(productEntry)
+      productVolume   <- ProductVolumeSummary.row(productEntry)
+      calculations    <- CurrentProductEntrySummary.calculations(productEntry)
     } yield SummaryListViewModel(
       rows = productName ++
         Seq(alcoholByVolume) ++

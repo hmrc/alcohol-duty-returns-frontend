@@ -68,7 +68,7 @@ GET        /you-have-declared-this-many-litres-of-pure-alcohol                  
 
 GET        /the-duty-due-on-this-product                       controllers.productEntry.DutyDueController.onPageLoad()
 
-GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad()
+GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
 POST       /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onSubmit()
 
 # End of product entry sub-journey

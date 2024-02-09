@@ -152,7 +152,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
-        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }

@@ -20,56 +20,56 @@ import controllers.actions._
 import forms.productEntry.ProductListFormProvider
 
 import javax.inject.Inject
-import models.{Mode, NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.ProductEntryNavigator
 import pages.productEntry.ProductListPage
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.productEntry.ProductEntry
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.SummaryListRowNoValue
+
+import viewmodels.checkAnswers.productEntry.ProductListSummaryHelper
 import views.html.productEntry.ProductListView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ProductListController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         cacheConnector: CacheConnector,
-                                         navigator: ProductEntryNavigator,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: ProductListFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: ProductListView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class ProductListController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: ProductEntryNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: ProductListFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: ProductListView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val table        = ProductListSummaryHelper.productEntryTable(request.userAnswers)
+    val preparedForm = request.userAnswers.get(ProductListPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-     val preparedForm = request.userAnswers.get(ProductListPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm))
+    Ok(view(preparedForm, table))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors))),
-
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val table = ProductListSummaryHelper.productEntryTable(request.userAnswers)
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, table))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ProductListPage, value))
             _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ProductListPage,NormalMode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(ProductListPage, NormalMode, updatedAnswers))
       )
   }
 }

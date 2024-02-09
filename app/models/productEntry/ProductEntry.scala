@@ -20,6 +20,7 @@ import models.{AlcoholByVolume, AlcoholRegime}
 import play.api.libs.json.{Json, OFormat}
 
 case class ProductEntry(
+  index: Option[Int] = None,
   name: Option[String] = None,
   abv: Option[AlcoholByVolume] = None,
   volume: Option[BigDecimal] = None,

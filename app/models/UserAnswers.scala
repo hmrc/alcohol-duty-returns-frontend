@@ -16,6 +16,8 @@
 
 package models
 
+import models.productEntry.ProductEntry
+import pages.productEntry.ProductEntryListPage
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
@@ -94,6 +96,16 @@ final case class UserAnswers(
       case JsError(errors)       =>
         Failure(JsResultException(errors))
     }
+
+  def setByIndex[A](page: Settable[Seq[A]], i: Int, value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
+    val path        = page.path \ i
+    val updatedData = set(path, value)
+    updatedData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      page.cleanup(None, updatedAnswers)
+    }
+  }
+
 }
 
 object UserAnswers {

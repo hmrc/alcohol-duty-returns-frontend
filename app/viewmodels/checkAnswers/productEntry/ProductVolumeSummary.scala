@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
+import models.productEntry.ProductEntry
 import models.{CheckMode, UserAnswers}
 import pages.productEntry.CurrentProductEntryPage
 import play.api.i18n.Messages
@@ -26,8 +27,8 @@ import viewmodels.implicits._
 
 object ProductVolumeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CurrentProductEntryPage).flatMap(_.volume).map { volume =>
+  def row(productEntry: ProductEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    productEntry.volume.map { volume =>
       SummaryListRowViewModel(
         key = "productVolume.checkYourAnswersLabel",
         value = ValueViewModel(s"$volume ${messages("site.unit.litres")}"),

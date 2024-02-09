@@ -17,18 +17,51 @@
 package viewmodels.checkAnswers.productEntry
 
 import models.UserAnswers
+import models.productEntry.ProductEntry
 import pages.productEntry.ProductEntryListPage
 import play.api.i18n.Messages
-import viewmodels.SummaryListNoValue
-import viewmodels.checkAnswers.productEntry.ProductEntryListSummary
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
+import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
-class ProductListSummaryHelper {
+object ProductListSummaryHelper {
 
-  def productEntryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListNoValue]={
+  def productEntryTable(userAnswers: UserAnswers)(implicit messages: Messages): TableViewModel = {
 
-    userAnswers.get(ProductEntryListPage).flatMap(productList => ProductEntryListSummary.row(productList))
-
-
+    val productEntries: Seq[ProductEntry] = getProductEntries(userAnswers)
+    TableViewModel(
+      head = Seq(
+        HeadCell(content = Text(messages("productEntryList.name")), classes = "govuk-!-width-one-half"),
+        HeadCell(content = Text(messages("productEntryList.duty")), classes = "govuk-!-width-one-quarter"),
+        HeadCell(content = Text(messages("productEntryList.action")), classes = "govuk-!-width-one-quarter")
+      ),
+      rows = getProductEntryRows(productEntries),
+      total = productEntries.map(_.duty.getOrElse(BigDecimal(0))).sum
+    )
   }
+
+  private def getProductEntries(userAnswers: UserAnswers): Seq[ProductEntry] =
+    userAnswers.get(ProductEntryListPage).getOrElse(Seq.empty)
+
+  private def getProductEntryRows(productEntries: Seq[ProductEntry])(implicit
+    messages: Messages
+  ): Seq[TableRowViewModel] =
+    productEntries.zipWithIndex.map { case (productEntry, index) =>
+      TableRowViewModel(
+        cells = Seq(
+          Text(productEntry.name.getOrElse("")),
+          Text(messages("site.currency.2DP", productEntry.duty.getOrElse(BigDecimal(0))))
+        ),
+        actions = Seq(
+          TableRowActionViewModel(
+            label = messages("site.change"),
+            href = controllers.productEntry.routes.CheckYourAnswersController.onPageLoad(Some(index))
+          ),
+          TableRowActionViewModel(
+            label = messages("site.remove"),
+            href = controllers.routes.JourneyRecoveryController.onPageLoad()
+          )
+        )
+      )
+    }
 
 }

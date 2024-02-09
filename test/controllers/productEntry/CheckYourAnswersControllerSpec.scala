@@ -74,9 +74,9 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val checkYourAnswersHelper =
-          new CheckYourAnswersSummaryListHelper(completeProductEntryUserAnswers)(messages(application))
-        val list                   = checkYourAnswersHelper.currentProductEntrySummaryList.get
+        val list = CheckYourAnswersSummaryListHelper
+          .currentProductEntrySummaryList(currentProductEntry)(messages(application))
+          .get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list)(request, messages(application)).toString
@@ -85,26 +85,17 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET if any optional questions are not answered" in {
 
-      val incompleteUserAnswers1 =
-        completeProductEntryUserAnswers
-          .set(CurrentProductEntryPage, currentProductEntry.copy(name = None))
-          .success
-          .value
-      val incompleteUserAnswers2 =
-        completeProductEntryUserAnswers
-          .set(CurrentProductEntryPage, currentProductEntry.copy(draughtRelief = None))
-          .success
-          .value
-      val incompleteUserAnswers3 =
-        completeProductEntryUserAnswers
-          .set(CurrentProductEntryPage, currentProductEntry.copy(smallProducerRelief = None))
+      Seq(
+        currentProductEntry.copy(name = None),
+        currentProductEntry.copy(draughtRelief = None),
+        currentProductEntry.copy(smallProducerRelief = None)
+      ).foreach { incompleteProductEntry =>
+        val userAnswers = completeProductEntryUserAnswers
+          .set(CurrentProductEntryPage, incompleteProductEntry)
           .success
           .value
 
-      val incompleteUserAnswerList = Seq(incompleteUserAnswers1, incompleteUserAnswers2, incompleteUserAnswers3)
-
-      incompleteUserAnswerList.foreach { userAnswer =>
-        val application = applicationBuilder(userAnswers = Some(userAnswer)).build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
         running(application) {
           val request = FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
@@ -113,9 +104,9 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
           val view = application.injector.instanceOf[CheckYourAnswersView]
 
-          val checkYourAnswersHelper =
-            new CheckYourAnswersSummaryListHelper(userAnswer)(messages(application))
-          val list                   = checkYourAnswersHelper.currentProductEntrySummaryList.get
+          val list = CheckYourAnswersSummaryListHelper
+            .currentProductEntrySummaryList(incompleteProductEntry)(messages(application))
+            .get
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(list)(request, messages(application)).toString
@@ -145,9 +136,8 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val checkYourAnswersHelper =
-          new CheckYourAnswersSummaryListHelper(userAnswers)(messages(application))
-        val list                   = checkYourAnswersHelper.currentProductEntrySummaryList.get
+        val list =
+          CheckYourAnswersSummaryListHelper.currentProductEntrySummaryList(productEntry)(messages(application)).get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list)(request, messages(application)).toString
@@ -246,7 +236,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.ProductListController.onPageLoad().url
 
         verify(mockCacheConnector, times(1)).set(any())(any())
       }
