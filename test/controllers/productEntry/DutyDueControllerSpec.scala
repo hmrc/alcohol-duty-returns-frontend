@@ -17,7 +17,7 @@
 package controllers.productEntry
 
 import base.SpecBase
-import models.UserAnswers
+import models.{AlcoholByVolume, UserAnswers}
 import models.productEntry.ProductEntry
 import pages.productEntry.CurrentProductEntryPage
 import play.api.test.FakeRequest
@@ -37,7 +37,17 @@ class DutyDueControllerSpec extends SpecBase {
       val pureAlcoholVolume = BigDecimal(3.69)
       val taxCode           = "311"
 
-      val productEntry = ProductEntry(1, 1, false, false, rate, pureAlcoholVolume, dutyDue, taxCode)
+      val productEntry = ProductEntry(
+        name = Some("Name"),
+        abv = Some(AlcoholByVolume(1)),
+        volume = Some(BigDecimal(1)),
+        draughtRelief = Some(false),
+        smallProducerRelief = Some(false),
+        taxRate = Some(rate),
+        pureAlcoholVolume = Some(pureAlcoholVolume),
+        duty = Some(dutyDue),
+        taxCode = Some(taxCode)
+      )
 
       val userAnswers = UserAnswers(userAnswersId).set(CurrentProductEntryPage, productEntry).success.value
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -50,7 +60,7 @@ class DutyDueControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DutyDueView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(productEntry)(
+        contentAsString(result) mustEqual view(dutyDue, pureAlcoholVolume, taxCode, rate)(
           request,
           messages(application)
         ).toString

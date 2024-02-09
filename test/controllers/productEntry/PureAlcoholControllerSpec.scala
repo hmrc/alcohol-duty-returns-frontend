@@ -18,6 +18,7 @@ package controllers.productEntry
 
 import base.SpecBase
 import connectors.CacheConnector
+import models.AlcoholByVolume
 import models.productEntry.ProductEntry
 import org.mockito.ArgumentMatchers.any
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,25 +36,25 @@ class PureAlcoholControllerSpec extends SpecBase with MockitoSugar {
 
   "PureAlcohol Controller" - {
 
+    val abv               = AlcoholByVolume(1)
+    val volume            = BigDecimal(1)
+    val pureAlcoholVolume = BigDecimal(1)
+
+    val productEntry = ProductEntry(
+      abv = Some(abv),
+      volume = Some(volume),
+      draughtRelief = Some(false),
+      smallProducerRelief = Some(false),
+      taxRate = Some(BigDecimal(1)),
+      pureAlcoholVolume = Some(pureAlcoholVolume),
+      duty = Some(BigDecimal(1)),
+      taxCode = Some("311")
+    )
+
+    val mockCacheConnector = mock[CacheConnector]
+    when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
     "must return OK and the correct view for a GET" in {
-
-      val abv               = BigDecimal(1)
-      val volume            = BigDecimal(1)
-      val pureAlcoholVolume = BigDecimal(1)
-
-      val productEntry = ProductEntry(
-        abv = abv,
-        volume = volume,
-        draughtRelief = false,
-        smallProduceRelief = false,
-        rate = BigDecimal(1),
-        pureAlcoholVolume = pureAlcoholVolume,
-        duty = BigDecimal(1),
-        taxCode = "311"
-      )
-
-      val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val productEntryService = mock[ProductEntryService]
       when(productEntryService.createProduct(any())(any(), any())) thenReturn Future.successful(
@@ -77,7 +78,55 @@ class PureAlcoholControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(abv, volume, pureAlcoholVolume)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(abv.value, volume, pureAlcoholVolume)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.productEntry.routes.PureAlcoholController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    val incompleteProductEntries = List(
+      (productEntry.copy(abv = None), "abv"),
+      (productEntry.copy(volume = None), "volume"),
+      (productEntry.copy(pureAlcoholVolume = None), "pureAlcoholVolume")
+    )
+
+    incompleteProductEntries.foreach { incompleteProductEntry =>
+      val (productEntry, msg) = incompleteProductEntry
+
+      s"must redirect to Journey Recovery for a GET if product entry does not contain $msg" in {
+
+        val productEntryService = mock[ProductEntryService]
+        when(productEntryService.createProduct(any())(any(), any())) thenReturn Future.successful(productEntry)
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ProductEntryService].toInstance(productEntryService),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, controllers.productEntry.routes.PureAlcoholController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
   }

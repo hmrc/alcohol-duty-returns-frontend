@@ -19,18 +19,17 @@ package controllers.productEntry
 import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
-import models.productEntry.TaxType
+import models.productEntry.{ProductEntry, TaxType}
 import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.{AlcoholByVolumeQuestionPage, DraughtReliefQuestionPage, SmallProducerReliefQuestionPage, TaxTypePage}
+import pages.productEntry.{CurrentProductEntryPage, TaxTypePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import queries.Settable
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.TaxTypePageViewModel
 import views.html.productEntry.TaxTypeView
@@ -46,14 +45,14 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new TaxTypeFormProvider()
   val form         = formProvider()
 
+  val productEntry = ProductEntry(
+    abv = Some(AlcoholByVolume(3.5)),
+    draughtRelief = Some(true),
+    smallProducerRelief = Some(false)
+  )
+
   val fullUserAnswers = UserAnswers(userAnswersId)
-    .set(AlcoholByVolumeQuestionPage, BigDecimal(3.5))
-    .success
-    .value
-    .set(DraughtReliefQuestionPage, true)
-    .success
-    .value
-    .set(SmallProducerReliefQuestionPage, false)
+    .set(CurrentProductEntryPage, productEntry)
     .success
     .value
 
@@ -256,18 +255,18 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     "must throw an Exception" - {
       "for a GET if one of the necessary userAnswer data are missing" in {
         val errorMapping = Seq(
-          (AlcoholByVolumeQuestionPage, "abv"),
-          (DraughtReliefQuestionPage, "eligibleForDraughtRelief"),
-          (SmallProducerReliefQuestionPage, "eligibleForSmallProducerRelief")
+          (productEntry.copy(abv = None), "abv"),
+          (productEntry.copy(draughtRelief = None), "eligibleForDraughtRelief"),
+          (productEntry.copy(smallProducerRelief = None), "eligibleForSmallProducerRelief")
         )
-        errorMapping.foreach { case (missingKey, expectedMessageKey) =>
+        errorMapping.foreach { case (incompleteProductEntry, expectedMessageKey) =>
           val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
           when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
             .successful(
               rateBandList
             )
 
-          val userAnswers = fullUserAnswers.remove(missingKey.asInstanceOf[Settable[_]]).success.value
+          val userAnswers = fullUserAnswers.set(CurrentProductEntryPage, incompleteProductEntry).success.value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(
@@ -288,23 +287,29 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
           }
         }
       }
+
       "for a POST if one of the necessary userAnswer data are missing" in {
 
         val errorMapping = Seq(
-          (AlcoholByVolumeQuestionPage, "abv"),
-          (DraughtReliefQuestionPage, "eligibleForDraughtRelief"),
-          (SmallProducerReliefQuestionPage, "eligibleForSmallProducerRelief")
+          (fullUserAnswers.remove(CurrentProductEntryPage).success.value, "currentProductEntry"),
+          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(abv = None)).success.value, "abv"),
+          (
+            fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(draughtRelief = None)).success.value,
+            "eligibleForDraughtRelief"
+          ),
+          (
+            fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(smallProducerRelief = None)).success.value,
+            "eligibleForSmallProducerRelief"
+          )
         )
-        errorMapping.foreach { case (missingKey, expectedMessageKey) =>
+        errorMapping.foreach { case (incompleteUserAnswers, expectedMessageKey) =>
           val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
           when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
             .successful(
               rateBandList
             )
 
-          val userAnswers = fullUserAnswers.remove(missingKey.asInstanceOf[Settable[_]]).success.value
-
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
+          val application = applicationBuilder(userAnswers = Some(incompleteUserAnswers))
             .overrides(
               bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
               bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)

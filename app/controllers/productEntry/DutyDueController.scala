@@ -37,9 +37,16 @@ class DutyDueController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get[ProductEntry](CurrentProductEntryPage) match {
-      case None        => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) => Ok(view(value))
-    }
+    val result = for {
+      productEntry      <- request.userAnswers.get[ProductEntry](CurrentProductEntryPage)
+      pureAlcoholVolume <- productEntry.pureAlcoholVolume
+      taxCode           <- productEntry.taxCode
+      duty              <- productEntry.duty
+      rate              <- productEntry.rate
+
+    } yield Ok(view(duty, pureAlcoholVolume, taxCode, rate))
+
+    result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
   }
+
 }

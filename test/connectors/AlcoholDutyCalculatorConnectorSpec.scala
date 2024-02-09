@@ -84,12 +84,12 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
         connector.httpClient.POST[DutyCalculationRequest, TaxDuty](any(), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1)))
 
-      whenReady(connector.calculateTaxDuty(BigDecimal(3.5), BigDecimal(1), BigDecimal(1))) { result =>
+      whenReady(connector.calculateTaxDuty(AlcoholByVolume(3.5), BigDecimal(1), BigDecimal(1))) { result =>
         result mustBe TaxDuty(BigDecimal(1), BigDecimal(1))
         verify(connector.httpClient, atLeastOnce)
           .POST[DutyCalculationRequest, TaxDuty](
             any(),
-            ArgumentMatchers.eq(DutyCalculationRequest(BigDecimal(3.5), BigDecimal(1), BigDecimal(1))),
+            ArgumentMatchers.eq(DutyCalculationRequest(AlcoholByVolume(3.5), BigDecimal(1), BigDecimal(1))),
             any()
           )(any(), any(), any(), any())
       }

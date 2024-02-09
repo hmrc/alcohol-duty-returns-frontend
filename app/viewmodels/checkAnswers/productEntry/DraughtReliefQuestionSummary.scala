@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,23 +20,26 @@ import controllers.productEntry.routes
 import models.{CheckMode, UserAnswers}
 import pages.productEntry.CurrentProductEntryPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-
-object TaxTypeSummary {
+object DraughtReliefQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CurrentProductEntryPage).flatMap(_.taxCode).map { taxCode =>
+    answers.get(CurrentProductEntryPage).map { answer =>
+      val value = if (answer.draughtRelief.getOrElse(false)) "site.yes" else "site.no"
+
       SummaryListRowViewModel(
-        key = "taxType.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(HtmlFormat.escape(messages(taxCode)))),
+        key = "draughtReliefQuestion.checkYourAnswersLabel",
+        value = ValueViewModel(messages(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.TaxTypeController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("taxType.change.hidden"))
+          ActionItemViewModel(
+            "site.change",
+            routes.DraughtReliefQuestionController.onPageLoad(CheckMode).url
+          )
+            .withVisuallyHiddenText(messages("draughtReliefQuestion.change.hidden"))
         )
       )
     }
+
 }

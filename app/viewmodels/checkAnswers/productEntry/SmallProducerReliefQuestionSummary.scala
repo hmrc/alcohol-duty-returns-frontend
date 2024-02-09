@@ -18,26 +18,28 @@ package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
 import models.{CheckMode, UserAnswers}
-import pages.productEntry.DeclareSmallProducerReliefDutyRatePage
+import pages.productEntry.CurrentProductEntryPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-
-object DeclareSmallProducerReliefDutyRateSummary {
+object SmallProducerReliefQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareSmallProducerReliefDutyRatePage).map { answer =>
+    answers.get(CurrentProductEntryPage).map { answer =>
+      val value = if (answer.smallProducerRelief.getOrElse(false)) "site.yes" else "site.no"
+
       SummaryListRowViewModel(
-        key = "declareSmallProducerReliefDutyRate.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        key = "smallProducerReliefQuestion.checkYourAnswersLabel",
+        value = ValueViewModel(messages(value)),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
+            routes.SmallProducerReliefQuestionController.onPageLoad(CheckMode).url
           )
-            .withVisuallyHiddenText(messages("declareSmallProducerReliefDutyRate.change.hidden"))
+            .withVisuallyHiddenText(messages("smallProducerReliefQuestion.change.hidden"))
         )
       )
     }
+
 }

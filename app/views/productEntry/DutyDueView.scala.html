@@ -15,7 +15,6 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList}
-@import models.productEntry.ProductEntry
 
 @this(
         layout: templates.Layout,
@@ -26,29 +25,30 @@
         bulletList: BulletList
 )
 
-@(productEntry: ProductEntry)(implicit request: Request[_], messages: Messages)
+@(duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("dutyDue.title", f"${productEntry.duty}%.2f"))) {
+@layout(pageTitle = titleNoForm(messages("dutyDue.title", f"$duty%.2f"))) {
 
     @sectionHeading(
         id = "dutyDue-section",
         text = messages("section.alcoholDutyReturn"),
     )
 
-    @pageHeading(messages("dutyDue.heading", f"${productEntry.duty}%.2f"))
+    @pageHeading(messages("dutyDue.heading", f"$duty%.2f"))
 
     @paragraph(messages("dutyDue.paragraph1"))
 
     @bulletList(Seq(
-        messages("dutyDue.bulletList.1", productEntry.pureAlcoholVolume),
-        messages("dutyDue.bulletList.2", productEntry.taxCode),
-        messages("dutyDue.bulletList.3", f"${productEntry.rate}%.2f")
+        messages("dutyDue.bulletList.1", pureAlcoholVolume),
+        messages("dutyDue.bulletList.2", taxCode),
+        messages("dutyDue.bulletList.3", f"$rate%.2f")
     ))
 
-    @paragraph(messages("dutyDue.paragraph2",  f"${productEntry.duty}%.2f"))
+    @paragraph(messages("dutyDue.paragraph2",  f"$duty%.2f"))
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
     )
 
 }

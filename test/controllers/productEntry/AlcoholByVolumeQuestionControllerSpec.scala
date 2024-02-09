@@ -19,12 +19,13 @@ package controllers.productEntry
 import base.SpecBase
 import connectors.CacheConnector
 import forms.productEntry.AlcoholByVolumeQuestionFormProvider
-import models.{NormalMode, UserAnswers}
+import models.productEntry.ProductEntry
+import models.{AlcoholByVolume, NormalMode, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.AlcoholByVolumeQuestionPage
+import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -41,7 +42,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal(10.23)
+  val validAnswer = AlcoholByVolume(10.2)
 
   lazy val alcoholByVolumeQuestionRoute = routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode).url
 
@@ -65,7 +66,8 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(AlcoholByVolumeQuestionPage, validAnswer).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(CurrentProductEntryPage, ProductEntry(abv = Some(validAnswer))).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -77,7 +79,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer.value), NormalMode)(
           request,
           messages(application)
         ).toString
@@ -101,7 +103,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, alcoholByVolumeQuestionRoute)
-            .withFormUrlEncodedBody(("alcohol-by-volume-input", validAnswer.toString))
+            .withFormUrlEncodedBody(("alcohol-by-volume-input", validAnswer.value.toString))
 
         val result = route(application, request).value
 
@@ -151,7 +153,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, alcoholByVolumeQuestionRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+            .withFormUrlEncodedBody(("value", validAnswer.value.toString))
 
         val result = route(application, request).value
 

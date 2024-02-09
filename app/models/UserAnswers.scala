@@ -66,6 +66,34 @@ final case class UserAnswers(
     pages.foldLeft(Try(this)) { (oldAnswerList, page) =>
       oldAnswerList.flatMap(_.remove(page))
     }
+
+  def addToSeq[A](page: Settable[Seq[A]], value: A)(implicit writes: Writes[A], rds: Reads[A]): Try[UserAnswers] = {
+    val path        = page.path
+    val data        = get[Seq[A]](path)
+    val updatedData = data match {
+      case Some(valueSeq: Seq[A]) => set(path, valueSeq :+ value)
+      case _                      => set(path, Seq(value))
+    }
+    updatedData.flatMap { d =>
+      Try(copy(data = d))
+    }
+  }
+
+  def getByIndex[A](page: Gettable[Seq[A]], index: Int)(implicit rds: Reads[A]): Option[A] = {
+    val path = page.path \ index
+    get(path)
+  }
+
+  def get[A](path: JsPath)(implicit rds: Reads[A]): Option[A] =
+    Reads.optionNoError(Reads.at(path)).reads(data).getOrElse(None)
+
+  def set[A](path: JsPath, value: A)(implicit writes: Writes[A]): Try[JsObject] =
+    data.setObject(path, Json.toJson(value)) match {
+      case JsSuccess(jsValue, _) =>
+        Success(jsValue)
+      case JsError(errors)       =>
+        Failure(JsResultException(errors))
+    }
 }
 
 object UserAnswers {
