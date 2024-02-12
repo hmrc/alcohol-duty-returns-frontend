@@ -21,7 +21,7 @@ import forms.productEntry.DeleteProductFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.DeleteProductPage
 import play.api.inject.bind
@@ -39,7 +39,7 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DeleteProductFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val deleteProductRoute = controllers.productEntry.routes.DeleteProductController.onPageLoad(NormalMode).url
 
@@ -101,7 +101,9 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.ProductListController.onPageLoad().url
+
+        verify(mockCacheConnector, times(1)).set(any())(any())
       }
     }
 

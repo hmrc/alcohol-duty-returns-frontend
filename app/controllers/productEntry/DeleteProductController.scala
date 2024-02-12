@@ -18,10 +18,11 @@ package controllers.productEntry
 
 import controllers.actions._
 import forms.productEntry.DeleteProductFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.ProductEntryNavigator
-import pages.productEntry.DeleteProductPage
+import pages.productEntry.{DeleteProductPage, ProductEntryListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
@@ -30,43 +31,46 @@ import views.html.productEntry.DeleteProductView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeleteProductController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         cacheConnector: CacheConnector,
-                                         navigator: ProductEntryNavigator,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: DeleteProductFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: DeleteProductView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class DeleteProductController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: ProductEntryNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: DeleteProductFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: DeleteProductView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.get(DeleteProductPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(DeleteProductPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(index: Int, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(DeleteProductPage, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(DeleteProductPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            if (value) {
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.removeBySeqIndex(ProductEntryListPage, index))
+                _              <- cacheConnector.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(DeleteProductPage, mode, updatedAnswers))
+            } else {
+              Future.successful(Redirect(navigator.nextPage(DeleteProductPage, mode, request.userAnswers)))
+            }
+        )
   }
 }

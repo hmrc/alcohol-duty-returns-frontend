@@ -23,6 +23,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -36,12 +37,17 @@
         }
         @sectionHeading(
             id = "deleteProduct-section",
-            text = messages("section.sectionName"),
+            text = messages("section.alcoholDutyReturn"),
         )
+
+        @pageHeading(messages("deleteProduct.heading"))
+
+        <p class="govuk-body">@messages("deleteProduct.paragraph")</p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("deleteProduct-yesNoValue"),
-                legend = LegendViewModel(messages("deleteProduct.heading")).asPageHeading()
+                legend = LegendViewModel(messages("deleteProduct.heading")).asVisuallyHidden()
             )
         )
 

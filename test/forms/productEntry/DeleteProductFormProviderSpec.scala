@@ -22,7 +22,7 @@ import play.api.data.FormError
 class DeleteProductFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "deleteProduct.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new DeleteProductFormProvider()()
 
