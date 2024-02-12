@@ -16,8 +16,6 @@
 
 package models
 
-import models.productEntry.ProductEntry
-import pages.productEntry.ProductEntryListPage
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats

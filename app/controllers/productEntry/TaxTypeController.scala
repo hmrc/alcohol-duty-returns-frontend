@@ -34,6 +34,7 @@ import views.html.productEntry.TaxTypeView
 import java.time.YearMonth
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class TaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
@@ -104,11 +105,10 @@ class TaxTypeController @Inject() (
                   TaxTypePageViewModel(abv, eligibleForDraughtRelief, eligibleForSmallProducerRelief, rates)
                 )
               )
-
             },
-          value => {
-            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+          value =>
             for {
+              product        <- Future.fromTry(Try(request.userAnswers.get(CurrentProductEntryPage).get))
               taxType        <- taxTypeFromValue(value, rates)
               updatedAnswers <-
                 Future.fromTry(
@@ -119,7 +119,6 @@ class TaxTypeController @Inject() (
                 )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers))
-          }
         )
   }
 

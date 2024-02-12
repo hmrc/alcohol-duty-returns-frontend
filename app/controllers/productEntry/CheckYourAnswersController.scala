@@ -20,15 +20,13 @@ import connectors.CacheConnector
 import controllers.actions._
 import models.UserAnswers
 import models.productEntry.ProductEntry
-import models.requests.DataRequest
 import pages.productEntry.{CurrentProductEntryPage, ProductEntryListPage}
 import play.api.Logging
 
 import javax.inject.Inject
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.productEntry.CheckYourAnswersSummaryListHelper
 import views.html.productEntry.CheckYourAnswersView
@@ -76,11 +74,13 @@ class CheckYourAnswersController @Inject() (
     }
   }
 
-  private def getProductEntry(answers: UserAnswers, maybeInt: Option[Int]): Option[ProductEntry] =
-    maybeInt
-      .flatMap(i => answers.getByIndex(ProductEntryListPage, i))
-      .orElse(answers.get(CurrentProductEntryPage))
-      .map(pe => if (pe.index.isDefined) pe else pe.copy(index = maybeInt))
+  private def getProductEntry(answers: UserAnswers, maybeInt: Option[Int]): Option[ProductEntry] = {
+    val pe = maybeInt match {
+      case Some(i) => answers.getByIndex(ProductEntryListPage, i)
+      case None    => answers.get(CurrentProductEntryPage)
+    }
+    pe.map(pe => if (pe.index.isDefined) pe else pe.copy(index = maybeInt))
+  }
 
   private def saveProductEntry(
     answers: UserAnswers,

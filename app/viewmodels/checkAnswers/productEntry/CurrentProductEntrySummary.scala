@@ -18,8 +18,7 @@ package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
 import models.productEntry.ProductEntry
-import models.{CheckMode, UserAnswers}
-import pages.productEntry.CurrentProductEntryPage
+import models.CheckMode
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._

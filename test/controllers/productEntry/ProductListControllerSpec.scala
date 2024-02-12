@@ -18,24 +18,26 @@ package controllers.productEntry
 
 import base.SpecBase
 import forms.productEntry.ProductListFormProvider
-import models.{NormalMode, UserAnswers}
+import models.UserAnswers
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.ProductListPage
+import pages.productEntry.{ProductEntryListPage, ProductListPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import generators.ModelGenerators
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.TableViewModel
+import viewmodels.checkAnswers.productEntry.ProductListSummaryHelper
 import views.html.productEntry.ProductListView
 
 import scala.concurrent.Future
 
-class ProductListControllerSpec extends SpecBase with MockitoSugar {
+class ProductListControllerSpec extends SpecBase with MockitoSugar with ModelGenerators {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -44,11 +46,14 @@ class ProductListControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val productListRoute = controllers.productEntry.routes.ProductListController.onPageLoad().url
 
+  val productEntryList = arbitraryProductEntryList.arbitrary.sample.value
+  val userAnswsers     = UserAnswers(userAnswersId).set(ProductEntryListPage, productEntryList).success.value
+
   "ProductList Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswsers)).build()
 
       running(application) {
         val request = FakeRequest(GET, productListRoute)
@@ -58,109 +63,111 @@ class ProductListControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ProductListView]
 
         val productTable: TableViewModel =
-          TableViewModel(
-            head = Seq.empty,
-            rows = Seq.empty,
-            total = BigDecimal(0)
-          )
+          ProductListSummaryHelper.productEntryTable(userAnswsers)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, productTable)(request, messages(application)).toString
       }
     }
 
-//    "must populate the view correctly on a GET when the question has previously been answered" in {
-//
-//      val userAnswers = UserAnswers(userAnswersId).set(ProductListPage, true).success.value
-//
-//      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, productListRoute)
-//
-//        val view = application.injector.instanceOf[ProductListView]
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual OK
-//        contentAsString(result) mustEqual view(form.fill(true))(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must redirect to the next page when valid data is submitted" in {
-//
-//      val mockCacheConnector = mock[CacheConnector]
-//
-//      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-//
-//      val application =
-//        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-//          .overrides(
-//            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
-//            bind[CacheConnector].toInstance(mockCacheConnector)
-//          )
-//          .build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, productListRoute)
-//            .withFormUrlEncodedBody(("productList-yesNoValue", "true"))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual onwardRoute.url
-//      }
-//    }
-//
-//    "must return a Bad Request and errors when invalid data is submitted" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, productListRoute)
-//            .withFormUrlEncodedBody(("value", ""))
-//
-//        val boundForm = form.bind(Map("value" -> ""))
-//
-//        val view = application.injector.instanceOf[ProductListView]
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual BAD_REQUEST
-//        contentAsString(result) mustEqual view(boundForm)(request, messages(application)).toString
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, productListRoute)
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, productListRoute)
-//            .withFormUrlEncodedBody(("value", "true"))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
+    "must populate the view correctly on a GET when the question has previously been answered" in {
+
+      val userAnswers = userAnswsers.set(ProductListPage, true).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, productListRoute)
+
+        val view = application.injector.instanceOf[ProductListView]
+
+        val result = route(application, request).value
+
+        val productTable: TableViewModel =
+          ProductListSummaryHelper.productEntryTable(userAnswsers)(messages(application))
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form.fill(true), productTable)(request, messages(application)).toString
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, productListRoute)
+            .withFormUrlEncodedBody(("productList-yesNoValue", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must return a Bad Request and errors when invalid data is submitted" in {
+
+      val application = applicationBuilder(userAnswers = Some(userAnswsers)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, productListRoute)
+            .withFormUrlEncodedBody(("value", ""))
+
+        val boundForm = form.bind(Map("value" -> ""))
+
+        val view = application.injector.instanceOf[ProductListView]
+
+        val result = route(application, request).value
+
+        val productTable: TableViewModel =
+          ProductListSummaryHelper.productEntryTable(userAnswsers)(messages(application))
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, productTable)(request, messages(application)).toString
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, productListRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, productListRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
   }
 }
