@@ -48,13 +48,12 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(index: Option[Int] = None): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getProductEntry(request.userAnswers, index)
-        .flatMap { productEntry =>
-          CheckYourAnswersSummaryListHelper.currentProductEntrySummaryList(productEntry).map { summaryList =>
-            setCurrentProductEntry(request.userAnswers, productEntry, summaryList)
-          }
-        }
-        .getOrElse(Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
+      val result = for {
+        productEntry <- getProductEntry(request.userAnswers, index)
+        summaryList  <- CheckYourAnswersSummaryListHelper.currentProductEntrySummaryList(productEntry)
+      } yield setCurrentProductEntry(request.userAnswers, productEntry, summaryList)
+
+      result.getOrElse(Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
@@ -74,12 +73,12 @@ class CheckYourAnswersController @Inject() (
     }
   }
 
-  private def getProductEntry(answers: UserAnswers, maybeInt: Option[Int]): Option[ProductEntry] = {
-    val pe = maybeInt match {
+  private def getProductEntry(answers: UserAnswers, index: Option[Int]): Option[ProductEntry] = {
+    val pe = index match {
       case Some(i) => answers.getByIndex(ProductEntryListPage, i)
       case None    => answers.get(CurrentProductEntryPage)
     }
-    pe.map(pe => if (pe.index.isDefined) pe else pe.copy(index = maybeInt))
+    pe.map(pe => if (pe.index.isDefined) pe else pe.copy(index = index))
   }
 
   private def saveProductEntry(
