@@ -24,11 +24,6 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryDeleteProduct: Arbitrary[productEntry.DeleteProduct] =
-    Arbitrary {
-      Gen.oneOf(productEntry.DeleteProduct.values.toSeq)
-    }
-
   implicit lazy val arbitrarySpiritType: Arbitrary[SpiritType] =
     Arbitrary {
       Gen.oneOf(SpiritType.values)

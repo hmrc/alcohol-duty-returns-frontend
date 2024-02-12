@@ -384,11 +384,4 @@ dutyDue.paragraph2 = The duty due on this product is £{0}.
 dutyDue.rate.checkYourAnswersLabel = Duty rate
 dutyDue.duty.checkYourAnswersLabel = Duty due
 
-deleteProduct.title = Are you sure you want to remove this product?
-deleteProduct.heading = Are you sure you want to remove this product?
-deleteProduct.paragraph = This will remove this product and its information from the product list.
-deleteProduct.yes = Yes
-deleteProduct.no = No
-deleteProduct.checkYourAnswersLabel = Are you sure you want to remove this product?
-deleteProduct.error.required = Select deleteProduct
-deleteProduct.change.hidden = DeleteProduct
+
