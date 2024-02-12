@@ -150,7 +150,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         ) mustBe controllers.productEntry.routes.ProductNameController.onPageLoad(NormalMode)
       }
 
-      "must go from the Product List Page page to Product Name page if the Answer is No" in {
+      "must go from the Product List Page page to task list page if the Answer is No" in {
         val userAnswers = UserAnswers("id").set(pages.productEntry.ProductListPage, false).success.value
         navigator.nextPage(
           pages.productEntry.ProductListPage,
