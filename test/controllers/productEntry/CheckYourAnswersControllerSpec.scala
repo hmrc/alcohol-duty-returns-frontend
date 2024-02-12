@@ -70,8 +70,15 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   "CheckYourAnswers Controller" - {
 
     "must return OK and the correct view for a GET if all necessary questions are answered" in {
+      val mockCacheConnector = mock[CacheConnector]
 
-      val application = applicationBuilder(userAnswers = Some(completeProductEntryUserAnswers)).build()
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(completeProductEntryUserAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
@@ -91,7 +98,15 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     "must return OK and load the saved product entry from the cache if index is defined" in {
 
-      val application = applicationBuilder(userAnswers = Some(completeProductEntryUserAnswers)).build()
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(completeProductEntryUserAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request =
@@ -111,6 +126,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     }
 
     "must return OK and load the saved product entry from the cache if index is defined inside the current product entry" in {
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val userAnswers =
         completeProductEntryUserAnswers
@@ -118,7 +136,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .success
           .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request =
@@ -139,6 +161,10 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     "must return OK and the correct view for a GET if any optional questions are not answered" in {
 
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
       Seq(
         currentProductEntry.copy(name = None),
         currentProductEntry.copy(draughtRelief = None),
@@ -149,7 +175,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .success
           .value
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
 
         running(application) {
           val request = FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
@@ -170,6 +200,10 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     "must return OK and the correct view for a GET if all necessary questions are answered, the TaxType contains a rate and SPR duty relief is absent" in {
 
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
       val productEntry = currentProductEntry.copy(
         smallProducerRelief = Some(false),
         taxRate = Some(rate),
@@ -181,7 +215,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         .success
         .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
