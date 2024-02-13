@@ -94,6 +94,16 @@ final case class UserAnswers(
       case JsError(errors)       =>
         Failure(JsResultException(errors))
     }
+
+  def setByIndex[A](page: Settable[Seq[A]], index: Int, value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
+    val path        = page.path \ index
+    val updatedData = set(path, value)
+    updatedData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      page.cleanup(None, updatedAnswers)
+    }
+  }
+
 }
 
 object UserAnswers {

@@ -41,6 +41,7 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
     case pages.productEntry.DeclareAlcoholDutyQuestionPage         => declareAlcoholDutyQuestionPageRoute
     case pages.productEntry.ProductVolumePage                      =>
       _ => controllers.productEntry.routes.PureAlcoholController.onPageLoad()
+    case pages.productEntry.ProductListPage                        => productListPageRoute
     case _                                                         =>
       _ => routes.IndexController.onPageLoad
 
@@ -66,6 +67,13 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
   private def declareAlcoholDutyQuestionPageRoute(answers: UserAnswers): Call =
     answers.get(pages.productEntry.DeclareAlcoholDutyQuestionPage) match {
       case Some(true)  => controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
+      case Some(false) => routes.IndexController.onPageLoad
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  private def productListPageRoute(answers: UserAnswers): Call =
+    answers.get(pages.productEntry.ProductListPage) match {
+      case Some(true)  => controllers.productEntry.routes.ProductNameController.onPageLoad(NormalMode)
       case Some(false) => routes.IndexController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }

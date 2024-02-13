@@ -17,6 +17,8 @@
 package generators
 
 import models._
+import models.productEntry.ProductEntry
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 
@@ -110,4 +112,37 @@ trait ModelGenerators {
   implicit val arbitraryListOfRatePeriod: Arbitrary[Seq[RatePeriod]] = Arbitrary {
     Gen.listOf(arbitraryRatePeriod.arbitrary)
   }
+
+  implicit val arbitraryProductEntry: Arbitrary[ProductEntry] = Arbitrary {
+    productEntryGen
+  }
+
+  implicit val arbitraryProductEntryList: Arbitrary[List[ProductEntry]] = Arbitrary {
+    Gen.listOf(productEntryGen)
+  }
+  def productEntryGen: Gen[ProductEntry]                                = for {
+    name                <- Gen.alphaStr
+    abv                 <- arbitrary[AlcoholByVolume]
+    volume              <- Gen.posNum[BigDecimal]
+    draughtRelief       <- Gen.oneOf(true, false)
+    smallProducerRelief <- Gen.oneOf(true, false)
+    taxCode             <- Gen.alphaStr
+    regime              <- arbitrary[AlcoholRegime]
+    taxRate             <- Gen.posNum[BigDecimal]
+    sprDutyRate         <- Gen.posNum[BigDecimal]
+    duty                <- Gen.posNum[BigDecimal]
+    pureAlcoholVolume   <- Gen.posNum[BigDecimal]
+  } yield ProductEntry(
+    name = Some(name),
+    abv = Some(abv),
+    volume = Some(volume),
+    draughtRelief = Some(draughtRelief),
+    smallProducerRelief = Some(smallProducerRelief),
+    taxCode = Some(taxCode),
+    regime = Some(regime),
+    taxRate = if (!smallProducerRelief) Some(taxRate) else None,
+    sprDutyRate = if (smallProducerRelief) Some(sprDutyRate) else None,
+    duty = Some(duty),
+    pureAlcoholVolume = Some(pureAlcoholVolume)
+  )
 }

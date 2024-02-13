@@ -19,14 +19,14 @@ package models
 import base.SpecBase
 import generators.ModelGenerators
 import models.productEntry.ProductEntry
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class ProductEntrySpec extends SpecBase with MockitoSugar with ScalaCheckPropertyChecks with ModelGenerators {
+
   "ProductEntry" - {
+
     "when taxType doesn't have a rate and spr relief is applied" in {
       val sprDutyRate  = Some(BigDecimal(1))
       val productEntry = ProductEntry(sprDutyRate = sprDutyRate)
@@ -129,32 +129,6 @@ class ProductEntrySpec extends SpecBase with MockitoSugar with ScalaCheckPropert
         productEntry.isComplete shouldBe false
       }
     }
-
-    def productEntryGen: Gen[ProductEntry] = for {
-      name                <- Gen.alphaStr
-      abv                 <- arbitrary[AlcoholByVolume]
-      volume              <- Gen.posNum[BigDecimal]
-      draughtRelief       <- Gen.oneOf(true, false)
-      smallProducerRelief <- Gen.oneOf(true, false)
-      taxCode             <- Gen.alphaStr
-      regime              <- arbitrary[AlcoholRegime]
-      taxRate             <- Gen.posNum[BigDecimal]
-      sprDutyRate         <- Gen.posNum[BigDecimal]
-      duty                <- Gen.posNum[BigDecimal]
-      pureAlcoholVolume   <- Gen.posNum[BigDecimal]
-    } yield ProductEntry(
-      name = Some(name),
-      abv = Some(abv),
-      volume = Some(volume),
-      draughtRelief = Some(draughtRelief),
-      smallProducerRelief = Some(smallProducerRelief),
-      taxCode = Some(taxCode),
-      regime = Some(regime),
-      taxRate = if (!smallProducerRelief) Some(taxRate) else None,
-      sprDutyRate = if (smallProducerRelief) Some(sprDutyRate) else None,
-      duty = Some(duty),
-      pureAlcoholVolume = Some(pureAlcoholVolume)
-    )
   }
 
 }

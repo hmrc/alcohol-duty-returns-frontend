@@ -16,6 +16,7 @@ site.unit.litres = litres
 site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
+site.currency.2DP = £{0,number,#,##0.00}
 
 date.day = Day
 date.month = Month
@@ -373,3 +374,14 @@ ethyleneGasUsed.error.twoDecimalPlaces = How much ethylene gas you have used mus
 ethyleneGasUsed.change.hidden = EthyleneGasUsed
 ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
 ethyleneGasUsed.inputSuffix = tonnes
+
+productList.title = Products to declare
+productList.heading = Products to declare
+productList.question = Do you want to add another product?
+productList.caption = Product list
+productList.error.required = Select yes if you want to add another product
+productList.change.hidden = Product List
+productList.total = Total due
+productEntryList.name = Name
+productEntryList.duty = Duty due
+productEntryList.action = Action

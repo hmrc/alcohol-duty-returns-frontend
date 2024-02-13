@@ -17,27 +17,25 @@
 package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
-import models.productEntry.ProductEntry
-import models.CheckMode
+import models.UserAnswers
+import pages.productEntry.ProductListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-object SmallProducerReliefQuestionSummary {
 
-  def row(productEntry: ProductEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    productEntry.smallProducerRelief.map { sprAnswer =>
-      val value = if (sprAnswer) "site.yes" else "site.no"
+object ProductListSummary {
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ProductListPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "smallProducerReliefQuestion.checkYourAnswersLabel",
-        value = ValueViewModel(messages(value)),
+        key = "productList.checkYourAnswersLabel",
+        value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            routes.SmallProducerReliefQuestionController.onPageLoad(CheckMode).url
-          )
-            .withVisuallyHiddenText(messages("smallProducerReliefQuestion.change.hidden"))
+          ActionItemViewModel("site.change", routes.ProductListController.onPageLoad().url)
+            .withVisuallyHiddenText(messages("productList.change.hidden"))
         )
       )
     }
