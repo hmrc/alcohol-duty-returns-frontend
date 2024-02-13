@@ -149,6 +149,6 @@ POST       /change-how-much-ethylene-gas-have-you-used                        co
 # End of quarterly spirits questions sub-journey
 
 GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = NormalMode)
-POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = NormalMode)
+POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = NormalMode, index: Option[Int] ?= None)
 GET        /change-delete-return-product                  controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-delete-return-product                  controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = CheckMode)

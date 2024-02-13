@@ -69,7 +69,7 @@ class DeleteProductController @Inject() (
                 _              <- cacheConnector.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(DeleteProductPage, mode, updatedAnswers))
             } else {
-              Future.successful(Redirect(navigator.nextPage(DeleteProductPage, mode, request.userAnswers)))
+              Future.successful(Redirect(navigator.nextPage(ProductListPage, mode, request.userAnswers)))
             }
         )
   }
