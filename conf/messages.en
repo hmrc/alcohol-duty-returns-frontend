@@ -16,6 +16,7 @@ site.unit.litres = litres
 site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
+site.currency.2DP = £{0,number,#,##0.00}
 
 date.day = Day
 date.month = Month
@@ -118,7 +119,7 @@ taxType.taxTypeRadio.regime.Wine = Wine
 taxType.taxTypeRadio.regime.Cider = Cider
 taxType.taxTypeRadio.regime.Spirits = Spirits
 taxType.taxTypeRadio.regime.OtherFermentedProduct = Other fermented products
-taxType.checkYourAnswersLabel = Your product’s tax type
+taxType.checkYourAnswersLabel = Tax type code
 taxType.error.required = Select this product’s tax type
 taxType.change.hidden = TaxType
 
@@ -374,15 +375,16 @@ ethyleneGasUsed.change.hidden = EthyleneGasUsed
 ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
 ethyleneGasUsed.inputSuffix = tonnes
 
-dutyDue.title = The duty due on this product is £{0}
-dutyDue.heading = The duty due on this product is £{0}
-dutyDue.paragraph1 = Based on the following details:
-dutyDue.bulletList.1 = Litres of pure alcohol: {0}
-dutyDue.bulletList.2 = Tax type: {0}
-dutyDue.bulletList.3 = Duty rate per litre: {0}
-dutyDue.paragraph2 = The duty due on this product is £{0}.
-dutyDue.rate.checkYourAnswersLabel = Duty rate
-dutyDue.duty.checkYourAnswersLabel = Duty due
+productList.title = Products to declare
+productList.heading = Products to declare
+productList.question = Do you want to add another product?
+productList.caption = Product list
+productList.error.required = Select yes if you want to add another product
+productList.change.hidden = Product List
+productList.total = Total due
+productEntryList.name = Name
+productEntryList.duty = Duty due
+productEntryList.action = Action
 
 deleteProduct.title = Are you sure you want to remove this product?
 deleteProduct.heading = Are you sure you want to remove this product?

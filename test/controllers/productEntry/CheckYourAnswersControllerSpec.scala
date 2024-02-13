@@ -18,6 +18,7 @@ package controllers.productEntry
 
 import base.SpecBase
 import connectors.CacheConnector
+import generators.ModelGenerators
 import models.productEntry.ProductEntry
 import models.{AlcoholByVolume, AlcoholRegime, UserAnswers}
 import org.mockito.ArgumentMatchers.any
@@ -33,7 +34,7 @@ import views.html.productEntry.CheckYourAnswersView
 
 import scala.concurrent.Future
 
-class CheckYourAnswersControllerSpec extends SpecBase {
+class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
   val name              = "Name"
   val abv               = AlcoholByVolume(3.0)
@@ -56,16 +57,28 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     duty = Some(duty)
   )
 
+  val savedProductEntry = arbitraryProductEntry.arbitrary.sample.value
+
   val completeProductEntryUserAnswers: UserAnswers = UserAnswers(userAnswersId)
     .set(CurrentProductEntryPage, currentProductEntry)
+    .success
+    .value
+    .set(ProductEntryListPage, Seq(savedProductEntry))
     .success
     .value
 
   "CheckYourAnswers Controller" - {
 
     "must return OK and the correct view for a GET if all necessary questions are answered" in {
+      val mockCacheConnector = mock[CacheConnector]
 
-      val application = applicationBuilder(userAnswers = Some(completeProductEntryUserAnswers)).build()
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(completeProductEntryUserAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
@@ -74,9 +87,72 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val checkYourAnswersHelper =
-          new CheckYourAnswersSummaryListHelper(completeProductEntryUserAnswers)(messages(application))
-        val list                   = checkYourAnswersHelper.currentProductEntrySummaryList.get
+        val list = CheckYourAnswersSummaryListHelper
+          .currentProductEntrySummaryList(currentProductEntry)(messages(application))
+          .get
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+      }
+    }
+
+    "must return OK and load the saved product entry from the cache if index is defined" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(completeProductEntryUserAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad(index = Some(0)).url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+
+        val list = CheckYourAnswersSummaryListHelper
+          .currentProductEntrySummaryList(savedProductEntry)(messages(application))
+          .get
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+      }
+    }
+
+    "must return OK and load the saved product entry from the cache if index is defined inside the current product entry" in {
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val userAnswers =
+        completeProductEntryUserAnswers
+          .set(CurrentProductEntryPage, savedProductEntry.copy(index = Some(0)))
+          .success
+          .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+
+        val list = CheckYourAnswersSummaryListHelper
+          .currentProductEntrySummaryList(savedProductEntry)(messages(application))
+          .get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list)(request, messages(application)).toString
@@ -85,26 +161,25 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET if any optional questions are not answered" in {
 
-      val incompleteUserAnswers1 =
-        completeProductEntryUserAnswers
-          .set(CurrentProductEntryPage, currentProductEntry.copy(name = None))
-          .success
-          .value
-      val incompleteUserAnswers2 =
-        completeProductEntryUserAnswers
-          .set(CurrentProductEntryPage, currentProductEntry.copy(draughtRelief = None))
-          .success
-          .value
-      val incompleteUserAnswers3 =
-        completeProductEntryUserAnswers
-          .set(CurrentProductEntryPage, currentProductEntry.copy(smallProducerRelief = None))
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      Seq(
+        currentProductEntry.copy(name = None),
+        currentProductEntry.copy(draughtRelief = None),
+        currentProductEntry.copy(smallProducerRelief = None)
+      ).foreach { incompleteProductEntry =>
+        val userAnswers = completeProductEntryUserAnswers
+          .set(CurrentProductEntryPage, incompleteProductEntry)
           .success
           .value
 
-      val incompleteUserAnswerList = Seq(incompleteUserAnswers1, incompleteUserAnswers2, incompleteUserAnswers3)
-
-      incompleteUserAnswerList.foreach { userAnswer =>
-        val application = applicationBuilder(userAnswers = Some(userAnswer)).build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
 
         running(application) {
           val request = FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
@@ -113,9 +188,9 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
           val view = application.injector.instanceOf[CheckYourAnswersView]
 
-          val checkYourAnswersHelper =
-            new CheckYourAnswersSummaryListHelper(userAnswer)(messages(application))
-          val list                   = checkYourAnswersHelper.currentProductEntrySummaryList.get
+          val list = CheckYourAnswersSummaryListHelper
+            .currentProductEntrySummaryList(incompleteProductEntry)(messages(application))
+            .get
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(list)(request, messages(application)).toString
@@ -124,6 +199,10 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a GET if all necessary questions are answered, the TaxType contains a rate and SPR duty relief is absent" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val productEntry = currentProductEntry.copy(
         smallProducerRelief = Some(false),
@@ -136,7 +215,11 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         .success
         .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
@@ -145,9 +228,8 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val checkYourAnswersHelper =
-          new CheckYourAnswersSummaryListHelper(userAnswers)(messages(application))
-        val list                   = checkYourAnswersHelper.currentProductEntrySummaryList.get
+        val list =
+          CheckYourAnswersSummaryListHelper.currentProductEntrySummaryList(productEntry)(messages(application)).get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list)(request, messages(application)).toString
@@ -162,6 +244,23 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         running(application) {
           val request = FakeRequest(GET, controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+
+      "if no existing data is found for a given index" in {
+
+        val application = applicationBuilder(userAnswers = Some(completeProductEntryUserAnswers)).build()
+
+        running(application) {
+          val request = FakeRequest(
+            GET,
+            controllers.productEntry.routes.CheckYourAnswersController.onPageLoad(index = Some(100)).url
+          )
 
           val result = route(application, request).value
 
@@ -246,7 +345,39 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.ProductListController.onPageLoad().url
+
+        verify(mockCacheConnector, times(1)).set(any())(any())
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted and the product entry has an index" in {
+
+      val userAnswers =
+        completeProductEntryUserAnswers
+          .set(CurrentProductEntryPage, savedProductEntry.copy(index = Some(0)))
+          .success
+          .value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, controllers.productEntry.routes.CheckYourAnswersController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.ProductListController.onPageLoad().url
 
         verify(mockCacheConnector, times(1)).set(any())(any())
       }

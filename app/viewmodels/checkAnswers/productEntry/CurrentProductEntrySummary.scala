@@ -18,17 +18,16 @@ package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
 import models.productEntry.ProductEntry
-import models.{CheckMode, UserAnswers}
-import pages.productEntry.CurrentProductEntryPage
+import models.CheckMode
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 object CurrentProductEntrySummary {
 
-  def calculations(userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    userAnswers.get(CurrentProductEntryPage) match {
-      case Some(productEntry) if productEntry.sprDutyRate.isDefined =>
+  def calculations(productEntry: ProductEntry)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
+    (productEntry.sprDutyRate, productEntry.taxRate) match {
+      case (Some(_), None)                                   =>
         val action = Seq(
           ActionItemViewModel(
             "site.change",
@@ -37,9 +36,9 @@ object CurrentProductEntrySummary {
             .withVisuallyHiddenText(messages("declareSmallProducerReliefDutyRate.change.hidden"))
         )
         getRowElements(productEntry, action)
-      case Some(productEntry) if productEntry.taxRate.isDefined     =>
+      case (None, Some(_)) if productEntry.taxRate.isDefined =>
         getRowElements(productEntry, Seq.empty)
-      case _                                                        => None
+      case _                                                 => None
     }
 
   def getRowElements(productEntry: ProductEntry, dutyRateAction: Seq[ActionItem])(implicit

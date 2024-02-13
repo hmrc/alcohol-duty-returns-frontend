@@ -17,6 +17,7 @@
 package controllers.productEntry
 
 import base.SpecBase
+import generators.ModelGenerators
 import models.{AlcoholByVolume, UserAnswers}
 import models.productEntry.ProductEntry
 import pages.productEntry.CurrentProductEntryPage
@@ -24,7 +25,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.productEntry.DutyDueView
 
-class DutyDueControllerSpec extends SpecBase {
+class DutyDueControllerSpec extends SpecBase with ModelGenerators {
 
   lazy val dutyDueRoute = controllers.productEntry.routes.DutyDueController.onPageLoad().url
 
@@ -69,6 +70,30 @@ class DutyDueControllerSpec extends SpecBase {
     "must redirect to Journey Recovery if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, dutyDueRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+  }
+
+  val productEntry: ProductEntry = arbitraryProductEntry.arbitrary.sample.get
+  Seq(
+    (productEntry.copy(taxRate = None, sprDutyRate = None), "rate"),
+    (productEntry.copy(duty = None), "duty"),
+    (productEntry.copy(pureAlcoholVolume = None), "pure alcohol volume")
+  ).foreach { test =>
+    val (productEntry, field) = test
+    s"must redirect to Journey Recovery if product entry does not contain $field" in {
+
+      val userAnswers = UserAnswers(userAnswersId).set(CurrentProductEntryPage, productEntry).success.value
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =

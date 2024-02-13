@@ -68,7 +68,7 @@ GET        /you-have-declared-this-many-litres-of-pure-alcohol                  
 
 GET        /the-duty-due-on-this-product                       controllers.productEntry.DutyDueController.onPageLoad()
 
-GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad()
+GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
 POST       /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onSubmit()
 
 # End of product entry sub-journey
@@ -147,6 +147,11 @@ POST       /how-much-ethylene-gas-have-you-used                  controllers.spi
 GET        /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey
+
+GET        /return-products                        controllers.productEntry.ProductListController.onPageLoad()
+POST       /return-products                        controllers.productEntry.ProductListController.onSubmit()
+GET        /change-return-products                  controllers.productEntry.ProductListController.onPageLoad()
+POST       /change-return-products                  controllers.productEntry.ProductListController.onSubmit()
 
 GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = NormalMode)
 POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = NormalMode, index: Option[Int] ?= None)

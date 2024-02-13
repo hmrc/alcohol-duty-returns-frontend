@@ -17,8 +17,8 @@
 package viewmodels.checkAnswers.productEntry
 
 import controllers.productEntry.routes
-import models.{CheckMode, UserAnswers}
-import pages.productEntry.CurrentProductEntryPage
+import models.productEntry.ProductEntry
+import models.CheckMode
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -28,8 +28,8 @@ import viewmodels.implicits._
 
 object TaxTypeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CurrentProductEntryPage).flatMap(_.taxCode).map { taxCode =>
+  def row(productEntry: ProductEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    productEntry.taxCode.map { taxCode =>
       SummaryListRowViewModel(
         key = "taxType.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(HtmlFormat.escape(messages(taxCode)))),

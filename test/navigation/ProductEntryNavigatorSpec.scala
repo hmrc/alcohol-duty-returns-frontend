@@ -141,6 +141,32 @@ class ProductEntryNavigatorSpec extends SpecBase {
         ) mustBe controllers.productEntry.routes.PureAlcoholController.onPageLoad()
       }
 
+      "must go from the Product List Page page to Product Name page if the Answer is Yes" in {
+        val userAnswers = UserAnswers("id").set(pages.productEntry.ProductListPage, true).success.value
+        navigator.nextPage(
+          pages.productEntry.ProductListPage,
+          NormalMode,
+          userAnswers
+        ) mustBe controllers.productEntry.routes.ProductNameController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Product List Page page to task list page if the Answer is No" in {
+        val userAnswers = UserAnswers("id").set(pages.productEntry.ProductListPage, false).success.value
+        navigator.nextPage(
+          pages.productEntry.ProductListPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.IndexController.onPageLoad
+      }
+
+      "must go from the Journey Recovery if there is no Answer for the Product List page" in {
+        navigator.nextPage(
+          pages.productEntry.ProductListPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
+
     }
 
     "in Check mode" - {
@@ -152,7 +178,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
-        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }
