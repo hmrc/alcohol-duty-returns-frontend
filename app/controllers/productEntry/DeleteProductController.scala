@@ -20,7 +20,6 @@ import controllers.actions._
 import forms.productEntry.DeleteProductFormProvider
 
 import javax.inject.Inject
-import models.Mode
 import navigation.ProductEntryNavigator
 import pages.productEntry.{DeleteProductPage, ProductEntryListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -47,29 +46,29 @@ class DeleteProductController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(index: Int): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val preparedForm = request.userAnswers.get(DeleteProductPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, index))
   }
 
-  def onSubmit(index: Int, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(index: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, index))),
           value =>
             if (value) {
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.removeBySeqIndex(ProductEntryListPage, index))
                 _              <- cacheConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(DeleteProductPage, mode, updatedAnswers))
+              } yield Redirect(controllers.productEntry.routes.ProductListController.onPageLoad())
             } else {
-              Future.successful(Redirect(navigator.nextPage(ProductListPage, mode, request.userAnswers)))
+              Future.successful(Redirect(controllers.productEntry.routes.ProductListController.onPageLoad()))
             }
         )
   }

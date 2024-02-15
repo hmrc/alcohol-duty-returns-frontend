@@ -104,7 +104,6 @@ final case class UserAnswers(
     }
   }
 
-
   def removeBySeqIndex[A](page: Settable[Seq[A]], index: Int): Try[UserAnswers] = {
     val path        = page.path \ index
     val updatedData = remove(path)

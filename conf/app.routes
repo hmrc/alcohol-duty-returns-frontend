@@ -153,7 +153,5 @@ POST       /return-products                        controllers.productEntry.Prod
 GET        /change-return-products                  controllers.productEntry.ProductListController.onPageLoad()
 POST       /change-return-products                  controllers.productEntry.ProductListController.onSubmit()
 
-GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = NormalMode)
-POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = NormalMode, index: Option[Int] ?= None)
-GET        /change-delete-return-product                  controllers.productEntry.DeleteProductController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-delete-return-product                  controllers.productEntry.DeleteProductController.onSubmit(mode: Mode = CheckMode)
+GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(index: Int)
+POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(index: Int)

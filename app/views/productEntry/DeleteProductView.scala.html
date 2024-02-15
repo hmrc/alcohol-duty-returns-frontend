@@ -26,29 +26,22 @@
     pageHeading: PageHeading
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], index: Int)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("deleteProduct.title"))) {
 
-    @formHelper(action = controllers.productEntry.routes.DeleteProductController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.productEntry.routes.DeleteProductController.onSubmit(index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @sectionHeading(
-            id = "deleteProduct-section",
-            text = messages("section.alcoholDutyReturn"),
-        )
-
-        @pageHeading(messages("deleteProduct.heading"))
-
-        <p class="govuk-body">@messages("deleteProduct.paragraph")</p>
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("deleteProduct-yesNoValue"),
-                legend = LegendViewModel(messages("deleteProduct.heading")).asVisuallyHidden()
+                legend = LegendViewModel(messages("deleteProduct.heading")).asPageHeading()
             )
+            .withHint(Hint(content = HtmlContent(messages("deleteProduct.paragraph"))))
         )
 
         @govukButton(

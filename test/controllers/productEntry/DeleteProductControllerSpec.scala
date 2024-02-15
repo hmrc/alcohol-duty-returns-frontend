@@ -18,7 +18,7 @@ package controllers.productEntry
 
 import base.SpecBase
 import forms.productEntry.DeleteProductFormProvider
-import models.{NormalMode, UserAnswers}
+import models.UserAnswers
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
@@ -40,8 +40,9 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new DeleteProductFormProvider()
   val form         = formProvider()
+  val index        = 0
 
-  lazy val deleteProductRoute = controllers.productEntry.routes.DeleteProductController.onPageLoad(NormalMode).url
+  lazy val deleteProductRoute = controllers.productEntry.routes.DeleteProductController.onPageLoad(index).url
 
   "DeleteProduct Controller" - {
 
@@ -57,7 +58,7 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[DeleteProductView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, index)(request, messages(application)).toString
       }
     }
 
@@ -75,7 +76,7 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), index)(request, messages(application)).toString
       }
     }
 
@@ -107,6 +108,34 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "must redirect to the next page when No is selected on remove radio button" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, deleteProductRoute)
+            .withFormUrlEncodedBody(("deleteProduct-yesNoValue", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.ProductListController.onPageLoad().url
+
+        //verify(mockCacheConnector, times(1)).set(any())(any())
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -123,7 +152,7 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, index)(request, messages(application)).toString
       }
     }
 
