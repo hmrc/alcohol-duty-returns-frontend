@@ -110,15 +110,10 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when No is selected on remove radio button" in {
 
-      val mockCacheConnector = mock[CacheConnector]
-
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute))
           )
           .build()
 
@@ -132,7 +127,6 @@ class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.productEntry.routes.ProductListController.onPageLoad().url
 
-        //verify(mockCacheConnector, times(1)).set(any())(any())
       }
     }
 
