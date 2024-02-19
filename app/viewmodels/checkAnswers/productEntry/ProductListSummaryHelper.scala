@@ -58,7 +58,7 @@ object ProductListSummaryHelper {
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
-            href = controllers.routes.JourneyRecoveryController.onPageLoad()
+            href = controllers.productEntry.routes.DeleteProductController.onPageLoad(index: Int)
           )
         )
       )

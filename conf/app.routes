@@ -152,3 +152,6 @@ GET        /return-products                        controllers.productEntry.Prod
 POST       /return-products                        controllers.productEntry.ProductListController.onSubmit()
 GET        /change-return-products                  controllers.productEntry.ProductListController.onPageLoad()
 POST       /change-return-products                  controllers.productEntry.ProductListController.onSubmit()
+
+GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(index: Int)
+POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(index: Int)

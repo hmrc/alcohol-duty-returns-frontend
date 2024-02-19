@@ -16,6 +16,7 @@
 
 package models
 
+import org.scalatest.TryValues.convertTryToSuccessOrFailure
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.JsPath
@@ -27,7 +28,6 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers {
   case object TestSeqPage extends Gettable[Seq[String]] with Settable[Seq[String]] {
     override def path: JsPath = JsPath \ toString
   }
-
   "UserAnswer" - {
     "should add a value to a set for a given page and get the same value" in {
       val userAnswers = UserAnswers("id")
@@ -45,6 +45,17 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers {
       }
 
       expectedValue mustBe actualValue
+    }
+
+    "should remove a value for a given Page" in {
+      val userAnswers = UserAnswers("id").set(TestSeqPage, Seq("123")).success.value
+
+      val updatedUserAnswer = userAnswers.removeBySeqIndex(TestSeqPage, 0) match {
+        case Success(ua) => ua
+        case _           => fail()
+      }
+      val actualValueOption = updatedUserAnswer.getByIndex(TestSeqPage, 0)
+      actualValueOption mustBe None
     }
   }
 

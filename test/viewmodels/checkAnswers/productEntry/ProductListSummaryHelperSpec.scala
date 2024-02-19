@@ -45,6 +45,11 @@ class ProductListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCheck
         val userAnswers = emptyUserAnswers.set(ProductEntryListPage, productList).success.value
         val table       = ProductListSummaryHelper.productEntryTable(userAnswers)
         table.rows.size shouldBe productList.size
+        table.rows.zipWithIndex.foreach { case (row, index) =>
+          row.actions.head.href shouldBe controllers.productEntry.routes.CheckYourAnswersController
+            .onPageLoad(Some(index))
+          row.actions(1).href   shouldBe controllers.productEntry.routes.DeleteProductController.onPageLoad(index)
+        }
       }
     }
 

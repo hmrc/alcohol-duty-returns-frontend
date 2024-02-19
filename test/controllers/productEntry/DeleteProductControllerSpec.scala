@@ -17,65 +17,66 @@
 package controllers.productEntry
 
 import base.SpecBase
-import forms.productEntry.DeclareAlcoholDutyQuestionFormProvider
-import models.{NormalMode, UserAnswers}
+import forms.productEntry.DeleteProductFormProvider
+import models.UserAnswers
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import pages.productEntry.DeleteProductPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
 import connectors.CacheConnector
-import views.html.productEntry.DeclareAlcoholDutyQuestionView
+import uk.gov.hmrc.http.HttpResponse
+import views.html.productEntry.DeleteProductView
 
 import scala.concurrent.Future
 
-class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSugar {
+class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DeclareAlcoholDutyQuestionFormProvider()
+  val formProvider = new DeleteProductFormProvider()
   val form         = formProvider()
+  val index        = 0
 
-  lazy val declareAlcoholDutyQuestionRoute = routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
+  lazy val deleteProductRoute = controllers.productEntry.routes.DeleteProductController.onPageLoad(index).url
 
-  "DeclareAlcoholDutyQuestion Controller" - {
+  "DeleteProduct Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
+        val request = FakeRequest(GET, deleteProductRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
+        val view = application.injector.instanceOf[DeleteProductView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(DeclareAlcoholDutyQuestionPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(DeleteProductPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
+        val request = FakeRequest(GET, deleteProductRoute)
 
-        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
+        val view = application.injector.instanceOf[DeleteProductView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), index)(request, messages(application)).toString
       }
     }
 
@@ -95,39 +96,37 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
-            .withFormUrlEncodedBody(("declareAlcoholDutyQuestion-yesNoValue", "true"))
+          FakeRequest(POST, deleteProductRoute)
+            .withFormUrlEncodedBody(("deleteProduct-yesNoValue", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.ProductListController.onPageLoad().url
+
+        verify(mockCacheConnector, times(1)).set(any())(any())
       }
     }
 
-    "must redirect to the index page when valid question is answered as No" in {
-
-      val mockCacheConnector = mock[CacheConnector]
-
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+    "must redirect to the next page when No is selected on remove radio button" in {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute))
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
-            .withFormUrlEncodedBody(("declareAlcoholDutyQuestion-yesNoValue", "false"))
+          FakeRequest(POST, deleteProductRoute)
+            .withFormUrlEncodedBody(("deleteProduct-yesNoValue", "false"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual controllers.productEntry.routes.ProductListController.onPageLoad().url
+
       }
     }
 
@@ -137,31 +136,31 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
+          FakeRequest(POST, deleteProductRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
+        val view = application.injector.instanceOf[DeleteProductView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, index)(request, messages(application)).toString
       }
     }
-    /* commenting out tests as requireData was removed
+
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
+        val request = FakeRequest(GET, deleteProductRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -171,15 +170,14 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
+          FakeRequest(POST, deleteProductRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
-     */
   }
 }

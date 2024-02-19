@@ -87,7 +87,7 @@ final case class UserAnswers(
   def get[A](path: JsPath)(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(path)).reads(data).getOrElse(None)
 
-  def set[A](path: JsPath, value: A)(implicit writes: Writes[A]): Try[JsObject] =
+  def set[A](path: JsPath, value: A)(implicit writes: Writes[A]): Try[JsObject]    =
     data.setObject(path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
@@ -104,6 +104,23 @@ final case class UserAnswers(
     }
   }
 
+  def removeBySeqIndex[A](page: Settable[Seq[A]], index: Int): Try[UserAnswers] = {
+    val path        = page.path \ index
+    val updatedData = remove(path)
+    cleanupPage(page, updatedData)
+  }
+  def remove[A](path: JsPath): Try[JsObject]                                       =
+    data.removeObject(path) match {
+      case JsSuccess(jsValue, _) =>
+        Success(jsValue)
+      case JsError(_)            =>
+        Success(data)
+    }
+  def cleanupPage(page: Settable[_], updatedData: Try[JsObject]): Try[UserAnswers] =
+    updatedData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      page.cleanup(None, updatedAnswers)
+    }
 }
 
 object UserAnswers {

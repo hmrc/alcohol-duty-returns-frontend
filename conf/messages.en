@@ -385,3 +385,10 @@ productList.total = Total due
 productEntryList.name = Name
 productEntryList.duty = Duty due
 productEntryList.action = Action
+
+deleteProduct.title = Are you sure you want to remove this product?
+deleteProduct.heading = Are you sure you want to remove this product?
+deleteProduct.checkYourAnswersLabel = Are you sure you want to remove this product?
+deleteProduct.paragraph = This will remove this product and its information from the product list.
+deleteProduct.error.required = Select yes if you need to delete a product
+deleteProduct.change.hidden = DeleteProduct
