@@ -3,6 +3,9 @@ import sbt.Def
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
+ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "2.13.12"
+
 lazy val appName: String = "alcohol-duty-returns-frontend"
 
 lazy val root = (project in file("."))
@@ -10,11 +13,8 @@ lazy val root = (project in file("."))
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(inConfig(Test)(testSettings): _*)
   .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(itSettings): _*)
-  .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.13.8",
     name := appName,
     RoutesKeys.routesImport ++= Seq(
       "models._",
@@ -81,4 +81,10 @@ lazy val itSettings = Defaults.itSettings ++ Seq(
   fork := true
 )
 
-addCommandAlias("runAllChecks", ";clean;compile;scalafmtAll;coverage;test;it:test;scalastyle;coverageReport")
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .settings(itSettings)
+  .settings(libraryDependencies ++= AppDependencies.itDependencies)
+
+addCommandAlias("runAllChecks", ";clean;compile;scalafmtAll;coverage;test;it/test;scalastyle;coverageReport")
