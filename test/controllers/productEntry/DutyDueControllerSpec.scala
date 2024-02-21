@@ -88,8 +88,7 @@ class DutyDueControllerSpec extends SpecBase with ModelGenerators {
     (productEntry.copy(taxRate = None, sprDutyRate = None), "rate"),
     (productEntry.copy(duty = None), "duty"),
     (productEntry.copy(pureAlcoholVolume = None), "pure alcohol volume")
-  ).foreach { test =>
-    val (productEntry, field) = test
+  ).foreach { case (productEntry, field) =>
     s"must redirect to Journey Recovery if product entry does not contain $field" in {
 
       val userAnswers = UserAnswers(userAnswersId).set(CurrentProductEntryPage, productEntry).success.value

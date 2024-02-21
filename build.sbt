@@ -1,21 +1,20 @@
 import play.sbt.routes.RoutesKeys
 import sbt.Def
 import scoverage.ScoverageKeys
+import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
+
+ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "2.13.12"
 
 lazy val appName: String = "alcohol-duty-returns-frontend"
 
-lazy val root = (project in file("."))
+lazy val root = Project(appName, file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(inConfig(Test)(testSettings): _*)
-  .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(itSettings): _*)
-  .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.13.8",
-    name := appName,
     RoutesKeys.routesImport ++= Seq(
       "models._",
       "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
@@ -56,6 +55,7 @@ lazy val root = (project in file("."))
     ),
     // prevent removal of unused code which generates warning errors due to use of third-party libs
     uglifyCompressOptions := Seq("unused=false", "dead_code=false"),
+    uglifyOps := UglifyOps.singleFile,
     pipelineStages := Seq(digest),
     // below line required to force asset pipeline to operate in dev rather than only prod
     Assets / pipelineStages := Seq(concat,uglify),
@@ -69,16 +69,19 @@ lazy val testSettings: Seq[Def.Setting[_]] = Seq(
   unmanagedSourceDirectories += baseDirectory.value / "test-utils"
 )
 
-lazy val itSettings = Defaults.itSettings ++ Seq(
-  unmanagedSourceDirectories := Seq(
-    baseDirectory.value / "it",
-    baseDirectory.value / "test-utils"
-  ),
-  unmanagedResourceDirectories := Seq(
-    baseDirectory.value / "it" / "resources"
-  ),
-  parallelExecution := false,
-  fork := true
-)
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .settings(DefaultBuildSettings.itSettings())
+  .settings(
+    libraryDependencies ++= AppDependencies.test,
+    Test / unmanagedSourceDirectories := Seq(
+      baseDirectory.value / "it" / "test",
+      baseDirectory.value / "test-utils"
+    ),
+    Test / unmanagedResourceDirectories += baseDirectory.value / "it" / "test" / "resources",
+    Test / parallelExecution := false,
+    Test / fork := true
+  )
 
-addCommandAlias("runAllChecks", ";clean;compile;scalafmtAll;coverage;test;it:test;scalastyle;coverageReport")
+addCommandAlias("runAllChecks", ";clean;compile;scalafmtAll;coverage;test;it/test;scalastyle;coverageReport")
