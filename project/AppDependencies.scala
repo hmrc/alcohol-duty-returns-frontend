@@ -24,7 +24,7 @@ object AppDependencies {
     "org.pegdown"             %  "pegdown"                 % "1.6.0",
     "org.jsoup"               %  "jsoup"                   % "1.17.2",
     "com.vladsch.flexmark"    %  "flexmark-all"            % "0.64.8"
-  ).map(_ % "test, it")
+  ).map(_ % Test)
 
   val itDependencies = Seq.empty
   def apply(): Seq[ModuleID] = compile ++ test
