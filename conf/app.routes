@@ -22,47 +22,47 @@ GET         /unauthorised                                controllers.Unauthorise
 
 # Beginning of product entry sub-journey
 
-GET        /productEntryGuidance                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
+GET        /tell-us-about-your-alcohol                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
 
-GET        /declareAlcoholDutyQuestion                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareAlcoholDutyQuestion                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareAlcoholDutyQuestion                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareAlcoholDutyQuestion                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /do-you-need-to-declare-duty                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /do-you-need-to-declare-duty                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-do-you-need-to-declare-duty                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-do-you-need-to-declare-duty                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /productName                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
-POST       /productName                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)
-GET        /changeProductName                  controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeProductName                  controllers.productEntry.ProductNameController.onSubmit(mode: Mode = CheckMode)
+GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)
+GET        /change-what-name-do-you-want-to-give-this-product                  controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-what-name-do-you-want-to-give-this-product                  controllers.productEntry.ProductNameController.onSubmit(mode: Mode = CheckMode)
 
-GET        /alcoholByVolumeQuestion                  controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /alcoholByVolumeQuestion                  controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeAlcoholByVolumeQuestion                        controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeAlcoholByVolumeQuestion                        controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /what-is-this-products-alcohol-by-volume-strength                  controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-is-this-products-alcohol-by-volume-strength                  controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-what-is-this-products-alcohol-by-volume-strength                        controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-what-is-this-products-alcohol-by-volume-strength                        controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /draughtReliefQuestion                        controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /draughtReliefQuestion                        controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDraughtReliefQuestion                  controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDraughtReliefQuestion                  controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /is-this-product-eligible-for-draught-relief                        controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /is-this-product-eligible-for-draught-relief                        controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-is-this-product-eligible-for-draught-relief                  controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-is-this-product-eligible-for-draught-relief                  controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /taxType                        controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /taxType                        controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /changeTaxType                  controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeTaxType                  controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /what-is-this-products-tax-type                        controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-is-this-products-tax-type                        controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-what-is-this-products-tax-type                  controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-what-is-this-products-tax-type                  controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /smallProducerReliefQuestion                        controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /smallProducerReliefQuestion                        controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeSmallProducerReliefQuestion                  controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeSmallProducerReliefQuestion                  controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /is-this-product-eligible-for-small-producer-relief                        controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /is-this-product-eligible-for-small-producer-relief                        controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-is-this-product-eligible-for-small-producer-relief                  controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-is-this-product-eligible-for-small-producer-relief                  controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /productVolume                  controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /productVolume                  controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /changeProductVolume                        controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeProductVolume                        controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
+GET        /how-much-of-this-product-do-you-need-to-declare                  controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-of-this-product-do-you-need-to-declare                  controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-of-this-product-do-you-need-to-declare                        controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-of-this-product-do-you-need-to-declare                        controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /declareSmallProducerReliefDutyRate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareSmallProducerReliefDutyRate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareSmallProducerReliefDutyRate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
+GET        /what-is-your-small-producer-duty-rate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-is-your-small-producer-duty-rate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
+GET        /change-what-is-your-small-producer-duty-rate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-what-is-your-small-producer-duty-rate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 
 GET        /you-have-declared-this-many-litres-of-pure-alcohol                       controllers.productEntry.PureAlcoholController.onPageLoad()
 
@@ -74,48 +74,48 @@ POST       /return-check-your-answers                       controllers.productE
 # End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
-GET        /declareDutySuspendedDeliveriesQuestion                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareDutySuspendedDeliveriesQuestion                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareDutySuspendedDeliveriesQuestion                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /do-you-need-to-declare-delivered-received-duty-suspended                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /do-you-need-to-declare-delivered-received-duty-suspended                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-do-you-need-to-declare-delivered-received-duty-suspended                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-do-you-need-to-declare-delivered-received-duty-suspended                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /dutySuspendedDeliveriesGuidance                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+GET        /tell-us-about-your-duty-suspended-deliveries                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onPageLoad()
 
-GET        /declareDutySuspendedDeliveriesOutsideUk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareDutySuspendedDeliveriesOutsideUk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareDutySuspendedDeliveriesOutsideUk                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = CheckMode)
+GET        /how-much-have-you-delivered-duty-suspended-outside-of-the-uk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-have-you-delivered-duty-suspended-outside-of-the-uk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-have-you-delivered-duty-suspended-outside-of-the-uk                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-have-you-delivered-duty-suspended-outside-of-the-uk                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = CheckMode)
 
-GET        /dutySuspendedDeliveries                  controllers.dutySuspended.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = NormalMode)
-POST       /dutySuspendedDeliveries                  controllers.dutySuspended.DutySuspendedDeliveriesController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDutySuspendedDeliveries                        controllers.dutySuspended.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDutySuspendedDeliveries                        controllers.dutySuspended.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
+GET        /how-much-have-you-delivered-duty-suspended-within-the-uk                  controllers.dutySuspended.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-have-you-delivered-duty-suspended-within-the-uk                  controllers.dutySuspended.DutySuspendedDeliveriesController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-have-you-delivered-duty-suspended-within-the-uk                        controllers.dutySuspended.DutySuspendedDeliveriesController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-have-you-delivered-duty-suspended-within-the-uk                        controllers.dutySuspended.DutySuspendedDeliveriesController.onSubmit(mode: Mode = CheckMode)
 
-GET        /declareDutySuspendedReceived                  controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareDutySuspendedReceived                  controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareDutySuspendedReceived                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareDutySuspendedReceived                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
+GET        /how-much-have-you-received-suspended                  controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-have-you-received-suspended                  controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-have-you-received-suspended                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-have-you-received-suspended                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
 
-GET         /check-your-answers-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+GET        /check-your-answers-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
 # End of of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
-GET        /declareSpiritsTotal                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareSpiritsTotal                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareSpiritsTotal                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareSpiritsTotal                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
+GET        /what-is-the-total-volume-of-spirits-you-made-this-quarter                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-is-the-total-volume-of-spirits-you-made-this-quarter                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
+GET        /change-what-is-the-total-volume-of-spirits-you-made-this-quarter                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-what-is-the-total-volume-of-spirits-you-made-this-quarter                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
 
-GET        /declareScotchWhisky                  controllers.spiritsQuestions.DeclareScotchWhiskyController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareScotchWhisky                  controllers.spiritsQuestions.DeclareScotchWhiskyController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareScotchWhisky                        controllers.spiritsQuestions.DeclareScotchWhiskyController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareScotchWhisky                        controllers.spiritsQuestions.DeclareScotchWhiskyController.onSubmit(mode: Mode = CheckMode)
+GET        /how-much-scotch-whisky-have-you-made                  controllers.spiritsQuestions.DeclareScotchWhiskyController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-scotch-whisky-have-you-made                  controllers.spiritsQuestions.DeclareScotchWhiskyController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-scotch-whisky-have-you-made                        controllers.spiritsQuestions.DeclareScotchWhiskyController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-scotch-whisky-have-you-made                        controllers.spiritsQuestions.DeclareScotchWhiskyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /declareIrishWhiskey                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = NormalMode)
-POST       /declareIrishWhiskey                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDeclareIrishWhiskey                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDeclareIrishWhiskey                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
+GET        /how-much-irish-whiskey-have-you-made                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-irish-whiskey-have-you-made                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-irish-whiskey-have-you-made                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-irish-whiskey-have-you-made                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /quarterlySpiritsReturnGuidance                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
+GET        /tell-us-about-the-spirits-and-ingredients-you-have-used                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 GET        /how-much-unmalted-grain-have-you-used                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-unmalted-grain-have-you-used                 controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = NormalMode)
