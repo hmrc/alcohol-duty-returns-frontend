@@ -31,6 +31,6 @@ class IndexController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = identify {
-    Redirect("/manage-alcohol-duty/declareAlcoholDutyQuestion")
+    Redirect("/manage-alcohol-duty/do-you-need-to-declare-duty")
   }
 }
