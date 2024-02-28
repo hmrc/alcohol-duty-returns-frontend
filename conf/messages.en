@@ -392,3 +392,9 @@ deleteProduct.checkYourAnswersLabel = Are you sure you want to remove this produ
 deleteProduct.paragraph = This will remove this product and its information from the product list.
 deleteProduct.error.required = Select yes if you need to delete a product
 deleteProduct.change.hidden = DeleteProduct
+
+declareAdjustmentQuestion.title = declareAdjustmentQuestion
+declareAdjustmentQuestion.heading = declareAdjustmentQuestion
+declareAdjustmentQuestion.checkYourAnswersLabel = declareAdjustmentQuestion
+declareAdjustmentQuestion.error.required = Select yes if declareAdjustmentQuestion
+declareAdjustmentQuestion.change.hidden = DeclareAdjustmentQuestion
