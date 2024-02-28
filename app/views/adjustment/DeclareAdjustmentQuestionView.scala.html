@@ -23,25 +23,38 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("declareAdjustmentQuestion.title"))) {
 
-    @formHelper(action = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
-
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
         @sectionHeading(
             id = "declareAdjustmentQuestion-section",
-            text = messages("section.sectionName"),
+            text = messages("section.alcoholDutyReturn"),
         )
+
+        @pageHeading(messages("declareAdjustmentQuestion.heading"))
+
+        <p class="govuk-body">@messages("declareAdjustmentQuestion.p1")</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>@messages("declareAdjustmentQuestion.para1.list1")</li>
+                    <li>@messages("declareAdjustmentQuestion.para1.list2")</li>
+                    <li>@messages("declareAdjustmentQuestion.para1.list3")</li>
+                    <li>@messages("declareAdjustmentQuestion.para1.list4")</li>
+                    <li>@messages("declareAdjustmentQuestion.para1.list5")</li>
+                </ul>
+
+        @formHelper(action = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("declareAdjustmentQuestion-yesNoValue"),
-                legend = LegendViewModel(messages("declareAdjustmentQuestion.heading")).asPageHeading()
+                legend = LegendViewModel(messages("declareAdjustmentQuestion.heading")).asVisuallyHidden()
             )
         )
 

@@ -24,21 +24,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareAdjustmentQuestionSummary  {
+object DeclareAdjustmentQuestionSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareAdjustmentQuestionPage).map {
-      answer =>
+    answers.get(DeclareAdjustmentQuestionPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        val value = if (answer) "site.yes" else "site.no"
-
-        SummaryListRowViewModel(
-          key     = "declareAdjustmentQuestion.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("declareAdjustmentQuestion.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "declareAdjustmentQuestion.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("declareAdjustmentQuestion.change.hidden"))
         )
+      )
     }
 }

@@ -19,7 +19,7 @@ package controllers.adjustment
 import base.SpecBase
 import forms.adjustment.DeclareAdjustmentQuestionFormProvider
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeAdjustmentNavigator, AdjustmentNavigator}
+import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -39,7 +39,7 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase with MockitoSugar
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DeclareAdjustmentQuestionFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val declareAdjustmentQuestionRoute = routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url
 

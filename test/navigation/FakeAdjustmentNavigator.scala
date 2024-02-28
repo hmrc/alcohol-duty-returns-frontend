@@ -22,7 +22,6 @@ import models.{Mode, UserAnswers}
 
 class FakeAdjustmentNavigator(desiredRoute: Call) extends AdjustmentNavigator {
 
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-      desiredRoute
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    desiredRoute
 }
-
