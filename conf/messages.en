@@ -392,3 +392,11 @@ deleteProduct.checkYourAnswersLabel = Are you sure you want to remove this produ
 deleteProduct.paragraph = This will remove this product and its information from the product list.
 deleteProduct.error.required = Select yes if you need to delete a product
 deleteProduct.change.hidden = DeleteProduct
+
+adjustmentType.title = Which type of adjustment do you need to make?
+adjustmentType.heading = Which type of adjustment do you need to make?
+adjustmentType.under-declaration = Under-declaration
+adjustmentType.over-declation = Over-declaration
+adjustmentType.checkYourAnswersLabel = adjustment
+adjustmentType.error.required = Select adjustmentType
+adjustmentType.change.hidden = AdjustmentType
