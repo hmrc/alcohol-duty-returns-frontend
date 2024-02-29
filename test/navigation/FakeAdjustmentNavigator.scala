@@ -15,20 +15,13 @@
  */
 
 package navigation
-import controllers._
-import models._
-import pages._
+
 import play.api.mvc.Call
-import javax.inject.{Inject, Singleton}
+import pages._
+import models.{Mode, UserAnswers}
 
-@Singleton
-class AdjustmentNavigator @Inject() () extends BaseNavigator {
+class FakeAdjustmentNavigator(desiredRoute: Call) extends AdjustmentNavigator {
 
-  override val normalRoutes: Page => UserAnswers => Call = { case pages.adjustment.AdjustmentTypePage =>
-    _ => routes.IndexController. //This should change to the next page that is developed
-  }
-
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
-  }
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    desiredRoute
 }

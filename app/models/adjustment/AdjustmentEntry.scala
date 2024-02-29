@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package navigation
-import controllers._
-import models._
-import pages._
-import play.api.mvc.Call
-import javax.inject.{Inject, Singleton}
+package models.adjustment
 
-@Singleton
-class AdjustmentNavigator @Inject() () extends BaseNavigator {
+import play.api.libs.json.{Json, OFormat}
 
-  override val normalRoutes: Page => UserAnswers => Call = { case pages.adjustment.AdjustmentTypePage =>
-    _ => routes.IndexController. //This should change to the next page that is developed
-  }
-
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
-  }
+case class AdjustmentEntry (
+                             adjustmentType: Option[AdjustmentType] = None
+                           )
+object AdjustmentEntry {
+  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
 }

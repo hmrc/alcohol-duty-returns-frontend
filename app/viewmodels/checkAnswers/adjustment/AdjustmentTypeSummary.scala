@@ -26,25 +26,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdjustmentTypeSummary  {
+object AdjustmentTypeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdjustmentTypePage).map {
-      answer =>
-
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"adjustmentType.$answer"))
-          )
+    answers.get(AdjustmentTypePage).map { answer =>
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"adjustmentType.$answer"))
         )
+      )
 
-        SummaryListRowViewModel(
-          key     = "adjustmentType.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.AdjustmentTypeController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("adjustmentType.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "adjustmentType.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AdjustmentTypeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("adjustmentType.change.hidden"))
         )
+      )
     }
 }

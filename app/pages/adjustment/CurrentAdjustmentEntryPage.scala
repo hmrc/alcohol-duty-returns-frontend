@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package navigation
-import controllers._
-import models._
-import pages._
-import play.api.mvc.Call
-import javax.inject.{Inject, Singleton}
+package pages.adjustment
 
-@Singleton
-class AdjustmentNavigator @Inject() () extends BaseNavigator {
+import models.adjustment.AdjustmentEntry
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-  override val normalRoutes: Page => UserAnswers => Call = { case pages.adjustment.AdjustmentTypePage =>
-    _ => routes.IndexController. //This should change to the next page that is developed
-  }
+case object CurrentAdjustmentEntryPage extends QuestionPage[AdjustmentEntry]{
 
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
-  }
+  override def path: JsPath = JsPath \ toString
+  override def toString: String = "currentAdjustmentEntry"
 }
