@@ -25,6 +25,6 @@ class DeclareAdjustmentQuestionFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
-      "declareAdjustmentQuestion-yesNoValue" -> boolean("declareAdjustmentQuestion.error.required")
+      "declare-adjustment-question-value" -> boolean("declareAdjustmentQuestion.error.required")
     )
 }

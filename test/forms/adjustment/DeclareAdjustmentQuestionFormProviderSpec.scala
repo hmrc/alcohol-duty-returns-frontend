@@ -28,7 +28,7 @@ class DeclareAdjustmentQuestionFormProviderSpec extends BooleanFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "declareAdjustmentQuestion-yesNoValue"
+    val fieldName = "declare-adjustment-question-value"
 
     behave like booleanField(
       form,
