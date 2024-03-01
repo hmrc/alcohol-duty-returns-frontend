@@ -18,9 +18,9 @@ package models.adjustment
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AdjustmentEntry (
-                             adjustmentType: Option[AdjustmentType] = None
-                           )
+case class AdjustmentEntry(
+  adjustmentType: Option[AdjustmentType] = None
+)
 object AdjustmentEntry {
   implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
 }

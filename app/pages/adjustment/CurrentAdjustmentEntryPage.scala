@@ -20,8 +20,8 @@ import models.adjustment.AdjustmentEntry
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object CurrentAdjustmentEntryPage extends QuestionPage[AdjustmentEntry]{
+case object CurrentAdjustmentEntryPage extends QuestionPage[AdjustmentEntry] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath     = JsPath \ toString
   override def toString: String = "currentAdjustmentEntry"
 }

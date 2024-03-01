@@ -33,7 +33,8 @@
     @formHelper(action = controllers.adjustment.routes.AdjustmentTypeController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("adjustment-type-value" -> AdjustmentType.options.headOption.flatMap(_.id).getOrElse(""))))
+
         }
 
         @sectionHeading(

@@ -44,7 +44,7 @@ object AdjustmentType extends Enumerable.Implicits {
     RadioItem(
       content = Text(messages(s"adjustmentType.${value.toString}")),
       value = Some(value.toString),
-      id = Some(s"value_$index"),
+      id = Some(value.toString),
       hint = Some(Hint(content = Text(messages(s"adjustmentType.${value.toString}.hint"))))
     )
   }
