@@ -392,3 +392,15 @@ deleteProduct.checkYourAnswersLabel = Are you sure you want to remove this produ
 deleteProduct.paragraph = This will remove this product and its information from the product list.
 deleteProduct.error.required = Select yes if you need to delete a product
 deleteProduct.change.hidden = DeleteProduct
+
+declareAdjustmentQuestion.title = Do you need to make any adjustments from a previously submitted return?
+declareAdjustmentQuestion.heading = Do you need to make any adjustments from a previously submitted return?
+declareAdjustmentQuestion.p1 = You should make an adjustment to a previously submitted return if you need to do any of the following:
+declareAdjustmentQuestion.para1.list1 = you have under-declared alcohol on a previous return and have not paid enough duty
+declareAdjustmentQuestion.para1.list2 = you have over-declared alcohol on a previous return and paid too much duty
+declareAdjustmentQuestion.para1.list3 = you have paid duty on alcohol and it is now spoilt and cannot be consumed
+declareAdjustmentQuestion.para1.list4 = you have paid duty on alcohol and have now exported it
+declareAdjustmentQuestion.para1.list5 = you have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate
+declareAdjustmentQuestion.checkYourAnswersLabel = declareAdjustmentQuestion
+declareAdjustmentQuestion.error.required = Select yes if you need to enter an adjustment.
+declareAdjustmentQuestion.change.hidden = DeclareAdjustmentQuestion
