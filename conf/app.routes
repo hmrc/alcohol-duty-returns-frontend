@@ -156,7 +156,7 @@ POST       /change-return-products                  controllers.productEntry.Pro
 GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(index: Int)
 POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(index: Int)
 
-GET        /adjustmentType                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /adjustmentType                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-adjustmentType                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-adjustmentType                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /what-type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
