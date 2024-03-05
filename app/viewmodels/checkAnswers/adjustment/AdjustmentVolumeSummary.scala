@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdjustmentVolumeSummary  {
+object AdjustmentVolumeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdjustmentVolumePage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "adjustmentVolume.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.AdjustmentVolumeController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("adjustmentVolume.change.hidden"))
-          )
+    answers.get(AdjustmentVolumePage).map { answer =>
+      SummaryListRowViewModel(
+        key = "adjustmentVolume.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AdjustmentVolumeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("adjustmentVolume.change.hidden"))
         )
+      )
     }
 }

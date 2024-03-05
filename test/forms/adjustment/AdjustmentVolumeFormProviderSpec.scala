@@ -43,7 +43,7 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "adjustmentVolume.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "adjustmentVolume.error.nonNumeric"),
       twoDecimalPlacesError = FormError(fieldName, "adjustmentVolume.error.twoDecimalPlaces")
     )
 

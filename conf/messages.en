@@ -405,11 +405,14 @@ declareAdjustmentQuestion.checkYourAnswersLabel = declareAdjustmentQuestion
 declareAdjustmentQuestion.error.required = Select yes if you need to enter an adjustment.
 declareAdjustmentQuestion.change.hidden = DeclareAdjustmentQuestion
 
-adjustmentVolume.title = AdjustmentVolume
-adjustmentVolume.heading = AdjustmentVolume
-adjustmentVolume.checkYourAnswersLabel = AdjustmentVolume
-adjustmentVolume.error.nonNumeric = Enter your adjustmentVolume using numbers
-adjustmentVolume.error.required = Enter your adjustmentVolume
-adjustmentVolume.error.wholeNumber = Enter your adjustmentVolume using whole numbers
-adjustmentVolume.error.outOfRange = AdjustmentVolume must be between {0} and {1}
-adjustmentVolume.change.hidden = AdjustmentVolume
+adjustmentVolume.title = How much do you need to adjust?
+adjustmentVolume.heading = How much do you need to adjust?
+adjustmentVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
+adjustmentVolume.checkYourAnswersLabel = Adjustment Volume
+adjustmentVolume.error.nonNumeric = This product’s volume must be a number
+adjustmentVolume.error.required = Enter how much of this product you need to declare
+adjustmentVolume.error.minimumRequired = This product’s volume must be 0.01 or more
+adjustmentVolume.error.maximumRequired = This product’s volume must be 999999999.99 or less
+adjustmentVolume.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
+adjustmentVolume.change.hidden = Adjustment Volume
+

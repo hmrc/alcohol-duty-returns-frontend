@@ -38,7 +38,7 @@
 
         @sectionHeading(
             id = "adjustment-volume-section",
-            text = messages("section.sectionName"),
+            text = messages("section.alcoholDutyReturn"),
         )
 
         @govukInput(
@@ -48,10 +48,12 @@
             )
             .asNumeric()
             .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withHint(Hint(content = HtmlContent(messages("adjustmentVolume.hint"))))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }

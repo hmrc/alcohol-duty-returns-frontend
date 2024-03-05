@@ -19,7 +19,7 @@ package controllers.adjustment
 import base.SpecBase
 import forms.adjustment.AdjustmentVolumeFormProvider
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeAdjustmentNavigator, AdjustmentNavigator}
+import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new AdjustmentVolumeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -77,7 +77,10 @@ class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

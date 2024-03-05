@@ -27,7 +27,9 @@ class AdjustmentVolumeFormProvider @Inject() extends Mappings {
       "adjustment-volume-input" -> bigDecimal(
         "adjustmentVolume.error.required",
         "adjustmentVolume.error.nonNumeric",
-        "adjustmentVolume.error.twoDecimalPlaces")
+        "adjustmentVolume.error.twoDecimalPlaces"
+      )
         .verifying(minimumValue(BigDecimal(0.01), "adjustmentVolume.error.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "adjustmentVolume.error.maximumRequired"))    )
+        .verifying(maximumValue(BigDecimal(999999999.99), "adjustmentVolume.error.maximumRequired"))
+    )
 }
