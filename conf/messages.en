@@ -409,10 +409,10 @@ adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
 adjustmentVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
 adjustmentVolume.checkYourAnswersLabel = Adjustment Volume
-adjustmentVolume.error.nonNumeric = This product’s volume must be a number
-adjustmentVolume.error.required = Enter how much of this product you need to declare
-adjustmentVolume.error.minimumRequired = This product’s volume must be 0.01 or more
-adjustmentVolume.error.maximumRequired = This product’s volume must be 999999999.99 or less
-adjustmentVolume.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
+adjustmentVolume.error.nonNumeric = The volume of this adjustment must be a number
+adjustmentVolume.error.required = Enter the volume of this adjustment
+adjustmentVolume.error.minimumRequired = The volume of this adjustment must be 0.01 or more
+adjustmentVolume.error.maximumRequired = The volume of this adjustment must be 999999999.99 or less
+adjustmentVolume.error.twoDecimalPlaces = The volume of this adjustment must be to 2 decimal places or less
 adjustmentVolume.change.hidden = Adjustment Volume
 
