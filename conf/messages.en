@@ -404,3 +404,12 @@ declareAdjustmentQuestion.para1.list5 = you have paid duty on alcohol at the red
 declareAdjustmentQuestion.checkYourAnswersLabel = declareAdjustmentQuestion
 declareAdjustmentQuestion.error.required = Select yes if you need to enter an adjustment.
 declareAdjustmentQuestion.change.hidden = DeclareAdjustmentQuestion
+
+adjustmentVolume.title = AdjustmentVolume
+adjustmentVolume.heading = AdjustmentVolume
+adjustmentVolume.checkYourAnswersLabel = AdjustmentVolume
+adjustmentVolume.error.nonNumeric = Enter your adjustmentVolume using numbers
+adjustmentVolume.error.required = Enter your adjustmentVolume
+adjustmentVolume.error.wholeNumber = Enter your adjustmentVolume using whole numbers
+adjustmentVolume.error.outOfRange = AdjustmentVolume must be between {0} and {1}
+adjustmentVolume.change.hidden = AdjustmentVolume
