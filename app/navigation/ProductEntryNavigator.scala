@@ -24,9 +24,9 @@ import pages._
 import models._
 
 @Singleton
-class ProductEntryNavigator @Inject() () extends BaseNavigator {
+class ProductEntryNavigator @Inject() () {
 
-  override val normalRoutes: Page => UserAnswers => Call = {
+  private val normalRoutes: Page => UserAnswers => Call = {
     case pages.productEntry.ProductNamePage                        =>
       _ => controllers.productEntry.routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
     case pages.productEntry.AlcoholByVolumeQuestionPage            =>
@@ -61,8 +61,13 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
     }
   }
 
-  override val checkRouteMap: Page => UserAnswers => Call                     = { case _ =>
-    _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+  private val checkRouteMap: Page => UserAnswers => Boolean => Call           = {
+    case pages.productEntry.AlcoholByVolumeQuestionPage =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case _                                              => _ => _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
   }
   private def declareAlcoholDutyQuestionPageRoute(answers: UserAnswers): Call =
     answers.get(pages.productEntry.DeclareAlcoholDutyQuestionPage) match {
@@ -77,4 +82,11 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
       case Some(false) => routes.IndexController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
+
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean = true): Call = mode match {
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode  =>
+      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
+  }
 }

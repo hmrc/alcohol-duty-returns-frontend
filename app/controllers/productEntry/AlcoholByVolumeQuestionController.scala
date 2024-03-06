@@ -59,22 +59,44 @@ class AlcoholByVolumeQuestionController @Inject() (
     Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode): Action[AnyContent]                                                 = (identify andThen getData andThen requireData).async {
     implicit request =>
       form
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val product                      = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val (updatedProduct, hasChanged) = updateABV(product, value)
+            println(hasChanged)
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(CurrentProductEntryPage, product.copy(abv = Some(AlcoholByVolume(value))))
+                  request.userAnswers
+                    .set(CurrentProductEntryPage, updatedProduct.copy(abv = Some(AlcoholByVolume(value))))
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+  def updateABV(productEntry: ProductEntry, currentValue: BigDecimal): (ProductEntry, Boolean) =
+    productEntry.abv match {
+      case Some(existingValue) if currentValue == existingValue.value => (productEntry, false)
+      case _                                                          =>
+        (
+          productEntry.copy(
+            draughtRelief = None,
+            smallProducerRelief = None,
+            taxCode = None,
+            taxRate = None,
+            regime = None,
+            sprDutyRate = None,
+            volume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 }
