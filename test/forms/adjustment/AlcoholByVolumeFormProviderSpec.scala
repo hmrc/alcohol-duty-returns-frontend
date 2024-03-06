@@ -28,7 +28,7 @@ class AlcoholByVolumeFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName = "alcoholByVolume-input"
 
-    val minimum = 0.01
+    val minimum = 0.1
     val maximum = 100
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
@@ -42,14 +42,14 @@ class AlcoholByVolumeFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "alcoholByVolume.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "alcoholByVolume.error.nonNumeric"),
       twoDecimalPlacesError = FormError(fieldName, "alcoholByVolume.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
-      minimum       = minimum,
+      minimum = minimum,
       expectedError = FormError(fieldName, "alcoholByVolume.error.minimumRequired", ArraySeq(minimum))
     )
     behave like bigDecimalFieldWithMaximum(

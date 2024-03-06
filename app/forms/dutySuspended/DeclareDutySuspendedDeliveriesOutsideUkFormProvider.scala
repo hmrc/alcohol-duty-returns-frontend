@@ -25,6 +25,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProvider @Inject() extends Mapp
   def apply(): Form[BigDecimal] =
     Form(
       "declare-duty-suspended-deliveries-outside-uk-input" -> bigDecimal(
+        2,
         "declareDutySuspendedDeliveriesOutsideUk.error.required",
         "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric",
         "declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces"

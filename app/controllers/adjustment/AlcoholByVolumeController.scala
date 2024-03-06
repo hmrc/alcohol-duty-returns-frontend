@@ -32,53 +32,48 @@ import views.html.adjustment.AlcoholByVolumeView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AlcoholByVolumeController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        cacheConnector: CacheConnector,
-                                        navigator: AdjustmentNavigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: AlcoholByVolumeFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: AlcoholByVolumeView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class AlcoholByVolumeController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: AdjustmentNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: AlcoholByVolumeFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: AlcoholByVolumeView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val abv = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.abv)
-      val preparedForm = abv match {
-        case None => form
-        case Some(alcoholByVolume) => form.fill(alcoholByVolume.value)
-      }
-      val adjustmentType= request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.adjustmentType)
-      Ok(view(preparedForm, mode, adjustmentType.getOrElse("").toString))/*
-    implicit request =>
-      val result = for {
-        adjustmentEntry <- request.userAnswers.get[AdjustmentEntry](CurrentAdjustmentEntryPage)
-        abv <- adjustmentEntry.abv
-        preparedForm <- form.fill(abv.value)
-        adjustmentType <- adjustmentEntry.adjustmentType
-      }yield Ok(view(preparedForm, mode, adjustmentType))
-      result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))*/
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val abv          = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.abv)
+    val preparedForm = abv match {
+      case None                  => form
+      case Some(alcoholByVolume) => form.fill(alcoholByVolume.value)
+    }
+    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val adjustmentType= ""
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode, adjustmentType))),
-
-        value => {
-          val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(abv = Some(AlcoholByVolume(value)))))
-            _ <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AlcoholByVolumePage, mode, updatedAnswers))
-        }
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value => {
+            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            for {
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers
+                    .set(CurrentAdjustmentEntryPage, adjustment.copy(abv = Some(AlcoholByVolume(value))))
+                )
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(AlcoholByVolumePage, mode, updatedAnswers))
+          }
+        )
   }
 }

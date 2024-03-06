@@ -25,6 +25,7 @@ class WheatUsedFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "wheat-used-input" -> bigDecimal(
+        2,
         "wheatUsed.error.required",
         "wheatUsed.error.nonNumeric",
         "wheatUsed.error.twoDecimalPlaces"

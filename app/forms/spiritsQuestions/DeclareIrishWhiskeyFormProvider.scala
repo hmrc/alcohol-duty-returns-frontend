@@ -25,6 +25,7 @@ class DeclareIrishWhiskeyFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "declare-irish-whiskey-input" -> bigDecimal(
+        2,
         "declareIrishWhiskey.error.required",
         "declareIrishWhiskey.error.nonNumeric",
         "declareIrishWhiskey.error.twoDecimalPlaces"

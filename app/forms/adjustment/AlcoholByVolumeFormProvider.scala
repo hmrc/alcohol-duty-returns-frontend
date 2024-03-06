@@ -25,11 +25,12 @@ class AlcoholByVolumeFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "alcoholByVolume-input" -> bigDecimal(
+        1,
         "alcoholByVolume.error.required",
         "alcoholByVolume.error.nonNumeric",
-        "alcoholByVolume.error.twoDecimalPlaces"
-        )
-          .verifying(minimumValue(BigDecimal(0.01), "alcoholByVolume.error.minimumRequired"))
-          .verifying(maximumValue(BigDecimal(100), "alcoholByVolume.error.maximumRequired"))
+        "alcoholByVolume.error.oneDecimalPlace"
+      )
+        .verifying(minimumValue(BigDecimal(0.1), "alcoholByVolume.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(100), "alcoholByVolume.error.maximumRequired"))
     )
 }
