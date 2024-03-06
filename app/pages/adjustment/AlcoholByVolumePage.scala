@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package models.adjustment
+package pages.adjustment
 
-import models.AlcoholByVolume
-import play.api.libs.json.{Json, OFormat}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case class AdjustmentEntry(
-  adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None
-)
-object AdjustmentEntry {
-  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
+case object AlcoholByVolumePage extends QuestionPage[BigDecimal] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "alcoholByVolume"
 }

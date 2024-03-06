@@ -407,4 +407,14 @@ adjustmentType.repackaged-draught-products = Repackaged draught products
 adjustmentType.repackaged-draught-products.hint = You have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate.
 adjustmentType.checkYourAnswersLabel = adjustment
 adjustmentType.error.required = Select adjustmentType
-adjustmentType.change.hidden = AdjustmentType
+adjustmentType.change.hidden = Adjustment Type
+
+alcoholByVolume.title = What is the Alcohol by Volume (ABV) strength for this adjustment?
+alcoholByVolume.heading = What is the Alcohol by Volume (ABV) strength for this adjustment?
+alcoholByVolume.checkYourAnswersLabel = AlcoholByVolume
+alcoholByVolume.error.nonNumeric = Enter your alcoholByVolume using numbers
+alcoholByVolume.error.required = Enter your alcoholByVolume
+alcoholByVolume.error.minimumRequired = alcoholByVolume must be 0.01 or more
+alcoholByVolume.error.maximumRequired = alcoholByVolume must be 100 or less
+alcoholByVolume.change.twoDecimalPlaces = AlcoholByVolume must be a number to 2 decimal places
+alcoholByVolume.change.hidden = Alcohol By Volume

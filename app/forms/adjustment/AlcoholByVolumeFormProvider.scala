@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package models.adjustment
+package forms.adjustment
 
-import models.AlcoholByVolume
-import play.api.libs.json.{Json, OFormat}
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-case class AdjustmentEntry(
-  adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None
-)
-object AdjustmentEntry {
-  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
+class AlcoholByVolumeFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[BigDecimal] =
+    Form(
+      "alcoholByVolume-input" -> bigDecimal(
+        "alcoholByVolume.error.required",
+        "alcoholByVolume.error.nonNumeric",
+        "alcoholByVolume.error.twoDecimalPlaces"
+        )
+          .verifying(minimumValue(BigDecimal(0.01), "alcoholByVolume.error.minimumRequired"))
+          .verifying(maximumValue(BigDecimal(100), "alcoholByVolume.error.maximumRequired"))
+    )
 }
