@@ -406,5 +406,5 @@ adjustmentType.drawback.hint = You have paid duty on alcohol and have now export
 adjustmentType.repackaged-draught-products = Repackaged draught products
 adjustmentType.repackaged-draught-products.hint = You have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate.
 adjustmentType.checkYourAnswersLabel = adjustment
-adjustmentType.error.required = Select adjustmentType
-adjustmentType.change.hidden = AdjustmentType
+adjustmentType.error.required = Select the adjustment you need to make
+adjustmentType.change.hidden = which type of adjustment do you need to make
