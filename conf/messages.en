@@ -411,8 +411,8 @@ adjustmentVolume.hint = Give your answers in litres, to 2 decimal places. For ex
 adjustmentVolume.checkYourAnswersLabel = Adjustment Volume
 adjustmentVolume.error.nonNumeric = The volume of this adjustment must be a number
 adjustmentVolume.error.required = Enter the volume of this adjustment
-adjustmentVolume.error.minimumRequired = The volume of this adjustment must be 0.01 or more
-adjustmentVolume.error.maximumRequired = The volume of this adjustment must be 999999999.99 or less
+adjustmentVolume.error.minimumRequired = The volume of this adjustment must be higher than 0
+adjustmentVolume.error.maximumRequired = The volume of adjustments must be less than 100 million litres
 adjustmentVolume.error.twoDecimalPlaces = The volume of this adjustment must be to 2 decimal places or less
 adjustmentVolume.change.hidden = Adjustment Volume
 
