@@ -160,3 +160,8 @@ GET        /do-you-need-to-make-any-adjustments-from-a-previous-return          
 POST       /do-you-need-to-make-any-adjustments-from-a-previous-return                       controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
+
+GET        /what-type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
