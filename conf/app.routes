@@ -161,7 +161,7 @@ POST       /do-you-need-to-make-any-adjustments-from-a-previous-return          
 GET        /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /how-much-do-you-need-to-adjust                  controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-do-you-need-to-adjust                  controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-do-you-need-to-adjust                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-do-you-need-to-adjust                        controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
+GET        /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-is-the-adjustment                       controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
