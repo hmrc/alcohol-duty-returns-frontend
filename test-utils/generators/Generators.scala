@@ -68,18 +68,18 @@ trait Generators extends ModelGenerators {
       .suchThat(!_.isValidInt)
       .map("%f".format(_))
 
-  val to2dp: BigDecimal => BigDecimal                       = _.setScale(2, BigDecimal.RoundingMode.HALF_UP)
-  def bigDecimalsBelowValue(value: BigDecimal): Gen[String] =
-    bigDecimalsInRangeWithCommas(Double.MinValue, value)
+  def todp(decimal: Int): BigDecimal => BigDecimal                        = _.setScale(decimal, BigDecimal.RoundingMode.HALF_UP)
+  def bigDecimalsBelowValue(value: BigDecimal, decimal: Int): Gen[String] =
+    bigDecimalsInRangeWithCommas(Double.MinValue, value, decimal)
 
-  def bigDecimalsAboveValue(value: BigDecimal): Gen[String] =
-    bigDecimalsInRangeWithCommas(value, 9999999999.99)
+  def bigDecimalsAboveValue(value: BigDecimal, decimal: Int): Gen[String] =
+    bigDecimalsInRangeWithCommas(value, 9999999999.99, decimal)
 
   def bigDecimalsOutsideRange(min: BigDecimal, max: BigDecimal): Gen[BigDecimal] =
     arbitrary[BigDecimal] suchThat (x => x < min || x > max)
 
-  def bigDecimalsInRangeWithCommas(min: BigDecimal, max: BigDecimal): Gen[String] = {
-    val numberGen = choose[BigDecimal](min, max).map(to2dp).map(_.toString)
+  def bigDecimalsInRangeWithCommas(min: BigDecimal, max: BigDecimal, decimal: Int): Gen[String] = {
+    val numberGen = choose[BigDecimal](min, max).map(todp(decimal)).map(_.toString)
     genIntersperseString(numberGen, ",")
   }
 

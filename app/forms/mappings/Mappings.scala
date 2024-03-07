@@ -36,7 +36,7 @@ trait Mappings extends Formatters with Constraints {
     of(intFormatter(requiredKey, wholeNumberKey, nonNumericKey, args))
 
   protected def bigDecimal(
-    decimalPlaces: Int,
+    decimalPlaces: Int = 2,
     requiredKey: String = "error.required",
     nonNumericKey: String = "error.nonNumeric",
     decimalPlacesKey: String = "error.twoDecimalPlaces",
