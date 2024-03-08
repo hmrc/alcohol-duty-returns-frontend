@@ -62,12 +62,32 @@ class ProductEntryNavigator @Inject() () {
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call           = {
-    case pages.productEntry.AlcoholByVolumeQuestionPage =>
+    case pages.productEntry.AlcoholByVolumeQuestionPage            =>
       _ =>
         hasChanged =>
           if (hasChanged) controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
           else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
-    case _                                              => _ => _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.DraughtReliefQuestionPage              =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.SmallProducerReliefQuestionPage        =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.ProductVolumePage                      =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.productEntry.routes.PureAlcoholController.onPageLoad()
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.DeclareSmallProducerReliefDutyRatePage =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case _                                                         => _ => _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
   }
   private def declareAlcoholDutyQuestionPageRoute(answers: UserAnswers): Call =
     answers.get(pages.productEntry.DeclareAlcoholDutyQuestionPage) match {

@@ -68,7 +68,6 @@ class AlcoholByVolumeQuestionController @Inject() (
           value => {
             val product                      = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             val (updatedProduct, hasChanged) = updateABV(product, value)
-            println(hasChanged)
             for {
               updatedAnswers <-
                 Future.fromTry(

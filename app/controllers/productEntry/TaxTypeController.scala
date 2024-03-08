@@ -55,10 +55,22 @@ class TaxTypeController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val preparedForm = request.userAnswers.get(TaxTypePage) match {
-        case None        => form
-        case Some(value) => form.fill(value.taxCode)
+      val preparedForm = request.userAnswers.get(CurrentProductEntryPage) match {
+        case None               => form
+        case Some(productEntry) =>
+          (for {
+            taxCode <- productEntry.taxCode
+            regime  <- productEntry.regime
+          } yield s"${taxCode}_$regime") match {
+            case Some(combinedValue) => form.fill(combinedValue)
+            case None                => form
+          } /*
+          val taxCode  = productEntry.taxCode.getOrElse("")
+          val regime   = productEntry.regime.getOrElse("").toString
+          val combined = s"${taxCode}_$regime"
+          if (regime.nonEmpty && taxCode.nonEmpty) form.fill(combined) else form*/
       }
+      println(preparedForm)
 
       val (
         abv: AlcoholByVolume,
