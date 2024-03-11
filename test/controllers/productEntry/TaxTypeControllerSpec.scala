@@ -19,13 +19,13 @@ package controllers.productEntry
 import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
-import models.productEntry.{ProductEntry, TaxType}
-import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType, UserAnswers}
+import models.productEntry.ProductEntry
+import models.{AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.{CurrentProductEntryPage, TaxTypePage}
+import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -40,7 +40,8 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val taxTypeRoute = routes.TaxTypeController.onPageLoad(NormalMode).url
+  lazy val taxTypeRoute       = routes.TaxTypeController.onPageLoad(NormalMode).url
+  lazy val changeTaxTypeRoute = routes.TaxTypeController.onPageLoad(CheckMode).url
 
   val formProvider = new TaxTypeFormProvider()
   val form         = formProvider()
@@ -100,7 +101,6 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
           eligibleForSmallProducerRelief = false,
           rateBandList
         )(messages(application))
-
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, viewModel)(request, messages(application)).toString
       }
@@ -112,12 +112,20 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future.successful(
         rateBandList
       )
-
-      val userAnswers =
-        fullUserAnswers
-          .set(TaxTypePage, TaxType(taxCode, alcoholRegime, rate))
-          .success
-          .value
+      val userAnswers                        = fullUserAnswers
+        .set(
+          CurrentProductEntryPage,
+          ProductEntry(
+            abv = Some(AlcoholByVolume(3.5)),
+            draughtRelief = Some(true),
+            smallProducerRelief = Some(false),
+            taxCode = Some(taxCode),
+            regime = Some(alcoholRegime),
+            taxRate = rate
+          )
+        )
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
@@ -141,6 +149,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
         )(messages(application))
 
         status(result) mustEqual OK
+
         contentAsString(result) mustEqual view(form.fill(s"${taxCode}_$alcoholRegime"), NormalMode, viewModel)(
           request,
           messages(application)

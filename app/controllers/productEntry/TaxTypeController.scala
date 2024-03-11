@@ -64,13 +64,8 @@ class TaxTypeController @Inject() (
           } yield s"${taxCode}_$regime") match {
             case Some(combinedValue) => form.fill(combinedValue)
             case None                => form
-          } /*
-          val taxCode  = productEntry.taxCode.getOrElse("")
-          val regime   = productEntry.regime.getOrElse("").toString
-          val combined = s"${taxCode}_$regime"
-          if (regime.nonEmpty && taxCode.nonEmpty) form.fill(combined) else form*/
+          }
       }
-      println(preparedForm)
 
       val (
         abv: AlcoholByVolume,
@@ -120,19 +115,37 @@ class TaxTypeController @Inject() (
             },
           value =>
             for {
-              product        <- Future.fromTry(Try(request.userAnswers.get(CurrentProductEntryPage).get))
-              taxType        <- taxTypeFromValue(value, rates)
-              updatedAnswers <-
+              product                     <- Future.fromTry(Try(request.userAnswers.get(CurrentProductEntryPage).get))
+              taxType                     <- taxTypeFromValue(value, rates)
+              (updatedProduct, hasChanged) = updateTaxType(product, value)
+              updatedAnswers              <-
                 Future.fromTry(
                   request.userAnswers.set(
                     CurrentProductEntryPage,
-                    product.copy(taxCode = Some(taxType.code), taxRate = taxType.taxRate, regime = Some(taxType.regime))
+                    updatedProduct
+                      .copy(taxCode = Some(taxType.code), taxRate = taxType.taxRate, regime = Some(taxType.regime))
                   )
                 )
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers))
+              _                           <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers, hasChanged))
         )
   }
+
+  def updateTaxType(productEntry: ProductEntry, currentValue: String): (ProductEntry, Boolean) =
+    (productEntry.taxCode, productEntry.regime) match {
+      case (Some(existingTaxCode), Some(existingRegime)) if currentValue == s"${existingTaxCode}_$existingRegime" =>
+        (productEntry, false)
+      case _                                                                                                      =>
+        (
+          productEntry.copy(
+            sprDutyRate = None,
+            volume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 
   private def rateParameters(
     request: DataRequest[AnyContent]

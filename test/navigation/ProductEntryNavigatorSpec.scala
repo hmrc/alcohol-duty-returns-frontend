@@ -21,6 +21,7 @@ import controllers._
 import pages._
 import models._
 import models.productEntry.ProductEntry
+import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductNamePage, ProductVolumePage, SmallProducerReliefQuestionPage, TaxTypePage}
 
 class ProductEntryNavigatorSpec extends SpecBase {
 
@@ -178,6 +179,135 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+      }
+      "must go from Product Name page to Check Your Answers Controller irrespective of answer" in {
+        navigator.nextPage(
+          ProductNamePage,
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+      }
+      "must go from Alcohol by volume page to Draught relief question page if answer has changed" in {
+        navigator.nextPage(
+          AlcoholByVolumeQuestionPage,
+          CheckMode,
+          UserAnswers("id"),
+          true
+        ) mustBe controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+      }
+      "must go from Alcohol by volume page to CheckYourAnswersController if answer is the same" in {
+        navigator.nextPage(
+          AlcoholByVolumeQuestionPage,
+          CheckMode,
+          UserAnswers("id"),
+          false
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+      }
+      "must go from Draught relief question page to Small producer relief if answer has changed" in {
+        navigator.nextPage(
+          DraughtReliefQuestionPage,
+          CheckMode,
+          UserAnswers("id"),
+          true
+        ) mustBe controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+      }
+      "must go from Draught relief question page to CheckYourAnswersController if answer is the same" in {
+        navigator.nextPage(
+          DraughtReliefQuestionPage,
+          CheckMode,
+          UserAnswers("id"),
+          false
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+      }
+      "must go from Small producer relief to Tax Type page if answer has changed" in {
+        navigator.nextPage(
+          SmallProducerReliefQuestionPage,
+          CheckMode,
+          UserAnswers("id"),
+          true
+        ) mustBe controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+      }
+      "must go from Small relief question page to CheckYourAnswersController if answer is the same" in {
+        navigator.nextPage(
+          SmallProducerReliefQuestionPage,
+          CheckMode,
+          UserAnswers("id"),
+          false
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+      }
+      "must go from Tax Type page to Product Volume page if answer has changed and SPR relief is not applicable" in {
+        navigator.nextPage(
+          TaxTypePage,
+          CheckMode,
+          UserAnswers("id")
+            .set(
+              CurrentProductEntryPage,
+              ProductEntry(
+                draughtRelief = Some(true),
+                smallProducerRelief = Some(false)
+              )
+            )
+            .success
+            .value,
+          true
+        ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
+      }
+      "must go from Tax Type page to SPR Duty rate page if answer has changed and SPR relief is applicable" in {
+        navigator.nextPage(
+          TaxTypePage,
+          CheckMode,
+          UserAnswers("id")
+            .set(
+              CurrentProductEntryPage,
+              ProductEntry(
+                draughtRelief = Some(true),
+                smallProducerRelief = Some(true)
+              )
+            )
+            .success
+            .value,
+          true
+        ) mustBe controllers.productEntry.routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+      }
+      "must go from Tax Type page to CheckYourAnswersController if answer is the same" in {
+        navigator.nextPage(
+          TaxTypePage,
+          CheckMode,
+          UserAnswers("id"),
+          false
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+      }
+      "must go from Small producer duty rate page to Product Volume page if answer has changed" in {
+        navigator.nextPage(
+          DeclareSmallProducerReliefDutyRatePage,
+          CheckMode,
+          UserAnswers("id"),
+          true
+        ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
+      }
+      "must go from Small producer duty rate page to CheckYourAnswersController if answer is the same" in {
+        navigator.nextPage(
+          DeclareSmallProducerReliefDutyRatePage,
+          CheckMode,
+          UserAnswers("id"),
+          false
+        ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+      }
+      "must go from Product Volume page to Pure Alcohol page if answer has changed" in {
+        navigator.nextPage(
+          ProductVolumePage,
+          CheckMode,
+          UserAnswers("id"),
+          true
+        ) mustBe controllers.productEntry.routes.PureAlcoholController.onPageLoad()
+      }
+      "must go from Product Volume page to CheckYourAnswersController if answer is the same" in {
+        navigator.nextPage(
+          ProductVolumePage,
+          CheckMode,
+          UserAnswers("id"),
+          false
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
     }

@@ -22,6 +22,6 @@ import models.{Mode, UserAnswers}
 
 class FakeProductEntryNavigator(desiredRoute: Call) extends ProductEntryNavigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call =
     desiredRoute
 }

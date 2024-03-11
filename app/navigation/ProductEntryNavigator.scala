@@ -77,6 +77,11 @@ class ProductEntryNavigator @Inject() () {
         hasChanged =>
           if (hasChanged) controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
           else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.TaxTypePage                            =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) taxTypePageRoute(userAnswers)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
     case pages.productEntry.ProductVolumePage                      =>
       _ =>
         hasChanged =>
