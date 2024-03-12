@@ -465,7 +465,7 @@ adjustmentVolume.error.nonNumeric = The volume of this adjustment must be a numb
 adjustmentVolume.error.required = Enter the volume of this adjustment
 adjustmentVolume.error.minimumRequired = The volume of this adjustment must be higher than 0
 adjustmentVolume.error.maximumRequired = The volume of adjustments must be less than 100 million litres
-adjustmentVolume.error.twoDecimalPlaces = The volume of this adjustment must be to 2 decimal places or less
+adjustmentVolume.error.twoDecimalPlaces = The volume must be up to 2 decimal places
 adjustmentVolume.change.hidden = Adjustment Volume
 
 # End of adjustments sub-journey
