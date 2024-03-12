@@ -31,8 +31,9 @@ class DutySuspendedDeliveriesFormProviderSpec extends BigDecimalFieldBehaviours 
 
     val minimum = 0.00
     val maximum = 999999999.99
+    val decimal = 2
 
-    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
@@ -51,6 +52,7 @@ class DutySuspendedDeliveriesFormProviderSpec extends BigDecimalFieldBehaviours 
       form,
       fieldName,
       minimum = minimum,
+      decimal = decimal,
       expectedError = FormError(fieldName, "dutySuspendedDeliveries.error.minimumRequired", ArraySeq(minimum))
     )
 
@@ -58,6 +60,7 @@ class DutySuspendedDeliveriesFormProviderSpec extends BigDecimalFieldBehaviours 
       form,
       fieldName,
       maximum = maximum,
+      decimal = decimal,
       expectedError = FormError(fieldName, "dutySuspendedDeliveries.error.maximumRequired", ArraySeq(maximum))
     )
 

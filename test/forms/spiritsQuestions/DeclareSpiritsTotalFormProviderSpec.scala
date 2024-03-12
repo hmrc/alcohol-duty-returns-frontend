@@ -30,8 +30,9 @@ class DeclareSpiritsTotalFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val minimum = 0.00
     val maximum = 999999999.99
+    val decimal = 2
 
-    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
@@ -50,6 +51,7 @@ class DeclareSpiritsTotalFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       minimum = minimum,
+      decimal = decimal,
       expectedError = FormError(fieldName, "declareSpiritsTotal.error.minimumRequired", ArraySeq(minimum))
     )
 
@@ -57,6 +59,7 @@ class DeclareSpiritsTotalFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       maximum = maximum,
+      decimal = decimal,
       expectedError = FormError(fieldName, "declareSpiritsTotal.error.maximumRequired", ArraySeq(maximum))
     )
 

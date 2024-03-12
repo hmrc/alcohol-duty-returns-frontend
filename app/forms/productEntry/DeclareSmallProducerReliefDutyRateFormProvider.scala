@@ -25,6 +25,7 @@ class DeclareSmallProducerReliefDutyRateFormProvider @Inject() extends Mappings 
   def apply(): Form[BigDecimal] =
     Form(
       "declareSmallProducerReliefDutyRate-input" -> bigDecimal(
+        2,
         "declareSmallProducerReliefDutyRate.error.required",
         "declareSmallProducerReliefDutyRate.error.nonNumeric",
         "declareSmallProducerReliefDutyRate.error.twoDecimalPlaces"
