@@ -70,12 +70,25 @@ section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty return
 section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits return
 
-draughtReliefQuestion.title = Is this product eligible for Draught Relief?
-draughtReliefQuestion.heading = Is this product eligible for Draught Relief?
-draughtReliefQuestion.checkYourAnswersLabel = Eligible for Draught Relief
-draughtReliefQuestion.error.required = Select yes if this product is eligible for Draught Relief
-draughtReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-you-can-pay-less-alcohol-duty-on-draught-products
-draughtReliefQuestion.guidance.link.text = You can get a reduced rate of duty on some draught products (opens in a new tab)
+
+
+# Beginning of product entry sub-journey
+
+declareAlcoholDutyQuestion.title = Do you need to declare duty on any alcoholic products?
+declareAlcoholDutyQuestion.heading = Do you need to declare duty on any alcoholic products?
+declareAlcoholDutyQuestion.checkYourAnswersLabel = declareAlcoholDutyQuestion
+declareAlcoholDutyQuestion.error.required = Select yes if you need to declare duty on any alcoholic products
+declareAlcoholDutyQuestion.change.hidden = alcohol duty to declare
+
+productEntryGuidance.title = Tell us about your alcohol
+productEntryGuidance.heading = Tell us about your alcohol
+productEntryGuidance.p1 = For every alcoholic product you declare, we need to know
+productEntryGuidance.para1.list1 = its Alcohol by Volume (ABV) strength
+productEntryGuidance.para1.list2 = its tax type
+productEntryGuidance.para1.list3 = how much of it you need to declare
+productEntryGuidance.p2 = We will also ask you to give each product a name so you can identify it on your return.
+productEntryGuidance.p3 = You can group different products together as a single item on your return as long as they have the same ABV strength and tax type.
+productEntryGuidance.p4 = You do not need to list each item by brand or Stock Keeping Unit (SKU).
 
 productName.title = What name do you want to give this product?
 productName.heading = What name do you want to give this product?
@@ -85,13 +98,6 @@ productName.checkYourAnswersLabel = Name
 productName.error.required = Enter the name you want to give this product
 productName.error.length = Product name must be 50 characters or less
 productName.change.hidden = name
-
-smallProducerReliefQuestion.title = Is this product eligible for Small Producer Relief?
-smallProducerReliefQuestion.heading = Is this product eligible for Small Producer Relief?
-smallProducerReliefQuestion.checkYourAnswersLabel = Eligible for Small Producer Relief
-smallProducerReliefQuestion.error.required = Select yes if this product is eligible for Small Producer Relief
-smallProducerReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-youre-eligible-for-small-producer-relief-on-alcohol-duty
-smallProducerReliefQuestion.guidance.link.text = If you’re a small producer you may be able to pay a lower rate of duty on this product.
 
 alcoholByVolumeQuestion.title = What is this product’s Alcohol by Volume (ABV) strength?
 alcoholByVolumeQuestion.heading = What is this product’s Alcohol by Volume (ABV) strength?
@@ -103,6 +109,36 @@ alcoholByVolumeQuestion.error.minimumRequired = This product’s Alcohol by Volu
 alcoholByVolumeQuestion.error.maximumRequired = This product’s Alcohol by Volume (ABV) strength must be 100 or less
 alcoholByVolumeQuestion.error.twoDecimalPlaces = This product’s Alcohol by Volume (ABV) must be a number to two decimal places
 alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
+
+draughtReliefQuestion.title = Is this product eligible for Draught Relief?
+draughtReliefQuestion.heading = Is this product eligible for Draught Relief?
+draughtReliefQuestion.checkYourAnswersLabel = Eligible for Draught Relief
+draughtReliefQuestion.error.required = Select yes if this product is eligible for Draught Relief
+draughtReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-you-can-pay-less-alcohol-duty-on-draught-products
+draughtReliefQuestion.guidance.link.text = You can get a reduced rate of duty on some draught products (opens in a new tab)
+draughtReliefQuestion.change.hidden = whether this product is eligible for draught relief
+
+smallProducerReliefQuestion.title = Is this product eligible for Small Producer Relief?
+smallProducerReliefQuestion.heading = Is this product eligible for Small Producer Relief?
+smallProducerReliefQuestion.checkYourAnswersLabel = Eligible for Small Producer Relief
+smallProducerReliefQuestion.error.required = Select yes if this product is eligible for Small Producer Relief
+smallProducerReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-youre-eligible-for-small-producer-relief-on-alcohol-duty
+smallProducerReliefQuestion.guidance.link.text = If you’re a small producer you may be able to pay a lower rate of duty on this product.
+smallProducerReliefQuestion.change.hidden = whether this product is eligible for Small Producer Relief
+
+declareSmallProducerReliefDutyRate.title = What is your Small Producer Relief duty rate?
+declareSmallProducerReliefDutyRate.heading = What is your Small Producer Relief duty rate?
+declareSmallProducerReliefDutyRate.hint = Give your answer in pounds and pence
+declareSmallProducerReliefDutyRate.guidance.link.prefix = You can
+declareSmallProducerReliefDutyRate.guidance.link.text = work out your Small Producer Relief duty rate (opens in a new tab)
+declareSmallProducerReliefDutyRate.guidance.link.url = https://www.gov.uk/guidance/find-out-your-alcohol-duty-rates-if-youre-eligible-for-small-producer-relief
+declareSmallProducerReliefDutyRate.checkYourAnswersLabel = DeclareSmallProducerReliefDutyRate
+declareSmallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
+declareSmallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
+declareSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be 0.01 or more
+declareSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be 999999999.99 or less
+declareSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
+declareSmallProducerReliefDutyRate.change.hidden = your Small Producer Relief duty rate
 
 taxType.title = Your product’s tax type code
 taxType.heading = Your product’s tax type code
@@ -121,7 +157,7 @@ taxType.taxTypeRadio.regime.Spirits = Spirits
 taxType.taxTypeRadio.regime.OtherFermentedProduct = Other fermented products
 taxType.checkYourAnswersLabel = Tax type code
 taxType.error.required = Select this product’s tax type
-taxType.change.hidden = TaxType
+taxType.change.hidden = your product’s tax type code
 
 productVolume.title = How much of this product do you need to declare?
 productVolume.heading = How much of this product do you need to declare?
@@ -134,6 +170,13 @@ productVolume.error.maximumRequired = This product’s volume must be 999999999.
 productVolume.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
 productVolume.change.hidden = Product volume
 
+pureAlcohol.title = This product has {0} litres of pure alcohol
+pureAlcohol.heading = This product has {0} litres of pure alcohol
+pureAlcohol.paragraph = This is because you told us:
+pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
+pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
+pureAlcohol.checkYourAnswersLabel = Pure alcohol
+
 dutyDue.title = The duty due on this product is £{0}
 dutyDue.heading = The duty due on this product is £{0}
 dutyDue.paragraph1 = Based on the following details:
@@ -144,22 +187,36 @@ dutyDue.paragraph2 = The duty due on this product is £{0}.
 dutyDue.rate.checkYourAnswersLabel = Duty rate
 dutyDue.duty.checkYourAnswersLabel = Duty due
 
+productList.title = Products to declare
+productList.heading = Products to declare
+productList.question = Do you want to add another product?
+productList.caption = Product list
+productList.error.required = Select yes if you want to add another product
+productList.change.hidden = this product
+productList.remove.hidden = this product
+productList.total = Total due
+productEntryList.name = Name
+productEntryList.duty = Duty due
+productEntryList.action = Action
+
+deleteProduct.title = Are you sure you want to remove this product?
+deleteProduct.heading = Are you sure you want to remove this product?
+deleteProduct.checkYourAnswersLabel = Are you sure you want to remove this product?
+deleteProduct.paragraph = This will remove this product and its information from the product list.
+deleteProduct.error.required = Select yes if you need to delete a product
+deleteProduct.change.hidden = Delete Product
+
+# End of product entry sub-journey
+
+
+
+# Beginning of duty suspended deliveries sub-journey
+
 declareDutySuspendedDeliveriesQuestion.title = Do you need to declare alcohol you delivered or received duty suspended?
 declareDutySuspendedDeliveriesQuestion.heading = Do you need to declare alcohol you delivered or received duty suspended?
 declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to declare any Duty Suspended Deliveries
 declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered it to a duty suspended warehouse.
-
-declareDutySuspendedDeliveriesOutsideUk.title = How much have you delivered duty suspended outside of the UK?
-declareDutySuspendedDeliveriesOutsideUk.heading = How much have you delivered duty suspended outside of the UK?
-declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = Amount delivered duty suspended outside the UK
-declareDutySuspendedDeliveriesOutsideUk.error.required = Enter how much you have delivered duty suspended
-declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric = How much you have delivered duty suspended must be a number
-declareDutySuspendedDeliveriesOutsideUk.change.hidden = amount delivered duty suspended outside the UK
-declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.00 or more
-declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
-declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
-declareDutySuspendedDeliveriesOutsideUk.p1 = This includes to sites in EU countries, sites in countries outside of the EU and ship stores. This will not change your duty calculation.
-declareDutySuspendedDeliveriesOutsideUk.hint = Give your answers in litres, to 2 decimal places.
+declareDutySuspendedDeliveriesQuestion.change.hidden = whether you need to declare alcohol you delivered or received duty suspended
 
 dutySuspendedDeliveriesGuidance.title = Tell us about alcohol you delivered or received duty suspended
 dutySuspendedDeliveriesGuidance.heading = Tell us about alcohol you delivered or received duty suspended
@@ -184,6 +241,18 @@ declareDutySuspendedReceived.p2 = This will not change your duty calculation.
 declareDutySuspendedReceived.para.list.1 = you received it from a UK site that is registered to send it duty suspended
 declareDutySuspendedReceived.para.list.2 = the beer is imported and all duties have already been paid
 
+declareDutySuspendedDeliveriesOutsideUk.title = How much have you delivered duty suspended outside of the UK?
+declareDutySuspendedDeliveriesOutsideUk.heading = How much have you delivered duty suspended outside of the UK?
+declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = Amount delivered duty suspended outside the UK
+declareDutySuspendedDeliveriesOutsideUk.error.required = Enter how much you have delivered duty suspended
+declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric = How much you have delivered duty suspended must be a number
+declareDutySuspendedDeliveriesOutsideUk.change.hidden = amount delivered duty suspended outside the UK
+declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.00 or more
+declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
+declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
+declareDutySuspendedDeliveriesOutsideUk.p1 = This includes to sites in EU countries, sites in countries outside of the EU and ship stores. This will not change your duty calculation.
+declareDutySuspendedDeliveriesOutsideUk.hint = Give your answers in litres, to 2 decimal places.
+
 dutySuspendedDeliveries.title = How much have you delivered duty suspended within the UK?
 dutySuspendedDeliveries.heading = How much have you delivered duty suspended within the UK?
 dutySuspendedDeliveries.p1 = For example, to UK sites that are registered to hold it duty suspended. This will not change your duty calculation.
@@ -196,47 +265,11 @@ dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty
 dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 dutySuspendedDeliveries.change.hidden = amount delivered duty suspended in the UK
 
-declareScotchWhisky.title = How much Scotch Whisky have you made?
-declareScotchWhisky.heading = How much Scotch Whisky have you made?
-declareScotchWhisky.checkYourAnswersLabel = DeclareScotchWhisky
-declareScotchWhisky.error.nonNumeric = The volume of Scotch Whisky you need to declare must be a number
-declareScotchWhisky.error.required = Enter how much Scotch Whisky you need to declare this quarter
-declareScotchWhisky.change.hidden = DeclareScotchWhisky
-declareScotchWhisky.hint = Give your answers in litres, to 2 decimal places.
-declareScotchWhisky.inputSuffix = litres
-declareScotchWhisky.error.maximumRequired = The volume of Scotch Whisky you need to declare must be 999999999.99 or less
-declareScotchWhisky.error.minimumRequired = The volume of Scotch Whisky you need to declare must be 0.00 or more
-declareScotchWhisky.error.twoDecimalPlaces = The volume of Scotch Whisky you need to declare must be a number to 2 decimal places
+# End of of duty suspended deliveries sub-journey
 
-declareSpiritsTotal.title = What is the total volume of spirits you made this quarter?
-declareSpiritsTotal.heading = What is the total volume of spirits you made this quarter?
-declareSpiritsTotal.checkYourAnswersLabel = DeclareSpiritsTotal
-declareSpiritsTotal.error.nonNumeric = The volume of spirits you need to declare must be a number
-declareSpiritsTotal.error.required = Enter the volume of spirits you need to declare for this quarter
-declareSpiritsTotal.change.hidden = DeclareSpiritsTotal
-declareSpiritsTotal.error.minimumRequired = The volume of spirits you need to declare must be 0.00 or more
-declareSpiritsTotal.error.maximumRequired = The volume of spirits you need to declare must be 999999999.99 or less
-declareSpiritsTotal.error.twoDecimalPlaces = The volume of spirits you need to declare must be a number to 2 decimal places
-declareSpiritsTotal.hint = Give your answers in litres, to 2 decimal places.
-declareSpiritsTotal.inputSuffix = litres
 
-declareIrishWhiskey.title = How much Irish Whiskey have you made?
-declareIrishWhiskey.heading = How much Irish Whiskey have you made?
-declareIrishWhiskey.checkYourAnswersLabel = DeclareIrishWhiskey
-declareIrishWhiskey.hint = Give your answers in litres, to 2 decimal places.
-declareIrishWhiskey.inputSuffix = litres
-declareIrishWhiskey.error.nonNumeric = The volume of Irish Whiskey you need to declare must be a number
-declareIrishWhiskey.error.required = Enter how much Irish Whiskey you need to declare this quarter
-declareIrishWhiskey.error.minimumRequired = The volume of Irish Whiskey you need to declare must be 0.00 or more
-declareIrishWhiskey.error.maximumRequired = The volume of Irish Whiskey you need to declare must be 999999999.99 or less
-declareIrishWhiskey.error.twoDecimalPlaces = The volume of Irish Whiskey you need to declare must be a number to 2 decimal places
-declareIrishWhiskey.change.hidden = Declare Irish Whiskey
 
-declareAlcoholDutyQuestion.title = Do you need to declare duty on any alcoholic products?
-declareAlcoholDutyQuestion.heading = Do you need to declare duty on any alcoholic products?
-declareAlcoholDutyQuestion.checkYourAnswersLabel = declareAlcoholDutyQuestion
-declareAlcoholDutyQuestion.error.required = Select yes if you need to declare duty on any alcoholic products
-declareAlcoholDutyQuestion.change.hidden = DeclareAlcoholDutyQuestion
+# Beginning of quarterly spirits questions sub-journey
 
 quarterlySpiritsReturnGuidance.title = Tell us about your ingredients and spirits
 quarterlySpiritsReturnGuidance.heading = Tell us about your ingredients and spirits
@@ -269,77 +302,41 @@ quarterlySpiritsReturnGuidance.para3.list12 = cider or perry
 quarterlySpiritsReturnGuidance.para3.list13 = any other materials
 quarterlySpiritsReturnGuidance.p4 = Your answers will not change your duty calculation.
 
-productEntryGuidance.title = Tell us about your alcohol
-productEntryGuidance.heading = Tell us about your alcohol
-productEntryGuidance.p1 = For every alcoholic product you declare, we need to know
-productEntryGuidance.para1.list1 = its Alcohol by Volume (ABV) strength
-productEntryGuidance.para1.list2 = its tax type
-productEntryGuidance.para1.list3 = how much of it you need to declare
-productEntryGuidance.p2 = We will also ask you to give each product a name so you can identify it on your return.
-productEntryGuidance.p3 = You can group different products together as a single item on your return as long as they have the same ABV strength and tax type.
-productEntryGuidance.p4 = You do not need to list each item by brand or Stock Keeping Unit (SKU).
+declareSpiritsTotal.title = What is the total volume of spirits you made this quarter?
+declareSpiritsTotal.heading = What is the total volume of spirits you made this quarter?
+declareSpiritsTotal.checkYourAnswersLabel = DeclareSpiritsTotal
+declareSpiritsTotal.error.nonNumeric = The volume of spirits you need to declare must be a number
+declareSpiritsTotal.error.required = Enter the volume of spirits you need to declare for this quarter
+declareSpiritsTotal.change.hidden = the total volume of spirits you made this quarter
+declareSpiritsTotal.error.minimumRequired = The volume of spirits you need to declare must be 0.00 or more
+declareSpiritsTotal.error.maximumRequired = The volume of spirits you need to declare must be 999999999.99 or less
+declareSpiritsTotal.error.twoDecimalPlaces = The volume of spirits you need to declare must be a number to 2 decimal places
+declareSpiritsTotal.hint = Give your answers in litres, to 2 decimal places.
+declareSpiritsTotal.inputSuffix = litres
 
-declareSmallProducerReliefDutyRate.title = What is your Small Producer Relief duty rate?
-declareSmallProducerReliefDutyRate.heading = What is your Small Producer Relief duty rate?
-declareSmallProducerReliefDutyRate.hint = Give your answer in pounds and pence
-declareSmallProducerReliefDutyRate.guidance.link.prefix = You can
-declareSmallProducerReliefDutyRate.guidance.link.text = work out your Small Producer Relief duty rate (opens in a new tab)
-declareSmallProducerReliefDutyRate.guidance.link.url = https://www.gov.uk/guidance/find-out-your-alcohol-duty-rates-if-youre-eligible-for-small-producer-relief
-declareSmallProducerReliefDutyRate.checkYourAnswersLabel = DeclareSmallProducerReliefDutyRate
-declareSmallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
-declareSmallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
-declareSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be 0.01 or more
-declareSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be 999999999.99 or less
-declareSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
-declareSmallProducerReliefDutyRate.change.hidden = DeclareSmallProducerReliefDutyRate
+declareScotchWhisky.title = How much Scotch Whisky have you made?
+declareScotchWhisky.heading = How much Scotch Whisky have you made?
+declareScotchWhisky.checkYourAnswersLabel = DeclareScotchWhisky
+declareScotchWhisky.error.nonNumeric = The volume of Scotch Whisky you need to declare must be a number
+declareScotchWhisky.error.required = Enter how much Scotch Whisky you need to declare this quarter
+declareScotchWhisky.change.hidden = how much Scotch Whisky you have made
+declareScotchWhisky.hint = Give your answers in litres, to 2 decimal places.
+declareScotchWhisky.inputSuffix = litres
+declareScotchWhisky.error.maximumRequired = The volume of Scotch Whisky you need to declare must be 999999999.99 or less
+declareScotchWhisky.error.minimumRequired = The volume of Scotch Whisky you need to declare must be 0.00 or more
+declareScotchWhisky.error.twoDecimalPlaces = The volume of Scotch Whisky you need to declare must be a number to 2 decimal places
 
-unmaltedGrainUsed.title = How much unmalted grain have you used?
-unmaltedGrainUsed.heading = How much unmalted grain have you used?
-unmaltedGrainUsed.checkYourAnswersLabel = UnmaltedGrainUsed
-unmaltedGrainUsed.hint = Give your answers in tonnes, to 2 decimal places.
-unmaltedGrainUsed.inputSuffix = tonnes
-unmaltedGrainUsed.error.nonNumeric = How much unmalted grain you have used must be a number
-unmaltedGrainUsed.error.required = Enter how much unmalted grain you have used
-unmaltedGrainUsed.error.minimumRequired = How much unmalted grain you have used must be 0.01 or more
-unmaltedGrainUsed.error.maximumRequired = How much unmalted grain you have used must be 999999999.99 or less
-unmaltedGrainUsed.error.twoDecimalPlaces =How much unmalted grain you have used must be a number to 2 decimal places
-unmaltedGrainUsed.change.hidden = Unmalted Grain Used
-
-maltedBarleyUsed.title = How much malted barley have you used?
-maltedBarleyUsed.heading = How much malted barley have you used?
-maltedBarleyUsed.hint = Give your answer in tonnes, to 2 decimal places.
-maltedBarleyUsed.checkYourAnswersLabel = MaltedBarleyUsed
-maltedBarleyUsed.error.nonNumeric = How much malted barley you have used must be a number
-maltedBarleyUsed.error.required = Enter how much malted barley you have used
-maltedBarleyUsed.error.minimumRequired = How much malted barley you have used must be 0.01 or more
-maltedBarleyUsed.error.maximumRequired = How much malted barley you have used must be 999999999.99 or less
-maltedBarleyUsed.error.twoDecimalPlaces = How much malted barley you have used must be a number to 2 decimal places
-maltedBarleyUsed.change.hidden = MaltedBarleyUsed
-maltedBarleyUsed.inputSuffix = tonnes
-
-ryeUsed.title = How much rye have you used?
-ryeUsed.heading = How much rye have you used?
-ryeUsed.checkYourAnswersLabel = RyeUsed
-ryeUsed.hint = Give your answers in tonnes, to 2 decimal places.
-ryeUsed.inputSuffix = tonnes
-ryeUsed.error.nonNumeric = How much rye you have used must be a number
-ryeUsed.error.required = Enter how much rye you have used
-ryeUsed.error.minimumRequired = How much rye you have used must be 0.01 or more
-ryeUsed.error.maximumRequired = How much rye you have used must be 999999999.99 or less
-ryeUsed.error.twoDecimalPlaces = How much rye you have used must be a number to 2 decimal places
-ryeUsed.change.hidden = Rye Used
-
-wheatUsed.title = How much wheat have you used?
-wheatUsed.heading = How much wheat have you used?
-wheatUsed.checkYourAnswersLabel = WheatUsed
-wheatUsed.hint = Give your answers in tonnes, to 2 decimal places.
-wheatUsed.inputSuffix = tonnes
-wheatUsed.error.nonNumeric = How much wheat you have used must be a number
-wheatUsed.error.required = Enter how much wheat you have used
-wheatUsed.error.minimumRequired = How much wheat you have used must be 0.01 or more
-wheatUsed.error.maximumRequired = How much wheat you have used must be 999999999.99 or less
-wheatUsed.error.twoDecimalPlaces = How much wheat you have used must be a number to 2 decimal places
-wheatUsed.change.hidden = Wheat Used
+declareIrishWhiskey.title = How much Irish Whiskey have you made?
+declareIrishWhiskey.heading = How much Irish Whiskey have you made?
+declareIrishWhiskey.checkYourAnswersLabel = DeclareIrishWhiskey
+declareIrishWhiskey.hint = Give your answers in litres, to 2 decimal places.
+declareIrishWhiskey.inputSuffix = litres
+declareIrishWhiskey.error.nonNumeric = The volume of Irish Whiskey you need to declare must be a number
+declareIrishWhiskey.error.required = Enter how much Irish Whiskey you need to declare this quarter
+declareIrishWhiskey.error.minimumRequired = The volume of Irish Whiskey you need to declare must be 0.00 or more
+declareIrishWhiskey.error.maximumRequired = The volume of Irish Whiskey you need to declare must be 999999999.99 or less
+declareIrishWhiskey.error.twoDecimalPlaces = The volume of Irish Whiskey you need to declare must be a number to 2 decimal places
+declareIrishWhiskey.change.hidden = how much Irish Whiskey you have made
 
 spiritType.title = Which of these spirits have you made?
 spiritType.heading = Which of these spirits have you made?
@@ -353,15 +350,56 @@ spiritType.ciderOrPerry = Spirits produced from cider or perry
 spiritType.other = Other
 spiritType.checkYourAnswersLabel = Which of these spirits have you made?
 spiritType.error.required = Select the spirits you have made this quarter
-spiritType.change.hidden = SpiritType
+spiritType.change.hidden = which of these spirits you have made
 spiritType.hint = Select all that apply in the past quarter.
 
-pureAlcohol.title = This product has {0} litres of pure alcohol
-pureAlcohol.heading = This product has {0} litres of pure alcohol
-pureAlcohol.paragraph = This is because you told us:
-pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
-pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
-pureAlcohol.checkYourAnswersLabel = Pure alcohol
+maltedBarleyUsed.title = How much malted barley have you used?
+maltedBarleyUsed.heading = How much malted barley have you used?
+maltedBarleyUsed.hint = Give your answer in tonnes, to 2 decimal places.
+maltedBarleyUsed.checkYourAnswersLabel = MaltedBarleyUsed
+maltedBarleyUsed.error.nonNumeric = How much malted barley you have used must be a number
+maltedBarleyUsed.error.required = Enter how much malted barley you have used
+maltedBarleyUsed.error.minimumRequired = How much malted barley you have used must be 0.01 or more
+maltedBarleyUsed.error.maximumRequired = How much malted barley you have used must be 999999999.99 or less
+maltedBarleyUsed.error.twoDecimalPlaces = How much malted barley you have used must be a number to 2 decimal places
+maltedBarleyUsed.change.hidden = Malted Barley used
+maltedBarleyUsed.inputSuffix = tonnes
+
+wheatUsed.title = How much wheat have you used?
+wheatUsed.heading = How much wheat have you used?
+wheatUsed.checkYourAnswersLabel = WheatUsed
+wheatUsed.hint = Give your answers in tonnes, to 2 decimal places.
+wheatUsed.inputSuffix = tonnes
+wheatUsed.error.nonNumeric = How much wheat you have used must be a number
+wheatUsed.error.required = Enter how much wheat you have used
+wheatUsed.error.minimumRequired = How much wheat you have used must be 0.01 or more
+wheatUsed.error.maximumRequired = How much wheat you have used must be 999999999.99 or less
+wheatUsed.error.twoDecimalPlaces = How much wheat you have used must be a number to 2 decimal places
+wheatUsed.change.hidden = Wheat Used
+
+ryeUsed.title = How much rye have you used?
+ryeUsed.heading = How much rye have you used?
+ryeUsed.checkYourAnswersLabel = RyeUsed
+ryeUsed.hint = Give your answers in tonnes, to 2 decimal places.
+ryeUsed.inputSuffix = tonnes
+ryeUsed.error.nonNumeric = How much rye you have used must be a number
+ryeUsed.error.required = Enter how much rye you have used
+ryeUsed.error.minimumRequired = How much rye you have used must be 0.01 or more
+ryeUsed.error.maximumRequired = How much rye you have used must be 999999999.99 or less
+ryeUsed.error.twoDecimalPlaces = How much rye you have used must be a number to 2 decimal places
+ryeUsed.change.hidden = Rye Used
+
+unmaltedGrainUsed.title = How much unmalted grain have you used?
+unmaltedGrainUsed.heading = How much unmalted grain have you used?
+unmaltedGrainUsed.checkYourAnswersLabel = UnmaltedGrainUsed
+unmaltedGrainUsed.hint = Give your answers in tonnes, to 2 decimal places.
+unmaltedGrainUsed.inputSuffix = tonnes
+unmaltedGrainUsed.error.nonNumeric = How much unmalted grain you have used must be a number
+unmaltedGrainUsed.error.required = Enter how much unmalted grain you have used
+unmaltedGrainUsed.error.minimumRequired = How much unmalted grain you have used must be 0.01 or more
+unmaltedGrainUsed.error.maximumRequired = How much unmalted grain you have used must be 999999999.99 or less
+unmaltedGrainUsed.error.twoDecimalPlaces =How much unmalted grain you have used must be a number to 2 decimal places
+unmaltedGrainUsed.change.hidden = Unmalted Grain Used
 
 ethyleneGasUsed.title = How much ethylene gas have you used?
 ethyleneGasUsed.heading = How much ethylene gas have you used?
@@ -371,27 +409,15 @@ ethyleneGasUsed.error.required = Enter how much ethylene gas you have used
 ethyleneGasUsed.error.minimumRequired = How much ethylene gas you have used must be 0.01 or more
 ethyleneGasUsed.error.maximumRequired = How much ethylene gas you have used must be 999999999.99 or less
 ethyleneGasUsed.error.twoDecimalPlaces = How much ethylene gas you have used must be a number to 2 decimal places
-ethyleneGasUsed.change.hidden = EthyleneGasUsed
+ethyleneGasUsed.change.hidden = Ethylene Gas used
 ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
 ethyleneGasUsed.inputSuffix = tonnes
 
-productList.title = Products to declare
-productList.heading = Products to declare
-productList.question = Do you want to add another product?
-productList.caption = Product list
-productList.error.required = Select yes if you want to add another product
-productList.change.hidden = Product List
-productList.total = Total due
-productEntryList.name = Name
-productEntryList.duty = Duty due
-productEntryList.action = Action
+# End of quarterly spirits questions sub-journey
 
-deleteProduct.title = Are you sure you want to remove this product?
-deleteProduct.heading = Are you sure you want to remove this product?
-deleteProduct.checkYourAnswersLabel = Are you sure you want to remove this product?
-deleteProduct.paragraph = This will remove this product and its information from the product list.
-deleteProduct.error.required = Select yes if you need to delete a product
-deleteProduct.change.hidden = DeleteProduct
+
+
+# Beginning of adjustments sub-journey
 
 declareAdjustmentQuestion.title = Do you need to make any adjustments from a previously submitted return?
 declareAdjustmentQuestion.heading = Do you need to make any adjustments from a previously submitted return?
@@ -403,14 +429,14 @@ declareAdjustmentQuestion.para1.list4 = you have paid duty on alcohol and have n
 declareAdjustmentQuestion.para1.list5 = you have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate
 declareAdjustmentQuestion.checkYourAnswersLabel = declareAdjustmentQuestion
 declareAdjustmentQuestion.error.required = Select yes if you need to enter an adjustment.
-declareAdjustmentQuestion.change.hidden = DeclareAdjustmentQuestion
+declareAdjustmentQuestion.change.hidden = whether you need to make any adjustments from a previously submitted return
 
 adjustmentType.title = Which type of adjustment do you need to make?
 adjustmentType.heading = Which type of adjustment do you need to make?
 adjustmentType.under-declaration = Under-declaration
 adjustmentType.under-declaration.hint = You have under-declared alcohol on a previous return and have not paid enough duty.
-adjustmentType.over-declation = Over-declaration
-adjustmentType.over-declation.hint = You have over-declared alcohol on a previous return and paid too much duty.
+adjustmentType.over-declaration = Over-declaration
+adjustmentType.over-declaration.hint = You have over-declared alcohol on a previous return and paid too much duty.
 adjustmentType.spoilt = Spoilt
 adjustmentType.spoilt.hint = You have paid duty on alcohol and it is now spoilt and cannot be consumed.
 adjustmentType.drawback = Drawback
@@ -430,3 +456,6 @@ alcoholByVolume.error.minimumRequired = The ABV must be higher than 0
 alcoholByVolume.error.maximumRequired = The ABV must be 100 or lower
 alcoholByVolume.error.oneDecimalPlace = The ABV must be to 1 decimal place or less
 alcoholByVolume.change.hidden = What is the Alcohol by Volume (ABV) strength for this adjustment
+
+# End of adjustments sub-journey
+

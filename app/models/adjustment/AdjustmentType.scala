@@ -27,14 +27,14 @@ sealed trait AdjustmentType
 object AdjustmentType extends Enumerable.Implicits {
 
   case object Underdeclaration extends WithName("under-declaration") with AdjustmentType
-  case object Overdeclation extends WithName("over-declation") with AdjustmentType
+  case object Overdeclaration extends WithName("over-declaration") with AdjustmentType
   case object Spoilt extends WithName("spoilt") with AdjustmentType
   case object Drawback extends WithName("drawback") with AdjustmentType
   case object RepackagedDraughtProducts extends WithName("repackaged-draught-products") with AdjustmentType
 
   val values: Seq[AdjustmentType] = Seq(
     Underdeclaration,
-    Overdeclation,
+    Overdeclaration,
     Spoilt,
     Drawback,
     RepackagedDraughtProducts

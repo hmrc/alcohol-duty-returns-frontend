@@ -54,11 +54,13 @@ object ProductListSummaryHelper {
         actions = Seq(
           TableRowActionViewModel(
             label = messages("site.change"),
-            href = controllers.productEntry.routes.CheckYourAnswersController.onPageLoad(Some(index))
+            href = controllers.productEntry.routes.CheckYourAnswersController.onPageLoad(Some(index)),
+            visuallyHiddenText = Some(messages("productList.change.hidden"))
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
-            href = controllers.productEntry.routes.DeleteProductController.onPageLoad(index: Int)
+            href = controllers.productEntry.routes.DeleteProductController.onPageLoad(index: Int),
+            visuallyHiddenText = Some(messages("productList.remove.hidden"))
           )
         )
       )

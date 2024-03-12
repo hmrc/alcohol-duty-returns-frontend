@@ -21,7 +21,6 @@ GET         /account/signed-out                          controllers.auth.Signed
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 # Beginning of product entry sub-journey
-
 GET        /tell-us-about-your-alcohol                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
 
 GET        /do-you-need-to-declare-duty                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
@@ -71,6 +70,13 @@ GET        /the-duty-due-on-this-product                       controllers.produ
 GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
 POST       /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onSubmit()
 
+GET        /return-products                        controllers.productEntry.ProductListController.onPageLoad()
+POST       /return-products                        controllers.productEntry.ProductListController.onSubmit()
+GET        /change-return-products                  controllers.productEntry.ProductListController.onPageLoad()
+POST       /change-return-products                  controllers.productEntry.ProductListController.onSubmit()
+
+GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(index: Int)
+POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(index: Int)
 # End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
@@ -148,14 +154,8 @@ GET        /change-how-much-ethylene-gas-have-you-used                        co
 POST       /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey
 
-GET        /return-products                        controllers.productEntry.ProductListController.onPageLoad()
-POST       /return-products                        controllers.productEntry.ProductListController.onSubmit()
-GET        /change-return-products                  controllers.productEntry.ProductListController.onPageLoad()
-POST       /change-return-products                  controllers.productEntry.ProductListController.onSubmit()
 
-GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(index: Int)
-POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(index: Int)
-
+# Beginning of adjustments sub-journey
 GET        /do-you-need-to-make-any-adjustments-from-a-previous-return                        controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /do-you-need-to-make-any-adjustments-from-a-previous-return                       controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = NormalMode)
 GET        /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
@@ -170,3 +170,5 @@ GET        /what-is-the-adjustment-abv                  controllers.adjustment.A
 POST       /what-is-the-adjustment-abv                  controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = CheckMode)
+
+# End of adjustments sub-journey
