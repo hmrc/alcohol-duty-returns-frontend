@@ -26,6 +26,11 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryAdjustmentType: Arbitrary[adjustment.AdjustmentType] =
+    Arbitrary {
+      Gen.oneOf(adjustment.AdjustmentType.values.toSeq)
+    }
+
   implicit lazy val arbitrarySpiritType: Arbitrary[SpiritType] =
     Arbitrary {
       Gen.oneOf(SpiritType.values)

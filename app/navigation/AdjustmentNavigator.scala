@@ -24,8 +24,12 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class AdjustmentNavigator @Inject() () extends BaseNavigator {
 
-  override val normalRoutes: Page => UserAnswers => Call = { case pages.adjustment.DeclareAdjustmentQuestionPage =>
-    _ => routes.IndexController.onPageLoad
+  override val normalRoutes: Page => UserAnswers => Call = {
+    case pages.adjustment.DeclareAdjustmentQuestionPage =>
+      _ => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+    case _                                              =>
+      _ => routes.IndexController.onPageLoad
+
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
