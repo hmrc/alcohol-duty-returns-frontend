@@ -48,11 +48,12 @@ trait BigDecimalFieldBehaviours extends FieldBehaviours {
     form: Form[_],
     fieldName: String,
     minimum: BigDecimal,
+    decimal: Int,
     expectedError: FormError
   ): Unit =
     s"not bind big decimals below $minimum" in {
 
-      forAll(bigDecimalsBelowValue(minimum) -> "bigDecimalBelowMin") { number: String =>
+      forAll(bigDecimalsBelowValue(minimum, decimal) -> "bigDecimalBelowMin") { number: String =>
         val result = form.bind(Map(fieldName -> number)).apply(fieldName)
         result.errors must contain only expectedError
       }
@@ -62,11 +63,12 @@ trait BigDecimalFieldBehaviours extends FieldBehaviours {
     form: Form[_],
     fieldName: String,
     maximum: BigDecimal,
+    decimal: Int,
     expectedError: FormError
   ): Unit =
     s"not bind big decimals above $maximum" in {
 
-      forAll(bigDecimalsAboveValue(maximum) -> "bigDecimalAboveMax") { number: String =>
+      forAll(bigDecimalsAboveValue(maximum, decimal) -> "bigDecimalAboveMax") { number: String =>
         val result = form.bind(Map(fieldName -> number)).apply(fieldName)
         result.errors must contain only expectedError
       }

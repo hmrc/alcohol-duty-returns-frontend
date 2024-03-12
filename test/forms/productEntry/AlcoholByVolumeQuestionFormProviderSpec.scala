@@ -31,8 +31,9 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
 
     val minimum = 0.01
     val maximum = 100.01
+    val decimal = 2
 
-    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
@@ -51,6 +52,7 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
       form,
       fieldName,
       minimum = minimum,
+      decimal = decimal,
       expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.minimumRequired", ArraySeq(minimum))
     )
 
@@ -58,6 +60,7 @@ class AlcoholByVolumeQuestionFormProviderSpec extends BigDecimalFieldBehaviours 
       form,
       fieldName,
       maximum = maximum,
+      decimal = decimal,
       expectedError = FormError(fieldName, "alcoholByVolumeQuestion.error.maximumRequired", ArraySeq(100))
     )
 

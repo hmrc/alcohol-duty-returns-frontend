@@ -26,6 +26,7 @@ class DutySuspendedDeliveriesFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "duty-suspended-deliveries-input" -> bigDecimal(
+        2,
         "dutySuspendedDeliveries.error.required",
         "dutySuspendedDeliveries.error.nonNumeric",
         "dutySuspendedDeliveries.error.twoDecimalPlaces"

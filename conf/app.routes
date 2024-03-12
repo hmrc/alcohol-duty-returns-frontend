@@ -166,4 +166,9 @@ POST       /what-type-of-adjustment                        controllers.adjustmen
 GET        /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /what-is-the-adjustment-abv                  controllers.adjustment.AlcoholByVolumeController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-is-the-adjustment-abv                  controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = CheckMode)
+
 # End of adjustments sub-journey

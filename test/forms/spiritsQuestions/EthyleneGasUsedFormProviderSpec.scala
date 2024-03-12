@@ -30,8 +30,9 @@ class EthyleneGasUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val minimum = 0.01
     val maximum = 999999999.99
+    val decimal = 2
 
-    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
@@ -50,12 +51,14 @@ class EthyleneGasUsedFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       minimum = minimum,
+      decimal = decimal,
       expectedError = FormError(fieldName, "ethyleneGasUsed.error.minimumRequired", ArraySeq(minimum))
     )
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
+      decimal = decimal,
       expectedError = FormError(fieldName, "ethyleneGasUsed.error.maximumRequired", ArraySeq(maximum))
     )
 

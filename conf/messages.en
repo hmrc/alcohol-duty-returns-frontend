@@ -447,4 +447,15 @@ adjustmentType.checkYourAnswersLabel = adjustment
 adjustmentType.error.required = Select the adjustment you need to make
 adjustmentType.change.hidden = which type of adjustment do you need to make
 
+alcoholByVolume.title = What is the Alcohol by Volume (ABV) strength for this adjustment?
+alcoholByVolume.heading = What is the Alcohol by Volume (ABV) strength for this adjustment?
+alcoholByVolume.checkYourAnswersLabel = AlcoholByVolume
+alcoholByVolume.error.nonNumeric = The ABV must be a number
+alcoholByVolume.error.required = Enter the ABV of this adjustment
+alcoholByVolume.error.minimumRequired = The ABV must be higher than 0
+alcoholByVolume.error.maximumRequired = The ABV must be 100 or lower
+alcoholByVolume.error.oneDecimalPlace = The ABV must be to 1 decimal place or less
+alcoholByVolume.change.hidden = What is the Alcohol by Volume (ABV) strength for this adjustment
+
 # End of adjustments sub-journey
+

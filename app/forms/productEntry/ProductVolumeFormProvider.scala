@@ -25,6 +25,7 @@ class ProductVolumeFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "product-volume-input" -> bigDecimal(
+        2,
         "productVolume.error.required",
         "productVolume.error.nonNumeric",
         "productVolume.error.twoDecimalPlaces"

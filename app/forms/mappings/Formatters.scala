@@ -39,13 +39,14 @@ trait Formatters {
     }
 
   private[mappings] def bigDecimalFormatter(
+    decimalPlaces: Int,
     requiredKey: String,
     nonNumericKey: String,
-    twoDecimalPlacesKey: String,
+    decimalPlacesKey: String,
     args: Seq[String] = Seq.empty
   ): Formatter[BigDecimal] =
     new Formatter[BigDecimal] {
-      val decimalRegexp = """^[+-]?[0-9]*(\.[0-9]{0,2})?$"""
+      val decimalRegexp = s"""^[+-]?[0-9]*(\\.[0-9]{0,$decimalPlaces})?$$"""
 
       private val baseFormatter = stringFormatter(requiredKey, args)
 
@@ -62,7 +63,7 @@ trait Formatters {
                 if (res.toString().matches(decimalRegexp)) {
                   Right(res)
                 } else {
-                  Left(Seq(FormError(key, twoDecimalPlacesKey, args)))
+                  Left(Seq(FormError(key, decimalPlacesKey, args)))
                 }
               }
           }

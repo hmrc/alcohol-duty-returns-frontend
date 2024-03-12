@@ -29,7 +29,6 @@ class AdjustmentNavigator @Inject() () extends BaseNavigator {
       _ => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
     case _                                              =>
       _ => routes.IndexController.onPageLoad
-
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>

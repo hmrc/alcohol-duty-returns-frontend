@@ -25,6 +25,7 @@ class MaltedBarleyUsedFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "malted-barley-used-input" -> bigDecimal(
+        2,
         "maltedBarleyUsed.error.required",
         "maltedBarleyUsed.error.nonNumeric",
         "maltedBarleyUsed.error.twoDecimalPlaces"
