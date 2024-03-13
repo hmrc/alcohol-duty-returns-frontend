@@ -107,6 +107,37 @@ class DraughtReliefQuestionControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "must redirect to the next page when the same data is submitted" in {
+      val userAnswers =
+        UserAnswers(userAnswersId)
+          .set(CurrentProductEntryPage, ProductEntry(draughtRelief = Some(true)))
+          .success
+          .value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, draughtReliefQuestionRoute)
+            .withFormUrlEncodedBody(("draught-relief-input", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()

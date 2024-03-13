@@ -188,6 +188,53 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "must redirect to the next page when the same data is submitted" in {
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future.successful(
+        rateBandList
+      )
+
+      val userAnswers =
+        UserAnswers(userAnswersId)
+          .set(
+            CurrentProductEntryPage,
+            ProductEntry(
+              abv = Some(AlcoholByVolume(3.5)),
+              draughtRelief = Some(true),
+              smallProducerRelief = Some(false),
+              taxCode = Some(taxCode),
+              regime = Some(alcoholRegime),
+              taxRate = rate
+            )
+          )
+          .success
+          .value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, taxTypeRoute)
+            .withFormUrlEncodedBody(("value", s"${taxCode}_$alcoholRegime"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
