@@ -21,7 +21,8 @@ import play.api.libs.json.{Json, OFormat}
 
 case class AdjustmentEntry(
   adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None
+  abv: Option[AlcoholByVolume] = None,
+  volume: Option[BigDecimal] = None
 )
 object AdjustmentEntry {
   implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]

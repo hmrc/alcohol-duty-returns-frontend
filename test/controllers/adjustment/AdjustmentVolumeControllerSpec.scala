@@ -23,16 +23,19 @@ import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.adjustment.AdjustmentVolumePage
+import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.Future
+import scala.util.Try
 
 class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
 
@@ -45,39 +48,43 @@ class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val adjustmentVolumeRoute = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode).url
 
+  val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
+  val userAnswers     = UserAnswers(userAnswersId).set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+
   "AdjustmentVolume Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, adjustmentVolumeRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[AdjustmentVolumeView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(AdjustmentVolumePage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentVolumeRoute)
 
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[AdjustmentVolumeView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, NormalMode, "spoilt")(request, messages(application)).toString
+      }
+    }
+
+    "must populate the view correctly on a GET when the question has previously been answered" in {
+      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), volume = Some(validAnswer))
+
+      val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+
+      val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentVolumeRoute)
+
         val view = application.injector.instanceOf[AdjustmentVolumeView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, "spoilt")(
           request,
           messages(application)
         ).toString
@@ -112,7 +119,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =
@@ -126,7 +133,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, "spoilt")(request, messages(application)).toString
       }
     }
 

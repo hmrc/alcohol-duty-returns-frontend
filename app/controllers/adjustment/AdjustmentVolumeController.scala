@@ -26,6 +26,7 @@ import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import models.adjustment.AdjustmentEntry
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentVolumeView
@@ -50,10 +51,10 @@ class AdjustmentVolumeController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                               => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.abv.isDefined =>
-        Ok(view(form.fill(value.abv.get.value), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      case Some(value)                        => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case None                                  => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(value) if value.volume.isDefined =>
+        Ok(view(form.fill(value.volume.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                           => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
     }
   }
 
@@ -70,11 +71,16 @@ class AdjustmentVolumeController @Inject() (
                   BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
                 )
             },
-          value =>
+          value => {
+            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentVolumePage, value))
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(volume = Some(value)))
+                )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers))
+          }
         )
   }
 }

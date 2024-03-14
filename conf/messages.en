@@ -69,8 +69,6 @@ unauthorised.heading = You can’t access this service with this account
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty return
 section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits return
-
-
 section.adjustment.default = Alcohol Duty adjustment
 section.adjustment.under-declaration = Adjust for under-declared alcohol
 section.adjustment.over-declaration = Adjust for over-declared alcohol
