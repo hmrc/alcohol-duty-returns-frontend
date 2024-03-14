@@ -16,13 +16,14 @@
 
 package models.productEntry
 
-import models.{AlcoholByVolume, AlcoholRegime}
+import models.{AlcoholByVolume, AlcoholRegime, RateTypeResponse}
 import play.api.libs.json.{Json, OFormat}
 
 case class ProductEntry(
   index: Option[Int] = None,
   name: Option[String] = None,
   abv: Option[AlcoholByVolume] = None,
+  rateType: Option[RateTypeResponse] = None,
   volume: Option[BigDecimal] = None,
   draughtRelief: Option[Boolean] = None,
   smallProducerRelief: Option[Boolean] = None,
@@ -35,6 +36,7 @@ case class ProductEntry(
 ) {
   def isComplete: Boolean =
     abv.isDefined &&
+      rateType.isDefined &&
       volume.isDefined &&
       draughtRelief.isDefined &&
       smallProducerRelief.isDefined &&

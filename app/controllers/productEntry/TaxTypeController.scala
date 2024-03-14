@@ -154,12 +154,8 @@ class TaxTypeController @Inject() (
       .get(CurrentProductEntryPage)
       .getOrElse(throw new RuntimeException("Couldn't fetch currentProductEntry value from cache"))
     val abv                            = productEntry.abv.getOrElse(throw new RuntimeException("Couldn't fetch abv value from cache"))
-    val eligibleForDraughtRelief       = productEntry.draughtRelief.getOrElse(
-      throw new RuntimeException("Couldn't fetch eligibleForDraughtRelief value from cache")
-    )
-    val eligibleForSmallProducerRelief = productEntry.smallProducerRelief.getOrElse(
-      throw new RuntimeException("Couldn't fetch eligibleForSmallProducerRelief value from cache")
-    )
+    val eligibleForDraughtRelief       = productEntry.draughtRelief.getOrElse(false)
+    val eligibleForSmallProducerRelief = productEntry.smallProducerRelief.getOrElse(false)
 
     val rateType: RateType = RateType(eligibleForDraughtRelief, eligibleForSmallProducerRelief)
 

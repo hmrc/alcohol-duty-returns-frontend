@@ -16,25 +16,29 @@
 
 package controllers.productEntry
 
-import connectors.CacheConnector
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.productEntry.AlcoholByVolumeQuestionFormProvider
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 
 import javax.inject.Inject
-import models.{AlcoholByVolume, Mode}
+import models.{AlcoholByVolume, AlcoholRegime, Mode, RateTypeResponse}
 import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
 import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.productEntry.AlcoholByVolumeQuestionView
 
+import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
 class AlcoholByVolumeQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
+  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
   navigator: ProductEntryNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -69,15 +73,33 @@ class AlcoholByVolumeQuestionController @Inject() (
             val product                      = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
             val (updatedProduct, hasChanged) = updateABV(product, value)
             for {
+              rateType       <- fetchRateType(AlcoholByVolume(value))
               updatedAnswers <-
                 Future.fromTry(
                   request.userAnswers
-                    .set(CurrentProductEntryPage, updatedProduct.copy(abv = Some(AlcoholByVolume(value))))
+                    .set(
+                      CurrentProductEntryPage,
+                      updatedProduct.copy(abv = Some(AlcoholByVolume(value)), rateType = Some(rateType))
+                    )
                 )
               _              <- cacheConnector.set(updatedAnswers)
+
             } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers, hasChanged))
           }
         )
+  }
+
+  def fetchRateType(abv: AlcoholByVolume)(implicit hc: HeaderCarrier): (Future[RateTypeResponse]) = {
+    //val abv = productEntry.abv.getOrElse(throw new RuntimeException("Couldn't fetch abv value from cache"))
+
+    //hardcoded for now, will need to get this from obligation period
+    val ratePeriod: YearMonth = YearMonth.of(2024, 1)
+
+    //hardcoded for now, will need to get this from subscription data
+    val approvedAlcoholRegimes: Set[AlcoholRegime] = Set(Beer, Wine, Cider, Spirits, OtherFermentedProduct)
+    for {
+      rateType <- alcoholDutyCalculatorConnector.rateType(abv, ratePeriod, approvedAlcoholRegimes)
+    } yield rateType
   }
   def updateABV(productEntry: ProductEntry, currentValue: BigDecimal): (ProductEntry, Boolean) =
     productEntry.abv match {
