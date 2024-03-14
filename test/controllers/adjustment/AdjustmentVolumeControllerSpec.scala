@@ -23,7 +23,7 @@ import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
+import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -35,7 +35,6 @@ import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.Future
-import scala.util.Try
 
 class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
 
@@ -139,7 +138,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentVolumeRoute)
@@ -153,7 +152,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =
