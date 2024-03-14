@@ -19,9 +19,12 @@ package navigation
 import play.api.mvc.Call
 import pages._
 import models.{Mode, UserAnswers}
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
-class FakeProductEntryNavigator(desiredRoute: Call) extends ProductEntryNavigator {
+class FakeProductEntryNavigator(desiredRoute: Call, hasValueChanged: Boolean) extends ProductEntryNavigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call =
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call = {
+    hasValueChanged shouldBe hasChanged
     desiredRoute
+  }
 }

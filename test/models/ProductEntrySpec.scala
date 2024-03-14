@@ -68,6 +68,13 @@ class ProductEntrySpec extends SpecBase with MockitoSugar with ScalaCheckPropert
         }
       }
 
+      "returns false when rateType is not defined" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoRateType = productEntry.copy(rateType = None)
+          productEntryWithNoRateType.isComplete shouldBe false
+        }
+      }
+
       "return false when volume is not defined" in {
         forAll(productEntryGen) { productEntry =>
           val productEntryWithNoVolume = productEntry.copy(volume = None)

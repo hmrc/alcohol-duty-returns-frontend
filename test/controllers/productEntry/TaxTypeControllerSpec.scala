@@ -83,7 +83,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
         .overrides(
-          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
@@ -129,7 +129,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = false)),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
@@ -170,7 +170,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
@@ -217,7 +217,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = false)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
@@ -244,7 +244,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
         .overrides(
-          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
@@ -311,9 +311,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     "must throw an Exception" - {
       "for a GET if one of the necessary userAnswer data are missing" in {
         val errorMapping = Seq(
-          (productEntry.copy(abv = None), "abv"),
-          (productEntry.copy(draughtRelief = None), "eligibleForDraughtRelief"),
-          (productEntry.copy(smallProducerRelief = None), "eligibleForSmallProducerRelief")
+          (productEntry.copy(abv = None), "abv")
         )
         errorMapping.foreach { case (incompleteProductEntry, expectedMessageKey) =>
           val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
@@ -326,7 +324,8 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(
-              bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+              bind[ProductEntryNavigator]
+                .toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
               bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
             )
             .build()
@@ -348,15 +347,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val errorMapping = Seq(
           (fullUserAnswers.remove(CurrentProductEntryPage).success.value, "currentProductEntry"),
-          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(abv = None)).success.value, "abv"),
-          (
-            fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(draughtRelief = None)).success.value,
-            "eligibleForDraughtRelief"
-          ),
-          (
-            fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(smallProducerRelief = None)).success.value,
-            "eligibleForSmallProducerRelief"
-          )
+          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(abv = None)).success.value, "abv")
         )
         errorMapping.foreach { case (incompleteUserAnswers, expectedMessageKey) =>
           val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
@@ -367,7 +358,8 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
           val application = applicationBuilder(userAnswers = Some(incompleteUserAnswers))
             .overrides(
-              bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+              bind[ProductEntryNavigator]
+                .toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
               bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
             )
             .build()
@@ -395,7 +387,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
           )
           .build()
@@ -422,7 +414,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
           )
           .build()
@@ -449,7 +441,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
           )
           .build()

@@ -70,6 +70,7 @@ class ProductEntryNavigator @Inject() () {
         controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       case Some(RateTypeResponse(DraughtRelief))                 =>
         controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+      case _                                                     => routes.JourneyRecoveryController.onPageLoad()
     }
   }
 
@@ -83,6 +84,7 @@ class ProductEntryNavigator @Inject() () {
         controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       case Some(RateTypeResponse(DraughtRelief))                 =>
         controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+      case _                                                     => routes.JourneyRecoveryController.onPageLoad()
     }
   }
 

@@ -18,6 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers._
+import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
 import models.productEntry.ProductEntry
@@ -54,6 +55,14 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id").set(pages.productEntry.DeclareAlcoholDutyQuestionPage, false).success.value
         ) mustBe routes.IndexController.onPageLoad
       }
+      "must go from the Alcohol to declare to Journey Recovery page if there is no answer" in {
+
+        navigator.nextPage(
+          pages.productEntry.DeclareAlcoholDutyQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
 
       "must go from Product name page to Alcohol by volume page" in {
 
@@ -70,18 +79,106 @@ class ProductEntryNavigatorSpec extends SpecBase {
           pages.productEntry.AlcoholByVolumeQuestionPage,
           NormalMode,
           UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(DraughtRelief)))
+            )
+            .success
+            .value
         ) mustBe controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
       }
+      "must go from Alcohol by volume page to Tax Type page if RateType is Core" in {
 
+        navigator.nextPage(
+          pages.productEntry.AlcoholByVolumeQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(Core)))
+            )
+            .success
+            .value
+        ) mustBe controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+      }
+      "must go from Alcohol by volume page to Draught Relief page if RateType is DraughtAndSmallProducerRelief" in {
+
+        navigator.nextPage(
+          pages.productEntry.AlcoholByVolumeQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(DraughtAndSmallProducerRelief)))
+            )
+            .success
+            .value
+        ) mustBe controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+      }
+      "must go from Alcohol by volume page to Small Producer Relief page if RateType is SmallProducerRelief" in {
+
+        navigator.nextPage(
+          pages.productEntry.AlcoholByVolumeQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(SmallProducerRelief)))
+            )
+            .success
+            .value
+        ) mustBe controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+      }
+      "must go from the Alcohol by volume page to Journey Recovery page if the rate type is missing" in {
+
+        navigator.nextPage(
+          pages.productEntry.AlcoholByVolumeQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
       "must go from the Draught relief question page to Small producer relief question page" in {
 
         navigator.nextPage(
           pages.productEntry.DraughtReliefQuestionPage,
           NormalMode,
           UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(DraughtAndSmallProducerRelief)))
+            )
+            .success
+            .value
         ) mustBe controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       }
+      "must go from the Draught relief question page to Tax type page if RateType is DraughtRelief" in {
 
+        navigator.nextPage(
+          pages.productEntry.DraughtReliefQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(DraughtRelief)))
+            )
+            .success
+            .value
+        ) mustBe controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+      }
+      "must go from the Draught relief question page to Journey Recovery page if the rate type is incorrect" in {
+
+        navigator.nextPage(
+          pages.productEntry.DraughtReliefQuestionPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(SmallProducerRelief)))
+            )
+            .success
+            .value
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
       "must go from the Small producer relief question page to Tax Type page" in {
 
         navigator.nextPage(
@@ -113,15 +210,6 @@ class ProductEntryNavigatorSpec extends SpecBase {
             .success
             .value
         ) mustBe controllers.productEntry.routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
-      }
-
-      "must go from the Tax type page to Journey Recovery page if there is no answer for Small Producer Relief question" in {
-
-        navigator.nextPage(
-          pages.productEntry.TaxTypePage,
-          NormalMode,
-          UserAnswers("id")
-        ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
       "must go from the Declare SPR Duty Rate entry page to the Product Volume page" in {
@@ -192,9 +280,29 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           AlcoholByVolumeQuestionPage,
           CheckMode,
-          UserAnswers("id"),
+          UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(DraughtRelief)))
+            )
+            .success
+            .value,
           true
         ) mustBe controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+      }
+      "must go from Alcohol by volume page to Tax Type page if answer has changed and if RateType is Core" in {
+        navigator.nextPage(
+          AlcoholByVolumeQuestionPage,
+          CheckMode,
+          UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(Core)))
+            )
+            .success
+            .value,
+          true
+        ) mustBe controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
       }
       "must go from Alcohol by volume page to CheckYourAnswersController if answer is the same" in {
         navigator.nextPage(
@@ -208,7 +316,13 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DraughtReliefQuestionPage,
           CheckMode,
-          UserAnswers("id"),
+          UserAnswers("id")
+            .set(
+              pages.productEntry.CurrentProductEntryPage,
+              ProductEntry(rateType = Some(RateTypeResponse(DraughtAndSmallProducerRelief)))
+            )
+            .success
+            .value,
           true
         ) mustBe controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
       }

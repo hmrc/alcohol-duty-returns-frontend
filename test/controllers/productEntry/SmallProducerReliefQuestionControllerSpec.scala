@@ -92,7 +92,7 @@ class SmallProducerReliefQuestionControllerSpec extends SpecBase with MockitoSug
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -123,7 +123,7 @@ class SmallProducerReliefQuestionControllerSpec extends SpecBase with MockitoSug
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = false)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

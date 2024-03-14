@@ -17,10 +17,11 @@
 package controllers.productEntry
 
 import base.SpecBase
-import connectors.CacheConnector
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.AlcoholByVolumeQuestionFormProvider
+import models.RateType.Core
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, NormalMode, UserAnswers}
+import models.{AlcoholByVolume, NormalMode, RateTypeResponse, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -43,6 +44,8 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = AlcoholByVolume(10.2)
+
+  val rateType = RateTypeResponse(Core)
 
   lazy val alcoholByVolumeQuestionRoute = routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode).url
 
@@ -88,6 +91,11 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rateType(any(), any(), any())(any())) thenReturn Future.successful(
+        rateType
+      )
+
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -95,7 +103,8 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -113,8 +122,15 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must redirect to the next page when the same data is submitted" in {
-      val userAnswers =
-        UserAnswers(userAnswersId).set(CurrentProductEntryPage, ProductEntry(abv = Some(validAnswer))).success.value
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rateType(any(), any(), any())(any())) thenReturn Future.successful(
+        rateType
+      )
+      val userAnswers                        =
+        UserAnswers(userAnswersId)
+          .set(CurrentProductEntryPage, ProductEntry(abv = Some(validAnswer), rateType = Some(rateType)))
+          .success
+          .value
 
       val mockCacheConnector = mock[CacheConnector]
 
@@ -123,7 +139,8 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = false)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
