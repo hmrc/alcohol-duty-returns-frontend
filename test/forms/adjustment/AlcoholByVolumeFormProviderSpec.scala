@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package forms.spiritsQuestions
+package forms.adjustment
 
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 import scala.collection.immutable.ArraySeq
 
-class DeclareIrishWhiskeyFormProviderSpec extends BigDecimalFieldBehaviours {
+class AlcoholByVolumeFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new DeclareIrishWhiskeyFormProvider()()
+  val form = new AlcoholByVolumeFormProvider()()
 
   ".value" - {
 
-    val fieldName = "declare-irish-whiskey-input"
+    val fieldName = "alcoholByVolume-input"
 
-    val minimum = 0.00
-    val maximum = 999999999.99
-    val decimal = 2
+    val minimum = 0.1
+    val maximum = 100
+    val decimal = 1
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -43,8 +43,8 @@ class DeclareIrishWhiskeyFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "declareIrishWhiskey.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "declareIrishWhiskey.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "alcoholByVolume.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "alcoholByVolume.error.oneDecimalPlace")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -52,21 +52,20 @@ class DeclareIrishWhiskeyFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "declareIrishWhiskey.error.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "alcoholByVolume.error.minimumRequired", ArraySeq(minimum))
     )
-
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "declareIrishWhiskey.error.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "alcoholByVolume.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "declareIrishWhiskey.error.required")
+      requiredError = FormError(fieldName, "alcoholByVolume.error.required")
     )
   }
 }

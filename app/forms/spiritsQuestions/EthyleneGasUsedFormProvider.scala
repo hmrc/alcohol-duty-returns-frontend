@@ -25,6 +25,7 @@ class EthyleneGasUsedFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "ethylene-gas-used-input" -> bigDecimal(
+        2,
         "ethyleneGasUsed.error.required",
         "ethyleneGasUsed.error.nonNumeric",
         "ethyleneGasUsed.error.twoDecimalPlaces"

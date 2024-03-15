@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package forms.spiritsQuestions
+package forms.adjustment
 
 import forms.mappings.Mappings
 import javax.inject.Inject
 import play.api.data.Form
 
-class DeclareIrishWhiskeyFormProvider @Inject() extends Mappings {
+class AlcoholByVolumeFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BigDecimal] =
     Form(
-      "declare-irish-whiskey-input" -> bigDecimal(
-        2,
-        "declareIrishWhiskey.error.required",
-        "declareIrishWhiskey.error.nonNumeric",
-        "declareIrishWhiskey.error.twoDecimalPlaces"
+      "alcoholByVolume-input" -> bigDecimal(
+        1,
+        "alcoholByVolume.error.required",
+        "alcoholByVolume.error.nonNumeric",
+        "alcoholByVolume.error.oneDecimalPlace"
       )
-        .verifying(minimumValue(BigDecimal(0.00), "declareIrishWhiskey.error.minimumRequired"))
-        .verifying(
-          maximumValue(BigDecimal(999999999.99), "declareIrishWhiskey.error.maximumRequired")
-        )
+        .verifying(minimumValue(BigDecimal(0.1), "alcoholByVolume.error.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(100), "alcoholByVolume.error.maximumRequired"))
     )
 }

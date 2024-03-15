@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package forms.spiritsQuestions
+package forms.adjustment
 
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
+
 import scala.collection.immutable.ArraySeq
 
-class DeclareIrishWhiskeyFormProviderSpec extends BigDecimalFieldBehaviours {
+class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new DeclareIrishWhiskeyFormProvider()()
+  val form = new AdjustmentVolumeFormProvider()()
 
   ".value" - {
 
-    val fieldName = "declare-irish-whiskey-input"
+    val fieldName = "adjustment-volume-input"
 
-    val minimum = 0.00
+    val minimum = 0.01
     val maximum = 999999999.99
     val decimal = 2
 
@@ -43,8 +44,8 @@ class DeclareIrishWhiskeyFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "declareIrishWhiskey.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "declareIrishWhiskey.error.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "adjustmentVolume.error.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "adjustmentVolume.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -52,7 +53,7 @@ class DeclareIrishWhiskeyFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "declareIrishWhiskey.error.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "adjustmentVolume.error.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -60,13 +61,13 @@ class DeclareIrishWhiskeyFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "declareIrishWhiskey.error.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "adjustmentVolume.error.maximumRequired", ArraySeq(999999999.99))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "declareIrishWhiskey.error.required")
+      requiredError = FormError(fieldName, "adjustmentVolume.error.required")
     )
   }
 }

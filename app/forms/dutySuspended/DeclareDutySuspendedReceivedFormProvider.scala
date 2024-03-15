@@ -25,6 +25,7 @@ class DeclareDutySuspendedReceivedFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "declare-duty-suspended-received-input" -> bigDecimal(
+        2,
         "declareDutySuspendedReceived.error.required",
         "declareDutySuspendedReceived.error.nonNumeric",
         "declareDutySuspendedReceived.error.twoDecimalPlaces"

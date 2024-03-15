@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package forms.spiritsQuestions
+package forms.adjustment
+
+import javax.inject.Inject
 
 import forms.mappings.Mappings
-import javax.inject.Inject
 import play.api.data.Form
+import models.adjustment.AdjustmentType
 
-class DeclareIrishWhiskeyFormProvider @Inject() extends Mappings {
+class AdjustmentTypeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[BigDecimal] =
+  def apply(): Form[AdjustmentType] =
     Form(
-      "declare-irish-whiskey-input" -> bigDecimal(
-        2,
-        "declareIrishWhiskey.error.required",
-        "declareIrishWhiskey.error.nonNumeric",
-        "declareIrishWhiskey.error.twoDecimalPlaces"
-      )
-        .verifying(minimumValue(BigDecimal(0.00), "declareIrishWhiskey.error.minimumRequired"))
-        .verifying(
-          maximumValue(BigDecimal(999999999.99), "declareIrishWhiskey.error.maximumRequired")
-        )
+      "adjustment-type-value" -> enumerable[AdjustmentType]("adjustmentType.error.required")
     )
 }

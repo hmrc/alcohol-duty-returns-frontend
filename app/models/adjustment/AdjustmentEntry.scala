@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package forms.spiritsQuestions
+package models.adjustment
 
-import forms.mappings.Mappings
-import javax.inject.Inject
-import play.api.data.Form
+import models.AlcoholByVolume
+import play.api.libs.json.{Json, OFormat}
 
-class WheatUsedFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[BigDecimal] =
-    Form(
-      "wheat-used-input" -> bigDecimal(
-        2,
-        "wheatUsed.error.required",
-        "wheatUsed.error.nonNumeric",
-        "wheatUsed.error.twoDecimalPlaces"
-      )
-        .verifying(minimumValue(BigDecimal(0.01), "wheatUsed.error.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "wheatUsed.error.maximumRequired"))
-    )
+case class AdjustmentEntry(
+  adjustmentType: Option[AdjustmentType] = None,
+  abv: Option[AlcoholByVolume] = None
+)
+object AdjustmentEntry {
+  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
 }

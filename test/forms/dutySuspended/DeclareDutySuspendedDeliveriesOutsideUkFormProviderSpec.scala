@@ -30,8 +30,9 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimal
 
     val minimum = 0.00
     val maximum = 999999999.99
+    val decimal = 2
 
-    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
@@ -50,6 +51,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimal
       form,
       fieldName,
       minimum = minimum,
+      decimal = decimal,
       expectedError =
         FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired", ArraySeq(minimum))
     )
@@ -58,6 +60,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimal
       form,
       fieldName,
       maximum = maximum,
+      decimal = decimal,
       expectedError =
         FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired", ArraySeq(maximum))
     )

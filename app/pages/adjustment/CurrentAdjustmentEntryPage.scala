@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-package forms.spiritsQuestions
+package pages.adjustment
 
-import forms.mappings.Mappings
-import javax.inject.Inject
-import play.api.data.Form
+import models.adjustment.AdjustmentEntry
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class WheatUsedFormProvider @Inject() extends Mappings {
+case object CurrentAdjustmentEntryPage extends QuestionPage[AdjustmentEntry] {
 
-  def apply(): Form[BigDecimal] =
-    Form(
-      "wheat-used-input" -> bigDecimal(
-        2,
-        "wheatUsed.error.required",
-        "wheatUsed.error.nonNumeric",
-        "wheatUsed.error.twoDecimalPlaces"
-      )
-        .verifying(minimumValue(BigDecimal(0.01), "wheatUsed.error.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "wheatUsed.error.maximumRequired"))
-    )
+  override def path: JsPath     = JsPath \ toString
+  override def toString: String = "currentAdjustmentEntry"
 }
