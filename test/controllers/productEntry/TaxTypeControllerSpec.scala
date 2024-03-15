@@ -310,35 +310,60 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     }
     "must throw an Exception" - {
       "for a GET if one of the necessary userAnswer data are missing" in {
-        val errorMapping = Seq(
-          (productEntry.copy(abv = None), "abv")
-        )
-        errorMapping.foreach { case (incompleteProductEntry, expectedMessageKey) =>
-          val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
-          when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
-            .successful(
-              rateBandList
-            )
 
-          val userAnswers = fullUserAnswers.set(CurrentProductEntryPage, incompleteProductEntry).success.value
+        val incompleteProductEntry             = productEntry.copy(abv = None)
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
+          .successful(
+            rateBandList
+          )
 
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(
-              bind[ProductEntryNavigator]
-                .toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
-              bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
-            )
-            .build()
+        val userAnswers = fullUserAnswers.set(CurrentProductEntryPage, incompleteProductEntry).success.value
 
-          running(application) {
-            val request = FakeRequest(GET, taxTypeRoute)
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ProductEntryNavigator]
+              .toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
 
-            val result = route(application, request).value
+        running(application) {
+          val request = FakeRequest(GET, taxTypeRoute)
 
-            whenReady(result.failed) { exception =>
-              exception mustBe a[RuntimeException]
-              exception.getMessage mustEqual s"Couldn't fetch $expectedMessageKey value from cache"
-            }
+          val result = route(application, request).value
+
+          whenReady(result.failed) { exception =>
+            exception mustBe a[RuntimeException]
+            exception.getMessage mustEqual "Couldn't fetch abv value from cache"
+          }
+        }
+      }
+
+      "for a GET if one of the necessary userAnswer data is empty" in {
+
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
+          .successful(
+            rateBandList
+          )
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ProductEntryNavigator]
+              .toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, taxTypeRoute)
+
+          val result = route(application, request).value
+
+          whenReady(result.failed) { exception =>
+            exception mustBe a[RuntimeException]
+            exception.getMessage mustEqual "Couldn't fetch currentProductEntry value from cache"
           }
         }
       }

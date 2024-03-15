@@ -90,7 +90,6 @@ class AlcoholByVolumeQuestionController @Inject() (
   }
 
   def fetchRateType(abv: AlcoholByVolume)(implicit hc: HeaderCarrier): (Future[RateTypeResponse]) = {
-    //val abv = productEntry.abv.getOrElse(throw new RuntimeException("Couldn't fetch abv value from cache"))
 
     //hardcoded for now, will need to get this from obligation period
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
