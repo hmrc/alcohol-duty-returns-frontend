@@ -56,4 +56,12 @@ class AlcoholDutyCalculatorConnector @Inject() (
     )
     httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
   }
+
+  def validateTaxType(taxType: String, ratePeriod: YearMonth)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    val queryParams: Seq[(String, String)] = Seq(
+      "ratePeriod" -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
+      "taxType" -> Json.toJson(taxType).toString
+    )
+    httpClient.GET[Boolean](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)//change url
+  }
 }
