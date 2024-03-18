@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
+@import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
 
 @this(
         layout: templates.Layout,
@@ -22,32 +22,44 @@
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-        bulletList: BulletList
+        bulletList: BulletList,
+        subHeading: SubHeading
 )
 
-@(duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(abv:BigDecimal, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("dutyDue.title", f"$duty%.2f"))) {
+@layout(pageTitle = titleNoForm(messages("dutyDue.title"))) {
 
     @sectionHeading(
         id = "dutyDue-section",
         text = messages("section.alcoholDutyReturn"),
     )
 
-    @pageHeading(messages("dutyDue.heading", f"$duty%.2f"))
+    @pageHeading(messages("dutyDue.heading"))
 
     @paragraph(messages("dutyDue.paragraph1"))
 
+    @subHeading(messages("dutyDue.subheading1", pureAlcoholVolume))
+
+    @paragraph(messages("dutyDue.paragraph2"))
+
     @bulletList(Seq(
-        messages("dutyDue.bulletList.1", pureAlcoholVolume),
-        messages("dutyDue.bulletList.2", taxCode),
-        messages("dutyDue.bulletList.3", f"$rate%.2f")
+        messages("dutyDue.bulletList.1", abv),
+        messages("dutyDue.bulletList.2", volume),
+
     ))
 
-    @paragraph(messages("dutyDue.paragraph2",  f"$duty%.2f"))
+    @subHeading(messages("dutyDue.subheading2", f"$duty%.2f"))
+
+    @paragraph(messages("dutyDue.paragraph3",  f"$duty%.2f"))
+
+    @bulletList(Seq(
+    messages("dutyDue.bulletList.3", pureAlcoholVolume),
+    messages("dutyDue.bulletList.4", f"$rate%.2f")
+    ))
 
     @govukButton(
-        ButtonViewModel("continueButton", messages("site.continue"))
+        ButtonViewModel("continueButton", messages("site.saveAndContinue"))
         .asLink(controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
     )
 
