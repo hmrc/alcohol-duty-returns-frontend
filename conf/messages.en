@@ -170,13 +170,6 @@ productVolume.error.maximumRequired = This product’s volume must be 999999999.
 productVolume.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
 productVolume.change.hidden = Product volume
 
-pureAlcohol.title = This product has {0} litres of pure alcohol
-pureAlcohol.heading = This product has {0} litres of pure alcohol
-pureAlcohol.paragraph = This is because you told us:
-pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
-pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
-pureAlcohol.checkYourAnswersLabel = Pure alcohol
-
 dutyDue.title = Your calculations
 dutyDue.heading = Your calculations
 dutyDue.paragraph1 = Based on everything you’ve told us about this entry, we’ve worked out the litres of pure alcohol (Lpa) and the duty due for this entry.
