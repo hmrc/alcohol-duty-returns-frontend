@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package models.adjustment
+package viewmodels.checkAnswers.adjustment
 
-import models.AlcoholByVolume
-import play.api.libs.json.{Json, OFormat}
+import models.adjustment.AdjustmentEntry
 
-case class AdjustmentEntry(
-  adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None,
-  volume: Option[BigDecimal] = None
-)
-object AdjustmentEntry {
-  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
+object AdjustmentTypeHelper {
+
+  def getAdjustmentTypeValue(adjustmentEntry: AdjustmentEntry): String =
+    adjustmentEntry.adjustmentType match {
+      case Some(adjustmentType) => adjustmentType.toString
+      case _                    => "default"
+    }
+
 }
