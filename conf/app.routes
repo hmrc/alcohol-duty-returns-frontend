@@ -63,8 +63,6 @@ POST       /what-is-your-small-producer-duty-rate                  controllers.p
 GET        /change-what-is-your-small-producer-duty-rate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-what-is-your-small-producer-duty-rate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 
-GET        /you-have-declared-this-many-litres-of-pure-alcohol                       controllers.productEntry.PureAlcoholController.onPageLoad()
-
 GET        /the-duty-due-on-this-product                       controllers.productEntry.DutyDueController.onPageLoad()
 
 GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
