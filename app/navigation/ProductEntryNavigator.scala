@@ -38,7 +38,7 @@ class ProductEntryNavigator @Inject() () {
       _ => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
     case pages.productEntry.DeclareAlcoholDutyQuestionPage         => declareAlcoholDutyQuestionPageRoute
     case pages.productEntry.ProductVolumePage                      =>
-      _ => controllers.productEntry.routes.DutyDueController.onPageLoad()
+      _ => controllers.productEntry.routes.PureAlcoholController.onPageLoad()
     case pages.productEntry.ProductListPage                        => productListPageRoute
     case _                                                         =>
       _ => routes.IndexController.onPageLoad

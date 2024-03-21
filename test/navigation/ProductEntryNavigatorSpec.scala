@@ -221,13 +221,13 @@ class ProductEntryNavigatorSpec extends SpecBase {
         ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
       }
 
-      "must go from the Product Volume page to Duty Due page" in {
+      "must go from the Product Volume page to Pure Alcohol Volume page" in {
 
         navigator.nextPage(
           pages.productEntry.ProductVolumePage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe controllers.productEntry.routes.DutyDueController.onPageLoad()
+        ) mustBe controllers.productEntry.routes.PureAlcoholController.onPageLoad()
       }
 
       "must go from the Product List Page page to Product Name page if the Answer is Yes" in {

@@ -16,37 +16,48 @@
 
 package controllers.productEntry
 
+import connectors.CacheConnector
 import controllers.actions._
 import models.productEntry.ProductEntry
 import pages.productEntry.CurrentProductEntryPage
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
+import services.productEntry.ProductEntryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.productEntry.DutyDueView
+import views.html.productEntry.PureAlcoholView
 
-class DutyDueController @Inject() (
+import scala.concurrent.{ExecutionContext, Future}
+
+class PureAlcoholController @Inject() (
   override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: DutyDueView
-) extends FrontendBaseController
+  productEntryService: ProductEntryService,
+  view: PureAlcoholView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val result = for {
-      productEntry      <- request.userAnswers.get[ProductEntry](CurrentProductEntryPage)
-      pureAlcoholVolume <- productEntry.pureAlcoholVolume
-      taxCode           <- productEntry.taxCode
-      duty              <- productEntry.duty
-      rate              <- productEntry.rate
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    for {
+      product     <- productEntryService.createProduct(request.userAnswers)
+      userAnswers <- Future.fromTry(request.userAnswers.set(CurrentProductEntryPage, product))
+      _           <- cacheConnector.set(userAnswers)
+    } yield getView(product)
+  }
 
-    } yield Ok(view(duty, pureAlcoholVolume, taxCode, rate))
+  private def getView(productEntry: ProductEntry)(implicit request: Request[_]): Result = {
+    val result = for {
+      abv               <- productEntry.abv
+      volume            <- productEntry.volume
+      pureAlcoholVolume <- productEntry.pureAlcoholVolume
+    } yield Ok(view(abv.value, volume, pureAlcoholVolume))
 
     result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
   }
-
 }

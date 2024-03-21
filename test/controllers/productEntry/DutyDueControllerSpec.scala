@@ -17,62 +17,41 @@
 package controllers.productEntry
 
 import base.SpecBase
-import connectors.CacheConnector
 import generators.ModelGenerators
-import models.AlcoholByVolume
+import models.{AlcoholByVolume, UserAnswers}
 import models.productEntry.ProductEntry
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
-import play.api.inject.bind
+import pages.productEntry.CurrentProductEntryPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.productEntry.ProductEntryService
-import uk.gov.hmrc.http.HttpResponse
 import views.html.productEntry.DutyDueView
-
-import scala.concurrent.Future
 
 class DutyDueControllerSpec extends SpecBase with ModelGenerators {
 
-  private lazy val dutyDueRoute = controllers.productEntry.routes.DutyDueController.onPageLoad().url
+  lazy val dutyDueRoute = controllers.productEntry.routes.DutyDueController.onPageLoad().url
 
   "DutyDue Controller" - {
 
-    val dutyDue           = BigDecimal(34.2)
-    val rate              = BigDecimal(9.27)
-    val pureAlcoholVolume = BigDecimal(3.69)
-    val taxCode           = "311"
-    val volume            = BigDecimal(1)
-    val abv               = AlcoholByVolume(1)
-
-    val productEntry = ProductEntry(
-      name = Some("Name"),
-      abv = Some(AlcoholByVolume(1)),
-      volume = Some(BigDecimal(1)),
-      draughtRelief = Some(false),
-      smallProducerRelief = Some(false),
-      taxRate = Some(rate),
-      pureAlcoholVolume = Some(pureAlcoholVolume),
-      duty = Some(dutyDue),
-      taxCode = Some(taxCode)
-    )
-
-    val mockCacheConnector = mock[CacheConnector]
-    when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
     "must return OK and the correct view for a GET" in {
 
-      val productEntryService = mock[ProductEntryService]
-      when(productEntryService.createProduct(any())(any(), any())) thenReturn Future.successful(productEntry)
+      val dutyDue           = BigDecimal(34.2)
+      val rate              = BigDecimal(9.27)
+      val pureAlcoholVolume = BigDecimal(3.69)
+      val taxCode           = "311"
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[ProductEntryService].toInstance(productEntryService),
-            bind[CacheConnector].toInstance(mockCacheConnector)
-          )
-          .build()
+      val productEntry = ProductEntry(
+        name = Some("Name"),
+        abv = Some(AlcoholByVolume(1)),
+        volume = Some(BigDecimal(1)),
+        draughtRelief = Some(false),
+        smallProducerRelief = Some(false),
+        taxRate = Some(rate),
+        pureAlcoholVolume = Some(pureAlcoholVolume),
+        duty = Some(dutyDue),
+        taxCode = Some(taxCode)
+      )
+
+      val userAnswers = UserAnswers(userAnswersId).set(CurrentProductEntryPage, productEntry).success.value
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, dutyDueRoute)
@@ -82,7 +61,7 @@ class DutyDueControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[DutyDueView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(abv.value, volume, dutyDue, pureAlcoholVolume, taxCode, rate)(
+        contentAsString(result) mustEqual view(dutyDue, pureAlcoholVolume, taxCode, rate)(
           request,
           messages(application)
         ).toString
@@ -102,37 +81,27 @@ class DutyDueControllerSpec extends SpecBase with ModelGenerators {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+  }
 
-    val incompleteProductEntries = List(
-      (productEntry.copy(abv = None), "abv"),
-      (productEntry.copy(volume = None), "volume"),
-      (productEntry.copy(pureAlcoholVolume = None), "pureAlcoholVolume"),
-      (productEntry.copy(taxRate = None, sprDutyRate = None), "rate"),
-      (productEntry.copy(duty = None), "duty")
-    )
+  val productEntry: ProductEntry = arbitraryProductEntry.arbitrary.sample.get
+  Seq(
+    (productEntry.copy(taxRate = None, sprDutyRate = None), "rate"),
+    (productEntry.copy(duty = None), "duty"),
+    (productEntry.copy(pureAlcoholVolume = None), "pure alcohol volume")
+  ).foreach { case (productEntry, field) =>
+    s"must redirect to Journey Recovery if product entry does not contain $field" in {
 
-    incompleteProductEntries.foreach { case (productEntry, msg) =>
-      s"must redirect to Journey Recovery for a GET if product entry does not contain $msg" in {
+      val userAnswers = UserAnswers(userAnswersId).set(CurrentProductEntryPage, productEntry).success.value
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val productEntryService = mock[ProductEntryService]
-        when(productEntryService.createProduct(any())(any(), any())) thenReturn Future.successful(productEntry)
+      running(application) {
+        val request =
+          FakeRequest(GET, dutyDueRoute)
 
-        val application =
-          applicationBuilder(userAnswers = Some(emptyUserAnswers))
-            .overrides(
-              bind[ProductEntryService].toInstance(productEntryService),
-              bind[CacheConnector].toInstance(mockCacheConnector)
-            )
-            .build()
+        val result = route(application, request).value
 
-        running(application) {
-          val request = FakeRequest(GET, dutyDueRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
