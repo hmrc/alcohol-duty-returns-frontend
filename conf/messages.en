@@ -187,7 +187,7 @@ dutyDue.bulletList.3 = the entry having {0} litres of pure alcohol (Lpa)
 dutyDue.bulletList.4 = the duty rate for this entry being £{0} per litre  of pure alcohol
 dutyDue.rate.checkYourAnswersLabel = Duty rate
 dutyDue.duty.checkYourAnswersLabel = Duty due
-pureAlcohol.checkYourAnswersLabel = Pure Alcohol
+pureAlcohol.checkYourAnswersLabel = Pure alcohol
 
 productList.title = Products to declare
 productList.heading = Products to declare
