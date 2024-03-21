@@ -55,9 +55,16 @@ class TaxTypeController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val preparedForm = request.userAnswers.get(TaxTypePage) match {
-        case None        => form
-        case Some(value) => form.fill(value.taxCode)
+      val preparedForm = request.userAnswers.get(CurrentProductEntryPage) match {
+        case None               => form
+        case Some(productEntry) =>
+          (for {
+            taxCode <- productEntry.taxCode
+            regime  <- productEntry.regime
+          } yield s"${taxCode}_$regime") match {
+            case Some(combinedValue) => form.fill(combinedValue)
+            case None                => form
+          }
       }
 
       val (
@@ -108,19 +115,37 @@ class TaxTypeController @Inject() (
             },
           value =>
             for {
-              product        <- Future.fromTry(Try(request.userAnswers.get(CurrentProductEntryPage).get))
-              taxType        <- taxTypeFromValue(value, rates)
-              updatedAnswers <-
+              product                     <- Future.fromTry(Try(request.userAnswers.get(CurrentProductEntryPage).get))
+              taxType                     <- taxTypeFromValue(value, rates)
+              (updatedProduct, hasChanged) = updateTaxType(product, value)
+              updatedAnswers              <-
                 Future.fromTry(
                   request.userAnswers.set(
                     CurrentProductEntryPage,
-                    product.copy(taxCode = Some(taxType.code), taxRate = taxType.taxRate, regime = Some(taxType.regime))
+                    updatedProduct
+                      .copy(taxCode = Some(taxType.code), taxRate = taxType.taxRate, regime = Some(taxType.regime))
                   )
                 )
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers))
+              _                           <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers, hasChanged))
         )
   }
+
+  def updateTaxType(productEntry: ProductEntry, currentValue: String): (ProductEntry, Boolean) =
+    (productEntry.taxCode, productEntry.regime) match {
+      case (Some(existingTaxCode), Some(existingRegime)) if currentValue == s"${existingTaxCode}_$existingRegime" =>
+        (productEntry, false)
+      case _                                                                                                      =>
+        (
+          productEntry.copy(
+            sprDutyRate = None,
+            volume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 
   private def rateParameters(
     request: DataRequest[AnyContent]
@@ -129,12 +154,8 @@ class TaxTypeController @Inject() (
       .get(CurrentProductEntryPage)
       .getOrElse(throw new RuntimeException("Couldn't fetch currentProductEntry value from cache"))
     val abv                            = productEntry.abv.getOrElse(throw new RuntimeException("Couldn't fetch abv value from cache"))
-    val eligibleForDraughtRelief       = productEntry.draughtRelief.getOrElse(
-      throw new RuntimeException("Couldn't fetch eligibleForDraughtRelief value from cache")
-    )
-    val eligibleForSmallProducerRelief = productEntry.smallProducerRelief.getOrElse(
-      throw new RuntimeException("Couldn't fetch eligibleForSmallProducerRelief value from cache")
-    )
+    val eligibleForDraughtRelief       = productEntry.draughtRelief.getOrElse(false)
+    val eligibleForSmallProducerRelief = productEntry.smallProducerRelief.getOrElse(false)
 
     val rateType: RateType = RateType(eligibleForDraughtRelief, eligibleForSmallProducerRelief)
 

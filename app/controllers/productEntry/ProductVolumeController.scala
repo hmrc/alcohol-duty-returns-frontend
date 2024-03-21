@@ -66,13 +66,29 @@ class ProductVolumeController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val product                      = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val (updatedProduct, hasChanged) = updateProductVolume(product, value)
             for {
               updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(CurrentProductEntryPage, product.copy(volume = Some(value))))
+                Future
+                  .fromTry(request.userAnswers.set(CurrentProductEntryPage, updatedProduct.copy(volume = Some(value))))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ProductVolumePage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(ProductVolumePage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+
+  def updateProductVolume(productEntry: ProductEntry, currentValue: BigDecimal): (ProductEntry, Boolean) =
+    productEntry.volume match {
+      case Some(existingValue) if currentValue == existingValue => (productEntry, false)
+      case _                                                    =>
+        (
+          productEntry.copy(
+            volume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 }

@@ -19,8 +19,9 @@ package controllers.productEntry
 import base.SpecBase
 import connectors.CacheConnector
 import generators.ModelGenerators
+import models.RateType.Core
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, AlcoholRegime, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, RateTypeResponse, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.MockitoSugar.mock
@@ -38,6 +39,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
   val name              = "Name"
   val abv               = AlcoholByVolume(3.0)
+  val rateType          = RateTypeResponse(Core)
   val volume            = BigDecimal(1.2)
   val rate              = BigDecimal(1.2)
   val pureAlcoholVolume = BigDecimal(1)
@@ -47,6 +49,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   val currentProductEntry = ProductEntry(
     name = Some(name),
     abv = Some(abv),
+    rateType = Some(rateType),
     volume = Some(volume),
     draughtRelief = Some(false),
     smallProducerRelief = Some(true),

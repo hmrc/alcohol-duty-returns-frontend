@@ -66,14 +66,34 @@ class DeclareSmallProducerReliefDutyRateController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val product                      = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val (updatedProduct, hasChanged) = updateSPRDutyRate(product, value)
             for {
               updatedAnswers <-
                 Future
-                  .fromTry(request.userAnswers.set(CurrentProductEntryPage, product.copy(sprDutyRate = Some(value))))
+                  .fromTry(
+                    request.userAnswers.set(CurrentProductEntryPage, updatedProduct.copy(sprDutyRate = Some(value)))
+                  )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DeclareSmallProducerReliefDutyRatePage, mode, updatedAnswers))
+            } yield Redirect(
+              navigator.nextPage(DeclareSmallProducerReliefDutyRatePage, mode, updatedAnswers, hasChanged)
+            )
           }
         )
   }
+
+  def updateSPRDutyRate(productEntry: ProductEntry, currentValue: BigDecimal): (ProductEntry, Boolean) =
+    productEntry.sprDutyRate match {
+      case Some(existingValue) if currentValue == existingValue => (productEntry, false)
+      case _                                                    =>
+        (
+          productEntry.copy(
+            sprDutyRate = None,
+            volume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 }

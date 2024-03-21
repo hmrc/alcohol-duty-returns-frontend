@@ -19,13 +19,13 @@ package controllers.productEntry
 import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
-import models.productEntry.{ProductEntry, TaxType}
-import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType, UserAnswers}
+import models.productEntry.ProductEntry
+import models.{AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.{CurrentProductEntryPage, TaxTypePage}
+import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -40,7 +40,8 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val taxTypeRoute = routes.TaxTypeController.onPageLoad(NormalMode).url
+  lazy val taxTypeRoute       = routes.TaxTypeController.onPageLoad(NormalMode).url
+  lazy val changeTaxTypeRoute = routes.TaxTypeController.onPageLoad(CheckMode).url
 
   val formProvider = new TaxTypeFormProvider()
   val form         = formProvider()
@@ -82,7 +83,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
         .overrides(
-          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
@@ -100,7 +101,6 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
           eligibleForSmallProducerRelief = false,
           rateBandList
         )(messages(application))
-
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, viewModel)(request, messages(application)).toString
       }
@@ -112,16 +112,24 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future.successful(
         rateBandList
       )
-
-      val userAnswers =
-        fullUserAnswers
-          .set(TaxTypePage, TaxType(taxCode, alcoholRegime, rate))
-          .success
-          .value
+      val userAnswers                        = fullUserAnswers
+        .set(
+          CurrentProductEntryPage,
+          ProductEntry(
+            abv = Some(AlcoholByVolume(3.5)),
+            draughtRelief = Some(true),
+            smallProducerRelief = Some(false),
+            taxCode = Some(taxCode),
+            regime = Some(alcoholRegime),
+            taxRate = rate
+          )
+        )
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = false)),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
@@ -141,6 +149,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
         )(messages(application))
 
         status(result) mustEqual OK
+
         contentAsString(result) mustEqual view(form.fill(s"${taxCode}_$alcoholRegime"), NormalMode, viewModel)(
           request,
           messages(application)
@@ -161,7 +170,54 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, taxTypeRoute)
+            .withFormUrlEncodedBody(("value", s"${taxCode}_$alcoholRegime"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when the same data is submitted" in {
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future.successful(
+        rateBandList
+      )
+
+      val userAnswers =
+        UserAnswers(userAnswersId)
+          .set(
+            CurrentProductEntryPage,
+            ProductEntry(
+              abv = Some(AlcoholByVolume(3.5)),
+              draughtRelief = Some(true),
+              smallProducerRelief = Some(false),
+              taxCode = Some(taxCode),
+              regime = Some(alcoholRegime),
+              taxRate = rate
+            )
+          )
+          .success
+          .value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = false)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
@@ -188,7 +244,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
         .overrides(
-          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+          bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
@@ -254,36 +310,60 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     }
     "must throw an Exception" - {
       "for a GET if one of the necessary userAnswer data are missing" in {
-        val errorMapping = Seq(
-          (productEntry.copy(abv = None), "abv"),
-          (productEntry.copy(draughtRelief = None), "eligibleForDraughtRelief"),
-          (productEntry.copy(smallProducerRelief = None), "eligibleForSmallProducerRelief")
-        )
-        errorMapping.foreach { case (incompleteProductEntry, expectedMessageKey) =>
-          val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
-          when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
-            .successful(
-              rateBandList
-            )
 
-          val userAnswers = fullUserAnswers.set(CurrentProductEntryPage, incompleteProductEntry).success.value
+        val incompleteProductEntry             = productEntry.copy(abv = None)
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
+          .successful(
+            rateBandList
+          )
 
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(
-              bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
-              bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
-            )
-            .build()
+        val userAnswers = fullUserAnswers.set(CurrentProductEntryPage, incompleteProductEntry).success.value
 
-          running(application) {
-            val request = FakeRequest(GET, taxTypeRoute)
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ProductEntryNavigator]
+              .toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
 
-            val result = route(application, request).value
+        running(application) {
+          val request = FakeRequest(GET, taxTypeRoute)
 
-            whenReady(result.failed) { exception =>
-              exception mustBe a[RuntimeException]
-              exception.getMessage mustEqual s"Couldn't fetch $expectedMessageKey value from cache"
-            }
+          val result = route(application, request).value
+
+          whenReady(result.failed) { exception =>
+            exception mustBe a[RuntimeException]
+            exception.getMessage mustEqual "Couldn't fetch abv value from cache"
+          }
+        }
+      }
+
+      "for a GET if one of the necessary userAnswer data is empty" in {
+
+        val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockAlcoholDutyCalculatorConnector.rates(any(), any(), any(), any())(any())) thenReturn Future
+          .successful(
+            rateBandList
+          )
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ProductEntryNavigator]
+              .toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, taxTypeRoute)
+
+          val result = route(application, request).value
+
+          whenReady(result.failed) { exception =>
+            exception mustBe a[RuntimeException]
+            exception.getMessage mustEqual "Couldn't fetch currentProductEntry value from cache"
           }
         }
       }
@@ -292,15 +372,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val errorMapping = Seq(
           (fullUserAnswers.remove(CurrentProductEntryPage).success.value, "currentProductEntry"),
-          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(abv = None)).success.value, "abv"),
-          (
-            fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(draughtRelief = None)).success.value,
-            "eligibleForDraughtRelief"
-          ),
-          (
-            fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(smallProducerRelief = None)).success.value,
-            "eligibleForSmallProducerRelief"
-          )
+          (fullUserAnswers.set(CurrentProductEntryPage, productEntry.copy(abv = None)).success.value, "abv")
         )
         errorMapping.foreach { case (incompleteUserAnswers, expectedMessageKey) =>
           val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
@@ -311,7 +383,8 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
           val application = applicationBuilder(userAnswers = Some(incompleteUserAnswers))
             .overrides(
-              bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+              bind[ProductEntryNavigator]
+                .toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
               bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
             )
             .build()
@@ -339,7 +412,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
           )
           .build()
@@ -366,7 +439,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
           )
           .build()
@@ -393,7 +466,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
         val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute)),
+            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
           )
           .build()

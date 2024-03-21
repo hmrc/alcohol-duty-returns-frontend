@@ -66,15 +66,35 @@ class SmallProducerReliefQuestionController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val product                      = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val (updatedProduct, hasChanged) = updateSmallProducerRelief(product, value)
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(CurrentProductEntryPage, product.copy(smallProducerRelief = Some(value)))
+                  request.userAnswers
+                    .set(CurrentProductEntryPage, updatedProduct.copy(smallProducerRelief = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SmallProducerReliefQuestionPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(SmallProducerReliefQuestionPage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+
+  def updateSmallProducerRelief(productEntry: ProductEntry, currentValue: Boolean): (ProductEntry, Boolean) =
+    productEntry.smallProducerRelief match {
+      case Some(existingValue) if currentValue == existingValue => (productEntry, false)
+      case _                                                    =>
+        (
+          productEntry.copy(
+            taxCode = None,
+            taxRate = None,
+            regime = None,
+            sprDutyRate = None,
+            volume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 }

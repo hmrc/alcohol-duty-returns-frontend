@@ -17,22 +17,20 @@
 package navigation
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.Call
 import controllers._
+import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
-import models._
+import models.{RateTypeResponse, _}
 
 @Singleton
-class ProductEntryNavigator @Inject() () extends BaseNavigator {
+class ProductEntryNavigator @Inject() () {
 
-  override val normalRoutes: Page => UserAnswers => Call = {
+  private val normalRoutes: Page => UserAnswers => Call = {
     case pages.productEntry.ProductNamePage                        =>
       _ => controllers.productEntry.routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
-    case pages.productEntry.AlcoholByVolumeQuestionPage            =>
-      _ => controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
-    case pages.productEntry.DraughtReliefQuestionPage              =>
-      _ => controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+    case pages.productEntry.AlcoholByVolumeQuestionPage            => abvPageRoute
+    case pages.productEntry.DraughtReliefQuestionPage              => draughtReliefRoute
     case pages.productEntry.SmallProducerReliefQuestionPage        =>
       _ => controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
     case pages.productEntry.TaxTypePage                            => taxTypePageRoute
@@ -54,15 +52,74 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
     } yield smallProducerRelief
 
     eligibleForSPR match {
-      case Some(true)  =>
+      case Some(true) =>
         controllers.productEntry.routes.DeclareSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
-      case Some(false) => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
-      case _           => routes.JourneyRecoveryController.onPageLoad()
+      case _          => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
+    }
+  }
+  private def abvPageRoute(answers: UserAnswers): Call = {
+    val rateType = for {
+      product  <- answers.get(pages.productEntry.CurrentProductEntryPage)
+      rateType <- product.rateType
+    } yield rateType
+    rateType match {
+      case Some(RateTypeResponse(Core))                          => controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+      case Some(RateTypeResponse(DraughtAndSmallProducerRelief)) =>
+        controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+      case Some(RateTypeResponse(SmallProducerRelief))           =>
+        controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+      case Some(RateTypeResponse(DraughtRelief))                 =>
+        controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
+      case _                                                     => routes.JourneyRecoveryController.onPageLoad()
     }
   }
 
-  override val checkRouteMap: Page => UserAnswers => Call                     = { case _ =>
-    _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+  private def draughtReliefRoute(answers: UserAnswers): Call = {
+    val rateType = for {
+      product  <- answers.get(pages.productEntry.CurrentProductEntryPage)
+      rateType <- product.rateType
+    } yield rateType
+    rateType match {
+      case Some(RateTypeResponse(DraughtAndSmallProducerRelief)) =>
+        controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
+      case Some(RateTypeResponse(DraughtRelief))                 =>
+        controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+      case _                                                     => routes.JourneyRecoveryController.onPageLoad()
+    }
+  }
+
+  private val checkRouteMap: Page => UserAnswers => Boolean => Call           = {
+    case pages.productEntry.AlcoholByVolumeQuestionPage            =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) abvPageRoute(userAnswers)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.DraughtReliefQuestionPage              =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) draughtReliefRoute(userAnswers)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.SmallProducerReliefQuestionPage        =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.TaxTypePage                            =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) taxTypePageRoute(userAnswers)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.ProductVolumePage                      =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.productEntry.routes.PureAlcoholController.onPageLoad()
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case pages.productEntry.DeclareSmallProducerReliefDutyRatePage =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
+          else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case _                                                         => _ => _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
   }
   private def declareAlcoholDutyQuestionPageRoute(answers: UserAnswers): Call =
     answers.get(pages.productEntry.DeclareAlcoholDutyQuestionPage) match {
@@ -77,4 +134,11 @@ class ProductEntryNavigator @Inject() () extends BaseNavigator {
       case Some(false) => routes.IndexController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
+
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean = true): Call = mode match {
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode  =>
+      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
+  }
 }
