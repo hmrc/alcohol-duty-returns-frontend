@@ -112,7 +112,7 @@ class ProductEntryNavigator @Inject() () {
     case pages.productEntry.ProductVolumePage                      =>
       _ =>
         hasChanged =>
-          if (hasChanged) controllers.productEntry.routes.PureAlcoholController.onPageLoad()
+          if (hasChanged) controllers.productEntry.routes.DutyDueController.onPageLoad()
           else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
     case pages.productEntry.DeclareSmallProducerReliefDutyRatePage =>
       _ =>
