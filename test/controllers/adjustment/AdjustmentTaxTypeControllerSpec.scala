@@ -3,7 +3,7 @@ package controllers.adjustment
 import base.SpecBase
 import forms.adjustment.AdjustmentTaxTypeFormProvider
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeAdjustmentNavigator, AdjustmentNavigator}
+import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -21,7 +21,7 @@ import scala.concurrent.Future
 class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new AdjustmentTaxTypeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -61,7 +61,10 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

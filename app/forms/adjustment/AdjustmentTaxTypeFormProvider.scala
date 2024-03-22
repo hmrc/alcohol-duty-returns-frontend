@@ -26,8 +26,8 @@ class AdjustmentTaxTypeFormProvider @Inject() extends Mappings {
     Form(
       "adjustmentTaxType-input" -> int(
         "adjustmentTaxType.error.required",
-        "adjustmentTaxType.error.wholeNumber",
-        "adjustmentTaxType.error.nonNumeric")
-          .verifying(inRange(100, 999, "adjustmentTaxType.error.outOfRange"))
+        "adjustmentTaxType.error.valid",
+        "adjustmentTaxType.error.valid"
+      )
     )
 }

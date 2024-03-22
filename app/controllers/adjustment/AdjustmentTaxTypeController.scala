@@ -20,64 +20,90 @@ import controllers.actions._
 import forms.adjustment.AdjustmentTaxTypeFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, RateBand, TaxType}
 import navigation.AdjustmentNavigator
-import pages.adjustment.AdjustmentTaxTypePage
+import pages.adjustment.{AdjustmentTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.AdjustmentTaxTypeView
 
 import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Success, Try}
 
-class AdjustmentTaxTypeController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       cacheConnector: CacheConnector,
-                                       navigator: AdjustmentNavigator,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       formProvider: AdjustmentTaxTypeFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: AdjustmentTaxTypeView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class AdjustmentTaxTypeController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: AdjustmentNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: AdjustmentTaxTypeFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: AdjustmentTaxTypeView,
+  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.get(AdjustmentTaxTypePage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(AdjustmentTaxTypePage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            validFlag      <- fetchTaxTypeValidity(value)
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTaxTypePage, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            fetchAdjustmentTaxType(TaxType(value.toString)).flatMap {
+              case Some(rateBand) =>
+                for {
+                  adjustment     <- Future.fromTry(Try(request.userAnswers.get(CurrentAdjustmentEntryPage).get))
+                  updatedAnswers <-
+                    Future.fromTry(
+                      request.userAnswers
+                        .set(
+                          CurrentAdjustmentEntryPage,
+                          adjustment.copy(
+                            taxCode = Some(value.toString),
+                            taxRate = rateBand.rate,
+                            regime = rateBand.alcoholRegime.headOption,
+                            rateType = Some(rateBand.rateType)
+                          )
+                        )
+                    )
+                  _              <- cacheConnector.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers))
+              case None           =>
+                Future.successful(
+                  BadRequest(
+                    view(
+                      formProvider()
+                        .withError("adjustmentTaxType-input", "adjustmentTaxType.error.invalid")
+                        .fill(value),
+                      mode
+                    )
+                  )
+                )
+            }
+        )
   }
 
-  def fetchTaxTypeValidity(taxCode: Int): (Future[Boolean]) ={
+  def fetchAdjustmentTaxType(taxCode: TaxType)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
     //hardcoded for now, will need to get this from obligation period
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
-    for {
-      validFlag <- alcoholDutyCalculatorConnector.validateTaxType(taxCode, ratePeriod)
-    } yield validFlag
+    alcoholDutyCalculatorConnector.adjustmentTaxType(taxCode, ratePeriod)
   }
 }

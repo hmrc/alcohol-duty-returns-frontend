@@ -16,12 +16,16 @@
 
 package models.adjustment
 
-import models.AlcoholByVolume
+import models.{AlcoholByVolume, AlcoholRegime, RateType}
 import play.api.libs.json.{Json, OFormat}
 
 case class AdjustmentEntry(
   adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None
+  abv: Option[AlcoholByVolume] = None,
+  taxCode: Option[String] = None,
+  regime: Option[AlcoholRegime] = None,
+  rateType: Option[RateType] = None,
+  taxRate: Option[BigDecimal] = None
 )
 object AdjustmentEntry {
   implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]

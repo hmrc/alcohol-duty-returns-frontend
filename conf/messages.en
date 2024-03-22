@@ -471,10 +471,8 @@ adjustmentVolume.change.hidden = Adjustment Volume
 adjustmentTaxType.title = What is the tax type for this adjustment?
 adjustmentTaxType.heading = What is the tax type for this adjustment?
 adjustmentTaxType.checkYourAnswersLabel = AdjustmentTaxType
-adjustmentTaxType.error.nonNumeric = Enter your adjustmentTaxType using numbers
-adjustmentTaxType.error.required = Enter a valid 3 digit tax type
-adjustmentTaxType.error.wholeNumber = Enter your adjustmentTaxType using whole numbers
-adjustmentTaxType.error.outOfRange = AdjustmentTaxType must be between {0} and {1}
+adjustmentTaxType.error.valid = Enter a valid 3 digit tax type
+adjustmentTaxType.error.invalid = Enter the previous tax type
 adjustmentTaxType.change.hidden = what is the tax type for this adjustment
 
 # End of adjustments sub-journey
