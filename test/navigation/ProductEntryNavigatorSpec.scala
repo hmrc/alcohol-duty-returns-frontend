@@ -408,13 +408,13 @@ class ProductEntryNavigatorSpec extends SpecBase {
           false
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
-      "must go from Product Volume page to Pure Alcohol page if answer has changed" in {
+      "must go from Product Volume page to Duty Due page if answer has changed" in {
         navigator.nextPage(
           ProductVolumePage,
           CheckMode,
           UserAnswers("id"),
           true
-        ) mustBe controllers.productEntry.routes.PureAlcoholController.onPageLoad()
+        ) mustBe controllers.productEntry.routes.DutyDueController.onPageLoad()
       }
       "must go from Product Volume page to CheckYourAnswersController if answer is the same" in {
         navigator.nextPage(

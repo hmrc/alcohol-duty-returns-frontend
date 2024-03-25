@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package models.adjustment
+package models
 
-import models.{AlcoholByVolume, YearMonthModelFormatter}
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, Json}
 
 import java.time.YearMonth
 
-case class AdjustmentEntry(
-  adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None,
-  volume: Option[BigDecimal] = None,
-  period: Option[YearMonth] = None
-)
-object AdjustmentEntry extends YearMonthModelFormatter {
-  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
+trait YearMonthModelFormatter {
+  implicit def formatYearMonth: Format[YearMonth] = new Format[YearMonth] {
+    override def reads(json: play.api.libs.json.JsValue): play.api.libs.json.JsResult[YearMonth] =
+      json.validate[String].map(YearMonth.parse)
+
+    override def writes(o: YearMonth): play.api.libs.json.JsValue =
+      Json.toJson(o.toString)
+  }
+
 }

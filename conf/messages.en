@@ -448,6 +448,18 @@ adjustmentType.checkYourAnswersLabel = adjustment
 adjustmentType.error.required = Select the adjustment you need to make
 adjustmentType.change.hidden = which type of adjustment do you need to make
 
+whenDidYouPayDuty.title = When did you pay duty on this?
+whenDidYouPayDuty.heading = When did you pay duty on this?
+whenDidYouPayDuty.paragraph = Contact HMRC if this was originally declared before August 2023.
+whenDidYouPayDuty.hint = For example, 3 2007
+whenDidYouPayDuty.date.error.required.all = Enter a month and year
+whenDidYouPayDuty.date.error.required.month = Enter a month
+whenDidYouPayDuty.date.error.required.year = Enter a year
+whenDidYouPayDuty.date.error.invalid.future = The date must be in the past
+whenDidYouPayDuty.date.error.invalid.month = Enter a valid month. It must be a number between 1 and 12
+whenDidYouPayDuty.date.error.invalid.year = Enter a valid year. It must be a 4-digit number
+whenDidYouPayDuty.date.error.invalid.past = The date must be after August 2023
+
 alcoholByVolume.title = What is the Alcohol by Volume (ABV) strength for this adjustment?
 alcoholByVolume.heading = What is the Alcohol by Volume (ABV) strength for this adjustment?
 alcoholByVolume.checkYourAnswersLabel = AlcoholByVolume
@@ -470,4 +482,3 @@ adjustmentVolume.error.twoDecimalPlaces = The volume must be up to 2 decimal pla
 adjustmentVolume.change.hidden = Adjustment Volume
 
 # End of adjustments sub-journey
-

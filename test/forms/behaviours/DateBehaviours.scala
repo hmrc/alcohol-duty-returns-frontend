@@ -16,9 +16,8 @@
 
 package forms.behaviours
 
-import java.time.LocalDate
+import java.time.{LocalDate, YearMonth}
 import java.time.format.DateTimeFormatter
-
 import org.scalacheck.Gen
 import play.api.data.{Form, FormError}
 
@@ -83,5 +82,110 @@ class DateBehaviours extends FieldBehaviours {
       val result = form.bind(Map.empty[String, String])
 
       result.errors must contain only FormError(key, requiredAllKey, errorArgs)
+    }
+
+  def yearMonthField(form: Form[_], key: String, validData: Gen[YearMonth]): Unit =
+    "bind valid data" in {
+
+      forAll(validData -> "valid date") { date =>
+        val data = Map(
+          s"$key.month" -> date.getMonthValue.toString,
+          s"$key.year"  -> date.getYear.toString
+        )
+
+        val result = form.bind(data)
+
+        result(key).errors mustBe empty
+      }
+    }
+
+  def monthYearFieldInFuture(form: Form[_], key: String, formError: FormError): Unit =
+    "fail to bind a date in the future" in {
+
+      val futureDate = YearMonth.now().plusMonths(1)
+
+      val data = Map(
+        s"$key.month" -> futureDate.getMonthValue.toString,
+        s"$key.year"  -> futureDate.getYear.toString
+      )
+
+      val result = form.bind(data)
+
+      result.errors must contain only formError
+    }
+
+  def monthYearFieldWithMin(form: Form[_], key: String, formError: FormError): Unit =
+    "fail to bind a date earlier than the minimum" in {
+
+      val minDate = YearMonth.of(2022, 1)
+
+      val data = Map(
+        s"$key.month" -> minDate.getMonthValue.toString,
+        s"$key.year"  -> minDate.getYear.toString
+      )
+
+      val result = form.bind(data)
+
+      result.errors must contain only formError
+    }
+
+  def monthYearMonthOutOfRange(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
+    "fail to bind a date with a month out of range" in {
+
+      forAll(validData -> "valid date") { date =>
+        val data = Map(
+          s"$key.month" -> "13",
+          s"$key.year"  -> date.getYear.toString
+        )
+
+        val result = form.bind(data)
+
+        result.errors must contain only formError
+      }
+    }
+
+  def monthYearInvalidMonth(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
+    "fail to bind a date with an invalid month" in {
+
+      forAll(validData -> "valid date") { date =>
+        val data = Map(
+          s"$key.month" -> "aaa",
+          s"$key.year"  -> date.getYear.toString
+        )
+
+        val result = form.bind(data)
+
+        result.errors must contain only formError
+      }
+    }
+
+  def monthYearInvalidYear(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
+    "fail to bind a date with an invalid year" in {
+
+      forAll(validData -> "valid date") { date =>
+        val data = Map(
+          s"$key.month" -> date.getMonthValue.toString,
+          s"$key.year"  -> "abcd"
+        )
+
+        val result = form.bind(data)
+
+        result.errors must contain only formError
+      }
+    }
+
+  def monthYearYearOutOfRange(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
+    "fail to bind a date with a year out of range" in {
+
+      forAll(validData -> "valid date") { date =>
+        val data = Map(
+          s"$key.month" -> date.getMonthValue.toString,
+          s"$key.year"  -> "1"
+        )
+
+        val result = form.bind(data)
+
+        result.errors must contain only formError
+      }
     }
 }
