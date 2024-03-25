@@ -47,7 +47,7 @@
         @paragraph(messages("whenDidYouPayDuty.paragraph"))
 
         @govukDateInput(
-            MonthYearDateViewModel(
+            YearMonthDateViewModel(
                 field  = form("when-did-you-pay-duty-input"),
                 legend = LegendViewModel(messages("whenDidYouPayDuty.heading")).asVisuallyHidden(),
             ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))

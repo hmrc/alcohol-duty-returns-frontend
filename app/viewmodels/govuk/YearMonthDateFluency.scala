@@ -22,11 +22,11 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.dateinput.{DateInput, InputIte
 import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
 import viewmodels.ErrorMessageAwareness
 
-object monthYear extends MonthYearDateFluency
+object yearMonth extends YearMonthDateFluency
 
-trait MonthYearDateFluency {
+trait YearMonthDateFluency {
 
-  object MonthYearDateViewModel extends ErrorMessageAwareness {
+  object YearMonthDateViewModel extends ErrorMessageAwareness {
 
     def apply(
       field: Field,

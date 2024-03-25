@@ -99,7 +99,7 @@ class DateBehaviours extends FieldBehaviours {
       }
     }
 
-  def monthYearFieldInFuture(form: Form[_], key: String, formError: FormError): Unit =
+  def yearMonthFieldInFuture(form: Form[_], key: String, formError: FormError): Unit =
     "fail to bind a date in the future" in {
 
       val futureDate = YearMonth.now().plusMonths(1)
@@ -114,14 +114,12 @@ class DateBehaviours extends FieldBehaviours {
       result.errors must contain only formError
     }
 
-  def monthYearFieldWithMin(form: Form[_], key: String, formError: FormError): Unit =
+  def yearMonthFieldWithMin(form: Form[_], key: String, minYearMonth: YearMonth, formError: FormError): Unit =
     "fail to bind a date earlier than the minimum" in {
 
-      val minDate = YearMonth.of(2022, 1)
-
       val data = Map(
-        s"$key.month" -> minDate.getMonthValue.toString,
-        s"$key.year"  -> minDate.getYear.toString
+        s"$key.month" -> minYearMonth.getMonthValue.toString,
+        s"$key.year"  -> minYearMonth.getYear.toString
       )
 
       val result = form.bind(data)
@@ -129,8 +127,33 @@ class DateBehaviours extends FieldBehaviours {
       result.errors must contain only formError
     }
 
-  def monthYearMonthOutOfRange(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
-    "fail to bind a date with a month out of range" in {
+  def yearMonthWithMonthOutOfMinRange(
+    form: Form[_],
+    key: String,
+    validData: Gen[YearMonth],
+    formError: FormError
+  ): Unit =
+    "fail to bind a date with a month value below 1" in {
+
+      forAll(validData -> "valid date") { date =>
+        val data = Map(
+          s"$key.month" -> "0",
+          s"$key.year"  -> date.getYear.toString
+        )
+
+        val result = form.bind(data)
+
+        result.errors must contain only formError
+      }
+    }
+
+  def yearMonthWithMonthOutOfMaxRange(
+    form: Form[_],
+    key: String,
+    validData: Gen[YearMonth],
+    formError: FormError
+  ): Unit =
+    "fail to bind a date with a month value greater than 12" in {
 
       forAll(validData -> "valid date") { date =>
         val data = Map(
@@ -144,7 +167,7 @@ class DateBehaviours extends FieldBehaviours {
       }
     }
 
-  def monthYearInvalidMonth(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
+  def yearMonthInvalidMonth(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
     "fail to bind a date with an invalid month" in {
 
       forAll(validData -> "valid date") { date =>
@@ -159,7 +182,7 @@ class DateBehaviours extends FieldBehaviours {
       }
     }
 
-  def monthYearInvalidYear(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
+  def yearMonthInvalidYear(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
     "fail to bind a date with an invalid year" in {
 
       forAll(validData -> "valid date") { date =>
@@ -174,13 +197,38 @@ class DateBehaviours extends FieldBehaviours {
       }
     }
 
-  def monthYearYearOutOfRange(form: Form[_], key: String, validData: Gen[YearMonth], formError: FormError): Unit =
-    "fail to bind a date with a year out of range" in {
+  def yearMonthWithYearOutOfMinRange(
+    form: Form[_],
+    key: String,
+    validData: Gen[YearMonth],
+    formError: FormError
+  ): Unit =
+    "fail to bind a date with a year value with less than 4 digits" in {
 
       forAll(validData -> "valid date") { date =>
         val data = Map(
           s"$key.month" -> date.getMonthValue.toString,
-          s"$key.year"  -> "1"
+          s"$key.year"  -> "999"
+        )
+
+        val result = form.bind(data)
+
+        result.errors must contain only formError
+      }
+    }
+
+  def yearMonthWithYearOutOfMaxRange(
+    form: Form[_],
+    key: String,
+    validData: Gen[YearMonth],
+    formError: FormError
+  ): Unit =
+    "fail to bind a date with a year value with more than 4 digits" in {
+
+      forAll(validData -> "valid date") { date =>
+        val data = Map(
+          s"$key.month" -> date.getMonthValue.toString,
+          s"$key.year"  -> "10000"
         )
 
         val result = form.bind(data)
