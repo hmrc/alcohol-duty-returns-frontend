@@ -127,7 +127,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, adjustmentTaxTypeRoute)
-            .withFormUrlEncodedBody(("adjustmentTaxType-input", validAnswer.toString))
+            .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -171,9 +171,48 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "must return a Bad Request and errors when invalid tax type is submitted" in {
+
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.adjustmentTaxType(any(), any())(any())) thenReturn Future.successful(
+        None
+      )
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentTaxTypeRoute)
+            .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+
+        val view = application.injector.instanceOf[AdjustmentTaxTypeView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(
+          formProvider()
+            .withError("adjustment-tax-type-input", "adjustmentTaxType.error.invalid")
+            .fill(validAnswer),
+          NormalMode,
+          spoilt
+        )(request, messages(application)).toString
+      }
+    }
+
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentTaxTypeRoute)
@@ -187,7 +226,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =

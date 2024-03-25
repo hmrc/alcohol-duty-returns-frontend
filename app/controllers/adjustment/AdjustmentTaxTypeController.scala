@@ -100,7 +100,7 @@ class AdjustmentTaxTypeController @Inject() (
                   BadRequest(
                     view(
                       formProvider()
-                        .withError("adjustmentTaxType-input", "adjustmentTaxType.error.invalid")
+                        .withError("adjustment-tax-type-input", "adjustmentTaxType.error.invalid")
                         .fill(value),
                       mode,
                       AdjustmentTypeHelper

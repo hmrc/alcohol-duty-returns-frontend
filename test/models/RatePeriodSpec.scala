@@ -172,4 +172,22 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       }
     }
   }
+
+  "TaxType" - {
+    "reading from json" - {
+      "translate from the String representation when it is a valid Tax Type value" in {
+        JsString("322").as[TaxType] mustBe TaxType("322")
+      }
+    }
+    "writing to json" - {
+      "return the correct representation" in {
+        Json.toJson(TaxType("322")) mustBe JsString("322")
+      }
+    }
+    "should return a JsError when passed a type that is not a String" - {
+      val result = Json.fromJson[TaxType](JsNumber(1234))
+      result mustBe a[JsError]
+
+    }
+  }
 }

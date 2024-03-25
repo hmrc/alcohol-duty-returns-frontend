@@ -37,13 +37,13 @@
         }
 
         @sectionHeading(
-            id = "adjustmentTaxType-section",
+            id = "adjustment-tax-type-section",
             text = messages(s"section.adjustment.$adjustmentType"),
         )
 
         @govukInput(
             InputViewModel(
-                field = form("adjustmentTaxType-input"),
+                field = form("adjustment-tax-type-input"),
                 label = LabelViewModel(messages("adjustmentTaxType.heading")).asPageHeading()
             )
             .asNumeric()

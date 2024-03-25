@@ -24,7 +24,7 @@ class AdjustmentTaxTypeFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Int] =
     Form(
-      "adjustmentTaxType-input" -> int(
+      "adjustment-tax-type-input" -> int(
         "adjustmentTaxType.error.valid",
         "adjustmentTaxType.error.valid",
         "adjustmentTaxType.error.valid"

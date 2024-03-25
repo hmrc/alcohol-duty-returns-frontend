@@ -25,7 +25,7 @@ class AdjustmentTaxTypeFormProviderSpec extends IntFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "adjustmentTaxType-input"
+    val fieldName = "adjustment-tax-type-input"
 
     val minimum = 100
     val maximum = 999
