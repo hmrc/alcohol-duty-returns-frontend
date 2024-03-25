@@ -28,11 +28,12 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentTaxTypeView
 
 import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Success, Try}
+import scala.util.Try
 
 class AdjustmentTaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
@@ -52,12 +53,13 @@ class AdjustmentTaxTypeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(AdjustmentTaxTypePage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+      case None                                   => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(value) if value.taxCode.isDefined =>
+        Ok(view(form.fill(value.taxCode.get.toInt), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                            => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
     }
 
-    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -65,7 +67,14 @@ class AdjustmentTaxTypeController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors =>
+            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+              case Some(value) =>
+                Future.successful(
+                  BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+                )
+            },
           value =>
             fetchAdjustmentTaxType(TaxType(value.toString)).flatMap {
               case Some(rateBand) =>
@@ -93,7 +102,9 @@ class AdjustmentTaxTypeController @Inject() (
                       formProvider()
                         .withError("adjustmentTaxType-input", "adjustmentTaxType.error.invalid")
                         .fill(value),
-                      mode
+                      mode,
+                      AdjustmentTypeHelper
+                        .getAdjustmentTypeValue(request.userAnswers.get(CurrentAdjustmentEntryPage).get)
                     )
                   )
                 )
