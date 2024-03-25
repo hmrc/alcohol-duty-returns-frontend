@@ -22,7 +22,7 @@ import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.productEntry.TaxDuty
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
+import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{atLeastOnce, mock, verify, when}
@@ -51,6 +51,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
         Some(BigDecimal(10.99))
       )
     )
+  val rateType                                = RateTypeResponse(DraughtRelief)
 
   "rates" - {
     "successfully retrieve rates" in {
@@ -92,6 +93,30 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
             ArgumentMatchers.eq(DutyCalculationRequest(AlcoholByVolume(3.5), BigDecimal(1), BigDecimal(1))),
             any()
           )(any(), any(), any(), any())
+      }
+    }
+  }
+
+  "rateType" - {
+    "successfully retrieve rates" in {
+      when {
+        connector.httpClient.GET[RateTypeResponse](any(), any(), any())(any(), any(), any())
+      } thenReturn Future.successful(rateType)
+
+      whenReady(connector.rateType(AlcoholByVolume(3.5), YearMonth.of(2023, 1), Set(Beer, Wine))) { result =>
+        result mustBe rateType
+        verify(connector.httpClient, atLeastOnce)
+          .GET[RateTypeResponse](
+            any(),
+            ArgumentMatchers.eq(
+              Seq(
+                ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
+                ("alcoholRegimes", Json.toJson(Set("Beer", "Wine")).toString()),
+                ("abv", "3.5")
+              )
+            ),
+            any()
+          )(any(), any(), any())
       }
     }
   }

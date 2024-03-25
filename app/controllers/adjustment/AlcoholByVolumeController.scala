@@ -28,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AlcoholByVolumeView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,12 +50,12 @@ class AlcoholByVolumeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val abv          = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.abv)
-    val preparedForm = abv match {
-      case None                  => form
-      case Some(alcoholByVolume) => form.fill(alcoholByVolume.value)
+    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+      case None                               => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(value) if value.abv.isDefined =>
+        Ok(view(form.fill(value.abv.get.value), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                        => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
     }
-    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -62,7 +63,14 @@ class AlcoholByVolumeController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors =>
+            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+              case Some(value) =>
+                Future.successful(
+                  BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+                )
+            },
           value => {
             val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
             for {

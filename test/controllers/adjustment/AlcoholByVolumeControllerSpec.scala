@@ -30,6 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AlcoholByVolumeView
 
@@ -46,11 +47,14 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val alcoholByVolumeRoute = controllers.adjustment.routes.AlcoholByVolumeController.onPageLoad(NormalMode).url
 
+  val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
+  val userAnswers     = UserAnswers(userAnswersId).set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+
   "AlcoholByVolume Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, alcoholByVolumeRoute)
@@ -60,7 +64,7 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AlcoholByVolumeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, "spoilt")(request, messages(application)).toString
       }
     }
 
@@ -69,7 +73,7 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
       val userAnswers = UserAnswers(userAnswersId)
         .set(
           CurrentAdjustmentEntryPage,
-          AdjustmentEntry(abv = Some(validAnswer))
+          AdjustmentEntry(abv = Some(validAnswer), adjustmentType = Some(Spoilt))
         )
         .success
         .value
@@ -84,7 +88,7 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer.value), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer.value), NormalMode, "spoilt")(
           request,
           messages(application)
         ).toString
@@ -119,7 +123,7 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =
@@ -133,13 +137,13 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, "spoilt")(request, messages(application)).toString
       }
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, alcoholByVolumeRoute)
@@ -153,7 +157,7 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =

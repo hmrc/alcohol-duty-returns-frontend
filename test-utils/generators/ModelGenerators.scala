@@ -47,12 +47,20 @@ trait ModelGenerators {
     Gen.oneOf(RateType.Core, RateType.DraughtRelief)
   }
 
-  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime] = Arbitrary {
+  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime]       = Arbitrary {
     Gen.oneOf(
       AlcoholRegime.Beer,
       AlcoholRegime.Cider,
       AlcoholRegime.Wine,
       AlcoholRegime.Spirits
+    )
+  }
+  implicit val arbitraryRateTypeResponse: Arbitrary[RateTypeResponse] = Arbitrary {
+    Gen.oneOf(
+      RateTypeResponse(RateType.DraughtRelief),
+      RateTypeResponse(RateType.SmallProducerRelief),
+      RateTypeResponse(RateType.DraughtAndSmallProducerRelief),
+      RateTypeResponse(RateType.Core)
     )
   }
 
@@ -128,6 +136,7 @@ trait ModelGenerators {
   def productEntryGen: Gen[ProductEntry]                                = for {
     name                <- Gen.alphaStr
     abv                 <- arbitrary[AlcoholByVolume]
+    rateType            <- arbitrary[RateTypeResponse]
     volume              <- Gen.posNum[BigDecimal]
     draughtRelief       <- Gen.oneOf(true, false)
     smallProducerRelief <- Gen.oneOf(true, false)
@@ -140,6 +149,7 @@ trait ModelGenerators {
   } yield ProductEntry(
     name = Some(name),
     abv = Some(abv),
+    rateType = Some(rateType),
     volume = Some(volume),
     draughtRelief = Some(draughtRelief),
     smallProducerRelief = Some(smallProducerRelief),

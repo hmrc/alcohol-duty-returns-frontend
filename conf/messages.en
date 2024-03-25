@@ -69,8 +69,12 @@ unauthorised.heading = You can’t access this service with this account
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty return
 section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits return
-
-
+section.adjustment.default = Alcohol Duty adjustment
+section.adjustment.under-declaration = Adjust for under-declared alcohol
+section.adjustment.over-declaration = Adjust for over-declared alcohol
+section.adjustment.spoilt = Adjust for spoilt alcohol
+section.adjustment.drawback = Adjust for duty drawback
+section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
 
 # Beginning of product entry sub-journey
 
@@ -170,22 +174,20 @@ productVolume.error.maximumRequired = This product’s volume must be 999999999.
 productVolume.error.twoDecimalPlaces = This product’s volume must be a number to 2 decimal places
 productVolume.change.hidden = Product volume
 
-pureAlcohol.title = This product has {0} litres of pure alcohol
-pureAlcohol.heading = This product has {0} litres of pure alcohol
-pureAlcohol.paragraph = This is because you told us:
-pureAlcohol.bulletList.1 = this product is {0}% Alcohol by Volume (ABV) strength
-pureAlcohol.bulletList.2 = you need to declare {0} litres of this product
-pureAlcohol.checkYourAnswersLabel = Pure alcohol
-
-dutyDue.title = The duty due on this product is £{0}
-dutyDue.heading = The duty due on this product is £{0}
-dutyDue.paragraph1 = Based on the following details:
-dutyDue.bulletList.1 = Litres of pure alcohol: {0}
-dutyDue.bulletList.2 = Tax type: {0}
-dutyDue.bulletList.3 = Duty rate per litre: £{0}
-dutyDue.paragraph2 = The duty due on this product is £{0}.
+dutyDue.title = Your calculations
+dutyDue.heading = Your calculations
+dutyDue.paragraph1 = Based on everything you’ve told us about this entry, we’ve worked out the litres of pure alcohol (Lpa) and the duty due for this entry.
+dutyDue.subheading1 = {0} litres of pure alcohol (Lpa)
+dutyDue.paragraph2 = This is based on:
+dutyDue.bulletList.1 = the Alcohol by Volume (ABV) strength of this entry is {0}
+dutyDue.bulletList.2 = you need to declare {0} litres of this entry
+dutyDue.subheading2 = The duty due for this entry is £{0}.
+dutyDue.paragraph3 = This is based on:
+dutyDue.bulletList.3 = the entry having {0} litres of pure alcohol (Lpa)
+dutyDue.bulletList.4 = the duty rate for this entry being £{0} per litre  of pure alcohol
 dutyDue.rate.checkYourAnswersLabel = Duty rate
 dutyDue.duty.checkYourAnswersLabel = Duty due
+pureAlcohol.checkYourAnswersLabel = Pure alcohol
 
 productList.title = Products to declare
 productList.heading = Products to declare

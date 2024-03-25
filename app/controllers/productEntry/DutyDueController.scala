@@ -16,35 +16,51 @@
 
 package controllers.productEntry
 
+import connectors.CacheConnector
 import controllers.actions._
 import models.productEntry.ProductEntry
 import pages.productEntry.CurrentProductEntryPage
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
+import services.productEntry.ProductEntryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.productEntry.DutyDueView
 
+import scala.concurrent.{ExecutionContext, Future}
+
 class DutyDueController @Inject() (
   override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
+  productEntryService: ProductEntryService,
   view: DutyDueView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    for {
+      product     <- productEntryService.createProduct(request.userAnswers)
+      userAnswers <- Future.fromTry(request.userAnswers.set(CurrentProductEntryPage, product))
+      _           <- cacheConnector.set(userAnswers)
+    } yield getView(product)
+  }
+
+  private def getView(productEntry: ProductEntry)(implicit request: Request[_]): Result = {
     val result = for {
-      productEntry      <- request.userAnswers.get[ProductEntry](CurrentProductEntryPage)
+      abv               <- productEntry.abv
+      volume            <- productEntry.volume
       pureAlcoholVolume <- productEntry.pureAlcoholVolume
       taxCode           <- productEntry.taxCode
       duty              <- productEntry.duty
       rate              <- productEntry.rate
 
-    } yield Ok(view(duty, pureAlcoholVolume, taxCode, rate))
+    } yield Ok(view(abv.value, volume, duty, pureAlcoholVolume, taxCode, rate))
 
     result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
   }

@@ -25,7 +25,8 @@ case class AdjustmentEntry(
   taxCode: Option[String] = None,
   regime: Option[AlcoholRegime] = None,
   rateType: Option[RateType] = None,
-  taxRate: Option[BigDecimal] = None
+  taxRate: Option[BigDecimal] = None,
+  volume: Option[BigDecimal] = None
 )
 object AdjustmentEntry {
   implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]

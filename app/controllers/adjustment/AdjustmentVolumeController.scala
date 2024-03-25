@@ -18,14 +18,17 @@ package controllers.adjustment
 
 import controllers.actions._
 import forms.adjustment.AdjustmentVolumeFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.AdjustmentNavigator
-import pages.adjustment.AdjustmentVolumePage
+import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import models.adjustment.AdjustmentEntry
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -47,12 +50,12 @@ class AdjustmentVolumeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(AdjustmentVolumePage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+      case None                                  => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(value) if value.volume.isDefined =>
+        Ok(view(form.fill(value.volume.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                           => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
     }
-
-    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -60,12 +63,24 @@ class AdjustmentVolumeController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          formWithErrors =>
+            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+              case Some(value) =>
+                Future.successful(
+                  BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+                )
+            },
+          value => {
+            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentVolumePage, value))
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(volume = Some(value)))
+                )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers))
+          }
         )
   }
 }

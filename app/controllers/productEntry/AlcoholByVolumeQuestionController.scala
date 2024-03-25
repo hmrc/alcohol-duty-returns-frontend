@@ -16,25 +16,29 @@
 
 package controllers.productEntry
 
-import connectors.CacheConnector
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.productEntry.AlcoholByVolumeQuestionFormProvider
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 
 import javax.inject.Inject
-import models.{AlcoholByVolume, Mode}
+import models.{AlcoholByVolume, AlcoholRegime, Mode, RateTypeResponse}
 import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
 import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.productEntry.AlcoholByVolumeQuestionView
 
+import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
 class AlcoholByVolumeQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
+  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
   navigator: ProductEntryNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -59,22 +63,60 @@ class AlcoholByVolumeQuestionController @Inject() (
     Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode): Action[AnyContent]                                                 = (identify andThen getData andThen requireData).async {
     implicit request =>
       form
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val product                      = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val (updatedProduct, hasChanged) = updateABV(product, value)
             for {
+              rateType       <- fetchRateType(AlcoholByVolume(value))
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(CurrentProductEntryPage, product.copy(abv = Some(AlcoholByVolume(value))))
+                  request.userAnswers
+                    .set(
+                      CurrentProductEntryPage,
+                      updatedProduct.copy(abv = Some(AlcoholByVolume(value)), rateType = Some(rateType))
+                    )
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers))
+
+            } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+
+  def fetchRateType(abv: AlcoholByVolume)(implicit hc: HeaderCarrier): (Future[RateTypeResponse]) = {
+
+    //hardcoded for now, will need to get this from obligation period
+    val ratePeriod: YearMonth = YearMonth.of(2024, 1)
+
+    //hardcoded for now, will need to get this from subscription data
+    val approvedAlcoholRegimes: Set[AlcoholRegime] = Set(Beer, Wine, Cider, Spirits, OtherFermentedProduct)
+    for {
+      rateType <- alcoholDutyCalculatorConnector.rateType(abv, ratePeriod, approvedAlcoholRegimes)
+    } yield rateType
+  }
+  def updateABV(productEntry: ProductEntry, currentValue: BigDecimal): (ProductEntry, Boolean) =
+    productEntry.abv match {
+      case Some(existingValue) if currentValue == existingValue.value => (productEntry, false)
+      case _                                                          =>
+        (
+          productEntry.copy(
+            draughtRelief = None,
+            smallProducerRelief = None,
+            taxCode = None,
+            taxRate = None,
+            regime = None,
+            sprDutyRate = None,
+            volume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 }

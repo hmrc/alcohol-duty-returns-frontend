@@ -66,15 +66,35 @@ class DraughtReliefQuestionController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val product = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val product                      = request.userAnswers.get(CurrentProductEntryPage).getOrElse(ProductEntry())
+            val (updatedProduct, hasChanged) = updateDraughtRelief(product, value)
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(CurrentProductEntryPage, product.copy(draughtRelief = Some(value)))
+                  request.userAnswers.set(CurrentProductEntryPage, updatedProduct.copy(draughtRelief = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DraughtReliefQuestionPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(DraughtReliefQuestionPage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+
+  def updateDraughtRelief(productEntry: ProductEntry, currentValue: Boolean): (ProductEntry, Boolean) =
+    productEntry.draughtRelief match {
+      case Some(existingValue) if currentValue == existingValue => (productEntry, false)
+      case _                                                    =>
+        (
+          productEntry.copy(
+            smallProducerRelief = None,
+            taxCode = None,
+            taxRate = None,
+            regime = None,
+            sprDutyRate = None,
+            volume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 }

@@ -48,7 +48,7 @@ class AdjustmentTaxTypeFormProviderSpec extends IntFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "adjustmentTaxType.error.required")
+      requiredError = FormError(fieldName, "adjustmentTaxType.error.valid")
     )
   }
 }
