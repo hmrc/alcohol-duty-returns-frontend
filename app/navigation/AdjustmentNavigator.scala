@@ -29,6 +29,8 @@ class AdjustmentNavigator @Inject() () extends BaseNavigator {
       _ => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
     case pages.adjustment.AlcoholByVolumePage           =>
       _ => controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
+    case pages.adjustment.AdjustmentTaxTypePage         =>
+      _ => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
     case _                                              =>
       _ => routes.IndexController.onPageLoad
   }

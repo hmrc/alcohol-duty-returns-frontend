@@ -20,7 +20,6 @@ import base.SpecBase
 import controllers._
 import pages._
 import models._
-import models.adjustment.AdjustmentEntry
 
 class AdjustmentNavigatorSpec extends SpecBase {
 
@@ -52,6 +51,15 @@ class AdjustmentNavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers("id")
         ) mustBe controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Adjustment Tax Type page to Adjustment Volume Page" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentTaxTypePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
       }
     }
     "in Check mode" - {
