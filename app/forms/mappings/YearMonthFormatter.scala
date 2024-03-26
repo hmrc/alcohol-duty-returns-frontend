@@ -28,9 +28,10 @@ class YearMonthFormatter(invalidKey: String, allRequiredKey: String, requiredKey
   val fieldKeys: List[String] = List("month", "year")
 
   def verifyMonth(key: String, month: Int): Either[Seq[FormError], Int] =
-    if (month >= 1 && month <= 12) Right(month) else Left(Seq(FormError(s"$key.month", s"$invalidKey.month", args)))
-  def verifyYear(key: String, year: Int): Either[Seq[FormError], Int]   =
-    if (year >= 1000 && year <= 9999) Right(year) else Left(Seq(FormError(s"$key.year", s"$invalidKey.year", args)))
+    if (month >= 1 && month <= 12) Right(month) else Left(Seq(FormError(key, s"$invalidKey.month", args)))
+
+  def verifyYear(key: String, year: Int): Either[Seq[FormError], Int] =
+    if (year >= 1000 && year <= 9999) Right(year) else Left(Seq(FormError(key, s"$invalidKey.year", args)))
 
   val monthIntFormatter = intFormatter(
     requiredKey = s"$requiredKey.month",
@@ -50,12 +51,12 @@ class YearMonthFormatter(invalidKey: String, allRequiredKey: String, requiredKey
 
     val month: Either[Seq[FormError], Int] = monthIntFormatter.bind(s"$key.month", data) match {
       case Right(value)   => verifyMonth(key, value)
-      case Left(errorSeq) => Left(errorSeq)
+      case Left(errorSeq) => Left(setErrorKey(key, errorSeq))
     }
 
     val year = yearIntFormatter.bind(s"$key.year", data) match {
       case Right(value)   => verifyYear(key, value)
-      case Left(errorSeq) => Left(errorSeq)
+      case Left(errorSeq) => Left(setErrorKey(key, errorSeq))
     }
 
     (month, year) match {
@@ -64,15 +65,28 @@ class YearMonthFormatter(invalidKey: String, allRequiredKey: String, requiredKey
     }
   }
 
+  def setErrorKey(key: String, errors: Seq[FormError]): Seq[FormError] =
+    errors.map(error => error.copy(key = key, args = error.key ++ args))
+
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], YearMonth] = {
     val fields = fieldKeys.map { field =>
       field -> data.get(s"$key.$field").filter(_.nonEmpty)
     }.toMap
 
-    if (fields.count(_._2.isDefined) > 0) {
-      formatDate(key, data)
-    } else {
-      Left(List(FormError(key, allRequiredKey, args)))
+    lazy val missingFields = fields
+      .withFilter(_._2.isEmpty)
+      .map(_._1)
+      .toList
+
+    fields.count(_._2.isDefined) match {
+      case 2 =>
+        formatDate(key, data).left.map {
+          _.map(_.copy(key = key, args = args))
+        }
+      case 1 =>
+        Left(missingFields.map(field => FormError(s"$key.$field", requiredKey, missingFields ++ args)))
+      case _ =>
+        Left(List(FormError(key, allRequiredKey, args)))
     }
   }
 

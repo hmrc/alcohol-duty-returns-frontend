@@ -84,6 +84,32 @@ class DateBehaviours extends FieldBehaviours {
       result.errors must contain only FormError(key, requiredAllKey, errorArgs)
     }
 
+  def yearMonthMandatoryMonthField(form: Form[_], key: String, formError: FormError): Unit =
+    s"fail to bind an empty month" in {
+
+      val data = Map(
+        s"$key.month" -> "",
+        s"$key.year"  -> "2024"
+      )
+
+      val result = form.bind(data)
+
+      result.errors must contain only formError
+    }
+
+  def yearMonthMandatoryYearField(form: Form[_], key: String, formError: FormError): Unit =
+    s"fail to bind an empty year" in {
+
+      val data = Map(
+        s"$key.month" -> "1",
+        s"$key.year"  -> ""
+      )
+
+      val result = form.bind(data)
+
+      result.errors must contain only formError
+    }
+
   def yearMonthField(form: Form[_], key: String, validData: Gen[YearMonth]): Unit =
     "bind valid data" in {
 

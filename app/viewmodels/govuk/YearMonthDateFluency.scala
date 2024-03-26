@@ -16,7 +16,7 @@
 
 package viewmodels.govuk
 
-import play.api.data.Field
+import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.dateinput.{DateInput, InputItem}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
@@ -29,35 +29,47 @@ trait YearMonthDateFluency {
   object YearMonthDateViewModel extends ErrorMessageAwareness {
 
     def apply(
-      field: Field,
+      form: Form[_],
+      id: String,
       legend: Legend
     )(implicit messages: Messages): DateInput =
       apply(
-        field = field,
+        form = form,
+        id = id,
         fieldset = Fieldset(legend = Some(legend))
       )
 
     def apply(
-      field: Field,
+      form: Form[_],
+      id: String,
       fieldset: Fieldset
     )(implicit messages: Messages): DateInput = {
 
-      val errorClass = if (errorMessage(field).isDefined) "govuk-input--error" else ""
+      val field = form(id)
+
+      def errorClass(id: String) =
+        if (errorMessage(field).isDefined || errorMessage(form(id)).isDefined) "govuk-input--error" else ""
+
+      val monthId = s"${field.id}.month"
+      val yearId  = s"${field.id}.year"
+
+      val primaryError =
+        Seq(errorMessage(field), errorMessage(form(monthId)), errorMessage(form(yearId))).flatten.headOption
 
       val items = Seq(
         InputItem(
-          id = s"${field.id}.month",
+          id = monthId,
           name = s"${field.name}.month",
           value = field("month").value,
           label = Some(messages("date.month")),
-          classes = s"govuk-input--width-2 $errorClass".trim
+          classes = s"govuk-input--width-2 ${errorClass(monthId)}".trim
         ),
         InputItem(
-          id = s"${field.id}.year",
+          id = yearId,
           name = s"${field.name}.year",
           value = field("year").value,
           label = Some(messages("date.year")),
-          classes = s"govuk-input--width-4 $errorClass".trim
+          classes = s"govuk-input--width-4 ${errorClass(yearId)}".trim
         )
       )
 
@@ -65,7 +77,7 @@ trait YearMonthDateFluency {
         fieldset = Some(fieldset),
         items = items,
         id = field.id,
-        errorMessage = errorMessage(field)
+        errorMessage = primaryError
       )
     }
   }

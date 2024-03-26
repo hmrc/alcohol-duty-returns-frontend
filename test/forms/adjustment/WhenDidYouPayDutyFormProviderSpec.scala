@@ -23,9 +23,10 @@ import java.time.{Clock, LocalDate, YearMonth, ZoneOffset}
 
 class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBehaviours {
 
-  private val clock    = Clock.fixed(LocalDate.of(2024, 2, 1).atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
-  val form             = new WhenDidYouPayDutyFormProvider()()
-  val invalidYearMonth = YearMonth.of(2023, 8)
+  private val clock               = Clock.fixed(LocalDate.of(2024, 2, 1).atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
+  val form                        = new WhenDidYouPayDutyFormProvider()()
+  val invalidYearMonth: YearMonth = YearMonth.of(2023, 8)
+  val inputKey                    = "when-did-you-pay-duty-input"
 
   "input" - {
     val validData = datesBetween(
@@ -33,67 +34,79 @@ class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBeha
       max = LocalDate.now(clock).minusMonths(1)
     ).map(YearMonth.from(_))
 
-    behave like yearMonthField(form, "when-did-you-pay-duty-input", validData)
+    behave like yearMonthField(form, inputKey, validData)
 
     behave like mandatoryField(
       form,
-      "when-did-you-pay-duty-input",
-      FormError("when-did-you-pay-duty-input", "whenDidYouPayDuty.date.error.required.all")
+      inputKey,
+      FormError(inputKey, "whenDidYouPayDuty.date.error.required.all")
+    )
+
+    behave like yearMonthMandatoryMonthField(
+      form,
+      inputKey,
+      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.required", Seq("month"))
+    )
+
+    behave like yearMonthMandatoryYearField(
+      form,
+      inputKey,
+      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.required", Seq("year"))
     )
 
     behave like yearMonthFieldInFuture(
       form,
-      "when-did-you-pay-duty-input",
-      FormError("when-did-you-pay-duty-input", "whenDidYouPayDuty.date.error.invalid.future")
+      inputKey,
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.future")
     )
 
     behave like yearMonthFieldWithMin(
       form,
-      "when-did-you-pay-duty-input",
+      inputKey,
       invalidYearMonth,
-      FormError("when-did-you-pay-duty-input", "whenDidYouPayDuty.date.error.invalid.past")
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.past")
     )
 
     behave like yearMonthInvalidMonth(
       form,
-      "when-did-you-pay-duty-input",
+      inputKey,
       validData,
-      FormError("when-did-you-pay-duty-input.month", "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.month")
     )
 
     behave like yearMonthWithMonthOutOfMinRange(
       form,
-      "when-did-you-pay-duty-input",
+      inputKey,
       validData,
-      FormError("when-did-you-pay-duty-input.month", "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.month")
     )
 
     behave like yearMonthWithMonthOutOfMaxRange(
       form,
-      "when-did-you-pay-duty-input",
+      inputKey,
       validData,
-      FormError("when-did-you-pay-duty-input.month", "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.month")
     )
 
     behave like yearMonthInvalidYear(
       form,
-      "when-did-you-pay-duty-input",
+      inputKey,
       validData,
-      FormError("when-did-you-pay-duty-input.year", "whenDidYouPayDuty.date.error.invalid.year")
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.year")
     )
 
     behave like yearMonthWithYearOutOfMinRange(
       form,
-      "when-did-you-pay-duty-input",
+      inputKey,
       validData,
-      FormError("when-did-you-pay-duty-input.year", "whenDidYouPayDuty.date.error.invalid.year")
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.year")
     )
 
     behave like yearMonthWithYearOutOfMaxRange(
       form,
-      "when-did-you-pay-duty-input",
+      inputKey,
       validData,
-      FormError("when-did-you-pay-duty-input.year", "whenDidYouPayDuty.date.error.invalid.year")
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.year")
     )
 
   }
