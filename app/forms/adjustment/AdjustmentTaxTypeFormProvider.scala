@@ -29,5 +29,6 @@ class AdjustmentTaxTypeFormProvider @Inject() extends Mappings {
         "adjustmentTaxType.error.valid",
         "adjustmentTaxType.error.valid"
       )
+        .verifying(inRange(100, 999, "adjustmentTaxType.error.invalid"))
     )
 }
