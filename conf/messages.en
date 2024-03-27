@@ -454,10 +454,10 @@ whenDidYouPayDuty.paragraph = Contact HMRC if this was originally declared befor
 whenDidYouPayDuty.hint = For example, 3 2007
 whenDidYouPayDuty.date.error.required.all = Enter a month and year
 whenDidYouPayDuty.date.error.required = Enter a {0}
-whenDidYouPayDuty.date.error.invalid.future = The date must be in the past
+whenDidYouPayDuty.date.error.invalid.future = Enter a date that’s in the past
 whenDidYouPayDuty.date.error.invalid.month = Enter a valid month. It must be a number between 1 and 12
 whenDidYouPayDuty.date.error.invalid.year = Enter a valid year. It must be a 4-digit number
-whenDidYouPayDuty.date.error.invalid.past = The date must be after August 2023
+whenDidYouPayDuty.date.error.invalid.past = The date must be after 31st August 2023
 
 alcoholByVolume.title = What is the Alcohol by Volume (ABV) strength for this adjustment?
 alcoholByVolume.heading = What is the Alcohol by Volume (ABV) strength for this adjustment?
