@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.adjustment.AdjustmentTaxTypeFormProvider
 
 import javax.inject.Inject
-import models.{Mode, RateBand, TaxType}
+import models.{Mode, RateBand}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -76,7 +76,7 @@ class AdjustmentTaxTypeController @Inject() (
                 )
             },
           value =>
-            fetchAdjustmentTaxType(TaxType(value.toString)).flatMap {
+            fetchAdjustmentTaxType(value.toString).flatMap {
               case Some(rateBand) =>
                 for {
                   adjustment     <- Future.fromTry(Try(request.userAnswers.get(CurrentAdjustmentEntryPage).get))
@@ -112,7 +112,7 @@ class AdjustmentTaxTypeController @Inject() (
         )
   }
 
-  def fetchAdjustmentTaxType(taxCode: TaxType)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
+  def fetchAdjustmentTaxType(taxCode: String)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
     //hardcoded for now, will need to get this from obligation period
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
     alcoholDutyCalculatorConnector.adjustmentTaxType(taxCode, ratePeriod)

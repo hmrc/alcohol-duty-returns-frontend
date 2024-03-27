@@ -22,7 +22,7 @@ import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.productEntry.TaxDuty
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse, TaxType}
+import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{atLeastOnce, mock, verify, when}
@@ -131,7 +131,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
         connector.httpClient.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any())
       } thenReturn rateBandResponse
 
-      whenReady(connector.adjustmentTaxType(TaxType("310"), YearMonth.of(2023, 1))) { result =>
+      whenReady(connector.adjustmentTaxType("310", YearMonth.of(2023, 1))) { result =>
         result mustBe Some(rateBand)
         verify(connector.httpClient, atLeastOnce)
           .GET[Either[UpstreamErrorResponse, HttpResponse]](
@@ -139,7 +139,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
             ArgumentMatchers.eq(
               Seq(
                 ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                ("taxType", Json.toJson(TaxType("310")).toString)
+                ("taxType", Json.toJson("310").toString)
               )
             ),
             any()

@@ -133,19 +133,7 @@ case class RateBand(
 object RateBand {
   implicit val formats: OFormat[RateBand] = Json.format[RateBand]
 }
-case class TaxType private (value: String)
 
-object TaxType {
-
-  implicit val format: Format[TaxType] = new Format[TaxType] {
-    override def reads(json: JsValue): JsResult[TaxType] = json.validate[String] match {
-      case JsSuccess(value, _) => JsSuccess(TaxType(value))
-      case error: JsError      => error
-    }
-
-    override def writes(o: TaxType): JsValue = JsString(o.value)
-  }
-}
 case class RatePeriod(
   name: String,
   isLatest: Boolean,
