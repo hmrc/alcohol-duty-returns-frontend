@@ -30,7 +30,6 @@ class AdjustmentNavigatorSpec extends SpecBase {
     "in Normal mode" - {
 
       "must go from a page that doesn't exist in the route map to Index" in {
-
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
       }
@@ -42,6 +41,26 @@ class AdjustmentNavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers("id").set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value
         ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+      }
+
+      "must go from Adjustment Type Page to WhenDidYouPayDutyController" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentTypePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe
+          controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
+      }
+
+      "must go from WhenDidYouPayDutyPage to AlcoholByVolumeController" in {
+
+        navigator.nextPage(
+          pages.adjustment.WhenDidYouPayDutyPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe
+          controllers.adjustment.routes.AlcoholByVolumeController.onPageLoad(NormalMode)
       }
 
       "must go from the Alcohol By Volume Page to Adjustment Tax Type page" in {
@@ -62,6 +81,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
       }
     }
+
     "in Check mode" - {
 
       "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
@@ -73,7 +93,6 @@ class AdjustmentNavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe routes.CheckYourAnswersController.onPageLoad
       }
-
     }
   }
 

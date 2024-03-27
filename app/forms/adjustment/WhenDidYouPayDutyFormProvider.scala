@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package models.adjustment
+package forms.adjustment
 
-import models.{AlcoholByVolume, AlcoholRegime, RateType, YearMonthModelFormatter}
-import play.api.libs.json.{Json, OFormat}
+import javax.inject.Inject
+import forms.mappings.Mappings
+import play.api.data.Form
 
 import java.time.YearMonth
 
-case class AdjustmentEntry(
-  adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None,
-  taxCode: Option[String] = None,
-  regime: Option[AlcoholRegime] = None,
-  rateType: Option[RateType] = None,
-  taxRate: Option[BigDecimal] = None,
-  volume: Option[BigDecimal] = None,
-  period: Option[YearMonth] = None
-)
-object AdjustmentEntry extends YearMonthModelFormatter {
-  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
+class WhenDidYouPayDutyFormProvider @Inject() extends Mappings {
+  def apply(): Form[YearMonth] = Form(
+    "when-did-you-pay-duty-input" -> yearMonth(
+      "whenDidYouPayDuty.date.error.invalid",
+      "whenDidYouPayDuty.date.error.required.all",
+      "whenDidYouPayDuty.date.error.required"
+    )
+      .verifying("whenDidYouPayDuty.date.error.invalid.future", value => value.isBefore(YearMonth.now()))
+      .verifying("whenDidYouPayDuty.date.error.invalid.past", value => value.isAfter(YearMonth.of(2023, 8)))
+  )
 }
