@@ -66,7 +66,7 @@ class YearMonthFormatter(invalidKey: String, allRequiredKey: String, requiredKey
   }
 
   def setErrorKey(key: String, errors: Seq[FormError]): Seq[FormError] =
-    errors.map(error => error.copy(key = key, args = error.key ++ args))
+    errors.map(error => error.copy(key = key, args = args))
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], YearMonth] = {
     val fields = fieldKeys.map { field =>

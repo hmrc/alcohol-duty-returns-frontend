@@ -18,7 +18,8 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
+import pages.Page
 
 class AdjustmentNavigatorSpec extends SpecBase {
 
@@ -40,10 +41,15 @@ class AdjustmentNavigatorSpec extends SpecBase {
           controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
       }
 
-      "must go to IndexController from any page not covered by normalRoutes" in {
+      "must go from WhenDidYouPayDutyPage to AlcoholByVolumeController" in {
 
         navigator.normalRoutes(pages.adjustment.WhenDidYouPayDutyPage)(emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad
+          controllers.adjustment.routes.AlcoholByVolumeController.onPageLoad(NormalMode)
+      }
+
+      "must go to IndexController from any page not covered by normalRoutes" in {
+        case object UnknownPage extends Page
+        navigator.normalRoutes(UnknownPage)(emptyUserAnswers) mustBe routes.IndexController.onPageLoad
       }
     }
 
