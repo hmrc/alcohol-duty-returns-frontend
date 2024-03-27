@@ -27,6 +27,10 @@ class AdjustmentNavigator @Inject() () extends BaseNavigator {
   override val normalRoutes: Page => UserAnswers => Call = {
     case pages.adjustment.DeclareAdjustmentQuestionPage =>
       _ => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+    case pages.adjustment.AdjustmentTypePage            =>
+      _ => controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
+    case pages.adjustment.WhenDidYouPayDutyPage         =>
+      _ => controllers.adjustment.routes.AlcoholByVolumeController.onPageLoad(NormalMode)
     case _                                              =>
       _ => routes.IndexController.onPageLoad
   }

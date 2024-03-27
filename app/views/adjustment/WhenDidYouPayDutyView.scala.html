@@ -1,0 +1,61 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{SectionHeading, PageHeading, Paragraph}
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukDateInput: GovukDateInput,
+    govukButton: GovukButton,
+    paragraph: Paragraph,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
+)
+
+@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("whenDidYouPayDuty.title"))) {
+
+    @formHelper(action = controllers.adjustment.routes.WhenDidYouPayDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @sectionHeading(
+            id = "when-did-you-pay-duty-section",
+            messages(s"section.adjustment.$adjustmentType"),
+        )
+
+        @pageHeading(messages("whenDidYouPayDuty.heading"))
+
+        @paragraph(messages("whenDidYouPayDuty.paragraph"))
+
+        @govukDateInput(
+            YearMonthDateViewModel(
+                form  = form,
+                id = "when-did-you-pay-duty-input",
+                legend = LegendViewModel(messages("whenDidYouPayDuty.heading")).asVisuallyHidden(),
+            ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+        )
+    }
+}
