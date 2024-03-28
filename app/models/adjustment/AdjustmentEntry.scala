@@ -16,7 +16,7 @@
 
 package models.adjustment
 
-import models.{AlcoholByVolume, AlcoholRegime, RateType, YearMonthModelFormatter}
+import models.{AlcoholByVolume, RateType, YearMonthModelFormatter}
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.YearMonth
@@ -25,7 +25,6 @@ case class AdjustmentEntry(
   adjustmentType: Option[AdjustmentType] = None,
   abv: Option[AlcoholByVolume] = None,
   taxCode: Option[String] = None,
-  regime: Option[AlcoholRegime] = None,
   rateType: Option[RateType] = None,
   taxRate: Option[BigDecimal] = None,
   volume: Option[BigDecimal] = None,

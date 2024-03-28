@@ -76,24 +76,23 @@ class AdjustmentTaxTypeController @Inject() (
                 )
             },
           value =>
-            fetchAdjustmentTaxType(value.toString).flatMap {
+            fetchAdjustmentRateBand(value.toString).flatMap {
               case Some(rateBand) =>
                 for {
-                  adjustment     <- Future.fromTry(Try(request.userAnswers.get(CurrentAdjustmentEntryPage).get))
-                  updatedAnswers <-
+                  currentAdjustmentEntry <- Future.fromTry(Try(request.userAnswers.get(CurrentAdjustmentEntryPage).get))
+                  updatedAnswers         <-
                     Future.fromTry(
                       request.userAnswers
                         .set(
                           CurrentAdjustmentEntryPage,
-                          adjustment.copy(
+                          currentAdjustmentEntry.copy(
                             taxCode = Some(value.toString),
                             taxRate = rateBand.rate,
-                            regime = rateBand.alcoholRegime.headOption,
                             rateType = Some(rateBand.rateType)
                           )
                         )
                     )
-                  _              <- cacheConnector.set(updatedAnswers)
+                  _                      <- cacheConnector.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers))
               case None           =>
                 Future.successful(
@@ -112,9 +111,9 @@ class AdjustmentTaxTypeController @Inject() (
         )
   }
 
-  def fetchAdjustmentTaxType(taxCode: String)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
+  private def fetchAdjustmentRateBand(taxCode: String)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
     //hardcoded for now, will need to get this from obligation period
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
-    alcoholDutyCalculatorConnector.adjustmentTaxType(taxCode, ratePeriod)
+    alcoholDutyCalculatorConnector.adjustmentRateBand(taxCode, ratePeriod)
   }
 }

@@ -107,7 +107,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockAlcoholDutyCalculatorConnector.adjustmentTaxType(any(), any())(any())) thenReturn Future.successful(
+      when(mockAlcoholDutyCalculatorConnector.adjustmentRateBand(any(), any())(any())) thenReturn Future.successful(
         Some(rateBand)
       )
 
@@ -139,7 +139,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockAlcoholDutyCalculatorConnector.adjustmentTaxType(any(), any())(any())) thenReturn Future.successful(
+      when(mockAlcoholDutyCalculatorConnector.adjustmentRateBand(any(), any())(any())) thenReturn Future.successful(
         Some(rateBand)
       )
 
@@ -174,7 +174,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
     "must return a Bad Request and errors when invalid tax type is submitted" in {
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockAlcoholDutyCalculatorConnector.adjustmentTaxType(any(), any())(any())) thenReturn Future.successful(
+      when(mockAlcoholDutyCalculatorConnector.adjustmentRateBand(any(), any())(any())) thenReturn Future.successful(
         None
       )
 

@@ -27,7 +27,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{atLeastOnce, mock, verify, when}
 import org.scalatest.concurrent.ScalaFutures
-import play.api.http.Status.OK
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
@@ -120,7 +120,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
     }
   }
 
-  "taxType" - {
+  "rateBand" - {
     "successfully retrieve rate band" in {
       val rateBandResponse: Future[Either[UpstreamErrorResponse, HttpResponse]] = Future.successful(
         Right(
@@ -131,7 +131,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
         connector.httpClient.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any())
       } thenReturn rateBandResponse
 
-      whenReady(connector.adjustmentTaxType("310", YearMonth.of(2023, 1))) { result =>
+      whenReady(connector.adjustmentRateBand("310", YearMonth.of(2023, 1))) { result =>
         result mustBe Some(rateBand)
         verify(connector.httpClient, atLeastOnce)
           .GET[Either[UpstreamErrorResponse, HttpResponse]](
@@ -140,6 +140,32 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
               Seq(
                 ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
                 ("taxType", "310")
+              )
+            ),
+            any()
+          )(any(), any(), any())
+      }
+    }
+
+    "return None when unable to retrieve rate band" in {
+      val rateBandResponse: Future[Either[UpstreamErrorResponse, HttpResponse]] = Future.successful(
+        Right(
+          HttpResponse(NOT_FOUND, "RateBand not found")
+        )
+      )
+      when {
+        connector.httpClient.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any())
+      } thenReturn rateBandResponse
+
+      whenReady(connector.adjustmentRateBand("123", YearMonth.of(2023, 1))) { result =>
+        result mustBe None
+        verify(connector.httpClient, atLeastOnce)
+          .GET[Either[UpstreamErrorResponse, HttpResponse]](
+            any(),
+            ArgumentMatchers.eq(
+              Seq(
+                ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
+                ("taxType", "123")
               )
             ),
             any()
