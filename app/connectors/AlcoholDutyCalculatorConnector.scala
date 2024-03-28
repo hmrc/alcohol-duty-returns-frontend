@@ -63,7 +63,7 @@ class AlcoholDutyCalculatorConnector @Inject() (
   ): Future[Option[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(
       "ratePeriod" -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
-      "taxType"    -> Json.toJson(taxType).toString
+      "taxType"    -> taxType
     )
     httpClient
       .GET[Either[UpstreamErrorResponse, HttpResponse]](

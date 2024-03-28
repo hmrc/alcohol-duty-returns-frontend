@@ -139,7 +139,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
             ArgumentMatchers.eq(
               Seq(
                 ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                ("taxType", Json.toJson("310").toString)
+                ("taxType", "310")
               )
             ),
             any()
