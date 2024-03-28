@@ -27,8 +27,9 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{atLeastOnce, mock, verify, when}
 import org.scalatest.concurrent.ScalaFutures
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,18 +40,16 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
   protected implicit val hc: HeaderCarrier    = HeaderCarrier()
   val mockConfig: FrontendAppConfig           = mock[FrontendAppConfig]
   val connector                               = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val rateBandList: Seq[RateBand]             =
-    Seq(
-      RateBand(
-        "310",
-        "some band",
-        RateType.DraughtRelief,
-        Set(AlcoholRegime.Beer),
-        AlcoholByVolume(0.1),
-        AlcoholByVolume(5.8),
-        Some(BigDecimal(10.99))
-      )
-    )
+  val rateBand                                = RateBand(
+    "310",
+    "some band",
+    RateType.DraughtRelief,
+    Set(AlcoholRegime.Beer),
+    AlcoholByVolume(0.1),
+    AlcoholByVolume(5.8),
+    Some(BigDecimal(10.99))
+  )
+  val rateBandList: Seq[RateBand]             = Seq(rateBand)
   val rateType                                = RateTypeResponse(DraughtRelief)
 
   "rates" - {
@@ -113,6 +112,60 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
                 ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
                 ("alcoholRegimes", Json.toJson(Set("Beer", "Wine")).toString()),
                 ("abv", "3.5")
+              )
+            ),
+            any()
+          )(any(), any(), any())
+      }
+    }
+  }
+
+  "rateBand" - {
+    "successfully retrieve rate band" in {
+      val rateBandResponse: Future[Either[UpstreamErrorResponse, HttpResponse]] = Future.successful(
+        Right(
+          HttpResponse(OK, Json.toJson[RateBand](rateBand).toString())
+        )
+      )
+      when {
+        connector.httpClient.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any())
+      } thenReturn rateBandResponse
+
+      whenReady(connector.adjustmentRateBand("310", YearMonth.of(2023, 1))) { result =>
+        result mustBe Some(rateBand)
+        verify(connector.httpClient, atLeastOnce)
+          .GET[Either[UpstreamErrorResponse, HttpResponse]](
+            any(),
+            ArgumentMatchers.eq(
+              Seq(
+                ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
+                ("taxType", "310")
+              )
+            ),
+            any()
+          )(any(), any(), any())
+      }
+    }
+
+    "return None when unable to retrieve rate band" in {
+      val rateBandResponse: Future[Either[UpstreamErrorResponse, HttpResponse]] = Future.successful(
+        Right(
+          HttpResponse(NOT_FOUND, "RateBand not found")
+        )
+      )
+      when {
+        connector.httpClient.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any())
+      } thenReturn rateBandResponse
+
+      whenReady(connector.adjustmentRateBand("123", YearMonth.of(2023, 1))) { result =>
+        result mustBe None
+        verify(connector.httpClient, atLeastOnce)
+          .GET[Either[UpstreamErrorResponse, HttpResponse]](
+            any(),
+            ArgumentMatchers.eq(
+              Seq(
+                ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
+                ("taxType", "123")
               )
             ),
             any()
