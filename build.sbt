@@ -74,11 +74,7 @@ lazy val it = project
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
   .settings(DefaultBuildSettings.itSettings())
   .settings(
-    libraryDependencies ++= AppDependencies.test,
-    Test / unmanagedSourceDirectories := Seq(
-      baseDirectory.value / "it" / "test",
-      baseDirectory.value / "test-utils"
-    ),
+    libraryDependencies ++= AppDependencies.itDependencies,
     Test / unmanagedResourceDirectories += baseDirectory.value / "it" / "test" / "resources",
     Test / parallelExecution := false,
     Test / fork := true

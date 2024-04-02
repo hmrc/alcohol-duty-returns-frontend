@@ -174,9 +174,14 @@ POST       /what-is-the-adjustment-abv                  controllers.adjustment.A
 GET        /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /what-is-the-adjustment-tax-type                  controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-is-the-adjustment-tax-type                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-what-is-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-what-is-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
+
 GET        /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
-# End of adjustments sub-journey
 
+# End of adjustments sub-journey
