@@ -27,7 +27,6 @@ import org.mockito.MockitoSugar.mock
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.productEntry.ProductEntryService
 import uk.gov.hmrc.http.HttpResponse
 import views.html.productEntry.DutyDueView
 

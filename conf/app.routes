@@ -184,4 +184,7 @@ POST       /how-much-is-the-adjustment                 controllers.adjustment.Ad
 GET        /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
+
 # End of adjustments sub-journey
+

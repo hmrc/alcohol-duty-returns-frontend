@@ -488,5 +488,19 @@ adjustmentVolume.error.maximumRequired = The volume of adjustments must be less 
 adjustmentVolume.error.twoDecimalPlaces = The volume must be up to 2 decimal places
 adjustmentVolume.change.hidden = Adjustment Volume
 
-# End of adjustments sub-journey
+adjustmentDutyDue.title = Your calculations
+adjustmentDutyDue.heading = Your calculations
+adjustmentDutyDue.paragraph1 = Based on everything you’ve told us about this entry, we’ve worked out the litres of pure alcohol (Lpa) and the duty due for this entry.
+adjustmentDutyDue.subheading1 = {0} litres of pure alcohol (Lpa)
+adjustmentDutyDue.paragraph2 = This is based on:
+adjustmentDutyDue.bulletList.1 = the Alcohol by Volume (ABV) strength of this entry is {0}%
+adjustmentDutyDue.bulletList.2 = you need to declare {0} litres of this entry
+adjustmentDutyDue.subheading2 = The duty value of this entry is £{0}.
+adjustmentDutyDue.paragraph3 = This is based on:
+adjustmentDutyDue.bulletList.3 = the entry having {0} litres of pure alcohol (Lpa)
+adjustmentDutyDue.bulletList.4 = the duty rate for this entry being £{0} per litre  of pure alcohol
+adjustmentDutyDue.rate.checkYourAnswersLabel = Duty rate
+adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
+adjustmentDutyDue.checkYourAnswersLabel = Pure alcohol
 
+# End of adjustments sub-journey

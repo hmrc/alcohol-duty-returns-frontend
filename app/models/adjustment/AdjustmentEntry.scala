@@ -28,7 +28,10 @@ case class AdjustmentEntry(
   rateType: Option[RateType] = None,
   taxRate: Option[BigDecimal] = None,
   volume: Option[BigDecimal] = None,
-  period: Option[YearMonth] = None
+  period: Option[YearMonth] = None,
+  sprDutyRate: Option[BigDecimal] = None,
+  duty: Option[BigDecimal] = None,
+  pureAlcoholVolume: Option[BigDecimal] = None
 )
 object AdjustmentEntry extends YearMonthModelFormatter {
   implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]

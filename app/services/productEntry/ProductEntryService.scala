@@ -26,21 +26,21 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ProductEntryServiceImpl @Inject() (
-  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
-) extends ProductEntryService {
+class ProductEntryServiceImpl @Inject()(
+                                         alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
+                                       ) extends ProductEntryService {
 
   override def createProduct(
-    userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ProductEntry] = {
+                              userAnswers: UserAnswers
+                            )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ProductEntry] = {
 
     val productEntry =
       userAnswers
         .get(CurrentProductEntryPage)
         .getOrElse(throw new RuntimeException("Can't fetch product entry from cache"))
-    val abv          = productEntry.abv.getOrElse(throw new RuntimeException("Can't fetch ABV from cache"))
-    val volume       = productEntry.volume.getOrElse(throw new RuntimeException("Can't fetch volume from cache"))
-    val rate         = productEntry.rate.getOrElse(throw getError(productEntry))
+    val abv = productEntry.abv.getOrElse(throw new RuntimeException("Can't fetch ABV from cache"))
+    val volume = productEntry.volume.getOrElse(throw new RuntimeException("Can't fetch volume from cache"))
+    val rate = productEntry.rate.getOrElse(throw getError(productEntry))
 
     for {
       taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(abv, volume, rate)
@@ -54,11 +54,10 @@ class ProductEntryServiceImpl @Inject() (
     (productEntry.taxRate, productEntry.sprDutyRate) match {
       case (Some(_), Some(_)) =>
         new RuntimeException("Failed to get rate, both tax rate and spr duty rate are defined.")
-      case (None, None)       => new RuntimeException("Failed to get rate, neither tax rate nor spr duty rate are defined.")
-      case (_, _)             => new RuntimeException("Failed to get rate.")
+      case (None, None) => new RuntimeException("Failed to get rate, neither tax rate nor spr duty rate are defined.")
+      case (_, _) => new RuntimeException("Failed to get rate.")
     }
 }
-
 @ImplementedBy(classOf[ProductEntryServiceImpl])
 trait ProductEntryService {
   def createProduct(userAnswers: UserAnswers)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ProductEntry]
