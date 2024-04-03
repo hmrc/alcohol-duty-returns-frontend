@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package models.adjustment
+package pages.adjustment
 
-import models.{AlcoholByVolume, RateType, YearMonthModelFormatter}
-import play.api.libs.json.{Json, OFormat}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-import java.time.YearMonth
+case object AdjustmentTaxTypePage extends QuestionPage[Int] {
 
-case class AdjustmentEntry(
-  adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None,
-  taxCode: Option[String] = None,
-  rateType: Option[RateType] = None,
-  taxRate: Option[BigDecimal] = None,
-  volume: Option[BigDecimal] = None,
-  period: Option[YearMonth] = None
-)
-object AdjustmentEntry extends YearMonthModelFormatter {
-  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "adjustmentTaxType"
 }

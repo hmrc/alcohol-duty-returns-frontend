@@ -486,6 +486,13 @@ alcoholByVolume.error.maximumRequired = The ABV must be 100 or lower
 alcoholByVolume.error.oneDecimalPlace = The ABV must be to 1 decimal place or less
 alcoholByVolume.change.hidden = What is the Alcohol by Volume (ABV) strength for this adjustment
 
+adjustmentTaxType.title = What is the tax type for this adjustment?
+adjustmentTaxType.heading = What is the tax type for this adjustment?
+adjustmentTaxType.checkYourAnswersLabel = AdjustmentTaxType
+adjustmentTaxType.error.valid = Enter a valid 3 digit tax type
+adjustmentTaxType.error.invalid = Enter the previous tax type
+adjustmentTaxType.change.hidden = what is the tax type for this adjustment
+
 adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
 adjustmentVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
@@ -498,3 +505,4 @@ adjustmentVolume.error.twoDecimalPlaces = The volume must be up to 2 decimal pla
 adjustmentVolume.change.hidden = Adjustment Volume
 
 # End of adjustments sub-journey
+

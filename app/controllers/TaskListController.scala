@@ -21,7 +21,7 @@ import connectors.CacheConnector
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import models.UserAnswers
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView

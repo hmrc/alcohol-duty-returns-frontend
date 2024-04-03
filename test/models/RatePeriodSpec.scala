@@ -172,4 +172,5 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       }
     }
   }
+
 }

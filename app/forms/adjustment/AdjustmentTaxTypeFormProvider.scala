@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package models.adjustment
+package forms.adjustment
 
-import models.{AlcoholByVolume, RateType, YearMonthModelFormatter}
-import play.api.libs.json.{Json, OFormat}
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-import java.time.YearMonth
+class AdjustmentTaxTypeFormProvider @Inject() extends Mappings {
 
-case class AdjustmentEntry(
-  adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None,
-  taxCode: Option[String] = None,
-  rateType: Option[RateType] = None,
-  taxRate: Option[BigDecimal] = None,
-  volume: Option[BigDecimal] = None,
-  period: Option[YearMonth] = None
-)
-object AdjustmentEntry extends YearMonthModelFormatter {
-  implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
+  def apply(): Form[Int] =
+    Form(
+      "adjustment-tax-type-input" -> int(
+        "adjustmentTaxType.error.valid",
+        "adjustmentTaxType.error.valid",
+        "adjustmentTaxType.error.valid"
+      )
+        .verifying(inRange(100, 999, "adjustmentTaxType.error.valid"))
+    )
 }

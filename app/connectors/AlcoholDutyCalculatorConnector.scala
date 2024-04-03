@@ -19,8 +19,9 @@ package connectors
 import config.FrontendAppConfig
 import models.productEntry.TaxDuty
 import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import play.api.http.Status.OK
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
 
 import java.time.YearMonth
 import javax.inject.Inject
@@ -57,6 +58,23 @@ class AlcoholDutyCalculatorConnector @Inject() (
     httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
   }
 
+  def adjustmentRateBand(taxType: String, ratePeriod: YearMonth)(implicit
+    hc: HeaderCarrier
+  ): Future[Option[RateBand]] = {
+    val queryParams: Seq[(String, String)] = Seq(
+      "ratePeriod" -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
+      "taxType"    -> taxType
+    )
+    httpClient
+      .GET[Either[UpstreamErrorResponse, HttpResponse]](
+        url = config.adrCalculatorRateBandUrl(),
+        queryParams = queryParams
+      )
+      .map({
+        case Right(response) if response.status == OK => response.json.asOpt[RateBand]
+        case _                                        => None
+      })
+  }
   def rateType(
     abv: AlcoholByVolume,
     ratePeriod: YearMonth,
