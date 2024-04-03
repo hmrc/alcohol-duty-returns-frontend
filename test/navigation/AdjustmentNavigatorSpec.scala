@@ -133,6 +133,15 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .value
         ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
       }
+
+      "must go from the Small Producer Relief Duty Rate Page to Adjustment Volume page" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      }
     }
 
     "in Check mode" - {
