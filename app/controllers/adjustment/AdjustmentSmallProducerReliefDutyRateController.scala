@@ -33,52 +33,54 @@ import views.html.adjustment.AdjustmentSmallProducerReliefDutyRateView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AdjustmentSmallProducerReliefDutyRateController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        cacheConnector: CacheConnector,
-                                        navigator: AdjustmentNavigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: AdjustmentSmallProducerReliefDutyRateFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: AdjustmentSmallProducerReliefDutyRateView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class AdjustmentSmallProducerReliefDutyRateController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: AdjustmentNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: AdjustmentSmallProducerReliefDutyRateFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: AdjustmentSmallProducerReliefDutyRateView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-        case None => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        case Some(value) if value.sprDutyRate.isDefined =>
-          Ok(view(form.fill(value.sprDutyRate.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-        case Some(value) => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+      case None                                       => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(value) if value.sprDutyRate.isDefined =>
+        Ok(view(form.fill(value.sprDutyRate.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                                => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+    }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-            case None => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-            case Some(value) =>
-              Future.successful(
-                BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-              )
-          },
-        value => {
-          val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-          for {
-            updatedAnswers <-
-              Future.fromTry(
-                request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(sprDutyRate = Some(value)))
-              )
-            _ <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AdjustmentSmallProducerReliefDutyRatePage, mode, updatedAnswers))
-        }
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+              case Some(value) =>
+                Future.successful(
+                  BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+                )
+            },
+          value => {
+            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            for {
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(sprDutyRate = Some(value)))
+                )
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(AdjustmentSmallProducerReliefDutyRatePage, mode, updatedAnswers))
+          }
+        )
   }
 }

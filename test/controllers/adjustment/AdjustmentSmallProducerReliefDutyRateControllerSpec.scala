@@ -39,15 +39,16 @@ import scala.concurrent.Future
 class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new AdjustmentSmallProducerReliefDutyRateFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal(0.00)
-  val spoilt                      = Spoilt.toString
-  val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
-  val userAnswers = UserAnswers(userAnswersId).set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-  lazy val adjustmentSmallProducerReliefDutyRateRoute = controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode).url
+  val validAnswer                                     = BigDecimal(0.00)
+  val spoilt                                          = Spoilt.toString
+  val adjustmentEntry                                 = AdjustmentEntry(adjustmentType = Some(Spoilt))
+  val userAnswers                                     = UserAnswers(userAnswersId).set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  lazy val adjustmentSmallProducerReliefDutyRateRoute =
+    controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode).url
 
   "AdjustmentSmallProducerReliefDutyRate Controller" - {
 
@@ -83,7 +84,10 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase with 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, spoilt)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

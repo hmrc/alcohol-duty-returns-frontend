@@ -43,23 +43,25 @@ class AdjustmentSmallProducerReliefDutyRateFormProviderSpec extends BigDecimalFi
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.nonNumeric"),
       twoDecimalPlacesError = FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
       form,
       fieldName,
-      minimum       = minimum,
+      minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.minimumRequired", ArraySeq(minimum))
+      expectedError =
+        FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.minimumRequired", ArraySeq(minimum))
     )
     behave like bigDecimalFieldWithMaximum(
       form,
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.maximumRequired", ArraySeq(maximum))
+      expectedError =
+        FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(

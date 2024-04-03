@@ -24,19 +24,20 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdjustmentSmallProducerReliefDutyRateSummary  {
+object AdjustmentSmallProducerReliefDutyRateSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdjustmentSmallProducerReliefDutyRatePage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("adjustmentSmallProducerReliefDutyRate.change.hidden"))
+    answers.get(AdjustmentSmallProducerReliefDutyRatePage).map { answer =>
+      SummaryListRowViewModel(
+        key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
           )
+            .withVisuallyHiddenText(messages("adjustmentSmallProducerReliefDutyRate.change.hidden"))
         )
+      )
     }
 }
