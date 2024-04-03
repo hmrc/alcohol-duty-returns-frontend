@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import pages.Page
 
 class AdjustmentNavigatorSpec extends SpecBase {

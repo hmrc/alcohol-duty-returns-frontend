@@ -136,7 +136,7 @@ trait ModelGenerators {
   def productEntryGen: Gen[ProductEntry]                                = for {
     name                <- Gen.alphaStr
     abv                 <- arbitrary[AlcoholByVolume]
-    rateType            <- arbitrary[RateTypeResponse]
+    rateType            <- arbitrary[RateType]
     volume              <- Gen.posNum[BigDecimal]
     draughtRelief       <- Gen.oneOf(true, false)
     smallProducerRelief <- Gen.oneOf(true, false)

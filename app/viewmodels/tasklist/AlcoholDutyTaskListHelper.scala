@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package viewmodels.tasklist
 
-@(text: String, classes: String = "govuk-heading-l")
+import models.UserAnswers
+import play.api.i18n.Messages
 
-<h2 class="@classes">@text</h2>
+object AlcoholDutyTaskListHelper {
+  def getTaskList(userAnswers: UserAnswers, sessionExpirationInDays: Int)(implicit
+    messages: Messages
+  ): AlcoholDutyTaskList =
+    AlcoholDutyTaskList(Seq(ReturnTaskListHelper.returnSection(userAnswers)), sessionExpirationInDays)
+
+}

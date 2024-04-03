@@ -30,9 +30,10 @@
     tableRowAction: components.TableRowAction
 )
 
+
 @(form: Form[_], productTable:TableViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("productList.title"))) {
+@layout(pageTitle = title(form, messages("productList.title")), showBackLink = false) {
 
     @formHelper(action = controllers.productEntry.routes.ProductListController.onSubmit(), Symbol("autoComplete") -> "off") {
 
@@ -47,6 +48,7 @@
         @pageHeading(messages("productList.heading"))
 
         @govukTable(Table(
+          attributes = Map("data-module" -> "moj-sortable-table"),
           caption = Some(messages("productList.caption")),
           captionClasses = "govuk-table__caption--m",
           head = Some(productTable.head),
@@ -85,3 +87,5 @@
         )
     }
 }
+
+

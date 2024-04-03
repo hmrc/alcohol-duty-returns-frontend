@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package viewmodels.tasklist
 
-@(text: String, classes: String = "govuk-heading-l")
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-<h2 class="@classes">@text</h2>
+case class AlcoholDutyTaskList(sections: Seq[Section], expirationInDays: Int) {
+  private val dateFormatter = DateTimeFormatter.ofPattern("dd LLLL yyyy")
+  def completedTask: Int    = sections.count(_.completedTask)
+  def totalTask: Int        = sections.size
+
+  def sessionExpiryDate: String =
+    dateFormatter.format(LocalDate.now().plusDays(expirationInDays))
+
+  def status: String = if (completedTask == totalTask) {
+    "completed"
+  } else {
+    "incomplete"
+  }
+}

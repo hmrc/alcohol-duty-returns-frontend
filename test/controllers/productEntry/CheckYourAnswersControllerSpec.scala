@@ -21,7 +21,7 @@ import connectors.CacheConnector
 import generators.ModelGenerators
 import models.RateType.Core
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, AlcoholRegime, RateTypeResponse, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.MockitoSugar.mock
@@ -39,7 +39,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
   val name              = "Name"
   val abv               = AlcoholByVolume(3.0)
-  val rateType          = RateTypeResponse(Core)
+  val rateType          = Core
   val volume            = BigDecimal(1.2)
   val rate              = BigDecimal(1.2)
   val pureAlcoholVolume = BigDecimal(1)
