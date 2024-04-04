@@ -115,9 +115,9 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         )
 
         result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.returns.products.inProgress")
+          messages("taskList.section.returns.products.notStarted")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
         result.taskList.items(1).href          shouldBe Some(
           controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
         )

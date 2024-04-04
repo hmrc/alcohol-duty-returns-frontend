@@ -68,17 +68,11 @@ object ReturnTaskListHelper {
           status = AlcholDutyTaskListItemStatus.completed,
           href = Some(controllers.productEntry.routes.ProductListController.onPageLoad().url)
         )
-      case (Some(true), Some(list)) if list.nonEmpty  =>
+      case (_, Some(list)) if list.nonEmpty           =>
         TaskListItem(
           title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.inProgress"))),
           status = AlcholDutyTaskListItemStatus.inProgress,
           href = Some(controllers.productEntry.routes.ProductListController.onPageLoad().url)
-        )
-      case (_, Some(_))                               =>
-        TaskListItem(
-          title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.inProgress"))),
-          status = AlcholDutyTaskListItemStatus.inProgress,
-          href = Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url)
         )
       case (_, _)                                     =>
         TaskListItem(
