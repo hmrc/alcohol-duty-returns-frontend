@@ -114,6 +114,6 @@ class AdjustmentTaxTypeController @Inject() (
   private def fetchAdjustmentRateBand(taxCode: String)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
     //hardcoded for now, will need to get this from obligation period
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
-    alcoholDutyCalculatorConnector.adjustmentRateBand(taxCode, ratePeriod)
+    alcoholDutyCalculatorConnector.rateBand(taxCode, ratePeriod)
   }
 }

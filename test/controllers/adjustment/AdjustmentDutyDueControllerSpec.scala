@@ -29,7 +29,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
 import play.api.inject.bind
-import services.adjustmentEntry.AdjustmentEntryService
+import services.adjustment.AdjustmentEntryService
 
 import scala.concurrent.Future
 

@@ -24,7 +24,7 @@ import pages.adjustment.CurrentAdjustmentEntryPage
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
-import services.adjustmentEntry.AdjustmentEntryService
+import services.adjustment.AdjustmentEntryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentDutyDueView

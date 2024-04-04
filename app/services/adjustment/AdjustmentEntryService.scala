@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package services.adjustmentEntry
+package services.adjustment
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.AlcoholDutyCalculatorConnector
