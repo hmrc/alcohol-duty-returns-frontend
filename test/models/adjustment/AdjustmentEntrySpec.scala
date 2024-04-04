@@ -27,7 +27,7 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
   "AdjustmentEntry" - {
 
     "when taxType doesn't have a rate and spr relief is applied" in {
-      val sprDutyRate = Some(BigDecimal(1))
+      val sprDutyRate     = Some(BigDecimal(1))
       val adjustmentEntry = AdjustmentEntry(sprDutyRate = sprDutyRate)
 
       adjustmentEntry.rate shouldBe sprDutyRate
@@ -39,15 +39,15 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
     }
 
     "when taxType has a rate and spr relief is not applied" in {
-      val taxRate = Some(BigDecimal(1))
+      val taxRate         = Some(BigDecimal(1))
       val adjustmentEntry = AdjustmentEntry(taxRate = taxRate)
 
       adjustmentEntry.rate shouldBe taxRate
     }
 
     "when both spr relief is true and taxType has a rate" in {
-      val taxRate = Some(BigDecimal(1))
-      val sprDutyRate = Some(BigDecimal(1))
+      val taxRate         = Some(BigDecimal(1))
+      val sprDutyRate     = Some(BigDecimal(1))
       val adjustmentEntry = AdjustmentEntry(taxRate = taxRate, sprDutyRate = sprDutyRate)
 
       adjustmentEntry.rate shouldBe None

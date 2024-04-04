@@ -63,12 +63,12 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
       val result = service.createAdjustment(userAnswerWithRate).futureValue
 
-      result                     shouldBe a[AdjustmentEntry]
-      result.abv                 shouldBe Some(AlcoholByVolume(3.5))
-      result.rate                shouldBe Some(BigDecimal(1))
-      result.volume              shouldBe Some(BigDecimal(1))
-      result.pureAlcoholVolume   shouldBe Some(BigDecimal(1))
-      result.duty                shouldBe Some(BigDecimal(1))
+      result                   shouldBe a[AdjustmentEntry]
+      result.abv               shouldBe Some(AlcoholByVolume(3.5))
+      result.rate              shouldBe Some(BigDecimal(1))
+      result.volume            shouldBe Some(BigDecimal(1))
+      result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
+      result.duty              shouldBe Some(BigDecimal(1))
 
     }
 
@@ -92,12 +92,12 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
       val result = service.createAdjustment(userAnswerWithRate).futureValue
 
-      result                     shouldBe a[AdjustmentEntry]
-      result.abv                 shouldBe Some(AlcoholByVolume(3.5))
-      result.rate                shouldBe Some(BigDecimal(2))
-      result.volume              shouldBe Some(BigDecimal(1))
-      result.pureAlcoholVolume   shouldBe Some(BigDecimal(1))
-      result.duty                shouldBe Some(BigDecimal(1))
+      result                   shouldBe a[AdjustmentEntry]
+      result.abv               shouldBe Some(AlcoholByVolume(3.5))
+      result.rate              shouldBe Some(BigDecimal(2))
+      result.volume            shouldBe Some(BigDecimal(1))
+      result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
+      result.duty              shouldBe Some(BigDecimal(1))
     }
 
     "must throw an Exception" - {
@@ -197,4 +197,3 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
   }
 }
-
