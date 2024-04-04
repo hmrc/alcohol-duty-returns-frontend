@@ -64,129 +64,126 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       )
     }
 
-    "must return a incomplete section if the user answers yes to DeclareAlcoholDuty question and no other question is answered" in {
-      val userAnswers = emptyUserAnswers
+    "when Declare Alcohol duty is yes, the Product List Return task" - {
+      val declaredAlcoholDutyUserAnswer = emptyUserAnswers
         .set(DeclareAlcoholDutyQuestionPage, true)
         .success
         .value
-      val result      = ReturnTaskListHelper.returnSection(userAnswers)
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 2
-      result.title                             shouldBe messages("taskList.section.returns.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.returns.needToDeclare.yes")
-      )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-      )
+      "must have a link to ProductEntryGuidanceController if the user has not answer any other question" in {
+        val result = ReturnTaskListHelper.returnSection(declaredAlcoholDutyUserAnswer)
 
-      result.taskList.items(1).title.content shouldBe Text(
-        messages("taskList.section.returns.products.inProgress")
-      )
-      result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
-      result.taskList.items(1).href          shouldBe Some(
-        controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
-      )
-    }
+        result.completedTask                     shouldBe false
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.returns.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.returns.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        )
 
-    "must have a link to ProductEntryGuidanceController if the user answer yes to ProductListPage question and the list is empty" in {
-      val userAnswers = emptyUserAnswers
-        .set(DeclareAlcoholDutyQuestionPage, true)
-        .success
-        .value
-        .set(ProductListPage, true)
-        .success
-        .value
-      val result      = ReturnTaskListHelper.returnSection(userAnswers)
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.returns.products.notStarted")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
+        )
+      }
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 2
-      result.title                             shouldBe messages("taskList.section.returns.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.returns.needToDeclare.yes")
-      )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-      )
+      "must have a link to ProductEntryGuidanceController if the user answer yes to ProductListPage question and the list is empty" in {
+        val userAnswers = declaredAlcoholDutyUserAnswer
+          .set(ProductEntryListPage, Seq.empty)
+          .success
+          .value
+          .set(ProductListPage, true)
+          .success
+          .value
+        val result      = ReturnTaskListHelper.returnSection(userAnswers)
 
-      result.taskList.items(1).title.content shouldBe Text(
-        messages("taskList.section.returns.products.inProgress")
-      )
-      result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
-      result.taskList.items(1).href          shouldBe Some(
-        controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
-      )
-    }
+        result.completedTask                     shouldBe false
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.returns.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.returns.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        )
 
-    "must have a link to ProductListController if the user answer yes to ProductListPage question and the list is not empty" in {
-      val productEntry = productEntryGen.sample.get
-      val userAnswers  = emptyUserAnswers
-        .set(DeclareAlcoholDutyQuestionPage, true)
-        .success
-        .value
-        .set(ProductEntryListPage, Seq(productEntry))
-        .success
-        .value
-        .set(ProductListPage, true)
-        .success
-        .value
-      val result       = ReturnTaskListHelper.returnSection(userAnswers)
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.returns.products.inProgress")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
+        )
+      }
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 2
-      result.title                             shouldBe messages("taskList.section.returns.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.returns.needToDeclare.yes")
-      )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-      )
+      "must have a link to ProductListController if the user answer yes to ProductListPage question and the list is not empty" in {
+        val productEntry = productEntryGen.sample.get
+        val userAnswers  = declaredAlcoholDutyUserAnswer
+          .set(ProductEntryListPage, Seq(productEntry))
+          .success
+          .value
+          .set(ProductListPage, true)
+          .success
+          .value
+        val result       = ReturnTaskListHelper.returnSection(userAnswers)
 
-      result.taskList.items(1).title.content shouldBe Text(
-        messages("taskList.section.returns.products.inProgress")
-      )
-      result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
-      result.taskList.items(1).href          shouldBe Some(
-        controllers.productEntry.routes.ProductListController.onPageLoad().url
-      )
-    }
+        result.completedTask                     shouldBe false
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.returns.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.returns.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        )
 
-    "must have a link to ProductListController if the user answer no to ProductListPage question and the list is not empty" in {
-      val productEntry = productEntryGen.sample.get
-      val userAnswers  = emptyUserAnswers
-        .set(DeclareAlcoholDutyQuestionPage, true)
-        .success
-        .value
-        .set(ProductEntryListPage, Seq(productEntry))
-        .success
-        .value
-        .set(ProductListPage, false)
-        .success
-        .value
-      val result       = ReturnTaskListHelper.returnSection(userAnswers)
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.returns.products.inProgress")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.productEntry.routes.ProductListController.onPageLoad().url
+        )
+      }
 
-      result.completedTask                     shouldBe true
-      result.taskList.items.size               shouldBe 2
-      result.title                             shouldBe messages("taskList.section.returns.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.returns.needToDeclare.yes")
-      )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-      )
+      "must have a link to ProductListController if the user answer no to ProductListPage question and the list is not empty" in {
+        val productEntry = productEntryGen.sample.get
+        val userAnswers  = declaredAlcoholDutyUserAnswer
+          .set(ProductEntryListPage, Seq(productEntry))
+          .success
+          .value
+          .set(ProductListPage, false)
+          .success
+          .value
+        val result       = ReturnTaskListHelper.returnSection(userAnswers)
 
-      result.taskList.items(1).title.content shouldBe Text(
-        messages("taskList.section.returns.products.completed")
-      )
-      result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
-      result.taskList.items(1).href          shouldBe Some(
-        controllers.productEntry.routes.ProductListController.onPageLoad().url
-      )
+        result.completedTask                     shouldBe true
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.returns.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.returns.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.returns.products.completed")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.productEntry.routes.ProductListController.onPageLoad().url
+        )
+      }
     }
   }
 }
