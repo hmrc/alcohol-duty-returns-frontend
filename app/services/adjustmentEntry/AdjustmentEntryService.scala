@@ -27,20 +27,20 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AdjustmentEntryServiceImpl @Inject() (
-                                          alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
-                                        ) extends AdjustmentEntryService {
+  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
+) extends AdjustmentEntryService {
 
   override def createAdjustment(
-                              userAnswers: UserAnswers
-                            )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry] = {
+    userAnswers: UserAnswers
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry] = {
 
     val adjustmentEntry =
       userAnswers
         .get(CurrentAdjustmentEntryPage)
         .getOrElse(throw new RuntimeException("Can't fetch adjustment entry from cache"))
-    val abv          = adjustmentEntry.abv.getOrElse(throw new RuntimeException("Can't fetch ABV from cache"))
-    val volume       = adjustmentEntry.volume.getOrElse(throw new RuntimeException("Can't fetch volume from cache"))
-    val rate         = adjustmentEntry.taxRate.getOrElse(throw getError(adjustmentEntry))
+    val abv             = adjustmentEntry.abv.getOrElse(throw new RuntimeException("Can't fetch ABV from cache"))
+    val volume          = adjustmentEntry.volume.getOrElse(throw new RuntimeException("Can't fetch volume from cache"))
+    val rate            = adjustmentEntry.rate.getOrElse(throw getError(adjustmentEntry))
 
     for {
       taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(abv, volume, rate)
@@ -61,5 +61,7 @@ class AdjustmentEntryServiceImpl @Inject() (
 
 @ImplementedBy(classOf[AdjustmentEntryServiceImpl])
 trait AdjustmentEntryService {
-  def createAdjustment(userAnswers: UserAnswers)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry]
+  def createAdjustment(
+    userAnswers: UserAnswers
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry]
 }

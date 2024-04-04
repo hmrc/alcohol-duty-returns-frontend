@@ -16,24 +16,55 @@
 
 package controllers.adjustment
 
+import connectors.CacheConnector
 import controllers.actions._
+import models.adjustment.AdjustmentEntry
+import pages.adjustment.CurrentAdjustmentEntryPage
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
+import services.adjustmentEntry.AdjustmentEntryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentDutyDueView
 
-class AdjustmentDutyDueController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: AdjustmentDutyDueView
-                                     ) extends FrontendBaseController with I18nSupport {
+import scala.concurrent.{ExecutionContext, Future}
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      Ok(view("test",2,12,123,1234,"12345",123456))
+class AdjustmentDutyDueController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  adjustmentEntryService: AdjustmentEntryService,
+  view: AdjustmentDutyDueView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
+
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    for {
+      adjustment  <- adjustmentEntryService.createAdjustment(request.userAnswers)
+      userAnswers <- Future.fromTry(request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment))
+      _           <- cacheConnector.set(userAnswers)
+    } yield getView(adjustment)
+
+  }
+
+  private def getView(adjustmentEntry: AdjustmentEntry)(implicit request: Request[_]): Result = {
+    val result = for {
+      abv               <- adjustmentEntry.abv
+      volume            <- adjustmentEntry.volume
+      pureAlcoholVolume <- adjustmentEntry.pureAlcoholVolume
+      taxCode           <- adjustmentEntry.taxCode
+      duty              <- adjustmentEntry.duty
+      rate              <- adjustmentEntry.rate
+      adjustmentType    <- Some(AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry))
+
+    } yield Ok(view(adjustmentType, abv.value, volume, duty, pureAlcoholVolume, taxCode, rate))
+
+    result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
   }
 }

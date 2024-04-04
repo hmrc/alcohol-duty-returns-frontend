@@ -32,7 +32,13 @@ case class AdjustmentEntry(
   sprDutyRate: Option[BigDecimal] = None,
   duty: Option[BigDecimal] = None,
   pureAlcoholVolume: Option[BigDecimal] = None
-)
+) {
+  def rate: Option[BigDecimal] = (taxRate, sprDutyRate) match {
+    case (Some(_), None) => taxRate
+    case (None, Some(_)) => sprDutyRate
+    case _               => None
+  }
+}
 object AdjustmentEntry extends YearMonthModelFormatter {
   implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
 }

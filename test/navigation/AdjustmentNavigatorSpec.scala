@@ -80,6 +80,15 @@ class AdjustmentNavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
       }
+
+      "must go from the Adjustment Volume page to Adjustment Duty Due Page" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentVolumePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+      }
     }
 
     "in Check mode" - {

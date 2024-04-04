@@ -15,6 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
+@import views.ViewUtils.valueFormatter
 
 @this(
         layout: templates.Layout,
@@ -49,13 +50,13 @@
 
     ))
 
-    @subHeading(messages("dutyDue.subheading2", f"$duty%.2f"))
+    @subHeading(messages("dutyDue.subheading2", valueFormatter(duty)))
 
     @paragraph(messages("dutyDue.paragraph3"))
 
     @bulletList(Seq(
     messages("dutyDue.bulletList.3", pureAlcoholVolume),
-    messages("dutyDue.bulletList.4", f"$rate%.2f")
+    messages("dutyDue.bulletList.4", valueFormatter(rate))
     ))
 
     @govukButton(
