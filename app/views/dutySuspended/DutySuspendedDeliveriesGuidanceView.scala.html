@@ -22,31 +22,34 @@
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-numberedList: NumberedList
+        numberedList: NumberedList
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("dutySuspendedDeliveriesGuidance.title"))) {
 
-@sectionHeading(
-    id = "duty-suspended-deliveries-guidance-section",
-    text = messages("section.alcoholDutyReturn"),
-)
+    @sectionHeading(
+        id = "duty-suspended-deliveries-guidance-section",
+        text = messages("section.alcoholDutyReturn"),
+    )
 
-@pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
+    @pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
 
-@paragraph(messages("dutySuspendedDeliveriesGuidance.p1"))
-@paragraph(messages("dutySuspendedDeliveriesGuidance.p2"))
-@numberedList(Seq(
-messages("dutySuspendedDeliveriesGuidance.para.list.1"),
-messages("dutySuspendedDeliveriesGuidance.para.list.2"),
-messages("dutySuspendedDeliveriesGuidance.para.list.3")
-))
-@paragraph(messages("dutySuspendedDeliveriesGuidance.p3"))
+    @paragraph(messages("dutySuspendedDeliveriesGuidance.p1"))
 
-@govukButton(
-ButtonViewModel("continueButton", messages("site.continue"))
-    .asLink(controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url)
-)
+    @paragraph(messages("dutySuspendedDeliveriesGuidance.p2"))
+
+    @numberedList(Seq(
+        messages("dutySuspendedDeliveriesGuidance.para.list.1"),
+        messages("dutySuspendedDeliveriesGuidance.para.list.2"),
+        messages("dutySuspendedDeliveriesGuidance.para.list.3")
+    ))
+
+    @paragraph(messages("dutySuspendedDeliveriesGuidance.p3"))
+
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url)
+    )
 }
