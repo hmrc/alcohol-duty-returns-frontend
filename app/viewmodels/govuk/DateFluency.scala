@@ -23,6 +23,10 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import viewmodels.ErrorMessageAwareness
 
+import java.time.{Instant, ZoneId}
+import java.time.format.DateTimeFormatter
+import java.util.TimeZone
+
 object date extends DateFluency
 
 trait DateFluency {
@@ -100,5 +104,14 @@ trait DateFluency {
         val name = item.id.split('.').last
         item.copy(autocomplete = Some(s"bday-$name"))
       })
+  }
+
+  implicit class FluentInstant(instant: Instant) {
+    private val UK_TIME_ZONE: ZoneId = TimeZone.getTimeZone("Europe/London").toZoneId
+
+    def toLocalDateString()(implicit messages: Messages): String = {
+      val dateFormatter = DateTimeFormatter.ofPattern("dd LLLL yyyy", messages.lang.toLocale)
+      dateFormatter.format(instant.atZone(UK_TIME_ZONE).toLocalDate)
+    }
   }
 }

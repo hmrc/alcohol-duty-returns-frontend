@@ -16,14 +16,14 @@
 
 package models.productEntry
 
-import models.{AlcoholByVolume, AlcoholRegime, RateTypeResponse}
+import models.{AlcoholByVolume, AlcoholRegime, RateType}
 import play.api.libs.json.{Json, OFormat}
 
 case class ProductEntry(
   index: Option[Int] = None,
   name: Option[String] = None,
   abv: Option[AlcoholByVolume] = None,
-  rateType: Option[RateTypeResponse] = None,
+  rateType: Option[RateType] = None,
   volume: Option[BigDecimal] = None,
   draughtRelief: Option[Boolean] = None,
   smallProducerRelief: Option[Boolean] = None,
@@ -38,13 +38,20 @@ case class ProductEntry(
     abv.isDefined &&
       rateType.isDefined &&
       volume.isDefined &&
-      draughtRelief.isDefined &&
-      smallProducerRelief.isDefined &&
       taxCode.isDefined &&
+      reliefQuestionDefined &&
       regime.isDefined &&
       (taxRate.isDefined || sprDutyRate.isDefined) &&
       duty.isDefined &&
       pureAlcoholVolume.isDefined
+
+  private def reliefQuestionDefined: Boolean =
+    rateType match {
+      case Some(RateType.SmallProducerRelief)           => smallProducerRelief.isDefined
+      case Some(RateType.DraughtRelief)                 => draughtRelief.isDefined
+      case Some(RateType.DraughtAndSmallProducerRelief) => draughtRelief.isDefined && smallProducerRelief.isDefined
+      case _                                            => true
+    }
 
   def rate: Option[BigDecimal] = (taxRate, sprDutyRate) match {
     case (Some(_), None) => taxRate

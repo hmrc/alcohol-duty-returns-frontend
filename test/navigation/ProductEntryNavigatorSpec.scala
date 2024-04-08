@@ -22,7 +22,7 @@ import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, Smal
 import pages._
 import models._
 import models.productEntry.ProductEntry
-import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductNamePage, ProductVolumePage, SmallProducerReliefQuestionPage, TaxTypePage}
+import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage, DeclareAlcoholDutyQuestionPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductNamePage, ProductVolumePage, SmallProducerReliefQuestionPage, TaxTypePage}
 
 class ProductEntryNavigatorSpec extends SpecBase {
 
@@ -53,7 +53,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           pages.productEntry.DeclareAlcoholDutyQuestionPage,
           NormalMode,
           UserAnswers("id").set(pages.productEntry.DeclareAlcoholDutyQuestionPage, false).success.value
-        ) mustBe routes.IndexController.onPageLoad
+        ) mustBe routes.TaskListController.onPageLoad
       }
       "must go from the Alcohol to declare to Journey Recovery page if there is no answer" in {
 
@@ -81,7 +81,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(DraughtRelief)))
+              ProductEntry(rateType = Some(DraughtRelief))
             )
             .success
             .value
@@ -95,7 +95,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(Core)))
+              ProductEntry(rateType = Some(Core))
             )
             .success
             .value
@@ -109,7 +109,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(DraughtAndSmallProducerRelief)))
+              ProductEntry(rateType = Some(DraughtAndSmallProducerRelief))
             )
             .success
             .value
@@ -123,7 +123,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(SmallProducerRelief)))
+              ProductEntry(rateType = Some(SmallProducerRelief))
             )
             .success
             .value
@@ -145,7 +145,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(DraughtAndSmallProducerRelief)))
+              ProductEntry(rateType = Some(DraughtAndSmallProducerRelief))
             )
             .success
             .value
@@ -159,7 +159,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(DraughtRelief)))
+              ProductEntry(rateType = Some(DraughtRelief))
             )
             .success
             .value
@@ -173,7 +173,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(SmallProducerRelief)))
+              ProductEntry(rateType = Some(SmallProducerRelief))
             )
             .success
             .value
@@ -269,6 +269,46 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
+
+      "must go from Declare Alcohol Duty page to TaskList in Check Mode if the answer has not changed" in {
+        navigator.nextPage(
+          DeclareAlcoholDutyQuestionPage,
+          CheckMode,
+          UserAnswers("id"),
+          false
+        ) mustBe controllers.routes.TaskListController.onPageLoad
+      }
+
+      "must go from Declare Alcohol Duty page to TaskList in Check Mode if the answer has changed from true to false" in {
+        navigator.nextPage(
+          DeclareAlcoholDutyQuestionPage,
+          CheckMode,
+          UserAnswers("id")
+            .set(
+              DeclareAlcoholDutyQuestionPage,
+              false
+            )
+            .success
+            .value,
+          true
+        ) mustBe controllers.routes.TaskListController.onPageLoad
+      }
+
+      "must go from Declare Alcohol Duty page to Guidance in Check Mode if the answer has changed from false to true" in {
+        navigator.nextPage(
+          DeclareAlcoholDutyQuestionPage,
+          CheckMode,
+          UserAnswers("id")
+            .set(
+              DeclareAlcoholDutyQuestionPage,
+              true
+            )
+            .success
+            .value,
+          true
+        ) mustBe controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad
+      }
+
       "must go from Product Name page to Check Your Answers Controller irrespective of answer" in {
         navigator.nextPage(
           ProductNamePage,
@@ -283,7 +323,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(DraughtRelief)))
+              ProductEntry(rateType = Some(DraughtRelief))
             )
             .success
             .value,
@@ -297,7 +337,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(Core)))
+              ProductEntry(rateType = Some(Core))
             )
             .success
             .value,
@@ -319,7 +359,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               pages.productEntry.CurrentProductEntryPage,
-              ProductEntry(rateType = Some(RateTypeResponse(DraughtAndSmallProducerRelief)))
+              ProductEntry(rateType = Some(DraughtAndSmallProducerRelief))
             )
             .success
             .value,

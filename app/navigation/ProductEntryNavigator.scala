@@ -21,10 +21,10 @@ import play.api.mvc.Call
 import controllers._
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
-import models.{RateTypeResponse, _}
+import models._
 
 @Singleton
-class ProductEntryNavigator @Inject() () {
+class ProductEntryNavigator @Inject() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case pages.productEntry.ProductNamePage                        =>
@@ -63,14 +63,14 @@ class ProductEntryNavigator @Inject() () {
       rateType <- product.rateType
     } yield rateType
     rateType match {
-      case Some(RateTypeResponse(Core))                          => controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
-      case Some(RateTypeResponse(DraughtAndSmallProducerRelief)) =>
+      case Some(Core)                          => controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
+      case Some(DraughtAndSmallProducerRelief) =>
         controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
-      case Some(RateTypeResponse(SmallProducerRelief))           =>
+      case Some(SmallProducerRelief)           =>
         controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
-      case Some(RateTypeResponse(DraughtRelief))                 =>
+      case Some(DraughtRelief)                 =>
         controllers.productEntry.routes.DraughtReliefQuestionController.onPageLoad(NormalMode)
-      case _                                                     => routes.JourneyRecoveryController.onPageLoad()
+      case _                                   => routes.JourneyRecoveryController.onPageLoad()
     }
   }
 
@@ -80,11 +80,11 @@ class ProductEntryNavigator @Inject() () {
       rateType <- product.rateType
     } yield rateType
     rateType match {
-      case Some(RateTypeResponse(DraughtAndSmallProducerRelief)) =>
+      case Some(DraughtAndSmallProducerRelief) =>
         controllers.productEntry.routes.SmallProducerReliefQuestionController.onPageLoad(NormalMode)
-      case Some(RateTypeResponse(DraughtRelief))                 =>
+      case Some(DraughtRelief)                 =>
         controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
-      case _                                                     => routes.JourneyRecoveryController.onPageLoad()
+      case _                                   => routes.JourneyRecoveryController.onPageLoad()
     }
   }
 
@@ -119,12 +119,18 @@ class ProductEntryNavigator @Inject() () {
         hasChanged =>
           if (hasChanged) controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
           else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
-    case _                                                         => _ => _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+
+    case pages.productEntry.DeclareAlcoholDutyQuestionPage =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) declareAlcoholDutyQuestionPageRoute(userAnswers)
+          else routes.TaskListController.onPageLoad
+    case _                                                 => _ => _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
   }
   private def declareAlcoholDutyQuestionPageRoute(answers: UserAnswers): Call =
     answers.get(pages.productEntry.DeclareAlcoholDutyQuestionPage) match {
       case Some(true)  => controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
-      case Some(false) => routes.IndexController.onPageLoad
+      case Some(false) => routes.TaskListController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
 

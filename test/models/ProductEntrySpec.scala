@@ -18,6 +18,7 @@ package models
 
 import base.SpecBase
 import generators.ModelGenerators
+import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import models.productEntry.ProductEntry
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.mockito.MockitoSugar
@@ -82,16 +83,42 @@ class ProductEntrySpec extends SpecBase with MockitoSugar with ScalaCheckPropert
         }
       }
 
-      "returns false when draughtRelief is not defined" in {
+      "returns false when draughtRelief is not defined and rateType is DraughtRelief" in {
         forAll(productEntryGen) { productEntry =>
-          val productEntryWithNoDraughtRelief = productEntry.copy(draughtRelief = None)
+          val productEntryWithNoDraughtRelief = productEntry.copy(
+            rateType = Some(DraughtRelief),
+            draughtRelief = None
+          )
           productEntryWithNoDraughtRelief.isComplete shouldBe false
         }
       }
 
-      "returns false when smallProducerRelief is not defined" in {
+      "returns false when draughtRelief is not defined and rateType is DraughtAndSmallProducerRelief" in {
         forAll(productEntryGen) { productEntry =>
-          val productEntryWithNoDraughtRelief = productEntry.copy(smallProducerRelief = None)
+          val productEntryWithNoDraughtRelief = productEntry.copy(
+            rateType = Some(DraughtAndSmallProducerRelief),
+            draughtRelief = None
+          )
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when smallProducerRelief is not defined and rateType is SmallProducerRelief" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(
+            rateType = Some(SmallProducerRelief),
+            smallProducerRelief = None
+          )
+          productEntryWithNoDraughtRelief.isComplete shouldBe false
+        }
+      }
+
+      "returns false when smallProducerRelief is not defined and rateType is DraughtAndSmallProducerRelief" in {
+        forAll(productEntryGen) { productEntry =>
+          val productEntryWithNoDraughtRelief = productEntry.copy(
+            rateType = Some(DraughtAndSmallProducerRelief),
+            smallProducerRelief = None
+          )
           productEntryWithNoDraughtRelief.isComplete shouldBe false
         }
       }
