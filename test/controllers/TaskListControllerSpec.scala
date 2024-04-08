@@ -17,8 +17,8 @@
 package controllers
 
 import base.SpecBase
-import config.FrontendAppConfig
 import connectors.CacheConnector
+import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
@@ -29,14 +29,26 @@ import uk.gov.hmrc.http.HttpResponse
 import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView
 
+import java.time.temporal.ChronoUnit
+import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.Future
 
 class TaskListControllerSpec extends SpecBase {
+  private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+  private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
+  private val A_DAY_IN_SEC = 86400
+  private val validUntil   = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
+  private val userAnswers  = UserAnswers(
+    "userId",
+    lastUpdated = Instant.now(clock),
+    validUntil = Some(validUntil)
+  )
 
   "TaskList Controller" - {
 
     val mockCacheConnector = mock[CacheConnector]
     when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+    when(mockCacheConnector.get(any())(any())) thenReturn Future.successful(Some(userAnswers))
 
     "must return OK and the correct view for a GET" in {
 
@@ -52,9 +64,8 @@ class TaskListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val view             = application.injector.instanceOf[TaskListView]
-        val appConfig        = application.injector.instanceOf[FrontendAppConfig]
         val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, appConfig.cacheTtlInDays)(messages(application))
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(expectedTaskList)(request, messages(application)).toString
@@ -75,9 +86,8 @@ class TaskListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val view             = application.injector.instanceOf[TaskListView]
-        val appConfig        = application.injector.instanceOf[FrontendAppConfig]
         val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, appConfig.cacheTtlInDays)(messages(application))
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(expectedTaskList)(request, messages(application)).toString

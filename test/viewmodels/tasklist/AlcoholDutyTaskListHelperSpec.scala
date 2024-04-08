@@ -20,15 +20,17 @@ import base.SpecBase
 import pages.productEntry.DeclareAlcoholDutyQuestionPage
 import play.api.Application
 import play.api.i18n.Messages
+import viewmodels.govuk.all.FluentInstant
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.{Clock, Instant, ZoneId}
+import java.time.temporal.ChronoUnit
 
 class AlcoholDutyTaskListHelperSpec extends SpecBase {
 
-  val dateFormatter               = DateTimeFormatter.ofPattern("dd LLLL yyyy")
   val application: Application    = applicationBuilder().build()
-  val sessionExpiryDays           = 90
+  private val instant             = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+  private val clock: Clock        = Clock.fixed(instant, ZoneId.systemDefault)
+  private val validUntil          = Instant.now(clock)
   implicit val messages: Messages = messages(application)
 
   "AlcoholDutyTaskListHelper" - {
@@ -36,18 +38,18 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
 
       val expectedSections = Seq(ReturnTaskListHelper.returnSection(emptyUserAnswers))
 
-      val result = AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, sessionExpiryDays)(messages(application))
+      val result           = AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
+      val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
         expectedSections,
-        sessionExpiryDays
+        validUntilString
       )
 
       result.status mustBe "incomplete"
       result.sections mustBe expectedSections
       result.totalTask mustBe expectedSections.size
       result.completedTask mustBe 0
-      result.sessionExpiryDate mustBe dateFormatter.format(LocalDate.now().plusDays(sessionExpiryDays))
     }
 
     "must return a completed task list" in {
@@ -59,18 +61,18 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
 
       val expectedSections = Seq(ReturnTaskListHelper.returnSection(userAnswers))
 
-      val result = AlcoholDutyTaskListHelper.getTaskList(userAnswers, sessionExpiryDays)(messages(application))
+      val result           = AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil)(messages(application))
+      val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
         expectedSections,
-        sessionExpiryDays
+        validUntilString
       )
 
       result.status mustBe "completed"
       result.sections mustBe expectedSections
       result.totalTask mustBe expectedSections.size
       result.completedTask mustBe 1
-      result.sessionExpiryDate mustBe dateFormatter.format(LocalDate.now().plusDays(sessionExpiryDays))
     }
   }
 

@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import connectors.CacheConnector
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import models.UserAnswers
@@ -34,7 +33,6 @@ class TaskListController @Inject() (
   cacheConnector: CacheConnector,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  config: FrontendAppConfig,
   view: TaskListView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -42,9 +40,13 @@ class TaskListController @Inject() (
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData).async { implicit request =>
     val userAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
-    cacheConnector.set(userAnswers).map { _ =>
-      val alcoholDutyTaskList = AlcoholDutyTaskListHelper.getTaskList(userAnswers, config.cacheTtlInDays)
-      Ok(view(alcoholDutyTaskList))
+    for {
+      _                  <- cacheConnector.set(userAnswers)
+      updatedUserAnswers <- cacheConnector.get(request.userId)
+    } yield updatedUserAnswers match {
+      case Some(ua) if ua.validUntil.isDefined =>
+        Ok(view(AlcoholDutyTaskListHelper.getTaskList(ua, ua.validUntil.get)))
+      case _                                   => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

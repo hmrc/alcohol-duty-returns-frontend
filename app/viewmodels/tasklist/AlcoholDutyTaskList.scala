@@ -16,16 +16,10 @@
 
 package viewmodels.tasklist
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
 
-case class AlcoholDutyTaskList(sections: Seq[Section], expirationInDays: Int) {
-  private val dateFormatter = DateTimeFormatter.ofPattern("dd LLLL yyyy")
-  def completedTask: Int    = sections.count(_.completedTask)
-  def totalTask: Int        = sections.size
-
-  def sessionExpiryDate: String =
-    dateFormatter.format(LocalDate.now().plusDays(expirationInDays))
+  def completedTask: Int = sections.count(_.completedTask)
+  def totalTask: Int     = sections.size
 
   def status: String = if (completedTask == totalTask) {
     "completed"

@@ -18,11 +18,13 @@ package viewmodels.tasklist
 
 import models.UserAnswers
 import play.api.i18n.Messages
+import viewmodels.govuk.all.FluentInstant
+
+import java.time.Instant
 
 object AlcoholDutyTaskListHelper {
-  def getTaskList(userAnswers: UserAnswers, sessionExpirationInDays: Int)(implicit
+  def getTaskList(userAnswers: UserAnswers, validUntil: Instant)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
-    AlcoholDutyTaskList(Seq(ReturnTaskListHelper.returnSection(userAnswers)), sessionExpirationInDays)
-
+    AlcoholDutyTaskList(Seq(ReturnTaskListHelper.returnSection(userAnswers)), validUntil.toLocalDateString())
 }
