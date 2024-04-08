@@ -69,8 +69,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
-  val cacheTtl: Int       = configuration.get[Int]("mongodb.timeToLiveInSeconds")
-  val cacheTtlInDays: Int = cacheTtl / (60 * 60 * 24)
+  val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
   def adrCacheGetUrl(internalId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/cache/get/$internalId"
