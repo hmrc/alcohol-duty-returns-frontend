@@ -220,13 +220,14 @@ declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need t
 declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered it to a duty suspended warehouse.
 declareDutySuspendedDeliveriesQuestion.change.hidden = whether you need to declare alcohol you delivered or received duty suspended
 
-dutySuspendedDeliveriesGuidance.title = Tell us about alcohol you delivered or received duty suspended
-dutySuspendedDeliveriesGuidance.heading = Tell us about alcohol you delivered or received duty suspended
-dutySuspendedDeliveriesGuidance.p1 = You need to tell us how much alcohol you have:
-dutySuspendedDeliveriesGuidance.p2 = Your answers will not change your duty calculation.
-dutySuspendedDeliveriesGuidance.para.list.1 = delivered duty suspended outside of the UK
-dutySuspendedDeliveriesGuidance.para.list.2 = delivered duty suspended within the UK
-dutySuspendedDeliveriesGuidance.para.list.3 = received duty suspended
+dutySuspendedDeliveriesGuidance.title = Tell us about your duty suspended alcohol
+dutySuspendedDeliveriesGuidance.heading = Tell us about your duty suspended alcohol
+dutySuspendedDeliveriesGuidance.p1 = You need to tell us the net total of duty suspended alcohol that you have as both a total volume and total litres of pure alcohol (Lpa).
+dutySuspendedDeliveriesGuidance.p2 = To work out the net quantity, add together points 1 and 2 and then subtract point 3.
+dutySuspendedDeliveriesGuidance.para.list.1 = Quantity exported outside the UK (for example, ship stores)
+dutySuspendedDeliveriesGuidance.para.list.2 = Quantity delivered duty suspended to other UK registered premises and excise warehouses
+dutySuspendedDeliveriesGuidance.para.list.3 = Quantity received under duty suspense from registered premises, excise warehouses and importation
+dutySuspendedDeliveriesGuidance.p3 = Your answers will not change your duty calculation.
 
 declareDutySuspendedReceived.title = How much have you received duty suspended?
 declareDutySuspendedReceived.heading = How much have you received duty suspended?

@@ -14,37 +14,42 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, SectionHeading}
+@import components.{PageHeading, SectionHeading, Paragraph, NumberedList}
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
-        pageHeading: PageHeading
-
+        pageHeading: PageHeading,
+        paragraph: Paragraph,
+        numberedList: NumberedList
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("dutySuspendedDeliveriesGuidance.title"))) {
 
-@sectionHeading(
-    id = "duty-suspended-deliveries-guidance-section",
-    text = messages("section.alcoholDutyReturn"),
-)
+    @sectionHeading(
+        id = "duty-suspended-deliveries-guidance-section",
+        text = messages("section.alcoholDutyReturn"),
+    )
 
-@pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
+    @pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
 
-<p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p1")</p>
-<ul class="govuk-list govuk-list--bullet">
-    <li>@messages("dutySuspendedDeliveriesGuidance.para.list.1")</li>
-    <li>@messages("dutySuspendedDeliveriesGuidance.para.list.2")</li>
-    <li>@messages("dutySuspendedDeliveriesGuidance.para.list.3")</li>
-</ul>
-<p class="govuk-body">@messages("dutySuspendedDeliveriesGuidance.p2")</p>
+    @paragraph(messages("dutySuspendedDeliveriesGuidance.p1"))
 
-@govukButton(
-ButtonViewModel("continueButton", messages("site.continue"))
-    .asLink(controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url)
-)
+    @paragraph(messages("dutySuspendedDeliveriesGuidance.p2"))
+
+    @numberedList(Seq(
+        messages("dutySuspendedDeliveriesGuidance.para.list.1"),
+        messages("dutySuspendedDeliveriesGuidance.para.list.2"),
+        messages("dutySuspendedDeliveriesGuidance.para.list.3")
+    ))
+
+    @paragraph(messages("dutySuspendedDeliveriesGuidance.p3"))
+
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(NormalMode).url)
+    )
 }
