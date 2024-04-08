@@ -488,6 +488,19 @@ adjustmentVolume.error.maximumRequired = The volume of adjustments must be less 
 adjustmentVolume.error.twoDecimalPlaces = The volume must be up to 2 decimal places
 adjustmentVolume.change.hidden = Adjustment Volume
 
+adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief duty rate?
+adjustmentSmallProducerReliefDutyRate.heading = What is your Small Producer Relief duty rate?
+adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel = AdjustmentSmallProducerReliefDutyRate
+adjustmentSmallProducerReliefDutyRate.paragraph = You need to tell us your Small Producer Relief duty rate.
+adjustmentSmallProducerReliefDutyRate.guidance.link.text = Work out your Small Producer Relief duty rate here (opens in a new tab).
+adjustmentSmallProducerReliefDutyRate.guidance.link.url = https://www.gov.uk/guidance/find-out-your-alcohol-duty-rates-if-youre-eligible-for-small-producer-relief
+adjustmentSmallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
+adjustmentSmallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
+adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be 0.00 or more
+adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be 999999999.99 or less
+adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
+adjustmentSmallProducerReliefDutyRate.change.hidden = what is your Small Producer Relief duty rate
+
 adjustmentDutyDue.title = Your calculations
 adjustmentDutyDue.heading = Your calculations
 adjustmentDutyDue.paragraph1 = Based on everything you’ve told us about this entry, we’ve worked out the litres of pure alcohol (Lpa) and the duty due for this entry.
@@ -504,3 +517,4 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
+

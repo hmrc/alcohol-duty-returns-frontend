@@ -39,6 +39,7 @@ case class AdjustmentEntry(
     case _               => None
   }
 }
+
 object AdjustmentEntry extends YearMonthModelFormatter {
   implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
 }

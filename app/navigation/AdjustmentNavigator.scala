@@ -16,32 +16,52 @@
 
 package navigation
 import controllers._
+import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import models._
 import pages._
 import play.api.mvc.Call
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AdjustmentNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case pages.adjustment.DeclareAdjustmentQuestionPage =>
+    case pages.adjustment.DeclareAdjustmentQuestionPage             =>
       _ => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
-    case pages.adjustment.AlcoholByVolumePage           =>
+    case pages.adjustment.AlcoholByVolumePage                       =>
       _ => controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
-    case pages.adjustment.AdjustmentTaxTypePage         =>
-      _ => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
-    case pages.adjustment.AdjustmentTypePage            =>
+    case pages.adjustment.AdjustmentTypePage                        =>
       _ => controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
-    case pages.adjustment.WhenDidYouPayDutyPage         =>
+    case pages.adjustment.WhenDidYouPayDutyPage                     =>
       _ => controllers.adjustment.routes.AlcoholByVolumeController.onPageLoad(NormalMode)
-    case pages.adjustment.AdjustmentVolumePage          =>
+    case pages.adjustment.AdjustmentVolumePage                      =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
-    case _                                              =>
+    case pages.adjustment.AdjustmentTaxTypePage                     => adjustmentTaxTypePageRoute
+    case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
+      _ => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+    case _                                                          =>
       _ => routes.IndexController.onPageLoad
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
     _ => routes.CheckYourAnswersController.onPageLoad
+  }
+
+  private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers): Call = {
+    val rateType = for {
+      adjustment <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
+      rateType   <- adjustment.rateType
+    } yield rateType
+    rateType match {
+      case Some(Core)                          => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      case Some(DraughtRelief)                 =>
+        controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      case Some(DraughtAndSmallProducerRelief) =>
+        controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+      case Some(SmallProducerRelief)           =>
+        controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+      case _                                   => routes.JourneyRecoveryController.onPageLoad()
+    }
   }
 }
