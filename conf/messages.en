@@ -501,6 +501,6 @@ adjustmentDutyDue.bulletList.3 = the entry having {0} litres of pure alcohol (Lp
 adjustmentDutyDue.bulletList.4 = the duty rate for this entry being £{0} per litre  of pure alcohol
 adjustmentDutyDue.rate.checkYourAnswersLabel = Duty rate
 adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
-adjustmentDutyDue.checkYourAnswersLabel = Pure alcohol
+adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
