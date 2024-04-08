@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package models.dutySuspended
+package viewmodels.tasklist
 
-import play.api.libs.json._
+import models.UserAnswers
+import play.api.i18n.Messages
+import viewmodels.govuk.all.FluentInstant
 
-case class DutySuspendedBeer(totalBeer: BigDecimal, pureAlcoholInBeer: BigDecimal)
+import java.time.Instant
 
-object DutySuspendedBeer {
-  implicit val format = Json.format[DutySuspendedBeer]
+object AlcoholDutyTaskListHelper {
+  def getTaskList(userAnswers: UserAnswers, validUntil: Instant)(implicit
+    messages: Messages
+  ): AlcoholDutyTaskList =
+    AlcoholDutyTaskList(Seq(ReturnTaskListHelper.returnSection(userAnswers)), validUntil.toLocalDateString())
 }

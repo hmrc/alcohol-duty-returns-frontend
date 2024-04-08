@@ -77,6 +77,22 @@ section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
 section.dutySuspended = Duty suspended alcohol
 
+taskList.title = Alcohol Duty return
+taskList.status.completed = Return ready to submit
+taskList.status.incomplete = Return incomplete
+taskList.section.completed = You have completed {0} of {1} sections.
+taskList.expiry.date = We will save your answers until {0}.
+taskList.section.status.completed = Completed
+taskList.section.status.notStarted = Not started
+taskList.section.status.inProgress = In progress
+taskList.section.returns.heading = Alcohol to declare
+taskList.section.returns.needToDeclare.notStarted = Do you need to declare duty?
+taskList.section.returns.needToDeclare.no = You’ve told us you don’t need to declare duty
+taskList.section.returns.needToDeclare.yes = You’ve told us you need to declare duty
+taskList.section.returns.products.notStarted = Tell us about your products
+taskList.section.returns.products.inProgress = Change the products you’ve told us about
+taskList.section.returns.products.completed = Change the products you’ve told us about
+
 # Beginning of product entry sub-journey
 
 declareAlcoholDutyQuestion.title = Do you need to declare duty on any alcoholic products?
@@ -246,13 +262,14 @@ dutySuspendedBeer.error.pureAlcoholInBeer.maximumRequired = The volume of pure a
 dutySuspendedBeer.error.pureAlcoholInBeer.minimumRequired = The volume of pure alcohol in beer must be higher than 0
 dutySuspendedBeer.error.pureAlcoholInBeer.twoDecimalPlaces = The volume of pure alcohol in beer must be up to 2 decimal places
 
-dutySuspendedDeliveriesGuidance.title = Tell us about alcohol you delivered or received duty suspended
-dutySuspendedDeliveriesGuidance.heading = Tell us about alcohol you delivered or received duty suspended
-dutySuspendedDeliveriesGuidance.p1 = You need to tell us how much alcohol you have:
-dutySuspendedDeliveriesGuidance.p2 = Your answers will not change your duty calculation.
-dutySuspendedDeliveriesGuidance.para.list.1 = delivered duty suspended outside of the UK
-dutySuspendedDeliveriesGuidance.para.list.2 = delivered duty suspended within the UK
-dutySuspendedDeliveriesGuidance.para.list.3 = received duty suspended
+dutySuspendedDeliveriesGuidance.title = Tell us about your duty suspended alcohol
+dutySuspendedDeliveriesGuidance.heading = Tell us about your duty suspended alcohol
+dutySuspendedDeliveriesGuidance.p1 = You need to tell us the net total of duty suspended alcohol that you have as both a total volume and total litres of pure alcohol (Lpa).
+dutySuspendedDeliveriesGuidance.p2 = To work out the net quantity, add together points 1 and 2 and then subtract point 3.
+dutySuspendedDeliveriesGuidance.para.list.1 = Quantity exported outside the UK (for example, ship stores)
+dutySuspendedDeliveriesGuidance.para.list.2 = Quantity delivered duty suspended to other UK registered premises and excise warehouses
+dutySuspendedDeliveriesGuidance.para.list.3 = Quantity received under duty suspense from registered premises, excise warehouses and importation
+dutySuspendedDeliveriesGuidance.p3 = Your answers will not change your duty calculation.
 
 declareDutySuspendedReceived.title = How much have you received duty suspended?
 declareDutySuspendedReceived.heading = How much have you received duty suspended?
@@ -515,3 +532,4 @@ adjustmentVolume.error.twoDecimalPlaces = The volume must be up to 2 decimal pla
 adjustmentVolume.change.hidden = Adjustment Volume
 
 # End of adjustments sub-journey
+

@@ -19,7 +19,6 @@ package controllers
 import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import models.NormalMode
 
 class IndexControllerSpec extends SpecBase {
 
@@ -36,9 +35,7 @@ class IndexControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.productEntry.routes.DeclareAlcoholDutyQuestionController
-          .onPageLoad(NormalMode)
-          .url
+        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
       }
     }
   }

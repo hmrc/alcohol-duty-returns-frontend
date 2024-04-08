@@ -45,7 +45,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
   val validAnswer = AlcoholByVolume(10.2)
 
-  val rateType = RateTypeResponse(Core)
+  val rateType = Core
 
   lazy val alcoholByVolumeQuestionRoute = routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode).url
 
@@ -93,7 +93,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.rateType(any(), any(), any())(any())) thenReturn Future.successful(
-        rateType
+        RateTypeResponse(rateType)
       )
 
       val mockCacheConnector = mock[CacheConnector]
@@ -124,7 +124,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when the same data is submitted" in {
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.rateType(any(), any(), any())(any())) thenReturn Future.successful(
-        rateType
+        RateTypeResponse(rateType)
       )
       val userAnswers                        =
         UserAnswers(userAnswersId)

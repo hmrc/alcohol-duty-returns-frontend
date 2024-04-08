@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.dutySuspended.DutySuspendedBeerFormProvider
 import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedBeer
-import navigation.{FakeDeclareDutySuspendedDeliveriesNavigator, DeclareDutySuspendedDeliveriesNavigator}
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -41,7 +41,7 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DutySuspendedBeerFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val dutySuspendedBeerRoute = routes.DutySuspendedBeerController.onPageLoad(NormalMode).url
 
@@ -49,7 +49,7 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
     userAnswersId,
     Json.obj(
       DutySuspendedBeerPage.toString -> Json.obj(
-        "totalBeer" -> 5.6,
+        "totalBeer"         -> 5.6,
         "pureAlcoholInBeer" -> 47.5
       )
     )
@@ -85,7 +85,10 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(DutySuspendedBeer(5.6, 47.5)), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(DutySuspendedBeer(5.6, 47.5)), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -98,7 +101,8 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
+            bind[DeclareDutySuspendedDeliveriesNavigator]
+              .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

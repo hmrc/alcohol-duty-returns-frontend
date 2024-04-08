@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package models.dutySuspended
+package viewmodels.tasklist
 
-import play.api.libs.json._
+case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
 
-case class DutySuspendedBeer(totalBeer: BigDecimal, pureAlcoholInBeer: BigDecimal)
+  def completedTask: Int = sections.count(_.completedTask)
+  def totalTask: Int     = sections.size
 
-object DutySuspendedBeer {
-  implicit val format = Json.format[DutySuspendedBeer]
+  def status: String = if (completedTask == totalTask) {
+    "completed"
+  } else {
+    "incomplete"
+  }
 }

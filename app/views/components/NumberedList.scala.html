@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models.dutySuspended
+@this()
 
-import play.api.libs.json._
+@(elements: Seq[Content], classes: String = "govuk-list govuk-list--number", id: Option[String] = None)
 
-case class DutySuspendedBeer(totalBeer: BigDecimal, pureAlcoholInBeer: BigDecimal)
-
-object DutySuspendedBeer {
-  implicit val format = Json.format[DutySuspendedBeer]
-}
+<ol class="@classes" @id.map{id => id="@id"}>
+    @elements.map { element =>
+    <li class="dashed-list-item">
+        @element.asHtml
+    </li>
+    }
+</ol>

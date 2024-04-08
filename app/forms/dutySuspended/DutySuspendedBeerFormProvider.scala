@@ -25,9 +25,9 @@ import models.dutySuspended.DutySuspendedBeer
 
 class DutySuspendedBeerFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[DutySuspendedBeer] = Form(
-     mapping(
-      "totalBeer" -> bigDecimal(
+  def apply(): Form[DutySuspendedBeer] = Form(
+    mapping(
+      "totalBeer"         -> bigDecimal(
         2,
         "dutySuspendedBeer.error.totalBeer.required",
         "dutySuspendedBeer.error.totalBeer.nonNumeric",
@@ -42,5 +42,5 @@ class DutySuspendedBeerFormProvider @Inject() extends Mappings {
       ).verifying(minimumValue(BigDecimal(0.01), "dutySuspendedBeer.error.pureAlcoholInBeer.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedBeer.error.pureAlcoholInBeer.maximumRequired"))
     )(DutySuspendedBeer.apply)(DutySuspendedBeer.unapply)
-   )
- }
+  )
+}

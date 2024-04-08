@@ -26,7 +26,8 @@ import scala.util.{Failure, Success, Try}
 final case class UserAnswers(
   id: String,
   data: JsObject = Json.obj(),
-  lastUpdated: Instant = Instant.now
+  lastUpdated: Instant = Instant.now,
+  validUntil: Option[Instant] = None
 ) {
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
@@ -132,7 +133,8 @@ object UserAnswers {
     (
       (__ \ "_id").read[String] and
         (__ \ "data").read[JsObject] and
-        (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
+        (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat) and
+        (__ \ "validUntil").readNullable(MongoJavatimeFormats.instantFormat)
     )(UserAnswers.apply _)
   }
 
@@ -143,7 +145,8 @@ object UserAnswers {
     (
       (__ \ "_id").write[String] and
         (__ \ "data").write[JsObject] and
-        (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
+        (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat) and
+        (__ \ "validUntil").writeNullable(MongoJavatimeFormats.instantFormat)
     )(unlift(UserAnswers.unapply))
   }
 

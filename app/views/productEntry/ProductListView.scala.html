@@ -30,9 +30,10 @@
     tableRowAction: components.TableRowAction
 )
 
+
 @(form: Form[_], productTable:TableViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("productList.title"))) {
+@layout(pageTitle = title(form, messages("productList.title")), showBackLink = false) {
 
     @formHelper(action = controllers.productEntry.routes.ProductListController.onSubmit(), Symbol("autoComplete") -> "off") {
 
@@ -85,3 +86,5 @@
         )
     }
 }
+
+

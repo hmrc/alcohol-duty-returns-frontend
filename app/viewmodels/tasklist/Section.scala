@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package models.dutySuspended
+package viewmodels.tasklist
 
-import play.api.libs.json._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskList, TaskListItemStatus}
 
-case class DutySuspendedBeer(totalBeer: BigDecimal, pureAlcoholInBeer: BigDecimal)
-
-object DutySuspendedBeer {
-  implicit val format = Json.format[DutySuspendedBeer]
+case class Section(title: String, taskList: TaskList, statusCompleted: TaskListItemStatus) {
+  def completedTask: Boolean = taskList.items.forall(_.status == statusCompleted)
 }

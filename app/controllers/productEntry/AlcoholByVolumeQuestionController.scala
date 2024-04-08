@@ -22,7 +22,7 @@ import forms.productEntry.AlcoholByVolumeQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 
 import javax.inject.Inject
-import models.{AlcoholByVolume, AlcoholRegime, Mode, RateTypeResponse}
+import models.{AlcoholByVolume, AlcoholRegime, Mode, RateType}
 import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
 import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage}
@@ -89,7 +89,7 @@ class AlcoholByVolumeQuestionController @Inject() (
         )
   }
 
-  def fetchRateType(abv: AlcoholByVolume)(implicit hc: HeaderCarrier): (Future[RateTypeResponse]) = {
+  def fetchRateType(abv: AlcoholByVolume)(implicit hc: HeaderCarrier): (Future[RateType]) = {
 
     //hardcoded for now, will need to get this from obligation period
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
@@ -97,8 +97,8 @@ class AlcoholByVolumeQuestionController @Inject() (
     //hardcoded for now, will need to get this from subscription data
     val approvedAlcoholRegimes: Set[AlcoholRegime] = Set(Beer, Wine, Cider, Spirits, OtherFermentedProduct)
     for {
-      rateType <- alcoholDutyCalculatorConnector.rateType(abv, ratePeriod, approvedAlcoholRegimes)
-    } yield rateType
+      response <- alcoholDutyCalculatorConnector.rateType(abv, ratePeriod, approvedAlcoholRegimes)
+    } yield response.rateType
   }
   def updateABV(productEntry: ProductEntry, currentValue: BigDecimal): (ProductEntry, Boolean) =
     productEntry.abv match {

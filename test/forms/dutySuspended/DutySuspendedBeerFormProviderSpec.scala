@@ -27,11 +27,11 @@ class DutySuspendedBeerFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".totalBeer" - {
 
-    val fieldName = "totalBeer"
+    val fieldName   = "totalBeer"
     val requiredKey = "dutySuspendedBeer.error.totalBeer.required"
-    val minimum = 0.01
-    val maximum = 999999999.99
-    val decimal = 2
+    val minimum     = 0.01
+    val maximum     = 999999999.99
+    val decimal     = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -53,8 +53,7 @@ class DutySuspendedBeerFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "dutySuspendedBeer.error.totalBeer.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "dutySuspendedBeer.error.totalBeer.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -62,8 +61,7 @@ class DutySuspendedBeerFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "dutySuspendedBeer.error.totalBeer.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "dutySuspendedBeer.error.totalBeer.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
@@ -75,11 +73,11 @@ class DutySuspendedBeerFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".pureAlcoholInBeer" - {
 
-    val fieldName = "pureAlcoholInBeer"
-    val requiredKey = "dutySuspendedBeer.error.pureAlcoholInBeer.required"
-    val minimum = 0.01
-    val maximum = 999999999.99
-    val decimal = 2
+    val fieldName          = "pureAlcoholInBeer"
+    val requiredKey        = "dutySuspendedBeer.error.pureAlcoholInBeer.required"
+    val minimum            = 0.01
+    val maximum            = 999999999.99
+    val decimal            = 2
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(

@@ -110,6 +110,21 @@ class ProductEntryServiceSpec extends SpecBase {
 
     "must throw an Exception" - {
 
+      "if user answers object is empty" in {
+
+        val mockConnector = mock[AlcoholDutyCalculatorConnector]
+
+        val service = new ProductEntryServiceImpl(mockConnector)
+
+        val exception = intercept[RuntimeException] {
+          service.createProduct(emptyUserAnswers).futureValue
+        }
+
+        exception.getLocalizedMessage must include(
+          "Can't fetch product entry from cache"
+        )
+      }
+
       "if both, TaxType and SmallProducerReliefDuty contain rate" in {
 
         val updatedProductEntry = productEntry.copy(
@@ -206,6 +221,5 @@ class ProductEntryServiceSpec extends SpecBase {
         exception.getLocalizedMessage must include(s"Can't fetch volume from cache")
       }
     }
-
   }
 }
