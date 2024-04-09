@@ -306,7 +306,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
             .success
             .value,
           true
-        ) mustBe controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad
+        ) mustBe controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
       }
 
       "must go from Product Name page to Check Your Answers Controller irrespective of answer" in {

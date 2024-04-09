@@ -34,5 +34,5 @@ object ViewUtils {
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
 
   def withPercentage(percentage: BigDecimal)(implicit messages: Messages) =
-    percentage + messages("site.unit.percentage")
+    s"$percentage${messages("site.unit.percentage")}"
 }

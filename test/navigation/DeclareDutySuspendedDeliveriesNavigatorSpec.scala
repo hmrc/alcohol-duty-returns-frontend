@@ -84,7 +84,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
-        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
     }
   }
