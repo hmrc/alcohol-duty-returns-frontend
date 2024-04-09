@@ -18,8 +18,10 @@ package navigation
 
 import base.SpecBase
 import controllers._
+import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
+import models.adjustment.AdjustmentEntry
 
 class AdjustmentNavigatorSpec extends SpecBase {
 
@@ -72,13 +74,82 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
       }
 
-      "must go from the Adjustment Tax Type page to Adjustment Volume Page" in {
+      "must go from the Adjustment Tax Type page to Adjustment Volume Page if RateType is Core" in {
 
         navigator.nextPage(
           pages.adjustment.AdjustmentTaxTypePage,
           NormalMode,
           UserAnswers("id")
+            .set(
+              pages.adjustment.CurrentAdjustmentEntryPage,
+              AdjustmentEntry(rateType = Some(Core))
+            )
+            .success
+            .value
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Adjustment Tax Type page to Adjustment Volume Page if RateType is DraughtRelief" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentTaxTypePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              pages.adjustment.CurrentAdjustmentEntryPage,
+              AdjustmentEntry(rateType = Some(DraughtRelief))
+            )
+            .success
+            .value
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Adjustment Tax Type page to Small Producer Relief Duty Rate Page if RateType is SmallProducerRelief" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentTaxTypePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              pages.adjustment.CurrentAdjustmentEntryPage,
+              AdjustmentEntry(rateType = Some(SmallProducerRelief))
+            )
+            .success
+            .value
+        ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Adjustment Tax Type page to Small Producer Relief Duty Rate Page if RateType is DraughtAndSmallProducerRelief" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentTaxTypePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              pages.adjustment.CurrentAdjustmentEntryPage,
+              AdjustmentEntry(rateType = Some(DraughtAndSmallProducerRelief))
+            )
+            .success
+            .value
+        ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Small Producer Relief Duty Rate Page to Adjustment Volume page" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Adjustment Volume page to Adjustment Duty Due Page" in {
+
+        navigator.nextPage(
+          pages.adjustment.AdjustmentVolumePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
     }
 
