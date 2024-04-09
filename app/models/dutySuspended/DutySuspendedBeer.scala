@@ -21,5 +21,5 @@ import play.api.libs.json._
 case class DutySuspendedBeer(totalBeer: BigDecimal, pureAlcoholInBeer: BigDecimal)
 
 object DutySuspendedBeer {
-  implicit val format = Json.format[DutySuspendedBeer]
+  implicit val format: OFormat[DutySuspendedBeer] = Json.format[DutySuspendedBeer]
 }
