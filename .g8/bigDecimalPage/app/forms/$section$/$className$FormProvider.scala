@@ -9,6 +9,7 @@ class $className$FormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "$className;format="decap"$-input" -> bigDecimal(
+         2,
         "$className;format="decap"$.error.required",
         "$className;format="decap"$.error.nonNumeric",
         "$className;format="decap"$.error.twoDecimalPlaces"

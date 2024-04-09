@@ -58,7 +58,7 @@ class AlcoholDutyCalculatorConnector @Inject() (
     httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
   }
 
-  def adjustmentRateBand(taxType: String, ratePeriod: YearMonth)(implicit
+  def rateBand(taxType: String, ratePeriod: YearMonth)(implicit
     hc: HeaderCarrier
   ): Future[Option[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(

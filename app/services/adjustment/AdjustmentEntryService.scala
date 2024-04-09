@@ -14,51 +14,54 @@
  * limitations under the License.
  */
 
-package services.productEntry
+package services.adjustment
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
-import models.productEntry.ProductEntry
-import pages.productEntry.CurrentProductEntryPage
+import models.adjustment.AdjustmentEntry
+import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ProductEntryServiceImpl @Inject() (
+class AdjustmentEntryServiceImpl @Inject() (
   alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
-) extends ProductEntryService {
+) extends AdjustmentEntryService {
 
-  override def createProduct(
+  override def createAdjustment(
     userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ProductEntry] = {
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry] = {
 
-    val productEntry =
+    val adjustmentEntry =
       userAnswers
-        .get(CurrentProductEntryPage)
-        .getOrElse(throw new RuntimeException("Can't fetch product entry from cache"))
-    val abv          = productEntry.abv.getOrElse(throw new RuntimeException("Can't fetch ABV from cache"))
-    val volume       = productEntry.volume.getOrElse(throw new RuntimeException("Can't fetch volume from cache"))
-    val rate         = productEntry.rate.getOrElse(throw getError(productEntry))
+        .get(CurrentAdjustmentEntryPage)
+        .getOrElse(throw new RuntimeException("Can't fetch adjustment entry from cache"))
+    val abv             = adjustmentEntry.abv.getOrElse(throw new RuntimeException("Can't fetch ABV from cache"))
+    val volume          = adjustmentEntry.volume.getOrElse(throw new RuntimeException("Can't fetch volume from cache"))
+    val rate            = adjustmentEntry.rate.getOrElse(throw getError(adjustmentEntry))
 
     for {
       taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(abv, volume, rate)
-    } yield productEntry.copy(
+    } yield adjustmentEntry.copy(
       pureAlcoholVolume = Some(taxDuty.pureAlcoholVolume),
       duty = Some(taxDuty.duty)
     )
   }
 
-  private def getError(productEntry: ProductEntry): RuntimeException =
-    (productEntry.taxRate, productEntry.sprDutyRate) match {
+  private def getError(adjustmentEntry: AdjustmentEntry): RuntimeException =
+    (adjustmentEntry.taxRate, adjustmentEntry.sprDutyRate) match {
       case (Some(_), Some(_)) =>
         new RuntimeException("Failed to get rate, both tax rate and spr duty rate are defined.")
       case (None, None)       => new RuntimeException("Failed to get rate, neither tax rate nor spr duty rate are defined.")
       case (_, _)             => new RuntimeException("Failed to get rate.")
     }
 }
-@ImplementedBy(classOf[ProductEntryServiceImpl])
-trait ProductEntryService {
-  def createProduct(userAnswers: UserAnswers)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ProductEntry]
+
+@ImplementedBy(classOf[AdjustmentEntryServiceImpl])
+trait AdjustmentEntryService {
+  def createAdjustment(
+    userAnswers: UserAnswers
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry]
 }

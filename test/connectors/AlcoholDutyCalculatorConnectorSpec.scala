@@ -131,7 +131,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
         connector.httpClient.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any())
       } thenReturn rateBandResponse
 
-      whenReady(connector.adjustmentRateBand("310", YearMonth.of(2023, 1))) { result =>
+      whenReady(connector.rateBand("310", YearMonth.of(2023, 1))) { result =>
         result mustBe Some(rateBand)
         verify(connector.httpClient, atLeastOnce)
           .GET[Either[UpstreamErrorResponse, HttpResponse]](
@@ -157,7 +157,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
         connector.httpClient.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any())
       } thenReturn rateBandResponse
 
-      whenReady(connector.adjustmentRateBand("123", YearMonth.of(2023, 1))) { result =>
+      whenReady(connector.rateBand("123", YearMonth.of(2023, 1))) { result =>
         result mustBe None
         verify(connector.httpClient, atLeastOnce)
           .GET[Either[UpstreamErrorResponse, HttpResponse]](
