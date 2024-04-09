@@ -21,7 +21,7 @@ echo "$className;format="decap"$.error.nonNumeric = Enter your $className;format
 echo "$className;format="decap"$.error.required = Enter your $className;format="decap"$" >> ../conf/messages.en
 echo "$className;format="decap"$.error.minimumRequired = $className;format="decap"$ must be 0.00 or more" >> ../conf/messages.en
 echo "$className;format="decap"$.error.maximumRequired = $className;format="decap"$ must be 99999999.99 or less" >> ../conf/messages.en
-echo "$className;format="decap"$.change.twoDecimalPlaces = $className$ must be a number to 2 decimal places" >> ../conf/messages.en
+echo "$className;format="decap"$.error.twoDecimalPlaces = $className$ must be a number to 2 decimal places" >> ../conf/messages.en
 echo "$className;format="decap"$.change.hidden = $className$" >> ../conf/messages.en
 
 echo "Adding page to the section page list"

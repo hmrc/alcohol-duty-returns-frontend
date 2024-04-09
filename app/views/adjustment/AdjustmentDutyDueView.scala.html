@@ -27,41 +27,39 @@
         subHeading: SubHeading
 )
 
-@(abv:BigDecimal, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentType: String, abv:BigDecimal, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("dutyDue.title"))) {
+@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title"))) {
 
     @sectionHeading(
-        id = "dutyDue-section",
-        text = messages("section.alcoholDutyReturn"),
+    id = "adjustment-duty-due-section",
+    text = messages(s"section.adjustment.$adjustmentType"),
     )
+    @pageHeading(messages("adjustmentDutyDue.heading"))
 
-    @pageHeading(messages("dutyDue.heading"))
+    @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
-    @paragraph(messages("dutyDue.paragraph1"))
+    @subHeading(messages("adjustmentDutyDue.subheading1", pureAlcoholVolume))
 
-    @subHeading(messages("dutyDue.subheading1", pureAlcoholVolume))
-
-    @paragraph(messages("dutyDue.paragraph2"))
+    @paragraph(messages("adjustmentDutyDue.paragraph2"))
 
     @bulletList(Seq(
-        messages("dutyDue.bulletList.1", abv),
-        messages("dutyDue.bulletList.2", volume),
+    messages("adjustmentDutyDue.bulletList.1", abv),
+    messages("adjustmentDutyDue.bulletList.2", volume),
 
     ))
 
-    @subHeading(messages("dutyDue.subheading2", valueFormatter(duty)))
+    @subHeading(messages("adjustmentDutyDue.subheading2", valueFormatter(duty)))
 
-    @paragraph(messages("dutyDue.paragraph3"))
+    @paragraph(messages("adjustmentDutyDue.paragraph3"))
 
     @bulletList(Seq(
-    messages("dutyDue.bulletList.3", pureAlcoholVolume),
-    messages("dutyDue.bulletList.4", valueFormatter(rate))
+    messages("adjustmentDutyDue.bulletList.3", pureAlcoholVolume),
+    messages("adjustmentDutyDue.bulletList.4", valueFormatter(rate))
     ))
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
-        .asLink(controllers.productEntry.routes.CheckYourAnswersController.onPageLoad().url)
     )
 
 }
