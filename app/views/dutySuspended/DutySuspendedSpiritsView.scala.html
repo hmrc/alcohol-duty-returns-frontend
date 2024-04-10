@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -24,7 +24,9 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading
+    paragraph: Paragraph,
+    pageHeading: PageHeading,
+    subHeading: SubHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -38,30 +40,43 @@
         }
 
         @sectionHeading(
-            id = "dutySuspendedSpirits-section",
-            text = messages("section.sectionName"),
+            id = "duty-suspended-spirits-section",
+            text = messages("section.dutySuspended"),
         )
 
         @pageHeading(messages("dutySuspendedSpirits.heading"))
 
+        @paragraph(messages("dutySuspendedSpirits.p1"))
+
+        @subHeading(messages("dutySuspendedSpirits.subheading1"))
+
         @govukInput(
             InputViewModel(
                 field = form("totalSpirits"),
-                label = LabelViewModel(messages("dutySuspendedSpirits.totalSpirits"))
+                label = LabelViewModel(messages("dutySuspendedSpirits.totalSpirits")).asVisuallyHidden(),
             )
-            .withWidth(Full)
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withHint(Hint(content = HtmlContent(messages("dutySuspendedSpirits.hint.1"))))
         )
 
-        @govukInput(
+        @subHeading(messages("dutySuspendedSpirits.subheading2"))
+
+
+@govukInput(
             InputViewModel(
                 field = form("pureAlcoholInSpirits"),
                 label = LabelViewModel(messages("dutySuspendedSpirits.pureAlcoholInSpirits"))
             )
-            .withWidth(Full)
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withHint(Hint(content = HtmlContent(messages("dutySuspendedSpirits.hint.2"))))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }
