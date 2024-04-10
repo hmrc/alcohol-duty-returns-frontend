@@ -26,6 +26,14 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryDutySuspendedSpirits: Arbitrary[dutySuspended.DutySuspendedSpirits] =
+    Arbitrary {
+      for {
+        totalSpirits         <- arbitrary[String]
+        pureAlcoholInSpirits <- arbitrary[String]
+      } yield dutySuspended.DutySuspendedSpirits(totalSpirits, pureAlcoholInSpirits)
+    }
+
   implicit lazy val arbitraryAdjustmentType: Arbitrary[adjustment.AdjustmentType] =
     Arbitrary {
       Gen.oneOf(adjustment.AdjustmentType.values.toSeq)
