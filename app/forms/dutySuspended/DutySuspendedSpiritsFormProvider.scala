@@ -25,12 +25,24 @@ import models.dutySuspended.DutySuspendedSpirits
 
 class DutySuspendedSpiritsFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[DutySuspendedSpirits] = Form(
-     mapping(
-      "totalSpirits" -> text("dutySuspendedSpirits.error.totalSpirits.required")
-        .verifying(maxLength(100, "dutySuspendedSpirits.error.totalSpirits.length")),
-      "pureAlcoholInSpirits" -> text("dutySuspendedSpirits.error.pureAlcoholInSpirits.required")
-        .verifying(maxLength(100, "dutySuspendedSpirits.error.pureAlcoholInSpirits.length"))
+  def apply(): Form[DutySuspendedSpirits] = Form(
+    mapping(
+      "totalSpirits"         -> bigDecimal(
+        2,
+        "dutySuspendedSpirits.error.totalSpirits.required",
+        "dutySuspendedSpirits.error.totalSpirits.nonNumeric",
+        "dutySuspendedSpirits.error.totalSpirits.twoDecimalPlaces"
+      ).verifying(minimumValue(BigDecimal(0.01), "dutySuspendedSpirits.error.totalSpirits.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedSpirits.error.totalSpirits.maximumRequired")),
+      "pureAlcoholInSpirits" -> bigDecimal(
+        2,
+        "dutySuspendedSpirits.error.pureAlcoholInSpirits.required",
+        "dutySuspendedSpirits.error.pureAlcoholInSpirits.nonNumeric",
+        "dutySuspendedSpirits.error.pureAlcoholInSpirits.twoDecimalPlaces"
+      ).verifying(minimumValue(BigDecimal(0.01), "dutySuspendedSpirits.error.pureAlcoholInSpirits.minimumRequired"))
+        .verifying(
+          maximumValue(BigDecimal(999999999.99), "dutySuspendedSpirits.error.pureAlcoholInSpirits.maximumRequired")
+        )
     )(DutySuspendedSpirits.apply)(DutySuspendedSpirits.unapply)
-   )
- }
+  )
+}

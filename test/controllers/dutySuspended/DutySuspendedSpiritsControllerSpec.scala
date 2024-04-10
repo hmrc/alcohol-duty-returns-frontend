@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.dutySuspended.DutySuspendedSpiritsFormProvider
 import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedSpirits
-import navigation.{FakeDeclareDutySuspendedDeliveriesNavigator, DeclareDutySuspendedDeliveriesNavigator}
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -41,7 +41,7 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DutySuspendedSpiritsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val dutySuspendedSpiritsRoute = routes.DutySuspendedSpiritsController.onPageLoad(NormalMode).url
 
@@ -49,8 +49,8 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
     userAnswersId,
     Json.obj(
       DutySuspendedSpiritsPage.toString -> Json.obj(
-        "totalSpirits" -> "value 1",
-        "pureAlcoholInSpirits" -> "value 2"
+        "totalSpirits"         -> 5.6,
+        "pureAlcoholInSpirits" -> 47.5
       )
     )
   )
@@ -85,7 +85,10 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(DutySuspendedSpirits("value 1", "value 2")), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(DutySuspendedSpirits(5.6, 47.5)), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -98,7 +101,8 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
+            bind[DeclareDutySuspendedDeliveriesNavigator]
+              .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -106,7 +110,7 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedSpiritsRoute)
-            .withFormUrlEncodedBody(("totalSpirits", "value 1"), ("pureAlcoholInSpirits", "value 2"))
+            .withFormUrlEncodedBody(("totalSpirits", "5.6"), ("pureAlcoholInSpirits", "47.5"))
 
         val result = route(application, request).value
 
@@ -156,7 +160,7 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedSpiritsRoute)
-            .withFormUrlEncodedBody(("totalSpirits", "value 1"), ("pureAlcoholInSpirits", "value 2"))
+            .withFormUrlEncodedBody(("totalSpirits", "5.6"), ("pureAlcoholInSpirits", "47.5"))
 
         val result = route(application, request).value
 

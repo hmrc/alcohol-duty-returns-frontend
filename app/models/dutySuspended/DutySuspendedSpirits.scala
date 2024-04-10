@@ -18,7 +18,7 @@ package models.dutySuspended
 
 import play.api.libs.json._
 
-case class DutySuspendedSpirits (totalSpirits: String, pureAlcoholInSpirits: String)
+case class DutySuspendedSpirits(totalSpirits: BigDecimal, pureAlcoholInSpirits: BigDecimal)
 
 object DutySuspendedSpirits {
   implicit val format: OFormat[DutySuspendedSpirits] = Json.format[DutySuspendedSpirits]

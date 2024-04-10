@@ -29,8 +29,8 @@ trait ModelGenerators {
   implicit lazy val arbitraryDutySuspendedSpirits: Arbitrary[dutySuspended.DutySuspendedSpirits] =
     Arbitrary {
       for {
-        totalSpirits         <- arbitrary[String]
-        pureAlcoholInSpirits <- arbitrary[String]
+        totalSpirits         <- arbitrary[BigDecimal]
+        pureAlcoholInSpirits <- arbitrary[BigDecimal]
       } yield dutySuspended.DutySuspendedSpirits(totalSpirits, pureAlcoholInSpirits)
     }
 

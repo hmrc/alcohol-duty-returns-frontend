@@ -26,21 +26,21 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DutySuspendedSpiritsSummary  {
+object DutySuspendedSpiritsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedSpiritsPage).map {
-      answer =>
+    answers.get(DutySuspendedSpiritsPage).map { answer =>
+      val value = HtmlFormat.escape(answer.totalSpirits.toString()).toString + "<br/>" + HtmlFormat
+        .escape(answer.pureAlcoholInSpirits.toString())
+        .toString
 
-      val value = HtmlFormat.escape(answer.totalSpirits).toString + "<br/>" + HtmlFormat.escape(answer.pureAlcoholInSpirits).toString
-
-        SummaryListRowViewModel(
-          key     = "dutySuspendedSpirits.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("dutySuspendedSpirits.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "dutySuspendedSpirits.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspendedSpirits.change.hidden"))
         )
+      )
     }
 }

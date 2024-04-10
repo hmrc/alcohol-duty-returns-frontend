@@ -16,31 +16,51 @@
 
 package forms.dutySuspended
 
-import forms.behaviours.StringFieldBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
-class DutySuspendedSpiritsFormProviderSpec extends StringFieldBehaviours {
+import scala.collection.immutable.ArraySeq
+class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new DutySuspendedSpiritsFormProvider()()
 
   ".totalSpirits" - {
 
-    val fieldName = "totalSpirits"
+    val fieldName   = "totalSpirits"
     val requiredKey = "dutySuspendedSpirits.error.totalSpirits.required"
-    val lengthKey = "dutySuspendedSpirits.error.totalSpirits.length"
-    val maxLength = 100
+    val minimum     = 0.01
+    val maximum     = 999999999.99
+    val decimal     = 2
+
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      validDataGenerator
     )
 
-    behave like fieldWithMaxLength(
+    behave like bigDecimalField(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nonNumericError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.twoDecimalPlaces")
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
@@ -52,22 +72,43 @@ class DutySuspendedSpiritsFormProviderSpec extends StringFieldBehaviours {
 
   ".pureAlcoholInSpirits" - {
 
-    val fieldName = "pureAlcoholInSpirits"
+    val fieldName   = "pureAlcoholInSpirits"
     val requiredKey = "dutySuspendedSpirits.error.pureAlcoholInSpirits.required"
-    val lengthKey = "dutySuspendedSpirits.error.pureAlcoholInSpirits.length"
-    val maxLength = 100
+    val minimum     = 0.01
+    val maximum     = 999999999.99
+    val decimal     = 2
+
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      validDataGenerator
     )
 
-    behave like fieldWithMaxLength(
+    behave like bigDecimalField(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nonNumericError = FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.twoDecimalPlaces")
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError =
+        FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError =
+        FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
