@@ -67,7 +67,7 @@
 @govukInput(
             InputViewModel(
                 field = form("pureAlcoholInSpirits"),
-                label = LabelViewModel(messages("dutySuspendedSpirits.pureAlcoholInSpirits"))
+                label = LabelViewModel(messages("dutySuspendedSpirits.pureAlcoholInSpirits")).asVisuallyHidden(),
             )
             .asNumeric()
             .withWidth(Fixed10)
