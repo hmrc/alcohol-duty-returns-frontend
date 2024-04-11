@@ -53,7 +53,7 @@
         @govukInput(
             InputViewModel(
                 field = form("totalBeer"),
-                label = LabelViewModel(messages("dutySuspendedBeer.totalBeer")).asVisuallyHidden(),
+                label = LabelViewModel(messages("dutySuspendedBeer.subheading1")).asVisuallyHidden(),
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -66,7 +66,7 @@
         @govukInput(
         InputViewModel(
         field = form("pureAlcoholInBeer"),
-        label = LabelViewModel(messages("dutySuspendedBeer.pureAlcoholInBeer")).asVisuallyHidden(),
+        label = LabelViewModel(messages("dutySuspendedBeer.subheading2")).asVisuallyHidden(),
         )
         .asNumeric()
         .withWidth(Fixed10)
