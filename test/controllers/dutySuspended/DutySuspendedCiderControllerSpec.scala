@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.dutySuspended.DutySuspendedCiderFormProvider
 import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedCider
-import navigation.{FakeDeclareDutySuspendedDeliveriesNavigator, DeclareDutySuspendedDeliveriesNavigator}
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -40,9 +40,9 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DutySuspendedCiderFormProvider()
-  val form = formProvider()
-  val validTotalCider = 45.67
+  val formProvider            = new DutySuspendedCiderFormProvider()
+  val form                    = formProvider()
+  val validTotalCider         = 45.67
   val validPureAlcoholInCider = 23.45
 
   lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
@@ -51,7 +51,7 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
     userAnswersId,
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(
-        "totalCider" -> validTotalCider,
+        "totalCider"         -> validTotalCider,
         "pureAlcoholInCider" -> validPureAlcoholInCider
       )
     )
@@ -87,7 +87,10 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(DutySuspendedCider(validTotalCider, validPureAlcoholInCider)), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(DutySuspendedCider(validTotalCider, validPureAlcoholInCider)),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -100,7 +103,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
+            bind[DeclareDutySuspendedDeliveriesNavigator]
+              .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -108,7 +112,10 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedCiderRoute)
-            .withFormUrlEncodedBody(("totalCider", validTotalCider.toString), ("pureAlcoholInCider", validPureAlcoholInCider.toString))
+            .withFormUrlEncodedBody(
+              ("totalCider", validTotalCider.toString),
+              ("pureAlcoholInCider", validPureAlcoholInCider.toString)
+            )
 
         val result = route(application, request).value
 

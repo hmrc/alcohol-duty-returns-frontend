@@ -27,14 +27,13 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".totalCider" - {
 
-    val fieldName = "totalCider"
+    val fieldName   = "totalCider"
     val requiredKey = "dutySuspendedCider.error.totalCider.required"
-    val minimum = 0.01
-    val maximum = 999999999.99
-    val decimal = 2
+    val minimum     = 0.01
+    val maximum     = 999999999.99
+    val decimal     = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
-
 
     behave like fieldThatBindsValidData(
       form,
@@ -74,14 +73,13 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".pureAlcoholInCider" - {
 
-    val fieldName = "pureAlcoholInCider"
+    val fieldName   = "pureAlcoholInCider"
     val requiredKey = "dutySuspendedCider.error.pureAlcoholInCider.required"
-    val minimum = 0.01
-    val maximum = 999999999.99
-    val decimal = 2
+    val minimum     = 0.01
+    val maximum     = 999999999.99
+    val decimal     = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
-
 
     behave like fieldThatBindsValidData(
       form,
@@ -101,7 +99,8 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.minimumRequired", ArraySeq(minimum))
+      expectedError =
+        FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -109,7 +108,8 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.maximumRequired", ArraySeq(maximum))
+      expectedError =
+        FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(

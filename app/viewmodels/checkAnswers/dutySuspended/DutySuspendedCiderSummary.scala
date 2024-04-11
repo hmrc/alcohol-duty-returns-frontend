@@ -26,21 +26,21 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DutySuspendedCiderSummary  {
+object DutySuspendedCiderSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedCiderPage).map {
-      answer =>
+    answers.get(DutySuspendedCiderPage).map { answer =>
+      val value = HtmlFormat.escape(answer.totalCider.toString()).toString + "<br/>" + HtmlFormat
+        .escape(answer.pureAlcoholInCider.toString())
+        .toString
 
-      val value = HtmlFormat.escape(answer.totalCider.toString()).toString + "<br/>" + HtmlFormat.escape(answer.pureAlcoholInCider.toString()).toString
-
-        SummaryListRowViewModel(
-          key     = "dutySuspendedCider.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("dutySuspendedCider.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "dutySuspendedCider.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspendedCider.change.hidden"))
         )
+      )
     }
 }
