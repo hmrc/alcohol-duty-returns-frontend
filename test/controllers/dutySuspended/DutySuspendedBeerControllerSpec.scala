@@ -45,12 +45,15 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val dutySuspendedBeerRoute = routes.DutySuspendedBeerController.onPageLoad(NormalMode).url
 
+  val validTotalBeer         = 55.6
+  val validPureAlcoholInBeer = 47.5
+
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       DutySuspendedBeerPage.toString -> Json.obj(
-        "totalBeer"         -> 5.6,
-        "pureAlcoholInBeer" -> 47.5
+        "totalBeer"         -> validTotalBeer,
+        "pureAlcoholInBeer" -> validPureAlcoholInBeer
       )
     )
   )
@@ -85,7 +88,10 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(DutySuspendedBeer(5.6, 47.5)), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(DutySuspendedBeer(validTotalBeer, validPureAlcoholInBeer)),
+          NormalMode
+        )(
           request,
           messages(application)
         ).toString
@@ -110,7 +116,10 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedBeerRoute)
-            .withFormUrlEncodedBody(("totalBeer", "5.6"), ("pureAlcoholInBeer", "47.5"))
+            .withFormUrlEncodedBody(
+              ("totalBeer", validTotalBeer.toString),
+              ("pureAlcoholInBeer", validPureAlcoholInBeer.toString)
+            )
 
         val result = route(application, request).value
 
