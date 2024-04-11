@@ -165,7 +165,10 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedCiderRoute)
-            .withFormUrlEncodedBody(("totalCider", "value 1"), ("pureAlcoholInCider", "value 2"))
+            .withFormUrlEncodedBody(
+              ("totalCider", validTotalCider.toString),
+              ("pureAlcoholInCider", validPureAlcoholInCider.toString)
+            )
 
         val result = route(application, request).value
 
