@@ -561,3 +561,15 @@ adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
 
+
+dutySuspendedOtherFermented.title = dutySuspendedOtherFermented
+dutySuspendedOtherFermented.heading = dutySuspendedOtherFermented
+dutySuspendedOtherFermented.totalOtherFermented = totalOtherFermented
+dutySuspendedOtherFermented.pureAlcoholInOtherFermented = pureAlcoholInOtherFermented
+dutySuspendedOtherFermented.checkYourAnswersLabel = DutySuspendedOtherFermented
+dutySuspendedOtherFermented.error.totalOtherFermented.required = Enter totalOtherFermented
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required = Enter pureAlcoholInOtherFermented
+dutySuspendedOtherFermented.error.totalOtherFermented.length = totalOtherFermented must be 100 characters or less
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.length = pureAlcoholInOtherFermented must be 100 characters or less
+dutySuspendedOtherFermented.totalOtherFermented.change.hidden = totalOtherFermented
+dutySuspendedOtherFermented.pureAlcoholInOtherFermented.change.hidden = pureAlcoholInOtherFermented
