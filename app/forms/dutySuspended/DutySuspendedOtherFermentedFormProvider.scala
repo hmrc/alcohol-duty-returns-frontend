@@ -25,22 +25,31 @@ import models.dutySuspended.DutySuspendedOtherFermented
 
 class DutySuspendedOtherFermentedFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[DutySuspendedOtherFermented] = Form(
-     mapping(
-       "totalOtherFermented"         -> bigDecimal(
-         2,
-         "dutySuspendedOtherFermented.error.totalOtherFermented.required",
-         "dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric",
-         "dutySuspendedOtherFermented.error.totalOtherFermented.twoDecimalPlaces"
-       ).verifying(minimumValue(BigDecimal(0.01), "dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired"))
-         .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired")),
-       "pureAlcoholInOtherFermented" -> bigDecimal(
-         2,
-         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required",
-         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric",
-         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.twoDecimalPlaces"
-       ).verifying(minimumValue(BigDecimal(0.01), "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired"))
-         .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired"))
-     )(DutySuspendedOtherFermented.apply)(DutySuspendedOtherFermented.unapply)
-   )
- }
+  def apply(): Form[DutySuspendedOtherFermented] = Form(
+    mapping(
+      "totalOtherFermented"         -> bigDecimal(
+        2,
+        "dutySuspendedOtherFermented.error.totalOtherFermented.required",
+        "dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric",
+        "dutySuspendedOtherFermented.error.totalOtherFermented.twoDecimalPlaces"
+      ).verifying(
+        minimumValue(BigDecimal(0.01), "dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired")
+      ).verifying(
+        maximumValue(BigDecimal(999999999.99), "dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired")
+      ),
+      "pureAlcoholInOtherFermented" -> bigDecimal(
+        2,
+        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required",
+        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric",
+        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.twoDecimalPlaces"
+      ).verifying(
+        minimumValue(BigDecimal(0.01), "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired")
+      ).verifying(
+        maximumValue(
+          BigDecimal(999999999.99),
+          "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired"
+        )
+      )
+    )(DutySuspendedOtherFermented.apply)(DutySuspendedOtherFermented.unapply)
+  )
+}

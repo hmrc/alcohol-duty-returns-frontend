@@ -262,6 +262,29 @@ dutySuspendedBeer.error.pureAlcoholInBeer.maximumRequired = The volume of pure a
 dutySuspendedBeer.error.pureAlcoholInBeer.minimumRequired = The volume of pure alcohol in beer must be higher than 0
 dutySuspendedBeer.error.pureAlcoholInBeer.twoDecimalPlaces = The volume of pure alcohol in beer must be up to 2 decimal places
 
+dutySuspendedOtherFermented.title = Tell us about your duty suspended other fermented products
+dutySuspendedOtherFermented.heading = Tell us about your duty suspended other fermented products
+dutySuspendedOtherFermented.p1 = You need to tell us about your net quantity of other fermented products that is duty suspended, both as total litres and litres of pure alcohol (Lpa).
+dutySuspendedOtherFermented.subheading1 = What is the total net quantity of duty suspended other fermented products?
+dutySuspendedOtherFermented.hint.1 = Enter litres of other fermented products, up to 2 decimal places.
+dutySuspendedOtherFermented.subheading2 = What is the total net quantity of pure alcohol in your duty suspended other fermented products?
+dutySuspendedOtherFermented.hint.2 = Enter litres pure alcohol in other fermented products, to 2 decimal places.
+dutySuspendedOtherFermented.totalOtherFermented = totalOtherFermented
+dutySuspendedOtherFermented.pureAlcoholInOtherFermented = pureAlcoholInOtherFermented
+dutySuspendedOtherFermented.checkYourAnswersLabel = DutySuspendedOtherFermented
+dutySuspendedOtherFermented.error.totalOtherFermented.required = Enter the volume of other fermented products in litres
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required = Enter the volume of pure alcohol in other fermented products in litres
+dutySuspendedOtherFermented.totalOtherFermented.change.hidden = total Other Fermented
+dutySuspendedOtherFermented.pureAlcoholInOtherFermented.change.hidden = pureAlcoholInOtherFermented
+dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric = The volume of other fermented products must be a number
+dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired = The volume of other fermented products must be less than 100 million litres
+dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired = The volume of other fermented products must be higher than 0
+dutySuspendedOtherFermented.error.totalOtherFermented.twoDecimalPlaces = The volume of other fermented products must be up to 2 decimal places
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric =  The volume of pure alcohol in other fermented products must be a number
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired = The volume of pure alcohol in other fermented products must be less than 100 million litres
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired = The volume of pure alcohol in other fermented products must be higher than 0
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.twoDecimalPlaces = The volume of pure alcohol in other fermented products must be up to 2 decimal places
+
 dutySuspendedDeliveriesGuidance.title = Tell us about your duty suspended alcohol
 dutySuspendedDeliveriesGuidance.heading = Tell us about your duty suspended alcohol
 dutySuspendedDeliveriesGuidance.p1 = You need to tell us the net total of duty suspended alcohol that you have as both a total volume and total litres of pure alcohol (Lpa).
@@ -562,14 +585,4 @@ adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 # End of adjustments sub-journey
 
 
-dutySuspendedOtherFermented.title = dutySuspendedOtherFermented
-dutySuspendedOtherFermented.heading = dutySuspendedOtherFermented
-dutySuspendedOtherFermented.totalOtherFermented = totalOtherFermented
-dutySuspendedOtherFermented.pureAlcoholInOtherFermented = pureAlcoholInOtherFermented
-dutySuspendedOtherFermented.checkYourAnswersLabel = DutySuspendedOtherFermented
-dutySuspendedOtherFermented.error.totalOtherFermented.required = Enter totalOtherFermented
-dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required = Enter pureAlcoholInOtherFermented
-dutySuspendedOtherFermented.error.totalOtherFermented.length = totalOtherFermented must be 100 characters or less
-dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.length = pureAlcoholInOtherFermented must be 100 characters or less
-dutySuspendedOtherFermented.totalOtherFermented.change.hidden = totalOtherFermented
-dutySuspendedOtherFermented.pureAlcoholInOtherFermented.change.hidden = pureAlcoholInOtherFermented
+

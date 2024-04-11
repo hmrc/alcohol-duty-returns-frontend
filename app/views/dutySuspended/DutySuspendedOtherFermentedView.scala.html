@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -24,7 +24,9 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading
+    paragraph: Paragraph,
+    pageHeading: PageHeading,
+    subHeading: SubHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -38,30 +40,42 @@
         }
 
         @sectionHeading(
-            id = "dutySuspendedOtherFermented-section",
-            text = messages("section.sectionName"),
+            id = "duty-suspended-other-fermented-section",
+            text = messages("section.dutySuspended"),
         )
 
         @pageHeading(messages("dutySuspendedOtherFermented.heading"))
 
+        @paragraph(messages("dutySuspendedOtherFermented.p1"))
+
+        @subHeading(messages("dutySuspendedOtherFermented.subheading1"))
+
         @govukInput(
             InputViewModel(
                 field = form("totalOtherFermented"),
-                label = LabelViewModel(messages("dutySuspendedOtherFermented.totalOtherFermented"))
+                label = LabelViewModel(messages("dutySuspendedOtherFermented.totalOtherFermented")).asVisuallyHidden()
             )
-            .withWidth(Full)
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.1"))))
         )
+
+        @subHeading(messages("dutySuspendedOtherFermented.subheading2"))
 
         @govukInput(
             InputViewModel(
                 field = form("pureAlcoholInOtherFermented"),
-                label = LabelViewModel(messages("dutySuspendedOtherFermented.pureAlcoholInOtherFermented"))
+                label = LabelViewModel(messages("dutySuspendedOtherFermented.pureAlcoholInOtherFermented")).asVisuallyHidden()
             )
-            .withWidth(Full)
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withHint(Hint(content = HtmlContent(messages("dutySuspendedOtherFermented.hint.2"))))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }

@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
 import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedOtherFermented
-import navigation.{FakeDeclareDutySuspendedDeliveriesNavigator, DeclareDutySuspendedDeliveriesNavigator}
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -40,8 +40,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSug
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DutySuspendedOtherFermentedFormProvider()
-  val form = formProvider()
+  val formProvider                     = new DutySuspendedOtherFermentedFormProvider()
+  val form                             = formProvider()
   val validTotalOtherFermented         = 45.67
   val validPureAlcoholInOtherFermented = 23.45
 
@@ -51,7 +51,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSug
     userAnswersId,
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
-        "totalOtherFermented" -> validTotalOtherFermented,
+        "totalOtherFermented"         -> validTotalOtherFermented,
         "pureAlcoholInOtherFermented" -> validPureAlcoholInOtherFermented
       )
     )
@@ -87,7 +87,10 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(DutySuspendedOtherFermented(validTotalOtherFermented, validPureAlcoholInOtherFermented)), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(DutySuspendedOtherFermented(validTotalOtherFermented, validPureAlcoholInOtherFermented)),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -100,7 +103,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSug
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
+            bind[DeclareDutySuspendedDeliveriesNavigator]
+              .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -108,7 +112,10 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedOtherFermentedRoute)
-            .withFormUrlEncodedBody(("totalOtherFermented", validTotalOtherFermented.toString), ("pureAlcoholInOtherFermented", validPureAlcoholInOtherFermented.toString))
+            .withFormUrlEncodedBody(
+              ("totalOtherFermented", validTotalOtherFermented.toString),
+              ("pureAlcoholInOtherFermented", validPureAlcoholInOtherFermented.toString)
+            )
 
         val result = route(application, request).value
 

@@ -27,7 +27,7 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
 
   ".totalOtherFermented" - {
 
-    val fieldName = "totalOtherFermented"
+    val fieldName   = "totalOtherFermented"
     val requiredKey = "dutySuspendedOtherFermented.error.totalOtherFermented.required"
     val minimum     = 0.01
     val maximum     = 999999999.99
@@ -45,7 +45,8 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.twoDecimalPlaces")
+      twoDecimalPlacesError =
+        FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -53,7 +54,8 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired", ArraySeq(minimum))
+      expectedError =
+        FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -61,7 +63,8 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired", ArraySeq(maximum))
+      expectedError =
+        FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
@@ -73,7 +76,7 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
 
   ".pureAlcoholInOtherFermented" - {
 
-    val fieldName = "pureAlcoholInOtherFermented"
+    val fieldName   = "pureAlcoholInOtherFermented"
     val requiredKey = "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required"
     val minimum     = 0.01
     val maximum     = 999999999.99
@@ -90,8 +93,10 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.twoDecimalPlaces")
+      nonNumericError =
+        FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric"),
+      twoDecimalPlacesError =
+        FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -99,7 +104,11 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(
+        fieldName,
+        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired",
+        ArraySeq(minimum)
+      )
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -107,7 +116,11 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(
+        fieldName,
+        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired",
+        ArraySeq(maximum)
+      )
     )
 
     behave like mandatoryField(

@@ -26,21 +26,21 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DutySuspendedOtherFermentedSummary  {
+object DutySuspendedOtherFermentedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedOtherFermentedPage).map {
-      answer =>
+    answers.get(DutySuspendedOtherFermentedPage).map { answer =>
+      val value = HtmlFormat.escape(answer.totalOtherFermented.toString()).toString + "<br/>" + HtmlFormat
+        .escape(answer.pureAlcoholInOtherFermented.toString())
+        .toString
 
-      val value = HtmlFormat.escape(answer.totalOtherFermented.toString()).toString + "<br/>" + HtmlFormat.escape(answer.pureAlcoholInOtherFermented.toString()).toString
-
-        SummaryListRowViewModel(
-          key     = "dutySuspendedOtherFermented.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "dutySuspendedOtherFermented.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.change.hidden"))
         )
+      )
     }
 }
