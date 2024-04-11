@@ -22,6 +22,8 @@ GET         /unauthorised                                controllers.Unauthorise
 
 GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
 
+GET         /start/:periodKey                            controllers.BeforeStartReturnController.onPageLoad(periodKey: String)
+
 # Beginning of product entry sub-journey
 GET        /tell-us-about-your-alcohol                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
 

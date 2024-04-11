@@ -22,18 +22,18 @@ import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
-import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.inject.bind
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.tasklist.AlcoholDutyTaskListHelper
-import views.html.TaskListView
+import views.html.BeforeStartReturnView
 
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.Future
 
-class TaskListControllerSpec extends SpecBase {
+class BeforeStartReturnControllerSpec extends SpecBase {
+
   private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
   private val A_DAY_IN_SEC = 86400
@@ -44,37 +44,51 @@ class TaskListControllerSpec extends SpecBase {
     validUntil = Some(validUntil)
   )
 
-  "TaskList Controller" - {
+  private val periodKey = "24AA"
+
+  "BeforeStartReturn Controller" - {
+
+    val mockCacheConnector = mock[CacheConnector]
+    when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+    when(mockCacheConnector.get(any())(any())) thenReturn Future.successful(Some(userAnswers))
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
+        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(periodKey).url)
 
         val result = route(application, request).value
 
-        val view             = application.injector.instanceOf[TaskListView]
-        val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
+        val view = application.injector.instanceOf[BeforeStartReturnView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(expectedTaskList)(request, messages(application)).toString
+        contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must return OK and the correct view for a GET if the userAnswer does not exist yet" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
+        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(periodKey).url)
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        val view = application.injector.instanceOf[BeforeStartReturnView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }
   }
