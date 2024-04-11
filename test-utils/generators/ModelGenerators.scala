@@ -26,6 +26,14 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryDutySuspendedCider: Arbitrary[dutySuspended.DutySuspendedCider] =
+    Arbitrary {
+      for {
+        totalCider         <- arbitrary[BigDecimal]
+        pureAlcoholInCider <- arbitrary[BigDecimal]
+      } yield dutySuspended.DutySuspendedCider(totalCider, pureAlcoholInCider)
+    }
+
   implicit lazy val arbitraryDutySuspendedOtherFermented: Arbitrary[dutySuspended.DutySuspendedOtherFermented] =
     Arbitrary {
       for {

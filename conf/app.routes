@@ -92,6 +92,11 @@ POST       /tell-us-about-your-beer-in-duty-suspense                        cont
 GET        /change-tell-us-about-your-beer-in-duty-suspense                 controllers.dutySuspended.DutySuspendedBeerController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-your-beer-in-duty-suspense                 controllers.dutySuspended.DutySuspendedBeerController.onSubmit(mode: Mode = CheckMode)
 
+GET        /tell-us-about-your-cider-in-duty-suspense                        controllers.dutySuspended.DutySuspendedCiderController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-your-cider-in-duty-suspense                        controllers.dutySuspended.DutySuspendedCiderController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-your-cider-in-duty-suspense                  controllers.dutySuspended.DutySuspendedCiderController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-your-cider-in-duty-suspense                  controllers.dutySuspended.DutySuspendedCiderController.onSubmit(mode: Mode = CheckMode)
+
 GET        /tell-us-about-your-other-fermented-in-duty-suspense                        controllers.dutySuspended.DutySuspendedOtherFermentedController.onPageLoad(mode: Mode = NormalMode)
 POST       /tell-us-about-your-other-fermented-in-duty-suspense                        controllers.dutySuspended.DutySuspendedOtherFermentedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-tell-us-about-your-other-fermented-in-duty-suspense                  controllers.dutySuspended.DutySuspendedOtherFermentedController.onPageLoad(mode: Mode = CheckMode)

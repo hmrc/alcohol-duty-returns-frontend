@@ -17,14 +17,14 @@
 package controllers.dutySuspended
 
 import base.SpecBase
-import forms.dutySuspended.DutySuspendedBeerFormProvider
+import forms.dutySuspended.DutySuspendedCiderFormProvider
 import models.{NormalMode, UserAnswers}
-import models.dutySuspended.DutySuspendedBeer
+import models.dutySuspended.DutySuspendedCider
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.dutySuspended.DutySuspendedBeerPage
+import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
@@ -32,42 +32,41 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
-import views.html.dutySuspended.DutySuspendedBeerView
+import views.html.dutySuspended.DutySuspendedCiderView
 
 import scala.concurrent.Future
 
-class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
+class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DutySuspendedBeerFormProvider()
-  val form         = formProvider()
+  val formProvider            = new DutySuspendedCiderFormProvider()
+  val form                    = formProvider()
+  val validTotalCider         = 45.67
+  val validPureAlcoholInCider = 23.45
 
-  lazy val dutySuspendedBeerRoute = routes.DutySuspendedBeerController.onPageLoad(NormalMode).url
-
-  val validTotalBeer         = 55.6
-  val validPureAlcoholInBeer = 47.5
+  lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
 
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
-      DutySuspendedBeerPage.toString -> Json.obj(
-        "totalBeer"         -> validTotalBeer,
-        "pureAlcoholInBeer" -> validPureAlcoholInBeer
+      DutySuspendedCiderPage.toString -> Json.obj(
+        "totalCider"         -> validTotalCider,
+        "pureAlcoholInCider" -> validPureAlcoholInCider
       )
     )
   )
 
-  "DutySuspendedBeer Controller" - {
+  "DutySuspendedCider Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, dutySuspendedBeerRoute)
+        val request = FakeRequest(GET, dutySuspendedCiderRoute)
 
-        val view = application.injector.instanceOf[DutySuspendedBeerView]
+        val view = application.injector.instanceOf[DutySuspendedCiderView]
 
         val result = route(application, request).value
 
@@ -81,20 +80,17 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, dutySuspendedBeerRoute)
+        val request = FakeRequest(GET, dutySuspendedCiderRoute)
 
-        val view = application.injector.instanceOf[DutySuspendedBeerView]
+        val view = application.injector.instanceOf[DutySuspendedCiderView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(DutySuspendedBeer(validTotalBeer, validPureAlcoholInBeer)),
+          form.fill(DutySuspendedCider(validTotalCider, validPureAlcoholInCider)),
           NormalMode
-        )(
-          request,
-          messages(application)
-        ).toString
+        )(request, messages(application)).toString
       }
     }
 
@@ -115,10 +111,10 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, dutySuspendedBeerRoute)
+          FakeRequest(POST, dutySuspendedCiderRoute)
             .withFormUrlEncodedBody(
-              ("totalBeer", validTotalBeer.toString),
-              ("pureAlcoholInBeer", validPureAlcoholInBeer.toString)
+              ("totalCider", validTotalCider.toString),
+              ("pureAlcoholInCider", validPureAlcoholInCider.toString)
             )
 
         val result = route(application, request).value
@@ -134,12 +130,12 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, dutySuspendedBeerRoute)
+          FakeRequest(POST, dutySuspendedCiderRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[DutySuspendedBeerView]
+        val view = application.injector.instanceOf[DutySuspendedCiderView]
 
         val result = route(application, request).value
 
@@ -153,7 +149,7 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, dutySuspendedBeerRoute)
+        val request = FakeRequest(GET, dutySuspendedCiderRoute)
 
         val result = route(application, request).value
 
@@ -168,8 +164,11 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, dutySuspendedBeerRoute)
-            .withFormUrlEncodedBody(("totalBeer", "5.6"), ("pureAlcoholInBeer", "47.5"))
+          FakeRequest(POST, dutySuspendedCiderRoute)
+            .withFormUrlEncodedBody(
+              ("totalCider", validTotalCider.toString),
+              ("pureAlcoholInCider", validPureAlcoholInCider.toString)
+            )
 
         val result = route(application, request).value
 
