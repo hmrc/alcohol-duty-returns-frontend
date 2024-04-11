@@ -31,47 +31,47 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("dutySuspendedBeer.title"))) {
+@layout(pageTitle = title(form, messages("dutySuspendedCider.title"))) {
 
-    @formHelper(action = controllers.dutySuspended.routes.DutySuspendedBeerController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.dutySuspended.routes.DutySuspendedCiderController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
-            id = "duty-suspended-beer-section",
+            id = "dutySuspendedCider-section",
             text = messages("section.dutySuspended"),
         )
 
-        @pageHeading(messages("dutySuspendedBeer.heading"))
+        @pageHeading(messages("dutySuspendedCider.heading"))
 
-        @paragraph(messages("dutySuspendedBeer.p1"))
+        @paragraph(messages("dutySuspendedCider.p1"))
 
-        @subHeading(messages("dutySuspendedBeer.subheading1"))
+        @subHeading(messages("dutySuspendedCider.subheading1"))
 
         @govukInput(
             InputViewModel(
-                field = form("totalBeer"),
-                label = LabelViewModel(messages("dutySuspendedBeer.subheading1")).asVisuallyHidden(),
+                field = form("totalCider"),
+                label = LabelViewModel(messages("dutySuspendedCider.subheading1")).asVisuallyHidden()
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.1"))))
+            .withHint(Hint(content = HtmlContent(messages("dutySuspendedCider.hint.1"))))
         )
 
-        @subHeading(messages("dutySuspendedBeer.subheading2"))
+        @subHeading(messages("dutySuspendedCider.subheading2"))
 
         @govukInput(
-        InputViewModel(
-        field = form("pureAlcoholInBeer"),
-        label = LabelViewModel(messages("dutySuspendedBeer.subheading2")).asVisuallyHidden(),
-        )
-        .asNumeric()
-        .withWidth(Fixed10)
-        .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-        .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.2"))))
+            InputViewModel(
+                field = form("pureAlcoholInCider"),
+                label = LabelViewModel(messages("dutySuspendedCider.subheading2")).asVisuallyHidden()
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withHint(Hint(content = HtmlContent(messages("dutySuspendedCider.hint.2"))))
         )
 
         @govukButton(
