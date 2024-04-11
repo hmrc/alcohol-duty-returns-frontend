@@ -45,7 +45,9 @@ class BeforeStartReturnController @Inject() (
       updatedUserAnswers <- cacheConnector.get(request.userId)
     } yield updatedUserAnswers match {
       case Some(ua) if ua.validUntil.isDefined =>
-        Ok(view())
+        val fromDate = "1 July 2024"
+        val toDate   = "31 July 2024"
+        Ok(view(fromDate, toDate))
       case _                                   => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

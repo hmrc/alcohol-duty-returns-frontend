@@ -92,8 +92,17 @@ taskList.section.returns.products.notStarted = Tell us about your products
 taskList.section.returns.products.inProgress = Change the products you’ve told us about
 taskList.section.returns.products.completed = Change the products you’ve told us about
 
-beforeStartReturn.title = beforeStartReturn
-beforeStartReturn.heading = beforeStartReturn
+beforeStartReturn.title = Alcohol Duty return
+beforeStartReturn.heading = Before you start
+beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty return for {0} to {1}.
+beforeStartReturn.text.guidance2 = You need to tell us if you need to declare duty on any alcoholic products for this period.
+beforeStartReturn.text.guidance3 = You can also use this service to tell us about any:
+beforeStartReturn.text.guidance3.usecase1 = products you under-declared in a past return
+beforeStartReturn.text.guidance3.usecase2 = products you over-declared in a past return
+beforeStartReturn.text.guidance3.usecase3 = spoilt alcohol
+beforeStartReturn.text.guidance3.usecase4 = products you need to claim drawback on
+beforeStartReturn.text.guidance3.usecase5 = repackaged draught products
+beforeStartReturn.text.guidance4 = After you tell us this information, we will calculate how much you owe for this period.
 
 # Beginning of product entry sub-journey
 
