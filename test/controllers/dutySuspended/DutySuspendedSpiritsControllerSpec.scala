@@ -40,8 +40,10 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DutySuspendedSpiritsFormProvider()
-  val form         = formProvider()
+  val formProvider              = new DutySuspendedSpiritsFormProvider()
+  val form                      = formProvider()
+  val validTotalSpirits         = 45.67
+  val validPureAlcoholInSpirits = 23.45
 
   lazy val dutySuspendedSpiritsRoute = routes.DutySuspendedSpiritsController.onPageLoad(NormalMode).url
 
@@ -49,8 +51,8 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
     userAnswersId,
     Json.obj(
       DutySuspendedSpiritsPage.toString -> Json.obj(
-        "totalSpirits"         -> 5.6,
-        "pureAlcoholInSpirits" -> 47.5
+        "totalSpirits"         -> validTotalSpirits,
+        "pureAlcoholInSpirits" -> validPureAlcoholInSpirits
       )
     )
   )
@@ -85,7 +87,10 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(DutySuspendedSpirits(5.6, 47.5)), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(DutySuspendedSpirits(validTotalSpirits, validPureAlcoholInSpirits)),
+          NormalMode
+        )(
           request,
           messages(application)
         ).toString
@@ -110,7 +115,10 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedSpiritsRoute)
-            .withFormUrlEncodedBody(("totalSpirits", "5.6"), ("pureAlcoholInSpirits", "47.5"))
+            .withFormUrlEncodedBody(
+              ("totalSpirits", validTotalSpirits.toString),
+              ("pureAlcoholInSpirits", validPureAlcoholInSpirits.toString)
+            )
 
         val result = route(application, request).value
 
@@ -160,7 +168,7 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedSpiritsRoute)
-            .withFormUrlEncodedBody(("totalSpirits", "5.6"), ("pureAlcoholInSpirits", "47.5"))
+            .withFormUrlEncodedBody(("totalSpirits", "value 1"), ("pureAlcoholInSpirits", "value 2"))
 
         val result = route(application, request).value
 
