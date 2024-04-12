@@ -19,16 +19,16 @@ package forms.dutySuspended
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
-import scala.collection.immutable.ArraySeq
+import scala.collection.compat.immutable.ArraySeq
 
-class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
+class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
 
-  val form = new DutySuspendedWineFormProvider()()
+  val form = new DutySuspendedCiderFormProvider()()
 
-  ".totalWine" - {
+  ".totalCider" - {
 
-    val fieldName   = "totalWine"
-    val requiredKey = "dutySuspendedWine.error.totalWine.required"
+    val fieldName   = "totalCider"
+    val requiredKey = "dutySuspendedCider.error.totalCider.required"
     val minimum     = 0.01
     val maximum     = 999999999.99
     val decimal     = 2
@@ -44,8 +44,8 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "dutySuspendedWine.error.totalWine.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.totalWine.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "dutySuspendedCider.error.totalCider.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.totalCider.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -53,7 +53,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "dutySuspendedWine.error.totalWine.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "dutySuspendedCider.error.totalCider.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -61,7 +61,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "dutySuspendedWine.error.totalWine.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "dutySuspendedCider.error.totalCider.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
@@ -71,10 +71,10 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
     )
   }
 
-  ".pureAlcoholInWine" - {
+  ".pureAlcoholInCider" - {
 
-    val fieldName   = "pureAlcoholInWine"
-    val requiredKey = "dutySuspendedWine.error.pureAlcoholInWine.required"
+    val fieldName   = "pureAlcoholInCider"
+    val requiredKey = "dutySuspendedCider.error.pureAlcoholInCider.required"
     val minimum     = 0.01
     val maximum     = 999999999.99
     val decimal     = 2
@@ -90,8 +90,8 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -100,7 +100,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
       minimum = minimum,
       decimal = decimal,
       expectedError =
-        FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.minimumRequired", ArraySeq(minimum))
+        FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -109,7 +109,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
       maximum = maximum,
       decimal = decimal,
       expectedError =
-        FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.maximumRequired", ArraySeq(maximum))
+        FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(

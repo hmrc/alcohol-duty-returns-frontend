@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package models.dutySuspended
+package pages.dutySuspended
 
-import play.api.libs.json._
+import models.dutySuspended.DutySuspendedCider
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case class DutySuspendedWine(totalWine: BigDecimal, pureAlcoholInWine: BigDecimal)
+case object DutySuspendedCiderPage extends QuestionPage[DutySuspendedCider] {
 
-object DutySuspendedWine {
-  implicit val format: OFormat[DutySuspendedWine] = Json.format[DutySuspendedWine]
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "dutySuspendedCider"
 }

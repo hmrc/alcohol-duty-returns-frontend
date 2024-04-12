@@ -243,14 +243,10 @@ dutySuspendedBeer.p1 = You need to tell us about your net quantity of beer that 
 dutySuspendedBeer.subheading1 = What is the total net quantity of duty suspended beer?
 dutySuspendedBeer.hint.1 = Enter litres of beer, up to 2 decimal places.
 dutySuspendedBeer.subheading2 = What is the total net quantity of pure alcohol in your duty suspended beer?
-dutySuspendedBeer.hint.2 = Enter litres pure alcohol in beer, to 2 decimal places.
-dutySuspendedBeer.totalBeer = totalBeer
-dutySuspendedBeer.pureAlcoholInBeer = pureAlcoholInBeer
+dutySuspendedBeer.hint.2 = Enter litres of pure alcohol in beer, up to 2 decimal places.
 dutySuspendedBeer.checkYourAnswersLabel = DutySuspendedBeer
 dutySuspendedBeer.error.totalBeer.required = Enter the volume of beer in litres
 dutySuspendedBeer.error.pureAlcoholInBeer.required = Enter the volume of pure alcohol in beer in litres
-dutySuspendedBeer.error.totalBeer.length = totalBeer must be 999999999.99 characters or less
-dutySuspendedBeer.error.pureAlcoholInBeer.length = pureAlcoholInBeer must be 999999999.99 characters or less
 dutySuspendedBeer.totalBeer.change.hidden = totalBeer
 dutySuspendedBeer.pureAlcoholInBeer.change.hidden = pureAlcoholInBeer
 dutySuspendedBeer.error.totalBeer.nonNumeric = The volume of beer must be a number
@@ -282,6 +278,27 @@ dutySuspendedWine.error.pureAlcoholInWine.nonNumeric =  The volume of pure alcoh
 dutySuspendedWine.error.pureAlcoholInWine.maximumRequired = The volume of pure alcohol in wine must be less than 100 million litres
 dutySuspendedWine.error.pureAlcoholInWine.minimumRequired = The volume of pure alcohol in wine must be higher than 0
 dutySuspendedWine.error.pureAlcoholInWine.twoDecimalPlaces = The volume of pure alcohol in wine must be up to 2 decimal places
+
+dutySuspendedCider.title = Tell us about your duty suspended cider
+dutySuspendedCider.heading = Tell us about your duty suspended cider
+dutySuspendedCider.p1 = You need to tell us about your net quantity of cider that is duty suspended, both as total litres and litres of pure alcohol (Lpa).
+dutySuspendedCider.subheading1 = What is the total net quantity of duty suspended cider?
+dutySuspendedCider.hint.1 = Enter litres of cider, up to 2 decimal places.
+dutySuspendedCider.subheading2 = What is the total net quantity of pure alcohol in your duty suspended cider?
+dutySuspendedCider.hint.2 = Enter litres of pure alcohol in cider, up to 2 decimal places.
+dutySuspendedCider.checkYourAnswersLabel = DutySuspendedCider
+dutySuspendedCider.error.totalCider.required = Enter the volume of cider in litres
+dutySuspendedCider.error.pureAlcoholInCider.required = Enter the volume of pure alcohol in cider in litres
+dutySuspendedCider.totalCider.change.hidden = totalCider
+dutySuspendedCider.pureAlcoholInCider.change.hidden = pureAlcoholInCider
+dutySuspendedCider.error.totalCider.nonNumeric = The volume of cider must be a number
+dutySuspendedCider.error.totalCider.maximumRequired = The volume of cider must be less than 100 million litres
+dutySuspendedCider.error.totalCider.minimumRequired = The volume of cider must be higher than 0
+dutySuspendedCider.error.totalCider.twoDecimalPlaces = The volume of cider must be up to 2 decimal places
+dutySuspendedCider.error.pureAlcoholInCider.nonNumeric =  The volume of pure alcohol in cider must be a number
+dutySuspendedCider.error.pureAlcoholInCider.maximumRequired = The volume of pure alcohol in cider must be less than 100 million litres
+dutySuspendedCider.error.pureAlcoholInCider.minimumRequired = The volume of pure alcohol in cider must be higher than 0
+dutySuspendedCider.error.pureAlcoholInCider.twoDecimalPlaces = The volume of pure alcohol in cider must be up to 2 decimal places
 
 dutySuspendedDeliveriesGuidance.title = Tell us about your duty suspended alcohol
 dutySuspendedDeliveriesGuidance.heading = Tell us about your duty suspended alcohol
@@ -581,3 +598,4 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
+

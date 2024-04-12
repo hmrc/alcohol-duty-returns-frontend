@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.dutySuspended.DutySuspendedWineFormProvider
 import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedWine
-import navigation.{FakeDeclareDutySuspendedDeliveriesNavigator, DeclareDutySuspendedDeliveriesNavigator}
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -41,17 +41,17 @@ class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DutySuspendedWineFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val dutySuspendedWineRoute = routes.DutySuspendedWineController.onPageLoad(NormalMode).url
-  val validTotalWine = 23.45
-  val validPureAlcoholInWine = 16.46
+  val validTotalWine              = 23.45
+  val validPureAlcoholInWine      = 16.46
 
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       DutySuspendedWinePage.toString -> Json.obj(
-        "totalWine" -> validTotalWine,
+        "totalWine"         -> validTotalWine,
         "pureAlcoholInWine" -> validPureAlcoholInWine
       )
     )
@@ -87,7 +87,10 @@ class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(DutySuspendedWine(validTotalWine, validPureAlcoholInWine)), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(DutySuspendedWine(validTotalWine, validPureAlcoholInWine)),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -100,7 +103,8 @@ class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
+            bind[DeclareDutySuspendedDeliveriesNavigator]
+              .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -108,7 +112,10 @@ class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedWineRoute)
-            .withFormUrlEncodedBody(("totalWine", validTotalWine.toString), ("pureAlcoholInWine", validPureAlcoholInWine.toString))
+            .withFormUrlEncodedBody(
+              ("totalWine", validTotalWine.toString),
+              ("pureAlcoholInWine", validPureAlcoholInWine.toString)
+            )
 
         val result = route(application, request).value
 
@@ -158,7 +165,10 @@ class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedWineRoute)
-            .withFormUrlEncodedBody(("totalWine", validTotalWine.toString), ("pureAlcoholInWine", validPureAlcoholInWine.toString))
+            .withFormUrlEncodedBody(
+              ("totalWine", validTotalWine.toString),
+              ("pureAlcoholInWine", validPureAlcoholInWine.toString)
+            )
 
         val result = route(application, request).value
 

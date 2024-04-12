@@ -18,8 +18,8 @@ package models.dutySuspended
 
 import play.api.libs.json._
 
-case class DutySuspendedWine(totalWine: BigDecimal, pureAlcoholInWine: BigDecimal)
+case class DutySuspendedCider(totalCider: BigDecimal, pureAlcoholInCider: BigDecimal)
 
-object DutySuspendedWine {
-  implicit val format: OFormat[DutySuspendedWine] = Json.format[DutySuspendedWine]
+object DutySuspendedCider {
+  implicit val format: OFormat[DutySuspendedCider] = Json.format[DutySuspendedCider]
 }

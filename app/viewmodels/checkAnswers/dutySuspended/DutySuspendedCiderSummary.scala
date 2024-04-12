@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.dutySuspended
 
 import controllers.dutySuspended.routes
 import models.{CheckMode, UserAnswers}
-import pages.dutySuspended.DutySuspendedWinePage
+import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -26,20 +26,20 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DutySuspendedWineSummary {
+object DutySuspendedCiderSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedWinePage).map { answer =>
-      val value = HtmlFormat.escape(answer.totalWine.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.pureAlcoholInWine.toString())
+    answers.get(DutySuspendedCiderPage).map { answer =>
+      val value = HtmlFormat.escape(answer.totalCider.toString()).toString + "<br/>" + HtmlFormat
+        .escape(answer.pureAlcoholInCider.toString())
         .toString
 
       SummaryListRowViewModel(
-        key = "dutySuspendedWine.checkYourAnswersLabel",
+        key = "dutySuspendedCider.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.DutySuspendedWineController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("dutySuspendedWine.change.hidden"))
+          ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspendedCider.change.hidden"))
         )
       )
     }
