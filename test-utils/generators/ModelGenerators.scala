@@ -58,6 +58,14 @@ trait ModelGenerators {
       } yield dutySuspended.DutySuspendedBeer(totalBeer, pureAlcoholInBeer)
     }
 
+  implicit lazy val arbitraryDutySuspendedSpirits: Arbitrary[dutySuspended.DutySuspendedSpirits] =
+    Arbitrary {
+      for {
+        totalSpirits         <- arbitrary[BigDecimal]
+        pureAlcoholInSpirits <- arbitrary[BigDecimal]
+      } yield dutySuspended.DutySuspendedSpirits(totalSpirits, pureAlcoholInSpirits)
+    }
+
   implicit lazy val arbitraryAdjustmentType: Arbitrary[adjustment.AdjustmentType] =
     Arbitrary {
       Gen.oneOf(adjustment.AdjustmentType.values.toSeq)
