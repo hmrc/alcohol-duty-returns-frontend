@@ -44,7 +44,10 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     validUntil = Some(validUntil)
   )
 
-  private val periodKey = "24AA"
+  private val periodKey       = "24AC"
+  private val periodStartDate = "1 Mar 2024"
+  private val periodEndDate   = "31 Mar 2024"
+  private val badPeriodKey    = "24A"
 
   "BeforeStartReturn Controller" - {
 
@@ -68,7 +71,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[BeforeStartReturnView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(periodStartDate, periodEndDate)(request, messages(application)).toString
       }
     }
 
@@ -88,7 +91,25 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[BeforeStartReturnView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(periodStartDate, periodEndDate)(request, messages(application)).toString
+      }
+    }
+
+    "must redirect to the journey recovery controller if a bad period key is supplied" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(badPeriodKey).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

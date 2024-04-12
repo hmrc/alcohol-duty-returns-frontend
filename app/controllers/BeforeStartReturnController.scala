@@ -18,12 +18,14 @@ package controllers
 
 import connectors.CacheConnector
 import controllers.actions._
-import models.UserAnswers
+import models.{ReturnPeriod, UserAnswers}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.BeforeStartReturnView
 
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
@@ -45,9 +47,15 @@ class BeforeStartReturnController @Inject() (
       updatedUserAnswers <- cacheConnector.get(request.userId)
     } yield updatedUserAnswers match {
       case Some(ua) if ua.validUntil.isDefined =>
-        val fromDate = "1 July 2024"
-        val toDate   = "31 July 2024"
-        Ok(view(fromDate, toDate))
+        ReturnPeriod.fromPeriodKey(periodKey) match {
+          case Left(error)         =>
+            // TODO: Log the error here
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          case Right(returnPeriod) =>
+            val fromDate = returnPeriod.firstDateViewString()
+            val toDate   = returnPeriod.lastDateViewString()
+            Ok(view(fromDate, toDate))
+        }
       case _                                   => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
