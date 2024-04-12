@@ -19,7 +19,7 @@ package models
 import java.time.{LocalDate, YearMonth}
 import java.time.format.DateTimeFormatter
 
-case class ReturnPeriod(yearMonth: YearMonth) {
+case class ReturnPeriod(periodKey: String, yearMonth: YearMonth) {
   def firstDateViewString(): String = ReturnPeriod.toViewString(yearMonth.atDay(1))
   def lastDateViewString(): String  = ReturnPeriod.toViewString(yearMonth.atEndOfMonth)
 }
@@ -27,7 +27,7 @@ case class ReturnPeriod(yearMonth: YearMonth) {
 object ReturnPeriod {
   private val viewDateFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
 
-  def apply(year: Int, month: Int): ReturnPeriod = ReturnPeriod(YearMonth.of(year, month))
+  def apply(periodKey: String, year: Int, month: Int): ReturnPeriod = ReturnPeriod(periodKey, YearMonth.of(year, month))
 
   private def toViewString(date: LocalDate) = viewDateFormatter.format(date)
 
@@ -43,12 +43,12 @@ object ReturnPeriod {
     case _                         => true
   }
 
-  def fromPeriodKey(key: String): Either[String, ReturnPeriod] =
-    if (validatePeriodKey(key)) {
-      val year  = (key.charAt(0) - '0') * 10 + (key.charAt(1) - '0') + 2000
-      val month = key.charAt(3) - 'A' + 1
-      Right(ReturnPeriod(year, month))
+  def fromPeriodKey(periodKey: String): Either[String, ReturnPeriod] =
+    if (validatePeriodKey(periodKey)) {
+      val year  = (periodKey.charAt(0) - '0') * 10 + (periodKey.charAt(1) - '0') + 2000
+      val month = periodKey.charAt(3) - 'A' + 1
+      Right(ReturnPeriod(periodKey, year, month))
     } else {
-      Left("Period key should be 4 characters yyAc where yy is year, A is a literal A and c is month character A-L")
+      Left(s"Period key should be 4 characters yyAc where yy is year, A is a literal A and c is month character A-L. Received $periodKey")
     }
 }

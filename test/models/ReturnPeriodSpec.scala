@@ -8,17 +8,18 @@ class ReturnPeriodSpec extends SpecBase {
   "ReturnPeriod" - {
     "when apply is called" - {
       "should construct a correct ReturnPeriod" in {
-        ReturnPeriod.apply(2024, 5).yearMonth mustBe YearMonth.of(2024, 5)
+        ReturnPeriod.apply("24AE", 2024, 5).yearMonth mustBe YearMonth.of(2024, 5)
+        ReturnPeriod.apply("24AE", 2024, 5).periodKey mustBe "24AE"
       }
     }
 
     "should return the correct view string" - {
       "for the first date of the period" in {
-        ReturnPeriod.apply(2024, 5).firstDateViewString() mustBe "1 May 2024"
+        ReturnPeriod.apply("24AE", 2024, 5).firstDateViewString() mustBe "1 May 2024"
       }
 
       "for the last date of the period" in {
-        ReturnPeriod.apply(2024, 5).lastDateViewString() mustBe "31 May 2024"
+        ReturnPeriod.apply("24AE", 2024, 5).lastDateViewString() mustBe "31 May 2024"
       }
     }
 
@@ -64,9 +65,9 @@ class ReturnPeriodSpec extends SpecBase {
 
       "return a correct ReturnPeriod when" - {
         "a valid period key is passed" in {
-          ReturnPeriod.fromPeriodKey("24AA") mustBe Right(ReturnPeriod(2024, 1))
-          ReturnPeriod.fromPeriodKey("24AL") mustBe Right(ReturnPeriod(2024, 12))
-          ReturnPeriod.fromPeriodKey("28AC") mustBe Right(ReturnPeriod(2028, 3))
+          ReturnPeriod.fromPeriodKey("24AA") mustBe Right(ReturnPeriod("24AA", 2024, 1))
+          ReturnPeriod.fromPeriodKey("24AL") mustBe Right(ReturnPeriod("24AL", 2024, 12))
+          ReturnPeriod.fromPeriodKey("28AC") mustBe Right(ReturnPeriod("28AC", 2028, 3))
         }
       }
     }
