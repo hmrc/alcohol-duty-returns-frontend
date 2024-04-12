@@ -279,13 +279,13 @@ dutySuspendedCider.error.pureAlcoholInCider.maximumRequired = The volume of pure
 dutySuspendedCider.error.pureAlcoholInCider.minimumRequired = The volume of pure alcohol in cider must be higher than 0
 dutySuspendedCider.error.pureAlcoholInCider.twoDecimalPlaces = The volume of pure alcohol in cider must be up to 2 decimal places
 
-dutySuspendedOtherFermented.title = Tell us about your duty suspended other fermented products
-dutySuspendedOtherFermented.heading = Tell us about your duty suspended other fermented products
+dutySuspendedOtherFermented.title = Tell us about your other fermented products with duty suspended
+dutySuspendedOtherFermented.heading = Tell us about your other fermented products with duty suspended
 dutySuspendedOtherFermented.p1 = You need to tell us about your net quantity of other fermented products that is duty suspended, both as total litres and litres of pure alcohol (Lpa).
 dutySuspendedOtherFermented.subheading1 = What is the total net quantity of duty suspended other fermented products?
 dutySuspendedOtherFermented.hint.1 = Enter litres of other fermented products, up to 2 decimal places.
-dutySuspendedOtherFermented.subheading2 = What is the total net quantity of pure alcohol in your duty suspended other fermented products?
-dutySuspendedOtherFermented.hint.2 = Enter litres pure alcohol in other fermented products, to 2 decimal places.
+dutySuspendedOtherFermented.subheading2 = What is the total net quantity of pure alcohol in your other fermented products with duty suspended?
+dutySuspendedOtherFermented.hint.2 = Enter litres of pure alcohol in other fermented products, up to 2 decimal places.
 dutySuspendedOtherFermented.totalOtherFermented = totalOtherFermented
 dutySuspendedOtherFermented.pureAlcoholInOtherFermented = pureAlcoholInOtherFermented
 dutySuspendedOtherFermented.checkYourAnswersLabel = DutySuspendedOtherFermented
