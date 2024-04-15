@@ -18,6 +18,15 @@ import play.api.libs.json._
 
 package object models {
 
+  implicit def optionFormat[T: Format]: Format[Option[T]] = new Format[Option[T]] {
+    override def reads(json: JsValue): JsResult[Option[T]] = json.validateOpt[T]
+
+    override def writes(o: Option[T]) = o match {
+      case Some(t) ⇒ implicitly[Writes[T]].writes(t)
+      case None ⇒ JsNull
+    }
+  }
+
   implicit class RichJsObject(jsObject: JsObject) {
 
     def setObject(path: JsPath, value: JsValue): JsResult[JsObject] =

@@ -16,6 +16,8 @@
 
 package models
 
+import play.api.libs.json.{Format, JsResult, JsString, JsValue}
+
 import java.time.{LocalDate, YearMonth}
 import java.time.format.DateTimeFormatter
 
@@ -49,6 +51,23 @@ object ReturnPeriod {
       val month = periodKey.charAt(3) - 'A' + 1
       Right(ReturnPeriod(periodKey, year, month))
     } else {
-      Left(s"Period key should be 4 characters yyAc where yy is year, A is a literal A and c is month character A-L. Received $periodKey")
+      Left(
+        s"Period key should be 4 characters yyAc where yy is year, A is a literal A and c is month character A-L. Received $periodKey"
+      )
     }
+
+  implicit val format: Format[ReturnPeriod] = new Format[ReturnPeriod] {
+    override def reads(json: JsValue): JsResult[ReturnPeriod] =
+      json
+        .validate[String]
+        .map(
+          fromPeriodKey(_) match {
+            case Right(rp)   => rp
+            case Left(error) => throw new IllegalArgumentException(error)
+          }
+        )
+
+    override def writes(returnPeriod: ReturnPeriod): JsValue =
+      JsString(returnPeriod.periodKey)
+  }
 }

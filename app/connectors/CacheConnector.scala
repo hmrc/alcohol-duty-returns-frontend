@@ -16,10 +16,11 @@
 
 package connectors
 
+import cats.data.EitherT
 import config.FrontendAppConfig
 import models.UserAnswers
 import play.api.libs.json.Writes
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpReadsInstances, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,4 +41,5 @@ class CacheConnector @Inject() (
       hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
       implicitly
     )
+
 }

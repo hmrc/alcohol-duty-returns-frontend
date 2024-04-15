@@ -77,6 +77,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCacheSetUrl(internalId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/cache/set/$internalId"
 
+  def adrReturnGetUrl(): String =
+    s"$adrReturnsHost/alcohol-duty-returns/returns/get"
+
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart
 
