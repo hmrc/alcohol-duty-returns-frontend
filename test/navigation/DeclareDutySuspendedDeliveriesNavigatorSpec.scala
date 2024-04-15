@@ -47,6 +47,42 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         ) mustBe routes.IndexController.onPageLoad
       }
 
+      "must go from the duty suspended deliveries beer page to Duty suspended deliveries cider page" in {
+
+        navigator.nextPage(
+          pages.dutySuspended.DutySuspendedBeerPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)
+      }
+
+      "must go from the duty suspended deliveries cider page to Duty suspended deliveries wine page" in {
+
+        navigator.nextPage(
+          pages.dutySuspended.DutySuspendedCiderPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)
+      }
+
+      "must go from the duty suspended deliveries wine page to Duty suspended deliveries spirits page" in {
+
+        navigator.nextPage(
+          pages.dutySuspended.DutySuspendedWinePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)
+      }
+
+      "must go from the duty suspended deliveries spirits page to Duty suspended deliveries other fermented products page" in {
+
+        navigator.nextPage(
+          pages.dutySuspended.DutySuspendedSpiritsPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
+      }
+
       "must go from the Declare duty suspended deliveries question page to journey recovery page if the answer there is not an answer" in {
 
         navigator.nextPage(

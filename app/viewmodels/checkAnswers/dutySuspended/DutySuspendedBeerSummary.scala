@@ -20,27 +20,35 @@ import controllers.dutySuspended.routes
 import models.{CheckMode, UserAnswers}
 import pages.dutySuspended.DutySuspendedBeerPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object DutySuspendedBeerSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def totalVolumeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DutySuspendedBeerPage).map { answer =>
-      val value = HtmlFormat.escape(answer.totalBeer.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.pureAlcoholInBeer.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "dutySuspendedBeer.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "dutySuspendedBeer.totalBeer.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.totalBeer.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedBeerController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedBeer.change.hidden"))
         )
       )
+
+    }
+
+  def pureAlcoholRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(DutySuspendedBeerPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "dutySuspendedBeer.pureAlcoholInBeer.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.pureAlcoholInBeer.toString} ${messages("site.unit.litres")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedBeerController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspendedBeer.change.hidden"))
+        )
+      )
+
     }
 }

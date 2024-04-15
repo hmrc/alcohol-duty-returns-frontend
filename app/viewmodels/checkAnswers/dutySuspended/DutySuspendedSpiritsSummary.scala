@@ -20,23 +20,29 @@ import controllers.dutySuspended.routes
 import models.{CheckMode, UserAnswers}
 import pages.dutySuspended.DutySuspendedSpiritsPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object DutySuspendedSpiritsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def totalVolumeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DutySuspendedSpiritsPage).map { answer =>
-      val value = HtmlFormat.escape(answer.totalSpirits.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.pureAlcoholInSpirits.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "dutySuspendedSpirits.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "dutySuspendedSpirits.totalSpirits.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.totalSpirits.toString} ${messages("site.unit.litres")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspendedSpirits.change.hidden"))
+        )
+      )
+    }
+
+  def pureAlcoholRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(DutySuspendedSpiritsPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "dutySuspendedSpirits.pureAlcoholInSpirits.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.pureAlcoholInSpirits.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedSpirits.change.hidden"))

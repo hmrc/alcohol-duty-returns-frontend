@@ -20,23 +20,29 @@ import controllers.dutySuspended.routes
 import models.{CheckMode, UserAnswers}
 import pages.dutySuspended.DutySuspendedOtherFermentedPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object DutySuspendedOtherFermentedSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def totalVolumeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DutySuspendedOtherFermentedPage).map { answer =>
-      val value = HtmlFormat.escape(answer.totalOtherFermented.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.pureAlcoholInOtherFermented.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "dutySuspendedOtherFermented.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "dutySuspendedOtherFermented.totalOtherFermented.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.totalOtherFermented.toString} ${messages("site.unit.litres")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.change.hidden"))
+        )
+      )
+    }
+
+  def pureAlcoholRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(DutySuspendedOtherFermentedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "dutySuspendedOtherFermented.pureAlcoholInOtherFermented.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.pureAlcoholInOtherFermented.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.change.hidden"))
