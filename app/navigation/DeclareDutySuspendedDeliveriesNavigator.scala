@@ -31,6 +31,8 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
       declareDutySuspendedDeliveriesQuestionPageRoute
     case pages.dutySuspended.DutySuspendedBeerPage                       =>
       _ => controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)
+    case pages.dutySuspended.DutySuspendedCiderPage                      =>
+      _ => controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
     case pages.dutySuspended.DutySuspendedDeliveriesPage                 =>
