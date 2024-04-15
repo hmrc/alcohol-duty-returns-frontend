@@ -97,10 +97,10 @@ POST       /tell-us-about-your-cider-in-duty-suspense                        con
 GET        /change-tell-us-about-your-cider-in-duty-suspense                  controllers.dutySuspended.DutySuspendedCiderController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-your-cider-in-duty-suspense                  controllers.dutySuspended.DutySuspendedCiderController.onSubmit(mode: Mode = CheckMode)
 
-GET        /tell-us-about-your-spirits-in-suspense                        controllers.dutySuspended.DutySuspendedSpiritsController.onPageLoad(mode: Mode = NormalMode)
-POST       /tell-us-about-your-spirits-in-suspense                        controllers.dutySuspended.DutySuspendedSpiritsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-tell-us-about-your-spirits-in-suspense                  controllers.dutySuspended.DutySuspendedSpiritsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-tell-us-about-your-spirits-in-suspense                  controllers.dutySuspended.DutySuspendedSpiritsController.onSubmit(mode: Mode = CheckMode)
+GET        /tell-us-about-your-spirits-in-duty-suspense                        controllers.dutySuspended.DutySuspendedSpiritsController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-your-spirits-in-duty-suspense                        controllers.dutySuspended.DutySuspendedSpiritsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-your-spirits-in-duty-suspense                  controllers.dutySuspended.DutySuspendedSpiritsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-your-spirits-in-duty-suspense                  controllers.dutySuspended.DutySuspendedSpiritsController.onSubmit(mode: Mode = CheckMode)
 
 GET        /how-much-have-you-delivered-duty-suspended-outside-of-the-uk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-have-you-delivered-duty-suspended-outside-of-the-uk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
