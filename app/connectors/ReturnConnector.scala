@@ -50,8 +50,8 @@ class ReturnConnector @Inject() (
           response.json
             .asOpt[Return]
             .fold[Either[ReturnError, Return]](Left(ReturnParsingError))(Right(_))
-        case Right(response) if response.status == LOCKED => Left(ReturnLocked)
-        case Right(response) if response.status == NOT_FOUND => Left(ReturnNotFound)
+        case Left(errorResponse) if errorResponse.statusCode == LOCKED => Left(ReturnLocked)
+        case Left(errorResponse) if errorResponse.statusCode == NOT_FOUND => Left(ReturnNotFound)
         case _                                            => Left(ReturnUpstreamError)
       }
   )
