@@ -348,6 +348,29 @@ dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty
 dutySuspendedDeliveries.error.twoDecimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
 dutySuspendedDeliveries.change.hidden = amount delivered duty suspended in the UK
 
+dutySuspendedSpirits.title = Tell us about your duty suspended spirits
+dutySuspendedSpirits.heading = Tell us about your duty suspended spirits
+dutySuspendedSpirits.p1 = You need to tell us about your net quantity of spirits that is duty suspended, both as total litres and litres of pure alcohol (Lpa).
+dutySuspendedSpirits.subheading1 = What is the total net quantity of duty suspended spirits?
+dutySuspendedSpirits.hint.1 = Enter litres of spirits, up to 2 decimal places.
+dutySuspendedSpirits.subheading2 = What is the total net quantity of pure alcohol in your duty suspended spirits?
+dutySuspendedSpirits.hint.2 = Enter litres of pure alcohol in spirits, up to 2 decimal places.
+dutySuspendedSpirits.checkYourAnswersLabel = DutySuspendedSpirits
+dutySuspendedSpirits.error.totalSpirits.required = Enter the volume of spirits in litres
+dutySuspendedSpirits.error.pureAlcoholInSpirits.required = Enter the volume of pure alcohol in spirits in litres
+dutySuspendedSpirits.error.totalSpirits.length = totalSpirits must be 999999999.99 characters or less
+dutySuspendedSpirits.error.pureAlcoholInSpirits.length = pureAlcoholInSpirits must be 999999999.99 characters or less
+dutySuspendedSpirits.totalSpirits.change.hidden = total spirits
+dutySuspendedSpirits.pureAlcoholInSpirits.change.hidden = pureAlcoholInSpirits
+dutySuspendedSpirits.error.totalSpirits.nonNumeric = The volume of spirits must be a number
+dutySuspendedSpirits.error.totalSpirits.maximumRequired = The volume of spirits must be less than 100 million litres
+dutySuspendedSpirits.error.totalSpirits.minimumRequired = The volume of spirits must be higher than 0
+dutySuspendedSpirits.error.totalSpirits.twoDecimalPlaces = The volume of spirits must be up to 2 decimal places
+dutySuspendedSpirits.error.pureAlcoholInSpirits.nonNumeric =  The volume of pure alcohol in spirits must be a number
+dutySuspendedSpirits.error.pureAlcoholInSpirits.maximumRequired = The volume of pure alcohol in spirits must be less than 100 million litres
+dutySuspendedSpirits.error.pureAlcoholInSpirits.minimumRequired = The volume of pure alcohol in spirits must be higher than 0
+dutySuspendedSpirits.error.pureAlcoholInSpirits.twoDecimalPlaces = The volume of pure alcohol in spirits must be up to 2 decimal places
+
 # End of of duty suspended deliveries sub-journey
 
 
