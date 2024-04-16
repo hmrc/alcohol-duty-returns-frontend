@@ -381,16 +381,16 @@ dutySuspendedSpirits.p1 = You need to tell us about your net quantity of spirits
 dutySuspendedSpirits.subheading1 = What is the total net quantity of duty suspended spirits?
 dutySuspendedSpirits.hint.1 = Enter litres of spirits, up to 2 decimal places.
 dutySuspendedSpirits.subheading2 = What is the total net quantity of pure alcohol in your duty suspended spirits?
-dutySuspendedSpirits.hint.2 = Enter litres pure alcohol in spirits, to 2 decimal places.
 dutySuspendedSpirits.totalSpirits = totalSpirits
 dutySuspendedSpirits.pureAlcoholInSpirits = pureAlcoholInSpirits
 dutySuspendedSpirits.totalSpirits.checkYourAnswersLabel = Total net quantity of duty suspended spirits
 dutySuspendedSpirits.pureAlcoholInSpirits.checkYourAnswersLabel = Total net quantity of pure alcohol in your duty suspended spirits
+dutySuspendedSpirits.hint.2 = Enter litres of pure alcohol in spirits, up to 2 decimal places.
 dutySuspendedSpirits.error.totalSpirits.required = Enter the volume of spirits in litres
 dutySuspendedSpirits.error.pureAlcoholInSpirits.required = Enter the volume of pure alcohol in spirits in litres
 dutySuspendedSpirits.error.totalSpirits.length = totalSpirits must be 999999999.99 characters or less
 dutySuspendedSpirits.error.pureAlcoholInSpirits.length = pureAlcoholInSpirits must be 999999999.99 characters or less
-dutySuspendedSpirits.totalSpirits.change.hidden = totalSpirits
+dutySuspendedSpirits.totalSpirits.change.hidden = total spirits
 dutySuspendedSpirits.pureAlcoholInSpirits.change.hidden = pureAlcoholInSpirits
 dutySuspendedSpirits.error.totalSpirits.nonNumeric = The volume of spirits must be a number
 dutySuspendedSpirits.error.totalSpirits.maximumRequired = The volume of spirits must be less than 100 million litres
@@ -651,3 +651,4 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
+
