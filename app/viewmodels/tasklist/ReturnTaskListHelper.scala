@@ -17,12 +17,14 @@
 package viewmodels.tasklist
 
 import models.{CheckMode, NormalMode, UserAnswers}
-import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
+import pages.Page
+import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{DeclareAlcoholDutyQuestionPage, ProductEntryListPage, ProductListPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
+import scala.collection.immutable.Map
 
 object ReturnTaskListHelper {
   def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
@@ -131,25 +133,24 @@ object ReturnTaskListHelper {
         )
     }
 
-  private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem =
-    (userAnswers.get(ProductListPage), userAnswers.get(ProductEntryListPage)) match {
-      case (Some(false), Some(list)) if list.nonEmpty =>
-        TaskListItem(
-          title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.completed"))),
-          status = AlcholDutyTaskListItemStatus.completed,
-          href = Some(controllers.productEntry.routes.ProductListController.onPageLoad().url)
-        )
-      case (_, Some(list)) if list.nonEmpty           =>
-        TaskListItem(
-          title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.inProgress"))),
-          status = AlcholDutyTaskListItemStatus.inProgress,
-          href = Some(controllers.productEntry.routes.ProductListController.onPageLoad().url)
-        )
-      case (_, _)                                     =>
-        TaskListItem(
-          title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.notStarted"))),
-          status = AlcholDutyTaskListItemStatus.notStarted,
-          href = Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url)
-        )
+  private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
+    val beer         = userAnswers.get(DutySuspendedBeerPage).isDefined
+    val cider        = userAnswers.get(DutySuspendedCiderPage).isDefined
+    val wine = userAnswers.get(DutySuspendedWinePage).isDefined
+    val spirits = userAnswers.get(DutySuspendedSpiritsPage).isDefined
+    val definedCount = Seq(beer, cider, wine, spirits).count(identity)
+
+        definedCount match {
+          case 0 => "Not Started"
+          case 5 => "Complete"
+          case _ => "In Progress"
+        }
+
     }
+    TaskListItem(
+      title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.notStarted"))),
+      status = AlcholDutyTaskListItemStatus.notStarted,
+      href = Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url)
+    )
+
 }
