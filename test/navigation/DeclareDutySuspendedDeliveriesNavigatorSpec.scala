@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers._
 import models._
 import pages._
+import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 
 class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
 
@@ -44,7 +45,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
           UserAnswers("id").set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
-        ) mustBe routes.IndexController.onPageLoad
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from the duty suspended deliveries beer page to Duty suspended deliveries cider page" in {
@@ -121,6 +122,20 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
           CheckMode,
           UserAnswers("id")
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+      }
+
+      "must go from the Declare DSD question page to the task list when the answer is No" in {
+        navigator.nextPage(
+          DeclareDutySuspendedDeliveriesQuestionPage,
+          CheckMode,
+          UserAnswers("id")
+            .set(
+              DeclareDutySuspendedDeliveriesQuestionPage,
+              false
+            )
+            .success
+            .value
+        ) mustBe routes.TaskListController.onPageLoad
       }
     }
   }

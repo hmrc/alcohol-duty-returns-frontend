@@ -19,9 +19,10 @@ package controllers.dutySuspended
 import connectors.CacheConnector
 import controllers.actions._
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.DeclareDutySuspendedDeliveriesNavigator
-import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
+import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductEntryListPage, ProductListPage, ProductNamePage, ProductVolumePage, SmallProducerReliefQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -29,6 +30,7 @@ import views.html.dutySuspended.DeclareDutySuspendedDeliveriesQuestionView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   override val messagesApi: MessagesApi,
@@ -63,12 +65,28 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <-
+              updatedAnswers   <-
                 Future.fromTry(
                   request.userAnswers.set(DeclareDutySuspendedDeliveriesQuestionPage, value)
                 )
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, updatedAnswers))
+              filterUserAnswer <- Future.fromTry(filterDSDQuestionAnswer(updatedAnswers, value))
+              _                <- cacheConnector.set(filterUserAnswer)
+            } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, filterUserAnswer))
         )
   }
+
+  def filterDSDQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
+    if (value) {
+      Try(userAnswer)
+    } else {
+      userAnswer.remove(
+        List(
+          DutySuspendedBeerPage,
+          DutySuspendedCiderPage,
+          DutySuspendedWinePage,
+          DutySuspendedSpiritsPage,
+          DutySuspendedOtherFermentedPage
+        )
+      )
+    }
 }
