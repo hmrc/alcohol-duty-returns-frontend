@@ -18,12 +18,13 @@ package viewmodels.tasklist
 
 import models.{CheckMode, NormalMode, UserAnswers}
 import pages.Page
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{DeclareAlcoholDutyQuestionPage, ProductEntryListPage, ProductListPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
+
 import scala.collection.immutable.Map
 
 object ReturnTaskListHelper {
@@ -134,23 +135,36 @@ object ReturnTaskListHelper {
     }
 
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
-    val beer         = userAnswers.get(DutySuspendedBeerPage).isDefined
-    val cider        = userAnswers.get(DutySuspendedCiderPage).isDefined
-    val wine         = userAnswers.get(DutySuspendedWinePage).isDefined
-    val spirits      = userAnswers.get(DutySuspendedSpiritsPage).isDefined
-    val definedCount = Seq(beer, cider, wine, spirits).count(identity)
+    val beer           = userAnswers.get(DutySuspendedBeerPage).isDefined
+    val cider          = userAnswers.get(DutySuspendedCiderPage).isDefined
+    val wine           = userAnswers.get(DutySuspendedWinePage).isDefined
+    val spirits        = userAnswers.get(DutySuspendedSpiritsPage).isDefined
+    val otherFermented = userAnswers.get(DutySuspendedOtherFermentedPage).isDefined
+    val definedCount   = Seq(beer, cider, wine, spirits, otherFermented).count(identity)
 
     definedCount match {
-      case 0 => "Not Started"
-      case 5 => "Complete"
-      case _ => "In Progress"
-    }
+      case 0 =>
+        TaskListItem(
+          title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.notStarted"))),
+          status = AlcholDutyTaskListItemStatus.notStarted,
+          href = Some(controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url)
+        )
 
+      case 5 =>
+        TaskListItem(
+          title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.completed"))),
+          status = AlcholDutyTaskListItemStatus.completed,
+          href = Some(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url)
+        )
+
+      case _ =>
+        TaskListItem(
+          title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.inProgress"))),
+          status = AlcholDutyTaskListItemStatus.inProgress,
+          href = Some(controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url)
+        )
+
+    }
   }
-  TaskListItem(
-    title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.notStarted"))),
-    status = AlcholDutyTaskListItemStatus.notStarted,
-    href = Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url)
-  )
 
 }
