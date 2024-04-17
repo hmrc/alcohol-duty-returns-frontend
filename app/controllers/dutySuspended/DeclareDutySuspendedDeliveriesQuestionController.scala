@@ -22,7 +22,6 @@ import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.{Mode, UserAnswers}
 import navigation.DeclareDutySuspendedDeliveriesNavigator
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductEntryListPage, ProductListPage, ProductNamePage, ProductVolumePage, SmallProducerReliefQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
