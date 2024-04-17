@@ -136,21 +136,21 @@ object ReturnTaskListHelper {
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val beer         = userAnswers.get(DutySuspendedBeerPage).isDefined
     val cider        = userAnswers.get(DutySuspendedCiderPage).isDefined
-    val wine = userAnswers.get(DutySuspendedWinePage).isDefined
-    val spirits = userAnswers.get(DutySuspendedSpiritsPage).isDefined
+    val wine         = userAnswers.get(DutySuspendedWinePage).isDefined
+    val spirits      = userAnswers.get(DutySuspendedSpiritsPage).isDefined
     val definedCount = Seq(beer, cider, wine, spirits).count(identity)
 
-        definedCount match {
-          case 0 => "Not Started"
-          case 5 => "Complete"
-          case _ => "In Progress"
-        }
-
+    definedCount match {
+      case 0 => "Not Started"
+      case 5 => "Complete"
+      case _ => "In Progress"
     }
-    TaskListItem(
-      title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.notStarted"))),
-      status = AlcholDutyTaskListItemStatus.notStarted,
-      href = Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url)
-    )
+
+  }
+  TaskListItem(
+    title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.notStarted"))),
+    status = AlcholDutyTaskListItemStatus.notStarted,
+    href = Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url)
+  )
 
 }
