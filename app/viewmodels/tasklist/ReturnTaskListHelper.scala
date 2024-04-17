@@ -17,15 +17,12 @@
 package viewmodels.tasklist
 
 import models.{CheckMode, NormalMode, UserAnswers}
-import pages.Page
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{DeclareAlcoholDutyQuestionPage, ProductEntryListPage, ProductListPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
-
-import scala.collection.immutable.Map
 
 object ReturnTaskListHelper {
   def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
@@ -112,6 +109,7 @@ object ReturnTaskListHelper {
       statusCompleted = AlcholDutyTaskListItemStatus.completed
     )
   }
+
   private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem =
     (userAnswers.get(ProductListPage), userAnswers.get(ProductEntryListPage)) match {
       case (Some(false), Some(list)) if list.nonEmpty =>
