@@ -33,7 +33,7 @@ object DutySuspendedSpiritsSummary {
         value = ValueViewModel(s"${answer.totalSpirits.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("dutySuspendedSpirits.change.hidden"))
+            .withVisuallyHiddenText(messages("dutySuspendedSpirits.totalSpirits.change.hidden"))
         )
       )
     }
@@ -45,7 +45,7 @@ object DutySuspendedSpiritsSummary {
         value = ValueViewModel(s"${answer.pureAlcoholInSpirits.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("dutySuspendedSpirits.change.hidden"))
+            .withVisuallyHiddenText(messages("dutySuspendedSpirits.pureAlcoholInSpirits.change.hidden"))
         )
       )
     }

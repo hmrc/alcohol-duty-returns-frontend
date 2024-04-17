@@ -33,7 +33,7 @@ object DutySuspendedOtherFermentedSummary {
         value = ValueViewModel(s"${answer.totalOtherFermented.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.change.hidden"))
+            .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.totalOtherFermented.change.hidden"))
         )
       )
     }
@@ -45,7 +45,7 @@ object DutySuspendedOtherFermentedSummary {
         value = ValueViewModel(s"${answer.pureAlcoholInOtherFermented.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.change.hidden"))
+            .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.pureAlcoholInOtherFermented.change.hidden"))
         )
       )
     }
