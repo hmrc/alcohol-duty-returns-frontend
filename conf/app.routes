@@ -219,7 +219,6 @@ POST       /change-how-much-is-the-adjustment                        controllers
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
 
-GET        /tell-us-about-your-spirits-in-suspense                        controllers.dutySuspended.DutySuspendedSpiritsController.onPageLoad(mode: Mode = NormalMode)
-POST       /tell-us-about-your-spirits-in-suspense                        controllers.dutySuspended.DutySuspendedSpiritsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-tell-us-about-your-spirits-in-suspense                  controllers.dutySuspended.DutySuspendedSpiritsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-tell-us-about-your-spirits-in-suspense                  controllers.dutySuspended.DutySuspendedSpiritsController.onSubmit(mode: Mode = CheckMode)
+
+
+
