@@ -61,6 +61,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
 
+  val enrolmentServiceName = configuration.get[String]("enrolment.serviceName")
+
+  val enrolmentIdentifierKey = configuration.get[String]("enrolment.identifierKey")
+
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en"),
     "cy" -> Lang("cy")
@@ -71,14 +75,14 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  def adrCacheGetUrl(internalId: String): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/get/$internalId"
+  def adrCacheGetUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/cache/get/$appaId/$periodKey"
 
-  def adrCacheSetUrl(internalId: String): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/set/$internalId"
+  def adrCacheSetUrl(): String =
+    s"$adrReturnsHost/alcohol-duty-returns/cache/set"
 
-  def adrReturnGetUrl(): String =
-    s"$adrReturnsHost/alcohol-duty-returns/returns/get"
+  def adrCacheAddUrl(): String =
+    s"$adrReturnsHost/alcohol-duty-returns/cache/add"
 
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart
@@ -91,4 +95,5 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCalculatorRateTypeUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRateTypeUrlPart
 
+  val periodKeySessionKey: String = "period-key"
 }

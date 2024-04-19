@@ -29,8 +29,14 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers {
     override def path: JsPath = JsPath \ toString
   }
   "UserAnswer" - {
+    val appaId: String        = "XMADP0000000200"
+    val periodKey: String     = "24AA"
+    val groupId: String       = "groupid"
+    val userAnswersId: String = "id"
+
     "should add a value to a set for a given page and get the same value" in {
-      val userAnswers = UserAnswers("id")
+
+      val userAnswers = UserAnswers(ReturnId(appaId, periodKey), groupId, userAnswersId)
 
       val expectedValue = "value"
 
@@ -48,7 +54,8 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers {
     }
 
     "should remove a value for a given Page" in {
-      val userAnswers = UserAnswers("id").set(TestSeqPage, Seq("123")).success.value
+      val userAnswers =
+        UserAnswers(ReturnId(appaId, periodKey), groupId, userAnswersId).set(TestSeqPage, Seq("123")).success.value
 
       val updatedUserAnswer = userAnswers.removeBySeqIndex(TestSeqPage, 0) match {
         case Success(ua) => ua

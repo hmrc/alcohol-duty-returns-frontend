@@ -17,7 +17,6 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.spiritsQuestions.QuarterlySpiritsReturnGuidanceView
 

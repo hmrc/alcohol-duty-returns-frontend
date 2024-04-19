@@ -34,7 +34,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
-          UserAnswers("id").set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
+          emptyUserAnswers.set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
         ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
       }
 
@@ -43,7 +43,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
-          UserAnswers("id").set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
+          emptyUserAnswers.set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
         ) mustBe routes.IndexController.onPageLoad
       }
 
@@ -52,7 +52,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad(None)
       }
 
@@ -61,7 +61,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
       }
 
@@ -70,7 +70,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedDeliveriesPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
       }
     }
@@ -83,7 +83,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           UnknownPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
       }
     }

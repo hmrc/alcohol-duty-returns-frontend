@@ -17,12 +17,12 @@
 package repositories
 
 import config.FrontendAppConfig
-import models.UserAnswers
+import models.{ReturnId, UserAnswers}
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model._
 import play.api.libs.json.Format
 import uk.gov.hmrc.mongo.MongoComponent
-import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.{Clock, Instant}
@@ -47,14 +47,15 @@ class SessionRepository @Inject() (
             .name("lastUpdatedIdx")
             .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
         )
-      )
+      ),
+      extraCodecs = Seq(Codecs.playFormatCodec(ReturnId.format))
     ) {
 
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
 
-  private def byId(id: String): Bson = Filters.equal("_id", id)
+  private def byId(id: ReturnId): Bson = Filters.equal("_id", id)
 
-  def keepAlive(id: String): Future[Boolean] =
+  def keepAlive(id: ReturnId): Future[Boolean] =
     collection
       .updateOne(
         filter = byId(id),
@@ -63,7 +64,7 @@ class SessionRepository @Inject() (
       .toFuture()
       .map(_ => true)
 
-  def get(id: String): Future[Option[UserAnswers]] =
+  def get(id: ReturnId): Future[Option[UserAnswers]] =
     keepAlive(id).flatMap { _ =>
       collection
         .find(byId(id))
@@ -84,9 +85,10 @@ class SessionRepository @Inject() (
       .map(_ => true)
   }
 
-  def clear(id: String): Future[Boolean] =
+  //TODO: check this
+  def clear(id: ReturnId): Future[Boolean] =
     collection
-      .deleteOne(byId(id))
+      .deleteOne(Filters.equal("_id", id))
       .toFuture()
       .map(_ => true)
 }

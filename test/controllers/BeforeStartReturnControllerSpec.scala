@@ -18,11 +18,10 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import models.UserAnswers
+import models.{ReturnId, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.inject.bind
 import uk.gov.hmrc.http.HttpResponse
@@ -34,57 +33,60 @@ import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
 
-  private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
-  private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
-  private val A_DAY_IN_SEC = 86400
-  private val validUntil   = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
-  private val userAnswers  = UserAnswers(
-    "userId",
-    lastUpdated = Instant.now(clock),
-    validUntil = Some(validUntil)
-  )
-
-  private val periodKey       = "24AC"
+  private val instant         = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+  private val clock: Clock    = Clock.fixed(instant, ZoneId.systemDefault)
+  private val A_DAY_IN_SEC    = 86400
+  private val validUntil      = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
+  private val validPeriodKey  = "24AC"
   private val periodStartDate = "1 Mar 2024"
   private val periodEndDate   = "31 Mar 2024"
   private val badPeriodKey    = "24A"
+
+  private val userAnswers = UserAnswers(
+    ReturnId(appaId, validPeriodKey),
+    groupId = groupId,
+    internalId = userAnswersId,
+    lastUpdated = Instant.now(clock),
+    validUntil = Some(validUntil)
+  )
 
   "BeforeStartReturn Controller" - {
 
     val mockCacheConnector = mock[CacheConnector]
     when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-    when(mockCacheConnector.get(any())(any())) thenReturn Future.successful(Some(userAnswers))
 
-    "must return OK and the correct view for a GET" in {
+    "must redirect to the TaksList Page if UserAnswers already exist for a GET" in {
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Some(userAnswers))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder()
         .overrides(
           bind[CacheConnector].toInstance(mockCacheConnector)
         )
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(periodKey).url)
+        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(validPeriodKey).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[BeforeStartReturnView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodStartDate, periodEndDate)(request, messages(application)).toString
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
       }
     }
 
     "must return OK and the correct view for a GET if the userAnswer does not exist yet" in {
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(None)
 
-      val application = applicationBuilder(userAnswers = None)
+      val application = applicationBuilder()
         .overrides(
           bind[CacheConnector].toInstance(mockCacheConnector)
         )
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(periodKey).url)
+        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(validPeriodKey).url)
 
         val result = route(application, request).value
 

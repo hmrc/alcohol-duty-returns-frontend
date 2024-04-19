@@ -16,11 +16,10 @@
 
 package connectors
 
-import cats.data.EitherT
 import config.FrontendAppConfig
 import models.UserAnswers
 import play.api.libs.json.Writes
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpReadsInstances, HttpResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,15 +30,22 @@ class CacheConnector @Inject() (
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances {
 
-  def get(internalId: String)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
-    httpClient.GET[Option[UserAnswers]](config.adrCacheGetUrl(internalId))
+  def get(appaId: String, periodKey: String)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
+    httpClient.GET[Option[UserAnswers]](config.adrCacheGetUrl(appaId, periodKey))
 
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.POST(config.adrCacheSetUrl(userAnswers.id), userAnswers)(
+    httpClient.POST(config.adrCacheSetUrl(), userAnswers)(
       implicitly[Writes[UserAnswers]],
       implicitly[HttpReads[HttpResponse]],
       hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
       implicitly
     )
 
+  def add(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    httpClient.POST(config.adrCacheAddUrl(), userAnswers)(
+      implicitly[Writes[UserAnswers]],
+      implicitly[HttpReads[HttpResponse]],
+      hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
+      implicitly
+    )
 }

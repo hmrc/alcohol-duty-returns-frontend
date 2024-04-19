@@ -17,21 +17,13 @@
 package controllers
 
 import base.SpecBase
-import connectors.CacheConnector
-import models.UserAnswers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
-import play.api.inject.bind
-import play.api.test.FakeRequest
+import models.{ReturnId, UserAnswers}
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
 import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView
 
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
-import scala.concurrent.Future
 
 class TaskListControllerSpec extends SpecBase {
   private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
@@ -39,7 +31,9 @@ class TaskListControllerSpec extends SpecBase {
   private val A_DAY_IN_SEC = 86400
   private val validUntil   = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
   private val userAnswers  = UserAnswers(
-    "userId",
+    ReturnId(appaId, periodKey),
+    groupId = groupId,
+    internalId = userAnswersId,
     lastUpdated = Instant.now(clock),
     validUntil = Some(validUntil)
   )

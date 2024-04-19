@@ -18,14 +18,13 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.WhenDidYouPayDutyFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
@@ -48,12 +47,12 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase with MockitoSugar {
   val adjustmentType = AdjustmentType.Overdeclaration
   val period         = YearMonth.of(2024, 1)
 
-  val validEmptyUserAnswers = UserAnswers(userAnswersId)
+  val validEmptyUserAnswers = emptyUserAnswers
     .set(CurrentAdjustmentEntryPage, AdjustmentEntry(adjustmentType = Some(AdjustmentType.Overdeclaration)))
     .success
     .value
 
-  val userAnswers = UserAnswers(userAnswersId)
+  val userAnswers = emptyUserAnswers
     .set(
       CurrentAdjustmentEntryPage,
       AdjustmentEntry(
@@ -140,7 +139,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase with MockitoSugar {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(UserAnswers(userAnswersId)))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
@@ -201,7 +200,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to Journey Recovery for a GET if userAnswers are empty" in {
 
-      val userAnswers = UserAnswers(userAnswersId)
+      val userAnswers = emptyUserAnswers
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -233,7 +232,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase with MockitoSugar {
   }
 
   "must redirect to Journey Recovery for a POST with invalid data and empty user answers" in {
-    val userAnswers = UserAnswers(userAnswersId)
+    val userAnswers = emptyUserAnswers
 
     val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

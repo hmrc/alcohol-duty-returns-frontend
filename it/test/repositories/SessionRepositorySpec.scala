@@ -17,7 +17,7 @@
 package repositories
 
 import config.FrontendAppConfig
-import models.UserAnswers
+import models.{ReturnId, UserAnswers}
 import org.mockito.Mockito.when
 import org.mongodb.scala.model.Filters
 import org.scalatest.OptionValues
@@ -44,7 +44,12 @@ class SessionRepositorySpec
   private val instant          = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
 
-  private val userAnswers = UserAnswers("id", Json.obj("foo" -> "bar"), Instant.ofEpochSecond(1))
+  private val appaId = "ADR0001"
+  private val periodKey = "24AA"
+  private val groupId = "groupId"
+  private val userId = "id"
+  private val id = ReturnId(appaId, periodKey)
+  private val userAnswers = UserAnswers(id, groupId, userId, Json.obj("foo" -> "bar"), Instant.ofEpochSecond(1))
 
   private val mockAppConfig = mock[FrontendAppConfig]
   when(mockAppConfig.cacheTtl) thenReturn 1
@@ -88,7 +93,7 @@ class SessionRepositorySpec
 
       "must return None" in {
 
-        repository.get("id that does not exist").futureValue must not be defined
+        repository.get(ReturnId("id that does not exist", "invalid period")).futureValue must not be defined
       }
     }
   }
@@ -99,14 +104,14 @@ class SessionRepositorySpec
 
       insert(userAnswers).futureValue
 
-      val result = repository.clear(userAnswers.id).futureValue
+      val result = repository.clear(id).futureValue
 
       result mustEqual true
       repository.get(userAnswers.id).futureValue must not be defined
     }
 
     "must return true when there is no record to remove" in {
-      val result = repository.clear("id that does not exist").futureValue
+      val result = repository.clear(ReturnId("id that does not exist", "invalid period")).futureValue
 
       result mustEqual true
     }
@@ -134,7 +139,7 @@ class SessionRepositorySpec
 
       "must return true" in {
 
-        repository.keepAlive("id that does not exist").futureValue mustEqual true
+        repository.keepAlive(ReturnId("id that does not exist", "invalid period")).futureValue mustEqual true
       }
     }
   }

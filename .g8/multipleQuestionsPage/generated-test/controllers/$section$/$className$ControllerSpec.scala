@@ -2,7 +2,7 @@ package controllers.$section$
 
 import base.SpecBase
 import forms.$section$.$className$FormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.$section$.$className$
 import navigation.{Fake$section;format="cap"$Navigator, $section;format="cap"$Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -12,7 +12,6 @@ import pages.$section$.$className$Page
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse

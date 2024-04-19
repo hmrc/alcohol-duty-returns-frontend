@@ -17,21 +17,22 @@
 package controllers.actions
 
 import base.SpecBase
+import config.FrontendAppConfig
 import connectors.CacheConnector
-import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.test.FakeRequest
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
+  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  when(mockConfig.periodKeySessionKey).thenReturn("period-key")
 
-  class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(cacheConnector) {
+  class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(mockConfig, cacheConnector) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
   }
 
@@ -42,10 +43,10 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
       "must set userAnswers to 'None' in the request" in {
 
         val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo("id"))(any())) thenReturn Future(None)
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(None)
         val action         = new Harness(cacheConnector)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id")).futureValue
+        val result = action.callTransform(IdentifierRequest(FakeRequest(), appaId, groupId, userAnswersId)).futureValue
 
         result.userAnswers must not be defined
       }
@@ -56,12 +57,43 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
       "must build a userAnswers object and add it to the request" in {
 
         val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo("id"))(any)) thenReturn Future(Some(UserAnswers("id")))
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Some(emptyUserAnswers))
         val action         = new Harness(cacheConnector)
 
-        val result = action.callTransform(new IdentifierRequest(FakeRequest(), "id")).futureValue
+        val result =
+          action
+            .callTransform(
+              new IdentifierRequest(
+                FakeRequest().withSession((mockConfig.periodKeySessionKey, periodKey)),
+                appaId,
+                groupId,
+                userAnswersId
+              )
+            )
+            .futureValue
 
         result.userAnswers mustBe defined
+      }
+
+      "must set userAnswers to 'None' if the session does not contain the period Key" in {
+
+        val cacheConnector = mock[CacheConnector]
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Some(emptyUserAnswers))
+        val action         = new Harness(cacheConnector)
+
+        val result =
+          action
+            .callTransform(
+              IdentifierRequest(
+                play.api.test.FakeRequest(),
+                appaId,
+                groupId,
+                userAnswersId
+              )
+            )
+            .futureValue
+
+        result.userAnswers must not be defined
       }
     }
   }

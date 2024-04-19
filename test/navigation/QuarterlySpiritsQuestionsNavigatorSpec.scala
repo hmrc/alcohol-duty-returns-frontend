@@ -34,7 +34,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.spiritsQuestions.DeclareSpiritsTotalPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
       }
 
@@ -47,7 +47,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.spiritsQuestions.DeclareScotchWhiskyPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.spiritsQuestions.routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
       }
 
@@ -60,7 +60,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.spiritsQuestions.DeclareIrishWhiskeyPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
       }
 
@@ -74,7 +74,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         navigator.nextPage(
           UnknownPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe routes.CheckYourAnswersController.onPageLoad
       }
     }

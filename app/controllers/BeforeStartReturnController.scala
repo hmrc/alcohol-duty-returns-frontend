@@ -16,13 +16,11 @@
 
 package controllers
 
-import connectors.{CacheConnector, ReturnConnector}
+import connectors.CacheConnector
 import controllers.actions._
-import models.{Return, ReturnPeriod, UserAnswers}
-import pages.{ReturnPage, ReturnPeriodPage}
+import models.{ReturnId, ReturnPeriod, UserAnswers}
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.BeforeStartReturnView
 
@@ -31,7 +29,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BeforeStartReturnController @Inject() (
   cacheConnector: CacheConnector,
-  returnConnector: ReturnConnector,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   val controllerComponents: MessagesControllerComponents,
@@ -41,49 +38,30 @@ class BeforeStartReturnController @Inject() (
     with I18nSupport {
 
   def onPageLoad(periodKey: String): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    val userAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
-
     ReturnPeriod.fromPeriodKey(periodKey) match {
-      case Left(error)         =>
+      case Left(_)             =>
         // TODO: Log the error here
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Right(returnPeriod) =>
-        val appaID = "XMADP0000000200"
-        returnConnector
-          .getReturn(returnPeriod, appaID, request.userId)
-          .foldF(
-            _ => {
-              println("fold!!")
-              Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-            },
-            handleReturn(_, returnPeriod, userAnswers)
-          )
+        val session = request.session + ("period-key", periodKey)
+        cacheConnector.get(request.appaId, periodKey).map {
+          case Some(_) => Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+          case None    =>
+            val fromDate = returnPeriod.firstDateViewString()
+            val toDate   = returnPeriod.lastDateViewString()
+            Ok(view(fromDate, toDate)).withSession(session)
+        }
     }
   }
 
-  private def handleReturn(
-    maybeUserReturn: Option[Return],
-    returnPeriod: ReturnPeriod,
-    userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier, request: Request[_]): Future[Result] =
-    maybeUserReturn match {
-      case Some(userReturn) =>
-        println("here")
-        userAnswers
-          .set(ReturnPage, userReturn)
-          .fold(
-            _ => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())),
-            ua => cacheConnector.set(ua).map(_ => Redirect(controllers.routes.TaskListController.onPageLoad))
-          )
-      case None             =>
-        println("here too")
-        val fromDate = returnPeriod.firstDateViewString()
-        val toDate   = returnPeriod.lastDateViewString()
-        userAnswers
-          .set(ReturnPeriodPage, returnPeriod)
-          .fold(
-            _ => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())),
-            ua => cacheConnector.set(ua).map(_ => Ok(view(fromDate, toDate)))
-          )
+  def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+    request.session.get("period-key") match {
+      case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case Some(periodKey) =>
+        val userAnswers = UserAnswers(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
+        cacheConnector.add(userAnswers).map { _ =>
+          Redirect(controllers.routes.TaskListController.onPageLoad)
+        }
     }
+  }
 }

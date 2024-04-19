@@ -17,7 +17,7 @@
 package base
 
 import controllers.actions._
-import models.UserAnswers
+import models.{ReturnId, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -27,7 +27,6 @@ import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
 
 trait SpecBase
     extends AnyFreeSpec
@@ -37,22 +36,28 @@ trait SpecBase
     with ScalaFutures
     with IntegrationPatience {
 
+  val appaId: String        = "XMADP0000000200"
+  val periodKey: String     = "24AA"
+  val groupId: String       = "groupid"
   val userAnswersId: String = "id"
+  val returnId: ReturnId    = ReturnId(appaId, periodKey)
 
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+  def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, userAnswersId)
 
-  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(userAnswersId)
-    .set(DeclareDutySuspendedDeliveriesOutsideUkPage, BigDecimal(1.2))
-    .success
-    .value
-    .set(DutySuspendedDeliveriesPage, BigDecimal(99.12))
-    .success
-    .value
-    .set(DeclareDutySuspendedReceivedPage, BigDecimal(10091.99))
-    .success
-    .value
+  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers =
+    UserAnswers(ReturnId(appaId, periodKey), groupId, userAnswersId)
+      .set(DeclareDutySuspendedDeliveriesOutsideUkPage, BigDecimal(1.2))
+      .success
+      .value
+      .set(DutySuspendedDeliveriesPage, BigDecimal(99.12))
+      .success
+      .value
+      .set(DeclareDutySuspendedReceivedPage, BigDecimal(10091.99))
+      .success
+      .value
 
-  def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+  def messages(app: Application): Messages =
+    app.injector.instanceOf[MessagesApi].preferred(play.api.test.FakeRequest().withSession(("period-key", periodKey)))
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
@@ -61,4 +66,8 @@ trait SpecBase
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
+
+  def FakeRequest()                            = play.api.test.FakeRequest().withSession(("period-key", periodKey))
+  def FakeRequest(verb: String, route: String) =
+    play.api.test.FakeRequest(verb, route).withSession(("period-key", periodKey))
 }

@@ -18,6 +18,7 @@
 
 @this(
         layout: templates.Layout,
+        formHelper: FormWithCSRF,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
@@ -27,32 +28,32 @@
 @(fromDate: String, toDate: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("beforeStartReturn.title"))) {
+    @formHelper(action = controllers.routes.BeforeStartReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
+        @sectionHeading(
+            id = "before-start-return-section",
+            text = messages("section.alcoholDutyReturn"),
+        )
 
-    @sectionHeading(
-        id = "before-start-return-section",
-        text = messages("section.alcoholDutyReturn"),
-    )
+        @pageHeading(messages("beforeStartReturn.heading"))
 
-    @pageHeading(messages("beforeStartReturn.heading"))
+        @paragraph(messages("beforeStartReturn.text.guidance1", fromDate, toDate))
 
-    @paragraph(messages("beforeStartReturn.text.guidance1", fromDate, toDate))
+        @paragraph(messages("beforeStartReturn.text.guidance2"))
 
-    @paragraph(messages("beforeStartReturn.text.guidance2"))
+        @paragraph(messages("beforeStartReturn.text.guidance3"))
 
-    @paragraph(messages("beforeStartReturn.text.guidance3"))
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@messages("beforeStartReturn.text.guidance3.usecase1")</li>
+            <li>@messages("beforeStartReturn.text.guidance3.usecase2")</li>
+            <li>@messages("beforeStartReturn.text.guidance3.usecase3")</li>
+            <li>@messages("beforeStartReturn.text.guidance3.usecase4")</li>
+            <li>@messages("beforeStartReturn.text.guidance3.usecase5")</li>
+        </ul>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>@messages("beforeStartReturn.text.guidance3.usecase1")</li>
-      <li>@messages("beforeStartReturn.text.guidance3.usecase2")</li>
-      <li>@messages("beforeStartReturn.text.guidance3.usecase3")</li>
-      <li>@messages("beforeStartReturn.text.guidance3.usecase4")</li>
-      <li>@messages("beforeStartReturn.text.guidance3.usecase5")</li>
-    </ul>
+        @paragraph(messages("beforeStartReturn.text.guidance4"))
 
-    @paragraph(messages("beforeStartReturn.text.guidance4"))
-
-    @govukButton(
-        ButtonViewModel("continueButton", messages("site.continue"))
-    )
-
+        @govukButton(
+            ButtonViewModel("continueButton", messages("site.continue"))
+        )
+    }
 }

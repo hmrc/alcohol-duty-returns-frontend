@@ -36,7 +36,7 @@ class CacheConnectorSpec extends SpecBase with ScalaFutures {
   val mockConfig: FrontendAppConfig           = mock[FrontendAppConfig]
   val connector                               = new CacheConnector(config = mockConfig, httpClient = mock[HttpClient])
   val dateVal: LocalDateTime                  = LocalDateTime.now
-  val answers: UserAnswers                    = UserAnswers("id")
+  val answers: UserAnswers                    = emptyUserAnswers
 
   "GET" - {
     "successfully fetch cache" in {
@@ -45,7 +45,7 @@ class CacheConnectorSpec extends SpecBase with ScalaFutures {
         connector.httpClient.GET[Option[UserAnswers]](any(), any(), any())(any(), any(), any())
       } thenReturn Future.successful(Some(answers))
 
-      whenReady(connector.get("someref")) {
+      whenReady(connector.get("someref", "somePeriodKey")) {
         _ mustBe Some(answers)
       }
     }
@@ -55,9 +55,9 @@ class CacheConnectorSpec extends SpecBase with ScalaFutures {
     "successfully write cache" in {
       Mockito.reset(connector.httpClient)
 
-      val putUrl = s"/cache/set/someref"
+      val putUrl = s"/cache/set"
 
-      when(mockConfig.adrCacheSetUrl(any())).thenReturn("/cache/set/someref")
+      when(mockConfig.adrCacheSetUrl()).thenReturn("/cache/set")
 
       connector.set(answers)
       verify(connector.httpClient, atLeastOnce).POST(eqTo(putUrl), eqTo(answers), any())(any(), any(), any(), any())

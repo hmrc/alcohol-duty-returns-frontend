@@ -16,7 +16,9 @@
 
 package controllers.actions
 
+import config.FrontendAppConfig
 import connectors.CacheConnector
+import models.ReturnPeriod
 
 import javax.inject.Inject
 import models.requests.{IdentifierRequest, OptionalDataRequest}
@@ -27,6 +29,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject() (
+  config: FrontendAppConfig,
   val cacheConnector: CacheConnector
 )(implicit val executionContext: ExecutionContext)
     extends DataRetrievalAction {
@@ -35,8 +38,22 @@ class DataRetrievalActionImpl @Inject() (
 
     val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    cacheConnector.get(request.userId)(headerCarrier).map {
-      OptionalDataRequest(request.request, request.userId, _)
+    request.session.get(config.periodKeySessionKey) match {
+      case None            =>
+        Future.successful(
+          OptionalDataRequest(request.request, request.appaId, request.groupId, request.userId, None, None)
+        )
+      case Some(periodKey) =>
+        cacheConnector.get(request.appaId, periodKey)(headerCarrier).map {
+          OptionalDataRequest(
+            request.request,
+            request.appaId,
+            request.groupId,
+            request.userId,
+            ReturnPeriod.fromPeriodKey(periodKey).toOption,
+            _
+          )
+        }
     }
   }
 }

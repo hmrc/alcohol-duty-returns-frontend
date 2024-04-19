@@ -35,7 +35,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
       "must go from a page that doesn't exist in the route map to Index" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
+        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.IndexController.onPageLoad
       }
 
       "must go from the Alcohol to declare to Product Entry Guidance page if the answer is Yes" in {
@@ -43,7 +43,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.DeclareAlcoholDutyQuestionPage,
           NormalMode,
-          UserAnswers("id").set(pages.productEntry.DeclareAlcoholDutyQuestionPage, true).success.value
+          emptyUserAnswers.set(pages.productEntry.DeclareAlcoholDutyQuestionPage, true).success.value
         ) mustBe controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
       }
 
@@ -52,7 +52,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.DeclareAlcoholDutyQuestionPage,
           NormalMode,
-          UserAnswers("id").set(pages.productEntry.DeclareAlcoholDutyQuestionPage, false).success.value
+          emptyUserAnswers.set(pages.productEntry.DeclareAlcoholDutyQuestionPage, false).success.value
         ) mustBe routes.TaskListController.onPageLoad
       }
       "must go from the Alcohol to declare to Journey Recovery page if there is no answer" in {
@@ -60,7 +60,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.DeclareAlcoholDutyQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
@@ -69,7 +69,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.ProductNamePage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.productEntry.routes.AlcoholByVolumeQuestionController.onPageLoad(NormalMode)
       }
 
@@ -78,7 +78,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.AlcoholByVolumeQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(DraughtRelief))
@@ -92,7 +92,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.AlcoholByVolumeQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(Core))
@@ -106,7 +106,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.AlcoholByVolumeQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(DraughtAndSmallProducerRelief))
@@ -120,7 +120,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.AlcoholByVolumeQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(SmallProducerRelief))
@@ -134,7 +134,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.AlcoholByVolumeQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
       "must go from the Draught relief question page to Small producer relief question page" in {
@@ -142,7 +142,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.DraughtReliefQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(DraughtAndSmallProducerRelief))
@@ -156,7 +156,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.DraughtReliefQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(DraughtRelief))
@@ -170,7 +170,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.DraughtReliefQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(SmallProducerRelief))
@@ -184,7 +184,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.SmallProducerReliefQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
       }
 
@@ -193,7 +193,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.TaxTypePage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(pages.productEntry.CurrentProductEntryPage, ProductEntry(smallProducerRelief = Some(false)))
             .success
             .value
@@ -205,7 +205,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.TaxTypePage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(pages.productEntry.CurrentProductEntryPage, ProductEntry(smallProducerRelief = Some(true)))
             .success
             .value
@@ -217,7 +217,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.DeclareSmallProducerReliefDutyRatePage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
       }
 
@@ -226,12 +226,12 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.ProductVolumePage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.productEntry.routes.DutyDueController.onPageLoad()
       }
 
       "must go from the Product List Page page to Product Name page if the Answer is Yes" in {
-        val userAnswers = UserAnswers("id").set(pages.productEntry.ProductListPage, true).success.value
+        val userAnswers = emptyUserAnswers.set(pages.productEntry.ProductListPage, true).success.value
         navigator.nextPage(
           pages.productEntry.ProductListPage,
           NormalMode,
@@ -240,7 +240,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
       }
 
       "must go from the Product List Page page to task list page if the Answer is No" in {
-        val userAnswers = UserAnswers("id").set(pages.productEntry.ProductListPage, false).success.value
+        val userAnswers = emptyUserAnswers.set(pages.productEntry.ProductListPage, false).success.value
         navigator.nextPage(
           pages.productEntry.ProductListPage,
           NormalMode,
@@ -252,7 +252,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.productEntry.ProductListPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
@@ -266,7 +266,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           UnknownPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
 
@@ -274,7 +274,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareAlcoholDutyQuestionPage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           false
         ) mustBe controllers.routes.TaskListController.onPageLoad
       }
@@ -283,7 +283,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareAlcoholDutyQuestionPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               DeclareAlcoholDutyQuestionPage,
               false
@@ -298,7 +298,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareAlcoholDutyQuestionPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               DeclareAlcoholDutyQuestionPage,
               true
@@ -313,14 +313,14 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           ProductNamePage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
       "must go from Alcohol by volume page to Draught relief question page if answer has changed" in {
         navigator.nextPage(
           AlcoholByVolumeQuestionPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(DraughtRelief))
@@ -334,7 +334,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           AlcoholByVolumeQuestionPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(Core))
@@ -348,7 +348,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           AlcoholByVolumeQuestionPage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           false
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
@@ -356,7 +356,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DraughtReliefQuestionPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               pages.productEntry.CurrentProductEntryPage,
               ProductEntry(rateType = Some(DraughtAndSmallProducerRelief))
@@ -370,7 +370,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DraughtReliefQuestionPage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           false
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
@@ -378,7 +378,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           SmallProducerReliefQuestionPage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           true
         ) mustBe controllers.productEntry.routes.TaxTypeController.onPageLoad(NormalMode)
       }
@@ -386,7 +386,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           SmallProducerReliefQuestionPage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           false
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
@@ -394,7 +394,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           TaxTypePage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               CurrentProductEntryPage,
               ProductEntry(
@@ -411,7 +411,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           TaxTypePage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               CurrentProductEntryPage,
               ProductEntry(
@@ -428,7 +428,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           TaxTypePage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           false
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
@@ -436,7 +436,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareSmallProducerReliefDutyRatePage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           true
         ) mustBe controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
       }
@@ -444,7 +444,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareSmallProducerReliefDutyRatePage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           false
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }
@@ -452,7 +452,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           ProductVolumePage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           true
         ) mustBe controllers.productEntry.routes.DutyDueController.onPageLoad()
       }
@@ -460,7 +460,7 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(
           ProductVolumePage,
           CheckMode,
-          UserAnswers("id"),
+          emptyUserAnswers,
           false
         ) mustBe controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
       }

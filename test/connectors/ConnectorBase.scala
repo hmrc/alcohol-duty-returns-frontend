@@ -26,8 +26,6 @@ import uk.gov.hmrc.http.test.{HttpClientSupport, WireMockSupport}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 abstract class ConnectorBase extends SpecBase with ScalaFutures with WireMockSupport with HttpClientSupport {
   protected val endpointConfigurationPath = "microservice.services"
   protected val endpointName: String
@@ -47,15 +45,20 @@ abstract class ConnectorBase extends SpecBase with ScalaFutures with WireMockSup
 
     def stubGet(url: String, status: Int, body: String): Unit =
       wireMockServer.stubFor(
-        WireMock.get(urlEqualTo(stripToPath(url))).willReturn(aResponse().withStatus(status).withBody(body)))
+        WireMock.get(urlEqualTo(stripToPath(url))).willReturn(aResponse().withStatus(status).withBody(body))
+      )
 
     def stubGetWithParameters(url: String, parameters: Map[String, String], status: Int, body: String): Unit =
       wireMockServer.stubFor(
-        WireMock.get(urlEqualTo(urlWithParameters(url, parameters))).willReturn(aResponse().withStatus(status).withBody(body)))
+        WireMock
+          .get(urlEqualTo(urlWithParameters(url, parameters)))
+          .willReturn(aResponse().withStatus(status).withBody(body))
+      )
 
     def stubPost(url: String, status: Int, body: String): Unit =
       wireMockServer.stubFor(
-        WireMock.post(urlEqualTo(stripToPath(url))).willReturn(aResponse().withStatus(status).withBody(body)))
+        WireMock.post(urlEqualTo(stripToPath(url))).willReturn(aResponse().withStatus(status).withBody(body))
+      )
 
     def verifyGet(url: String): Unit =
       wireMockServer.verify(getRequestedFor(urlEqualTo(stripToPath(url))))
@@ -69,15 +72,16 @@ abstract class ConnectorBase extends SpecBase with ScalaFutures with WireMockSup
 
   protected class ConnectorFixture extends WireMockHelper {
     private val application =
-      new GuiceApplicationBuilder().configure(
-        s"$endpointConfigurationPath.$endpointName.host" -> wireMockHost,
-        s"$endpointConfigurationPath.$endpointName.port" -> wireMockPort).build()
+      new GuiceApplicationBuilder()
+        .configure(
+          s"$endpointConfigurationPath.$endpointName.host" -> wireMockHost,
+          s"$endpointConfigurationPath.$endpointName.port" -> wireMockPort
+        )
+        .build()
 
-    private val servicesConfig = new ServicesConfig(application.configuration)
+    private val servicesConfig    = new ServicesConfig(application.configuration)
     val config: FrontendAppConfig = new FrontendAppConfig(application.configuration, servicesConfig)
 
     protected implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    val connector = new ReturnConnector(config = config, httpClient = httpClient)
   }
 }

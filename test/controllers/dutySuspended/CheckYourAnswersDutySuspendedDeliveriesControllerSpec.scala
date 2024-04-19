@@ -19,7 +19,6 @@ package controllers.dutySuspended
 import base.SpecBase
 import models.UserAnswers
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesOutsideUkPage, DeclareDutySuspendedReceivedPage, DutySuspendedDeliveriesPage}
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
