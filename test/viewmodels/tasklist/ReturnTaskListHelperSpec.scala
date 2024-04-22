@@ -31,8 +31,9 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
   val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = messages(application)
 
-  "ReturnTaskListHelper" - {
-    "must return the not started return section if the user answers object is empty" in {
+  "returnSection" - {
+
+    "when the user answers object is empty, must return the not started section" in {
       val result = ReturnTaskListHelper.returnSection(emptyUserAnswers)
 
       result.completedTask                     shouldBe false
@@ -47,7 +48,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       )
     }
 
-    "must return a complete section if the user answers no to DeclareAlcoholDuty question" in {
+    "when the user answers no to DeclareAlcoholDuty question, must return a complete section" in {
       val userAnswers = emptyUserAnswers
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
@@ -66,7 +67,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       )
     }
 
-    "when Declare Alcohol duty is yes, the Product List Return task" - {
+    "when the user answers yes to DeclareAlcoholDuty question, must return a complete section and the Product List task" - {
       val declaredAlcoholDutyUserAnswer = emptyUserAnswers
         .set(DeclareAlcoholDutyQuestionPage, true)
         .success
@@ -187,8 +188,11 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         )
       }
     }
+  }
 
-    "must return the not started duty suspended section if the user answers object is empty" in {
+  "returnDSDSection" - {
+
+    "when the user answers object is empty, must return a not started section" in {
       val result = ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
 
       result.completedTask                     shouldBe false
@@ -203,7 +207,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       )
     }
 
-    "must return a complete section if the user answers no to Declare DSD question" in {
+    "when  the user answers no to Declare DSD question, must return a complete section" in {
       val userAnswers = emptyUserAnswers
         .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
         .success
@@ -221,7 +225,8 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
       )
     }
-    "when Declare DSD is yes, the Tell us about task" - {
+
+    "when  the user answers yes to Declare DSD question, must return a complete section and the DSD task" - {
       val declaredDSDUserAnswer = emptyUserAnswers
         .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
         .success
