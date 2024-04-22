@@ -24,6 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    link: Link,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading
 )
@@ -43,10 +44,32 @@
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
+        @pageHeading(messages("declareSpiritsTotal.heading"))
+
+        <h2 class="govuk-heading-l">@messages("declareSpiritsTotal.subheading1")</h2>
+        <p class="govuk-body">
+            @messages("declareSpiritsTotal.p1")
+            @link(
+            id = "draught-relief-question-guidance-link",
+            text = messages("declareSpiritsTotal.guidance.link.text"),
+            href = messages("declareSpiritsTotal.guidance.link.url"),
+            newTab = true
+            )
+        </p>
+
+        <p class="govuk-body">@messages("declareSpiritsTotal.p2")</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@messages("declareSpiritsTotal.para2.list1")<strong> @messages("declareSpiritsTotal.para2.list1.bold")</strong></li>
+            <li>@messages("declareSpiritsTotal.para2.list2")<strong> @messages("declareSpiritsTotal.para2.list2.bold")</strong></li>
+
+        </ul>
+
+        <h2 class="govuk-heading-l">@messages("declareSpiritsTotal.subheading2")</h2>
+
         @govukInput(
         InputViewModel(
             field = form("declare-spirits-total-input"),
-            label = LabelViewModel(messages("declareSpiritsTotal.heading")).asPageHeading(),
+            label = LabelViewModel(messages("declareSpiritsTotal.heading")).asVisuallyHidden(),
             )
             .asNumeric()
             .withWidth(Fixed10)
