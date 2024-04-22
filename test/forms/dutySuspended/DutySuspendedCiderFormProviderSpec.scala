@@ -29,7 +29,7 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "totalCider"
     val requiredKey = "dutySuspendedCider.error.totalCider.required"
-    val minimum     = 0.01
+    val minimum     = 0.00
     val maximum     = 999999999.99
     val decimal     = 2
 
@@ -75,7 +75,7 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "pureAlcoholInCider"
     val requiredKey = "dutySuspendedCider.error.pureAlcoholInCider.required"
-    val minimum     = 0.01
+    val minimum     = 0.00
     val maximum     = 999999999.99
     val decimal     = 2
 

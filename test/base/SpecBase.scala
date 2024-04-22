@@ -22,7 +22,6 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesOutsideUkPage, DeclareDutySuspendedReceivedPage, DutySuspendedDeliveriesPage}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
@@ -40,17 +39,6 @@ trait SpecBase
   val userAnswersId: String = "id"
 
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
-
-  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(userAnswersId)
-    .set(DeclareDutySuspendedDeliveriesOutsideUkPage, BigDecimal(1.2))
-    .success
-    .value
-    .set(DutySuspendedDeliveriesPage, BigDecimal(99.12))
-    .success
-    .value
-    .set(DeclareDutySuspendedReceivedPage, BigDecimal(10091.99))
-    .success
-    .value
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 

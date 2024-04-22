@@ -32,14 +32,14 @@ class DutySuspendedCiderFormProvider @Inject() extends Mappings {
         "dutySuspendedCider.error.totalCider.required",
         "dutySuspendedCider.error.totalCider.nonNumeric",
         "dutySuspendedCider.error.totalCider.twoDecimalPlaces"
-      ).verifying(minimumValue(BigDecimal(0.01), "dutySuspendedCider.error.totalCider.minimumRequired"))
+      ).verifying(minimumValue(BigDecimal(0.00), "dutySuspendedCider.error.totalCider.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedCider.error.totalCider.maximumRequired")),
       "pureAlcoholInCider" -> bigDecimal(
         2,
         "dutySuspendedCider.error.pureAlcoholInCider.required",
         "dutySuspendedCider.error.pureAlcoholInCider.nonNumeric",
         "dutySuspendedCider.error.pureAlcoholInCider.twoDecimalPlaces"
-      ).verifying(minimumValue(BigDecimal(0.01), "dutySuspendedCider.error.pureAlcoholInCider.minimumRequired"))
+      ).verifying(minimumValue(BigDecimal(0.00), "dutySuspendedCider.error.pureAlcoholInCider.minimumRequired"))
         .verifying(
           maximumValue(BigDecimal(999999999.99), "dutySuspendedCider.error.pureAlcoholInCider.maximumRequired")
         )
