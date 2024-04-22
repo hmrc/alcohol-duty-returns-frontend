@@ -28,7 +28,7 @@ class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "totalSpirits"
     val requiredKey = "dutySuspendedSpirits.error.totalSpirits.required"
-    val minimum     = 0.01
+    val minimum     = 0.00
     val maximum     = 999999999.99
     val decimal     = 2
 
@@ -74,7 +74,7 @@ class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "pureAlcoholInSpirits"
     val requiredKey = "dutySuspendedSpirits.error.pureAlcoholInSpirits.required"
-    val minimum     = 0.01
+    val minimum     = 0.00
     val maximum     = 999999999.99
     val decimal     = 2
 

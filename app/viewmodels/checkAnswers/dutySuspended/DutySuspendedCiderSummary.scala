@@ -20,26 +20,32 @@ import controllers.dutySuspended.routes
 import models.{CheckMode, UserAnswers}
 import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object DutySuspendedCiderSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def totalVolumeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DutySuspendedCiderPage).map { answer =>
-      val value = HtmlFormat.escape(answer.totalCider.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.pureAlcoholInCider.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "dutySuspendedCider.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "dutySuspendedCider.totalCider.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.totalCider.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("dutySuspendedCider.change.hidden"))
+            .withVisuallyHiddenText(messages("dutySuspendedCider.totalCider.change.hidden"))
+        )
+      )
+    }
+
+  def pureAlcoholRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(DutySuspendedCiderPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "dutySuspendedCider.pureAlcoholInCider.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.pureAlcoholInCider.toString} ${messages("site.unit.litres")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("dutySuspendedCider.pureAlcoholInCider.change.hidden"))
         )
       )
     }
