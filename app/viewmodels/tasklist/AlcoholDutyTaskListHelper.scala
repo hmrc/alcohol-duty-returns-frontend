@@ -27,7 +27,7 @@ object AlcoholDutyTaskListHelper {
     messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
-      Seq(ReturnTaskListHelper.returnSection(userAnswers), (ReturnTaskListHelper.returnDSDSection(userAnswers))),
+      Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
       validUntil.toLocalDateString()
     )
 }
