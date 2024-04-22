@@ -1,0 +1,93 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    paragraph: Paragraph,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    bulletList: BulletList,
+    pageHeading: PageHeading
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("declareQuarterlySpirits.title"))) {
+
+    @formHelper(action = controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+        @sectionHeading(
+            id = "declareQuarterlySpirits-section",
+            text = messages("section.alcoholDutyReturn"),
+        )
+
+        @pageHeading(messages("declareQuarterlySpirits.heading"))
+
+        @paragraph(messages("declareQuarterlySpirits.paragraph1"))
+
+        @bulletList(Seq(
+        messages("declareQuarterlySpirits.paragraph1.bulletList.1"),
+        messages("declareQuarterlySpirits.paragraph1.bulletList.2"),
+        ))
+
+        @paragraph(messages("declareQuarterlySpirits.paragraph2"))
+
+        @bulletList(Seq(
+        messages("declareQuarterlySpirits.paragraph2.bulletList.1"),
+        messages("declareQuarterlySpirits.paragraph2.bulletList.2"),
+        messages("declareQuarterlySpirits.paragraph2.bulletList.3"),
+        messages("declareQuarterlySpirits.paragraph2.bulletList.4"),
+        ))
+
+        @paragraph(messages("declareQuarterlySpirits.paragraph3"))
+
+        @bulletList(Seq(
+        messages("declareQuarterlySpirits.paragraph3.bulletList.1"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.2"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.3"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.4"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.5"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.6"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.7"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.8"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.9"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.10"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.11"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.12"),
+        messages("declareQuarterlySpirits.paragraph3.bulletList.13"),
+        ))
+
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("declareQuarterlySpirits-yesNoValue"),
+                legend = LegendViewModel(messages("declareQuarterlySpirits.question")).withCssClass("govuk-fieldset__legend--l")
+            )
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+        )
+    }
+}

@@ -131,6 +131,12 @@ GET        /check-your-answers-duty-suspended-deliveries                  contro
 # End of of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
+
+GET        /tell-us-about-the-spirits-and-ingredients-you-have-used                        controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-the-spirits-and-ingredients-you-have-used                        controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-the-spirits-and-ingredients-you-have-used                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-the-spirits-and-ingredients-you-have-used                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = CheckMode)
+
 GET        /what-is-the-total-volume-of-spirits-you-made-this-quarter                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-is-the-total-volume-of-spirits-you-made-this-quarter                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
 GET        /change-what-is-the-total-volume-of-spirits-you-made-this-quarter                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
@@ -145,8 +151,6 @@ GET        /how-much-irish-whiskey-have-you-made                  controllers.sp
 POST       /how-much-irish-whiskey-have-you-made                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-irish-whiskey-have-you-made                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-irish-whiskey-have-you-made                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
-
-GET        /tell-us-about-the-spirits-and-ingredients-you-have-used                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 GET        /how-much-unmalted-grain-have-you-used                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-unmalted-grain-have-you-used                 controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = NormalMode)
@@ -218,7 +222,3 @@ POST       /change-how-much-is-the-adjustment                        controllers
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
-
-
-
-
