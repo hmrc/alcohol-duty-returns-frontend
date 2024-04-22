@@ -38,7 +38,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
         @sectionHeading(
-            id = "declareQuarterlySpirits-section",
+            id = "declare-quarterly-spirits-section",
             text = messages("section.alcoholDutyReturn"),
         )
 
@@ -78,6 +78,7 @@
         messages("declareQuarterlySpirits.paragraph3.bulletList.13"),
         ))
 
+        @paragraph(messages("declareQuarterlySpirits.paragraph4"))
 
         @govukRadios(
             RadiosViewModel.yesNo(
