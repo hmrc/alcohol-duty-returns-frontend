@@ -39,9 +39,10 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DeclareQuarterlySpiritsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val declareQuarterlySpiritsRoute = controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
+  lazy val declareQuarterlySpiritsRoute =
+    controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 
   "DeclareQuarterlySpirits Controller" - {
 

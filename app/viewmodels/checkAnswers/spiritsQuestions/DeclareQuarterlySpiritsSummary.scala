@@ -24,21 +24,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareQuarterlySpiritsSummary  {
+object DeclareQuarterlySpiritsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareQuarterlySpiritsPage).map {
-      answer =>
+    answers.get(DeclareQuarterlySpiritsPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        val value = if (answer) "site.yes" else "site.no"
-
-        SummaryListRowViewModel(
-          key     = "declareQuarterlySpirits.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("declareQuarterlySpirits.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "declareQuarterlySpirits.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("declareQuarterlySpirits.change.hidden"))
         )
+      )
     }
 }
