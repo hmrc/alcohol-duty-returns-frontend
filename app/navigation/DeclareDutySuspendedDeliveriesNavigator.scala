@@ -57,7 +57,7 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
   private def declareDutySuspendedDeliveriesQuestionPageRoute(answers: UserAnswers): Call =
     answers.get(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage) match {
       case Some(true)  => controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
-      case Some(false) => routes.IndexController.onPageLoad
+      case Some(false) => routes.TaskListController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
 

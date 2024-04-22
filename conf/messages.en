@@ -93,6 +93,14 @@ taskList.section.returns.products.notStarted = Tell us about your products
 taskList.section.returns.products.inProgress = Change the products you’ve told us about
 taskList.section.returns.products.completed = Change the products you’ve told us about
 
+taskList.section.dutySuspended.heading = Duty suspended deliveries
+taskList.section.dutySuspended.needToDeclare.notStarted = Tell us about your duty suspended deliveries
+taskList.section.dutySuspended.needToDeclare.no = You don’t need to tell us about any duty suspended deliveries
+taskList.section.dutySuspended.needToDeclare.yes = You’ve told us you need to declare duty suspended deliveries
+taskList.section.dutySuspended.notStarted = Tell us about your duty suspended deliveries
+taskList.section.dutySuspended.inProgress = Change the deliveries you’ve told us about
+taskList.section.dutySuspended.completed = Change the deliveries you’ve told us about
+
 # Beginning of product entry sub-journey
 
 declareAlcoholDutyQuestion.title = Do you need to declare duty on any alcoholic products?
@@ -651,8 +659,4 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
-
-
-
-
 
