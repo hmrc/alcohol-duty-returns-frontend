@@ -127,7 +127,7 @@ POST       /how-much-have-you-received-suspended                  controllers.du
 GET        /change-how-much-have-you-received-suspended                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-have-you-received-suspended                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
 
-GET        /check-your-answers-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+GET        /check-your-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
 # End of of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
