@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package viewmodels
+package models.productEntry
 
-package object govuk {
+import play.api.libs.json._
 
-  object all
-      extends ImplicitConversions
-      with BackLinkFluency
-      with ButtonFluency
-      with CheckboxFluency
-      with DateFluency
-      with ErrorSummaryFluency
-      with FieldsetFluency
-      with HintFluency
-      with InputFluency
-      with LabelFluency
-      with YearMonthDateFluency
-      with YearMonthDateFluencyNew
-      with RadiosFluency
-      with SummaryListFluency
-      with TagFluency
-}
+import java.time.YearMonth
+
+//case class AllRatesPage(yearMonth: YearMonth)
+//
+//object AllRatesPage {
+//  implicit val format = Json.format[AllRatesPage]
+//}

@@ -222,3 +222,8 @@ GET        /check-your-calculations                       controllers.adjustment
 
 
 
+
+GET        /all-rates                        controllers.productEntry.AllRatesPageController.onPageLoad(mode: Mode = NormalMode)
+POST       /all-rates                        controllers.productEntry.AllRatesPageController.onSubmit(mode: Mode = NormalMode)
+GET        /change-all-rates                  controllers.productEntry.AllRatesPageController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-all-rates                  controllers.productEntry.AllRatesPageController.onSubmit(mode: Mode = CheckMode)

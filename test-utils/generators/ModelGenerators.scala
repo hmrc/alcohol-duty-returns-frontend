@@ -26,6 +26,14 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryAllRatesPage: Arbitrary[productEntry.AllRatesPage] =
+    Arbitrary {
+      for {
+        bulkVolume        <- arbitrary[String]
+        pureAlcoholVolume <- arbitrary[String]
+      } yield productEntry.AllRatesPage(bulkVolume, pureAlcoholVolume)
+    }
+
   implicit lazy val arbitraryDutySuspendedBeer: Arbitrary[dutySuspended.DutySuspendedBeer] =
     Arbitrary {
       for {

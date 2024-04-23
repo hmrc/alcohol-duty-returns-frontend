@@ -660,3 +660,15 @@ adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
 
+
+allRatesPage.title = allRatesPage
+allRatesPage.heading = allRatesPage
+allRatesPage.bulkVolume = bulkVolume
+allRatesPage.pureAlcoholVolume = pureAlcoholVolume
+allRatesPage.checkYourAnswersLabel = AllRatesPage
+allRatesPage.error.bulkVolume.required = Enter bulkVolume
+allRatesPage.error.pureAlcoholVolume.required = Enter pureAlcoholVolume
+allRatesPage.error.bulkVolume.length = bulkVolume must be 90 characters or less
+allRatesPage.error.pureAlcoholVolume.length = pureAlcoholVolume must be 9 characters or less
+allRatesPage.bulkVolume.change.hidden = bulkVolume
+allRatesPage.pureAlcoholVolume.change.hidden = pureAlcoholVolume
