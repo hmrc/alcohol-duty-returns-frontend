@@ -18,10 +18,8 @@ package models.productEntry
 
 import play.api.libs.json._
 
-import java.time.YearMonth
+case class AllRatesPage(bulkVolume: String, pureAlcoholVolume: String)
 
-//case class AllRatesPage(yearMonth: YearMonth)
-//
-//object AllRatesPage {
-//  implicit val format = Json.format[AllRatesPage]
-//}
+object AllRatesPage {
+  implicit val format = Json.format[AllRatesPage]
+}

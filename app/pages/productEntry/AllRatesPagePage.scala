@@ -16,12 +16,11 @@
 
 package pages.productEntry
 
+import models.productEntry.AllRatesPage
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-import java.time.YearMonth
-
-case object AllRatesPagePage extends QuestionPage[List[YearMonth]] {
+case object AllRatesPagePage extends QuestionPage[List[AllRatesPage]] {
 
   override def path: JsPath = JsPath \ toString
 

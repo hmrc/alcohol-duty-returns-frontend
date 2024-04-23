@@ -18,6 +18,7 @@ package forms.productEntry
 
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.productEntry.AllRatesPage
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -25,15 +26,13 @@ import java.time.YearMonth
 
 class AllRatesPageFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[List[YearMonth]] = Form(
+  def apply(): Form[List[AllRatesPage]] = Form(
     "all-rates" -> list(
-      yearMonth(
+      doubleInput(
         "whenDidYouPayDuty.date.error.invalid",
         "whenDidYouPayDuty.date.error.required.all",
         "whenDidYouPayDuty.date.error.required"
       )
-        .verifying("whenDidYouPayDuty.date.error.invalid.future", value => value.isBefore(YearMonth.now()))
-        .verifying("whenDidYouPayDuty.date.error.invalid.past", value => value.isAfter(YearMonth.of(2023, 8)))
     )
   )
 }

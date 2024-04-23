@@ -20,6 +20,7 @@ import java.time.{LocalDate, YearMonth}
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
 import models.Enumerable
+import models.productEntry.AllRatesPage
 
 trait Mappings extends Formatters with Constraints {
 
@@ -73,5 +74,13 @@ trait Mappings extends Formatters with Constraints {
     args: Seq[String] = Seq.empty
   ): FieldMapping[YearMonth] =
     of(new YearMonthFormatter(invalidKey, allRequiredKey, requiredKey, args))
+
+  protected def doubleInput(
+    invalidKey: String,
+    allRequiredKey: String,
+    requiredKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[AllRatesPage] =
+    of(new DoubleInputFormatter(invalidKey, allRequiredKey, requiredKey, args))
 
 }
