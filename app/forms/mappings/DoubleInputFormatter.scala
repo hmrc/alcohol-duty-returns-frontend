@@ -26,7 +26,7 @@ class DoubleInputFormatter(invalidKey: String, allRequiredKey: String, requiredK
     extends Formatter[AllRatesPage]
     with Formatters {
 
-  val fieldKeys: List[String] = List("month", "year")
+  val fieldKeys: List[String] = List("month", "year", "bandName")
 
   private val baseFormatter = stringFormatter(requiredKey, args)
 
@@ -42,9 +42,19 @@ class DoubleInputFormatter(invalidKey: String, allRequiredKey: String, requiredK
       case Left(errorSeq) => Left(setErrorKey(key, errorSeq))
     }
 
-    (month, year) match {
-      case (Right(m), Right(y))    => Right(AllRatesPage(m, y))
-      case (monthError, yearError) => Left(monthError.left.getOrElse(Seq.empty) ++ yearError.left.getOrElse(Seq.empty))
+    val bandName = baseFormatter.bind(s"$key.bandName", data) match {
+      case Right(value)   => Right(value)
+      case Left(errorSeq) => Left(setErrorKey(key, errorSeq))
+    }
+
+    (month, year, bandName) match {
+      case (Right(m), Right(y), Right(b))         => Right(AllRatesPage(b, m, y))
+      case (monthError, yearError, bandNameError) =>
+        Left(
+          monthError.left.getOrElse(Seq.empty) ++ yearError.left.getOrElse(Seq.empty) ++ bandNameError.left.getOrElse(
+            Seq.empty
+          )
+        )
     }
 
   }
@@ -63,20 +73,21 @@ class DoubleInputFormatter(invalidKey: String, allRequiredKey: String, requiredK
       .toList
 
     fields.count(_._2.isDefined) match {
-      case 2 =>
+      case 3     =>
         formatDate(key, data).left.map {
           _.map(_.copy(key = key, args = args))
         }
-      case 1 =>
+      case 2 | 1 =>
         Left(missingFields.map(field => FormError(s"$key.$field", requiredKey, missingFields ++ args)))
-      case _ =>
+      case _     =>
         Left(List(FormError(key, allRequiredKey, args)))
     }
   }
 
   override def unbind(key: String, value: AllRatesPage): Map[String, String] =
     Map(
-      s"$key.month" -> value.bulkVolume,
-      s"$key.year"  -> value.pureAlcoholVolume
+      s"$key.month"    -> value.bulkVolume,
+      s"$key.year"     -> value.pureAlcoholVolume,
+      s"$key.bandName" -> value.rateBandName
     )
 }

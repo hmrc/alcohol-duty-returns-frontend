@@ -30,23 +30,27 @@ trait YearMonthDateFluencyNew {
 
     def apply(
       field: Field,
+      name: String,
       legend: Legend
     )(implicit messages: Messages): DateInput =
       apply(
         field,
+        name,
         fieldset = Fieldset(legend = Some(legend))
       )
 
     def apply(
       field: Field,
+      name: String,
       fieldset: Fieldset
     )(implicit messages: Messages): DateInput = {
 
       def errorClass(id: String) =
         if (errorMessage(field).isDefined || errorMessage(field).isDefined) "govuk-input--error" else ""
 
-      val monthId = s"${field.id}.month"
-      val yearId  = s"${field.id}.year"
+      val monthId  = s"${field.id}.month"
+      val yearId   = s"${field.id}.year"
+      val bandName = s"${field.id}.bandName"
 
       val primaryError =
         Seq(errorMessage(field), errorMessage(field), errorMessage(field)).flatten.headOption
@@ -64,6 +68,13 @@ trait YearMonthDateFluencyNew {
           name = s"${field.name}.year",
           value = field("year").value,
           label = Some(messages("date.year")),
+          classes = s"govuk-input--width-4 ${errorClass(yearId)}".trim
+        ),
+        InputItem(
+          id = bandName,
+          name = s"${field.name}.bandName",
+          value = field("bandName").value.orElse(Some(name)),
+          label = Some(messages("bandName")),
           classes = s"govuk-input--width-4 ${errorClass(yearId)}".trim
         )
       )

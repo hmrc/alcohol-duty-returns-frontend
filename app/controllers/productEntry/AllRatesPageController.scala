@@ -49,12 +49,13 @@ class AllRatesPageController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val rates        = List("rate-1", "rate-2")
     val preparedForm = request.userAnswers.get(AllRatesPagePage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode, rates))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -62,7 +63,7 @@ class AllRatesPageController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, List("rate-1", "rate-2")))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(AllRatesPagePage, value))

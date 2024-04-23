@@ -18,7 +18,7 @@ package models.productEntry
 
 import play.api.libs.json._
 
-case class AllRatesPage(bulkVolume: String, pureAlcoholVolume: String)
+case class AllRatesPage(rateBandName: String, bulkVolume: String, pureAlcoholVolume: String)
 
 object AllRatesPage {
   implicit val format = Json.format[AllRatesPage]

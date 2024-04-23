@@ -28,7 +28,7 @@
     pageHeading: PageHeading
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, rates: List[String])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("allRatesPage.title"))) {
 
@@ -47,10 +47,11 @@
 
 
 
-@helper.repeat(form("all-rates"), min = 5) { allRatesField:Field =>
+@helper.repeatWithIndex(form("all-rates"), min = rates.size) { (allRatesField, index) =>
     @govukDateInput(
         YearMonthDateViewModelNew(
             allRatesField,
+            rates(index),
             legend = LegendViewModel(messages("whenDidYouPayDuty.heading")).asVisuallyHidden(),
         ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
     )
