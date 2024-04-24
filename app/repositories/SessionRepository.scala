@@ -85,7 +85,6 @@ class SessionRepository @Inject() (
       .map(_ => true)
   }
 
-  //TODO: check this
   def clear(id: ReturnId): Future[Boolean] =
     collection
       .deleteOne(Filters.equal("_id", id))
