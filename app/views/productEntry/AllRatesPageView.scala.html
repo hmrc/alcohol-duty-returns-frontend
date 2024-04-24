@@ -16,6 +16,7 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading}
+@import viewmodels.govuk.inputNew.InputViewModelNew
 
 @this(
     layout: templates.Layout,
@@ -27,6 +28,7 @@
     sectionHeading: SectionHeading,
     pageHeading: PageHeading
 )
+
 
 @(form: Form[_], mode: Mode, rates: List[String])(implicit request: Request[_], messages: Messages)
 
@@ -46,16 +48,12 @@
         @pageHeading(messages("allRatesPage.heading"))
 
 
-
-@helper.repeatWithIndex(form("all-rates"), min = rates.size) { (allRatesField, index) =>
-    @govukDateInput(
-        YearMonthDateViewModelNew(
-            allRatesField,
-            rates(index),
-            legend = LegendViewModel(messages("whenDidYouPayDuty.heading")).asVisuallyHidden(),
-        ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
-    )
-}
+      @helper.repeatWithIndex(form("all-rates"), min = rates.size) { (allRatesField, index) =>
+        <h2>@rates(index)</h2>
+        @govukInput(InputViewModelNew(allRatesField, "month", LabelViewModel(Text("Bulk volume"))))
+        @govukInput(InputViewModelNew(allRatesField, "year", LabelViewModel(Text("Pure Alcohol Volume"))))
+        @govukInput(InputViewModelNew(allRatesField, "bandName", LabelViewModel(Text(""))).copy(inputType = "hidden", value = Some(rates(index))))
+      }
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.continue"))

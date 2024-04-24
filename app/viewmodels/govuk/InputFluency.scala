@@ -59,6 +59,9 @@ trait InputFluency {
     def withId(id: String): Input =
       input.copy(id = id)
 
+    def withName(name: String): Input =
+      input.copy(name = name)
+
     def withInputType(inputType: String): Input =
       input.copy(inputType = inputType)
 
