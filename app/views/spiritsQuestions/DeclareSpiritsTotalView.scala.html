@@ -26,7 +26,9 @@
     govukButton: GovukButton,
     link: Link,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    subheading: components.SubHeading,
+    paragraph: components.Paragraph
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -46,7 +48,7 @@
 
         @pageHeading(messages("declareSpiritsTotal.heading"))
 
-        <h2 class="govuk-heading-l">@messages("declareSpiritsTotal.subheading1")</h2>
+        @subheading(text = messages("declareSpiritsTotal.subheading1"), classes = "govuk-heading-s")
         <p class="govuk-body">
             @messages("declareSpiritsTotal.p1")
             @link(
@@ -57,14 +59,14 @@
             )
         </p>
 
-        <p class="govuk-body">@messages("declareSpiritsTotal.p2")</p>
+        @paragraph(messages("declareSpiritsTotal.p2"))
         <ul class="govuk-list govuk-list--bullet">
             <li>@messages("declareSpiritsTotal.para2.list1")<strong> @messages("declareSpiritsTotal.para2.list1.bold")</strong></li>
             <li>@messages("declareSpiritsTotal.para2.list2")<strong> @messages("declareSpiritsTotal.para2.list2.bold")</strong></li>
 
         </ul>
 
-        <h2 class="govuk-heading-l">@messages("declareSpiritsTotal.subheading2")</h2>
+        @subheading(text = messages("declareSpiritsTotal.subheading2"), classes = "govuk-heading-s")
 
         @govukInput(
         InputViewModel(
