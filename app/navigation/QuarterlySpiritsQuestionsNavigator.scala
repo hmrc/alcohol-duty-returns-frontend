@@ -28,10 +28,8 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
     case pages.spiritsQuestions.DeclareSpiritsTotalPage =>
-      _ => controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.DeclareScotchWhiskyPage =>
-      _ => controllers.spiritsQuestions.routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.DeclareIrishWhiskeyPage =>
+      _ => controllers.spiritsQuestions.routes.WhiskyController.onPageLoad(NormalMode)
+    case pages.spiritsQuestions.WhiskyPage              =>
       _ => controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
     case _                                              => _ => routes.IndexController.onPageLoad
 

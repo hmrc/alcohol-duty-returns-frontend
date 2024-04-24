@@ -35,30 +35,13 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.DeclareSpiritsTotalPage,
           NormalMode,
           UserAnswers("id")
-        ) mustBe controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
+        ) mustBe controllers.spiritsQuestions.routes.WhiskyController.onPageLoad(NormalMode)
       }
 
-    }
-
-    "in Normal mode" - {
-
-      "must go from the Declare Scotch whisky page to Declare Irish whiskey page" in {
+      "must go from the Declare whiskey page to Spirit type page" in {
 
         navigator.nextPage(
-          pages.spiritsQuestions.DeclareScotchWhiskyPage,
-          NormalMode,
-          UserAnswers("id")
-        ) mustBe controllers.spiritsQuestions.routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
-      }
-
-    }
-
-    "in Normal mode" - {
-
-      "must go from the Declare Irish whiskey page to Spirit type page" in {
-
-        navigator.nextPage(
-          pages.spiritsQuestions.DeclareIrishWhiskeyPage,
+          pages.spiritsQuestions.WhiskyPage,
           NormalMode,
           UserAnswers("id")
         ) mustBe controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
