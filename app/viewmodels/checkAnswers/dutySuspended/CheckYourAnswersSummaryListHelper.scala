@@ -18,21 +18,43 @@ package viewmodels.checkAnswers.dutySuspended
 
 import models.UserAnswers
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.govuk.summarylist.SummaryListViewModel
 
 class CheckYourAnswersSummaryListHelper(userAnswers: UserAnswers)(implicit messages: Messages) {
 
-  def dutySuspendedDeliveriesSummaryList: Option[SummaryList] =
-    for {
-      deliveredOutsideUkSummaryRow <- DeclareDutySuspendedDeliveriesOutsideUkSummary.row(userAnswers)
-      deliveredWithinUkSummaryRow  <- DutySuspendedDeliveriesSummary.row(userAnswers)
-      receivedSummaryRow           <- DeclareDutySuspendedReceivedSummary.row(userAnswers)
-    } yield SummaryListViewModel(
-      Seq(
-        deliveredOutsideUkSummaryRow,
-        deliveredWithinUkSummaryRow,
-        receivedSummaryRow
+  def dutySuspendedDeliveriesSummaryList: Option[SummaryList] = {
+
+    val totalbeer                          = getOptionalRow(DutySuspendedBeerSummary.totalVolumeRow(userAnswers))
+    val pureAlcoholInBeer                  = getOptionalRow(DutySuspendedBeerSummary.pureAlcoholRow(userAnswers))
+    val totalCider                         = getOptionalRow(DutySuspendedCiderSummary.totalVolumeRow(userAnswers))
+    val pureAlcoholInCider                 = getOptionalRow(DutySuspendedCiderSummary.pureAlcoholRow(userAnswers))
+    val totalWine                          = getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))
+    val pureAlcoholInWine                  = getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers))
+    val totalSpirts                        = getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))
+    val pureAlcoholInSpirits               = getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers))
+    val totalOtherFermentedSummary         = getOptionalRow(DutySuspendedOtherFermentedSummary.totalVolumeRow(userAnswers))
+    val pureAlcoholInOtherFermentedSummary = getOptionalRow(
+      DutySuspendedOtherFermentedSummary.pureAlcoholRow(userAnswers)
+    )
+    Some(
+      SummaryListViewModel(
+        rows = totalbeer ++
+          pureAlcoholInBeer ++
+          totalCider ++
+          pureAlcoholInCider ++
+          totalWine ++
+          pureAlcoholInWine ++
+          totalSpirts ++
+          pureAlcoholInSpirits ++
+          totalOtherFermentedSummary ++
+          pureAlcoholInOtherFermentedSummary
       )
     )
+  }
+  private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
+    row match {
+      case Some(row) => Seq(row)
+      case None      => Seq.empty
+    }
 }

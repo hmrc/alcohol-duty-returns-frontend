@@ -18,13 +18,43 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import models.UserAnswers
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesOutsideUkPage, DeclareDutySuspendedReceivedPage, DutySuspendedDeliveriesPage}
+import pages.dutySuspended.{DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
 import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 
 class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase with SummaryListFluency {
+  val validTotal                                              = 42.34
+  val validPureAlcohol                                        = 34.23
+  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
+    returnId,
+    groupId,
+    userAnswersId,
+    Json.obj(
+      DutySuspendedBeerPage.toString           -> Json.obj(
+        "totalBeer"         -> validTotal,
+        "pureAlcoholInBeer" -> validPureAlcohol
+      ),
+      DutySuspendedCiderPage.toString          -> Json.obj(
+        "totalCider"         -> validTotal,
+        "pureAlcoholInCider" -> validPureAlcohol
+      ),
+      DutySuspendedSpiritsPage.toString        -> Json.obj(
+        "totalSpirits"         -> validTotal,
+        "pureAlcoholInSpirits" -> validPureAlcohol
+      ),
+      DutySuspendedWinePage.toString           -> Json.obj(
+        "totalWine"         -> validTotal,
+        "pureAlcoholInWine" -> validPureAlcohol
+      ),
+      DutySuspendedOtherFermentedPage.toString -> Json.obj(
+        "totalOtherFermented"         -> validTotal,
+        "pureAlcoholInOtherFermented" -> validPureAlcohol
+      )
+    )
+  )
 
   "Check Your Answers Duty Suspended Deliveries Controller" - {
 
@@ -51,11 +81,46 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
       }
     }
 
+    "must return OK and the correct view for a GET if all relevant regime questions are answered" in {
+
+      val beerScreenAnswer: UserAnswers = UserAnswers(
+        returnId,
+        groupId,
+        userAnswersId,
+        Json.obj(
+          DutySuspendedBeerPage.toString -> Json.obj(
+            "totalBeer"         -> validTotal,
+            "pureAlcoholInBeer" -> validPureAlcohol
+          )
+        )
+      )
+
+      val application = applicationBuilder(userAnswers = Some(beerScreenAnswer)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(
+            GET,
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
+          )
+
+        val result = route(application, request).value
+
+        val view                   = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
+        val checkYourAnswersHelper =
+          new CheckYourAnswersSummaryListHelper(beerScreenAnswer)(messages(application))
+        val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList.get
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+      }
+    }
+
     "must redirect to Journey Recovery for a GET" - {
 
       "if no existing data is found" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
         running(application) {
           val request =
@@ -70,33 +135,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }
-      "if all necessary questions are answered are not answered" in {
-        val incompleteUserAnswers1 =
-          completeDutySuspendedDeliveriesUserAnswers.remove(DeclareDutySuspendedDeliveriesOutsideUkPage).success.value
-        val incompleteUserAnswers2 =
-          completeDutySuspendedDeliveriesUserAnswers.remove(DutySuspendedDeliveriesPage).success.value
-        val incompleteUserAnswers3 =
-          completeDutySuspendedDeliveriesUserAnswers.remove(DeclareDutySuspendedReceivedPage).success.value
 
-        val incompleteUserAnswersList = Seq(incompleteUserAnswers1, incompleteUserAnswers2, incompleteUserAnswers3)
-
-        incompleteUserAnswersList.foreach { (incompleteUserAnswers: UserAnswers) =>
-          val application = applicationBuilder(Some(incompleteUserAnswers)).build()
-
-          running(application) {
-            val request =
-              FakeRequest(
-                GET,
-                controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
-              )
-
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-          }
-        }
-      }
     }
   }
 }

@@ -26,5 +26,8 @@ object AlcoholDutyTaskListHelper {
   def getTaskList(userAnswers: UserAnswers, validUntil: Instant)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
-    AlcoholDutyTaskList(Seq(ReturnTaskListHelper.returnSection(userAnswers)), validUntil.toLocalDateString())
+    AlcoholDutyTaskList(
+      Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
+      validUntil.toLocalDateString()
+    )
 }

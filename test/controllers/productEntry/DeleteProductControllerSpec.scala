@@ -18,7 +18,6 @@ package controllers.productEntry
 
 import base.SpecBase
 import forms.productEntry.DeleteProductFormProvider
-import models.UserAnswers
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}

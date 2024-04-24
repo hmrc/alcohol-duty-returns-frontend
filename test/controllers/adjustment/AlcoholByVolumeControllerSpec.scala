@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AlcoholByVolumeFormProvider
-import models.{AlcoholByVolume, NormalMode, UserAnswers}
+import models.{AlcoholByVolume, NormalMode}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when

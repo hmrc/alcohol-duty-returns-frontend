@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when

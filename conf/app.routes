@@ -90,6 +90,31 @@ POST       /change-do-you-need-to-declare-delivered-received-duty-suspended     
 
 GET        /tell-us-about-your-duty-suspended-deliveries                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onPageLoad()
 
+GET        /tell-us-about-your-beer-in-duty-suspense                        controllers.dutySuspended.DutySuspendedBeerController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-your-beer-in-duty-suspense                        controllers.dutySuspended.DutySuspendedBeerController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-your-beer-in-duty-suspense                 controllers.dutySuspended.DutySuspendedBeerController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-your-beer-in-duty-suspense                 controllers.dutySuspended.DutySuspendedBeerController.onSubmit(mode: Mode = CheckMode)
+
+GET        /tell-us-about-your-wine-in-duty-suspense                        controllers.dutySuspended.DutySuspendedWineController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-your-wine-in-duty-suspense                        controllers.dutySuspended.DutySuspendedWineController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-your-wine-in-duty-suspense                  controllers.dutySuspended.DutySuspendedWineController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-your-wine-in-duty-suspense                  controllers.dutySuspended.DutySuspendedWineController.onSubmit(mode: Mode = CheckMode)
+
+GET        /tell-us-about-your-cider-in-duty-suspense                        controllers.dutySuspended.DutySuspendedCiderController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-your-cider-in-duty-suspense                        controllers.dutySuspended.DutySuspendedCiderController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-your-cider-in-duty-suspense                  controllers.dutySuspended.DutySuspendedCiderController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-your-cider-in-duty-suspense                  controllers.dutySuspended.DutySuspendedCiderController.onSubmit(mode: Mode = CheckMode)
+
+GET        /tell-us-about-your-spirits-in-duty-suspense                        controllers.dutySuspended.DutySuspendedSpiritsController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-your-spirits-in-duty-suspense                        controllers.dutySuspended.DutySuspendedSpiritsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-your-spirits-in-duty-suspense                  controllers.dutySuspended.DutySuspendedSpiritsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-your-spirits-in-duty-suspense                  controllers.dutySuspended.DutySuspendedSpiritsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /tell-us-about-your-other-fermented-in-duty-suspense                        controllers.dutySuspended.DutySuspendedOtherFermentedController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-your-other-fermented-in-duty-suspense                        controllers.dutySuspended.DutySuspendedOtherFermentedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-your-other-fermented-in-duty-suspense                  controllers.dutySuspended.DutySuspendedOtherFermentedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-your-other-fermented-in-duty-suspense                  controllers.dutySuspended.DutySuspendedOtherFermentedController.onSubmit(mode: Mode = CheckMode)
+
 GET        /how-much-have-you-delivered-duty-suspended-outside-of-the-uk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-have-you-delivered-duty-suspended-outside-of-the-uk                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-have-you-delivered-duty-suspended-outside-of-the-uk                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkController.onPageLoad(mode: Mode = CheckMode)
@@ -105,10 +130,16 @@ POST       /how-much-have-you-received-suspended                  controllers.du
 GET        /change-how-much-have-you-received-suspended                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-have-you-received-suspended                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
 
-GET        /check-your-answers-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+GET        /check-your-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
 # End of of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
+
+GET        /tell-us-about-the-spirits-and-ingredients-you-have-used                        controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-the-spirits-and-ingredients-you-have-used                        controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-the-spirits-and-ingredients-you-have-used                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-the-spirits-and-ingredients-you-have-used                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = CheckMode)
+
 GET        /what-is-the-total-volume-of-spirits-you-made-this-quarter                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-is-the-total-volume-of-spirits-you-made-this-quarter                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
 GET        /change-what-is-the-total-volume-of-spirits-you-made-this-quarter                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
@@ -123,8 +154,6 @@ GET        /how-much-irish-whiskey-have-you-made                  controllers.sp
 POST       /how-much-irish-whiskey-have-you-made                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-irish-whiskey-have-you-made                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-irish-whiskey-have-you-made                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
-
-GET        /tell-us-about-the-spirits-and-ingredients-you-have-used                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 GET        /how-much-unmalted-grain-have-you-used                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-unmalted-grain-have-you-used                 controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = NormalMode)
@@ -184,15 +213,15 @@ POST       /what-is-the-adjustment-tax-type                  controllers.adjustm
 GET        /change-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /what-is-your-adjustment-small-producer-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-is-your-adjustment-small-producer-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
+GET        /change--your-adjustment-small-producer-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-your-adjustment-small-producer-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
+
 GET        /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
-
-GET        /what-is-your-adjustment-small-producer-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-your-adjustment-small-producer-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
-GET        /change--your-adjustment-small-producer-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-your-adjustment-small-producer-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 # End of adjustments sub-journey

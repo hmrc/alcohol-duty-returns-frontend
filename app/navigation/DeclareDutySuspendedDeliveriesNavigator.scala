@@ -29,24 +29,35 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
   override val normalRoutes: Page => UserAnswers => Call = {
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage  =>
       declareDutySuspendedDeliveriesQuestionPageRoute
+    case pages.dutySuspended.DutySuspendedBeerPage                       =>
+      _ => controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)
+    case pages.dutySuspended.DutySuspendedCiderPage                      =>
+      _ => controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)
+    case pages.dutySuspended.DutySuspendedWinePage                       =>
+      _ => controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)
+    case pages.dutySuspended.DutySuspendedSpiritsPage                    =>
+      _ => controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
     case pages.dutySuspended.DutySuspendedDeliveriesPage                 =>
       _ => controllers.dutySuspended.routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
-    case pages.dutySuspended.DeclareDutySuspendedReceivedPage            =>
+    case pages.dutySuspended.DutySuspendedOtherFermentedPage             =>
       _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
     case _                                                               =>
       _ => routes.IndexController.onPageLoad
   }
 
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+  override val checkRouteMap: Page => UserAnswers => Call = {
+    case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage =>
+      declareDutySuspendedDeliveriesQuestionPageRoute
+    case _                                                              =>
+      _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
   }
 
   private def declareDutySuspendedDeliveriesQuestionPageRoute(answers: UserAnswers): Call =
     answers.get(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage) match {
       case Some(true)  => controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
-      case Some(false) => routes.IndexController.onPageLoad
+      case Some(false) => routes.TaskListController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
 

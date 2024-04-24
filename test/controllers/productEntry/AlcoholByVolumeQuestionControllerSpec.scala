@@ -21,7 +21,7 @@ import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.AlcoholByVolumeQuestionFormProvider
 import models.RateType.Core
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, NormalMode, RateTypeResponse, UserAnswers}
+import models.{AlcoholByVolume, NormalMode, RateTypeResponse}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when

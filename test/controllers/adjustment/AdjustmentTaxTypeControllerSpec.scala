@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AdjustmentTaxTypeFormProvider
-import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
