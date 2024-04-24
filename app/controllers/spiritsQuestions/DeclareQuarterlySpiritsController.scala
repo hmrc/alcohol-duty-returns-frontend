@@ -17,29 +17,29 @@
 package controllers.spiritsQuestions
 
 import controllers.actions._
-import forms.spiritsQuestions.WhiskyFormProvider
+import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.WhiskyPage
+import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.spiritsQuestions.WhiskyView
+import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhiskyController @Inject() (
+class DeclareQuarterlySpiritsController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: QuarterlySpiritsQuestionsNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: WhiskyFormProvider,
+  formProvider: DeclareQuarterlySpiritsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: WhiskyView
+  view: DeclareQuarterlySpiritsView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -47,7 +47,7 @@ class WhiskyController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(WhiskyPage) match {
+    val preparedForm = request.userAnswers.get(DeclareQuarterlySpiritsPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -63,9 +63,9 @@ class WhiskyController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(WhiskyPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(WhiskyPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers))
         )
   }
 }

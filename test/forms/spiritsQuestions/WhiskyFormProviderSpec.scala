@@ -26,11 +26,11 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".ScotchWhisky" - {
 
-    val fieldName = "ScotchWhisky"
+    val fieldName   = "ScotchWhisky"
     val requiredKey = "whisky.error.ScotchWhisky.required"
-    val minimum = 0.00
-    val maximum = 999999999.99
-    val decimal = 2
+    val minimum     = 0.00
+    val maximum     = 999999999.99
+    val decimal     = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -72,11 +72,11 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".IrishWhiskey" - {
 
-    val fieldName = "IrishWhiskey"
+    val fieldName   = "IrishWhiskey"
     val requiredKey = "whisky.error.IrishWhiskey.required"
-    val minimum = 0.00
-    val maximum = 999999999.99
-    val decimal = 2
+    val minimum     = 0.00
+    val maximum     = 999999999.99
+    val decimal     = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 

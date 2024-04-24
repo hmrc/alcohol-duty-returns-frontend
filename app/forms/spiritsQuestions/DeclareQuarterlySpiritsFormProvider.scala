@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package models.spiritsQuestions
+package forms.spiritsQuestions
 
-import play.api.libs.json._
+import javax.inject.Inject
 
-case class Whisky(ScotchWhisky: BigDecimal, IrishWhiskey: BigDecimal)
+import forms.mappings.Mappings
+import play.api.data.Form
 
-object Whisky {
-  implicit val format: OFormat[Whisky] = Json.format[Whisky]
+class DeclareQuarterlySpiritsFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "declareQuarterlySpirits-yesNoValue" -> boolean("declareQuarterlySpirits.error.required")
+    )
 }

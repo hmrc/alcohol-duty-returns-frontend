@@ -131,12 +131,16 @@ GET        /check-your-duty-suspended-deliveries                  controllers.du
 # End of of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
+
+GET        /tell-us-about-the-spirits-and-ingredients-you-have-used                        controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-the-spirits-and-ingredients-you-have-used                        controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-the-spirits-and-ingredients-you-have-used                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-the-spirits-and-ingredients-you-have-used                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = CheckMode)
+
 GET        /what-is-the-total-volume-of-spirits-you-made-this-quarter                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-is-the-total-volume-of-spirits-you-made-this-quarter                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
 GET        /change-what-is-the-total-volume-of-spirits-you-made-this-quarter                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-what-is-the-total-volume-of-spirits-you-made-this-quarter                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
-
-GET        /tell-us-about-the-spirits-and-ingredients-you-have-used                       controllers.spiritsQuestions.QuarterlySpiritsReturnGuidanceController.onPageLoad()
 
 GET        /how-much-whiskey-have-you-made                        controllers.spiritsQuestions.WhiskyController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-whiskey-have-you-made                        controllers.spiritsQuestions.WhiskyController.onSubmit(mode: Mode = NormalMode)

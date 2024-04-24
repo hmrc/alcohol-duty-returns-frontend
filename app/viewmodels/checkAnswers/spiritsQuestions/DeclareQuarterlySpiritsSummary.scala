@@ -18,28 +18,24 @@ package viewmodels.checkAnswers.spiritsQuestions
 
 import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
-import pages.spiritsQuestions.WhiskyPage
+import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object WhiskySummary {
+object DeclareQuarterlySpiritsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WhiskyPage).map { answer =>
-      val value = HtmlFormat.escape(answer.ScotchWhisky.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.IrishWhiskey.toString())
-        .toString
+    answers.get(DeclareQuarterlySpiritsPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "whisky.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "declareQuarterlySpirits.checkYourAnswersLabel",
+        value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.WhiskyController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("whisky.change.hidden"))
+          ActionItemViewModel("site.change", routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("declareQuarterlySpirits.change.hidden"))
         )
       )
     }
