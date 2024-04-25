@@ -41,6 +41,8 @@ class OtherSpiritsProducedControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new OtherSpiritsProducedFormProvider()
   val form         = formProvider()
 
+  val otherSpiritsProduced = "CocoPopsVodka"
+
   lazy val otherSpiritsProducedRoute =
     controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(NormalMode).url
 
@@ -64,7 +66,7 @@ class OtherSpiritsProducedControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(OtherSpiritsProducedPage, "answer").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(OtherSpiritsProducedPage, otherSpiritsProduced).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,7 +78,10 @@ class OtherSpiritsProducedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(otherSpiritsProduced), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -97,7 +102,7 @@ class OtherSpiritsProducedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, otherSpiritsProducedRoute)
-            .withFormUrlEncodedBody(("otherSpiritsProduced", "answer"))
+            .withFormUrlEncodedBody(("otherSpiritsProduced", otherSpiritsProduced))
 
         val result = route(application, request).value
 
@@ -147,7 +152,7 @@ class OtherSpiritsProducedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, otherSpiritsProducedRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("otherSpiritsProduced", otherSpiritsProduced))
 
         val result = route(application, request).value
 

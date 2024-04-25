@@ -21,7 +21,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
+    govukTextarea: GovukTextarea,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
@@ -45,14 +45,13 @@
 
         @pageHeading(messages("otherSpiritsProduced.heading"))
 
-        @subHeading(messages("otherSpiritsProduced.subheading1"))
-
-        @govukInput(
-            InputViewModel(
+        @govukTextarea(
+            TextareaViewModel(
                 field = form("otherSpiritsProduced"),
                 label = LabelViewModel(messages("otherSpiritsProduced.subheading1")).asVisuallyHidden()
             )
             .withWidth(TwoThirds)
+            .withHint(Hint(content = HtmlContent(messages("otherSpiritsProduced.hint"))))
         )
 
         @govukButton(
