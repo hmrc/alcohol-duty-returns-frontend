@@ -27,10 +27,10 @@ class OtherSpiritsProducedFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "otherSpiritsProduced" -> text("otherSpiritsProduced.error.required")
-        .verifying(maxLength(length, "otherSpiritsProduced.error.length"))
+        .verifying(maxLength(otherTypesLength, "otherSpiritsProduced.error.length"))
     )
 }
 
 object OtherSpiritsProducedFormProvider {
-  val length = 150
+  val otherTypesLength = 150
 }
