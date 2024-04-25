@@ -42,7 +42,7 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() extends BaseNavigator {
     case pages.dutySuspended.DutySuspendedDeliveriesPage                 =>
       _ => controllers.dutySuspended.routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
     case pages.dutySuspended.DutySuspendedOtherFermentedPage             =>
-      _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+      _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
     case _                                                               =>
       _ => routes.IndexController.onPageLoad
   }
@@ -51,7 +51,7 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() extends BaseNavigator {
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage =>
       declareDutySuspendedDeliveriesQuestionPageRoute
     case _                                                              =>
-      _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+      _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
   }
 
   private def declareDutySuspendedDeliveriesQuestionPageRoute(answers: UserAnswers): Call =
