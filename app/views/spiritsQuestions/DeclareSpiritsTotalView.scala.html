@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{Link, SectionHeading, PageHeading}
+@import components.{Link, SectionHeading, PageHeading, BulletList}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
 @this(
@@ -28,7 +28,8 @@
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
     subheading: components.SubHeading,
-    paragraph: components.Paragraph
+    paragraph: components.Paragraph,
+    bulletList: BulletList,
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -60,11 +61,10 @@
         </p>
 
         @paragraph(messages("declareSpiritsTotal.p2"))
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@messages("declareSpiritsTotal.para2.list1")</li>
-            <li>@messages("declareSpiritsTotal.para2.list2")</li>
-
-        </ul>
+        @bulletList(Seq(
+            messages("declareSpiritsTotal.para2.list1"),
+            messages("declareSpiritsTotal.para2.list2")
+            ))
 
         @subheading(text = messages("declareSpiritsTotal.subheading2"), classes = "govuk-heading-m")
 
