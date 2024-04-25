@@ -1,0 +1,84 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import viewmodels.InputWidth._
+@import components.{SectionHeading, PageHeading, SubHeading}
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading,
+    subHeading: SubHeading
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("otherIngredientsUsed.title"))) {
+
+    @formHelper(action = controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @sectionHeading(
+            id = "other-ingredients-used-section",
+            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
+        )
+
+        @pageHeading(messages("otherIngredientsUsed.heading"))
+
+        @subHeading(messages("otherIngredientsUsed.subheading1"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("other-ingredients-types"),
+                label = LabelViewModel(messages("otherIngredientsUsed.subheading1")).asVisuallyHidden()
+            )
+            .withWidth(ThreeQuarters)
+        )
+
+        @subHeading(messages("otherIngredientsUsed.subheading2"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("other-ingredients-unit"),
+                label = LabelViewModel(messages("otherIngredientsUsed.otherIngredientsUsedUnit"))
+            )
+            .withWidth(Full)
+        )
+
+        @subHeading(messages("otherIngredientsUsed.subheading3"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("other-ingredients-quantity"),
+                label = LabelViewModel(messages("otherIngredientsUsed.otherIngredientsUsedQuantity")).asVisuallyHidden()
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withHint(Hint(content = HtmlContent(messages("otherIngredientsUsed.hint"))))
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+        )
+    }
+}
