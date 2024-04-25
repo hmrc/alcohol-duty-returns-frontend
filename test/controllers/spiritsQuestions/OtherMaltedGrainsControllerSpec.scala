@@ -41,18 +41,18 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new OtherMaltedGrainsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val otherMaltedGrainsRoute = routes.OtherMaltedGrainsController.onPageLoad(NormalMode).url
 
-  val otherMaltedGrainsTypes = "Coco Pops"
+  val otherMaltedGrainsTypes    = "Coco Pops"
   val otherMaltedGrainsQuantity = BigDecimal(100000)
 
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       OtherMaltedGrainsPage.toString -> Json.obj(
-        "otherMaltedGrainsTypes" -> otherMaltedGrainsTypes,
+        "otherMaltedGrainsTypes"    -> otherMaltedGrainsTypes,
         "otherMaltedGrainsQuantity" -> otherMaltedGrainsQuantity
       )
     )
@@ -88,7 +88,10 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -109,7 +112,10 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, otherMaltedGrainsRoute)
-            .withFormUrlEncodedBody(("otherMaltedGrainsTypes", otherMaltedGrainsTypes), ("otherMaltedGrainsQuantity", otherMaltedGrainsQuantity.toString()))
+            .withFormUrlEncodedBody(
+              ("otherMaltedGrainsTypes", otherMaltedGrainsTypes),
+              ("otherMaltedGrainsQuantity", otherMaltedGrainsQuantity.toString())
+            )
 
         val result = route(application, request).value
 
@@ -159,7 +165,10 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, otherMaltedGrainsRoute)
-            .withFormUrlEncodedBody(("otherMaltedGrainsTypes", otherMaltedGrainsTypes), ("otherMaltedGrainsQuantity", otherMaltedGrainsQuantity.toString()))
+            .withFormUrlEncodedBody(
+              ("otherMaltedGrainsTypes", otherMaltedGrainsTypes),
+              ("otherMaltedGrainsQuantity", otherMaltedGrainsQuantity.toString())
+            )
 
         val result = route(application, request).value
 

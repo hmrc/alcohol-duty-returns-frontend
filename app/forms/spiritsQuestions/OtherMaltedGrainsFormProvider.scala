@@ -24,18 +24,26 @@ import play.api.data.Forms._
 import models.spiritsQuestions.OtherMaltedGrains
 
 class OtherMaltedGrainsFormProvider @Inject() extends Mappings {
+  import OtherMaltedGrainsFormProvider._
 
-   def apply(): Form[OtherMaltedGrains] = Form(
-     mapping(
-      "otherMaltedGrainsTypes" -> text("otherMaltedGrains.error.otherMaltedGrainsTypes.required")
-        .verifying(maxLength(120, "otherMaltedGrains.error.otherMaltedGrainsTypes.length")),
-       "otherMaltedGrainsQuantity"         -> bigDecimal(
-         2,
-         "otherMaltedGrains.error.otherMaltedGrainsQuantity.required",
-         "otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric",
-         "otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces"
-       ).verifying(minimumValue(BigDecimal(0.01), "otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired"))
-         .verifying(maximumValue(BigDecimal(999999999.99), "otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired"))
+  def apply(): Form[OtherMaltedGrains] = Form(
+    mapping(
+      "otherMaltedGrainsTypes"    -> text("otherMaltedGrains.error.otherMaltedGrainsTypes.required")
+        .verifying(maxLength(typesMaxLength, "otherMaltedGrains.error.otherMaltedGrainsTypes.length")),
+      "otherMaltedGrainsQuantity" -> bigDecimal(
+        quantityMaxDecimalPlaces,
+        "otherMaltedGrains.error.otherMaltedGrainsQuantity.required",
+        "otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric",
+        "otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces"
+      ).verifying(minimumValue(quantityMinValue, "otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired"))
     )(OtherMaltedGrains.apply)(OtherMaltedGrains.unapply)
-   )
- }
+  )
+}
+
+object OtherMaltedGrainsFormProvider {
+  val typesMaxLength           = 120
+  val quantityMaxDecimalPlaces = 2
+  val quantityMinValue         = BigDecimal(0.01)
+  val quantityMaxValue         = BigDecimal(999999999.99)
+}

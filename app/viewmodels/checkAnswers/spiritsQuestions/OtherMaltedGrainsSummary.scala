@@ -26,21 +26,21 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object OtherMaltedGrainsSummary  {
+object OtherMaltedGrainsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(OtherMaltedGrainsPage).map {
-      answer =>
+    answers.get(OtherMaltedGrainsPage).map { answer =>
+      val value = HtmlFormat.escape(answer.otherMaltedGrainsTypes).toString + "<br/>" + HtmlFormat
+        .escape(answer.otherMaltedGrainsQuantity.toString())
+        .toString
 
-      val value = HtmlFormat.escape(answer.otherMaltedGrainsTypes).toString + "<br/>" + HtmlFormat.escape(answer.otherMaltedGrainsQuantity.toString()).toString
-
-        SummaryListRowViewModel(
-          key     = "otherMaltedGrains.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.OtherMaltedGrainsController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("otherMaltedGrains.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "otherMaltedGrains.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.OtherMaltedGrainsController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("otherMaltedGrains.change.hidden"))
         )
+      )
     }
 }

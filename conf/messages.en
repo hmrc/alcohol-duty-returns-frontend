@@ -563,17 +563,15 @@ otherMaltedGrains.subheading1 = What other malted grains have you used?
 otherMaltedGrains.subheading2 = How much have you used?
 otherMaltedGrains.hint = Enter weight in tonnes, up to 2 decimal places.
 otherMaltedGrains.checkYourAnswersLabel = OtherMaltedGrains
-otherMaltedGrains.error.otherMaltedGrainsTypes.required = TBD Enter otherMaltedGrainsTypes
-otherMaltedGrains.error.otherMaltedGrainsQuantity.required = Enter how much other malted grains you have used.
-otherMaltedGrains.error.otherMaltedGrainsTypes.length = TBD must be 120 characters or less
-otherMaltedGrains.error.otherMaltedGrainsQuantity.length = otherMaltedGrainsQuantity must be 100 characters or less
+otherMaltedGrains.error.otherMaltedGrainsTypes.required = Enter other malted grains
+otherMaltedGrains.error.otherMaltedGrainsTypes.length = Other malted grains must be {0} characters or less
 otherMaltedGrains.otherMaltedGrainsTypes.change.hidden = otherMaltedGrainsTypes
-otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = otherMaltedGrainsQuantity
 otherMaltedGrains.error.otherMaltedGrainsQuantity.required = Enter how much other malted grains you have used.
 otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric = The volume of other malted grains you need to declare must be a number
 otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired = The volume of other malted grains you need to declare must be 999999999.99 or less
-otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired = The volume of other malted grains you need to declare must be 0.01 or more
+otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired = The volume of other malted grains you need to declare must be {0} or more
 otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces = The volume of other malted grains you need to declare must be a number to 2 decimal places
+otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = otherMaltedGrainsQuantity
 # End of quarterly spirits questions sub-journey
 
 

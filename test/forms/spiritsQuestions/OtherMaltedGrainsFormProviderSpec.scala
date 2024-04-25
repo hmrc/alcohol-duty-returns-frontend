@@ -25,10 +25,10 @@ class OtherMaltedGrainsFormProviderSpec extends StringFieldBehaviours with BigDe
 
   ".otherMaltedGrainsTypes" - {
 
-    val fieldName = "otherMaltedGrainsTypes"
+    val fieldName   = "otherMaltedGrainsTypes"
     val requiredKey = "otherMaltedGrains.error.otherMaltedGrainsTypes.required"
-    val lengthKey = "otherMaltedGrains.error.otherMaltedGrainsTypes.length"
-    val maxLength = 120
+    val lengthKey   = "otherMaltedGrains.error.otherMaltedGrainsTypes.length"
+    val maxLength   = 120
 
     behave like fieldThatBindsValidData(
       form,
@@ -51,47 +51,49 @@ class OtherMaltedGrainsFormProviderSpec extends StringFieldBehaviours with BigDe
   }
 
   ".otherMaltedGrainsQuantity" - {
-      val fieldName   = "otherMaltedGrainsQuantity"
-      val requiredKey = "otherMaltedGrains.error.otherMaltedGrainsQuantity.required"
-      val minimum     = 0.01
-      val maximum     = 999999999.99
-      val decimal     = 2
+    val fieldName   = "otherMaltedGrainsQuantity"
+    val requiredKey = "otherMaltedGrains.error.otherMaltedGrainsQuantity.required"
+    val minimum     = 0.01
+    val maximum     = 999999999.99
+    val decimal     = 2
 
-      val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
-      behave like fieldThatBindsValidData(
-        form,
-        fieldName,
-        validDataGenerator
-      )
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      validDataGenerator
+    )
 
-      behave like bigDecimalField(
-        form,
-        fieldName,
-        nonNumericError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric"),
-        twoDecimalPlacesError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces")
-      )
+    behave like bigDecimalField(
+      form,
+      fieldName,
+      nonNumericError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces")
+    )
 
-      behave like bigDecimalFieldWithMinimum(
-        form,
-        fieldName,
-        minimum = minimum,
-        decimal = decimal,
-        expectedError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired", Seq(minimum))
-      )
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError =
+        FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired", Seq(minimum))
+    )
 
-      behave like bigDecimalFieldWithMaximum(
-        form,
-        fieldName,
-        maximum = maximum,
-        decimal = decimal,
-        expectedError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired", Seq(maximum))
-      )
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError =
+        FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired", Seq(maximum))
+    )
 
-      behave like mandatoryField(
-        form,
-        fieldName,
-        requiredError = FormError(fieldName, requiredKey)
-      )
-    }
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }
