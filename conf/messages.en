@@ -658,3 +658,15 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
+
+alcoholUsed.title = alcoholUsed
+alcoholUsed.heading = alcoholUsed
+alcoholUsed.beer = beer
+alcoholUsed.wine = wine
+alcoholUsed.checkYourAnswersLabel = AlcoholUsed
+alcoholUsed.error.beer.required = Enter beer
+alcoholUsed.error.wine.required = Enter wine
+alcoholUsed.error.beer.length = beer must be 100 characters or less
+alcoholUsed.error.wine.length = wine must be 100 characters or less
+alcoholUsed.beer.change.hidden = beer
+alcoholUsed.wine.change.hidden = wine

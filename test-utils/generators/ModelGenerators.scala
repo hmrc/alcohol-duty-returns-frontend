@@ -26,6 +26,14 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryAlcoholUsed: Arbitrary[spiritsQuestions.AlcoholUsed] =
+    Arbitrary {
+      for {
+        beer <- arbitrary[String]
+        wine <- arbitrary[String]
+      } yield spiritsQuestions.AlcoholUsed(beer, wine)
+    }
+
   implicit lazy val arbitraryDutySuspendedBeer: Arbitrary[dutySuspended.DutySuspendedBeer] =
     Arbitrary {
       for {
