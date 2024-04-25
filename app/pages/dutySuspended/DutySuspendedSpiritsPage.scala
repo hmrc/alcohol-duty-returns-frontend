@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package pages.dutySuspended
 
-import models.UserAnswers
-import play.api.i18n.Messages
-import viewmodels.govuk.all.FluentInstant
+import models.dutySuspended.DutySuspendedSpirits
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-import java.time.Instant
+case object DutySuspendedSpiritsPage extends QuestionPage[DutySuspendedSpirits] {
 
-object AlcoholDutyTaskListHelper {
-  def getTaskList(userAnswers: UserAnswers, validUntil: Instant)(implicit
-    messages: Messages
-  ): AlcoholDutyTaskList =
-    AlcoholDutyTaskList(
-      Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
-      validUntil.toLocalDateString()
-    )
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "dutySuspendedSpirits"
 }

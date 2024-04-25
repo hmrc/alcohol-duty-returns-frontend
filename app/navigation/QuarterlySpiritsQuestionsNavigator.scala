@@ -19,6 +19,7 @@ package navigation
 import controllers._
 import models._
 import pages._
+import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -27,17 +28,25 @@ import javax.inject.{Inject, Singleton}
 class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case pages.spiritsQuestions.DeclareSpiritsTotalPage =>
+    case pages.spiritsQuestions.DeclareQuarterlySpiritsPage => declareQuarterlySpiritsRoute
+    case pages.spiritsQuestions.DeclareSpiritsTotalPage     =>
       _ => controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.DeclareScotchWhiskyPage =>
+    case pages.spiritsQuestions.DeclareScotchWhiskyPage     =>
       _ => controllers.spiritsQuestions.routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.DeclareIrishWhiskeyPage =>
+    case pages.spiritsQuestions.DeclareIrishWhiskeyPage     =>
       _ => controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
-    case _                                              => _ => routes.IndexController.onPageLoad
+    case _                                                  => _ => routes.IndexController.onPageLoad
 
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
     _ => routes.CheckYourAnswersController.onPageLoad()
   }
+
+  private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
+    userAnswers.get(DeclareQuarterlySpiritsPage) match {
+      case Some(true)  => controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
+      case Some(false) => routes.TaskListController.onPageLoad
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
 }

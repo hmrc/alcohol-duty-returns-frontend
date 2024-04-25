@@ -37,8 +37,8 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper(request.userAnswers)
     checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList match {
-      case Some(summaryList) => Ok(view(summaryList))
-      case None              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(summaryList) if summaryList.rows.nonEmpty => Ok(view(summaryList))
+      case _                                              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

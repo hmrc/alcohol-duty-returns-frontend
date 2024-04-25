@@ -17,6 +17,7 @@
 package viewmodels.tasklist
 
 import models.{CheckMode, NormalMode, UserAnswers}
+import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{DeclareAlcoholDutyQuestionPage, ProductEntryListPage, ProductListPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
@@ -60,6 +61,55 @@ object ReturnTaskListHelper {
     )
   }
 
+  def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
+    val declareDSDQuestion = userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
+      case Some(true)  =>
+        Seq(
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.needToDeclare.yes"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(
+              controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          ),
+          returnDSDJourneyTaskListItem(userAnswers)
+        )
+      case Some(false) =>
+        Seq(
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.needToDeclare.no"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(
+              controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          )
+        )
+      case None        =>
+        Seq(
+          TaskListItem(
+            title =
+              TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.needToDeclare.notStarted"))),
+            status = AlcholDutyTaskListItemStatus.notStarted,
+            href = Some(
+              controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
+                .onPageLoad(NormalMode)
+                .url
+            )
+          )
+        )
+    }
+
+    Section(
+      title = messages("taskList.section.dutySuspended.heading"),
+      taskList = TaskList(items = declareDSDQuestion),
+      statusCompleted = AlcholDutyTaskListItemStatus.completed
+    )
+  }
+
   private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem =
     (userAnswers.get(ProductListPage), userAnswers.get(ProductEntryListPage)) match {
       case (Some(false), Some(list)) if list.nonEmpty =>
@@ -81,4 +131,38 @@ object ReturnTaskListHelper {
           href = Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url)
         )
     }
+
+  private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
+    val beer           = userAnswers.get(DutySuspendedBeerPage).isDefined
+    val cider          = userAnswers.get(DutySuspendedCiderPage).isDefined
+    val wine           = userAnswers.get(DutySuspendedWinePage).isDefined
+    val spirits        = userAnswers.get(DutySuspendedSpiritsPage).isDefined
+    val otherFermented = userAnswers.get(DutySuspendedOtherFermentedPage).isDefined
+    val definedCount   = Seq(beer, cider, wine, spirits, otherFermented).count(identity)
+
+    definedCount match {
+      case 0 =>
+        TaskListItem(
+          title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.notStarted"))),
+          status = AlcholDutyTaskListItemStatus.notStarted,
+          href = Some(controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url)
+        )
+
+      case 5 =>
+        TaskListItem(
+          title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.completed"))),
+          status = AlcholDutyTaskListItemStatus.completed,
+          href = Some(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url)
+        )
+
+      case _ =>
+        TaskListItem(
+          title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.inProgress"))),
+          status = AlcholDutyTaskListItemStatus.inProgress,
+          href = Some(controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url)
+        )
+
+    }
+  }
+
 }

@@ -26,6 +26,46 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryDutySuspendedBeer: Arbitrary[dutySuspended.DutySuspendedBeer] =
+    Arbitrary {
+      for {
+        totalBeer         <- arbitrary[BigDecimal]
+        pureAlcoholInBeer <- arbitrary[BigDecimal]
+      } yield dutySuspended.DutySuspendedBeer(totalBeer, pureAlcoholInBeer)
+    }
+
+  implicit lazy val arbitraryDutySuspendedCider: Arbitrary[dutySuspended.DutySuspendedCider] =
+    Arbitrary {
+      for {
+        totalCider         <- arbitrary[BigDecimal]
+        pureAlcoholInCider <- arbitrary[BigDecimal]
+      } yield dutySuspended.DutySuspendedCider(totalCider, pureAlcoholInCider)
+    }
+
+  implicit lazy val arbitraryDutySuspendedWine: Arbitrary[dutySuspended.DutySuspendedWine] =
+    Arbitrary {
+      for {
+        totalWine         <- arbitrary[BigDecimal]
+        pureAlcoholInWine <- arbitrary[BigDecimal]
+      } yield dutySuspended.DutySuspendedWine(totalWine, pureAlcoholInWine)
+    }
+
+  implicit lazy val arbitraryDutySuspendedSpirits: Arbitrary[dutySuspended.DutySuspendedSpirits] =
+    Arbitrary {
+      for {
+        totalSpirits         <- arbitrary[BigDecimal]
+        pureAlcoholInSpirits <- arbitrary[BigDecimal]
+      } yield dutySuspended.DutySuspendedSpirits(totalSpirits, pureAlcoholInSpirits)
+    }
+
+  implicit lazy val arbitraryDutySuspendedOtherFermented: Arbitrary[dutySuspended.DutySuspendedOtherFermented] =
+    Arbitrary {
+      for {
+        totalOtherFermented         <- arbitrary[BigDecimal]
+        pureAlcoholInOtherFermented <- arbitrary[BigDecimal]
+      } yield dutySuspended.DutySuspendedOtherFermented(totalOtherFermented, pureAlcoholInOtherFermented)
+    }
+
   implicit lazy val arbitraryAdjustmentType: Arbitrary[adjustment.AdjustmentType] =
     Arbitrary {
       Gen.oneOf(adjustment.AdjustmentType.values.toSeq)

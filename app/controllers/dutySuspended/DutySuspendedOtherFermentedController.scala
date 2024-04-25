@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,31 @@
 
 package controllers.dutySuspended
 
-import connectors.CacheConnector
 import controllers.actions._
-import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
-import models.{Mode, UserAnswers}
-import navigation.DeclareDutySuspendedDeliveriesNavigator
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.dutySuspended.DeclareDutySuspendedDeliveriesQuestionView
+import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import models.Mode
+import navigation.DeclareDutySuspendedDeliveriesNavigator
+import pages.dutySuspended.DutySuspendedOtherFermentedPage
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import connectors.CacheConnector
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.dutySuspended.DutySuspendedOtherFermentedView
 
-class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
+import scala.concurrent.{ExecutionContext, Future}
+
+class DutySuspendedOtherFermentedController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: DeclareDutySuspendedDeliveriesQuestionFormProvider,
+  formProvider: DutySuspendedOtherFermentedFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: DeclareDutySuspendedDeliveriesQuestionView
+  view: DutySuspendedOtherFermentedView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -48,7 +48,7 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
+    val preparedForm = request.userAnswers.get(DutySuspendedOtherFermentedPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -64,28 +64,9 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers   <-
-                Future.fromTry(
-                  request.userAnswers.set(DeclareDutySuspendedDeliveriesQuestionPage, value)
-                )
-              filterUserAnswer <- Future.fromTry(filterDSDQuestionAnswer(updatedAnswers, value))
-              _                <- cacheConnector.set(filterUserAnswer)
-            } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, filterUserAnswer))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedOtherFermentedPage, value))
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DutySuspendedOtherFermentedPage, mode, updatedAnswers))
         )
   }
-
-  def filterDSDQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
-    if (value) {
-      Try(userAnswer)
-    } else {
-      userAnswer.remove(
-        List(
-          DutySuspendedBeerPage,
-          DutySuspendedCiderPage,
-          DutySuspendedWinePage,
-          DutySuspendedSpiritsPage,
-          DutySuspendedOtherFermentedPage
-        )
-      )
-    }
 }
