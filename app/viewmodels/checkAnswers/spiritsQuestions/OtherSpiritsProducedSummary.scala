@@ -25,19 +25,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object OtherSpiritsProducedSummary  {
+object OtherSpiritsProducedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(OtherSpiritsProducedPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "otherSpiritsProduced.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.OtherSpiritsProducedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("otherSpiritsProduced.change.hidden"))
-          )
+    answers.get(OtherSpiritsProducedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "otherSpiritsProduced.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlFormat.escape(answer).toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.OtherSpiritsProducedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("otherSpiritsProduced.change.hidden"))
         )
+      )
     }
 }
