@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package forms.spiritsQuestions
 
-import models.UserAnswers
-import play.api.i18n.Messages
-import viewmodels.govuk.all.FluentInstant
+import javax.inject.Inject
 
-import java.time.Instant
+import forms.mappings.Mappings
+import play.api.data.Form
 
-object AlcoholDutyTaskListHelper {
-  def getTaskList(userAnswers: UserAnswers, validUntil: Instant)(implicit
-    messages: Messages
-  ): AlcoholDutyTaskList =
-    AlcoholDutyTaskList(
-      Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
-      validUntil.toLocalDateString()
+class DeclareQuarterlySpiritsFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "declareQuarterlySpirits-yesNoValue" -> boolean("declareQuarterlySpirits.error.required")
     )
 }

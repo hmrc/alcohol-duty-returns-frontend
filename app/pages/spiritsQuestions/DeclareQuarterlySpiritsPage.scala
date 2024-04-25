@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package pages.spiritsQuestions
 
-import models.UserAnswers
-import play.api.i18n.Messages
-import viewmodels.govuk.all.FluentInstant
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-import java.time.Instant
+case object DeclareQuarterlySpiritsPage extends QuestionPage[Boolean] {
 
-object AlcoholDutyTaskListHelper {
-  def getTaskList(userAnswers: UserAnswers, validUntil: Instant)(implicit
-    messages: Messages
-  ): AlcoholDutyTaskList =
-    AlcoholDutyTaskList(
-      Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
-      validUntil.toLocalDateString()
-    )
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "declareQuarterlySpirits"
 }

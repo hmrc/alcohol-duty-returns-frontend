@@ -29,6 +29,33 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
+      "must go from the Quarterly Spirits to declare to Spirits Total page if the answer is Yes" in {
+
+        navigator.nextPage(
+          pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
+          NormalMode,
+          UserAnswers("id").set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, true).success.value
+        ) mustBe controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Quarterly Spirits to declare to task list page if the answer is No" in {
+
+        navigator.nextPage(
+          pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
+          NormalMode,
+          UserAnswers("id").set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, false).success.value
+        ) mustBe routes.TaskListController.onPageLoad
+      }
+
+      "must go from the Quarterly Spirits to declare to task list page if there is an issue" in {
+
+        navigator.nextPage(
+          pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
+
       "must go from the Declare Spirits Total page to Declare Scotch whisky page" in {
 
         navigator.nextPage(
@@ -38,10 +65,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         ) mustBe controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onPageLoad(NormalMode)
       }
 
-    }
-
-    "in Normal mode" - {
-
       "must go from the Declare Scotch whisky page to Declare Irish whiskey page" in {
 
         navigator.nextPage(
@@ -50,10 +73,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe controllers.spiritsQuestions.routes.DeclareIrishWhiskeyController.onPageLoad(NormalMode)
       }
-
-    }
-
-    "in Normal mode" - {
 
       "must go from the Declare Irish whiskey page to Spirit type page" in {
 
