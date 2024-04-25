@@ -24,7 +24,7 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeclareDutySuspendedDeliveriesNavigator @Inject() extends BaseNavigator {
+class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage  =>
