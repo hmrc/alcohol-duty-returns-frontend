@@ -26,21 +26,21 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object OtherIngredientsUsedSummary  {
+object OtherIngredientsUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(OtherIngredientsUsedPage).map {
-      answer =>
+    answers.get(OtherIngredientsUsedPage).map { answer =>
+      val value = HtmlFormat.escape(answer.otherIngredientsTypes).toString + "<br/>" + HtmlFormat
+        .escape(answer.otherIngredientsUnit)
+        .toString + "<br/>" + HtmlFormat.escape(answer.otherIngredientsQuantity.toString()).toString
 
-      val value = HtmlFormat.escape(answer.otherIngredientsTypes).toString +  "<br/>" + HtmlFormat.escape(answer.otherIngredientsUnit).toString + "<br/>" + HtmlFormat.escape(answer.otherIngredientsQuantity.toString()).toString
-
-        SummaryListRowViewModel(
-          key     = "otherIngredientsUsed.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.OtherIngredientsUsedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("otherIngredientsUsed.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "otherIngredientsUsed.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.OtherIngredientsUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("otherIngredientsUsed.change.hidden"))
         )
+      )
     }
 }

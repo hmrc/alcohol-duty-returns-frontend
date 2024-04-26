@@ -41,20 +41,20 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new OtherIngredientsUsedFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val otherIngredientsUsedRoute = routes.OtherIngredientsUsedController.onPageLoad(NormalMode).url
 
-  val otherIngredientsTypes = "Coco Pops"
-  val otherIngredientsUnit = "tonnes"
+  val otherIngredientsTypes    = "Coco Pops"
+  val otherIngredientsUnit     = "tonnes"
   val otherIngredientsQuantity = BigDecimal(100000)
 
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       OtherIngredientsUsedPage.toString -> Json.obj(
-        "otherIngredientsUsedTypes" -> otherIngredientsTypes,
-        "otherIngredientsUsedUnit" -> otherIngredientsUnit,
+        "otherIngredientsUsedTypes"    -> otherIngredientsTypes,
+        "otherIngredientsUsedUnit"     -> otherIngredientsUnit,
         "otherIngredientsUsedQuantity" -> otherIngredientsQuantity
       )
     )
@@ -90,7 +90,10 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(OtherIngredientsUsed(otherIngredientsTypes, otherIngredientsUnit, otherIngredientsQuantity)), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(OtherIngredientsUsed(otherIngredientsTypes, otherIngredientsUnit, otherIngredientsQuantity)),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -111,7 +114,11 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, otherIngredientsUsedRoute)
-            .withFormUrlEncodedBody(("otherIngredientsUsedTypes", otherIngredientsTypes), ("otherIngredientsUsedUnit", otherIngredientsUnit), ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString()))
+            .withFormUrlEncodedBody(
+              ("otherIngredientsUsedTypes", otherIngredientsTypes),
+              ("otherIngredientsUsedUnit", otherIngredientsUnit),
+              ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString())
+            )
 
         val result = route(application, request).value
 
@@ -161,7 +168,11 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, otherIngredientsUsedRoute)
-            .withFormUrlEncodedBody(("otherIngredientsUsedTypes", otherIngredientsTypes), ("otherIngredientsUsedUnit", otherIngredientsUnit), ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString()))
+            .withFormUrlEncodedBody(
+              ("otherIngredientsUsedTypes", otherIngredientsTypes),
+              ("otherIngredientsUsedUnit", otherIngredientsUnit),
+              ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString())
+            )
 
         val result = route(application, request).value
 

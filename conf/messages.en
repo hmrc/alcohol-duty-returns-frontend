@@ -13,6 +13,7 @@ site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
 site.unit.litres = litres
+site.unit.tonnes = tonnes
 site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}

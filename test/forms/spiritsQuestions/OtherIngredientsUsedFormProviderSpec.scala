@@ -25,10 +25,10 @@ class OtherIngredientsUsedFormProviderSpec extends StringFieldBehaviours with Bi
 
   ".otherIngredientsUsedTypes" - {
 
-    val fieldName = "otherIngredientsUsedTypes"
+    val fieldName   = "otherIngredientsUsedTypes"
     val requiredKey = "otherIngredientsUsed.error.otherIngredientsUsedTypes.required"
-    val lengthKey = "otherIngredientsUsed.error.otherIngredientsUsedTypes.length"
-    val maxLength = 120
+    val lengthKey   = "otherIngredientsUsed.error.otherIngredientsUsedTypes.length"
+    val maxLength   = 120
 
     behave like fieldThatBindsValidData(
       form,
@@ -52,10 +52,10 @@ class OtherIngredientsUsedFormProviderSpec extends StringFieldBehaviours with Bi
 
   ".otherIngredientsUsedUnit" - {
 
-    val fieldName = "otherIngredientsUsedUnit"
+    val fieldName   = "otherIngredientsUsedUnit"
     val requiredKey = "otherIngredientsUsed.error.otherIngredientsUsedUnit.required"
-    val lengthKey = "otherIngredientsUsed.error.otherIngredientsUsedUnit.length"
-    val maxLength = 100
+    val lengthKey   = "otherIngredientsUsed.error.otherIngredientsUsedUnit.length"
+    val maxLength   = 100
 
     behave like fieldThatBindsValidData(
       form,
@@ -79,7 +79,7 @@ class OtherIngredientsUsedFormProviderSpec extends StringFieldBehaviours with Bi
 
   ".otherIngredientsUsedQuantity" - {
 
-    val fieldName = "otherIngredientsUsedQuantity"
+    val fieldName   = "otherIngredientsUsedQuantity"
     val requiredKey = "otherIngredientsUsed.error.otherIngredientsUsedQuantity.required"
     val minimum     = 0.01
     val maximum     = 999999999.99
@@ -97,7 +97,8 @@ class OtherIngredientsUsedFormProviderSpec extends StringFieldBehaviours with Bi
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.twoDecimalPlaces")
+      twoDecimalPlacesError =
+        FormError(fieldName, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

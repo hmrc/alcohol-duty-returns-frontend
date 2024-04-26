@@ -31,43 +31,42 @@ import views.html.spiritsQuestions.OtherIngredientsUsedView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class OtherIngredientsUsedController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       cacheConnector: CacheConnector,
-                                       navigator: QuarterlySpiritsQuestionsNavigator,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       formProvider: OtherIngredientsUsedFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: OtherIngredientsUsedView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class OtherIngredientsUsedController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: QuarterlySpiritsQuestionsNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: OtherIngredientsUsedFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: OtherIngredientsUsedView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val preparedForm = request.userAnswers.get(OtherIngredientsUsedPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(OtherIngredientsUsedPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(OtherIngredientsUsedPage, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(OtherIngredientsUsedPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(OtherIngredientsUsedPage, value))
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(OtherIngredientsUsedPage, mode, updatedAnswers))
+        )
   }
 }

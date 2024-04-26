@@ -23,6 +23,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    govukSelect: GovukSelect,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
     subHeading: SubHeading
@@ -49,7 +50,7 @@
 
         @govukInput(
             InputViewModel(
-                field = form("other-ingredients-types"),
+                field = form("otherIngredientsUsedTypes"),
                 label = LabelViewModel(messages("otherIngredientsUsed.subheading1")).asVisuallyHidden()
             )
             .withWidth(ThreeQuarters)
@@ -57,19 +58,19 @@
 
         @subHeading(messages("otherIngredientsUsed.subheading2"))
 
-        @govukInput(
-            InputViewModel(
-                field = form("other-ingredients-unit"),
-                label = LabelViewModel(messages("otherIngredientsUsed.otherIngredientsUsedUnit"))
+        @govukSelect(
+            SelectViewModel(
+                field = form("otherIngredientsUsedUnit"),
+                label = LabelViewModel(messages("otherIngredientsUsed.otherIngredientsUsedUnit")).asVisuallyHidden(),
+                items = Seq(messages("site.unit.tonnes"), messages("site.unit.litres"))
             )
-            .withWidth(Full)
         )
 
         @subHeading(messages("otherIngredientsUsed.subheading3"))
 
         @govukInput(
             InputViewModel(
-                field = form("other-ingredients-quantity"),
+                field = form("otherIngredientsUsedQuantity"),
                 label = LabelViewModel(messages("otherIngredientsUsed.otherIngredientsUsedQuantity")).asVisuallyHidden()
             )
             .asNumeric()

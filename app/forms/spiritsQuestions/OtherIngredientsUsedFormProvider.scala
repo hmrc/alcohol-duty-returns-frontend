@@ -24,28 +24,33 @@ import play.api.data.Forms._
 import models.spiritsQuestions.OtherIngredientsUsed
 
 class OtherIngredientsUsedFormProvider @Inject() extends Mappings {
-   import OtherIngredientsUsedFormProvider._
+  import OtherIngredientsUsedFormProvider._
 
-   def apply(): Form[OtherIngredientsUsed] = Form(
-     mapping(
-      "otherIngredientsUsedTypes" -> text("otherIngredientsUsed.error.otherIngredientsUsedTypes.required")
-        .verifying(maxLength(otherIngredientTypesMaxLength, "otherIngredientsUsed.error.otherIngredientsUsedTypes.length")),
-      "otherIngredientsUsedUnit" -> text("otherIngredientsUsed.error.otherIngredientsUsedUnit.required")
+  def apply(): Form[OtherIngredientsUsed] = Form(
+    mapping(
+      "otherIngredientsUsedTypes"    -> text("otherIngredientsUsed.error.otherIngredientsUsedTypes.required")
+        .verifying(
+          maxLength(otherIngredientTypesMaxLength, "otherIngredientsUsed.error.otherIngredientsUsedTypes.length")
+        ),
+      "otherIngredientsUsedUnit"     -> text("otherIngredientsUsed.error.otherIngredientsUsedUnit.required")
         .verifying(maxLength(100, "otherIngredientsUsed.error.otherIngredientsUsedUnit.length")),
       "otherIngredientsUsedQuantity" -> bigDecimal(
         quantityMaxDecimalPlaces,
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.required",
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.nonNumeric",
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.twoDecimalPlaces"
-      ).verifying(minimumValue(quantityMinValue, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired"))
-       .verifying(maximumValue(quantityMaxValue, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.maximumRequired"))
-      )(OtherIngredientsUsed.apply)(OtherIngredientsUsed.unapply)
-   )
- }
+      ).verifying(
+        minimumValue(quantityMinValue, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired")
+      ).verifying(
+        maximumValue(quantityMaxValue, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.maximumRequired")
+      )
+    )(OtherIngredientsUsed.apply)(OtherIngredientsUsed.unapply)
+  )
+}
 
 object OtherIngredientsUsedFormProvider {
   val otherIngredientTypesMaxLength = 120
-  val quantityMaxDecimalPlaces = 2
-  val quantityMinValue         = BigDecimal(0.01)
-  val quantityMaxValue         = BigDecimal(999999999.99)
+  val quantityMaxDecimalPlaces      = 2
+  val quantityMinValue              = BigDecimal(0.01)
+  val quantityMaxValue              = BigDecimal(999999999.99)
 }
