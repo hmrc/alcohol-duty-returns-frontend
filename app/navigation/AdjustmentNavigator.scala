@@ -45,7 +45,7 @@ class AdjustmentNavigator @Inject() () extends BaseNavigator {
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
+    _ => routes.CheckYourAnswersController.onPageLoad()
   }
 
   private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers): Call = {

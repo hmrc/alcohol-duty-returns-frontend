@@ -37,7 +37,7 @@ object ViewUtils {
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
 
   def withPercentage(percentage: BigDecimal)(implicit messages: Messages) =
-    percentage + messages("site.unit.percentage")
+    s"$percentage${messages("site.unit.percentage")}"
 
   def valueFormatter(value: BigDecimal): String = {
     val decimalFormat = new DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(Locale.UK))

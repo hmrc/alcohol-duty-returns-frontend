@@ -104,7 +104,7 @@ trait ModelGenerators {
     )
   }
 
-  implicit val arbitrarySetOfAlcoholRegimes = Arbitrary {
+  implicit val arbitrarySetOfAlcoholRegimes: Arbitrary[Set[AlcoholRegime]] = Arbitrary {
     Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
   }
 
