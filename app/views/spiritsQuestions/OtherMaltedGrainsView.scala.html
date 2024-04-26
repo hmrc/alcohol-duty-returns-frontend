@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, SubHeading}
+@import components.{SectionHeading, PageHeading}
 
 @this(
     layout: templates.Layout,
@@ -24,8 +24,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading,
-    subHeading: SubHeading
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -45,22 +44,18 @@
 
         @pageHeading(messages("otherMaltedGrains.heading"))
 
-        @subHeading(messages("otherMaltedGrains.subheading1"))
-
         @govukInput(
             InputViewModel(
                 field = form("otherMaltedGrainsTypes"),
-                label = LabelViewModel(messages("otherMaltedGrains.subheading1")).asVisuallyHidden()
+                label = LabelViewModel(messages("otherMaltedGrains.subheading1")).asSubheading
             )
             .withWidth(ThreeQuarters)
         )
 
-        @subHeading(messages("otherMaltedGrains.subheading2"))
-
         @govukInput(
             InputViewModel(
                 field = form("otherMaltedGrainsQuantity"),
-                label = LabelViewModel(messages("otherMaltedGrains.subheading2")).asVisuallyHidden()
+                label = LabelViewModel(messages("otherMaltedGrains.subheading2")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)

@@ -40,6 +40,9 @@ trait LabelFluency {
     def withCssClass(className: String): Label =
       label.copy(classes = s"${label.classes} $className")
 
+    def asSubheading: Label =
+      label.withCssClass("govuk-label--m govuk-!-margin-bottom-0")
+
     def withAttribute(attribute: (String, String)): Label =
       label.copy(attributes = label.attributes + attribute)
 
