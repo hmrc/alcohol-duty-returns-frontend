@@ -1,0 +1,127 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import viewmodels.InputWidth._
+@import components.{SectionHeading, PageHeading, SubHeading}
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading,
+    subHeading: SubHeading,
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("grainsUsed.title"))) {
+
+    @formHelper(action = controllers.spiritsQuestions.routes.GrainsUsedController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @sectionHeading(
+            id = "grains-used-section",
+            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
+        )
+
+        @pageHeading(messages("grainsUsed.heading"))
+
+        @subHeading(messages("grainsUsed.subheading1"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("maltedBarleyQuantity"),
+                label = LabelViewModel(messages("grainsUsed.subheading1")).asVisuallyHidden()
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
+        )
+
+        @subHeading(messages("grainsUsed.subheading2"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("wheatQuantity"),
+                label = LabelViewModel(messages("grainsUsed.subheading2")).asVisuallyHidden()
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+        .    withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
+        )
+
+        @subHeading(messages("grainsUsed.subheading3"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("maizeQuantity"),
+                label = LabelViewModel(messages("grainsUsed.subheading3")).asVisuallyHidden()
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
+        )
+
+        @subHeading(messages("grainsUsed.subheading4"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("ryeQuantity"),
+                label = LabelViewModel(messages("grainsUsed.subheading4")).asVisuallyHidden()
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
+        )
+
+        @subHeading(messages("grainsUsed.subheading5"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("unmaltedGrainQuantity"),
+                label = LabelViewModel(messages("grainsUsed.subheading5")).asVisuallyHidden()
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
+        )
+
+        @subHeading(messages("grainsUsed.subheading6"))
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("otherMaltedGrainsUsed"),
+                legend = LegendViewModel(messages("grainsUsed.subheading6")).asVisuallyHidden()
+            )
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+        )
+    }
+}
