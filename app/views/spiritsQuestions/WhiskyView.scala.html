@@ -45,24 +45,20 @@ subHeading: SubHeading
 
         @pageHeading(messages("whisky.heading"))
 
-        @subHeading(messages("whisky.ScotchWhisky.subheading1"))
-
         @govukInput(
             InputViewModel(
                 field = form("ScotchWhisky"),
-                label = LabelViewModel(messages("whisky.ScotchWhisky.subheading1")).asVisuallyHidden(),
+                label = LabelViewModel(messages("whisky.ScotchWhisky.subheading1")).asSubheading,
             )
             .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
             .withWidth(Fixed10)
         )
 
-        @subHeading(messages("whisky.IrishWhiskey.subheading2"))
-
         @govukInput(
             InputViewModel(
                 field = form("IrishWhiskey"),
-                label = LabelViewModel(messages("whisky.IrishWhiskey.subheading2")).asVisuallyHidden()
+                label = LabelViewModel(messages("whisky.IrishWhiskey.subheading2")).asSubheading
             )
             .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
