@@ -18,7 +18,14 @@ package models.spiritsQuestions
 
 import play.api.libs.json._
 
-case class GrainsUsed(maltedBarleyQuantity: BigDecimal, wheatQuantity: BigDecimal, maizeQuantity: BigDecimal, ryeQuantity: BigDecimal, unmaltedGrainQuantity: BigDecimal, otherMaltedGrainsUsed: Boolean)
+case class GrainsUsed(
+  maltedBarleyQuantity: BigDecimal,
+  maltedNotBarleyQuantity: BigDecimal,
+  wheatQuantity: BigDecimal,
+  maizeQuantity: BigDecimal,
+  ryeQuantity: BigDecimal,
+  unmaltedGrainQuantity: BigDecimal
+)
 
 object GrainsUsed {
   implicit val format: OFormat[GrainsUsed] = Json.format[GrainsUsed]

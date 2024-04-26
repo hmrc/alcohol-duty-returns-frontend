@@ -26,54 +26,53 @@ import models.spiritsQuestions.GrainsUsed
 class GrainsUsedFormProvider @Inject() extends Mappings {
   import GrainsUsedFormProvider._
 
-   def apply(): Form[GrainsUsed] = Form(
-     mapping(
-       "maltedBarleyQuantity" -> bigDecimal(
-         quantityMaxDecimalPlaces,
-         "grainsUsed.error.maltedBarleyQuantity.required",
-         "grainsUsed.error.maltedBarleyQuantity.nonNumeric",
-         "grainsUsed.error.maltedBarleyQuantity.twoDecimalPlaces"
-       ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.maltedBarleyQuantity.minimumRequired"))
-         .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.maltedBarleyQuantity.maximumRequired")),
-
-       "wheatQuantity" -> bigDecimal(
-         quantityMaxDecimalPlaces,
-         "grainsUsed.error.wheatQuantity.required",
-         "grainsUsed.error.wheatQuantity.nonNumeric",
-         "grainsUsed.error.wheatQuantity.twoDecimalPlaces"
-       ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.wheatQuantity.minimumRequired"))
-         .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.wheatQuantity.maximumRequired")),
-
-       "maizeQuantity" -> bigDecimal(
-         quantityMaxDecimalPlaces,
-         "grainsUsed.error.maizeQuantity.required",
-         "grainsUsed.error.maizeQuantity.nonNumeric",
-         "grainsUsed.error.maizeQuantity.twoDecimalPlaces"
-       ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.maizeQuantity.minimumRequired"))
-         .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.maizeQuantity.maximumRequired")),
-
-       "ryeQuantity" -> bigDecimal(
-         quantityMaxDecimalPlaces,
-         "grainsUsed.error.ryeQuantity.required",
-         "grainsUsed.error.ryeQuantity.nonNumeric",
-         "grainsUsed.error.ryeQuantity.twoDecimalPlaces"
-       ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.ryeQuantity.minimumRequired"))
-         .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.ryeQuantity.maximumRequired")),
-
-       "unmaltedGrainQuantity" -> bigDecimal(
-         quantityMaxDecimalPlaces,
-         "grainsUsed.error.unmaltedGrainQuantity.required",
-         "grainsUsed.error.unmaltedGrainQuantity.nonNumeric",
-         "grainsUsed.error.unmaltedGrainQuantity.twoDecimalPlaces"
-       ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.unmaltedGrainQuantity.minimumRequired"))
-         .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.unmaltedGrainQuantity.maximumRequired")),
-
-       "otherMaltedGrainsUsed" -> boolean(
-         "grainsUsed.error.otherMaltedGrainsUsed.required"
-       )
+  def apply(): Form[GrainsUsed] = Form(
+    mapping(
+      "maltedBarleyQuantity"    -> bigDecimal(
+        quantityMaxDecimalPlaces,
+        "grainsUsed.error.maltedBarleyQuantity.required",
+        "grainsUsed.error.maltedBarleyQuantity.nonNumeric",
+        "grainsUsed.error.maltedBarleyQuantity.twoDecimalPlaces"
+      ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.maltedBarleyQuantity.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.maltedBarleyQuantity.maximumRequired")),
+      "maltedNotBarleyQuantity" -> bigDecimal(
+        quantityMaxDecimalPlaces,
+        "grainsUsed.error.maltedNotBarleyQuantity.required",
+        "grainsUsed.error.maltedNotBarleyQuantity.nonNumeric",
+        "grainsUsed.error.maltedNotBarleyQuantity.twoDecimalPlaces"
+      ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.maltedNotBarleyQuantity.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.maltedNotBarleyQuantity.maximumRequired")),
+      "wheatQuantity"           -> bigDecimal(
+        quantityMaxDecimalPlaces,
+        "grainsUsed.error.wheatQuantity.required",
+        "grainsUsed.error.wheatQuantity.nonNumeric",
+        "grainsUsed.error.wheatQuantity.twoDecimalPlaces"
+      ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.wheatQuantity.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.wheatQuantity.maximumRequired")),
+      "maizeQuantity"           -> bigDecimal(
+        quantityMaxDecimalPlaces,
+        "grainsUsed.error.maizeQuantity.required",
+        "grainsUsed.error.maizeQuantity.nonNumeric",
+        "grainsUsed.error.maizeQuantity.twoDecimalPlaces"
+      ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.maizeQuantity.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.maizeQuantity.maximumRequired")),
+      "ryeQuantity"             -> bigDecimal(
+        quantityMaxDecimalPlaces,
+        "grainsUsed.error.ryeQuantity.required",
+        "grainsUsed.error.ryeQuantity.nonNumeric",
+        "grainsUsed.error.ryeQuantity.twoDecimalPlaces"
+      ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.ryeQuantity.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.ryeQuantity.maximumRequired")),
+      "unmaltedGrainQuantity"   -> bigDecimal(
+        quantityMaxDecimalPlaces,
+        "grainsUsed.error.unmaltedGrainQuantity.required",
+        "grainsUsed.error.unmaltedGrainQuantity.nonNumeric",
+        "grainsUsed.error.unmaltedGrainQuantity.twoDecimalPlaces"
+      ).verifying(minimumValue(quantityMinValue, "grainsUsed.error.unmaltedGrainQuantity.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "grainsUsed.error.unmaltedGrainQuantity.maximumRequired"))
     )(GrainsUsed.apply)(GrainsUsed.unapply)
-   )
- }
+  )
+}
 
 object GrainsUsedFormProvider {
   val quantityMaxDecimalPlaces = 2

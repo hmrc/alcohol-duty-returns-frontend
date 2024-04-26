@@ -19,7 +19,7 @@ package forms.spiritsQuestions
 import forms.behaviours.{BigDecimalFieldBehaviours, BooleanFieldBehaviours}
 import play.api.data.FormError
 
-class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanFieldBehaviours {
+class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new GrainsUsedFormProvider()()
 
@@ -50,8 +50,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.maltedBarleyQuantity.minimumRequired", Seq(minimum))
+      expectedError = FormError(fieldName, "grainsUsed.error.maltedBarleyQuantity.minimumRequired", Seq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -59,8 +58,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.maltedBarleyQuantity.maximumRequired", Seq(maximum))
+      expectedError = FormError(fieldName, "grainsUsed.error.maltedBarleyQuantity.maximumRequired", Seq(maximum))
     )
 
     behave like mandatoryField(
@@ -97,8 +95,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.wheatQuantity.minimumRequired", Seq(minimum))
+      expectedError = FormError(fieldName, "grainsUsed.error.wheatQuantity.minimumRequired", Seq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -106,8 +103,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.wheatQuantity.maximumRequired", Seq(maximum))
+      expectedError = FormError(fieldName, "grainsUsed.error.wheatQuantity.maximumRequired", Seq(maximum))
     )
 
     behave like mandatoryField(
@@ -144,8 +140,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.maizeQuantity.minimumRequired", Seq(minimum))
+      expectedError = FormError(fieldName, "grainsUsed.error.maizeQuantity.minimumRequired", Seq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -153,8 +148,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.maizeQuantity.maximumRequired", Seq(maximum))
+      expectedError = FormError(fieldName, "grainsUsed.error.maizeQuantity.maximumRequired", Seq(maximum))
     )
 
     behave like mandatoryField(
@@ -165,11 +159,11 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
   }
 
   ".ryeQuantity" - {
-    val fieldName = "ryeQuantity"
+    val fieldName   = "ryeQuantity"
     val requiredKey = "grainsUsed.error.ryeQuantity.required"
-    val minimum = 0
-    val maximum = 999999999.99
-    val decimal = 2
+    val minimum     = 0
+    val maximum     = 999999999.99
+    val decimal     = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -191,8 +185,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.ryeQuantity.minimumRequired", Seq(minimum))
+      expectedError = FormError(fieldName, "grainsUsed.error.ryeQuantity.minimumRequired", Seq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -200,8 +193,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.ryeQuantity.maximumRequired", Seq(maximum))
+      expectedError = FormError(fieldName, "grainsUsed.error.ryeQuantity.maximumRequired", Seq(maximum))
     )
 
     behave like mandatoryField(
@@ -212,11 +204,11 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
   }
 
   ".unmaltedGrainQuantity" - {
-    val fieldName = "unmaltedGrainQuantity"
+    val fieldName   = "unmaltedGrainQuantity"
     val requiredKey = "grainsUsed.error.unmaltedGrainQuantity.required"
-    val minimum = 0
-    val maximum = 999999999.99
-    val decimal = 2
+    val minimum     = 0
+    val maximum     = 999999999.99
+    val decimal     = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -238,8 +230,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.unmaltedGrainQuantity.minimumRequired", Seq(minimum))
+      expectedError = FormError(fieldName, "grainsUsed.error.unmaltedGrainQuantity.minimumRequired", Seq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -247,26 +238,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "grainsUsed.error.unmaltedGrainQuantity.maximumRequired", Seq(maximum))
-    )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-  }
-
-  ".otherMaltedGrainsUsed" - {
-    val fieldName = "otherMaltedGrainsUsed"
-    val requiredKey = "grainsUsed.error.otherMaltedGrainsUsed.required"
-    val invalidKey = "error.boolean"
-
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      expectedError = FormError(fieldName, "grainsUsed.error.unmaltedGrainQuantity.maximumRequired", Seq(maximum))
     )
 
     behave like mandatoryField(

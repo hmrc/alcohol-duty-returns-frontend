@@ -26,21 +26,22 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object GrainsUsedSummary  {
+object GrainsUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(GrainsUsedPage).map {
-      answer =>
+    answers.get(GrainsUsedPage).map { answer =>
+      val value = HtmlFormat.escape(answer.maltedBarleyQuantity.toString()).toString + "<br/>" + HtmlFormat.escape(
+        answer.wheatQuantity.toString()
+      ) + "<br/>" + HtmlFormat.escape(answer.maizeQuantity.toString()) + "<br/>" + HtmlFormat
+        .escape(answer.ryeQuantity.toString()) + "<br/>" + HtmlFormat.escape(answer.unmaltedGrainQuantity.toString())
 
-      val value = HtmlFormat.escape(answer.maltedBarleyQuantity.toString()).toString + "<br/>" + HtmlFormat.escape(answer.wheatQuantity.toString()) + "<br/>" + HtmlFormat.escape(answer.maizeQuantity.toString()) + "<br/>" + HtmlFormat.escape(answer.ryeQuantity.toString()) + "<br/>" + HtmlFormat.escape(answer.unmaltedGrainQuantity.toString()) + "<br/>" + HtmlFormat.escape(answer.otherMaltedGrainsUsed.toString)
-
-        SummaryListRowViewModel(
-          key     = "grainsUsed.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("grainsUsed.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "grainsUsed.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("grainsUsed.change.hidden"))
         )
+      )
     }
 }

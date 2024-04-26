@@ -41,27 +41,27 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new GrainsUsedFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val grainsUsedRoute = routes.GrainsUsedController.onPageLoad(NormalMode).url
 
-  val maltedBarleyQuantity = BigDecimal(100000)
-  val wheatQuantity = BigDecimal(200000)
-  val maizeQuantity = BigDecimal(300000)
-  val ryeQuantity = BigDecimal(400000)
-  val unmaltedGrainQuantity = BigDecimal(500000)
-  val otherMaltedGrainsUsed = true
+  val maltedBarleyQuantity    = BigDecimal(100000)
+  val maltedNotBarleyQuantity = BigDecimal(200000)
+  val wheatQuantity           = BigDecimal(300000)
+  val maizeQuantity           = BigDecimal(400000)
+  val ryeQuantity             = BigDecimal(500000)
+  val unmaltedGrainQuantity   = BigDecimal(600000)
 
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       GrainsUsedPage.toString -> Json.obj(
-        "maltedBarleyQuantity"  -> maltedBarleyQuantity,
-        "wheatQuantity"         -> wheatQuantity,
-        "maizeQuantity"         -> maizeQuantity,
-        "ryeQuantity"           -> ryeQuantity,
-        "unmaltedGrainQuantity" -> unmaltedGrainQuantity,
-        "otherMaltedGrainsUsed" -> otherMaltedGrainsUsed
+        "maltedBarleyQuantity"    -> maltedBarleyQuantity,
+        "maltedNotBarleyQuantity" -> maltedNotBarleyQuantity,
+        "wheatQuantity"           -> wheatQuantity,
+        "maizeQuantity"           -> maizeQuantity,
+        "ryeQuantity"             -> ryeQuantity,
+        "unmaltedGrainQuantity"   -> unmaltedGrainQuantity
       )
     )
   )
@@ -96,7 +96,19 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(GrainsUsed(maltedBarleyQuantity, wheatQuantity, maizeQuantity, ryeQuantity, unmaltedGrainQuantity, otherMaltedGrainsUsed)), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(
+            GrainsUsed(
+              maltedBarleyQuantity,
+              maltedNotBarleyQuantity,
+              wheatQuantity,
+              maizeQuantity,
+              ryeQuantity,
+              unmaltedGrainQuantity
+            )
+          ),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -119,11 +131,11 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, grainsUsedRoute)
             .withFormUrlEncodedBody(
               ("maltedBarleyQuantity", maltedBarleyQuantity.toString()),
+              ("maltedNotBarleyQuantity", maltedNotBarleyQuantity.toString()),
               ("wheatQuantity", wheatQuantity.toString()),
               ("maizeQuantity", maizeQuantity.toString()),
               ("ryeQuantity", ryeQuantity.toString()),
-              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString()),
-              ("otherMaltedGrainsUsed", otherMaltedGrainsUsed.toString)
+              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString())
             )
 
         val result = route(application, request).value
@@ -176,11 +188,11 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, grainsUsedRoute)
             .withFormUrlEncodedBody(
               ("maltedBarleyQuantity", maltedBarleyQuantity.toString()),
+              ("maltedNotBarleyQuantity", maltedNotBarleyQuantity.toString()),
               ("wheatQuantity", wheatQuantity.toString()),
               ("maizeQuantity", maizeQuantity.toString()),
               ("ryeQuantity", ryeQuantity.toString()),
-              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString()),
-              ("otherMaltedGrainsUsed", otherMaltedGrainsUsed.toString)
+              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString())
             )
 
         val result = route(application, request).value
