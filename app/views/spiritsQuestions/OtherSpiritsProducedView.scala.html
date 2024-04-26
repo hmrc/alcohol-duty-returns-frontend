@@ -16,7 +16,7 @@
 
 @import forms.spiritsQuestions.OtherSpiritsProducedFormProvider
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, SubHeading}
+@import components.{SectionHeading, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -25,7 +25,6 @@
     govukCharacterCount: GovukCharacterCount,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading,
     subHeading: SubHeading
 )
 
@@ -44,12 +43,10 @@
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
-        @pageHeading(messages("otherSpiritsProduced.heading"))
-
         @govukCharacterCount(
             CharacterCountViewModel(
                 field = form("otherSpiritsProduced"),
-                label = LabelViewModel(messages("otherSpiritsProduced.subheading1")).asVisuallyHidden()
+                label = LabelViewModel(messages("otherSpiritsProduced.heading")).asPageHeading()
             )
             .withWidth(TwoThirds)
             .withMaxLength(OtherSpiritsProducedFormProvider.otherTypesLength)
