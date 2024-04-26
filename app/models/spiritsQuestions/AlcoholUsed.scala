@@ -18,7 +18,7 @@ package models.spiritsQuestions
 
 import play.api.libs.json._
 
-case class AlcoholUsed (beer: String, wine: String)
+case class AlcoholUsed(beer: BigDecimal, wine: BigDecimal, madeWine: BigDecimal, ciderOrPerry: BigDecimal)
 
 object AlcoholUsed {
   implicit val format: OFormat[AlcoholUsed] = Json.format[AlcoholUsed]

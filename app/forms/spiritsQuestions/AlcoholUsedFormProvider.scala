@@ -25,12 +25,44 @@ import models.spiritsQuestions.AlcoholUsed
 
 class AlcoholUsedFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[AlcoholUsed] = Form(
-     mapping(
-      "beer" -> text("alcoholUsed.error.beer.required")
-        .verifying(maxLength(100, "alcoholUsed.error.beer.length")),
-      "wine" -> text("alcoholUsed.error.wine.required")
-        .verifying(maxLength(100, "alcoholUsed.error.wine.length"))
+  def apply(): Form[AlcoholUsed] = Form(
+    mapping(
+      "beer"         -> bigDecimal(
+        2,
+        "alcoholUsed.error.required",
+        "alcoholUsed.error.nonNumeric",
+        "alcoholUsed.error.twoDecimalPlaces",
+        Seq("Beer")
+      )
+        .verifying(minimumValue(BigDecimal(0.01), "alcoholUsed.error.beer.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "alcoholUsed.error.beer.maximumRequired")),
+      "wine"         -> bigDecimal(
+        2,
+        "alcoholUsed.error.required",
+        "alcoholUsed.error.nonNumeric",
+        "alcoholUsed.error.twoDecimalPlaces",
+        Seq("Wine")
+      )
+        .verifying(minimumValue(BigDecimal(0.01), "alcoholUsed.error.wine.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "alcoholUsed.error.wine.maximumRequired")),
+      "madeWine"     -> bigDecimal(
+        2,
+        "alcoholUsed.error.required",
+        "alcoholUsed.error.nonNumeric",
+        "alcoholUsed.error.twoDecimalPlaces",
+        Seq("Made-wine")
+      )
+        .verifying(minimumValue(BigDecimal(0.01), "alcoholUsed.error.madeWine.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "alcoholUsed.error.madeWine.maximumRequired")),
+      "ciderOrPerry" -> bigDecimal(
+        2,
+        "alcoholUsed.error.required",
+        "alcoholUsed.error.nonNumeric",
+        "alcoholUsed.error.twoDecimalPlaces",
+        Seq("Cider or perry")
+      )
+        .verifying(minimumValue(BigDecimal(0.01), "alcoholUsed.error.ciderOrPerry.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "alcoholUsed.error.ciderOrPerry.maximumRequired"))
     )(AlcoholUsed.apply)(AlcoholUsed.unapply)
-   )
- }
+  )
+}

@@ -1,10 +1,26 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.AlcoholUsedFormProvider
 import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.AlcoholUsed
-import navigation.{FakeSpiritsQuestionsNavigator, SpiritsQuestionsNavigator}
+import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -25,16 +41,23 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new AlcoholUsedFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val alcoholUsedRoute = routes.AlcoholUsedController.onPageLoad(NormalMode).url
+
+  val validBeer         = 55.6
+  val validWine         = 47.5
+  val validCiderOrPerry = 55.6
+  val validMadeWine     = 47.5
 
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       AlcoholUsedPage.toString -> Json.obj(
-        "beer" -> "value 1",
-        "wine" -> "value 2"
+        "beer"         -> validBeer,
+        "wine"         -> validWine,
+        "madeWine"     -> validMadeWine,
+        "ciderOrPerry" -> validCiderOrPerry
       )
     )
   )
@@ -69,7 +92,13 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(AlcoholUsed("value 1", "value 2")), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(AlcoholUsed(validBeer, validWine, validMadeWine, validCiderOrPerry)),
+          NormalMode
+        )(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -82,7 +111,8 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[SpiritsQuestionsNavigator].toInstance(new FakeSpiritsQuestionsNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -90,7 +120,12 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, alcoholUsedRoute)
-            .withFormUrlEncodedBody(("beer", "value 1"), ("wine", "value 2"))
+            .withFormUrlEncodedBody(
+              ("beer", validBeer.toString),
+              ("wine", validWine.toString),
+              ("madeWine", validMadeWine.toString),
+              ("ciderOrperry", validCiderOrPerry.toString)
+            )
 
         val result = route(application, request).value
 
@@ -140,7 +175,12 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, alcoholUsedRoute)
-            .withFormUrlEncodedBody(("beer", "value 1"), ("wine", "value 2"))
+            .withFormUrlEncodedBody(
+              ("beer", validBeer.toString),
+              ("wine", validWine.toString),
+              ("madeWine", validMadeWine.toString),
+              ("ciderOrperry", validCiderOrPerry.toString)
+            )
 
         val result = route(application, request).value
 

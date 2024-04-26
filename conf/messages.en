@@ -556,6 +556,24 @@ ethyleneGasUsed.change.hidden = Ethylene Gas used
 ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
 ethyleneGasUsed.inputSuffix = tonnes
 
+alcoholUsed.title = How much alcohol have you used this quarter?
+alcoholUsed.heading = How much alcohol have you used this quarter?
+alcoholUsed.beer = Beer
+alcoholUsed.wine = Wine
+alcoholUsed.madeWine = Made-wine
+alcoholUsed.ciderOrPerry = Cider or perry
+alcoholUsed.hint = Enter volume in litres, up to 2 decimal places.
+alcoholUsed.checkYourAnswersLabel = AlcoholUsed
+alcoholUsed.error.required = Enter how much {0} you have used.
+alcoholUsed.error.nonNumeric = The volume of {0} you need to declare must be a number
+alcoholUsed.error.maximumRequired = The volume of {0} you need to declare must be 999999999.99 or less
+alcoholUsed.error.minimumRequired = The volume of {0} you need to declare must be 0.00 or more
+alcoholUsed.error.twoDecimalPlaces = The volume of {0} you need to declare must be a number to 2 decimal places
+alcoholUsed.beer.change.hidden = beer
+alcoholUsed.wine.change.hidden = wine
+alcoholUsed.madeWine.change.hidden = made-wine
+alcoholUsed.ciderOrPerry.change.hidden = cider or perry
+
 # End of quarterly spirits questions sub-journey
 
 
@@ -658,15 +676,3 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
-
-alcoholUsed.title = alcoholUsed
-alcoholUsed.heading = alcoholUsed
-alcoholUsed.beer = beer
-alcoholUsed.wine = wine
-alcoholUsed.checkYourAnswersLabel = AlcoholUsed
-alcoholUsed.error.beer.required = Enter beer
-alcoholUsed.error.wine.required = Enter wine
-alcoholUsed.error.beer.length = beer must be 100 characters or less
-alcoholUsed.error.wine.length = wine must be 100 characters or less
-alcoholUsed.beer.change.hidden = beer
-alcoholUsed.wine.change.hidden = wine

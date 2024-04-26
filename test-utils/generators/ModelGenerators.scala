@@ -29,9 +29,11 @@ trait ModelGenerators {
   implicit lazy val arbitraryAlcoholUsed: Arbitrary[spiritsQuestions.AlcoholUsed] =
     Arbitrary {
       for {
-        beer <- arbitrary[String]
-        wine <- arbitrary[String]
-      } yield spiritsQuestions.AlcoholUsed(beer, wine)
+        beer         <- arbitrary[BigDecimal]
+        wine         <- arbitrary[BigDecimal]
+        madeWine     <- arbitrary[BigDecimal]
+        ciderOrPerry <- arbitrary[BigDecimal]
+      } yield spiritsQuestions.AlcoholUsed(beer, wine, madeWine, ciderOrPerry)
     }
 
   implicit lazy val arbitraryDutySuspendedBeer: Arbitrary[dutySuspended.DutySuspendedBeer] =

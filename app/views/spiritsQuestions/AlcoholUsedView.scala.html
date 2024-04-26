@@ -38,8 +38,8 @@
         }
 
         @sectionHeading(
-            id = "alcoholUsed-section",
-            text = messages("section.sectionName"),
+            id = "alcohol-used-section",
+            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
         @pageHeading(messages("alcoholUsed.heading"))
@@ -47,21 +47,49 @@
         @govukInput(
             InputViewModel(
                 field = form("beer"),
-                label = LabelViewModel(messages("alcoholUsed.beer"))
+                label = LabelViewModel(messages("alcoholUsed.beer")).asSubheading
             )
-            .withWidth(Full)
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withHint(Hint(content =  messages("alcoholUsed.hint")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
 
         @govukInput(
             InputViewModel(
                 field = form("wine"),
-                label = LabelViewModel(messages("alcoholUsed.wine"))
+                label = LabelViewModel(messages("alcoholUsed.wine")).asSubheading
             )
-            .withWidth(Full)
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withHint(Hint(content =  messages("alcoholUsed.hint")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("madeWine"),
+                label = LabelViewModel(messages("alcoholUsed.madeWine")).asSubheading
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withHint(Hint(content =  messages("alcoholUsed.hint")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("ciderOrPerry"),
+                label = LabelViewModel(messages("alcoholUsed.ciderOrPerry")).asSubheading
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withHint(Hint(content =  messages("alcoholUsed.hint")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }

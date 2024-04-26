@@ -26,21 +26,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AlcoholUsedSummary  {
+object AlcoholUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AlcoholUsedPage).map {
-      answer =>
+    answers.get(AlcoholUsedPage).map { answer =>
+      val value = HtmlFormat.escape(answer.beer.toString()).toString + "<br/>" + HtmlFormat
+        .escape(answer.wine.toString())
+        .toString + "<br/>" + HtmlFormat.escape(answer.madeWine.toString()).toString + "<br/>" + HtmlFormat
+        .escape(answer.ciderOrPerry.toString())
+        .toString
 
-      val value = HtmlFormat.escape(answer.beer).toString + "<br/>" + HtmlFormat.escape(answer.wine).toString
-
-        SummaryListRowViewModel(
-          key     = "alcoholUsed.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("alcoholUsed.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "alcoholUsed.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("alcoholUsed.change.hidden"))
         )
+      )
     }
 }
