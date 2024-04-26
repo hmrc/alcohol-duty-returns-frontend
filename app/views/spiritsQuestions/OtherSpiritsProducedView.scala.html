@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import forms.spiritsQuestions.OtherSpiritsProducedFormProvider
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, SubHeading}
 
@@ -21,7 +22,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukTextarea: GovukTextarea,
+    govukCharacterCount: GovukCharacterCount,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
@@ -45,12 +46,13 @@
 
         @pageHeading(messages("otherSpiritsProduced.heading"))
 
-        @govukTextarea(
-            TextareaViewModel(
+        @govukCharacterCount(
+            CharacterCountViewModel(
                 field = form("otherSpiritsProduced"),
                 label = LabelViewModel(messages("otherSpiritsProduced.subheading1")).asVisuallyHidden()
             )
             .withWidth(TwoThirds)
+            .withMaxLength(OtherSpiritsProducedFormProvider.otherTypesLength)
             .withHint(Hint(content = HtmlContent(messages("otherSpiritsProduced.hint"))))
         )
 
