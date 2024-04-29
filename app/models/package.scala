@@ -16,6 +16,8 @@
 
 import play.api.libs.json._
 
+import scala.annotation.nowarn
+
 package object models {
 
   implicit class RichJsObject(jsObject: JsObject) {
@@ -112,6 +114,7 @@ package object models {
       }
     }
 
+    @nowarn("msg=not.*?exhaustive")
     def remove(path: JsPath): JsResult[JsValue] =
       (path.path, jsValue) match {
         case (Nil, _)                                                                  => JsError("path cannot be empty")
