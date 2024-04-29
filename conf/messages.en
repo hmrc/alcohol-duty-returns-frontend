@@ -101,7 +101,7 @@ taskList.section.dutySuspended.notStarted = Tell us about your duty suspended de
 taskList.section.dutySuspended.inProgress = Change the deliveries you’ve told us about
 taskList.section.dutySuspended.completed = Change the deliveries you’ve told us about
 
-beforeStartReturn.title = Alcohol Duty return
+beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
 beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty return for {0} to {1}.
 beforeStartReturn.text.guidance2 = You need to tell us if you need to declare duty on any alcoholic products for this period.
