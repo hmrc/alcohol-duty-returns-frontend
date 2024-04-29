@@ -17,52 +17,53 @@
 package forms.spiritsQuestions
 
 import javax.inject.Inject
-
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
 import models.spiritsQuestions.AlcoholUsed
 
 class AlcoholUsedFormProvider @Inject() extends Mappings {
+  import AlcoholUsedFormProvider._
 
   def apply(): Form[AlcoholUsed] = Form(
     mapping(
       "beer"         -> bigDecimal(
-        2,
-        "alcoholUsed.error.required",
-        "alcoholUsed.error.nonNumeric",
-        "alcoholUsed.error.twoDecimalPlaces",
-        Seq("Beer")
+        quantityMaxDecimalPlaces,
+        "alcoholUsed.error.beer.required",
+        "alcoholUsed.error.beer.nonNumeric",
+        "alcoholUsed.error.beer.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.01), "alcoholUsed.error.beer.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "alcoholUsed.error.beer.maximumRequired")),
+        .verifying(minimumValue(quantityMinValue, "alcoholUsed.error.beer.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "alcoholUsed.error.beer.maximumRequired")),
       "wine"         -> bigDecimal(
         2,
-        "alcoholUsed.error.required",
-        "alcoholUsed.error.nonNumeric",
-        "alcoholUsed.error.twoDecimalPlaces",
-        Seq("Wine")
+        "alcoholUsed.error.wine.required",
+        "alcoholUsed.error.wine.nonNumeric",
+        "alcoholUsed.error.wine.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.01), "alcoholUsed.error.wine.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "alcoholUsed.error.wine.maximumRequired")),
+        .verifying(minimumValue(quantityMinValue, "alcoholUsed.error.wine.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "alcoholUsed.error.wine.maximumRequired")),
       "madeWine"     -> bigDecimal(
         2,
-        "alcoholUsed.error.required",
-        "alcoholUsed.error.nonNumeric",
-        "alcoholUsed.error.twoDecimalPlaces",
-        Seq("Made-wine")
+        "alcoholUsed.error.madeWine.required",
+        "alcoholUsed.error.madeWine.nonNumeric",
+        "alcoholUsed.error.madeWine.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.01), "alcoholUsed.error.madeWine.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "alcoholUsed.error.madeWine.maximumRequired")),
+        .verifying(minimumValue(quantityMinValue, "alcoholUsed.error.madeWine.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "alcoholUsed.error.madeWine.maximumRequired")),
       "ciderOrPerry" -> bigDecimal(
         2,
-        "alcoholUsed.error.required",
-        "alcoholUsed.error.nonNumeric",
-        "alcoholUsed.error.twoDecimalPlaces",
-        Seq("Cider or perry")
+        "alcoholUsed.error.ciderOrPerry.required",
+        "alcoholUsed.error.ciderOrPerry.nonNumeric",
+        "alcoholUsed.error.ciderOrPerry.twoDecimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.01), "alcoholUsed.error.ciderOrPerry.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "alcoholUsed.error.ciderOrPerry.maximumRequired"))
+        .verifying(minimumValue(quantityMinValue, "alcoholUsed.error.ciderOrPerry.minimumRequired"))
+        .verifying(maximumValue(quantityMaxValue, "alcoholUsed.error.ciderOrPerry.maximumRequired"))
     )(AlcoholUsed.apply)(AlcoholUsed.unapply)
   )
+}
+object AlcoholUsedFormProvider {
+  val quantityMaxDecimalPlaces = 2
+  val quantityMinValue         = BigDecimal(0.00)
+  val quantityMaxValue         = BigDecimal(999999999.99)
 }

@@ -16,10 +16,12 @@
 
 package forms.spiritsQuestions
 
-import forms.behaviours.StringFieldBehaviours
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
-class AlcoholUsedFormProviderSpec extends StringFieldBehaviours {
+import scala.collection.compat.immutable.ArraySeq
+
+class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new AlcoholUsedFormProvider()()
 
@@ -27,20 +29,39 @@ class AlcoholUsedFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "beer"
     val requiredKey = "alcoholUsed.error.beer.required"
-    val lengthKey   = "alcoholUsed.error.beer.length"
-    val maxLength   = 100
+    val minimum     = 0.00
+    val maximum     = 999999999.99
+    val decimal     = 2
+
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      validDataGenerator
     )
 
-    behave like fieldWithMaxLength(
+    behave like bigDecimalField(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nonNumericError = FormError(fieldName, "alcoholUsed.error.beer.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "alcoholUsed.error.beer.twoDecimalPlaces")
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "alcoholUsed.error.beer.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "alcoholUsed.error.beer.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
@@ -54,20 +75,131 @@ class AlcoholUsedFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "wine"
     val requiredKey = "alcoholUsed.error.wine.required"
-    val lengthKey   = "alcoholUsed.error.wine.length"
-    val maxLength   = 100
+    val minimum     = 0.00
+    val maximum     = 999999999.99
+    val decimal     = 2
+
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      validDataGenerator
     )
 
-    behave like fieldWithMaxLength(
+    behave like bigDecimalField(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nonNumericError = FormError(fieldName, "alcoholUsed.error.wine.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "alcoholUsed.error.wine.twoDecimalPlaces")
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "alcoholUsed.error.wine.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "alcoholUsed.error.wine.maximumRequired", ArraySeq(maximum))
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  ".madeWine" - {
+
+    val fieldName   = "madeWine"
+    val requiredKey = "alcoholUsed.error.madeWine.required"
+    val minimum     = 0.00
+    val maximum     = 999999999.99
+    val decimal     = 2
+
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      validDataGenerator
+    )
+
+    behave like bigDecimalField(
+      form,
+      fieldName,
+      nonNumericError = FormError(fieldName, "alcoholUsed.error.madeWine.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "alcoholUsed.error.madeWine.twoDecimalPlaces")
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "alcoholUsed.error.madeWine.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "alcoholUsed.error.madeWine.maximumRequired", ArraySeq(maximum))
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  ".ciderOrPerry" - {
+
+    val fieldName   = "ciderOrPerry"
+    val requiredKey = "alcoholUsed.error.ciderOrPerry.required"
+    val minimum     = 0.00
+    val maximum     = 999999999.99
+    val decimal     = 2
+
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      validDataGenerator
+    )
+
+    behave like bigDecimalField(
+      form,
+      fieldName,
+      nonNumericError = FormError(fieldName, "alcoholUsed.error.ciderOrPerry.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "alcoholUsed.error.ciderOrPerry.twoDecimalPlaces")
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "alcoholUsed.error.ciderOrPerry.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError = FormError(fieldName, "alcoholUsed.error.ciderOrPerry.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(

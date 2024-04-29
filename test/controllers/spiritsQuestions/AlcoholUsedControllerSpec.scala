@@ -124,7 +124,7 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
               ("beer", validBeer.toString),
               ("wine", validWine.toString),
               ("madeWine", validMadeWine.toString),
-              ("ciderOrperry", validCiderOrPerry.toString)
+              ("ciderOrPerry", validCiderOrPerry.toString)
             )
 
         val result = route(application, request).value
