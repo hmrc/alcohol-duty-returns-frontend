@@ -94,7 +94,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
+        ) mustBe routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }

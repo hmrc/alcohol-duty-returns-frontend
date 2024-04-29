@@ -89,7 +89,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
           pages.dutySuspended.DutySuspendedOtherFermentedPage,
           NormalMode,
           emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from the Declare duty suspended deliveries question page to journey recovery page if the answer there is not an answer" in {
 
@@ -128,7 +128,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
 
       "must go from the Declare DSD question page to the task list when the answer is No" in {
@@ -149,42 +149,42 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           CheckMode,
           emptyUserAnswers.set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
-        ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
       }
       "must go from DSD Beer page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedBeerPage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from DSD Cider page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedCiderPage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from DSD Wine page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedWinePage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from DSD Spirits page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedSpiritsPage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from DSD Other Fermented products page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedOtherFermentedPage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
     }
   }

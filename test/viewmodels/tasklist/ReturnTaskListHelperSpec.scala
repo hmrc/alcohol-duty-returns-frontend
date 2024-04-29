@@ -359,7 +359,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         )
         result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items(1).href          shouldBe Some(
-          controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
+          controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
         )
       }
     }

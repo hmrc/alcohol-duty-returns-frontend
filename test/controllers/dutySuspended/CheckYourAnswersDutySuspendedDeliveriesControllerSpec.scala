@@ -66,7 +66,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
         val request =
           FakeRequest(
             GET,
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
           )
 
         val result = route(application, request).value
@@ -101,7 +101,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
         val request =
           FakeRequest(
             GET,
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
           )
 
         val result = route(application, request).value
@@ -126,7 +126,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
           val request =
             FakeRequest(
               GET,
-              controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url
+              controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
             )
 
           val result = route(application, request).value
@@ -135,7 +135,6 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }
-
     }
   }
 }
