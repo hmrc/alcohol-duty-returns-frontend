@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{Link, SectionHeading, PageHeading}
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
+@import components.{SectionHeading, PageHeading, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -25,37 +24,49 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+subHeading: SubHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("declareScotchWhisky.title"))) {
+@layout(pageTitle = title(form, messages("whisky.title"))) {
 
-    @formHelper(action = controllers.spiritsQuestions.routes.DeclareScotchWhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.spiritsQuestions.routes.WhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
-            id = "declare-scotch-whisky-section",
+            id = "whisky-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
+        )
+
+        @pageHeading(messages("whisky.heading"))
+
+        @govukInput(
+            InputViewModel(
+                field = form("ScotchWhisky"),
+                label = LabelViewModel(messages("whisky.ScotchWhisky.subheading1")).asSubheading,
+            )
+            .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withWidth(Fixed10)
         )
 
         @govukInput(
             InputViewModel(
-                field = form("declare-scotch-whisky-input"),
-                label = LabelViewModel(messages("declareScotchWhisky.heading")).asPageHeading(),
+                field = form("IrishWhiskey"),
+                label = LabelViewModel(messages("whisky.IrishWhiskey.subheading2")).asSubheading
             )
-            .asNumeric()
+            .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
             .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("declareScotchWhisky.inputSuffix")))
-            .withHint(Hint(content =  messages("declareScotchWhisky.hint")))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }

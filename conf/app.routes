@@ -12,10 +12,10 @@ GET         /refresh-session                             controllers.KeepAliveCo
 
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
+GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad()
 
-GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut
-GET         /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey
+GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut()
+GET         /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey()
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
@@ -127,7 +127,7 @@ POST       /how-much-have-you-received-suspended                  controllers.du
 GET        /change-how-much-have-you-received-suspended                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-have-you-received-suspended                        controllers.dutySuspended.DeclareDutySuspendedReceivedController.onSubmit(mode: Mode = CheckMode)
 
-GET        /check-your-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad
+GET        /check-your-duty-suspended-deliveries                  controllers.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
 # End of of duty suspended deliveries sub-journey
 
 # Beginning of quarterly spirits questions sub-journey
@@ -142,15 +142,10 @@ POST       /what-is-the-total-volume-of-spirits-you-made-this-quarter           
 GET        /change-what-is-the-total-volume-of-spirits-you-made-this-quarter                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-what-is-the-total-volume-of-spirits-you-made-this-quarter                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
 
-GET        /how-much-scotch-whisky-have-you-made                  controllers.spiritsQuestions.DeclareScotchWhiskyController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-scotch-whisky-have-you-made                  controllers.spiritsQuestions.DeclareScotchWhiskyController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-scotch-whisky-have-you-made                        controllers.spiritsQuestions.DeclareScotchWhiskyController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-scotch-whisky-have-you-made                        controllers.spiritsQuestions.DeclareScotchWhiskyController.onSubmit(mode: Mode = CheckMode)
-
-GET        /how-much-irish-whiskey-have-you-made                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-irish-whiskey-have-you-made                  controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-irish-whiskey-have-you-made                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-irish-whiskey-have-you-made                        controllers.spiritsQuestions.DeclareIrishWhiskeyController.onSubmit(mode: Mode = CheckMode)
+GET        /how-much-whiskey-have-you-made                        controllers.spiritsQuestions.WhiskyController.onPageLoad(mode: Mode = NormalMode)
+POST       /how-much-whiskey-have-you-made                        controllers.spiritsQuestions.WhiskyController.onSubmit(mode: Mode = NormalMode)
+GET        /change-how-much-whiskey-have-you-made                  controllers.spiritsQuestions.WhiskyController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-how-much-whiskey-have-you-made                  controllers.spiritsQuestions.WhiskyController.onSubmit(mode: Mode = CheckMode)
 
 GET        /how-much-unmalted-grain-have-you-used                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /how-much-unmalted-grain-have-you-used                 controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = NormalMode)

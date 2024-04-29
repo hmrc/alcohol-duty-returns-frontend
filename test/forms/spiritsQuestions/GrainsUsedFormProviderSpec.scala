@@ -16,7 +16,7 @@
 
 package forms.spiritsQuestions
 
-import forms.behaviours.{BigDecimalFieldBehaviours, BooleanFieldBehaviours}
+import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
 class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours {
