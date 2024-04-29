@@ -84,6 +84,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCacheAddUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/cache/add"
 
+  def adrCacheClearAllUrl(): String =
+    s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-all"
+
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart
 
