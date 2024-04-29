@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, SubHeading, Paragraph}
+@import components.{SectionHeading, PageHeading, Paragraph}
 
 @this(
     layout: templates.Layout,
@@ -26,7 +26,6 @@
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
-    subHeading: SubHeading,
     paragraph: Paragraph,
 )
 
@@ -49,72 +48,60 @@
 
         @paragraph(messages("grainsUsed.hint"))
 
-        @subHeading(messages("grainsUsed.subheading1"))
-
         @govukInput(
             InputViewModel(
                 field = form("maltedBarleyQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading1")).asVisuallyHidden()
+                label = LabelViewModel(messages("grainsUsed.subheading1")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
         )
-
-        @subHeading(messages("grainsUsed.subheading2"))
 
         @govukInput(
             InputViewModel(
                 field = form("maltedNotBarleyQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading2")).asVisuallyHidden()
+                label = LabelViewModel(messages("grainsUsed.subheading2")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
         )
-
-        @subHeading(messages("grainsUsed.subheading3"))
 
         @govukInput(
             InputViewModel(
                 field = form("wheatQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading3")).asVisuallyHidden()
+                label = LabelViewModel(messages("grainsUsed.subheading3")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
         )
-
-        @subHeading(messages("grainsUsed.subheading4"))
 
         @govukInput(
             InputViewModel(
                 field = form("maizeQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading4")).asVisuallyHidden()
+                label = LabelViewModel(messages("grainsUsed.subheading4")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
         )
-
-        @subHeading(messages("grainsUsed.subheading5"))
 
         @govukInput(
             InputViewModel(
                 field = form("ryeQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading5")).asVisuallyHidden()
+                label = LabelViewModel(messages("grainsUsed.subheading5")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
         )
 
-        @subHeading(messages("grainsUsed.subheading6"))
-
         @govukInput(
             InputViewModel(
                 field = form("unmaltedGrainQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading6")).asVisuallyHidden()
+                label = LabelViewModel(messages("grainsUsed.subheading6")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
