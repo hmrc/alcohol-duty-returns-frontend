@@ -17,6 +17,7 @@
 package testonly.connectors
 
 import config.FrontendAppConfig
+import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.Inject
