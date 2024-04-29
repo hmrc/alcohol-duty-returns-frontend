@@ -30,8 +30,8 @@ object WhiskySummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(WhiskyPage).map { answer =>
-      val value = HtmlFormat.escape(answer.ScotchWhisky.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.IrishWhiskey.toString())
+      val value = HtmlFormat.escape(answer.scotchWhisky.toString()).toString + "<br/>" + HtmlFormat
+        .escape(answer.irishWhiskey.toString())
         .toString
 
       SummaryListRowViewModel(

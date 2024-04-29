@@ -27,20 +27,20 @@ class WhiskyFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Whisky] = Form(
     mapping(
-      "ScotchWhisky" -> bigDecimal(
+      "scotchWhisky" -> bigDecimal(
         2,
-        "whisky.error.ScotchWhisky.required",
-        "whisky.error.ScotchWhisky.nonNumeric",
-        "whisky.error.ScotchWhisky.twoDecimalPlaces"
-      ).verifying(minimumValue(BigDecimal(0.00), "whisky.error.ScotchWhisky.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "whisky.error.ScotchWhisky.maximumRequired")),
-      "IrishWhiskey" -> bigDecimal(
+        "whisky.error.scotchWhisky.required",
+        "whisky.error.scotchWhisky.nonNumeric",
+        "whisky.error.scotchWhisky.twoDecimalPlaces"
+      ).verifying(minimumValue(BigDecimal(0.00), "whisky.error.scotchWhisky.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "whisky.error.scotchWhisky.maximumRequired")),
+      "irishWhiskey" -> bigDecimal(
         2,
-        "whisky.error.IrishWhiskey.required",
-        "whisky.error.IrishWhiskey.nonNumeric",
-        "whisky.error.IrishWhiskey.twoDecimalPlaces"
-      ).verifying(minimumValue(BigDecimal(0.00), "whisky.error.IrishWhiskey.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "whisky.error.IrishWhiskey.maximumRequired"))
+        "whisky.error.irishWhiskey.required",
+        "whisky.error.irishWhiskey.nonNumeric",
+        "whisky.error.irishWhiskey.twoDecimalPlaces"
+      ).verifying(minimumValue(BigDecimal(0.00), "whisky.error.irishWhiskey.minimumRequired"))
+        .verifying(maximumValue(BigDecimal(999999999.99), "whisky.error.irishWhiskey.maximumRequired"))
     )(Whisky.apply)(Whisky.unapply)
   )
 }
