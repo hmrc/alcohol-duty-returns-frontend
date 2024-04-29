@@ -40,7 +40,6 @@ class BeforeStartReturnController @Inject() (
   def onPageLoad(periodKey: String): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case Left(_)             =>
-        // TODO: Log the error here
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Right(returnPeriod) =>
         val session = request.session + ("period-key", periodKey)

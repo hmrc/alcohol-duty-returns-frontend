@@ -84,7 +84,7 @@ lazy val scoverageExcludedList:Seq[String] = Seq(
   "Reverse.*",
   ".*handlers.*",
   ".*components.*",
-  "*Routes.*",
+  ".*Routes.*",
   ".*viewmodels.govuk.*",
   "testOnly.*",
   ".*testOnly.*",
