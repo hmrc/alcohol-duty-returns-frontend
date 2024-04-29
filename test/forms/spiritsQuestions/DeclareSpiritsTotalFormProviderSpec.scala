@@ -28,7 +28,7 @@ class DeclareSpiritsTotalFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName = "declare-spirits-total-input"
 
-    val minimum = 0.00
+    val minimum = 0.01
     val maximum = 999999999.99
     val decimal = 2
 
