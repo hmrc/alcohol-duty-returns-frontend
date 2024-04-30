@@ -176,6 +176,11 @@ GET        /how-much-ethylene-gas-have-you-used                  controllers.spi
 POST       /how-much-ethylene-gas-have-you-used                  controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey
 
 
