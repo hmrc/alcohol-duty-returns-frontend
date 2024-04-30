@@ -63,7 +63,7 @@ trait CharacterCountFluency {
       characterCount.copy(hint = Some(hint))
 
     def withFormGroupClasses(classes: String): CharacterCount =
-      characterCount.copy(formGroupClasses = classes)
+      characterCount.copy(formGroup = characterCount.formGroup.copy(classes = Some(classes)))
 
     def withCssClass(newClass: String): CharacterCount =
       characterCount.copy(classes = s"${characterCount.classes} $newClass")
