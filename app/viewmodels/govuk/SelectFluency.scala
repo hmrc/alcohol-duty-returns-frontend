@@ -56,7 +56,7 @@ trait SelectFluency {
       select.copy(hint = Some(hint))
 
     def withFormGroupClasses(classes: String): Select =
-      select.copy(formGroupClasses = classes)
+      select.copy(formGroup = select.formGroup.copy(classes = Some(classes)))
 
     def withCssClass(newClass: String): Select =
       select.copy(classes = s"${select.classes} $newClass")

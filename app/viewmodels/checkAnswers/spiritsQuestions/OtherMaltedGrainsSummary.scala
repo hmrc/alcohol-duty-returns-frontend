@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,28 @@ package viewmodels.checkAnswers.spiritsQuestions
 
 import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
-import pages.spiritsQuestions.DeclareIrishWhiskeyPage
+import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareIrishWhiskeySummary {
+object OtherMaltedGrainsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareIrishWhiskeyPage).map { answer =>
+    answers.get(OtherMaltedGrainsPage).map { answer =>
+      val value = HtmlFormat.escape(answer.otherMaltedGrainsTypes).toString + "<br/>" + HtmlFormat
+        .escape(answer.otherMaltedGrainsQuantity.toString())
+        .toString
+
       SummaryListRowViewModel(
-        key = "declareIrishWhiskey.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        key = "otherMaltedGrains.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.DeclareIrishWhiskeyController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("declareIrishWhiskey.change.hidden"))
+          ActionItemViewModel("site.change", routes.OtherMaltedGrainsController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("otherMaltedGrains.change.hidden"))
         )
       )
     }

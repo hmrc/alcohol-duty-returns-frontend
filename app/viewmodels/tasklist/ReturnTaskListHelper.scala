@@ -152,7 +152,8 @@ object ReturnTaskListHelper {
         TaskListItem(
           title = TaskListItemTitle(content = Text(messages("taskList.section.dutySuspended.completed"))),
           status = AlcholDutyTaskListItemStatus.completed,
-          href = Some(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad.url)
+          href =
+            Some(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url)
         )
 
       case _ =>

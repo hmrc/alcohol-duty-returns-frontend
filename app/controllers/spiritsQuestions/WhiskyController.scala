@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,30 @@
 
 package controllers.spiritsQuestions
 
-import connectors.CacheConnector
 import controllers.actions._
-import forms.spiritsQuestions.DeclareIrishWhiskeyFormProvider
+import forms.spiritsQuestions.WhiskyFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.DeclareIrishWhiskeyPage
+import pages.spiritsQuestions.WhiskyPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import connectors.CacheConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.spiritsQuestions.DeclareIrishWhiskeyView
+import views.html.spiritsQuestions.WhiskyView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeclareIrishWhiskeyController @Inject() (
+class WhiskyController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: QuarterlySpiritsQuestionsNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: DeclareIrishWhiskeyFormProvider,
+  formProvider: WhiskyFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: DeclareIrishWhiskeyView
+  view: WhiskyView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -47,7 +47,7 @@ class DeclareIrishWhiskeyController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeclareIrishWhiskeyPage) match {
+    val preparedForm = request.userAnswers.get(WhiskyPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -63,10 +63,9 @@ class DeclareIrishWhiskeyController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(DeclareIrishWhiskeyPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(WhiskyPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DeclareIrishWhiskeyPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(WhiskyPage, mode, updatedAnswers))
         )
   }
 }
