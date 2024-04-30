@@ -27,11 +27,10 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 
   ".beer" - {
 
-    val fieldName   = "beer"
-    val requiredKey = "alcoholUsed.error.beer.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val fieldName = "beer"
+    val minimum   = 0.00
+    val maximum   = 999999999.99
+    val decimal   = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -67,17 +66,16 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, "alcoholUsed.error.beer.required")
     )
   }
 
   ".wine" - {
 
-    val fieldName   = "wine"
-    val requiredKey = "alcoholUsed.error.wine.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val fieldName = "wine"
+    val minimum   = 0.00
+    val maximum   = 999999999.99
+    val decimal   = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -113,17 +111,16 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, "alcoholUsed.error.wine.required")
     )
   }
 
   ".madeWine" - {
 
-    val fieldName   = "madeWine"
-    val requiredKey = "alcoholUsed.error.madeWine.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val fieldName = "madeWine"
+    val minimum   = 0.00
+    val maximum   = 999999999.99
+    val decimal   = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -159,17 +156,16 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, "alcoholUsed.error.madeWine.required")
     )
   }
 
   ".ciderOrPerry" - {
 
-    val fieldName   = "ciderOrPerry"
-    val requiredKey = "alcoholUsed.error.ciderOrPerry.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val fieldName = "ciderOrPerry"
+    val minimum   = 0.00
+    val maximum   = 999999999.99
+    val decimal   = 2
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -205,7 +201,7 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, "alcoholUsed.error.ciderOrPerry.required")
     )
   }
 }
