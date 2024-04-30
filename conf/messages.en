@@ -560,8 +560,8 @@ otherSpiritsProduced.title = What other types of spirits have you produced this 
 otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
 otherSpiritsProduced.hint = Tell us what other spirits you have produced.
 otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
-otherSpiritsProduced.error.required = Enter the other ingredients you have used.
-otherSpiritsProduced.error.length = Other ingredients must be {0} characters or less
+otherSpiritsProduced.error.required = Enter the other spirits you produced
+otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
 # End of quarterly spirits questions sub-journey
 
 
