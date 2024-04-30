@@ -31,7 +31,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "alcohol-duty-returns-frontend"
 
-  private lazy val adrReturnsHost: String =
+  lazy val adrReturnsHost: String =
     servicesConfig.baseUrl("alcohol-duty-returns")
 
   private lazy val adrCalculatorHost: String =

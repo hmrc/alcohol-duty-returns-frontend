@@ -55,7 +55,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     val mockCacheConnector = mock[CacheConnector]
     when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-    "must redirect to the TaksList Page if UserAnswers already exist for a GET" in {
+    "must redirect to the TaskList Page if UserAnswers already exist for a GET" in {
       when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Some(userAnswers))
 
       val application = applicationBuilder()
@@ -105,6 +105,44 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
       running(application) {
         val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(badPeriodKey).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the TaskList Page when a user is successfully added for a POST" in {
+      when(mockCacheConnector.add(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+      }
+    }
+
+    "must redirect to the journey recovery controller if the period key is not in the session for a POST" in {
+      when(mockCacheConnector.add(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = play.api.test.FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
 
         val result = route(application, request).value
 

@@ -41,6 +41,8 @@ trait SpecBase
   val userAnswersId: String = "id"
   val returnId: ReturnId    = ReturnId(appaId, periodKey)
 
+  val periodKeySessionKey: String = "period-key"
+
   def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, userAnswersId)
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
@@ -53,7 +55,7 @@ trait SpecBase
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
 
-  def FakeRequest()                            = play.api.test.FakeRequest().withSession(("period-key", periodKey))
+  def FakeRequest()                            = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
   def FakeRequest(verb: String, route: String) =
-    play.api.test.FakeRequest(verb, route).withSession(("period-key", periodKey))
+    play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
 }

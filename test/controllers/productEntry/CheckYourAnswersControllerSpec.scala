@@ -422,10 +422,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val incompleteProductEntryUserAnswers: UserAnswers = emptyUserAnswers
-
       val application =
-        applicationBuilder(userAnswers = Some(incompleteProductEntryUserAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[CacheConnector].toInstance(mockCacheConnector)
           )

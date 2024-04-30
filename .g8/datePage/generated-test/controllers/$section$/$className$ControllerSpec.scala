@@ -30,8 +30,6 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val $className;format="decap"$Route = controllers.$section$.routes.$className$Controller.onPageLoad(NormalMode).url
 
-  override val emptyUserAnswers = emptyUserAnswers
-
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, $className;format="decap"$Route)
 

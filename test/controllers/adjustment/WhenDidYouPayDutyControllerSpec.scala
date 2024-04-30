@@ -200,9 +200,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to Journey Recovery for a GET if userAnswers are empty" in {
 
-      val userAnswers = emptyUserAnswers
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, whenDidYouPayDutyRoute)
@@ -232,9 +230,8 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase with MockitoSugar {
   }
 
   "must redirect to Journey Recovery for a POST with invalid data and empty user answers" in {
-    val userAnswers = emptyUserAnswers
 
-    val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
     running(application) {
       val request =

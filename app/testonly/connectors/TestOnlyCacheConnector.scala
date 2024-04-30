@@ -27,8 +27,12 @@ class TestOnlyCacheConnector @Inject() (
   appConfig: FrontendAppConfig,
   httpClient: HttpClient
 )(implicit val ec: ExecutionContext) {
+
+  private val adrCacheUrl: String =
+    s"${appConfig.adrReturnsHost}/test-only"
+
   def clearAllData()(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient.GET(
-      appConfig.adrCacheClearAllUrl()
+      s"$adrCacheUrl/cache/clear-all"
     )
 }
