@@ -50,8 +50,8 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
     userAnswersId,
     Json.obj(
       WhiskyPage.toString -> Json.obj(
-        "ScotchWhisky" -> validScotchWhisky,
-        "IrishWhiskey" -> validIrishWhisky
+        "scotchWhisky" -> validScotchWhisky,
+        "irishWhiskey" -> validIrishWhisky
       )
     )
   )
@@ -111,8 +111,8 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
         val request =
           FakeRequest(POST, whiskyRoute)
             .withFormUrlEncodedBody(
-              ("ScotchWhisky", validScotchWhisky.toString),
-              ("IrishWhiskey", validIrishWhisky.toString)
+              ("scotchWhisky", validScotchWhisky.toString),
+              ("irishWhiskey", validIrishWhisky.toString)
             )
 
         val result = route(application, request).value
@@ -164,8 +164,8 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
         val request =
           FakeRequest(POST, whiskyRoute)
             .withFormUrlEncodedBody(
-              ("ScotchWhisky", validScotchWhisky.toString),
-              ("IrishWhiskey", validIrishWhisky.toString)
+              ("scotchWhisky", validScotchWhisky.toString),
+              ("irishWhiskey", validIrishWhisky.toString)
             )
 
         val result = route(application, request).value

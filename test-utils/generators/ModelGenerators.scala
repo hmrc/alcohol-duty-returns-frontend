@@ -37,9 +37,9 @@ trait ModelGenerators {
   implicit lazy val arbitraryWhisky: Arbitrary[spiritsQuestions.Whisky] =
     Arbitrary {
       for {
-        ScotchWhisky <- arbitrary[BigDecimal]
-        IrishWhiskey <- arbitrary[BigDecimal]
-      } yield spiritsQuestions.Whisky(ScotchWhisky, IrishWhiskey)
+        scotchWhisky <- arbitrary[BigDecimal]
+        irishWhiskey <- arbitrary[BigDecimal]
+      } yield spiritsQuestions.Whisky(scotchWhisky, irishWhiskey)
     }
 
   implicit lazy val arbitraryAlcoholUsed: Arbitrary[spiritsQuestions.AlcoholUsed] =
