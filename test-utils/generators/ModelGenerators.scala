@@ -29,9 +29,10 @@ trait ModelGenerators {
   implicit lazy val arbitraryEthyleneGasOrMolassesUsed: Arbitrary[spiritsQuestions.EthyleneGasOrMolassesUsed] =
     Arbitrary {
       for {
-        ethyleneGas <- arbitrary[String]
-        molasses    <- arbitrary[String]
-      } yield spiritsQuestions.EthyleneGasOrMolassesUsed(ethyleneGas, molasses)
+        ethyleneGas      <- arbitrary[BigDecimal]
+        molasses         <- arbitrary[BigDecimal]
+        otherIngredients <- arbitrary[Boolean]
+      } yield spiritsQuestions.EthyleneGasOrMolassesUsed(ethyleneGas, molasses, otherIngredients)
     }
 
   implicit lazy val arbitraryWhisky: Arbitrary[spiritsQuestions.Whisky] =

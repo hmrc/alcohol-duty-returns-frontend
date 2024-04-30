@@ -26,21 +26,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object EthyleneGasOrMolassesUsedSummary  {
+object EthyleneGasOrMolassesUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(EthyleneGasOrMolassesUsedPage).map {
-      answer =>
+    answers.get(EthyleneGasOrMolassesUsedPage).map { answer =>
+      val value = HtmlFormat.escape(answer.ethyleneGas.toString()).toString + "<br/>" + HtmlFormat
+        .escape(answer.molasses.toString())
+        .toString + "<br/>" + HtmlFormat
+        .escape(answer.otherIngredients.toString())
+        .toString
 
-      val value = HtmlFormat.escape(answer.ethyleneGas).toString + "<br/>" + HtmlFormat.escape(answer.molasses).toString
-
-        SummaryListRowViewModel(
-          key     = "ethyleneGasOrMolassesUsed.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.EthyleneGasOrMolassesUsedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "ethyleneGasOrMolassesUsed.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.EthyleneGasOrMolassesUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.change.hidden"))
         )
+      )
     }
 }

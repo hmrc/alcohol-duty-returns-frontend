@@ -18,7 +18,7 @@ package models.spiritsQuestions
 
 import play.api.libs.json._
 
-case class EthyleneGasOrMolassesUsed (ethyleneGas: String, molasses: String, otherIngredients: Boolean)
+case class EthyleneGasOrMolassesUsed(ethyleneGas: BigDecimal, molasses: BigDecimal, otherIngredients: Boolean)
 
 object EthyleneGasOrMolassesUsed {
   implicit val format: OFormat[EthyleneGasOrMolassesUsed] = Json.format[EthyleneGasOrMolassesUsed]
