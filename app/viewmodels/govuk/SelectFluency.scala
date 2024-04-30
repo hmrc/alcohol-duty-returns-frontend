@@ -32,12 +32,12 @@ trait SelectFluency {
     def apply(
       field: Field,
       label: Label,
-      items: Seq[String]
+      items: Seq[(String, String)]
     )(implicit messages: Messages): Select =
       Select(
         id = field.id,
         name = field.name,
-        items = items.map(item => SelectItem(value = Some(item), text = item)),
+        items = items.map { case (value, text) => SelectItem(value = Some(value), text = text) },
         value = field.value,
         label = label,
         errorMessage = errorMessage(field)

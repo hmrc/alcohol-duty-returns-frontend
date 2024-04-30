@@ -22,6 +22,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 
+import enumeratum.scalacheck._
 import java.time.YearMonth
 
 trait ModelGenerators {
@@ -30,7 +31,7 @@ trait ModelGenerators {
     Arbitrary {
       for {
         otherIngredientsTypes    <- arbitrary[String]
-        otherIngredientsUnit     <- arbitrary[String]
+        otherIngredientsUnit     <- arbitrary[UnitsOfMeasure]
         otherIngredientsQuantity <- arbitrary[BigDecimal]
       } yield spiritsQuestions.OtherIngredientsUsed(
         otherIngredientsTypes,

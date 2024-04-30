@@ -562,8 +562,6 @@ otherIngredientsUsed.heading = Tell us about the other ingredients you have used
 otherIngredientsUsed.subheading1 = What other ingredients have you used?
 otherIngredientsUsed.subheading2 = How do you measure this ingredient?
 otherIngredientsUsed.subheading3 = How much of this have you used?
-otherIngredientsUsed.otherIngredientsUsedTypes = otherIngredientsTypes
-otherIngredientsUsed.otherIngredientsUsedUnit = otherIngredientsUnit
 otherIngredientsUsed.hint = Use the measurement unit above, up to 2 decimal places.
 otherIngredientsUsed.checkYourAnswersLabel = OtherIngredientsUsed
 otherIngredientsUsed.error.otherIngredientsUsedTypes.required = Enter ingredients
@@ -575,8 +573,7 @@ otherIngredientsUsed.error.otherIngredientsUsedQuantity.nonNumeric = The volume 
 otherIngredientsUsed.error.otherIngredientsUsedQuantity.maximumRequired = The volume of the other ingredient you need to declare must be 999999999.99 or less
 otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired = The volume of the other ingredient you need to declare must be {0} or more
 otherIngredientsUsed.error.otherIngredientsUsedQuantity.twoDecimalPlaces = The volume of the other ingredient you need to declare must be a number to 2 decimal places
-otherIngredientsUsed.otherIngredientsUsedTypes.change.hidden = otherIngredientsUsedTypes
-otherIngredientsUsed.otherIngredientsUsedUnit.change.hidden = otherIngredientsUsedUnit
+otherIngredientsUsed.otherIngredientsUsed.change.hidden = otherIngredientsUsed
 # End of quarterly spirits questions sub-journey
 
 

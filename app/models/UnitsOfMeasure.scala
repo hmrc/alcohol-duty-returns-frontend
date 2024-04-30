@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package models.spiritsQuestions
+package models
 
-import models.UnitsOfMeasure
-import play.api.libs.json._
+import enumeratum._
 
-case class OtherIngredientsUsed(
-  otherIngredientsUsedTypes: String,
-  otherIngredientsUsedUnit: UnitsOfMeasure,
-  otherIngredientsUsedQuantity: BigDecimal
-)
+sealed trait UnitsOfMeasure extends EnumEntry
 
-object OtherIngredientsUsed {
-  implicit val format: OFormat[OtherIngredientsUsed] = Json.format[OtherIngredientsUsed]
+object UnitsOfMeasure extends PlayEnum[UnitsOfMeasure] {
+  val values = findValues
+
+  case object Tonnes extends UnitsOfMeasure
+  case object Litres extends UnitsOfMeasure
 }

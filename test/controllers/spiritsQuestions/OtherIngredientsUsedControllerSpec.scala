@@ -29,6 +29,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.UnitsOfMeasure.Tonnes
 import models.spiritsQuestions.OtherIngredientsUsed
 import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import uk.gov.hmrc.http.HttpResponse
@@ -46,7 +47,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
   lazy val otherIngredientsUsedRoute = routes.OtherIngredientsUsedController.onPageLoad(NormalMode).url
 
   val otherIngredientsTypes    = "Coco Pops"
-  val otherIngredientsUnit     = "tonnes"
+  val otherIngredientsUnit     = Tonnes
   val otherIngredientsQuantity = BigDecimal(100000)
 
   val userAnswers = UserAnswers(
@@ -116,7 +117,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, otherIngredientsUsedRoute)
             .withFormUrlEncodedBody(
               ("otherIngredientsUsedTypes", otherIngredientsTypes),
-              ("otherIngredientsUsedUnit", otherIngredientsUnit),
+              ("otherIngredientsUsedUnit", otherIngredientsUnit.entryName),
               ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString())
             )
 
@@ -170,7 +171,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, otherIngredientsUsedRoute)
             .withFormUrlEncodedBody(
               ("otherIngredientsUsedTypes", otherIngredientsTypes),
-              ("otherIngredientsUsedUnit", otherIngredientsUnit),
+              ("otherIngredientsUsedUnit", otherIngredientsUnit.entryName),
               ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString())
             )
 

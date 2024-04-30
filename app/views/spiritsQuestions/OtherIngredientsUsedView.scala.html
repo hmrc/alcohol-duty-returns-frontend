@@ -15,7 +15,8 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, SubHeading}
+@import components.{SectionHeading, PageHeading}
+@import models.UnitsOfMeasure._
 
 @this(
     layout: templates.Layout,
@@ -25,8 +26,7 @@
     govukButton: GovukButton,
     govukSelect: GovukSelect,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading,
-    subHeading: SubHeading
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -46,32 +46,26 @@
 
         @pageHeading(messages("otherIngredientsUsed.heading"))
 
-        @subHeading(messages("otherIngredientsUsed.subheading1"))
-
         @govukInput(
             InputViewModel(
                 field = form("otherIngredientsUsedTypes"),
-                label = LabelViewModel(messages("otherIngredientsUsed.subheading1")).asVisuallyHidden()
+                label = LabelViewModel(messages("otherIngredientsUsed.subheading1")).asSubheading
             )
             .withWidth(ThreeQuarters)
         )
 
-        @subHeading(messages("otherIngredientsUsed.subheading2"))
-
         @govukSelect(
             SelectViewModel(
                 field = form("otherIngredientsUsedUnit"),
-                label = LabelViewModel(messages("otherIngredientsUsed.otherIngredientsUsedUnit")).asVisuallyHidden(),
-                items = Seq(messages("site.unit.tonnes"), messages("site.unit.litres"))
+                label = LabelViewModel(messages("otherIngredientsUsed.subheading2")).asSubheading,
+                items = Seq((Tonnes.entryName, messages("site.unit.tonnes")), (Litres.entryName, messages("site.unit.litres")))
             )
         )
-
-        @subHeading(messages("otherIngredientsUsed.subheading3"))
 
         @govukInput(
             InputViewModel(
                 field = form("otherIngredientsUsedQuantity"),
-                label = LabelViewModel(messages("otherIngredientsUsed.otherIngredientsUsedQuantity")).asVisuallyHidden()
+                label = LabelViewModel(messages("otherIngredientsUsed.subheading3")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)

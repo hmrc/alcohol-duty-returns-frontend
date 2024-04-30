@@ -17,8 +17,8 @@
 package forms.spiritsQuestions
 
 import javax.inject.Inject
-
 import forms.mappings.Mappings
+import models.UnitsOfMeasure
 import play.api.data.Form
 import play.api.data.Forms._
 import models.spiritsQuestions.OtherIngredientsUsed
@@ -32,8 +32,7 @@ class OtherIngredientsUsedFormProvider @Inject() extends Mappings {
         .verifying(
           maxLength(otherIngredientTypesMaxLength, "otherIngredientsUsed.error.otherIngredientsUsedTypes.length")
         ),
-      "otherIngredientsUsedUnit"     -> text("otherIngredientsUsed.error.otherIngredientsUsedUnit.required")
-        .verifying(maxLength(100, "otherIngredientsUsed.error.otherIngredientsUsedUnit.length")),
+      "otherIngredientsUsedUnit"     -> UnitsOfMeasure.formField,
       "otherIngredientsUsedQuantity" -> bigDecimal(
         quantityMaxDecimalPlaces,
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.required",

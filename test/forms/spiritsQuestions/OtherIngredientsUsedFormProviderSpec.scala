@@ -16,10 +16,14 @@
 
 package forms.spiritsQuestions
 
-import forms.behaviours.{BigDecimalFieldBehaviours, StringFieldBehaviours}
+import forms.behaviours.{BigDecimalFieldBehaviours, EnumBehaviours, StringFieldBehaviours}
+import models.UnitsOfMeasure.{Litres, Tonnes}
 import play.api.data.FormError
 
-class OtherIngredientsUsedFormProviderSpec extends StringFieldBehaviours with BigDecimalFieldBehaviours {
+class OtherIngredientsUsedFormProviderSpec
+    extends StringFieldBehaviours
+    with EnumBehaviours
+    with BigDecimalFieldBehaviours {
 
   val form = new OtherIngredientsUsedFormProvider()()
 
@@ -52,28 +56,21 @@ class OtherIngredientsUsedFormProviderSpec extends StringFieldBehaviours with Bi
 
   ".otherIngredientsUsedUnit" - {
 
-    val fieldName   = "otherIngredientsUsedUnit"
-    val requiredKey = "otherIngredientsUsed.error.otherIngredientsUsedUnit.required"
-    val lengthKey   = "otherIngredientsUsed.error.otherIngredientsUsedUnit.length"
-    val maxLength   = 100
+    val fieldName = "otherIngredientsUsedUnit"
+    val enums     = Seq(Tonnes, Litres)
 
-    behave like fieldThatBindsValidData(
+    behave like mandatoryEnumField(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      requiredError = FormError(fieldName, "error.required"),
+      enumError = FormError(fieldName, "error.enum")
     )
 
-    behave like fieldWithMaxLength(
+    behave like validEnumValues(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      enums = enums,
+      enumError = FormError(fieldName, "error.enum")
     )
   }
 

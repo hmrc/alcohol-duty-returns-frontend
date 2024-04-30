@@ -30,9 +30,9 @@ object OtherIngredientsUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(OtherIngredientsUsedPage).map { answer =>
-      val value = HtmlFormat.escape(answer.otherIngredientsTypes).toString + "<br/>" + HtmlFormat
-        .escape(answer.otherIngredientsUnit)
-        .toString + "<br/>" + HtmlFormat.escape(answer.otherIngredientsQuantity.toString()).toString
+      val value = HtmlFormat.escape(answer.otherIngredientsUsedTypes).toString + "<br/>" + HtmlFormat
+        .escape(messages(s"site.unit.${answer.otherIngredientsUsedUnit.entryName.toLowerCase}"))
+        .toString + "<br/>" + HtmlFormat.escape(answer.otherIngredientsUsedQuantity.toString()).toString
 
       SummaryListRowViewModel(
         key = "otherIngredientsUsed.checkYourAnswersLabel",
