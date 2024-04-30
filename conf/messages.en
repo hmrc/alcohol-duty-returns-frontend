@@ -559,6 +559,26 @@ ethyleneGasUsed.change.hidden = Ethylene Gas used
 ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
 ethyleneGasUsed.inputSuffix = tonnes
 
+ethyleneGasOrMolassesUsed.title = How much ethylene gas or molasses have you used?
+ethyleneGasOrMolassesUsed.heading = How much ethylene gas or molasses have you used?
+ethyleneGasOrMolassesUsed.ethyleneGas = Ethylene gas
+ethyleneGasOrMolassesUsed.molasses = Molasses
+ethyleneGasOrMolassesUsed.hint = Enter volume in litres, up to 2 decimal places.
+ethyleneGasOrMolassesUsed.question = Have you used any other ingredients?
+ethyleneGasOrMolassesUsed.checkYourAnswersLabel = EthyleneGasOrMolassesUsed
+ethyleneGasOrMolassesUsed.error.ethyleneGas.required = Enter how much ethylene gas you have used.
+ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric = The volume of ethylene gas you need to declare must be a number
+ethyleneGasOrMolassesUsed.error.ethyleneGas.twoDecimalPlaces = The volume of ethylene gas you need to declare must be a number to 2 decimal places
+ethyleneGasOrMolassesUsed.error.ethyleneGas.minimumRequired = The volume of ethylene gas you need to declare must be 0.00 or more
+ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired = The volume of ethylene gas you need to declare must be 999999999.99 or less
+ethyleneGasOrMolassesUsed.error.molasses.required = Enter how much molasses you have used.
+ethyleneGasOrMolassesUsed.error.molasses.nonNumeric =
+ethyleneGasOrMolassesUsed.error.molasses.twoDecimalPlaces =
+ethyleneGasOrMolassesUsed.error.molasses.minimumRequired =
+ethyleneGasOrMolassesUsed.error.molasses.maximumRequired =
+ethyleneGasOrMolassesUsed.ethyleneGas.change.hidden = ethylene gas
+ethyleneGasOrMolassesUsed.molasses.change.hidden = molasses
+
 # End of quarterly spirits questions sub-journey
 
 
