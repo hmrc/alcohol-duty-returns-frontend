@@ -177,10 +177,10 @@ POST       /how-much-ethylene-gas-have-you-used                  controllers.spi
 GET        /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = CheckMode)
 
-GET        /tell-us-about-the-other-spirits-ingredients-you-have-used                        controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = NormalMode)
-POST       /tell-us-about-the-other-spirits-ingredients-you-have-used                        controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = NormalMode)
-GET        /change-tell-us-about-the-other-spirits-ingredients-you-have-used                  controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-tell-us-about-the-other-spirits-ingredients-you-have-used                  controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = CheckMode)
+GET        /tell-us-about-the-other-spirits-you-have-produced                        controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-the-other-spirits-you-have-produced                        controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-the-other-spirits-you-have-produced                 controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-the-other-spirits-you-have-produced                 controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = CheckMode)
 # End of quarterly spirits questions sub-journey
 
 
