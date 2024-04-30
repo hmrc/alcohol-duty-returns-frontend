@@ -593,6 +593,13 @@ alcoholUsed.error.ciderOrPerry.minimumRequired = The volume of Cider or perry yo
 alcoholUsed.error.ciderOrPerry.twoDecimalPlaces = The volume of Cider or perry you need to declare must be a number to 2 decimal places
 alcoholUsed.ciderOrPerry.change.hidden = cider or perry
 
+otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
+otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
+otherSpiritsProduced.hint = Tell us what other spirits you have produced.
+otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
+otherSpiritsProduced.error.required = Enter the other spirits you produced
+otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
+
 otherMaltedGrains.title = Tell us about the other malted grains you have used
 otherMaltedGrains.heading = Tell us about the other malted grains you have used
 otherMaltedGrains.subheading1 = What other malted grains have you used?
