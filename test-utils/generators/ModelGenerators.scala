@@ -45,6 +45,14 @@ trait ModelGenerators {
       )
     }
 
+  implicit lazy val arbitraryOtherMaltedGrains: Arbitrary[spiritsQuestions.OtherMaltedGrains] =
+    Arbitrary {
+      for {
+        otherMaltedGrainsTypes    <- arbitrary[String]
+        otherMaltedGrainsQuantity <- arbitrary[BigDecimal]
+      } yield spiritsQuestions.OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)
+    }
+
   implicit lazy val arbitraryWhisky: Arbitrary[spiritsQuestions.Whisky] =
     Arbitrary {
       for {
