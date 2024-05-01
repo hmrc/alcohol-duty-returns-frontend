@@ -48,12 +48,11 @@
 
         @paragraph(messages("dutySuspendedCider.p1"))
 
-        @subHeading(messages("dutySuspendedCider.subheading1"))
 
         @govukInput(
             InputViewModel(
                 field = form("totalCider"),
-                label = LabelViewModel(messages("dutySuspendedCider.subheading1")).asVisuallyHidden()
+                label = LabelViewModel(messages("dutySuspendedCider.subheading1")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -61,12 +60,10 @@
             .withHint(Hint(content = HtmlContent(messages("dutySuspendedCider.hint.1"))))
         )
 
-        @subHeading(messages("dutySuspendedCider.subheading2"))
-
         @govukInput(
             InputViewModel(
                 field = form("pureAlcoholInCider"),
-                label = LabelViewModel(messages("dutySuspendedCider.subheading2")).asVisuallyHidden()
+                label = LabelViewModel(messages("dutySuspendedCider.subheading2")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)

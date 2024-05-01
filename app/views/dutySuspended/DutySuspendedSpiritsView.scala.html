@@ -48,12 +48,10 @@
 
         @paragraph(messages("dutySuspendedSpirits.p1"))
 
-        @subHeading(messages("dutySuspendedSpirits.subheading1"))
-
         @govukInput(
             InputViewModel(
                 field = form("totalSpirits"),
-                label = LabelViewModel(messages("dutySuspendedSpirits.subheading1")).asVisuallyHidden(),
+                label = LabelViewModel(messages("dutySuspendedSpirits.subheading1")).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -61,13 +59,10 @@
             .withHint(Hint(content = HtmlContent(messages("dutySuspendedSpirits.hint.1"))))
         )
 
-        @subHeading(messages("dutySuspendedSpirits.subheading2"))
-
-
-@govukInput(
+        @govukInput(
             InputViewModel(
                 field = form("pureAlcoholInSpirits"),
-                label = LabelViewModel(messages("dutySuspendedSpirits.subheading2")).asVisuallyHidden(),
+                label = LabelViewModel(messages("dutySuspendedSpirits.subheading2")).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
