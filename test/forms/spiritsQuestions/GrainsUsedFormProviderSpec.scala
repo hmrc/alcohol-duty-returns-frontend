@@ -16,10 +16,10 @@
 
 package forms.spiritsQuestions
 
-import forms.behaviours.BigDecimalFieldBehaviours
+import forms.behaviours.{BigDecimalFieldBehaviours, BooleanFieldBehaviours}
 import play.api.data.FormError
 
-class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours {
+class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanFieldBehaviours {
 
   val form = new GrainsUsedFormProvider()()
 
@@ -244,6 +244,24 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  ".usedMaltedGrainNotBarley" - {
+    val fieldName   = "usedMaltedGrainNotBarley"
+    val requiredKey = "grainsUsed.error.usedMaltedGrainNotBarley.required"
+    val invalidKey  = "error.boolean"
+
+    behave like booleanField(
+      form = form,
+      fieldName = fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form = form,
+      fieldName = fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
   }

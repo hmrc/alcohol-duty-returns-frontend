@@ -45,23 +45,23 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val grainsUsedRoute = routes.GrainsUsedController.onPageLoad(NormalMode).url
 
-  val maltedBarleyQuantity    = BigDecimal(100000)
-  val maltedNotBarleyQuantity = BigDecimal(200000)
-  val wheatQuantity           = BigDecimal(300000)
-  val maizeQuantity           = BigDecimal(400000)
-  val ryeQuantity             = BigDecimal(500000)
-  val unmaltedGrainQuantity   = BigDecimal(600000)
+  val maltedBarleyQuantity     = BigDecimal(100000)
+  val wheatQuantity            = BigDecimal(200000)
+  val maizeQuantity            = BigDecimal(300000)
+  val ryeQuantity              = BigDecimal(400000)
+  val unmaltedGrainQuantity    = BigDecimal(500000)
+  val usedMaltedGrainNotBarley = true
 
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       GrainsUsedPage.toString -> Json.obj(
-        "maltedBarleyQuantity"    -> maltedBarleyQuantity,
-        "maltedNotBarleyQuantity" -> maltedNotBarleyQuantity,
-        "wheatQuantity"           -> wheatQuantity,
-        "maizeQuantity"           -> maizeQuantity,
-        "ryeQuantity"             -> ryeQuantity,
-        "unmaltedGrainQuantity"   -> unmaltedGrainQuantity
+        "maltedBarleyQuantity"     -> maltedBarleyQuantity,
+        "wheatQuantity"            -> wheatQuantity,
+        "maizeQuantity"            -> maizeQuantity,
+        "ryeQuantity"              -> ryeQuantity,
+        "unmaltedGrainQuantity"    -> unmaltedGrainQuantity,
+        "usedMaltedGrainNotBarley" -> usedMaltedGrainNotBarley
       )
     )
   )
@@ -100,11 +100,11 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
           form.fill(
             GrainsUsed(
               maltedBarleyQuantity,
-              maltedNotBarleyQuantity,
               wheatQuantity,
               maizeQuantity,
               ryeQuantity,
-              unmaltedGrainQuantity
+              unmaltedGrainQuantity,
+              usedMaltedGrainNotBarley
             )
           ),
           NormalMode
@@ -131,11 +131,11 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, grainsUsedRoute)
             .withFormUrlEncodedBody(
               ("maltedBarleyQuantity", maltedBarleyQuantity.toString()),
-              ("maltedNotBarleyQuantity", maltedNotBarleyQuantity.toString()),
               ("wheatQuantity", wheatQuantity.toString()),
               ("maizeQuantity", maizeQuantity.toString()),
               ("ryeQuantity", ryeQuantity.toString()),
-              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString())
+              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString()),
+              ("usedMaltedGrainNotBarley", usedMaltedGrainNotBarley.toString)
             )
 
         val result = route(application, request).value
@@ -188,11 +188,11 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, grainsUsedRoute)
             .withFormUrlEncodedBody(
               ("maltedBarleyQuantity", maltedBarleyQuantity.toString()),
-              ("maltedNotBarleyQuantity", maltedNotBarleyQuantity.toString()),
               ("wheatQuantity", wheatQuantity.toString()),
               ("maizeQuantity", maizeQuantity.toString()),
               ("ryeQuantity", ryeQuantity.toString()),
-              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString())
+              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString()),
+              ("usedMaltedGrainNotBarley", usedMaltedGrainNotBarley.toString)
             )
 
         val result = route(application, request).value

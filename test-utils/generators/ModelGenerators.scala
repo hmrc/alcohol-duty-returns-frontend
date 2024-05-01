@@ -29,19 +29,19 @@ trait ModelGenerators {
   implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =
     Arbitrary {
       for {
-        maltedBarleyQuantity    <- arbitrary[BigDecimal]
-        maltedNotBarleyQuantity <- arbitrary[BigDecimal]
-        wheatQuantity           <- arbitrary[BigDecimal]
-        maizeQuantity           <- arbitrary[BigDecimal]
-        ryeQuantity             <- arbitrary[BigDecimal]
-        unmaltedGrainQuantity   <- arbitrary[BigDecimal]
+        maltedBarleyQuantity     <- arbitrary[BigDecimal]
+        wheatQuantity            <- arbitrary[BigDecimal]
+        maizeQuantity            <- arbitrary[BigDecimal]
+        ryeQuantity              <- arbitrary[BigDecimal]
+        unmaltedGrainQuantity    <- arbitrary[BigDecimal]
+        usedMaltedGrainNotBarley <- arbitrary[Boolean]
       } yield spiritsQuestions.GrainsUsed(
         maltedBarleyQuantity,
-        maltedNotBarleyQuantity,
         wheatQuantity,
         maizeQuantity,
         ryeQuantity,
-        unmaltedGrainQuantity
+        unmaltedGrainQuantity,
+        usedMaltedGrainNotBarley
       )
     }
 

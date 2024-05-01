@@ -20,11 +20,11 @@ import play.api.libs.json._
 
 case class GrainsUsed(
   maltedBarleyQuantity: BigDecimal,
-  maltedNotBarleyQuantity: BigDecimal,
   wheatQuantity: BigDecimal,
   maizeQuantity: BigDecimal,
   ryeQuantity: BigDecimal,
-  unmaltedGrainQuantity: BigDecimal
+  unmaltedGrainQuantity: BigDecimal,
+  usedMaltedGrainNotBarley: Boolean
 )
 
 object GrainsUsed {

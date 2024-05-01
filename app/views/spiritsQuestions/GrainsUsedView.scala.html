@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, Paragraph}
+@import components.{SectionHeading, PageHeading}
 
 @this(
     layout: templates.Layout,
@@ -25,8 +25,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading,
-    paragraph: Paragraph,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -46,8 +45,6 @@
 
         @pageHeading(messages("grainsUsed.heading"))
 
-        @paragraph(messages("grainsUsed.hint"))
-
         @govukInput(
             InputViewModel(
                 field = form("maltedBarleyQuantity"),
@@ -56,56 +53,58 @@
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
-        )
-
-        @govukInput(
-            InputViewModel(
-                field = form("maltedNotBarleyQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading2")).asSubheading
-            )
-            .asNumeric()
-            .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
         )
 
         @govukInput(
             InputViewModel(
                 field = form("wheatQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading3")).asSubheading
+                label = LabelViewModel(messages("grainsUsed.subheading2")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
         )
 
         @govukInput(
             InputViewModel(
                 field = form("maizeQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading4")).asSubheading
+                label = LabelViewModel(messages("grainsUsed.subheading3")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
         )
 
         @govukInput(
             InputViewModel(
                 field = form("ryeQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading5")).asSubheading
+                label = LabelViewModel(messages("grainsUsed.subheading4")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
         )
 
         @govukInput(
             InputViewModel(
                 field = form("unmaltedGrainQuantity"),
-                label = LabelViewModel(messages("grainsUsed.subheading6")).asSubheading
+                label = LabelViewModel(messages("grainsUsed.subheading5")).asSubheading
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("grainsUsed.hint"))))
+        )
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("usedMaltedGrainNotBarley"),
+                legend = LegendViewModel(messages("grainsUsed.subheading6")).asSubheading
+            )
         )
 
         @govukButton(
