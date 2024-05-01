@@ -182,6 +182,11 @@ POST       /tell-us-about-the-grains-you-have-used                        contro
 GET        /change-tell-us-about-the-grains-you-have-used                  controllers.spiritsQuestions.GrainsUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-the-grains-you-have-used                  controllers.spiritsQuestions.GrainsUsedController.onSubmit(mode: Mode = CheckMode)
 
+GET        /tell-us-about-the-other-spirits-you-have-produced                        controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-the-other-spirits-you-have-produced                        controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-the-other-spirits-you-have-produced                 controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-the-other-spirits-you-have-produced                 controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = CheckMode)
+
 GET        /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = NormalMode)
 POST       /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = NormalMode)
 GET        /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = CheckMode)
