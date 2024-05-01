@@ -18,7 +18,8 @@ package viewmodels.tasklist
 
 import models.{CheckMode, NormalMode, UserAnswers}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.productEntry.{DeclareAlcoholDutyQuestionPage, ProductEntryListPage, ProductListPage}
+import pages.productEntry.{ProductEntryListPage, ProductListPage}
+import pages.returns.DeclareAlcoholDutyQuestionPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text

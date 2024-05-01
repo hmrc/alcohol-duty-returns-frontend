@@ -23,6 +23,7 @@ import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegime, Mode, UserAnswers}
 import navigation.ProductEntryNavigator
 import pages.productEntry._
+import pages.returns.DeclareAlcoholDutyQuestionPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController

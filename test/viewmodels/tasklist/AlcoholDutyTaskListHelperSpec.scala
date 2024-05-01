@@ -18,7 +18,7 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
-import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import pages.returns.DeclareAlcoholDutyQuestionPage
 import play.api.Application
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant

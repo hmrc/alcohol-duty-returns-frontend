@@ -22,6 +22,7 @@ import controllers._
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
+import pages.returns.DeclareAlcoholDutyQuestionPage
 
 @Singleton
 class ProductEntryNavigator @Inject() {
@@ -36,7 +37,7 @@ class ProductEntryNavigator @Inject() {
     case pages.productEntry.TaxTypePage                            => taxTypePageRoute
     case pages.productEntry.DeclareSmallProducerReliefDutyRatePage =>
       _ => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
-    case pages.productEntry.DeclareAlcoholDutyQuestionPage         => declareAlcoholDutyQuestionPageRoute
+    case DeclareAlcoholDutyQuestionPage                            => declareAlcoholDutyQuestionPageRoute
     case pages.productEntry.ProductVolumePage                      =>
       _ => controllers.productEntry.routes.DutyDueController.onPageLoad()
     case pages.productEntry.ProductListPage                        => productListPageRoute
@@ -120,15 +121,15 @@ class ProductEntryNavigator @Inject() {
           if (hasChanged) controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
           else controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
 
-    case pages.productEntry.DeclareAlcoholDutyQuestionPage =>
+    case pages.returns.DeclareAlcoholDutyQuestionPage =>
       userAnswers =>
         hasChanged =>
           if (hasChanged) declareAlcoholDutyQuestionPageRoute(userAnswers)
           else routes.TaskListController.onPageLoad
-    case _                                                 => _ => _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
+    case _                                            => _ => _ => controllers.productEntry.routes.CheckYourAnswersController.onPageLoad()
   }
   private def declareAlcoholDutyQuestionPageRoute(answers: UserAnswers): Call =
-    answers.get(pages.productEntry.DeclareAlcoholDutyQuestionPage) match {
+    answers.get(pages.returns.DeclareAlcoholDutyQuestionPage) match {
       case Some(true)  => controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
       case Some(false) => routes.TaskListController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()

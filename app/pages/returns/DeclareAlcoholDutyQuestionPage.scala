@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package pages.productEntry
+package pages.returns
 
-import play.api.libs.json.JsPath
 import pages.QuestionPage
+import play.api.libs.json.JsPath
 case object DeclareAlcoholDutyQuestionPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString

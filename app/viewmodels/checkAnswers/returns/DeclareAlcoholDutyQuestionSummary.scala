@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.returns
 
 import controllers.returns.routes
 import models.{CheckMode, UserAnswers}
-import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import pages.returns.DeclareAlcoholDutyQuestionPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._

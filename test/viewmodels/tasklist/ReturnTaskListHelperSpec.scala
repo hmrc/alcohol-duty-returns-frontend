@@ -21,7 +21,8 @@ import generators.ModelGenerators
 import models.{CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.productEntry.{DeclareAlcoholDutyQuestionPage, ProductEntryListPage, ProductListPage}
+import pages.productEntry.{ProductEntryListPage, ProductListPage}
+import pages.returns.DeclareAlcoholDutyQuestionPage
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -44,7 +45,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       )
       result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
       result.taskList.items.head.href          shouldBe Some(
-        controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
+        controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
       )
     }
 
@@ -63,7 +64,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       )
       result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
       result.taskList.items.head.href          shouldBe Some(
-        controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
       )
     }
 
@@ -84,7 +85,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         )
         result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
-          controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
         result.taskList.items(1).title.content shouldBe Text(
@@ -114,7 +115,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         )
         result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
-          controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
         result.taskList.items(1).title.content shouldBe Text(
@@ -145,7 +146,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         )
         result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
-          controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
         result.taskList.items(1).title.content shouldBe Text(
@@ -176,7 +177,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         )
         result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
-          controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
         result.taskList.items(1).title.content shouldBe Text(

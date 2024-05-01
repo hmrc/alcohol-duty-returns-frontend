@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package controllers.productEntry
+package controllers.returns
 
 import base.SpecBase
+import connectors.CacheConnector
+import forms.returns.DeclareAlcoholDutyQuestionFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import pages.returns.DeclareAlcoholDutyQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import connectors.CacheConnector
-import forms.returns.DeclareAlcoholDutyQuestionFormProvider
-import views.html.productEntry.DeclareAlcoholDutyQuestionView
+import views.html.returns.DeclareAlcoholDutyQuestionView
 
 import scala.concurrent.Future
 
@@ -57,7 +57,8 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
         val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        // TODO: make it testable (contains Cider flag depends on regimes)
+        contentAsString(result) mustEqual view(form, true, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -75,7 +76,10 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), true, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -147,7 +151,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, true, NormalMode)(request, messages(application)).toString
       }
     }
 
