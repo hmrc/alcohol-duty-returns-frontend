@@ -17,6 +17,7 @@
 package pages.spiritsQuestions
 
 import models.SpiritType
+import models.SpiritType.Other
 import play.api.libs.json.JsPath
 import pages.QuestionPage
 
@@ -25,4 +26,6 @@ case object SpiritTypePage extends QuestionPage[Set[SpiritType]] {
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "spiritType"
+
+  def hasMadeOtherSpirits(spiritsType: Set[SpiritType]): Boolean = spiritsType.contains(Other)
 }
