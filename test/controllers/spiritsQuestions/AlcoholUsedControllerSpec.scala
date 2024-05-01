@@ -17,14 +17,14 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
-import forms.spiritsQuestions.WhiskyFormProvider
+import forms.spiritsQuestions.AlcoholUsedFormProvider
 import models.{NormalMode, UserAnswers}
-import models.spiritsQuestions.Whisky
+import models.spiritsQuestions.AlcoholUsed
 import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.spiritsQuestions.WhiskyPage
+import pages.spiritsQuestions.AlcoholUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
@@ -32,40 +32,46 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
-import views.html.spiritsQuestions.WhiskyView
+import views.html.spiritsQuestions.AlcoholUsedView
 
 import scala.concurrent.Future
 
-class WhiskyControllerSpec extends SpecBase with MockitoSugar {
+class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new WhiskyFormProvider()
+  val formProvider = new AlcoholUsedFormProvider()
   val form         = formProvider()
 
-  lazy val whiskyRoute  = routes.WhiskyController.onPageLoad(NormalMode).url
-  val validScotchWhisky = 55.6
-  val validIrishWhisky  = 47.5
-  val userAnswers       = UserAnswers(
+  lazy val alcoholUsedRoute = routes.AlcoholUsedController.onPageLoad(NormalMode).url
+
+  val validBeer         = 55.6
+  val validWine         = 47.5
+  val validCiderOrPerry = 55.6
+  val validMadeWine     = 47.5
+
+  val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
-      WhiskyPage.toString -> Json.obj(
-        "scotchWhisky" -> validScotchWhisky,
-        "irishWhiskey" -> validIrishWhisky
+      AlcoholUsedPage.toString -> Json.obj(
+        "beer"         -> validBeer,
+        "wine"         -> validWine,
+        "madeWine"     -> validMadeWine,
+        "ciderOrPerry" -> validCiderOrPerry
       )
     )
   )
 
-  "Whisky Controller" - {
+  "AlcoholUsed Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, whiskyRoute)
+        val request = FakeRequest(GET, alcoholUsedRoute)
 
-        val view = application.injector.instanceOf[WhiskyView]
+        val view = application.injector.instanceOf[AlcoholUsedView]
 
         val result = route(application, request).value
 
@@ -79,14 +85,17 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, whiskyRoute)
+        val request = FakeRequest(GET, alcoholUsedRoute)
 
-        val view = application.injector.instanceOf[WhiskyView]
+        val view = application.injector.instanceOf[AlcoholUsedView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(Whisky(validScotchWhisky, validIrishWhisky)), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(AlcoholUsed(validBeer, validWine, validMadeWine, validCiderOrPerry)),
+          NormalMode
+        )(
           request,
           messages(application)
         ).toString
@@ -102,17 +111,20 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator].toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, whiskyRoute)
+          FakeRequest(POST, alcoholUsedRoute)
             .withFormUrlEncodedBody(
-              ("scotchWhisky", validScotchWhisky.toString),
-              ("irishWhiskey", validIrishWhisky.toString)
+              ("beer", validBeer.toString),
+              ("wine", validWine.toString),
+              ("madeWine", validMadeWine.toString),
+              ("ciderOrPerry", validCiderOrPerry.toString)
             )
 
         val result = route(application, request).value
@@ -128,12 +140,12 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whiskyRoute)
+          FakeRequest(POST, alcoholUsedRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[WhiskyView]
+        val view = application.injector.instanceOf[AlcoholUsedView]
 
         val result = route(application, request).value
 
@@ -147,7 +159,7 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, whiskyRoute)
+        val request = FakeRequest(GET, alcoholUsedRoute)
 
         val result = route(application, request).value
 
@@ -162,10 +174,12 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whiskyRoute)
+          FakeRequest(POST, alcoholUsedRoute)
             .withFormUrlEncodedBody(
-              ("scotchWhisky", validScotchWhisky.toString),
-              ("irishWhiskey", validIrishWhisky.toString)
+              ("beer", validBeer.toString),
+              ("wine", validWine.toString),
+              ("madeWine", validMadeWine.toString),
+              ("ciderOrperry", validCiderOrPerry.toString)
             )
 
         val result = route(application, request).value

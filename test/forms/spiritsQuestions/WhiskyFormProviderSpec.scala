@@ -24,10 +24,10 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
 
   val form = new WhiskyFormProvider()()
 
-  ".ScotchWhisky" - {
+  ".scotchWhisky" - {
 
-    val fieldName   = "ScotchWhisky"
-    val requiredKey = "whisky.error.ScotchWhisky.required"
+    val fieldName   = "scotchWhisky"
+    val requiredKey = "whisky.error.scotchWhisky.required"
     val minimum     = 0.00
     val maximum     = 999999999.99
     val decimal     = 2
@@ -43,8 +43,8 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "whisky.error.ScotchWhisky.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "whisky.error.ScotchWhisky.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "whisky.error.scotchWhisky.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "whisky.error.scotchWhisky.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -52,7 +52,7 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "whisky.error.ScotchWhisky.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "whisky.error.scotchWhisky.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -60,7 +60,7 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "whisky.error.ScotchWhisky.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "whisky.error.scotchWhisky.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
@@ -70,10 +70,10 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
     )
   }
 
-  ".IrishWhiskey" - {
+  ".irishWhiskey" - {
 
-    val fieldName   = "IrishWhiskey"
-    val requiredKey = "whisky.error.IrishWhiskey.required"
+    val fieldName   = "irishWhiskey"
+    val requiredKey = "whisky.error.irishWhiskey.required"
     val minimum     = 0.00
     val maximum     = 999999999.99
     val decimal     = 2
@@ -89,8 +89,8 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "whisky.error.IrishWhiskey.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "whisky.error.IrishWhiskey.twoDecimalPlaces")
+      nonNumericError = FormError(fieldName, "whisky.error.irishWhiskey.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "whisky.error.irishWhiskey.twoDecimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -98,7 +98,7 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "whisky.error.IrishWhiskey.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "whisky.error.irishWhiskey.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -106,7 +106,7 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError = FormError(fieldName, "whisky.error.IrishWhiskey.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "whisky.error.irishWhiskey.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
