@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package viewmodels
+package forms.spiritsQuestions
 
-package object govuk {
+import javax.inject.Inject
 
-  object all
-      extends ImplicitConversions
-      with BackLinkFluency
-      with ButtonFluency
-      with CharacterCountFluency
-      with CheckboxFluency
-      with DateFluency
-      with ErrorSummaryFluency
-      with FieldsetFluency
-      with HintFluency
-      with InputFluency
-      with LabelFluency
-      with YearMonthDateFluency
-      with RadiosFluency
-      with SelectFluency
-      with SummaryListFluency
-      with TagFluency
-      with TextareaFluency
+import forms.mappings.Mappings
+import play.api.data.Form
+
+class OtherSpiritsProducedFormProvider @Inject() extends Mappings {
+  import OtherSpiritsProducedFormProvider._
+
+  def apply(): Form[String] =
+    Form(
+      "otherSpiritsProduced" -> text("otherSpiritsProduced.error.required")
+        .verifying(maxLength(otherTypesLength, "otherSpiritsProduced.error.length"))
+    )
+}
+
+object OtherSpiritsProducedFormProvider {
+  val otherTypesLength = 150
 }
