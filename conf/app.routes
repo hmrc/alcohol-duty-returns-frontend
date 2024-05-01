@@ -25,10 +25,10 @@ GET         /task-list/your-alcohol-duty-return          controllers.TaskListCon
 # Beginning of product entry sub-journey
 GET        /tell-us-about-your-alcohol                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
 
-GET        /do-you-need-to-declare-duty                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /do-you-need-to-declare-duty                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-do-you-need-to-declare-duty                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-do-you-need-to-declare-duty                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)

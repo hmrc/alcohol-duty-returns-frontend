@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package controllers.productEntry
+package controllers.returns
 
+import connectors.CacheConnector
 import controllers.actions._
-import forms.productEntry.DeclareAlcoholDutyQuestionFormProvider
-
-import javax.inject.Inject
-import models.Mode
+import forms.returns.DeclareAlcoholDutyQuestionFormProvider
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.{AlcoholRegime, Mode, UserAnswers}
 import navigation.ProductEntryNavigator
-import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage, DeclareAlcoholDutyQuestionPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductEntryListPage, ProductListPage, ProductNamePage, ProductVolumePage, SmallProducerReliefQuestionPage}
+import pages.productEntry._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.productEntry.DeclareAlcoholDutyQuestionView
+import views.html.returns.DeclareAlcoholDutyQuestionView
 
-import scala.util.Try
-import models.UserAnswers
-
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class DeclareAlcoholDutyQuestionController @Inject() (
   override val messagesApi: MessagesApi,
@@ -51,20 +49,24 @@ class DeclareAlcoholDutyQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val regimes: Seq[AlcoholRegime] = Seq(Beer, Cider, Spirits, Wine, OtherFermentedProduct)
+
     val preparedForm = request.userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode))
+    val showCider = regimes.contains(Cider)
+    Ok(view(preparedForm, showCider, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val regimes: Seq[AlcoholRegime] = Seq(Beer, Cider, Spirits, Wine, OtherFermentedProduct)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, regimes.contains(Cider), mode))),
           value =>
             for {
               updatedAnswers   <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))

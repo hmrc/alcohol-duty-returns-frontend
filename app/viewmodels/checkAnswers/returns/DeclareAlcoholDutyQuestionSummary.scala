@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.productEntry
+package viewmodels.checkAnswers.returns
 
-import controllers.productEntry.routes
+import controllers.returns.routes
 import models.{CheckMode, UserAnswers}
 import pages.productEntry.DeclareAlcoholDutyQuestionPage
 import play.api.i18n.Messages

@@ -17,7 +17,6 @@
 package controllers.productEntry
 
 import base.SpecBase
-import forms.productEntry.DeclareAlcoholDutyQuestionFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -30,6 +29,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import connectors.CacheConnector
+import forms.returns.DeclareAlcoholDutyQuestionFormProvider
 import views.html.productEntry.DeclareAlcoholDutyQuestionView
 
 import scala.concurrent.Future

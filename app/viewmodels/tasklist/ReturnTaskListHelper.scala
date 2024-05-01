@@ -32,7 +32,7 @@ object ReturnTaskListHelper {
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare.yes"))),
             status = AlcholDutyTaskListItemStatus.completed,
-            href = Some(controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
+            href = Some(controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
           ),
           returnJourneyTaskListItem(userAnswers)
         )
@@ -41,7 +41,7 @@ object ReturnTaskListHelper {
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare.no"))),
             status = AlcholDutyTaskListItemStatus.completed,
-            href = Some(controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
+            href = Some(controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
           )
         )
       case None        =>
@@ -49,7 +49,7 @@ object ReturnTaskListHelper {
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare.notStarted"))),
             status = AlcholDutyTaskListItemStatus.notStarted,
-            href = Some(controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url)
+            href = Some(controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url)
           )
         )
     }
