@@ -16,64 +16,125 @@
 
 package forms.spiritsQuestions
 
-import forms.behaviours.StringFieldBehaviours
+import forms.behaviours.{BigDecimalFieldBehaviours, BooleanFieldBehaviours}
 import play.api.data.FormError
 
-class EthyleneGasOrMolassesUsedFormProviderSpec extends StringFieldBehaviours {
+import scala.collection.immutable.ArraySeq
+
+class EthyleneGasOrMolassesUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanFieldBehaviours {
 
   val form = new EthyleneGasOrMolassesUsedFormProvider()()
 
   ".ethyleneGas" - {
 
-    val fieldName   = "ethyleneGas"
-    val requiredKey = "ethyleneGasOrMolassesUsed.error.ethyleneGas.required"
-    val lengthKey   = "ethyleneGasOrMolassesUsed.error.ethyleneGas.length"
-    val maxLength   = 100
+    val fieldName = "ethyleneGas"
+    val minimum   = 0.00
+    val maximum   = 999999999.99
+    val decimal   = 2
+
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      validDataGenerator
     )
 
-    behave like fieldWithMaxLength(
+    behave like bigDecimalField(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nonNumericError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.ethyleneGas.twoDecimalPlaces")
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError =
+        FormError(fieldName, "ethyleneGasOrMolassesUsed.error.ethyleneGas.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError =
+        FormError(fieldName, "ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.ethyleneGas.required")
     )
   }
 
   ".molasses" - {
 
-    val fieldName   = "molasses"
-    val requiredKey = "ethyleneGasOrMolassesUsed.error.molasses.required"
-    val lengthKey   = "ethyleneGasOrMolassesUsed.error.molasses.length"
-    val maxLength   = 100
+    val fieldName = "molasses"
+    val minimum   = 0.00
+    val maximum   = 999999999.99
+    val decimal   = 2
+
+    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      validDataGenerator
     )
 
-    behave like fieldWithMaxLength(
+    behave like bigDecimalField(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nonNumericError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.molasses.nonNumeric"),
+      twoDecimalPlacesError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.molasses.twoDecimalPlaces")
+    )
+
+    behave like bigDecimalFieldWithMinimum(
+      form,
+      fieldName,
+      minimum = minimum,
+      decimal = decimal,
+      expectedError =
+        FormError(fieldName, "ethyleneGasOrMolassesUsed.error.molasses.minimumRequired", ArraySeq(minimum))
+    )
+
+    behave like bigDecimalFieldWithMaximum(
+      form,
+      fieldName,
+      maximum = maximum,
+      decimal = decimal,
+      expectedError =
+        FormError(fieldName, "ethyleneGasOrMolassesUsed.error.molasses.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.molasses.required")
     )
+  }
+
+  ".otherIngredients" - {
+
+    val fieldName  = "otherIngredients"
+    val invalidKey = "error.boolean"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.required")
+    )
+
   }
 }

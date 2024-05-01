@@ -572,10 +572,11 @@ ethyleneGasOrMolassesUsed.error.ethyleneGas.twoDecimalPlaces = The volume of eth
 ethyleneGasOrMolassesUsed.error.ethyleneGas.minimumRequired = The volume of ethylene gas you need to declare must be 0.00 or more
 ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired = The volume of ethylene gas you need to declare must be 999999999.99 or less
 ethyleneGasOrMolassesUsed.error.molasses.required = Enter how much molasses you have used.
-ethyleneGasOrMolassesUsed.error.molasses.nonNumeric =
-ethyleneGasOrMolassesUsed.error.molasses.twoDecimalPlaces =
-ethyleneGasOrMolassesUsed.error.molasses.minimumRequired =
-ethyleneGasOrMolassesUsed.error.molasses.maximumRequired =
+ethyleneGasOrMolassesUsed.error.molasses.nonNumeric = The volume of molasses you need to declare must be a number
+ethyleneGasOrMolassesUsed.error.molasses.twoDecimalPlaces = The volume of molasses you need to declare must be a number to 2 decimal places
+ethyleneGasOrMolassesUsed.error.molasses.minimumRequired = The volume of molasses you need to declare must be 0.00 or more
+ethyleneGasOrMolassesUsed.error.molasses.maximumRequired = The volume of molasses you need to declare must be 999999999.99 or less
+ethyleneGasOrMolassesUsed.error.required = Select yes to declare any other ingredients you have used
 ethyleneGasOrMolassesUsed.ethyleneGas.change.hidden = ethylene gas
 ethyleneGasOrMolassesUsed.molasses.change.hidden = molasses
 

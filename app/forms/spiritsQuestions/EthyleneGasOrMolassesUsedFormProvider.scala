@@ -27,7 +27,7 @@ class EthyleneGasOrMolassesUsedFormProvider @Inject() extends Mappings {
 
   def apply(): Form[EthyleneGasOrMolassesUsed] = Form(
     mapping(
-      "ethyleneGas"                 -> bigDecimal(
+      "ethyleneGas"      -> bigDecimal(
         2,
         "ethyleneGasOrMolassesUsed.error.ethyleneGas.required",
         "ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric",
@@ -36,14 +36,14 @@ class EthyleneGasOrMolassesUsedFormProvider @Inject() extends Mappings {
         .verifying(
           maximumValue(BigDecimal(999999999.99), "ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired")
         ),
-      "molasses"                    -> bigDecimal(
+      "molasses"         -> bigDecimal(
         2,
         "ethyleneGasOrMolassesUsed.error.molasses.required",
         "ethyleneGasOrMolassesUsed.error.molasses.nonNumeric",
         "ethyleneGasOrMolassesUsed.error.molasses.twoDecimalPlaces"
       ).verifying(minimumValue(BigDecimal(0.00), "ethyleneGasOrMolassesUsed.error.molasses.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "ethyleneGasOrMolassesUsed.error.molasses.maximumRequired")),
-      "otherIngredients-yesNoValue" -> boolean("ethyleneGasOrMolassesUsed.error.required")
+      "otherIngredients" -> boolean("ethyleneGasOrMolassesUsed.error.required")
     )(EthyleneGasOrMolassesUsed.apply)(EthyleneGasOrMolassesUsed.unapply)
   )
 }
