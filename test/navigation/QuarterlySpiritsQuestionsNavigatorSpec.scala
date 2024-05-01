@@ -74,6 +74,15 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         ) mustBe controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
       }
 
+      "must go from the Alcohol Used Page to Ethylene Gas Or Molasses page" in {
+
+        navigator.nextPage(
+          pages.spiritsQuestions.AlcoholUsedPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
+      }
+
     }
 
     "in Check mode" - {
