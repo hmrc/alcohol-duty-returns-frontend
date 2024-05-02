@@ -19,7 +19,7 @@ package navigation
 import controllers._
 import models._
 import pages._
-import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, SpiritTypePage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -33,6 +33,7 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
       _ => controllers.spiritsQuestions.routes.WhiskyController.onPageLoad(NormalMode)
     case pages.spiritsQuestions.WhiskyPage                  =>
       _ => controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
+    case pages.spiritsQuestions.SpiritTypePage              => spiritTypesRoute
     case pages.spiritsQuestions.AlcoholUsedPage             =>
       _ => controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
     case _                                                  => _ => routes.IndexController.onPageLoad
@@ -48,5 +49,13 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
       case Some(true)  => controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
       case Some(false) => routes.TaskListController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  private def spiritTypesRoute(userAnswers: UserAnswers): Call =
+    userAnswers.get(SpiritTypePage) match {
+      case Some(spiritsType) if SpiritTypePage.hasMadeOtherSpirits(spiritsType) =>
+        controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(NormalMode)
+      case Some(_)                                                              => routes.TaskListController.onPageLoad
+      case _                                                                    => routes.JourneyRecoveryController.onPageLoad()
     }
 }
