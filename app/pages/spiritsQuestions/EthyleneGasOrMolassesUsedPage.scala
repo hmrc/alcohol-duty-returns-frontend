@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package models.spiritsQuestions
+package pages.spiritsQuestions
 
-import play.api.libs.json._
+import models.spiritsQuestions.EthyleneGasOrMolassesUsed
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case class Whisky(scotchWhisky: BigDecimal, irishWhiskey: BigDecimal)
+case object EthyleneGasOrMolassesUsedPage extends QuestionPage[EthyleneGasOrMolassesUsed] {
 
-object Whisky {
-  implicit val format: OFormat[Whisky] = Json.format[Whisky]
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "ethyleneGasOrMolassesUsed"
 }

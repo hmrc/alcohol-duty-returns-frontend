@@ -17,56 +17,58 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
-import forms.spiritsQuestions.WhiskyFormProvider
+import forms.spiritsQuestions.OtherMaltedGrainsFormProvider
 import models.{NormalMode, UserAnswers}
-import models.spiritsQuestions.Whisky
-import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.spiritsQuestions.WhiskyPage
+import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.spiritsQuestions.OtherMaltedGrains
+import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import uk.gov.hmrc.http.HttpResponse
-import views.html.spiritsQuestions.WhiskyView
+import views.html.spiritsQuestions.OtherMaltedGrainsView
 
 import scala.concurrent.Future
 
-class WhiskyControllerSpec extends SpecBase with MockitoSugar {
+class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new WhiskyFormProvider()
+  val formProvider = new OtherMaltedGrainsFormProvider()
   val form         = formProvider()
 
-  lazy val whiskyRoute  = routes.WhiskyController.onPageLoad(NormalMode).url
-  val validScotchWhisky = 55.6
-  val validIrishWhisky  = 47.5
-  val userAnswers       = UserAnswers(
+  lazy val otherMaltedGrainsRoute = routes.OtherMaltedGrainsController.onPageLoad(NormalMode).url
+
+  val otherMaltedGrainsTypes    = "Coco Pops"
+  val otherMaltedGrainsQuantity = BigDecimal(100000)
+
+  val userAnswers = UserAnswers(
     returnId,
     groupId,
     userAnswersId,
     Json.obj(
-      WhiskyPage.toString -> Json.obj(
-        "scotchWhisky" -> validScotchWhisky,
-        "irishWhiskey" -> validIrishWhisky
+      OtherMaltedGrainsPage.toString -> Json.obj(
+        "otherMaltedGrainsTypes"    -> otherMaltedGrainsTypes,
+        "otherMaltedGrainsQuantity" -> otherMaltedGrainsQuantity
       )
     )
   )
 
-  "Whisky Controller" - {
+  "OtherMaltedGrains Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, whiskyRoute)
+        val request = FakeRequest(GET, otherMaltedGrainsRoute)
 
-        val view = application.injector.instanceOf[WhiskyView]
+        val view = application.injector.instanceOf[OtherMaltedGrainsView]
 
         val result = route(application, request).value
 
@@ -80,17 +82,17 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, whiskyRoute)
+        val request = FakeRequest(GET, otherMaltedGrainsRoute)
 
-        val view = application.injector.instanceOf[WhiskyView]
+        val view = application.injector.instanceOf[OtherMaltedGrainsView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(Whisky(validScotchWhisky, validIrishWhisky)), NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(
+          form.fill(OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -110,10 +112,10 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whiskyRoute)
+          FakeRequest(POST, otherMaltedGrainsRoute)
             .withFormUrlEncodedBody(
-              ("scotchWhisky", validScotchWhisky.toString),
-              ("irishWhiskey", validIrishWhisky.toString)
+              ("otherMaltedGrainsTypes", otherMaltedGrainsTypes),
+              ("otherMaltedGrainsQuantity", otherMaltedGrainsQuantity.toString())
             )
 
         val result = route(application, request).value
@@ -129,12 +131,12 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whiskyRoute)
+          FakeRequest(POST, otherMaltedGrainsRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[WhiskyView]
+        val view = application.injector.instanceOf[OtherMaltedGrainsView]
 
         val result = route(application, request).value
 
@@ -148,7 +150,7 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, whiskyRoute)
+        val request = FakeRequest(GET, otherMaltedGrainsRoute)
 
         val result = route(application, request).value
 
@@ -163,10 +165,10 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whiskyRoute)
+          FakeRequest(POST, otherMaltedGrainsRoute)
             .withFormUrlEncodedBody(
-              ("scotchWhisky", validScotchWhisky.toString),
-              ("irishWhiskey", validIrishWhisky.toString)
+              ("otherMaltedGrainsTypes", otherMaltedGrainsTypes),
+              ("otherMaltedGrainsQuantity", otherMaltedGrainsQuantity.toString())
             )
 
         val result = route(application, request).value

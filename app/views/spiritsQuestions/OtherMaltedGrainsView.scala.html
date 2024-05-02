@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, SubHeading}
+@import components.{SectionHeading, PageHeading}
 
 @this(
     layout: templates.Layout,
@@ -24,45 +24,43 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading,
-subHeading: SubHeading
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whisky.title"))) {
+@layout(pageTitle = title(form, messages("otherMaltedGrains.title"))) {
 
-    @formHelper(action = controllers.spiritsQuestions.routes.WhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.spiritsQuestions.routes.OtherMaltedGrainsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
-            id = "whisky-section",
+            id = "other-malted-grains-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
-        @pageHeading(messages("whisky.heading"))
+        @pageHeading(messages("otherMaltedGrains.heading"))
 
         @govukInput(
             InputViewModel(
-                field = form("scotchWhisky"),
-                label = LabelViewModel(messages("whisky.scotchWhisky.subheading1")).asSubheading,
+                field = form("otherMaltedGrainsTypes"),
+                label = LabelViewModel(messages("otherMaltedGrains.subheading1")).asSubheading
             )
-            .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            .withWidth(Fixed10)
+            .withWidth(ThreeQuarters)
         )
 
         @govukInput(
             InputViewModel(
-                field = form("irishWhiskey"),
-                label = LabelViewModel(messages("whisky.irishWhiskey.subheading2")).asSubheading
+                field = form("otherMaltedGrainsQuantity"),
+                label = LabelViewModel(messages("otherMaltedGrains.subheading2")).asSubheading
             )
-            .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .asNumeric()
             .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.tonnes")))
+            .withHint(Hint(content = HtmlContent(messages("otherMaltedGrains.hint"))))
         )
 
         @govukButton(

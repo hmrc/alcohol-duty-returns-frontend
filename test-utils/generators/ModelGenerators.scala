@@ -26,12 +26,39 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryOtherMaltedGrains: Arbitrary[spiritsQuestions.OtherMaltedGrains] =
+    Arbitrary {
+      for {
+        otherMaltedGrainsTypes    <- arbitrary[String]
+        otherMaltedGrainsQuantity <- arbitrary[BigDecimal]
+      } yield spiritsQuestions.OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)
+    }
+
+  implicit lazy val arbitraryEthyleneGasOrMolassesUsed: Arbitrary[spiritsQuestions.EthyleneGasOrMolassesUsed] =
+    Arbitrary {
+      for {
+        ethyleneGas      <- arbitrary[BigDecimal]
+        molasses         <- arbitrary[BigDecimal]
+        otherIngredients <- arbitrary[Boolean]
+      } yield spiritsQuestions.EthyleneGasOrMolassesUsed(ethyleneGas, molasses, otherIngredients)
+    }
+
   implicit lazy val arbitraryWhisky: Arbitrary[spiritsQuestions.Whisky] =
     Arbitrary {
       for {
-        ScotchWhisky <- arbitrary[BigDecimal]
-        IrishWhiskey <- arbitrary[BigDecimal]
-      } yield spiritsQuestions.Whisky(ScotchWhisky, IrishWhiskey)
+        scotchWhisky <- arbitrary[BigDecimal]
+        irishWhiskey <- arbitrary[BigDecimal]
+      } yield spiritsQuestions.Whisky(scotchWhisky, irishWhiskey)
+    }
+
+  implicit lazy val arbitraryAlcoholUsed: Arbitrary[spiritsQuestions.AlcoholUsed] =
+    Arbitrary {
+      for {
+        beer         <- arbitrary[BigDecimal]
+        wine         <- arbitrary[BigDecimal]
+        madeWine     <- arbitrary[BigDecimal]
+        ciderOrPerry <- arbitrary[BigDecimal]
+      } yield spiritsQuestions.AlcoholUsed(beer, wine, madeWine, ciderOrPerry)
     }
 
   implicit lazy val arbitraryDutySuspendedBeer: Arbitrary[dutySuspended.DutySuspendedBeer] =

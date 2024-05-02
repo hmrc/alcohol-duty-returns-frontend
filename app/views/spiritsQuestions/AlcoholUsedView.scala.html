@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, SubHeading}
+@import components.{SectionHeading, PageHeading}
 
 @this(
     layout: templates.Layout,
@@ -24,45 +24,68 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading,
-subHeading: SubHeading
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whisky.title"))) {
+@layout(pageTitle = title(form, messages("alcoholUsed.title"))) {
 
-    @formHelper(action = controllers.spiritsQuestions.routes.WhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.spiritsQuestions.routes.AlcoholUsedController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
-            id = "whisky-section",
+            id = "alcohol-used-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
-        @pageHeading(messages("whisky.heading"))
+        @pageHeading(messages("alcoholUsed.heading"))
 
         @govukInput(
             InputViewModel(
-                field = form("scotchWhisky"),
-                label = LabelViewModel(messages("whisky.scotchWhisky.subheading1")).asSubheading,
+                field = form("beer"),
+                label = LabelViewModel(messages("alcoholUsed.beer")).asSubheading
             )
-            .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .asNumeric()
             .withWidth(Fixed10)
+            .withHint(Hint(content =  messages("alcoholUsed.hint")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
 
         @govukInput(
             InputViewModel(
-                field = form("irishWhiskey"),
-                label = LabelViewModel(messages("whisky.irishWhiskey.subheading2")).asSubheading
+                field = form("wine"),
+                label = LabelViewModel(messages("alcoholUsed.wine")).asSubheading
             )
-            .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .asNumeric()
             .withWidth(Fixed10)
+            .withHint(Hint(content =  messages("alcoholUsed.hint")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("madeWine"),
+                label = LabelViewModel(messages("alcoholUsed.madeWine")).asSubheading
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withHint(Hint(content =  messages("alcoholUsed.hint")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("ciderOrPerry"),
+                label = LabelViewModel(messages("alcoholUsed.ciderOrPerry")).asSubheading
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withHint(Hint(content =  messages("alcoholUsed.hint")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
 
         @govukButton(

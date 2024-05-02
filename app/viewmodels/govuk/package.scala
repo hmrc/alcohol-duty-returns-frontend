@@ -22,6 +22,7 @@ package object govuk {
       extends ImplicitConversions
       with BackLinkFluency
       with ButtonFluency
+      with CharacterCountFluency
       with CheckboxFluency
       with DateFluency
       with ErrorSummaryFluency
@@ -33,4 +34,5 @@ package object govuk {
       with RadiosFluency
       with SummaryListFluency
       with TagFluency
+      with TextareaFluency
 }

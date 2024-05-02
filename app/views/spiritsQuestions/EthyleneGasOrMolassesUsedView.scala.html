@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, SubHeading}
+@import components.{SectionHeading, PageHeading}
 
 @this(
     layout: templates.Layout,
@@ -25,44 +25,51 @@
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
-subHeading: SubHeading
+    govukRadios: GovukRadios
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whisky.title"))) {
+@layout(pageTitle = title(form, messages("ethyleneGasOrMolassesUsed.title"))) {
 
-    @formHelper(action = controllers.spiritsQuestions.routes.WhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
-            id = "whisky-section",
+            id = "ethyleneGasOrMolassesUsed-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
-        @pageHeading(messages("whisky.heading"))
+        @pageHeading(messages("ethyleneGasOrMolassesUsed.heading"))
 
         @govukInput(
             InputViewModel(
-                field = form("scotchWhisky"),
-                label = LabelViewModel(messages("whisky.scotchWhisky.subheading1")).asSubheading,
+                field = form("ethyleneGas"),
+                label = LabelViewModel(messages("ethyleneGasOrMolassesUsed.ethyleneGas")).asSubheading
             )
-            .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
+            .withHint(Hint(content = HtmlContent(messages("ethyleneGasOrMolassesUsed.hint"))))
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
             .withWidth(Fixed10)
         )
 
         @govukInput(
             InputViewModel(
-                field = form("irishWhiskey"),
-                label = LabelViewModel(messages("whisky.irishWhiskey.subheading2")).asSubheading
+                field = form("molasses"),
+                label = LabelViewModel(messages("ethyleneGasOrMolassesUsed.molasses")).asSubheading
             )
-            .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
+            .withHint(Hint(content = HtmlContent(messages("ethyleneGasOrMolassesUsed.hint"))))
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
             .withWidth(Fixed10)
+        )
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("otherIngredients"),
+                legend = LegendViewModel(messages("ethyleneGasOrMolassesUsed.question")).withCssClass("govuk-fieldset__legend--l")
+            )
         )
 
         @govukButton(

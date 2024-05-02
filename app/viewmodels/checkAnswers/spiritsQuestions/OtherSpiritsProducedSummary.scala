@@ -18,28 +18,23 @@ package viewmodels.checkAnswers.spiritsQuestions
 
 import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
-import pages.spiritsQuestions.WhiskyPage
+import pages.spiritsQuestions.OtherSpiritsProducedPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object WhiskySummary {
+object OtherSpiritsProducedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WhiskyPage).map { answer =>
-      val value = HtmlFormat.escape(answer.scotchWhisky.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.irishWhiskey.toString())
-        .toString
-
+    answers.get(OtherSpiritsProducedPage).map { answer =>
       SummaryListRowViewModel(
-        key = "whisky.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "otherSpiritsProduced.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlFormat.escape(answer).toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.WhiskyController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("whisky.change.hidden"))
+          ActionItemViewModel("site.change", routes.OtherSpiritsProducedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("otherSpiritsProduced.change.hidden"))
         )
       )
     }

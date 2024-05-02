@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package models.spiritsQuestions
+package forms.spiritsQuestions
 
-import play.api.libs.json._
+import javax.inject.Inject
 
-case class Whisky(scotchWhisky: BigDecimal, irishWhiskey: BigDecimal)
+import forms.mappings.Mappings
+import play.api.data.Form
 
-object Whisky {
-  implicit val format: OFormat[Whisky] = Json.format[Whisky]
+class OtherSpiritsProducedFormProvider @Inject() extends Mappings {
+  import OtherSpiritsProducedFormProvider._
+
+  def apply(): Form[String] =
+    Form(
+      "otherSpiritsProduced" -> text("otherSpiritsProduced.error.required")
+        .verifying(maxLength(otherTypesLength, "otherSpiritsProduced.error.length"))
+    )
+}
+
+object OtherSpiritsProducedFormProvider {
+  val otherTypesLength = 150
 }
