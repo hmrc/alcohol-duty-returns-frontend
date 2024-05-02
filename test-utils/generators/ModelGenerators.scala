@@ -26,6 +26,25 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =
+    Arbitrary {
+      for {
+        maltedBarleyQuantity     <- arbitrary[BigDecimal]
+        wheatQuantity            <- arbitrary[BigDecimal]
+        maizeQuantity            <- arbitrary[BigDecimal]
+        ryeQuantity              <- arbitrary[BigDecimal]
+        unmaltedGrainQuantity    <- arbitrary[BigDecimal]
+        usedMaltedGrainNotBarley <- arbitrary[Boolean]
+      } yield spiritsQuestions.GrainsUsed(
+        maltedBarleyQuantity,
+        wheatQuantity,
+        maizeQuantity,
+        ryeQuantity,
+        unmaltedGrainQuantity,
+        usedMaltedGrainNotBarley
+      )
+    }
+
   implicit lazy val arbitraryOtherMaltedGrains: Arbitrary[spiritsQuestions.OtherMaltedGrains] =
     Arbitrary {
       for {
