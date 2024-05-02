@@ -468,22 +468,22 @@ declareSpiritsTotal.inputSuffix = litres
 
 whisky.title = How much Scotch whisky and Irish whiskey have you produced?
 whisky.heading = How much Scotch whisky and Irish whiskey have you produced?
-whisky.ScotchWhisky.subheading1 = Scotch whisky
+whisky.scotchWhisky.subheading1 = Scotch whisky
 whisky.hint = Enter volume in whole litres of pure alcohol.
-whisky.IrishWhiskey.subheading2 = Irish whiskey
+whisky.irishWhiskey.subheading2 = Irish whiskey
 whisky.checkYourAnswersLabel = Whisky
-whisky.ScotchWhisky.change.hidden = ScotchWhisky
-whisky.IrishWhiskey.change.hidden = IrishWhiskey
-whisky.error.ScotchWhisky.required = Enter how much Scotch Whisky you need to declare this quarter
-whisky.error.ScotchWhisky.nonNumeric = The volume of Scotch Whisky you need to declare must be a number
-whisky.error.ScotchWhisky.maximumRequired = The volume of Scotch Whisky you need to declare must be 100 million litres or less
-whisky.error.ScotchWhisky.minimumRequired = The volume of Scotch Whisky you need to declare must be 0.00 or more
-whisky.error.ScotchWhisky.twoDecimalPlaces = The volume of Scotch Whisky you need to declare must be a number to 2 decimal places
-whisky.error.IrishWhiskey.required = Enter how much Irish Whiskey you need to declare this quarter
-whisky.error.IrishWhiskey.nonNumeric = The volume of Irish Whiskey you need to declare must be a number
-whisky.error.IrishWhiskey.maximumRequired = The volume of Irish Whiskey you need to declare must be 100 million litres  or less
-whisky.error.IrishWhiskey.minimumRequired = The volume of Irish Whiskey you need to declare must be 0.00 or more
-whisky.error.IrishWhiskey.twoDecimalPlaces = The volume of Irish Whiskey you need to declare must be a number to 2 decimal places
+whisky.scotchWhisky.change.hidden = scotch whisky
+whisky.irishWhiskey.change.hidden = irish whiskey
+whisky.error.scotchWhisky.required = Enter how much Scotch Whisky you need to declare this quarter
+whisky.error.scotchWhisky.nonNumeric = The volume of Scotch Whisky you need to declare must be a number
+whisky.error.scotchWhisky.maximumRequired = The volume of Scotch Whisky you need to declare must be 100 million litres or less
+whisky.error.scotchWhisky.minimumRequired = The volume of Scotch Whisky you need to declare must be 0.00 or more
+whisky.error.scotchWhisky.twoDecimalPlaces = The volume of Scotch Whisky you need to declare must be a number to 2 decimal places
+whisky.error.irishWhiskey.required = Enter how much Irish Whiskey you need to declare this quarter
+whisky.error.irishWhiskey.nonNumeric = The volume of Irish Whiskey you need to declare must be a number
+whisky.error.irishWhiskey.maximumRequired = The volume of Irish Whiskey you need to declare must be 100 million litres  or less
+whisky.error.irishWhiskey.minimumRequired = The volume of Irish Whiskey you need to declare must be 0.00 or more
+whisky.error.irishWhiskey.twoDecimalPlaces = The volume of Irish Whiskey you need to declare must be a number to 2 decimal places
 
 spiritType.title = Which of these spirits have you made?
 spiritType.heading = Which of these spirits have you made?
@@ -560,7 +560,14 @@ ethyleneGasUsed.change.hidden = Ethylene Gas used
 ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
 ethyleneGasUsed.inputSuffix = tonnes
 
-grainsUsed.title = How much grain have you used this quarter?
+otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
+otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
+otherSpiritsProduced.hint = Tell us what other spirits you have produced.
+otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
+otherSpiritsProduced.error.required = Enter the other spirits you produced
+otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
+
+rainsUsed.title = How much grain have you used this quarter?
 grainsUsed.heading = How much grain have you used this quarter?
 grainsUsed.subheading1 = Malted barley
 grainsUsed.subheading2 = Wheat
@@ -598,13 +605,6 @@ grainsUsed.error.unmaltedGrainQuantity.twoDecimalPlaces = The volume of unmalted
 grainsUsed.error.usedMaltedGrainNotBarley.required = Select whether you have used any malted grains that are not barley
 grainsUsed.change.hidden = grainsUsed
 
-otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
-otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
-otherSpiritsProduced.hint = Tell us what other spirits you have produced.
-otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
-otherSpiritsProduced.error.required = Enter the other spirits you produced
-otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
-
 otherMaltedGrains.title = Tell us about the other malted grains you have used
 otherMaltedGrains.heading = Tell us about the other malted grains you have used
 otherMaltedGrains.subheading1 = What other malted grains have you used?
@@ -620,6 +620,39 @@ otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired = The volume o
 otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired = The volume of other malted grains you need to declare must be {0} or more
 otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces = The volume of other malted grains you need to declare must be a number to 2 decimal places
 otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = otherMaltedGrainsQuantity
+
+alcoholUsed.title = How much alcohol have you used this quarter?
+alcoholUsed.heading = How much alcohol have you used this quarter?
+alcoholUsed.beer = Beer
+alcoholUsed.wine = Wine
+alcoholUsed.madeWine = Made-wine
+alcoholUsed.ciderOrPerry = Cider or perry
+alcoholUsed.hint = Enter volume in litres, up to 2 decimal places.
+alcoholUsed.checkYourAnswersLabel = AlcoholUsed
+alcoholUsed.error.beer.required = Enter how much Beer you have used.
+alcoholUsed.error.beer.nonNumeric = The volume of Beer you need to declare must be a number
+alcoholUsed.error.beer.maximumRequired = The volume of Beer you need to declare must be 999999999.99 or less
+alcoholUsed.error.beer.minimumRequired = The volume of Beer you need to declare must be 0.00 or more
+alcoholUsed.error.beer.twoDecimalPlaces = The volume of Beer you need to declare must be a number to 2 decimal places
+alcoholUsed.beer.change.hidden = beer
+alcoholUsed.error.wine.required = Enter how much Wine you have used.
+alcoholUsed.error.wine.nonNumeric = The volume of Wine you need to declare must be a number
+alcoholUsed.error.wine.maximumRequired = The volume of Wine you need to declare must be 999999999.99 or less
+alcoholUsed.error.wine.minimumRequired = The volume of Wine you need to declare must be 0.00 or more
+alcoholUsed.error.wine.twoDecimalPlaces = The volume of Wine you need to declare must be a number to 2 decimal places
+alcoholUsed.wine.change.hidden = wine
+alcoholUsed.error.madeWine.required = Enter how much Made-wine you have used.
+alcoholUsed.error.madeWine.nonNumeric = The volume of Made-wine you need to declare must be a number
+alcoholUsed.error.madeWine.maximumRequired = The volume of Made-wine you need to declare must be 999999999.99 or less
+alcoholUsed.error.madeWine.minimumRequired = The volume of Made-wine you need to declare must be 0.00 or more
+alcoholUsed.error.madeWine.twoDecimalPlaces = The volume of Made-wine you need to declare must be a number to 2 decimal places
+alcoholUsed.madeWine.change.hidden = made-wine
+alcoholUsed.error.ciderOrPerry.required = Enter how much Cider or perry you have used.
+alcoholUsed.error.ciderOrPerry.nonNumeric = The volume of Cider or perry you need to declare must be a number
+alcoholUsed.error.ciderOrPerry.maximumRequired = The volume of Cider or perry you need to declare must be 999999999.99 or less
+alcoholUsed.error.ciderOrPerry.minimumRequired = The volume of Cider or perry you need to declare must be 0.00 or more
+alcoholUsed.error.ciderOrPerry.twoDecimalPlaces = The volume of Cider or perry you need to declare must be a number to 2 decimal places
+alcoholUsed.ciderOrPerry.change.hidden = cider or perry
 # End of quarterly spirits questions sub-journey
 
 
