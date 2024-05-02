@@ -25,4 +25,6 @@ case object GrainsUsedPage extends QuestionPage[GrainsUsed] {
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "grainsUsed"
+
+  def hasUsedOtherMaltedGrains(grainsUsed: GrainsUsed): Boolean = grainsUsed.usedMaltedGrainNotBarley
 }
