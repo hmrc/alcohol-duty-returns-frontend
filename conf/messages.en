@@ -567,7 +567,7 @@ otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
 otherSpiritsProduced.error.required = Enter the other spirits you produced
 otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
 
-rainsUsed.title = How much grain have you used this quarter?
+grainsUsed.title = How much grain have you used this quarter?
 grainsUsed.heading = How much grain have you used this quarter?
 grainsUsed.subheading1 = Malted barley
 grainsUsed.subheading2 = Wheat
