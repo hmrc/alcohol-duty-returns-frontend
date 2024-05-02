@@ -617,7 +617,7 @@ otherMaltedGrains.otherMaltedGrainsTypes.change.hidden = otherMaltedGrainsTypes
 otherMaltedGrains.error.otherMaltedGrainsQuantity.required = Enter how much other malted grains you have used
 otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric = The weight of other malted grains you need to declare must be a number
 otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired = The weight of other malted grains you need to declare must be 999999999.99 or less
-otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired = The weight of other malted grains you need to declare must be 0.00 or more
+otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired = The weight of other malted grains you need to declare must be 0.01 or more
 otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces = The weight of other malted grains you need to declare must be a number to 2 decimal places
 otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = otherMaltedGrainsQuantity
 
