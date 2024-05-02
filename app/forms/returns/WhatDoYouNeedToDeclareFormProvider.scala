@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package pages
+package forms.returns
 
-package object returns {
-  val sectionPages: Seq[QuestionPage[_]] = Seq(WhatDoYouNeedToDeclarePage)
+import javax.inject.Inject
+
+import forms.mappings.Mappings
+import play.api.data.Form
+import play.api.data.Forms.set
+import models.returns.WhatDoYouNeedToDeclare
+
+class WhatDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Set[WhatDoYouNeedToDeclare]] =
+    Form(
+      "value" -> set(enumerable[WhatDoYouNeedToDeclare]("whatDoYouNeedToDeclare.error.required"))
+        .verifying(nonEmptySet("whatDoYouNeedToDeclare.error.required"))
+    )
 }

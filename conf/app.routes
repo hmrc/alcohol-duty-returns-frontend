@@ -232,3 +232,7 @@ POST       /change-how-much-is-the-adjustment                        controllers
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
+GET        /what-do-you-need-to-declare                        controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode)
+POST       /what-do-you-need-to-declare                        controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode)
+GET        /change-what-do-you-need-to-declare                  controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-what-do-you-need-to-declare                  controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode)

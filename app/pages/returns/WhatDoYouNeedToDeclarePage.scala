@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-package pages
+package pages.returns
 
-package object returns {
-  val sectionPages: Seq[QuestionPage[_]] = Seq(WhatDoYouNeedToDeclarePage)
+import models.returns.WhatDoYouNeedToDeclare
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+
+case object WhatDoYouNeedToDeclarePage extends QuestionPage[Set[WhatDoYouNeedToDeclare]] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "whatDoYouNeedToDeclare"
 }

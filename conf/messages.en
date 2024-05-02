@@ -133,6 +133,20 @@ declareAlcoholDutyQuestion.checkYourAnswersLabel = declareAlcoholDutyQuestion
 declareAlcoholDutyQuestion.error.required = Select yes if you need to declare duty on any alcoholic products
 declareAlcoholDutyQuestion.change.hidden = alcohol duty to declare
 
+whatDoYouNeedToDeclare.title = What do you need to declare?
+whatDoYouNeedToDeclare.heading = What do you need to declare?
+whatDoYouNeedToDeclare.hint = Select all that apply.
+
+whatDoYouNeedToDeclare.beer.heading = Beer (standard rate)
+whatDoYouNeedToDeclare.option1 = Between 1.2% and 3.4% ABV (tax type code 311)
+whatDoYouNeedToDeclare.option2 = Option 2
+whatDoYouNeedToDeclare.checkYourAnswersLabel = whatDoYouNeedToDeclare
+whatDoYouNeedToDeclare.error.required = Select whatDoYouNeedToDeclare
+whatDoYouNeedToDeclare.change.hidden = WhatDoYouNeedToDeclare
+
+
+
+
 productEntryGuidance.title = Tell us about your alcohol
 productEntryGuidance.heading = Tell us about your alcohol
 productEntryGuidance.p1 = For every alcoholic product you declare, we need to know

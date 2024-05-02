@@ -26,6 +26,11 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryWhatDoYouNeedToDeclare: Arbitrary[returns.WhatDoYouNeedToDeclare] =
+    Arbitrary {
+      Gen.oneOf(returns.WhatDoYouNeedToDeclare.values)
+    }
+
   implicit lazy val arbitraryOtherMaltedGrains: Arbitrary[spiritsQuestions.OtherMaltedGrains] =
     Arbitrary {
       for {
