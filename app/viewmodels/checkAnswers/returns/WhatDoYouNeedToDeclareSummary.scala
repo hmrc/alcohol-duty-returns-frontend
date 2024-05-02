@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.returns
 
 import controllers.returns.routes
+import models.AlcoholRegime.Beer
 import models.{CheckMode, UserAnswers}
 import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
@@ -44,7 +45,8 @@ object WhatDoYouNeedToDeclareSummary {
         key = "whatDoYouNeedToDeclare.checkYourAnswersLabel",
         value = value,
         actions = Seq(
-          ActionItemViewModel("site.change", routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode).url)
+          // TODO: insert the correct regime in the url
+          ActionItemViewModel("site.change", routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, Beer).url)
             .withVisuallyHiddenText(messages("whatDoYouNeedToDeclare.change.hidden"))
         )
       )

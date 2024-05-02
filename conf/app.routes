@@ -30,6 +30,13 @@ POST       /do-you-need-to-declare-duty                        controllers.retur
 GET        /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /what-do-you-need-to-declare/:regime                controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /what-do-you-need-to-declare                        controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode)
+GET        /change-what-do-you-need-to-declare/:regime         controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /change-what-do-you-need-to-declare                 controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode)
+
+
 GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)
 GET        /change-what-name-do-you-want-to-give-this-product                  controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = CheckMode)
@@ -232,7 +239,3 @@ POST       /change-how-much-is-the-adjustment                        controllers
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
-GET        /what-do-you-need-to-declare                        controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-do-you-need-to-declare                        controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-do-you-need-to-declare                  controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-do-you-need-to-declare                  controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode)

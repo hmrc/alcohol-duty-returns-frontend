@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 @import models.returns.WhatDoYouNeedToDeclare
 @import viewmodels.LegendSize
+@import viewmodels.checkAnswers.returns.TaxBandsViewModel
 
 @this(
     layout: templates.Layout,
@@ -26,11 +27,11 @@
     govukButton: GovukButton,
     pageHeading: PageHeading,
     paragraph: Paragraph,
-    sectionHeading: SectionHeading
+    sectionHeading: SectionHeading,
+    subHeading: SubHeading
 )
 
-
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime: AlcoholRegime, taxBandsViewModel: TaxBandsViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("whatDoYouNeedToDeclare.title"))) {
 
@@ -48,6 +49,34 @@
         @pageHeading(messages("whatDoYouNeedToDeclare.heading"))
 
         @paragraph(messages("whatDoYouNeedToDeclare.hint"), classes = "govuk-hint")
+
+        @if(taxBandsViewModel.core.nonEmpty) {
+          @subHeading(messages(s"whatDoYouNeedToDeclare.$regime.core.heading"))
+          @for(checkBoxViewModel <- taxBandsViewModel.core) {
+            @govukCheckboxes(checkBoxViewModel)
+          }
+        }
+
+        @if(taxBandsViewModel.draught.nonEmpty) {
+          @subHeading(messages(s"whatDoYouNeedToDeclare.$regime.draught.heading"))
+          @for(checkBoxViewModel <- taxBandsViewModel.draught) {
+            @govukCheckboxes(checkBoxViewModel)
+          }
+        }
+
+        @if(taxBandsViewModel.smallProducerRelief.nonEmpty) {
+          @subHeading(messages(s"whatDoYouNeedToDeclare.$regime.smallProducerRelief.heading"))
+          @for(checkBoxViewModel <- taxBandsViewModel.smallProducerRelief) {
+            @govukCheckboxes(checkBoxViewModel)
+          }
+        }
+
+        @if(taxBandsViewModel.draughtAndSmallProducerRelief.nonEmpty) {
+          @subHeading(messages(s"whatDoYouNeedToDeclare.$regime.draughtAndSmallProducerRelief.heading"))
+          @for(checkBoxViewModel <- taxBandsViewModel.draughtAndSmallProducerRelief) {
+            @govukCheckboxes(checkBoxViewModel)
+          }
+        }
 
         @govukCheckboxes(
             CheckboxesViewModel(

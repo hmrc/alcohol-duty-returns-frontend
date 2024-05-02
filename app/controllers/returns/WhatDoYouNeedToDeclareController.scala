@@ -18,14 +18,18 @@ package controllers.returns
 
 import controllers.actions._
 import forms.returns.WhatDoYouNeedToDeclareFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{AlcoholByVolume, AlcoholRegime, Mode, RateBand, RateType}
 import navigation.ReturnsNavigator
 import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import models.AlcoholRegime.Beer
+import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.returns.TaxBandsViewModel
 import views.html.returns.WhatDoYouNeedToDeclareView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,21 +50,27 @@ class WhatDoYouNeedToDeclareController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(WhatDoYouNeedToDeclarePage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+    (identify andThen getData andThen requireData) { implicit request =>
+      // TODO: check if user is authorised for this regime
 
-    Ok(view(preparedForm, mode))
-  }
+      // TODO: add call for tax bands
+      val taxBandsViewModel = TaxBandsViewModel(bands)
+      val preparedForm      = request.userAnswers.get(WhatDoYouNeedToDeclarePage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, taxBandsViewModel, mode))
+    }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val taxBandsViewModel = TaxBandsViewModel(bands)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, taxBandsViewModel, mode))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatDoYouNeedToDeclarePage, value))
@@ -68,4 +78,51 @@ class WhatDoYouNeedToDeclareController @Inject() (
             } yield Redirect(navigator.nextPage(WhatDoYouNeedToDeclarePage, mode, updatedAnswers))
         )
   }
+  private val bands                            = Seq(
+    RateBand(
+      "311",
+      "some band",
+      RateType.Core,
+      Set(Beer),
+      AlcoholByVolume(1.2),
+      AlcoholByVolume(3.4),
+      Some(BigDecimal(10))
+    ),
+    RateBand(
+      "321",
+      "some band",
+      RateType.Core,
+      Set(Beer),
+      AlcoholByVolume(3.5),
+      AlcoholByVolume(8.4),
+      Some(BigDecimal(10))
+    ),
+    RateBand(
+      "351",
+      "some band",
+      RateType.DraughtRelief,
+      Set(Beer),
+      AlcoholByVolume(1.2),
+      AlcoholByVolume(3.4),
+      Some(BigDecimal(10))
+    ),
+    RateBand(
+      "361",
+      "some band",
+      RateType.SmallProducerRelief,
+      Set(Beer),
+      AlcoholByVolume(1.2),
+      AlcoholByVolume(3.4),
+      Some(BigDecimal(10))
+    ),
+    RateBand(
+      "371",
+      "some band",
+      RateType.DraughtAndSmallProducerRelief,
+      Set(Beer),
+      AlcoholByVolume(1.2),
+      AlcoholByVolume(3.4),
+      Some(BigDecimal(10))
+    )
+  )
 }
