@@ -136,7 +136,10 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
             pages.spiritsQuestions.GrainsUsedPage,
             NormalMode,
             UserAnswers("id")
-              .set(pages.spiritsQuestions.GrainsUsedPage, GrainsUsed(BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), true))
+              .set(
+                pages.spiritsQuestions.GrainsUsedPage,
+                GrainsUsed(BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), true)
+              )
               .success
               .value
           ) mustBe controllers.spiritsQuestions.routes.OtherMaltedGrainsController.onPageLoad(NormalMode)
@@ -148,7 +151,10 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
             pages.spiritsQuestions.GrainsUsedPage,
             NormalMode,
             UserAnswers("id")
-              .set(pages.spiritsQuestions.GrainsUsedPage, GrainsUsed(BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), false))
+              .set(
+                pages.spiritsQuestions.GrainsUsedPage,
+                GrainsUsed(BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), false)
+              )
               .success
               .value
           ) mustBe controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
