@@ -653,6 +653,27 @@ alcoholUsed.error.ciderOrPerry.maximumRequired = The volume of Cider or perry yo
 alcoholUsed.error.ciderOrPerry.minimumRequired = The volume of Cider or perry you need to declare must be 0.00 or more
 alcoholUsed.error.ciderOrPerry.twoDecimalPlaces = The volume of Cider or perry you need to declare must be a number to 2 decimal places
 alcoholUsed.ciderOrPerry.change.hidden = cider or perry
+
+ethyleneGasOrMolassesUsed.title = How much ethylene gas or molasses have you used?
+ethyleneGasOrMolassesUsed.heading = How much ethylene gas or molasses have you used?
+ethyleneGasOrMolassesUsed.ethyleneGas = Ethylene gas
+ethyleneGasOrMolassesUsed.molasses = Molasses
+ethyleneGasOrMolassesUsed.hint = Enter volume in litres, up to 2 decimal places.
+ethyleneGasOrMolassesUsed.question = Have you used any other ingredients?
+ethyleneGasOrMolassesUsed.checkYourAnswersLabel = EthyleneGasOrMolassesUsed
+ethyleneGasOrMolassesUsed.error.ethyleneGas.required = Enter how much ethylene gas you have used
+ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric = The volume of ethylene gas you need to declare must be a number
+ethyleneGasOrMolassesUsed.error.ethyleneGas.twoDecimalPlaces = The volume of ethylene gas you need to declare must be a number to 2 decimal places
+ethyleneGasOrMolassesUsed.error.ethyleneGas.minimumRequired = The volume of ethylene gas you need to declare must be 0.00 or more
+ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired = The volume of ethylene gas you need to declare must be 999999999.99 or less
+ethyleneGasOrMolassesUsed.error.molasses.required = Enter how much molasses you have used
+ethyleneGasOrMolassesUsed.error.molasses.nonNumeric = The volume of molasses you need to declare must be a number
+ethyleneGasOrMolassesUsed.error.molasses.twoDecimalPlaces = The volume of molasses you need to declare must be a number to 2 decimal places
+ethyleneGasOrMolassesUsed.error.molasses.minimumRequired = The volume of molasses you need to declare must be 0.00 or more
+ethyleneGasOrMolassesUsed.error.molasses.maximumRequired = The volume of molasses you need to declare must be 999999999.99 or less
+ethyleneGasOrMolassesUsed.error.required = Select yes to declare any other ingredients you have used
+ethyleneGasOrMolassesUsed.ethyleneGas.change.hidden = ethylene gas
+ethyleneGasOrMolassesUsed.molasses.change.hidden = molasses
 # End of quarterly spirits questions sub-journey
 
 

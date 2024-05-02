@@ -196,7 +196,13 @@ GET        /tell-us-about-the-alcohol-you-have-used                        contr
 POST       /tell-us-about-the-alcohol-you-have-used                        controllers.spiritsQuestions.AlcoholUsedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-tell-us-about-the-alcohol-you-have-used                  controllers.spiritsQuestions.AlcoholUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-the-alcohol-you-have-used                  controllers.spiritsQuestions.AlcoholUsedController.onSubmit(mode: Mode = CheckMode)
-#End of quarterly spirits questions sub-journey
+
+GET        /tell-us-about-the-gas-or-molasses-you-have-used                        controllers.spiritsQuestions.EthyleneGasOrMolassesUsedController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-the-gas-or-molasses-you-have-used                        controllers.spiritsQuestions.EthyleneGasOrMolassesUsedController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-the-gas-or-molasses-you-have-used                  controllers.spiritsQuestions.EthyleneGasOrMolassesUsedController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-the-gas-or-molasses-you-have-used                  controllers.spiritsQuestions.EthyleneGasOrMolassesUsedController.onSubmit(mode: Mode = CheckMode)
+
+# End of quarterly spirits questions sub-journey
 
 
 # Beginning of adjustments sub-journey
