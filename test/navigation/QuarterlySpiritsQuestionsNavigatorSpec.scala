@@ -28,7 +28,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
   "QuarterlySpiritQuestionsNavigator" - {
 
     "in Normal mode" - {
-      "the Declare Quarterley Spirits page" - {
+      "the Declare Quarterly Spirits page" - {
 
         "must go to the Declare Spirits Total page if the answer is Yes" in {
 
@@ -115,6 +115,16 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
             NormalMode,
             UserAnswers("id")
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
+        }
+      }
+      "the Alcohol Used Page" - {
+        "must go to Ethylene Gas Or Molasses page" in {
+
+          navigator.nextPage(
+            pages.spiritsQuestions.AlcoholUsedPage,
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
         }
       }
     }

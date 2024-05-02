@@ -34,6 +34,8 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
     case pages.spiritsQuestions.WhiskyPage                  =>
       _ => controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
     case pages.spiritsQuestions.SpiritTypePage              => spiritTypesRoute
+    case pages.spiritsQuestions.AlcoholUsedPage             =>
+      _ => controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
     case _                                                  => _ => routes.IndexController.onPageLoad
 
   }

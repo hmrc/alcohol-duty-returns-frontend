@@ -34,6 +34,15 @@ trait ModelGenerators {
       } yield spiritsQuestions.OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)
     }
 
+  implicit lazy val arbitraryEthyleneGasOrMolassesUsed: Arbitrary[spiritsQuestions.EthyleneGasOrMolassesUsed] =
+    Arbitrary {
+      for {
+        ethyleneGas      <- arbitrary[BigDecimal]
+        molasses         <- arbitrary[BigDecimal]
+        otherIngredients <- arbitrary[Boolean]
+      } yield spiritsQuestions.EthyleneGasOrMolassesUsed(ethyleneGas, molasses, otherIngredients)
+    }
+
   implicit lazy val arbitraryWhisky: Arbitrary[spiritsQuestions.Whisky] =
     Arbitrary {
       for {
