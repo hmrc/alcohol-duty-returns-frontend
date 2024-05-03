@@ -191,6 +191,8 @@ GET        /tell-us-about-the-other-malted-grains-you-have-used                 
 POST       /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = NormalMode)
 GET        /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /check-your-spirits-and-ingredients                 controllers.spiritsQuestions.CheckYourAnswersController.onPageLoad()
 # End of quarterly spirits questions sub-journey
 
 

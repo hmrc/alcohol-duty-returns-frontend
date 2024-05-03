@@ -39,7 +39,7 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad()
+    _ => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
   }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
