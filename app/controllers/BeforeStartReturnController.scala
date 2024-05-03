@@ -16,12 +16,15 @@
 
 package controllers
 
+import config.Constants.periodKeySessionKey
 import connectors.CacheConnector
 import controllers.actions._
 import models.{ReturnId, ReturnPeriod, UserAnswers}
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
 import javax.inject.Inject
@@ -35,26 +38,26 @@ class BeforeStartReturnController @Inject() (
   view: BeforeStartReturnView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(periodKey: String): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     ReturnPeriod.fromPeriodKey(periodKey) match {
-      case Left(_)             =>
+      case None               =>
+        logger.warn("Period key is not valid")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      case Right(returnPeriod) =>
-        val session = request.session + ("period-key", periodKey)
+      case Some(returnPeriod) =>
+        val session = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
           case Some(_) => Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case None    =>
-            val fromDate = returnPeriod.firstDateViewString()
-            val toDate   = returnPeriod.lastDateViewString()
-            Ok(view(fromDate, toDate)).withSession(session)
+            Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
         }
     }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    request.session.get("period-key") match {
+    request.session.get(periodKeySessionKey) match {
       case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(periodKey) =>
         val userAnswers = UserAnswers(ReturnId(request.appaId, periodKey), request.groupId, request.userId)

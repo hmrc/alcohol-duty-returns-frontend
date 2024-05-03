@@ -55,12 +55,25 @@ class CacheConnectorSpec extends SpecBase with ScalaFutures {
     "successfully write cache" in {
       Mockito.reset(connector.httpClient)
 
+      val postUrl = s"/cache/add"
+
+      when(mockConfig.adrCacheAddUrl()).thenReturn("/cache/add")
+
+      connector.add(answers)
+      verify(connector.httpClient, atLeastOnce).POST(eqTo(postUrl), eqTo(answers), any())(any(), any(), any(), any())
+    }
+  }
+
+  "PUT" - {
+    "successfully write cache" in {
+      Mockito.reset(connector.httpClient)
+
       val putUrl = s"/cache/set"
 
       when(mockConfig.adrCacheSetUrl()).thenReturn("/cache/set")
 
       connector.set(answers)
-      verify(connector.httpClient, atLeastOnce).POST(eqTo(putUrl), eqTo(answers), any())(any(), any(), any(), any())
+      verify(connector.httpClient, atLeastOnce).PUT(eqTo(putUrl), eqTo(answers), any())(any(), any(), any(), any())
     }
   }
 }

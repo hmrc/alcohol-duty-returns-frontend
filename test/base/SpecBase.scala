@@ -16,6 +16,7 @@
 
 package base
 
+import config.Constants.periodKeySessionKey
 import controllers.actions._
 import models.{ReturnId, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -40,8 +41,6 @@ trait SpecBase
   val groupId: String       = "groupid"
   val userAnswersId: String = "id"
   val returnId: ReturnId    = ReturnId(appaId, periodKey)
-
-  val periodKeySessionKey: String = "period-key"
 
   def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, userAnswersId)
 

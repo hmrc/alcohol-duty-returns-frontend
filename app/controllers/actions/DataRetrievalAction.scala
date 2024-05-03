@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
 import connectors.CacheConnector
 import models.ReturnPeriod
@@ -38,7 +39,7 @@ class DataRetrievalActionImpl @Inject() (
 
     val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    request.session.get(config.periodKeySessionKey) match {
+    request.session.get(periodKeySessionKey) match {
       case None            =>
         Future.successful(
           OptionalDataRequest(request.request, request.appaId, request.groupId, request.userId, None, None)
@@ -50,7 +51,7 @@ class DataRetrievalActionImpl @Inject() (
             request.appaId,
             request.groupId,
             request.userId,
-            ReturnPeriod.fromPeriodKey(periodKey).toOption,
+            ReturnPeriod.fromPeriodKey(periodKey),
             _
           )
         }

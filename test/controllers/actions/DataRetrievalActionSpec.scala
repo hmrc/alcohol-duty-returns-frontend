@@ -17,6 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
+import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
 import connectors.CacheConnector
 import models.requests.{IdentifierRequest, OptionalDataRequest}
@@ -30,7 +31,6 @@ import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
   val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  when(mockConfig.periodKeySessionKey).thenReturn("period-key")
 
   class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(mockConfig, cacheConnector) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
@@ -64,7 +64,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
           action
             .callTransform(
               new IdentifierRequest(
-                FakeRequest().withSession((mockConfig.periodKeySessionKey, periodKey)),
+                FakeRequest().withSession((periodKeySessionKey, periodKey)),
                 appaId,
                 groupId,
                 userAnswersId

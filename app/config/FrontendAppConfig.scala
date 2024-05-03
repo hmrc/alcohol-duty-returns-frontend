@@ -97,6 +97,4 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRateBandUrlPart
   def adrCalculatorRateTypeUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRateTypeUrlPart
-
-  val periodKeySessionKey: String = "period-key"
 }

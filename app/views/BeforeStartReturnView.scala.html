@@ -15,6 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading}
+@import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
 
 @this(
         layout: templates.Layout,
@@ -25,7 +26,8 @@
         paragraph: components.Paragraph
 )
 
-@(fromDate: String, toDate: String)(implicit request: Request[_], messages: Messages)
+
+@(returnPeriod: ReturnPeriodViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("beforeStartReturn.title"))) {
     @formHelper(action = controllers.routes.BeforeStartReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
@@ -36,7 +38,7 @@
 
         @pageHeading(messages("beforeStartReturn.heading"))
 
-        @paragraph(messages("beforeStartReturn.text.guidance1", fromDate, toDate))
+        @paragraph(messages("beforeStartReturn.text.guidance1", returnPeriod.fromDate, returnPeriod.toDate))
 
         @paragraph(messages("beforeStartReturn.text.guidance2"))
 

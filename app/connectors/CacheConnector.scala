@@ -34,7 +34,7 @@ class CacheConnector @Inject() (
     httpClient.GET[Option[UserAnswers]](config.adrCacheGetUrl(appaId, periodKey))
 
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.POST(config.adrCacheSetUrl(), userAnswers)(
+    httpClient.PUT(config.adrCacheSetUrl(), userAnswers)(
       implicitly[Writes[UserAnswers]],
       implicitly[HttpReads[HttpResponse]],
       hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
