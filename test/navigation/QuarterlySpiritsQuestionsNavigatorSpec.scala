@@ -19,6 +19,7 @@ package navigation
 import base.SpecBase
 import controllers._
 import models._
+import models.spiritsQuestions.GrainsUsed
 import pages._
 
 class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
@@ -28,7 +29,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
   "QuarterlySpiritQuestionsNavigator" - {
 
     "in Normal mode" - {
-      "the Declare Quarterley Spirits page" - {
+      "the Declare Quarterly Spirits page" - {
 
         "must go to the Declare Spirits Total page if the answer is Yes" in {
 
@@ -93,7 +94,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           ) mustBe controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(NormalMode)
         }
 
-        "must to the Task List page if the answer if Other spirits is not checked" in {
+        "must to the Grains Used List page if the answer if Other spirits is not checked" in {
 
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
@@ -105,7 +106,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
               )
               .success
               .value
-          ) mustBe routes.TaskListController.onPageLoad
+          ) mustBe controllers.spiritsQuestions.routes.GrainsUsedController.onPageLoad(NormalMode)
         }
 
         "must go to the Journey Recovery page if there is an issue" in {
@@ -115,6 +116,78 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
             NormalMode,
             UserAnswers("id")
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
+        }
+      }
+
+      "the Other Spirits page" - {
+        "must go to the Grains Used page" in {
+          navigator.nextPage(
+            pages.spiritsQuestions.OtherSpiritsProducedPage,
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe controllers.spiritsQuestions.routes.GrainsUsedController.onPageLoad(NormalMode)
+        }
+      }
+
+      "the Grains Used page" - {
+        "must go to the Other Malted Grains page if Other malted grains is checked" in {
+
+          navigator.nextPage(
+            pages.spiritsQuestions.GrainsUsedPage,
+            NormalMode,
+            UserAnswers("id")
+              .set(
+                pages.spiritsQuestions.GrainsUsedPage,
+                GrainsUsed(BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), true)
+              )
+              .success
+              .value
+          ) mustBe controllers.spiritsQuestions.routes.OtherMaltedGrainsController.onPageLoad(NormalMode)
+        }
+
+        "must to the Alcohol Used page if the answer if Other spirits is not checked" in {
+
+          navigator.nextPage(
+            pages.spiritsQuestions.GrainsUsedPage,
+            NormalMode,
+            UserAnswers("id")
+              .set(
+                pages.spiritsQuestions.GrainsUsedPage,
+                GrainsUsed(BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), false)
+              )
+              .success
+              .value
+          ) mustBe controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
+        }
+
+        "must go to the Journey Recovery page if there is an issue" in {
+
+          navigator.nextPage(
+            pages.spiritsQuestions.GrainsUsedPage,
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+        }
+      }
+
+      "the Other Malted Grains page" - {
+        "must go to the Alcohol Used page" in {
+          navigator.nextPage(
+            pages.spiritsQuestions.OtherMaltedGrainsPage,
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
+        }
+      }
+
+      "the Alcohol Used Page" - {
+        "must go to Ethylene Gas Or Molasses page" in {
+
+          navigator.nextPage(
+            pages.spiritsQuestions.AlcoholUsedPage,
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
         }
       }
     }
