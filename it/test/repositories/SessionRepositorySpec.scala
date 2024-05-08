@@ -17,6 +17,7 @@
 package repositories
 
 import config.FrontendAppConfig
+import generators.ModelGenerators
 import models.{ReturnId, UserAnswers}
 import org.mockito.Mockito.when
 import org.mongodb.scala.model.Filters
@@ -39,13 +40,14 @@ class SessionRepositorySpec
     with ScalaFutures
     with IntegrationPatience
     with OptionValues
-    with MockitoSugar {
+    with MockitoSugar
+    with ModelGenerators {
 
   private val instant          = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
 
-  private val appaId = "ADR0001"
-  private val periodKey = "24AA"
+  private val appaId = appaIdGen.sample.get
+  private val periodKey = periodKeyGen.sample.get
   private val groupId = "groupId"
   private val userId = "id"
   private val id = ReturnId(appaId, periodKey)

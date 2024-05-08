@@ -16,6 +16,7 @@
 
 package models
 
+import generators.ModelGenerators
 import org.scalatest.TryValues.convertTryToSuccessOrFailure
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -24,13 +25,13 @@ import queries.{Gettable, Settable}
 
 import scala.util.Success
 
-class UserAnswersSpec extends AnyFreeSpec with Matchers {
+class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
   case object TestSeqPage extends Gettable[Seq[String]] with Settable[Seq[String]] {
     override def path: JsPath = JsPath \ toString
   }
   "UserAnswer" - {
-    val appaId: String        = "XMADP0000000200"
-    val periodKey: String     = "24AA"
+    val appaId: String        = appaIdGen.sample.get
+    val periodKey: String     = periodKeyGen.sample.get
     val groupId: String       = "groupid"
     val userAnswersId: String = "id"
 

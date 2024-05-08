@@ -58,7 +58,9 @@ class BeforeStartReturnController @Inject() (
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     request.session.get(periodKeySessionKey) match {
-      case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case None            =>
+        logger.warn("Period key not present in session")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(periodKey) =>
         val userAnswers = UserAnswers(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
         cacheConnector.add(userAnswers).map { _ =>

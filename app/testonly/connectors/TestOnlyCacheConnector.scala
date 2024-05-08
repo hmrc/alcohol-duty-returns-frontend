@@ -29,7 +29,7 @@ class TestOnlyCacheConnector @Inject() (
 )(implicit val ec: ExecutionContext) {
 
   def clearAllData()(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.GET(
+    httpClient.DELETE(
       appConfig.adrCacheClearAllUrl()
     )
 }

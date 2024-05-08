@@ -18,13 +18,14 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import models.{ReturnId, UserAnswers}
+import models.{ReturnId, ReturnPeriod, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
 import play.api.test.Helpers._
 import play.api.inject.bind
 import uk.gov.hmrc.http.HttpResponse
+import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
 import java.time.temporal.ChronoUnit
@@ -33,14 +34,12 @@ import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
 
-  private val instant         = Instant.now.truncatedTo(ChronoUnit.MILLIS)
-  private val clock: Clock    = Clock.fixed(instant, ZoneId.systemDefault)
-  private val A_DAY_IN_SEC    = 86400
-  private val validUntil      = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
-  private val validPeriodKey  = "24AC"
-  private val periodStartDate = "1 Mar 2024"
-  private val periodEndDate   = "31 Mar 2024"
-  private val badPeriodKey    = "24A"
+  private val instant        = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+  private val clock: Clock   = Clock.fixed(instant, ZoneId.systemDefault)
+  private val A_DAY_IN_SEC   = 86400
+  private val validUntil     = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
+  private val validPeriodKey = "24AC"
+  private val badPeriodKey   = "24A"
 
   private val userAnswers = UserAnswers(
     ReturnId(appaId, validPeriodKey),
@@ -90,8 +89,10 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[BeforeStartReturnView]
 
+        val returnPeriodViewModel = ReturnPeriodViewModel(ReturnPeriod.fromPeriodKey(validPeriodKey).get)
+
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodStartDate, periodEndDate)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(returnPeriodViewModel)(request, messages(application)).toString
       }
     }
 

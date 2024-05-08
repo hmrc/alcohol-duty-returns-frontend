@@ -18,6 +18,7 @@ package base
 
 import config.Constants.periodKeySessionKey
 import controllers.actions._
+import generators.ModelGenerators
 import models.{ReturnId, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -34,10 +35,11 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience {
+    with IntegrationPatience
+    with ModelGenerators {
 
-  val appaId: String        = "XMADP0000000200"
-  val periodKey: String     = "24AA"
+  val appaId: String        = appaIdGen.sample.get
+  val periodKey: String     = periodKeyGen.sample.get
   val groupId: String       = "groupid"
   val userAnswersId: String = "id"
   val returnId: ReturnId    = ReturnId(appaId, periodKey)

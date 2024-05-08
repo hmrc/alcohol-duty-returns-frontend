@@ -19,6 +19,7 @@ package controllers.actions
 import models.{ReturnPeriod, UserAnswers}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 
+import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
@@ -30,7 +31,7 @@ class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRet
         request.appaId,
         request.groupId,
         request.userId,
-        returnPeriod = Some(ReturnPeriod("24AA", 24, 1)),
+        returnPeriod = Some(ReturnPeriod(YearMonth.of(24, 1))),
         dataToReturn
       )
     )

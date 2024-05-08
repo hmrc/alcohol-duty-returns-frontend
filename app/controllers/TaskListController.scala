@@ -17,6 +17,7 @@
 package controllers
 
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -32,14 +33,15 @@ class TaskListController @Inject() (
   requireData: DataRequiredAction,
   view: TaskListView
 ) extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val userAnswers = request.userAnswers
-    if (userAnswers.validUntil.isDefined) {
-      Ok(view(AlcoholDutyTaskListHelper.getTaskList(userAnswers, userAnswers.validUntil.get)))
-    } else {
-      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    request.userAnswers.validUntil match {
+      case Some(validUntil) => Ok(view(AlcoholDutyTaskListHelper.getTaskList(request.userAnswers, validUntil)))
+      case None             =>
+        logger.warn("'Valid until' property not defined in User Answers ")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

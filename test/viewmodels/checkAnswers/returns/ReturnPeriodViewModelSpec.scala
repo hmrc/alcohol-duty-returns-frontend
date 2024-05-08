@@ -16,21 +16,21 @@
 
 package viewmodels.checkAnswers.returns
 
+import base.SpecBase
 import models.ReturnPeriod
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
-import java.time.format.DateTimeFormatter
+class ReturnPeriodViewModelSpec extends SpecBase {
 
-case class ReturnPeriodViewModel(fromDate: String, toDate: String)
-object ReturnPeriodViewModel {
+  "ReturnPeriodViewModelSpec" - {
+    "should return a ReturnPeriodViewModel when apply method is called with a valid ReturnPeriod" in {
+      val yearMonth    = arbitraryYearMonth.arbitrary.sample.get
+      val returnPeriod = ReturnPeriod(yearMonth)
+      val result       = ReturnPeriodViewModel(returnPeriod)
 
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
-
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel = {
-    val yearMonth = returnPeriod.period
-    ReturnPeriodViewModel(
-      viewDateFormatter.format(yearMonth.atDay(1)),
-      viewDateFormatter.format(yearMonth.atEndOfMonth)
-    )
+      result.fromDate shouldBe ReturnPeriodViewModel.viewDateFormatter.format(yearMonth.atDay(1))
+      result.toDate   shouldBe ReturnPeriodViewModel.viewDateFormatter.format(yearMonth.atEndOfMonth())
+    }
   }
 
 }

@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.routes
 import models.requests.IdentifierRequest
+import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
@@ -40,7 +41,8 @@ class AuthenticatedIdentifierAction @Inject() (
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
-    with AuthorisedFunctions {
+    with AuthorisedFunctions
+    with Logging {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -48,9 +50,9 @@ class AuthenticatedIdentifierAction @Inject() (
 
     authorised().retrieve(internalId and groupIdentifier and allEnrolments) {
       case optInternalId ~ optGroupId ~ enrolments =>
-        val internalId: String = getOrElseFail(optInternalId, "Unable to retrieve internalId")
-        val groupId: String    = getOrElseFail(optGroupId, "Unable to retrieve groupIdentifier")
-        val appaId             = getEnrolmentOrFail(enrolments)
+        val internalId: String = getOrElseFailWithUnauthorised(optInternalId, "Unable to retrieve internalId")
+        val groupId: String    = getOrElseFailWithUnauthorised(optGroupId, "Unable to retrieve groupIdentifier")
+        val appaId             = getAppaId(enrolments)
         block(IdentifierRequest(request, appaId, groupId, internalId))
     } recover {
       case _: NoActiveSession        =>
@@ -60,14 +62,20 @@ class AuthenticatedIdentifierAction @Inject() (
     }
   }
 
-  private def getEnrolmentOrFail(enrolments: Enrolments): String = {
-    val adrEnrolments: Option[Enrolment] = enrolments.enrolments.find(_.key == config.enrolmentServiceName)
-    val adrEnrolment: Option[String]     =
-      adrEnrolments.flatMap(_.getIdentifier(config.enrolmentIdentifierKey).map(_.value))
-    getOrElseFail(adrEnrolment, "Unable to retrieve enrolments")
+  private def getAppaId(enrolments: Enrolments): String = {
+    val adrEnrolments: Enrolment  = getOrElseFailWithUnauthorised(
+      enrolments.enrolments.find(_.key == config.enrolmentServiceName),
+      s"Unable to retrieve enrolment: ${config.enrolmentServiceName}"
+    )
+    val appaIdOpt: Option[String] =
+      adrEnrolments.getIdentifier(config.enrolmentIdentifierKey).map(_.value)
+    getOrElseFailWithUnauthorised(appaIdOpt, "Unable to retrieve APPAID from enrolments")
   }
 
-  def getOrElseFail[T](o: Option[T], failureMessage: String): T =
-    o.getOrElse(throw new UnauthorizedException(failureMessage))
+  def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
+    o.getOrElse {
+      logger.warn(s"Identifier Action failed with error: $failureMessage")
+      throw new UnauthorizedException(failureMessage)
+    }
 
 }

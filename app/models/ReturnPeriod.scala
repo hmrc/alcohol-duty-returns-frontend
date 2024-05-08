@@ -21,36 +21,34 @@ import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 import java.time.YearMonth
 import scala.util.matching.Regex
 
-case class ReturnPeriod(periodKey: String) {
-  def toYearMonth: YearMonth = {
-    val year  = periodKey.substring(0, 2).toInt + 2000
-    val month = periodKey.charAt(3) - 'A' + 1
-    YearMonth.of(year, month)
-  }
+case class ReturnPeriod(period: YearMonth) {
+  def toPeriodKey = s"${period.getYear - 2000}A${(period.getMonthValue + 64).toChar}"
 }
 
 object ReturnPeriod {
+  val returnPeriodPattern: Regex = """^(\d{2}A[A-L])$""".r
 
-  def fromPeriodKey(periodKey: String): Option[ReturnPeriod] = {
-    val returnPeriodPattern: Regex = """^\\d{2}A[A-L]$""".r
+  def fromPeriodKey(periodKey: String): Option[ReturnPeriod] =
     periodKey match {
-      case returnPeriodPattern(_) => Some(ReturnPeriod(periodKey))
+      case returnPeriodPattern(_) =>
+        val year  = periodKey.substring(0, 2).toInt + 2000
+        val month = periodKey.charAt(3) - 'A' + 1
+        Some(ReturnPeriod(YearMonth.of(year, month)))
       case _                      => None
     }
-  }
 
   implicit val format: Format[ReturnPeriod] = new Format[ReturnPeriod] {
     override def reads(json: JsValue): JsResult[ReturnPeriod] =
       json
         .validate[String]
-        .map(
-          ReturnPeriod.fromPeriodKey(_) match {
+        .map(pk =>
+          ReturnPeriod.fromPeriodKey(pk) match {
             case Some(rp) => rp
-            case None     => throw new IllegalArgumentException("Invalid format")
+            case None     => throw new IllegalArgumentException(s"$pk is not a valid period key")
           }
         )
 
     override def writes(returnPeriod: ReturnPeriod): JsValue =
-      JsString(returnPeriod.periodKey)
+      JsString(returnPeriod.toPeriodKey)
   }
 }
