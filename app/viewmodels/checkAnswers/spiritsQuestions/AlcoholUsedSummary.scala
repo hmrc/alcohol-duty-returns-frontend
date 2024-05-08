@@ -53,7 +53,7 @@ object AlcoholUsedSummary {
   def madeWineRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(AlcoholUsedPage).map { answer =>
       SummaryListRowViewModel(
-        key = "alcoholUsed.wine.checkYourAnswersLabel",
+        key = "alcoholUsed.madeWine.checkYourAnswersLabel",
         value = ValueViewModel(s"${answer.madeWine.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)

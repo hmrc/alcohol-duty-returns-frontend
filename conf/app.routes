@@ -202,8 +202,7 @@ POST       /tell-us-about-the-gas-or-molasses-you-have-used                     
 GET        /change-tell-us-about-the-gas-or-molasses-you-have-used                  controllers.spiritsQuestions.EthyleneGasOrMolassesUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-the-gas-or-molasses-you-have-used                  controllers.spiritsQuestions.EthyleneGasOrMolassesUsedController.onSubmit(mode: Mode = CheckMode)
 
-
-GET        /check-your-spirits-and-ingredients                 controllers.spiritsQuestions.CheckYourAnswersController.onPageLoad()
+GET        /spirits-check-your-answers                 controllers.spiritsQuestions.CheckYourAnswersController.onPageLoad()
 # End of quarterly spirits questions sub-journey
 
 

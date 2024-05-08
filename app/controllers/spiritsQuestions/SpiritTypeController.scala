@@ -18,10 +18,11 @@ package controllers.spiritsQuestions
 
 import controllers.actions._
 import forms.spiritsQuestions.SpiritTypeFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, SpiritType, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.SpiritTypePage
+import pages.spiritsQuestions.{OtherSpiritsProducedPage, SpiritTypePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
@@ -29,6 +30,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.SpiritTypeView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class SpiritTypeController @Inject() (
   override val messagesApi: MessagesApi,
@@ -55,7 +57,7 @@ class SpiritTypeController @Inject() (
     Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode): Action[AnyContent]                                             = (identify andThen getData andThen requireData).async {
     implicit request =>
       form
         .bindFromRequest()
@@ -64,8 +66,14 @@ class SpiritTypeController @Inject() (
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(SpiritTypePage, value))
+              //updatedAnswers <- updateOtherSpirits(updatedAnswers, value)
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers))
         )
   }
+  def updateOtherSpirits(answers: UserAnswers, currentValue: Set[SpiritType]): UserAnswers =
+    answers.get(OtherSpiritsProducedPage) match {
+      case Some(existingValue) if currentValue == existingValue => answers
+      //  case _                                                    => (answers.remove(OtherSpiritsProducedPage))
+    }
 }

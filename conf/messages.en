@@ -497,6 +497,7 @@ spiritType.wineOrMadeWine = Spirits produced from wine or made-wine
 spiritType.ciderOrPerry = Spirits produced from cider or perry
 spiritType.other = Other
 spiritType.checkYourAnswersLabel = Type of spirits
+spiritType.other.checkYourAnswersLabel = Other spirits produced
 spiritType.error.required = Select the spirits you have made this quarter
 spiritType.change.hidden = which of these spirits you have made
 spiritType.hint = Select all that apply in the past quarter.
@@ -577,33 +578,37 @@ grainsUsed.subheading4 = Rye
 grainsUsed.subheading5 = Unmalted grain
 grainsUsed.subheading6 = Have you used any malted grains that are not barley?
 grainsUsed.hint = Enter weight in tonnes, up to 2 decimal places.
-grainsUsed.checkYourAnswersLabel = GrainsUsed
 grainsUsed.error.maltedBarleyQuantity.required = Enter how much malted barley you have used
 grainsUsed.error.maltedBarleyQuantity.nonNumeric = The weight of malted barley you need to declare must be a number
 grainsUsed.error.maltedBarleyQuantity.maximumRequired = The weight of malted barley you need to declare must be 999999999.99 or less
 grainsUsed.error.maltedBarleyQuantity.minimumRequired = The weight of malted barley you need to declare must be 0.00 or more
 grainsUsed.error.maltedBarleyQuantity.twoDecimalPlaces = The weight of malted barley you need to declare must be a number to 2 decimal places
+grainsUsed.maltedBarleyQuantity.checkYourAnswersLabel = Malted barley
 grainsUsed.error.wheatQuantity.required = Enter how much wheat you have used
 grainsUsed.error.wheatQuantity.nonNumeric = The weight of wheat you need to declare must be a number
 grainsUsed.error.wheatQuantity.maximumRequired = The weight of wheat you need to declare must be 999999999.99 or less
 grainsUsed.error.wheatQuantity.minimumRequired = The weight of wheat you need to declare must be 0.00 or more
 grainsUsed.error.wheatQuantity.twoDecimalPlaces = The weight of wheat you need to declare must be a number to 2 decimal places
+grainsUsed.wheatQuantity.checkYourAnswersLabel = Wheat
 grainsUsed.error.maizeQuantity.required = Enter how much maize you have used
 grainsUsed.error.maizeQuantity.nonNumeric = The weight of maize you need to declare must be a number
 grainsUsed.error.maizeQuantity.maximumRequired = The weight of maize you need to declare must be 999999999.99 or less
 grainsUsed.error.maizeQuantity.minimumRequired = The weight of maize you need to declare must be 0.00 or more
 grainsUsed.error.maizeQuantity.twoDecimalPlaces = The weight of maize you need to declare must be a number to 2 decimal places
+grainsUsed.maizeQuantity.checkYourAnswersLabel = Maize
 grainsUsed.error.ryeQuantity.required = Enter how much rye you have used
 grainsUsed.error.ryeQuantity.nonNumeric = The weight of rye you need to declare must be a number
 grainsUsed.error.ryeQuantity.maximumRequired = The weight of rye you need to declare must be 999999999.99 or less
 grainsUsed.error.ryeQuantity.minimumRequired = The weight of rye you need to declare must be 0.00 or more
 grainsUsed.error.ryeQuantity.twoDecimalPlaces = The weight of rye you need to declare must be a number to 2 decimal places
+grainsUsed.ryeQuantity.checkYourAnswersLabel = Rye
 grainsUsed.error.unmaltedGrainQuantity.required = Enter how much unmalted grain you have used
 grainsUsed.error.unmaltedGrainQuantity.nonNumeric = The weight of unmalted grain you need to declare must be a number
 grainsUsed.error.unmaltedGrainQuantity.maximumRequired = The weight of unmalted grain you need to declare must be 999999999.99 or less
 grainsUsed.error.unmaltedGrainQuantity.minimumRequired = The weight of unmalted grain you need to declare must be 0.00 or more
 grainsUsed.error.unmaltedGrainQuantity.twoDecimalPlaces = The weight of unmalted grain you need to declare must be a number to 2 decimal places
 grainsUsed.error.usedMaltedGrainNotBarley.required = Select whether you have used any malted grains that are not barley
+grainsUsed.unmaltedGrainQuantity.checkYourAnswersLabel = Unmalted Grain
 grainsUsed.change.hidden = grainsUsed
 
 otherMaltedGrains.title = Tell us about the other malted grains you have used
@@ -678,6 +683,7 @@ ethyleneGasOrMolassesUsed.error.molasses.maximumRequired = The volume of molasse
 ethyleneGasOrMolassesUsed.error.required = Select yes to declare any other ingredients you have used
 ethyleneGasOrMolassesUsed.ethyleneGas.change.hidden = ethylene gas
 ethyleneGasOrMolassesUsed.molasses.change.hidden = molasses
+
 otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
 otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
 otherSpiritsProduced.hint = Tell us what other spirits you have produced.
@@ -703,9 +709,9 @@ otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = otherMaltedGrainsQua
 
 spiritsQuestions.checkYourAnswersLabel.card1 = Spirits you’ve produced
 spiritsQuestions.checkYourAnswersLabel.card2 = Alcohol ingredients you’ve used
+spiritsQuestions.checkYourAnswersLabel.card3 = Grain ingredients you’ve used
+
 # End of quarterly spirits questions sub-journey
-
-
 
 # Beginning of adjustments sub-journey
 

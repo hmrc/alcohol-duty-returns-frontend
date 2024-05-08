@@ -22,20 +22,24 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.spiritsQuestions.CheckYourAnswersSummaryListHelper
 import views.html.spiritsQuestions.CheckYourAnswersView
-class CheckYourAnswersController @Inject()(
-                                                   override val messagesApi: MessagesApi,
-                                                   identify: IdentifierAction,
-                                                   getData: DataRetrievalAction,
-                                                   requireData: DataRequiredAction,
-                                                   val controllerComponents: MessagesControllerComponents,
-                                                   view: CheckYourAnswersView
-                                                 ) extends FrontendBaseController
-  with I18nSupport {
+class CheckYourAnswersController @Inject() (
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  view: CheckYourAnswersView
+) extends FrontendBaseController
+    with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    (CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers),CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers)) match {
-      case (Some(list),Some(summaryList)) => Ok(view(list, summaryList))
-      case _                                              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    (
+      CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers),
+      CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers),
+      CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
+    ) match {
+      case (Some(list), Some(summaryList), Some(grainsList)) => Ok(view(list, summaryList, grainsList))
+      case _                                                 => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

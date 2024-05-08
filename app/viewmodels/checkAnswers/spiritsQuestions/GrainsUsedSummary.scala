@@ -28,19 +28,65 @@ import viewmodels.implicits._
 
 object GrainsUsedSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def maltedBarleyRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(GrainsUsedPage).map { answer =>
       val value = HtmlFormat.escape(answer.maltedBarleyQuantity.toString()).toString + "<br/>" + HtmlFormat.escape(
         answer.wheatQuantity.toString()
       ) + "<br/>" + HtmlFormat.escape(answer.maizeQuantity.toString()) + "<br/>" + HtmlFormat
         .escape(answer.ryeQuantity.toString()) + "<br/>" + HtmlFormat.escape(answer.unmaltedGrainQuantity.toString())
-
       SummaryListRowViewModel(
-        key = "grainsUsed.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "grainsUsed.maltedBarleyQuantity.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.maltedBarleyQuantity.toString} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("grainsUsed.change.hidden"))
+            .withVisuallyHiddenText(messages("grainsUsed.maltedBarleyQuantity.change.hidden"))
+        )
+      )
+    }
+  def wheatRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow]        =
+    answers.get(GrainsUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "grainsUsed.wheatQuantity.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.wheatQuantity.toString} ${messages("site.unit.tonnes")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("grainsUsed.wheatQuantity.change.hidden"))
+        )
+      )
+    }
+
+  def maizeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(GrainsUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "grainsUsed.maizeQuantity.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.maizeQuantity.toString} ${messages("site.unit.tonnes")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("grainsUsed.maizeQuantity.change.hidden"))
+        )
+      )
+    }
+
+  def ryeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(GrainsUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "grainsUsed.ryeQuantity.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.ryeQuantity.toString} ${messages("site.unit.tonnes")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("grainsUsed.ryeQuantity.change.hidden"))
+        )
+      )
+    }
+
+  def unmaltedGrainQuantityRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(GrainsUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "grainsUsed.unmaltedGrainQuantity.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.unmaltedGrainQuantity.toString} ${messages("site.unit.tonnes")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("grainsUsed.unmaltedGrainQuantity.change.hidden"))
         )
       )
     }

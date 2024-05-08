@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.spiritsQuestions
 
 import controllers.spiritsQuestions.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, SpiritType, UserAnswers}
 import pages.spiritsQuestions.SpiritTypePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -29,24 +29,30 @@ import viewmodels.implicits._
 object SpiritTypeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SpiritTypePage).map { answers =>
-      val value = ValueViewModel(
-        HtmlContent(
-          answers
-            .map { answer =>
-              HtmlFormat.escape(messages(s"spiritType.$answer")).toString
-            }
-            .mkString(",<br>")
+    answers.get(SpiritTypePage).flatMap { answers =>
+      val rowValue = answers.collect {
+        case answer if answer != SpiritType.Other => HtmlFormat.escape(messages(s"spiritType.$answer")).toString
+      }
+      if (rowValue.isEmpty)
+        None
+      else {
+        val value = ValueViewModel(
+          HtmlContent(
+            rowValue
+              .mkString(",<br>")
+          )
         )
-      )
 
-      SummaryListRowViewModel(
-        key = "spiritType.checkYourAnswersLabel",
-        value = value,
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.SpiritTypeController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("spiritType.change.hidden"))
+        Some(
+          SummaryListRowViewModel(
+            key = "spiritType.checkYourAnswersLabel",
+            value = value,
+            actions = Seq(
+              ActionItemViewModel("site.change", routes.SpiritTypeController.onPageLoad(CheckMode).url)
+                .withVisuallyHiddenText(messages("spiritType.change.hidden"))
+            )
+          )
         )
-      )
+      }
     }
 }

@@ -19,7 +19,7 @@ package navigation
 import controllers._
 import models._
 import pages._
-import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, GrainsUsedPage, SpiritTypePage}
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, SpiritTypePage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -28,20 +28,21 @@ import javax.inject.{Inject, Singleton}
 class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case pages.spiritsQuestions.DeclareQuarterlySpiritsPage => declareQuarterlySpiritsRoute
-    case pages.spiritsQuestions.DeclareSpiritsTotalPage     =>
+    case pages.spiritsQuestions.DeclareQuarterlySpiritsPage   => declareQuarterlySpiritsRoute
+    case pages.spiritsQuestions.DeclareSpiritsTotalPage       =>
       _ => controllers.spiritsQuestions.routes.WhiskyController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.WhiskyPage                  =>
+    case pages.spiritsQuestions.WhiskyPage                    =>
       _ => controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.SpiritTypePage              => spiritTypesRoute
-    case pages.spiritsQuestions.OtherSpiritsProducedPage    =>
+    case pages.spiritsQuestions.SpiritTypePage                => spiritTypesRoute
+    case pages.spiritsQuestions.OtherSpiritsProducedPage      =>
       _ => controllers.spiritsQuestions.routes.GrainsUsedController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.GrainsUsedPage              => grainsUsedRoute
-    case pages.spiritsQuestions.OtherMaltedGrainsPage       =>
+    case pages.spiritsQuestions.GrainsUsedPage                => grainsUsedRoute
+    case pages.spiritsQuestions.OtherMaltedGrainsPage         =>
       _ => controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.AlcoholUsedPage             =>
+    case pages.spiritsQuestions.AlcoholUsedPage               =>
       _ => controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
-    case _                                                  => _ => routes.IndexController.onPageLoad
+    case pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage => ethyleneGasOrMolassesRoute
+    case _                                                    => _ => routes.IndexController.onPageLoad
 
   }
 
@@ -72,5 +73,12 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
       case Some(_)                                                                 =>
         controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
       case _                                                                       => routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  private def ethyleneGasOrMolassesRoute(userAnswers: UserAnswers): Call =
+    userAnswers.get(EthyleneGasOrMolassesUsedPage).map(_.otherIngredients) match {
+      case Some(true)  => controllers.routes.TaskListController.onPageLoad
+      case Some(false) => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      case _           => routes.JourneyRecoveryController.onPageLoad()
     }
 }
