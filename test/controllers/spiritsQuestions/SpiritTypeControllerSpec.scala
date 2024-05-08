@@ -19,7 +19,7 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import forms.spiritsQuestions.SpiritTypeFormProvider
 import models.{NormalMode, SpiritType, UserAnswers}
-import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -92,7 +92,8 @@ class SpiritTypeControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator].toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
