@@ -20,7 +20,7 @@ import models.{Mode, UserAnswers}
 import pages._
 import play.api.mvc.Call
 
-class FakeQuarterlySpiritQuestionsNavigator(desiredRoute: Call) extends QuarterlySpiritsQuestionsNavigator {
+class FakeQuarterlySpiritsQuestionsNavigator(desiredRoute: Call) extends QuarterlySpiritsQuestionsNavigator {
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
     desiredRoute

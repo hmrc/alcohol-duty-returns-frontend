@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.CacheConnector
 import forms.spiritsQuestions.UnmaltedGrainUsedFormProvider
 import models.{NormalMode, UserAnswers}
-import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -93,7 +93,8 @@ class UnmaltedGrainUsedControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator].toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

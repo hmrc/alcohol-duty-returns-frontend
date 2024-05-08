@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.spiritsQuestions.OtherMaltedGrains
-import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.OtherMaltedGrainsView
 
@@ -104,7 +104,8 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator].toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
