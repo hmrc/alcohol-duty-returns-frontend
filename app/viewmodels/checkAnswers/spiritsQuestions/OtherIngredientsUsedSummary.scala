@@ -35,8 +35,10 @@ object OtherIngredientsUsedSummary {
         .toString + "<br/>" + HtmlFormat.escape(answer.otherIngredientsUsedQuantity.toString()).toString
 
       SummaryListRowViewModel(
-        key = "otherIngredientsUsed.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = answer.otherIngredientsUsedTypes,
+        value = ValueViewModel(
+          s" ${answer.otherIngredientsUsedQuantity.toString()} ${answer.otherIngredientsUsedUnit.toString.toLowerCase}"
+        ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.OtherIngredientsUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("otherIngredientsUsed.change.hidden"))

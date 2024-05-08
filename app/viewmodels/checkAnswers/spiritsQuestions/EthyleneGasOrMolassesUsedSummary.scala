@@ -28,17 +28,22 @@ import viewmodels.implicits._
 
 object EthyleneGasOrMolassesUsedSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def ethyleneGasUsedRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(EthyleneGasOrMolassesUsedPage).map { answer =>
-      val value = HtmlFormat.escape(answer.ethyleneGas.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.molasses.toString())
-        .toString + "<br/>" + HtmlFormat
-        .escape(answer.otherIngredients.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "ethyleneGasOrMolassesUsed.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "ethyleneGasOrMolassesUsed.ethyleneGas.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.ethyleneGas.toString} ${messages("site.unit.tonnes")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.EthyleneGasOrMolassesUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.change.hidden"))
+        )
+      )
+    }
+  def molassesUsedRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow]    =
+    answers.get(EthyleneGasOrMolassesUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "ethyleneGasOrMolassesUsed.molasses.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.molasses.toString} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.EthyleneGasOrMolassesUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.change.hidden"))

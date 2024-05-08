@@ -48,16 +48,18 @@ object CheckYourAnswersSummaryListHelper {
       maizeSummaryRow         <- GrainsUsedSummary.maizeRow(userAnswers)
       ryeSummaryRow           <- GrainsUsedSummary.ryeRow(userAnswers)
       unmaltedGrainSummaryRow <- GrainsUsedSummary.unmaltedGrainQuantityRow(userAnswers)
+      otherMaltedGrains       <- OtherMaltedGrainsSummary.row(userAnswers)
     } yield SummaryListViewModel(
       Seq(
         maltedBarleySummaryRow,
         wheatSummaryRow,
         maizeSummaryRow,
         ryeSummaryRow,
-        unmaltedGrainSummaryRow
+        unmaltedGrainSummaryRow,
+        otherMaltedGrains
       )
     ).copy(card =
-      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card3"))))))
+      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card2"))))))
     )
   def alcoholUsedSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] =
     for {
@@ -73,8 +75,22 @@ object CheckYourAnswersSummaryListHelper {
         ciderOrPerrySummaryRow
       )
     ).copy(card =
-      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card2"))))))
+      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card3"))))))
     )
+
+  def otherIngredientsUsedSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
+    val otherIngredients = getOptionalRow(OtherIngredientsUsedSummary.row(userAnswers))
+    for {
+      ethyleneGas <- EthyleneGasOrMolassesUsedSummary.ethyleneGasUsedRow(userAnswers)
+      molasses    <- EthyleneGasOrMolassesUsedSummary.molassesUsedRow(userAnswers)
+    } yield SummaryListViewModel(
+      Seq(ethyleneGas) ++
+        Seq(molasses) ++
+        otherIngredients
+    ).copy(card =
+      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card4"))))))
+    )
+  }
 
   private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
     row match {

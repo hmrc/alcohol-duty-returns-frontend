@@ -36,10 +36,12 @@ class CheckYourAnswersController @Inject() (
     (
       CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers),
       CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers),
-      CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
+      CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers),
+      CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
     ) match {
-      case (Some(list), Some(summaryList), Some(grainsList)) => Ok(view(list, summaryList, grainsList))
-      case _                                                 => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case (Some(list), Some(summaryList), Some(grainsList), Some(otherIngredientsList)) =>
+        Ok(view(list, summaryList, grainsList, otherIngredientsList))
+      case _                                                                             => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

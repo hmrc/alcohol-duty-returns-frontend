@@ -30,13 +30,9 @@ object OtherMaltedGrainsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(OtherMaltedGrainsPage).map { answer =>
-      val value = HtmlFormat.escape(answer.otherMaltedGrainsTypes).toString + "<br/>" + HtmlFormat
-        .escape(answer.otherMaltedGrainsQuantity.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "otherMaltedGrains.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = answer.otherMaltedGrainsTypes,
+        value = ValueViewModel(s"${answer.otherMaltedGrainsQuantity.toString} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.OtherMaltedGrainsController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("otherMaltedGrains.change.hidden"))

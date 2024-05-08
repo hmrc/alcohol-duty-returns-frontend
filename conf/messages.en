@@ -687,7 +687,8 @@ ethyleneGasOrMolassesUsed.ethyleneGas = Ethylene gas
 ethyleneGasOrMolassesUsed.molasses = Molasses
 ethyleneGasOrMolassesUsed.hint = Enter volume in litres, up to 2 decimal places.
 ethyleneGasOrMolassesUsed.question = Have you used any other ingredients?
-ethyleneGasOrMolassesUsed.checkYourAnswersLabel = EthyleneGasOrMolassesUsed
+ethyleneGasOrMolassesUsed.ethyleneGas.checkYourAnswersLabel = Ethylene gas
+ethyleneGasOrMolassesUsed.molasses.checkYourAnswersLabel = Molasses
 ethyleneGasOrMolassesUsed.error.ethyleneGas.required = Enter how much ethylene gas you have used
 ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric = The volume of ethylene gas you need to declare must be a number
 ethyleneGasOrMolassesUsed.error.ethyleneGas.twoDecimalPlaces = The volume of ethylene gas you need to declare must be a number to 2 decimal places
@@ -726,9 +727,9 @@ otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces = The volume 
 otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = otherMaltedGrainsQuantity
 
 spiritsQuestions.checkYourAnswersLabel.card1 = Spirits you’ve produced
-spiritsQuestions.checkYourAnswersLabel.card2 = Alcohol ingredients you’ve used
-spiritsQuestions.checkYourAnswersLabel.card3 = Grain ingredients you’ve used
-
+spiritsQuestions.checkYourAnswersLabel.card2 = Grain ingredients you’ve used
+spiritsQuestions.checkYourAnswersLabel.card3 = Alcohol ingredients you’ve used
+spiritsQuestions.checkYourAnswersLabel.card4 = Other ingredients you’ve used
 # End of quarterly spirits questions sub-journey
 
 # Beginning of adjustments sub-journey
