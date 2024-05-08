@@ -77,7 +77,7 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
 
   private def ethyleneGasOrMolassesRoute(userAnswers: UserAnswers): Call =
     userAnswers.get(EthyleneGasOrMolassesUsedPage).map(_.otherIngredients) match {
-      case Some(true)  => controllers.routes.TaskListController.onPageLoad
+      case Some(true)  => controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
       case Some(false) => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }

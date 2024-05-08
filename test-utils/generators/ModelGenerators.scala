@@ -22,6 +22,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 
+import enumeratum.scalacheck._
 import java.time.YearMonth
 
 trait ModelGenerators {
@@ -60,6 +61,19 @@ trait ModelGenerators {
         molasses         <- arbitrary[BigDecimal]
         otherIngredients <- arbitrary[Boolean]
       } yield spiritsQuestions.EthyleneGasOrMolassesUsed(ethyleneGas, molasses, otherIngredients)
+    }
+
+  implicit lazy val arbitraryOtherIngredientsUsed: Arbitrary[spiritsQuestions.OtherIngredientsUsed] =
+    Arbitrary {
+      for {
+        otherIngredientsTypes    <- arbitrary[String]
+        otherIngredientsUnit     <- arbitrary[UnitsOfMeasure]
+        otherIngredientsQuantity <- arbitrary[BigDecimal]
+      } yield spiritsQuestions.OtherIngredientsUsed(
+        otherIngredientsTypes,
+        otherIngredientsUnit,
+        otherIngredientsQuantity
+      )
     }
 
   implicit lazy val arbitraryWhisky: Arbitrary[spiritsQuestions.Whisky] =

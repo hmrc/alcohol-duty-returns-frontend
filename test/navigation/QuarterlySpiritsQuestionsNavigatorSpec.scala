@@ -180,7 +180,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         }
       }
 
-      "the Alcohol Used Page" - {
+      "the Alcohol Used page" - {
         "must go to Ethylene Gas Or Molasses page" in {
 
           navigator.nextPage(
@@ -188,6 +188,17 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
             NormalMode,
             UserAnswers("id")
           ) mustBe controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
+        }
+      }
+
+      "the Ethylene Gas Or Molasses page" - {
+        "must go to Other Ingredients Used page" in {
+
+          navigator.nextPage(
+            pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
         }
       }
     }
