@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-package viewmodels
+package navigation
 
-package object govuk {
+import models.{Mode, UserAnswers}
+import pages._
+import play.api.mvc.Call
 
-  object all
-      extends ImplicitConversions
-      with BackLinkFluency
-      with ButtonFluency
-      with CharacterCountFluency
-      with CheckboxFluency
-      with DateFluency
-      with ErrorSummaryFluency
-      with FieldsetFluency
-      with HintFluency
-      with InputFluency
-      with LabelFluency
-      with YearMonthDateFluency
-      with RadiosFluency
-      with SelectFluency
-      with SummaryListFluency
-      with TagFluency
-      with TextareaFluency
+class FakeQuarterlySpiritsQuestionsNavigator(desiredRoute: Call) extends QuarterlySpiritsQuestionsNavigator {
+
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    desiredRoute
 }

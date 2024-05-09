@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,46 +17,63 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
-import connectors.CacheConnector
-import forms.spiritsQuestions.DeclareSpiritsTotalFormProvider
-import models.NormalMode
-import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
+import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.spiritsQuestions.DeclareSpiritsTotalPage
+import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
+import connectors.CacheConnector
+import models.UnitsOfMeasure.Tonnes
+import models.spiritsQuestions.OtherIngredientsUsed
+import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import uk.gov.hmrc.http.HttpResponse
-import views.html.spiritsQuestions.DeclareSpiritsTotalView
+import views.html.spiritsQuestions.OtherIngredientsUsedView
 
 import scala.concurrent.Future
 
-class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
-
-  val formProvider = new DeclareSpiritsTotalFormProvider()
-  val form         = formProvider()
+class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal(10.23)
+  val formProvider = new OtherIngredientsUsedFormProvider()
+  val form         = formProvider()
 
-  lazy val declareSpiritsTotalRoute =
-    routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
+  lazy val otherIngredientsUsedRoute = routes.OtherIngredientsUsedController.onPageLoad(NormalMode).url
 
-  "DeclareSpiritsTotal Controller" - {
+  val otherIngredientsTypes    = "Coco Pops"
+  val otherIngredientsUnit     = Tonnes
+  val otherIngredientsQuantity = BigDecimal(100000)
+
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    userAnswersId,
+    Json.obj(
+      OtherIngredientsUsedPage.toString -> Json.obj(
+        "otherIngredientsUsedTypes"    -> otherIngredientsTypes,
+        "otherIngredientsUsedUnit"     -> otherIngredientsUnit,
+        "otherIngredientsUsedQuantity" -> otherIngredientsQuantity
+      )
+    )
+  )
+
+  "OtherIngredientsUsed Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareSpiritsTotalRoute)
+        val request = FakeRequest(GET, otherIngredientsUsedRoute)
+
+        val view = application.injector.instanceOf[OtherIngredientsUsedView]
 
         val result = route(application, request).value
-
-        val view = application.injector.instanceOf[DeclareSpiritsTotalView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
@@ -65,23 +82,20 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers =
-        emptyUserAnswers.set(DeclareSpiritsTotalPage, validAnswer).success.value
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareSpiritsTotalRoute)
+        val request = FakeRequest(GET, otherIngredientsUsedRoute)
 
-        val view = application.injector.instanceOf[DeclareSpiritsTotalView]
+        val view = application.injector.instanceOf[OtherIngredientsUsedView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(
+          form.fill(OtherIngredientsUsed(otherIngredientsTypes, otherIngredientsUnit, otherIngredientsQuantity)),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -102,8 +116,12 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareSpiritsTotalRoute)
-            .withFormUrlEncodedBody(("declare-spirits-total-input", validAnswer.toString))
+          FakeRequest(POST, otherIngredientsUsedRoute)
+            .withFormUrlEncodedBody(
+              ("otherIngredientsUsedTypes", otherIngredientsTypes),
+              ("otherIngredientsUsedUnit", otherIngredientsUnit.entryName),
+              ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString())
+            )
 
         val result = route(application, request).value
 
@@ -118,12 +136,12 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareSpiritsTotalRoute)
+          FakeRequest(POST, otherIngredientsUsedRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[DeclareSpiritsTotalView]
+        val view = application.injector.instanceOf[OtherIngredientsUsedView]
 
         val result = route(application, request).value
 
@@ -137,7 +155,7 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareSpiritsTotalRoute)
+        val request = FakeRequest(GET, otherIngredientsUsedRoute)
 
         val result = route(application, request).value
 
@@ -152,13 +170,16 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareSpiritsTotalRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+          FakeRequest(POST, otherIngredientsUsedRoute)
+            .withFormUrlEncodedBody(
+              ("otherIngredientsUsedTypes", otherIngredientsTypes),
+              ("otherIngredientsUsedUnit", otherIngredientsUnit.entryName),
+              ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString())
+            )
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

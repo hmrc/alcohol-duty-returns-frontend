@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package viewmodels
+package models.spiritsQuestions
 
-package object govuk {
+import models.UnitsOfMeasure
+import play.api.libs.json._
 
-  object all
-      extends ImplicitConversions
-      with BackLinkFluency
-      with ButtonFluency
-      with CharacterCountFluency
-      with CheckboxFluency
-      with DateFluency
-      with ErrorSummaryFluency
-      with FieldsetFluency
-      with HintFluency
-      with InputFluency
-      with LabelFluency
-      with YearMonthDateFluency
-      with RadiosFluency
-      with SelectFluency
-      with SummaryListFluency
-      with TagFluency
-      with TextareaFluency
+case class OtherIngredientsUsed(
+  otherIngredientsUsedTypes: String,
+  otherIngredientsUsedUnit: UnitsOfMeasure,
+  otherIngredientsUsedQuantity: BigDecimal
+)
+
+object OtherIngredientsUsed {
+  implicit val format: OFormat[OtherIngredientsUsed] = Json.format[OtherIngredientsUsed]
 }

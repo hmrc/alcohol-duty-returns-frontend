@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package navigation
+package models.spiritsQuestions
 
-import models.{Mode, UserAnswers}
-import pages._
-import play.api.mvc.Call
+import play.api.libs.json._
 
-class FakeQuarterlySpiritQuestionsNavigator(desiredRoute: Call) extends QuarterlySpiritsQuestionsNavigator {
+case class GrainsUsed(
+  maltedBarleyQuantity: BigDecimal,
+  wheatQuantity: BigDecimal,
+  maizeQuantity: BigDecimal,
+  ryeQuantity: BigDecimal,
+  unmaltedGrainQuantity: BigDecimal,
+  usedMaltedGrainNotBarley: Boolean
+)
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+object GrainsUsed {
+  implicit val format: OFormat[GrainsUsed] = Json.format[GrainsUsed]
 }

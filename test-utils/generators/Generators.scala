@@ -17,10 +17,10 @@
 package generators
 
 import java.time.{Instant, LocalDate, ZoneOffset}
-
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalacheck.{Gen, Shrink}
+import enumeratum.EnumEntry
 
 trait Generators extends ModelGenerators {
 
@@ -98,7 +98,10 @@ trait Generators extends ModelGenerators {
       .suchThat(_ != "true")
       .suchThat(_ != "false")
 
-  def nonEmptyString: Gen[String] =
+  def nonEnumStrings[E <: EnumEntry](enums: Seq[EnumEntry]): Gen[String] =
+    enums.foldLeft(nonEmptyString) { case (genSoFar, e) => genSoFar.suchThat(_ != e.entryName) }
+
+  def nonEmptyString: Gen[String]                                        =
     arbitrary[String] suchThat (_.nonEmpty)
 
   def stringsWithMaxLength(maxLength: Int): Gen[String] =
