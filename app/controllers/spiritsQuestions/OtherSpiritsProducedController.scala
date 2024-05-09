@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.spiritsQuestions.OtherSpiritsProducedFormProvider
 
 import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.QuarterlySpiritsQuestionsNavigator
 import pages.spiritsQuestions.OtherSpiritsProducedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -30,7 +30,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.OtherSpiritsProducedView
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.reflect.runtime.universe.Try
 
 class OtherSpiritsProducedController @Inject() (
   override val messagesApi: MessagesApi,

@@ -20,8 +20,6 @@ import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
 import pages.spiritsQuestions.GrainsUsedPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -30,10 +28,6 @@ object GrainsUsedSummary {
 
   def maltedBarleyRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(GrainsUsedPage).map { answer =>
-      val value = HtmlFormat.escape(answer.maltedBarleyQuantity.toString()).toString + "<br/>" + HtmlFormat.escape(
-        answer.wheatQuantity.toString()
-      ) + "<br/>" + HtmlFormat.escape(answer.maizeQuantity.toString()) + "<br/>" + HtmlFormat
-        .escape(answer.ryeQuantity.toString()) + "<br/>" + HtmlFormat.escape(answer.unmaltedGrainQuantity.toString())
       SummaryListRowViewModel(
         key = "grainsUsed.maltedBarleyQuantity.checkYourAnswersLabel",
         value = ValueViewModel(s"${answer.maltedBarleyQuantity.toString} ${messages("site.unit.tonnes")}"),

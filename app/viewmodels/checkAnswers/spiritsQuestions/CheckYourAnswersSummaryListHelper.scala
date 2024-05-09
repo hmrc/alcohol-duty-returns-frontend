@@ -99,3 +99,41 @@ object CheckYourAnswersSummaryListHelper {
     }
 
 }
+/*
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import play.api.i18n.Messages
+
+object CheckYourAnswersSummaryListHelper {
+  private def createSummaryList(cardTitleKey: String, rows: Seq[SummaryListRow])(implicit messages: Messages): Option[SummaryList] =
+    if (rows.isEmpty) None
+    else Some(SummaryListViewModel(rows).copy(card = Some(Card(title = Some(CardTitle(content = Text(messages(cardTitleKey))))))))
+
+  private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
+    row.toSeq
+
+  def spiritsSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
+    val rows = Seq(
+      DeclareSpiritsTotalSummary.row(userAnswers),
+      WhiskySummary.scotchWhiskyRow(userAnswers),
+      WhiskySummary.irishWhiskeyRow(userAnswers),
+      OtherSpiritsProducedSummary.row(userAnswers),
+      SpiritTypeSummary.row(userAnswers)
+    ).flatten
+    createSummaryList("spiritsQuestions.checkYourAnswersLabel.card1", rows)
+  }
+
+  def grainsUsedSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
+    val rows = Seq(
+      GrainsUsedSummary.maltedBarleyRow(userAnswers),
+      GrainsUsedSummary.wheatRow(userAnswers),
+      GrainsUsedSummary.maizeRow(userAnswers),
+      GrainsUsedSummary.ryeRow(userAnswers),
+      GrainsUsedSummary.unmaltedGrainQuantityRow(userAnswers),
+      OtherMaltedGrainsSummary.row(userAnswers)
+    ).flatten
+    createSummaryList("spiritsQuestions.checkYourAnswersLabel.card2", rows)
+  }
+
+  // Similar refactoring for other summary list functions
+}
+ */

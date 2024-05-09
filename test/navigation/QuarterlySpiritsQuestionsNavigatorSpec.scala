@@ -19,7 +19,7 @@ package navigation
 import base.SpecBase
 import controllers._
 import models._
-import models.spiritsQuestions.GrainsUsed
+import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, GrainsUsed}
 import pages._
 
 class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
@@ -198,6 +198,12 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
             pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
             NormalMode,
             UserAnswers("id")
+              .set(
+                pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
+                EthyleneGasOrMolassesUsed(BigDecimal(0), BigDecimal(0), true)
+              )
+              .success
+              .value
           ) mustBe controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
         }
       }
@@ -212,7 +218,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
-        ) mustBe routes.CheckYourAnswersController.onPageLoad()
+        ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }

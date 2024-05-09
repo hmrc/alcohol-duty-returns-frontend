@@ -33,15 +33,12 @@ class CheckYourAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    (
-      CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers),
-      CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers),
-      CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers),
-      CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
-    ) match {
-      case (Some(list), Some(summaryList), Some(grainsList), Some(otherIngredientsList)) =>
-        Ok(view(list, summaryList, grainsList, otherIngredientsList))
-      case _                                                                             => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-    }
+    val result = for {
+      spiritsList          <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
+      alcoholList          <- CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers)
+      grainsList           <- CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
+      otherIngredientsList <- CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
+    } yield Ok(view(spiritsList, alcoholList, grainsList, otherIngredientsList))
+    result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
   }
 }
