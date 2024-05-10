@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AdjustmentTaxTypeFormProvider
-import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -26,7 +26,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.adjustment.AdjustmentType.Spoilt
@@ -48,7 +47,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
   lazy val adjustmentTaxTypeRoute = controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode).url
   val spoilt                      = Spoilt.toString
   val adjustmentEntry             = AdjustmentEntry(adjustmentType = Some(Spoilt))
-  val userAnswers                 = UserAnswers(userAnswersId).set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswers                 = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
   val taxCode                     = "310"
   val alcoholRegime               = AlcoholRegime.Beer
   val rate                        = Some(BigDecimal(10.99))

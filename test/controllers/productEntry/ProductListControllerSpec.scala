@@ -18,7 +18,6 @@ package controllers.productEntry
 
 import base.SpecBase
 import forms.productEntry.ProductListFormProvider
-import models.UserAnswers
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -26,7 +25,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.{ProductEntryListPage, ProductListPage}
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import generators.ModelGenerators
@@ -47,7 +45,7 @@ class ProductListControllerSpec extends SpecBase with MockitoSugar with ModelGen
   lazy val productListRoute = controllers.productEntry.routes.ProductListController.onPageLoad().url
 
   val productEntryList = arbitraryProductEntryList.arbitrary.sample.value
-  val userAnswsers     = UserAnswers(userAnswersId).set(ProductEntryListPage, productEntryList).success.value
+  val userAnswsers     = emptyUserAnswers.set(ProductEntryListPage, productEntryList).success.value
 
   "ProductList Controller" - {
 

@@ -260,6 +260,8 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         val validTotal                                                = 42.34
         val validPureAlcohol                                          = 34.23
         val incompleteDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
+          returnId,
+          groupId,
           userAnswersId,
           Json.obj(
             DutySuspendedBeerPage.toString    -> Json.obj(
@@ -310,6 +312,8 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         val validTotal                                              = 42.34
         val validPureAlcohol                                        = 34.23
         val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
+          returnId,
+          groupId,
           userAnswersId,
           Json.obj(
             DutySuspendedBeerPage.toString           -> Json.obj(

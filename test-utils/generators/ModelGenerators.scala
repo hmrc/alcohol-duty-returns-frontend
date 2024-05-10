@@ -22,6 +22,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 
+import enumeratum.scalacheck._
 import java.time.YearMonth
 
 trait ModelGenerators {
@@ -31,12 +32,53 @@ trait ModelGenerators {
       Gen.oneOf(returns.WhatDoYouNeedToDeclare.values)
     }
 
+  implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =
+    Arbitrary {
+      for {
+        maltedBarleyQuantity     <- arbitrary[BigDecimal]
+        wheatQuantity            <- arbitrary[BigDecimal]
+        maizeQuantity            <- arbitrary[BigDecimal]
+        ryeQuantity              <- arbitrary[BigDecimal]
+        unmaltedGrainQuantity    <- arbitrary[BigDecimal]
+        usedMaltedGrainNotBarley <- arbitrary[Boolean]
+      } yield spiritsQuestions.GrainsUsed(
+        maltedBarleyQuantity,
+        wheatQuantity,
+        maizeQuantity,
+        ryeQuantity,
+        unmaltedGrainQuantity,
+        usedMaltedGrainNotBarley
+      )
+    }
+
   implicit lazy val arbitraryOtherMaltedGrains: Arbitrary[spiritsQuestions.OtherMaltedGrains] =
     Arbitrary {
       for {
         otherMaltedGrainsTypes    <- arbitrary[String]
         otherMaltedGrainsQuantity <- arbitrary[BigDecimal]
       } yield spiritsQuestions.OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)
+    }
+
+  implicit lazy val arbitraryEthyleneGasOrMolassesUsed: Arbitrary[spiritsQuestions.EthyleneGasOrMolassesUsed] =
+    Arbitrary {
+      for {
+        ethyleneGas      <- arbitrary[BigDecimal]
+        molasses         <- arbitrary[BigDecimal]
+        otherIngredients <- arbitrary[Boolean]
+      } yield spiritsQuestions.EthyleneGasOrMolassesUsed(ethyleneGas, molasses, otherIngredients)
+    }
+
+  implicit lazy val arbitraryOtherIngredientsUsed: Arbitrary[spiritsQuestions.OtherIngredientsUsed] =
+    Arbitrary {
+      for {
+        otherIngredientsTypes    <- arbitrary[String]
+        otherIngredientsUnit     <- arbitrary[UnitsOfMeasure]
+        otherIngredientsQuantity <- arbitrary[BigDecimal]
+      } yield spiritsQuestions.OtherIngredientsUsed(
+        otherIngredientsTypes,
+        otherIngredientsUnit,
+        otherIngredientsQuantity
+      )
     }
 
   implicit lazy val arbitraryWhisky: Arbitrary[spiritsQuestions.Whisky] =
@@ -231,4 +273,22 @@ trait ModelGenerators {
     duty = Some(duty),
     pureAlcoholVolume = Some(pureAlcoholVolume)
   )
+
+  def periodKeyGen: Gen[String] = for {
+    year  <- Gen.chooseNum(23, 50)
+    month <- Gen.chooseNum(0, 11)
+  } yield s"${year}A${(month + 'A').toChar}"
+
+  def invalidPeriodKeyGen: Gen[String] = Gen.alphaStr
+    .suchThat(_.nonEmpty)
+    .suchThat(!_.matches(ReturnPeriod.returnPeriodPattern.toString()))
+
+  def returnPeriodGen: Gen[ReturnPeriod] = periodKeyGen.map(ReturnPeriod.fromPeriodKey(_).get)
+
+  implicit val arbitraryReturnPeriod: Arbitrary[ReturnPeriod] = Arbitrary {
+    returnPeriodGen
+  }
+
+  def appaIdGen: Gen[String] = Gen.listOfN(10, Gen.numChar).map(id => s"XMADP${id.mkString}")
+
 }

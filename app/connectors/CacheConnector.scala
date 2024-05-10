@@ -30,11 +30,19 @@ class CacheConnector @Inject() (
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances {
 
-  def get(internalId: String)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
-    httpClient.GET[Option[UserAnswers]](config.adrCacheGetUrl(internalId))
+  def get(appaId: String, periodKey: String)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
+    httpClient.GET[Option[UserAnswers]](config.adrCacheGetUrl(appaId, periodKey))
 
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.POST(config.adrCacheSetUrl(userAnswers.id), userAnswers)(
+    httpClient.PUT(config.adrCacheSetUrl(), userAnswers)(
+      implicitly[Writes[UserAnswers]],
+      implicitly[HttpReads[HttpResponse]],
+      hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
+      implicitly
+    )
+
+  def add(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    httpClient.POST(config.adrCacheAddUrl(), userAnswers)(
       implicitly[Writes[UserAnswers]],
       implicitly[HttpReads[HttpResponse]],
       hc.withExtraHeaders("Csrf-Token" -> "nocheck"),

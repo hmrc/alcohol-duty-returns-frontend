@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AlcoholByVolumeFormProvider
-import models.{AlcoholByVolume, NormalMode, UserAnswers}
+import models.{AlcoholByVolume, NormalMode}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -26,7 +26,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
@@ -48,7 +47,7 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
   lazy val alcoholByVolumeRoute = controllers.adjustment.routes.AlcoholByVolumeController.onPageLoad(NormalMode).url
 
   val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
-  val userAnswers     = UserAnswers(userAnswersId).set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswers     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
   "AlcoholByVolume Controller" - {
 
@@ -70,7 +69,7 @@ class AlcoholByVolumeControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId)
+      val userAnswers = emptyUserAnswers
         .set(
           CurrentAdjustmentEntryPage,
           AdjustmentEntry(abv = Some(validAnswer), adjustmentType = Some(Spoilt))

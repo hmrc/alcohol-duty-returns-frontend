@@ -18,7 +18,7 @@ package controllers.productEntry
 
 import base.SpecBase
 import forms.productEntry.DeclareSmallProducerReliefDutyRateFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -26,7 +26,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.productEntry.ProductEntry
@@ -68,7 +67,7 @@ class DeclareSmallProducerReliefDutyRateControllerSpec extends SpecBase with Moc
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId)
+        emptyUserAnswers
           .set(CurrentProductEntryPage, ProductEntry(sprDutyRate = Some(validAnswer)))
           .success
           .value
@@ -118,7 +117,7 @@ class DeclareSmallProducerReliefDutyRateControllerSpec extends SpecBase with Moc
 
     "must redirect to the next page when the same data is submitted" in {
       val userAnswers =
-        UserAnswers(userAnswersId)
+        emptyUserAnswers
           .set(CurrentProductEntryPage, ProductEntry(sprDutyRate = Some(validAnswer)))
           .success
           .value

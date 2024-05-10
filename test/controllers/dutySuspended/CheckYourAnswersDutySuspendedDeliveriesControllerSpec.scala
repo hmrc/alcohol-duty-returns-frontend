@@ -20,7 +20,6 @@ import base.SpecBase
 import models.UserAnswers
 import pages.dutySuspended.{DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import play.api.libs.json.Json
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import viewmodels.checkAnswers.dutySuspended.CheckYourAnswersSummaryListHelper
 import viewmodels.govuk.SummaryListFluency
@@ -30,6 +29,8 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
   val validTotal                                              = 42.34
   val validPureAlcohol                                        = 34.23
   val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       DutySuspendedBeerPage.toString           -> Json.obj(
@@ -83,6 +84,8 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
     "must return OK and the correct view for a GET if all relevant regime questions are answered" in {
 
       val beerScreenAnswer: UserAnswers = UserAnswers(
+        returnId,
+        groupId,
         userAnswersId,
         Json.obj(
           DutySuspendedBeerPage.toString -> Json.obj(

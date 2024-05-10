@@ -19,15 +19,14 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.CacheConnector
 import forms.spiritsQuestions.DeclareSpiritsTotalFormProvider
-import models.{NormalMode, UserAnswers}
-import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import models.NormalMode
+import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.DeclareSpiritsTotalPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.DeclareSpiritsTotalView
@@ -67,7 +66,7 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(DeclareSpiritsTotalPage, validAnswer).success.value
+        emptyUserAnswers.set(DeclareSpiritsTotalPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -95,7 +94,8 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator].toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

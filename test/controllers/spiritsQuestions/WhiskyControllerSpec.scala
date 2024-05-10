@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.spiritsQuestions.WhiskyFormProvider
 import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.Whisky
-import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -28,7 +28,6 @@ import pages.spiritsQuestions.WhiskyPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
@@ -47,6 +46,8 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
   val validScotchWhisky = 55.6
   val validIrishWhisky  = 47.5
   val userAnswers       = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       WhiskyPage.toString -> Json.obj(
@@ -102,7 +103,8 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator].toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
