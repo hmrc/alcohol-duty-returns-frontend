@@ -16,6 +16,7 @@
 
 package models
 
+import generators.ModelGenerators
 import org.scalatest.TryValues.convertTryToSuccessOrFailure
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -24,13 +25,19 @@ import queries.{Gettable, Settable}
 
 import scala.util.Success
 
-class UserAnswersSpec extends AnyFreeSpec with Matchers {
+class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
   case object TestSeqPage extends Gettable[Seq[String]] with Settable[Seq[String]] {
     override def path: JsPath = JsPath \ toString
   }
   "UserAnswer" - {
+    val appaId: String        = appaIdGen.sample.get
+    val periodKey: String     = periodKeyGen.sample.get
+    val groupId: String       = "groupid"
+    val userAnswersId: String = "id"
+
     "should add a value to a set for a given page and get the same value" in {
-      val userAnswers = UserAnswers("id")
+
+      val userAnswers = UserAnswers(ReturnId(appaId, periodKey), groupId, userAnswersId)
 
       val expectedValue = "value"
 
@@ -48,7 +55,8 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers {
     }
 
     "should remove a value for a given Page" in {
-      val userAnswers = UserAnswers("id").set(TestSeqPage, Seq("123")).success.value
+      val userAnswers =
+        UserAnswers(ReturnId(appaId, periodKey), groupId, userAnswersId).set(TestSeqPage, Seq("123")).success.value
 
       val updatedUserAnswer = userAnswers.removeBySeqIndex(TestSeqPage, 0) match {
         case Success(ua) => ua

@@ -21,7 +21,7 @@ import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.AlcoholByVolumeQuestionFormProvider
 import models.RateType.Core
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, NormalMode, RateTypeResponse, UserAnswers}
+import models.{AlcoholByVolume, NormalMode, RateTypeResponse}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -29,7 +29,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.productEntry.AlcoholByVolumeQuestionView
@@ -70,7 +69,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(CurrentProductEntryPage, ProductEntry(abv = Some(validAnswer))).success.value
+        emptyUserAnswers.set(CurrentProductEntryPage, ProductEntry(abv = Some(validAnswer))).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -127,7 +126,7 @@ class AlcoholByVolumeQuestionControllerSpec extends SpecBase with MockitoSugar {
         RateTypeResponse(rateType)
       )
       val userAnswers                        =
-        UserAnswers(userAnswersId)
+        emptyUserAnswers
           .set(CurrentProductEntryPage, ProductEntry(abv = Some(validAnswer), rateType = Some(rateType)))
           .success
           .value

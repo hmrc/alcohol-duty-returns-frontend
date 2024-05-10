@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AdjustmentTypeFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -27,7 +27,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
@@ -66,7 +65,7 @@ class AdjustmentTypeControllerSpec extends SpecBase with MockitoSugar {
 
       val spoilt      = AdjustmentType.values.head
       val userAnswers =
-        UserAnswers(userAnswersId)
+        emptyUserAnswers
           .set(CurrentAdjustmentEntryPage, AdjustmentEntry(adjustmentType = Some(spoilt)))
           .success
           .value

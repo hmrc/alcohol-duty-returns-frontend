@@ -28,7 +28,6 @@ import pages.spiritsQuestions.AlcoholUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
@@ -51,6 +50,8 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
   val validMadeWine     = 47.5
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       AlcoholUsedPage.toString -> Json.obj(

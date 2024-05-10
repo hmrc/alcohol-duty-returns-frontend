@@ -27,7 +27,6 @@ import pages.spiritsQuestions.GrainsUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.spiritsQuestions.GrainsUsed
@@ -53,6 +52,8 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
   val usedMaltedGrainNotBarley = true
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       GrainsUsedPage.toString -> Json.obj(

@@ -26,7 +26,6 @@ import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.spiritsQuestions.OtherMaltedGrains
@@ -49,6 +48,8 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
   val otherMaltedGrainsQuantity = BigDecimal(100000)
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       OtherMaltedGrainsPage.toString -> Json.obj(

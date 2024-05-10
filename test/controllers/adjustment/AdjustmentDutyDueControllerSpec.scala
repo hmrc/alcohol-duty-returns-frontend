@@ -18,7 +18,6 @@ package controllers.adjustment
 
 import base.SpecBase
 import connectors.CacheConnector
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentDutyDueView

@@ -26,7 +26,6 @@ import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.UnitsOfMeasure.Tonnes
@@ -51,6 +50,8 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
   val otherIngredientsQuantity = BigDecimal(100000)
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       OtherIngredientsUsedPage.toString -> Json.obj(

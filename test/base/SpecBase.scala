@@ -16,8 +16,10 @@
 
 package base
 
+import config.Constants.periodKeySessionKey
 import controllers.actions._
-import models.UserAnswers
+import generators.ModelGenerators
+import models.{ReturnId, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -26,7 +28,6 @@ import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
 
 trait SpecBase
     extends AnyFreeSpec
@@ -34,11 +35,16 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience {
+    with IntegrationPatience
+    with ModelGenerators {
 
+  val appaId: String        = appaIdGen.sample.get
+  val periodKey: String     = periodKeyGen.sample.get
+  val groupId: String       = "groupid"
   val userAnswersId: String = "id"
+  val returnId: ReturnId    = ReturnId(appaId, periodKey)
 
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+  def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, userAnswersId)
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
@@ -49,4 +55,8 @@ trait SpecBase
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
+
+  def FakeRequest()                            = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
+  def FakeRequest(verb: String, route: String) =
+    play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
 }

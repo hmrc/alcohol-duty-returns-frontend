@@ -16,9 +16,8 @@
 
 package controllers
 
-import connectors.CacheConnector
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
-import models.UserAnswers
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -26,27 +25,23 @@ import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 
 class TaskListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  cacheConnector: CacheConnector,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
   view: TaskListView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
-    with I18nSupport {
+) extends FrontendBaseController
+    with I18nSupport
+    with Logging {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    val userAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
-    for {
-      _                  <- cacheConnector.set(userAnswers)
-      updatedUserAnswers <- cacheConnector.get(request.userId)
-    } yield updatedUserAnswers match {
-      case Some(ua) if ua.validUntil.isDefined =>
-        Ok(view(AlcoholDutyTaskListHelper.getTaskList(ua, ua.validUntil.get)))
-      case _                                   => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    request.userAnswers.validUntil match {
+      case Some(validUntil) => Ok(view(AlcoholDutyTaskListHelper.getTaskList(request.userAnswers, validUntil)))
+      case None             =>
+        logger.warn("'Valid until' property not defined in User Answers ")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

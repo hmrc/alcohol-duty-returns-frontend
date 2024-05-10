@@ -28,7 +28,6 @@ import pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
@@ -50,6 +49,8 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase with MockitoSugar
   val otherIngredients = true
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       EthyleneGasOrMolassesUsedPage.toString -> Json.obj(

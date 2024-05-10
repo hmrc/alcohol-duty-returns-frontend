@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -28,7 +28,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.TaxTypePageViewModel
@@ -52,7 +51,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     smallProducerRelief = Some(false)
   )
 
-  val fullUserAnswers = UserAnswers(userAnswersId)
+  val fullUserAnswers = emptyUserAnswers
     .set(CurrentProductEntryPage, productEntry)
     .success
     .value
@@ -195,7 +194,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
       )
 
       val userAnswers =
-        UserAnswers(userAnswersId)
+        emptyUserAnswers
           .set(
             CurrentProductEntryPage,
             ProductEntry(

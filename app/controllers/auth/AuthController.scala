@@ -16,8 +16,10 @@
 
 package controllers.auth
 
+import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
 import controllers.actions.IdentifierAction
+import models.ReturnId
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -37,7 +39,7 @@ class AuthController @Inject() (
 
   def signOut(): Action[AnyContent] = identify.async { implicit request =>
     sessionRepository
-      .clear(request.userId)
+      .clear(ReturnId(request.appaId, request.session.get(periodKeySessionKey).getOrElse("")))
       .map { _ =>
         Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
       }
@@ -45,7 +47,7 @@ class AuthController @Inject() (
 
   def signOutNoSurvey(): Action[AnyContent] = identify.async { implicit request =>
     sessionRepository
-      .clear(request.userId)
+      .clear(ReturnId(request.appaId, request.session.get(periodKeySessionKey).getOrElse("")))
       .map { _ =>
         Redirect(config.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url)))
       }
