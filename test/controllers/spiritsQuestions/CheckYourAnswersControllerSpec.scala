@@ -20,13 +20,12 @@ import connectors.CacheConnector
 import generators.ModelGenerators
 import models.UnitsOfMeasure.Tonnes
 import models.spiritsQuestions.{AlcoholUsed, EthyleneGasOrMolassesUsed, GrainsUsed, OtherIngredientsUsed, OtherMaltedGrains, Whisky}
-import models.{SpiritType, UserAnswers}
+import models.SpiritType
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.inject.bind
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.spiritsQuestions.CheckYourAnswersSummaryListHelper
@@ -35,7 +34,7 @@ import views.html.spiritsQuestions.CheckYourAnswersView
 import scala.concurrent.Future
 class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   "CheckYourAnswers Controller" - {
-    val completedUserAnswers = UserAnswers(userAnswersId)
+    val completedUserAnswers = emptyUserAnswers
       .set(
         SpiritTypePage,
         Set[SpiritType](SpiritType.Other)

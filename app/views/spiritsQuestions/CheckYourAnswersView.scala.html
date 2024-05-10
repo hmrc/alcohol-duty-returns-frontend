@@ -46,6 +46,7 @@
 
     @govukButton(
         ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+            .asLink(routes.TaskListController.onPageLoad.url)
     )
 }
 
