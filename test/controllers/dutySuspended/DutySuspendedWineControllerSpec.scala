@@ -28,7 +28,6 @@ import pages.dutySuspended.DutySuspendedWinePage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
@@ -48,6 +47,8 @@ class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
   val validPureAlcoholInWine      = 16.46
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       DutySuspendedWinePage.toString -> Json.obj(

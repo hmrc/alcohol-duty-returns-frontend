@@ -26,12 +26,11 @@ import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.UnitsOfMeasure.Tonnes
 import models.spiritsQuestions.OtherIngredientsUsed
-import navigation.{FakeQuarterlySpiritQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.OtherIngredientsUsedView
 
@@ -51,6 +50,8 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
   val otherIngredientsQuantity = BigDecimal(100000)
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       OtherIngredientsUsedPage.toString -> Json.obj(
@@ -107,7 +108,8 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator].toInstance(new FakeQuarterlySpiritQuestionsNavigator(onwardRoute)),
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

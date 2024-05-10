@@ -42,7 +42,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
-            UserAnswers("id").set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, true).success.value
+            emptyUserAnswers.set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, true).success.value
           ) mustBe controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
         }
 
@@ -51,7 +51,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
-            UserAnswers("id").set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, false).success.value
+            emptyUserAnswers.set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, false).success.value
           ) mustBe routes.TaskListController.onPageLoad
         }
 
@@ -60,7 +60,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -71,7 +71,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.DeclareSpiritsTotalPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe controllers.spiritsQuestions.routes.WhiskyController.onPageLoad(NormalMode)
         }
       }
@@ -82,7 +82,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.WhiskyPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
         }
       }
@@ -93,7 +93,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
               .set(pages.spiritsQuestions.SpiritTypePage, Set[SpiritType](SpiritType.Maltspirits, SpiritType.Other))
               .success
               .value
@@ -105,7 +105,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
               .set(
                 pages.spiritsQuestions.SpiritTypePage,
                 Set[SpiritType](SpiritType.Maltspirits, SpiritType.Grainspirits)
@@ -120,7 +120,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -130,7 +130,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.OtherSpiritsProducedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe controllers.spiritsQuestions.routes.GrainsUsedController.onPageLoad(NormalMode)
         }
       }
@@ -141,7 +141,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.GrainsUsedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
               .set(
                 pages.spiritsQuestions.GrainsUsedPage,
                 GrainsUsed(BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), true)
@@ -156,7 +156,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.GrainsUsedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
               .set(
                 pages.spiritsQuestions.GrainsUsedPage,
                 GrainsUsed(BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), BigDecimal(0), false)
@@ -171,7 +171,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.GrainsUsedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -181,7 +181,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.OtherMaltedGrainsPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
         }
       }
@@ -192,7 +192,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.AlcoholUsedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
         }
       }
@@ -203,7 +203,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
               .set(
                 pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
                 EthyleneGasOrMolassesUsed(BigDecimal(0), BigDecimal(0), true)
@@ -217,7 +217,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
               .set(
                 pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
                 EthyleneGasOrMolassesUsed(BigDecimal(0), BigDecimal(0), false)
@@ -231,7 +231,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -240,7 +240,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.OtherIngredientsUsedPage,
             NormalMode,
-            UserAnswers("id")
+            emptyUserAnswers
           ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
         }
       }
@@ -254,7 +254,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         navigator.nextPage(
           UnknownPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
     }

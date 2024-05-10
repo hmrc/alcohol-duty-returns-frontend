@@ -268,4 +268,22 @@ trait ModelGenerators {
     duty = Some(duty),
     pureAlcoholVolume = Some(pureAlcoholVolume)
   )
+
+  def periodKeyGen: Gen[String] = for {
+    year  <- Gen.chooseNum(23, 50)
+    month <- Gen.chooseNum(0, 11)
+  } yield s"${year}A${(month + 'A').toChar}"
+
+  def invalidPeriodKeyGen: Gen[String] = Gen.alphaStr
+    .suchThat(_.nonEmpty)
+    .suchThat(!_.matches(ReturnPeriod.returnPeriodPattern.toString()))
+
+  def returnPeriodGen: Gen[ReturnPeriod] = periodKeyGen.map(ReturnPeriod.fromPeriodKey(_).get)
+
+  implicit val arbitraryReturnPeriod: Arbitrary[ReturnPeriod] = Arbitrary {
+    returnPeriodGen
+  }
+
+  def appaIdGen: Gen[String] = Gen.listOfN(10, Gen.numChar).map(id => s"XMADP${id.mkString}")
+
 }

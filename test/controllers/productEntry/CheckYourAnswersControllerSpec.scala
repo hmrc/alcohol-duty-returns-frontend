@@ -27,7 +27,6 @@ import org.mockito.Mockito.{times, verify, when}
 import org.mockito.MockitoSugar.mock
 import pages.productEntry._
 import play.api.inject.bind
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.productEntry.CheckYourAnswersSummaryListHelper
@@ -62,7 +61,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
   val savedProductEntry = arbitraryProductEntry.arbitrary.sample.value
 
-  val completeProductEntryUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+  val completeProductEntryUserAnswers: UserAnswers = emptyUserAnswers
     .set(CurrentProductEntryPage, currentProductEntry)
     .success
     .value
@@ -392,7 +391,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val incompleteProductEntryUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+      val incompleteProductEntryUserAnswers: UserAnswers = emptyUserAnswers
         .set(CurrentProductEntryPage, currentProductEntry.copy(abv = None))
         .success
         .value
@@ -423,10 +422,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val incompleteProductEntryUserAnswers: UserAnswers = UserAnswers(userAnswersId)
-
       val application =
-        applicationBuilder(userAnswers = Some(incompleteProductEntryUserAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[CacheConnector].toInstance(mockCacheConnector)
           )

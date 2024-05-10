@@ -28,7 +28,6 @@ import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
@@ -48,6 +47,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
   lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(
