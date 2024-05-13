@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package pages
 
-import models.{AlcoholRegime, UserAnswers}
-import play.api.i18n.Messages
-import viewmodels.govuk.all.FluentInstant
+import models.AlcoholRegime
+import play.api.libs.json.JsPath
 
-import java.time.Instant
+object AlcoholRegimePage extends QuestionPage[Seq[AlcoholRegime]] {
 
-object AlcoholDutyTaskListHelper {
-  def getTaskList(regimes: Seq[AlcoholRegime], userAnswers: UserAnswers, validUntil: Instant)(implicit
-    messages: Messages
-  ): AlcoholDutyTaskList =
-    AlcoholDutyTaskList(
-      Seq(ReturnTaskListHelper.returnSection(regimes, userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
-      validUntil.toLocalDateString()
-    )
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "alcoholRegime"
+
 }

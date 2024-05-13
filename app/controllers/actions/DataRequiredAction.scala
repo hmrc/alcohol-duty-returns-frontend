@@ -18,7 +18,9 @@ package controllers.actions
 
 import javax.inject.Inject
 import controllers.routes
+import models.{ReturnPeriod, UserAnswers}
 import models.requests.{DataRequest, OptionalDataRequest}
+import pages.AlcoholRegimePage
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
 
@@ -28,12 +30,33 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
 
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =
     (request.userAnswers, request.returnPeriod) match {
-      case (Some(data), Some(returnPeriod)) =>
-        Future.successful(
-          Right(DataRequest(request.request, request.appaId, request.groupId, request.userId, returnPeriod, data))
-        )
+      case (Some(data), Some(returnPeriod)) => getRegimes(data, returnPeriod, request)
       case (_, _)                           => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
     }
+
+  def getRegimes[A](
+    userAnswers: UserAnswers,
+    returnPeriod: ReturnPeriod,
+    request: OptionalDataRequest[A]
+  ): Future[Either[Result, DataRequest[A]]] =
+    userAnswers.get(AlcoholRegimePage) match {
+      case Some(regimes) =>
+        Future.successful(
+          Right(
+            DataRequest(
+              request.request,
+              request.appaId,
+              request.groupId,
+              request.userId,
+              returnPeriod,
+              regimes,
+              userAnswers
+            )
+          )
+        )
+      case None          => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+    }
+
 }
 
 trait DataRequiredAction extends ActionRefiner[OptionalDataRequest, DataRequest]

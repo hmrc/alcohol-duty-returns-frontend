@@ -17,7 +17,7 @@
 package models.requests
 
 import play.api.mvc.{Request, WrappedRequest}
-import models.{ReturnPeriod, UserAnswers}
+import models.{AlcoholRegime, ReturnPeriod, UserAnswers}
 
 case class OptionalDataRequest[A](
   request: Request[A],
@@ -34,5 +34,6 @@ case class DataRequest[A](
   groupId: String,
   userId: String,
   returnPeriod: ReturnPeriod,
+  regimes: Seq[AlcoholRegime],
   userAnswers: UserAnswers
 ) extends WrappedRequest[A](request)

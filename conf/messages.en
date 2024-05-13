@@ -92,9 +92,12 @@ taskList.section.returns.heading = Alcohol to declare
 taskList.section.returns.needToDeclare.notStarted = Do you need to declare duty?
 taskList.section.returns.needToDeclare.no = You’ve told us you don’t need to declare duty
 taskList.section.returns.needToDeclare.yes = You’ve told us you need to declare duty
-taskList.section.returns.products.notStarted = Tell us about your products
-taskList.section.returns.products.inProgress = Change the products you’ve told us about
-taskList.section.returns.products.completed = Change the products you’ve told us about
+
+taskList.section.returns.Beer = Tell us about your beer
+taskList.section.returns.Cider = Tell us about your cider
+taskList.section.returns.Wine = Tell us about your wine
+taskList.section.returns.Spirits = Tell us about your spirits
+taskList.section.returns.OtherFermentedProduct = Tell us about your other fermented products
 
 taskList.section.dutySuspended.heading = Duty suspended deliveries
 taskList.section.dutySuspended.needToDeclare.notStarted = Tell us about your duty suspended deliveries

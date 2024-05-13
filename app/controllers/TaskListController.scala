@@ -38,7 +38,8 @@ class TaskListController @Inject() (
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.validUntil match {
-      case Some(validUntil) => Ok(view(AlcoholDutyTaskListHelper.getTaskList(request.userAnswers, validUntil)))
+      case Some(validUntil) =>
+        Ok(view(AlcoholDutyTaskListHelper.getTaskList(request.regimes, request.userAnswers, validUntil)))
       case None             =>
         logger.warn("'Valid until' property not defined in User Answers ")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())

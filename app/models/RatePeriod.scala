@@ -16,6 +16,8 @@
 
 package models
 
+import enumeratum.{PlayEnum, PlayJsonEnum}
+import enumeratum.values.{CatsOrderValueEnum, IntEnum, IntEnumEntry}
 import play.api.libs.json._
 
 import java.time.YearMonth
@@ -59,15 +61,26 @@ case class RateTypeResponse(rateType: RateType)
 object RateTypeResponse {
   implicit val format: Format[RateTypeResponse] = Json.format[RateTypeResponse]
 }
-sealed trait AlcoholRegime
 
-object AlcoholRegime {
-  case object Beer extends AlcoholRegime
-  case object Cider extends AlcoholRegime
-  case object Wine extends AlcoholRegime
-  case object Spirits extends AlcoholRegime
-  case object OtherFermentedProduct extends AlcoholRegime
+sealed abstract class AlcoholRegime(val value: Int) extends IntEnumEntry
+object AlcoholRegime extends CatsOrderValueEnum[Int, AlcoholRegime] with IntEnum[AlcoholRegime] {
+  val values = findValues
 
+  case object Beer extends AlcoholRegime(0)
+  case object Cider extends AlcoholRegime(1)
+  case object Wine extends AlcoholRegime(2)
+  case object Spirits extends AlcoholRegime(3)
+  case object OtherFermentedProduct extends AlcoholRegime(4)
+
+//sealed trait AlcoholRegime
+//
+//object AlcoholRegime {
+//  case object Beer extends AlcoholRegime
+//  case object Cider extends AlcoholRegime
+//  case object Wine extends AlcoholRegime
+//  case object Spirits extends AlcoholRegime
+//  case object OtherFermentedProduct extends AlcoholRegime
+//
   implicit val format: Format[AlcoholRegime] = new Format[AlcoholRegime] {
     override def reads(json: JsValue): JsResult[AlcoholRegime] = json.validate[String] match {
       case JsSuccess(value, _) =>
