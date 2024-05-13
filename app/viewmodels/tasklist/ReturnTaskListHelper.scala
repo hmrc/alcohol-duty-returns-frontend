@@ -76,28 +76,28 @@ object ReturnTaskListHelper {
   private def createDeclarationTask(
     getDeclarationState: () => DeclarationState,
     sectionName: String,
-    notStartedUrl: Option[String],
-    inProgressUrl: Option[String],
-    startedOrCompleteUrl: Option[String]
+    notStartedUrl: String,
+    inProgressUrl: String,
+    startedOrCompleteUrl: String
   )(implicit messages: Messages): TaskListItem =
     getDeclarationState() match {
       case NotStarted =>
         TaskListItem(
           title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.notStarted"))),
           status = AlcholDutyTaskListItemStatus.notStarted,
-          href = notStartedUrl
+          href = Some(notStartedUrl)
         )
       case InProgress =>
         TaskListItem(
           title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.inProgress"))),
           status = AlcholDutyTaskListItemStatus.inProgress,
-          href = inProgressUrl
+          href = Some(inProgressUrl)
         )
       case Completed  =>
         TaskListItem(
           title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.completed"))),
           status = AlcholDutyTaskListItemStatus.completed,
-          href = startedOrCompleteUrl
+          href = Some(startedOrCompleteUrl)
         )
     }
 
@@ -112,9 +112,9 @@ object ReturnTaskListHelper {
     createDeclarationTask(
       getDeclarationState,
       "returns.products",
-      Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url),
-      Some(controllers.productEntry.routes.ProductListController.onPageLoad().url),
-      Some(controllers.productEntry.routes.ProductListController.onPageLoad().url)
+      controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url,
+      controllers.productEntry.routes.ProductListController.onPageLoad().url,
+      controllers.productEntry.routes.ProductListController.onPageLoad().url
     )
   }
 
@@ -140,9 +140,9 @@ object ReturnTaskListHelper {
     createDeclarationTask(
       getDeclarationState,
       "dutySuspended",
-      Some(controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url),
-      Some(controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url),
-      Some(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url)
+      controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
+      controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
+      controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
     )
   }
 
@@ -181,9 +181,9 @@ object ReturnTaskListHelper {
     createDeclarationTask(
       getDeclarationState,
       "spirits",
-      Some(controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url),
-      Some(controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url),
-      Some(controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
+      controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
+      controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
+      controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
     )
   }
 

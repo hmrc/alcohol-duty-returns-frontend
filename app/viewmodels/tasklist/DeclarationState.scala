@@ -20,7 +20,7 @@ import enumeratum._
 
 private[tasklist] sealed trait DeclarationState extends EnumEntry
 
-object DeclarationState extends Enum[DeclarationState] {
+private[tasklist] object DeclarationState extends Enum[DeclarationState] {
   val values = findValues
 
   case object NotStarted extends DeclarationState
