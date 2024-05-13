@@ -25,4 +25,7 @@ case object EthyleneGasOrMolassesUsedPage extends QuestionPage[EthyleneGasOrMola
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "ethyleneGasOrMolassesUsed"
+
+  def hasUsedOtherIngredients(ethyleneGasOrMolassesUsed: EthyleneGasOrMolassesUsed): Boolean =
+    ethyleneGasOrMolassesUsed.otherIngredients
 }

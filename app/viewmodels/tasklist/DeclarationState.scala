@@ -16,22 +16,14 @@
 
 package viewmodels.tasklist
 
-import models.UserAnswers
-import play.api.i18n.Messages
-import viewmodels.govuk.all.FluentInstant
+import enumeratum._
 
-import java.time.Instant
+private[tasklist] sealed trait DeclarationState extends EnumEntry
 
-object AlcoholDutyTaskListHelper {
-  def getTaskList(userAnswers: UserAnswers, validUntil: Instant)(implicit
-    messages: Messages
-  ): AlcoholDutyTaskList =
-    AlcoholDutyTaskList(
-      Seq(
-        ReturnTaskListHelper.returnSection(userAnswers),
-        ReturnTaskListHelper.returnDSDSection(userAnswers),
-        ReturnTaskListHelper.returnQSSection(userAnswers)
-      ),
-      validUntil.toLocalDateString()
-    )
+object DeclarationState extends Enum[DeclarationState] {
+  val values = findValues
+
+  case object NotStarted extends DeclarationState
+  case object InProgress extends DeclarationState
+  case object Completed extends DeclarationState
 }

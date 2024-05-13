@@ -19,6 +19,7 @@ package viewmodels.tasklist
 import base.SpecBase
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
@@ -39,7 +40,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
 
       val expectedSections = Seq(
         ReturnTaskListHelper.returnSection(emptyUserAnswers),
-        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
+        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
       )
 
       val result           = AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
@@ -65,9 +67,16 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
         .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
         .success
         .value
+        .set(DeclareQuarterlySpiritsPage, false)
+        .success
+        .value
 
       val expectedSections =
-        Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers))
+        Seq(
+          ReturnTaskListHelper.returnSection(userAnswers),
+          ReturnTaskListHelper.returnDSDSection(userAnswers),
+          ReturnTaskListHelper.returnQSSection(userAnswers)
+        )
 
       val result           = AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil)(messages(application))
       val validUntilString = validUntil.toLocalDateString()
@@ -80,7 +89,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
       result.status mustBe "completed"
       result.sections mustBe expectedSections
       result.totalTask mustBe expectedSections.size
-      result.completedTask mustBe 2
+      result.completedTask mustBe 3
     }
   }
 
