@@ -55,18 +55,18 @@ package models
 //    }
 //}
 
-import enumeratum.{Enum, EnumEntry, PlayEnum}
-
-sealed trait AlcoholRegime extends EnumEntry
-
-object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {
-  val values = findValues
-
-  case object Beer extends AlcoholRegime
-  case object Cider extends AlcoholRegime
-  case object Wine extends AlcoholRegime
-  case object Spirits extends AlcoholRegime
-  case object OtherFermentedProduct extends AlcoholRegime
-
-  override def toString: String = "alcoholRegime"
-}
+//import enumeratum.{Enum, EnumEntry, PlayEnum}
+//
+//sealed trait AlcoholRegime extends EnumEntry
+//
+//object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {
+//  val values = findValues
+//
+//  case object Beer extends AlcoholRegime
+//  case object Cider extends AlcoholRegime
+//  case object Wine extends AlcoholRegime
+//  case object Spirits extends AlcoholRegime
+//  case object OtherFermentedProduct extends AlcoholRegime
+//
+//  override def toString: String = "alcoholRegime"
+//}

@@ -54,31 +54,31 @@ class WhatDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData) { implicit request =>
       // TODO: check if user is authorised for this regime
 
-      // TODO: add call for tax bands
       val taxBandsViewModel = TaxBandsViewModel(bands)
+      // TODO: add call for tax bands
       val preparedForm      = request.userAnswers.get(WhatDoYouNeedToDeclarePage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, taxBandsViewModel, mode))
+      Ok(view(preparedForm, regime, taxBandsViewModel, mode))
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       val taxBandsViewModel = TaxBandsViewModel(bands)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, taxBandsViewModel, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, taxBandsViewModel, mode))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatDoYouNeedToDeclarePage, value))
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(WhatDoYouNeedToDeclarePage, mode, updatedAnswers))
         )
-  }
-  private val bands                            = Seq(
+    }
+  private val bands                                                   = Seq(
     RateBand(
       "311",
       "some band",
@@ -95,6 +95,15 @@ class WhatDoYouNeedToDeclareController @Inject() (
       Set(Beer),
       AlcoholByVolume(3.5),
       AlcoholByVolume(8.4),
+      Some(BigDecimal(10))
+    ),
+    RateBand(
+      "341",
+      "some band",
+      RateType.Core,
+      Set(Beer),
+      AlcoholByVolume(22),
+      AlcoholByVolume(100),
       Some(BigDecimal(10))
     ),
     RateBand(

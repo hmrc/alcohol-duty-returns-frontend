@@ -32,8 +32,7 @@ lazy val root = Project(appName, file("."))
       "viewmodels.govuk.all._"
     ),
     PlayKeys.playDefaultPort := 16000,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*handlers.*;.*components.*;" +
-      ".*Routes.*;.*viewmodels.govuk.*;",
+    ScoverageKeys.coverageExcludedFiles := scoverageExcludedList.mkString(";"),
     ScoverageKeys.coverageMinimumStmtTotal := 78,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
@@ -82,5 +81,19 @@ lazy val it = project
     Test / parallelExecution := false,
     Test / fork := true
   )
+
+lazy val scoverageExcludedList:Seq[String] = Seq(
+  "<empty>",
+  "Reverse.*",
+  ".*handlers.*",
+  ".*components.*",
+  ".*Routes.*",
+  ".*viewmodels.govuk.*",
+  "testOnly.*",
+  ".*testOnly.*",
+  ".*TestOnlyController.*",
+  "testOnlyDoNotUseInAppConf.*"
+)
+
 
 addCommandAlias("runAllChecks", ";clean;compile;scalafmtAll;coverage;test;it/test;scalastyle;coverageReport")

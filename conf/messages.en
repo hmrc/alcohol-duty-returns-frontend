@@ -14,6 +14,8 @@ site.signIn = Sign in
 site.govuk = GOV.UK
 site.unit.litres = litres
 site.unit.tonnes = tonnes
+site.unit.litres.upper = Litres
+site.unit.tonnes.upper = Tonnes
 site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
@@ -90,9 +92,12 @@ taskList.section.returns.heading = Alcohol to declare
 taskList.section.returns.needToDeclare.notStarted = Do you need to declare duty?
 taskList.section.returns.needToDeclare.no = You’ve told us you don’t need to declare duty
 taskList.section.returns.needToDeclare.yes = You’ve told us you need to declare duty
-taskList.section.returns.products.notStarted = Tell us about your products
-taskList.section.returns.products.inProgress = Change the products you’ve told us about
-taskList.section.returns.products.completed = Change the products you’ve told us about
+
+taskList.section.returns.Beer = Tell us about your beer
+taskList.section.returns.Cider = Tell us about your cider
+taskList.section.returns.Wine = Tell us about your wine
+taskList.section.returns.Spirits = Tell us about your spirits
+taskList.section.returns.OtherFermentedProduct = Tell us about your other fermented products
 
 taskList.section.dutySuspended.heading = Duty suspended deliveries
 taskList.section.dutySuspended.needToDeclare.notStarted = Tell us about your duty suspended deliveries
@@ -101,6 +106,18 @@ taskList.section.dutySuspended.needToDeclare.yes = You’ve told us you need to 
 taskList.section.dutySuspended.notStarted = Tell us about your duty suspended deliveries
 taskList.section.dutySuspended.inProgress = Change the deliveries you’ve told us about
 taskList.section.dutySuspended.completed = Change the deliveries you’ve told us about
+
+beforeStartReturn.title = Before you start
+beforeStartReturn.heading = Before you start
+beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty return for {0} to {1}.
+beforeStartReturn.text.guidance2 = You need to tell us if you need to declare duty on any alcoholic products for this period.
+beforeStartReturn.text.guidance3 = You can also use this service to tell us about any:
+beforeStartReturn.text.guidance3.usecase1 = products you under-declared in a past return
+beforeStartReturn.text.guidance3.usecase2 = products you over-declared in a past return
+beforeStartReturn.text.guidance3.usecase3 = spoilt alcohol
+beforeStartReturn.text.guidance3.usecase4 = products you need to claim drawback on
+beforeStartReturn.text.guidance3.usecase5 = repackaged draught products
+beforeStartReturn.text.guidance4 = After you tell us this information, we will calculate how much you owe for this period.
 
 # Beginning of product entry sub-journey
 
@@ -143,8 +160,12 @@ whatDoYouNeedToDeclare.option2 = Option 2
 whatDoYouNeedToDeclare.checkYourAnswersLabel = whatDoYouNeedToDeclare
 whatDoYouNeedToDeclare.error.required = Select whatDoYouNeedToDeclare
 whatDoYouNeedToDeclare.change.hidden = WhatDoYouNeedToDeclare
-
-
+whatDoYouNeedToDeclare.Beer.core.heading = Non-draught beer (standard rate)
+whatDoYouNeedToDeclare.Beer.draught.heading = Draught beer (reduced rate)
+whatDoYouNeedToDeclare.Beer.smallProducerRelief.heading = Non-draught beer eligible for Small Producer Relief
+whatDoYouNeedToDeclare.Beer.draughtAndSmallProducerRelief.heading = Draught beer eligible for Small Producer Relief
+whatDoYouNeedToDeclare.option.abv.interval = Between {0}% and {1}% ABV (tax type code {2})
+whatDoYouNeedToDeclare.option.abv.exceeding.max = Exceeding {0}% ABV (tax type code {1})
 
 
 productEntryGuidance.title = Tell us about your alcohol
@@ -597,6 +618,83 @@ ethyleneGasUsed.change.hidden = Ethylene Gas used
 ethyleneGasUsed.hint = Give your answers in tonnes, to 2 decimal places.
 ethyleneGasUsed.inputSuffix = tonnes
 
+otherIngredientsUsed.title = Tell us about the other ingredients you have used
+otherIngredientsUsed.heading = Tell us about the other ingredients you have used
+otherIngredientsUsed.subheading1 = What other ingredients have you used?
+otherIngredientsUsed.subheading2 = How do you measure this ingredient?
+otherIngredientsUsed.subheading3 = How much of this have you used?
+otherIngredientsUsed.hint = Use the measurement unit above, up to 2 decimal places.
+otherIngredientsUsed.checkYourAnswersLabel = OtherIngredientsUsed
+otherIngredientsUsed.error.otherIngredientsUsedTypes.required = Enter ingredients
+otherIngredientsUsed.error.otherIngredientsUsedTypes.length = Ingredients must be {0} characters or less
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.required = Enter how much of the other ingredients you have used
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.nonNumeric = The quantity of the other ingredients you need to declare must be a number
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.maximumRequired = The quantity of the other ingredients you need to declare must be 999999999.99 or less
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired = The quantity of the other ingredients you need to declare must be {0} or more
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.twoDecimalPlaces = The quantity of the other ingredients you need to declare must be a number to 2 decimal places
+otherIngredientsUsed.otherIngredientsUsed.change.hidden = otherIngredientsUsed
+
+otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
+otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
+otherSpiritsProduced.hint = Tell us what other spirits you have produced.
+otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
+otherSpiritsProduced.error.required = Enter the other spirits you produced
+otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
+
+grainsUsed.title = How much grain have you used this quarter?
+grainsUsed.heading = How much grain have you used this quarter?
+grainsUsed.subheading1 = Malted barley
+grainsUsed.subheading2 = Wheat
+grainsUsed.subheading3 = Maize
+grainsUsed.subheading4 = Rye
+grainsUsed.subheading5 = Unmalted grain
+grainsUsed.subheading6 = Have you used any malted grains that are not barley?
+grainsUsed.hint = Enter weight in tonnes, up to 2 decimal places.
+grainsUsed.checkYourAnswersLabel = GrainsUsed
+grainsUsed.error.maltedBarleyQuantity.required = Enter how much malted barley you have used
+grainsUsed.error.maltedBarleyQuantity.nonNumeric = The weight of malted barley you need to declare must be a number
+grainsUsed.error.maltedBarleyQuantity.maximumRequired = The weight of malted barley you need to declare must be 999999999.99 or less
+grainsUsed.error.maltedBarleyQuantity.minimumRequired = The weight of malted barley you need to declare must be 0.00 or more
+grainsUsed.error.maltedBarleyQuantity.twoDecimalPlaces = The weight of malted barley you need to declare must be a number to 2 decimal places
+grainsUsed.error.wheatQuantity.required = Enter how much wheat you have used
+grainsUsed.error.wheatQuantity.nonNumeric = The weight of wheat you need to declare must be a number
+grainsUsed.error.wheatQuantity.maximumRequired = The weight of wheat you need to declare must be 999999999.99 or less
+grainsUsed.error.wheatQuantity.minimumRequired = The weight of wheat you need to declare must be 0.00 or more
+grainsUsed.error.wheatQuantity.twoDecimalPlaces = The weight of wheat you need to declare must be a number to 2 decimal places
+grainsUsed.error.maizeQuantity.required = Enter how much maize you have used
+grainsUsed.error.maizeQuantity.nonNumeric = The weight of maize you need to declare must be a number
+grainsUsed.error.maizeQuantity.maximumRequired = The weight of maize you need to declare must be 999999999.99 or less
+grainsUsed.error.maizeQuantity.minimumRequired = The weight of maize you need to declare must be 0.00 or more
+grainsUsed.error.maizeQuantity.twoDecimalPlaces = The weight of maize you need to declare must be a number to 2 decimal places
+grainsUsed.error.ryeQuantity.required = Enter how much rye you have used
+grainsUsed.error.ryeQuantity.nonNumeric = The weight of rye you need to declare must be a number
+grainsUsed.error.ryeQuantity.maximumRequired = The weight of rye you need to declare must be 999999999.99 or less
+grainsUsed.error.ryeQuantity.minimumRequired = The weight of rye you need to declare must be 0.00 or more
+grainsUsed.error.ryeQuantity.twoDecimalPlaces = The weight of rye you need to declare must be a number to 2 decimal places
+grainsUsed.error.unmaltedGrainQuantity.required = Enter how much unmalted grain you have used
+grainsUsed.error.unmaltedGrainQuantity.nonNumeric = The weight of unmalted grain you need to declare must be a number
+grainsUsed.error.unmaltedGrainQuantity.maximumRequired = The weight of unmalted grain you need to declare must be 999999999.99 or less
+grainsUsed.error.unmaltedGrainQuantity.minimumRequired = The weight of unmalted grain you need to declare must be 0.00 or more
+grainsUsed.error.unmaltedGrainQuantity.twoDecimalPlaces = The weight of unmalted grain you need to declare must be a number to 2 decimal places
+grainsUsed.error.usedMaltedGrainNotBarley.required = Select whether you have used any malted grains that are not barley
+grainsUsed.change.hidden = grainsUsed
+
+otherMaltedGrains.title = Tell us about the other malted grains you have used
+otherMaltedGrains.heading = Tell us about the other malted grains you have used
+otherMaltedGrains.subheading1 = What other malted grains have you used?
+otherMaltedGrains.subheading2 = How much have you used?
+otherMaltedGrains.hint = Enter weight in tonnes, up to 2 decimal places.
+otherMaltedGrains.checkYourAnswersLabel = OtherMaltedGrains
+otherMaltedGrains.error.otherMaltedGrainsTypes.required = Enter other malted grains
+otherMaltedGrains.error.otherMaltedGrainsTypes.length = Other malted grains must be {0} characters or less
+otherMaltedGrains.otherMaltedGrainsTypes.change.hidden = otherMaltedGrainsTypes
+otherMaltedGrains.error.otherMaltedGrainsQuantity.required = Enter how much other malted grains you have used
+otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric = The weight of other malted grains you need to declare must be a number
+otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired = The weight of other malted grains you need to declare must be 999999999.99 or less
+otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired = The weight of other malted grains you need to declare must be 0.01 or more
+otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces = The weight of other malted grains you need to declare must be a number to 2 decimal places
+otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = otherMaltedGrainsQuantity
+
 alcoholUsed.title = How much alcohol have you used this quarter?
 alcoholUsed.heading = How much alcohol have you used this quarter?
 alcoholUsed.beer = Beer
@@ -630,28 +728,26 @@ alcoholUsed.error.ciderOrPerry.minimumRequired = The volume of Cider or perry yo
 alcoholUsed.error.ciderOrPerry.twoDecimalPlaces = The volume of Cider or perry you need to declare must be a number to 2 decimal places
 alcoholUsed.ciderOrPerry.change.hidden = cider or perry
 
-otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
-otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
-otherSpiritsProduced.hint = Tell us what other spirits you have produced.
-otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
-otherSpiritsProduced.error.required = Enter the other spirits you produced
-otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
-
-otherMaltedGrains.title = Tell us about the other malted grains you have used
-otherMaltedGrains.heading = Tell us about the other malted grains you have used
-otherMaltedGrains.subheading1 = What other malted grains have you used?
-otherMaltedGrains.subheading2 = How much have you used?
-otherMaltedGrains.hint = Enter weight in tonnes, up to 2 decimal places.
-otherMaltedGrains.checkYourAnswersLabel = OtherMaltedGrains
-otherMaltedGrains.error.otherMaltedGrainsTypes.required = Enter other malted grains
-otherMaltedGrains.error.otherMaltedGrainsTypes.length = Other malted grains must be {0} characters or less
-otherMaltedGrains.otherMaltedGrainsTypes.change.hidden = otherMaltedGrainsTypes
-otherMaltedGrains.error.otherMaltedGrainsQuantity.required = Enter how much other malted grains you have used
-otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric = The volume of other malted grains you need to declare must be a number
-otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired = The volume of other malted grains you need to declare must be 999999999.99 or less
-otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired = The volume of other malted grains you need to declare must be {0} or more
-otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces = The volume of other malted grains you need to declare must be a number to 2 decimal places
-otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = otherMaltedGrainsQuantity
+ethyleneGasOrMolassesUsed.title = How much ethylene gas or molasses have you used?
+ethyleneGasOrMolassesUsed.heading = How much ethylene gas or molasses have you used?
+ethyleneGasOrMolassesUsed.ethyleneGas = Ethylene gas
+ethyleneGasOrMolassesUsed.molasses = Molasses
+ethyleneGasOrMolassesUsed.hint = Enter volume in litres, up to 2 decimal places.
+ethyleneGasOrMolassesUsed.question = Have you used any other ingredients?
+ethyleneGasOrMolassesUsed.checkYourAnswersLabel = EthyleneGasOrMolassesUsed
+ethyleneGasOrMolassesUsed.error.ethyleneGas.required = Enter how much ethylene gas you have used
+ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric = The volume of ethylene gas you need to declare must be a number
+ethyleneGasOrMolassesUsed.error.ethyleneGas.twoDecimalPlaces = The volume of ethylene gas you need to declare must be a number to 2 decimal places
+ethyleneGasOrMolassesUsed.error.ethyleneGas.minimumRequired = The volume of ethylene gas you need to declare must be 0.00 or more
+ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired = The volume of ethylene gas you need to declare must be 999999999.99 or less
+ethyleneGasOrMolassesUsed.error.molasses.required = Enter how much molasses you have used
+ethyleneGasOrMolassesUsed.error.molasses.nonNumeric = The volume of molasses you need to declare must be a number
+ethyleneGasOrMolassesUsed.error.molasses.twoDecimalPlaces = The volume of molasses you need to declare must be a number to 2 decimal places
+ethyleneGasOrMolassesUsed.error.molasses.minimumRequired = The volume of molasses you need to declare must be 0.00 or more
+ethyleneGasOrMolassesUsed.error.molasses.maximumRequired = The volume of molasses you need to declare must be 999999999.99 or less
+ethyleneGasOrMolassesUsed.error.required = Select yes to declare any other ingredients you have used
+ethyleneGasOrMolassesUsed.ethyleneGas.change.hidden = ethylene gas
+ethyleneGasOrMolassesUsed.molasses.change.hidden = molasses
 # End of quarterly spirits questions sub-journey
 
 

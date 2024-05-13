@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AdjustmentVolumeFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -26,7 +26,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
@@ -48,7 +47,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
   lazy val adjustmentVolumeRoute = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode).url
 
   val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
-  val userAnswers     = UserAnswers(userAnswersId).set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswers     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
   "AdjustmentVolume Controller" - {
 

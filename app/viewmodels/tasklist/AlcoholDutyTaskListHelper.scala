@@ -16,18 +16,18 @@
 
 package viewmodels.tasklist
 
-import models.UserAnswers
+import models.{AlcoholRegime, UserAnswers}
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
 
 import java.time.Instant
 
 object AlcoholDutyTaskListHelper {
-  def getTaskList(userAnswers: UserAnswers, validUntil: Instant)(implicit
+  def getTaskList(regimes: Seq[AlcoholRegime], userAnswers: UserAnswers, validUntil: Instant)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
-      Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
+      Seq(ReturnTaskListHelper.returnSection(regimes, userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
       validUntil.toLocalDateString()
     )
 }

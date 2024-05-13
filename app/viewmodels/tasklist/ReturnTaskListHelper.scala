@@ -16,7 +16,10 @@
 
 package viewmodels.tasklist
 
-import models.{CheckMode, NormalMode, UserAnswers}
+import cats.kernel.Order
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
+import pages.AlcoholRegimePage
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{ProductEntryListPage, ProductListPage}
 import pages.returns.DeclareAlcoholDutyQuestionPage
@@ -26,7 +29,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
 
 object ReturnTaskListHelper {
-  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
+  def returnSection(regimes: Seq[AlcoholRegime], userAnswers: UserAnswers)(implicit messages: Messages): Section = {
+
     val declareDutyQuestion = userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
       case Some(true)  =>
         Seq(
@@ -34,9 +38,8 @@ object ReturnTaskListHelper {
             title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare.yes"))),
             status = AlcholDutyTaskListItemStatus.completed,
             href = Some(controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
-          ),
-          returnJourneyTaskListItem(userAnswers)
-        )
+          )
+        ) ++ returnJourneyTaskListItems(regimes, userAnswers)
       case Some(false) =>
         Seq(
           TaskListItem(
@@ -111,27 +114,32 @@ object ReturnTaskListHelper {
     )
   }
 
-  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem =
-    (userAnswers.get(ProductListPage), userAnswers.get(ProductEntryListPage)) match {
-      case (Some(false), Some(list)) if list.nonEmpty =>
-        TaskListItem(
-          title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.completed"))),
-          status = AlcholDutyTaskListItemStatus.completed,
-          href = Some(controllers.productEntry.routes.ProductListController.onPageLoad().url)
-        )
-      case (_, Some(list)) if list.nonEmpty           =>
-        TaskListItem(
-          title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.inProgress"))),
-          status = AlcholDutyTaskListItemStatus.inProgress,
-          href = Some(controllers.productEntry.routes.ProductListController.onPageLoad().url)
-        )
-      case (_, _)                                     =>
-        TaskListItem(
-          title = TaskListItemTitle(content = Text(messages("taskList.section.returns.products.notStarted"))),
-          status = AlcholDutyTaskListItemStatus.notStarted,
-          href = Some(controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url)
-        )
-    }
+  private val alcoholRegimeViewOrder: Seq[AlcoholRegime] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
+
+  private def returnJourneyTaskListItems(regimes: Seq[AlcoholRegime], userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Seq[TaskListItem] =
+    for (regime <- regimes.sortBy(alcoholRegimeViewOrder.indexOf))
+      yield (userAnswers.get(ProductListPage), userAnswers.get(ProductEntryListPage)) match {
+        case (Some(false), Some(list)) if list.nonEmpty =>
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+          )
+        case (_, Some(list)) if list.nonEmpty           =>
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+            status = AlcholDutyTaskListItemStatus.inProgress,
+            href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+          )
+        case (_, _)                                     =>
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+            status = AlcholDutyTaskListItemStatus.notStarted,
+            href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+          )
+      }
 
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val beer           = userAnswers.get(DutySuspendedBeerPage).isDefined

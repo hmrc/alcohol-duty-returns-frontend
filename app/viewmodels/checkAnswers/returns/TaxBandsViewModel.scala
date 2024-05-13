@@ -16,8 +16,11 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.RateBand
+import models.{AlcoholByVolume, RateBand, RateType}
+import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import viewmodels.govuk.all.CheckboxGroupedItemViewModel
 
 case class TaxBandsViewModel(
   core: Seq[CheckboxItem],
@@ -27,13 +30,45 @@ case class TaxBandsViewModel(
 )
 
 object TaxBandsViewModel {
-  def apply(rateBands: Seq[RateBand]): TaxBandsViewModel = {
-    rateBands.groupBy(_.alcoholRegime)
-    //             CheckboxesViewModel(
-    //                 form   = form,
-    //                name   = "value",
-    //                legend = LegendViewModel(messages("whatDoYouNeedToDeclare.beer.heading")).withSize(LegendSize.Small),
-    //                items  = WhatDoYouNeedToDeclare.checkboxItems
-    //            )
+  def apply(rateBands: Seq[RateBand])(implicit messages: Messages): TaxBandsViewModel = {
+    val rateBandsByType = rateBands
+      .groupBy(_.rateType)
+      .view
+      .mapValues(rateBands =>
+        rateBands.map(rateBand =>
+          CheckboxGroupedItemViewModel(
+            content = rateBandContent(rateBand),
+            fieldId = "",
+            groupId = rateBand.rateType.toString,
+            value = rateBand.taxType
+          )
+        )
+      )
+      .toMap
+
+    TaxBandsViewModel(
+      core = rateBandsByType.getOrElse(RateType.Core, Seq.empty),
+      draught = rateBandsByType.getOrElse(RateType.DraughtRelief, Seq.empty),
+      smallProducerRelief = rateBandsByType.getOrElse(RateType.SmallProducerRelief, Seq.empty),
+      draughtAndSmallProducerRelief = rateBandsByType.getOrElse(RateType.DraughtAndSmallProducerRelief, Seq.empty)
+    )
   }
+
+  private def rateBandContent(rateBand: RateBand)(implicit messages: Messages): Text = Text(
+    rateBand.maxABV match {
+      case AlcoholByVolume.MAX =>
+        messages(
+          s"whatDoYouNeedToDeclare.option.abv.exceeding.max",
+          rateBand.minABV.value,
+          rateBand.taxType
+        )
+      case _                   =>
+        messages(
+          s"whatDoYouNeedToDeclare.option.abv.interval",
+          rateBand.minABV.value,
+          rateBand.maxABV.value,
+          rateBand.taxType
+        )
+    }
+  )
 }

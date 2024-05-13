@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 class IndexControllerSpec extends SpecBase {

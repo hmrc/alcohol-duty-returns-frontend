@@ -28,7 +28,6 @@ import pages.dutySuspended.DutySuspendedBeerPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
@@ -49,6 +48,8 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
   val validPureAlcoholInBeer = 47.5
 
   val userAnswers = UserAnswers(
+    returnId,
+    groupId,
     userAnswersId,
     Json.obj(
       DutySuspendedBeerPage.toString -> Json.obj(

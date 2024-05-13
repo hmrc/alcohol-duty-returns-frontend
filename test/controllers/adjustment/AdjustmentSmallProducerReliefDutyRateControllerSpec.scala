@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AdjustmentSmallProducerReliefDutyRateFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -26,7 +26,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
@@ -46,7 +45,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase with 
   val validAnswer                                     = BigDecimal(0.00)
   val spoilt                                          = Spoilt.toString
   val adjustmentEntry                                 = AdjustmentEntry(adjustmentType = Some(Spoilt))
-  val userAnswers                                     = UserAnswers(userAnswersId).set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswers                                     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
   lazy val adjustmentSmallProducerReliefDutyRateRoute =
     controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode).url
 

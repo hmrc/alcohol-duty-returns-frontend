@@ -11,7 +11,11 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-conditional-form-mapping-play-30"  % "2.0.0",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-30"     % bootstrapVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"             % hmrcMongoVersion,
-    "com.beachape"      %% "enumeratum-play"                % "1.8.0"
+    "org.typelevel"     %% "cats-core"                      % "2.10.0",
+    "com.beachape"      %% "enumeratum"                     % "1.7.3",
+    "com.beachape"      %% "enumeratum-play"                % "1.8.0",
+    "com.beachape"      %% "enumeratum-cats"                % "1.7.3"
+
   )
 
   val test = Seq(
@@ -19,6 +23,8 @@ object AppDependencies {
     "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-30" % hmrcMongoVersion,
     "org.scalatest"           %% "scalatest"               % "3.2.18",
     "org.scalatestplus"       %% "scalacheck-1-15"         % "3.2.11.0",
+    "org.mockito"             %% "mockito-scala-cats"      % "1.17.30",
+    "com.beachape"            %% "enumeratum-scalacheck"   % "1.7.3",
     "org.scalatestplus"       %% "mockito-3-4"             % "3.2.10.0",
     "org.mockito"             %% "mockito-scala"           % "1.17.30",
     "org.scalacheck"          %% "scalacheck"              % "1.17.0",

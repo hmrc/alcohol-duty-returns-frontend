@@ -70,6 +70,20 @@ trait CheckboxFluency {
       checkboxes copy (hint = Some(hint))
   }
 
+  object CheckboxGroupedItemViewModel {
+    def apply(
+      content: Content,
+      fieldId: String,
+      groupId: String,
+      value: String
+    ): CheckboxItem =
+      CheckboxItem(
+        content = content,
+        id = Some(s"${fieldId}_${groupId}_$value"),
+        value = value
+      )
+  }
+
   object CheckboxItemViewModel {
 
     def apply(

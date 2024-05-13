@@ -35,7 +35,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
-          UserAnswers("id").set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
+          emptyUserAnswers.set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
         ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
       }
 
@@ -44,7 +44,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
-          UserAnswers("id").set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
+          emptyUserAnswers.set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, false).success.value
         ) mustBe routes.TaskListController.onPageLoad
       }
 
@@ -53,7 +53,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedBeerPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)
       }
 
@@ -62,7 +62,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedCiderPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)
       }
 
@@ -71,7 +71,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedWinePage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)
       }
 
@@ -80,7 +80,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedSpiritsPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
       }
       "must go from the duty suspended deliveries other fermented products page to CYA page" in {
@@ -88,7 +88,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedOtherFermentedPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from the Declare duty suspended deliveries question page to journey recovery page if the answer there is not an answer" in {
@@ -96,7 +96,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad(None)
       }
 
@@ -105,7 +105,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
       }
 
@@ -114,7 +114,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedDeliveriesPage,
           NormalMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
       }
     }
@@ -127,7 +127,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           UnknownPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
 
@@ -135,7 +135,7 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareDutySuspendedDeliveriesQuestionPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
             .set(
               DeclareDutySuspendedDeliveriesQuestionPage,
               false
@@ -148,42 +148,42 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage,
           CheckMode,
-          UserAnswers("id").set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
+          emptyUserAnswers.set(pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage, true).success.value
         ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad()
       }
       "must go from DSD Beer page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedBeerPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from DSD Cider page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedCiderPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from DSD Wine page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedWinePage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from DSD Spirits page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedSpiritsPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
       "must go from DSD Other Fermented products page to CYA page in Check Mode" in {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedOtherFermentedPage,
           CheckMode,
-          UserAnswers("id")
+          emptyUserAnswers
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
     }

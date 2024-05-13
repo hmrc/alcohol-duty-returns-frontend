@@ -20,10 +20,12 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.routes
 import models.requests.IdentifierRequest
+import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -39,16 +41,19 @@ class AuthenticatedIdentifierAction @Inject() (
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
-    with AuthorisedFunctions {
+    with AuthorisedFunctions
+    with Logging {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(Retrievals.internalId) {
-      _.map { internalId =>
-        block(IdentifierRequest(request, internalId))
-      }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+    authorised().retrieve(internalId and groupIdentifier and allEnrolments) {
+      case optInternalId ~ optGroupId ~ enrolments =>
+        val internalId: String = getOrElseFailWithUnauthorised(optInternalId, "Unable to retrieve internalId")
+        val groupId: String    = getOrElseFailWithUnauthorised(optGroupId, "Unable to retrieve groupIdentifier")
+        val appaId             = getAppaId(enrolments)
+        block(IdentifierRequest(request, appaId, groupId, internalId))
     } recover {
       case _: NoActiveSession        =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
@@ -56,22 +61,21 @@ class AuthenticatedIdentifierAction @Inject() (
         Redirect(routes.UnauthorisedController.onPageLoad)
     }
   }
-}
 
-class SessionIdentifierAction @Inject() (
-  val parser: BodyParsers.Default
-)(implicit val executionContext: ExecutionContext)
-    extends IdentifierAction {
-
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
-
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-    hc.sessionId match {
-      case Some(session) =>
-        block(IdentifierRequest(request, session.value))
-      case None          =>
-        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-    }
+  private def getAppaId(enrolments: Enrolments): String = {
+    val adrEnrolments: Enrolment  = getOrElseFailWithUnauthorised(
+      enrolments.enrolments.find(_.key == config.enrolmentServiceName),
+      s"Unable to retrieve enrolment: ${config.enrolmentServiceName}"
+    )
+    val appaIdOpt: Option[String] =
+      adrEnrolments.getIdentifier(config.enrolmentIdentifierKey).map(_.value)
+    getOrElseFailWithUnauthorised(appaIdOpt, "Unable to retrieve APPAID from enrolments")
   }
+
+  def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
+    o.getOrElse {
+      logger.warn(s"Identifier Action failed with error: $failureMessage")
+      throw new UnauthorizedException(failureMessage)
+    }
+
 }

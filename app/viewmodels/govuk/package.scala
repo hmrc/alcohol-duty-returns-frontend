@@ -32,6 +32,7 @@ package object govuk {
       with LabelFluency
       with YearMonthDateFluency
       with RadiosFluency
+      with SelectFluency
       with SummaryListFluency
       with TagFluency
       with TextareaFluency
