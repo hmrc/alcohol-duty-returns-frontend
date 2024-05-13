@@ -66,18 +66,15 @@
             messages("declareSpiritsTotal.para2.list2")
             ))
 
-        @subheading(text = messages("declareSpiritsTotal.subheading2"), classes = "govuk-heading-m")
-
         @govukInput(
         InputViewModel(
-            field = form("declare-spirits-total-input"),
-            label = LabelViewModel(messages("declareSpiritsTotal.heading")).asVisuallyHidden(),
+                field = form("declare-spirits-total-input"),
+                label = LabelViewModel(messages("declareSpiritsTotal.subheading2")).withCssClass("govuk-label--m"),
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("declareSpiritsTotal.inputSuffix")))
             .withHint(Hint(content =  messages("declareSpiritsTotal.hint")))
-
         )
 
         @govukButton(
