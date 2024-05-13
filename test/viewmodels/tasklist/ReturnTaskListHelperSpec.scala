@@ -18,7 +18,7 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import generators.ModelGenerators
-import models.{CheckMode, NormalMode, UserAnswers}
+import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{ProductEntryListPage, ProductListPage}
@@ -35,7 +35,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
   "returnSection" - {
 
     "when the user answers object is empty, must return the not started section" in {
-      val result = ReturnTaskListHelper.returnSection(emptyUserAnswers)
+      val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, emptyUserAnswers)
 
       result.completedTask                     shouldBe false
       result.taskList.items.size               shouldBe 1
@@ -54,7 +54,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
         .value
-      val result      = ReturnTaskListHelper.returnSection(userAnswers)
+      val result      = ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers)
 
       result.completedTask                     shouldBe true
       result.taskList.items.size               shouldBe 1
@@ -75,7 +75,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .value
 
       "must have a link to ProductEntryGuidanceController if the user has not answer any other question" in {
-        val result = ReturnTaskListHelper.returnSection(declaredAlcoholDutyUserAnswer)
+        val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, declaredAlcoholDutyUserAnswer)
 
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe 2
@@ -105,7 +105,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .set(ProductListPage, true)
           .success
           .value
-        val result      = ReturnTaskListHelper.returnSection(userAnswers)
+        val result      = ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers)
 
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe 2
@@ -136,7 +136,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .set(ProductListPage, true)
           .success
           .value
-        val result       = ReturnTaskListHelper.returnSection(userAnswers)
+        val result       = ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers)
 
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe 2
@@ -167,7 +167,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .set(ProductListPage, false)
           .success
           .value
-        val result       = ReturnTaskListHelper.returnSection(userAnswers)
+        val result       = ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers)
 
         result.completedTask                     shouldBe true
         result.taskList.items.size               shouldBe 2

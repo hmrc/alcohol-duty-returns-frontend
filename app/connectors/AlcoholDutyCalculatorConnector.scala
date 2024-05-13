@@ -58,6 +58,8 @@ class AlcoholDutyCalculatorConnector @Inject() (
     httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
   }
 
+  def rateBandByRegime(ratePeriod: RatePeriod, regime: AlcoholRegime): Future[Seq[RateBand]] = ???
+
   def rateBand(taxType: String, ratePeriod: YearMonth)(implicit
     hc: HeaderCarrier
   ): Future[Option[RateBand]] = {

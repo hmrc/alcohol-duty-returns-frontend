@@ -18,7 +18,7 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.WhatDoYouNeedToDeclareFormProvider
-import models.NormalMode
+import models.{AlcoholByVolume, NormalMode, RateBand, RateType}
 import models.returns.WhatDoYouNeedToDeclare
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -28,8 +28,10 @@ import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import models.AlcoholRegime.Beer
 import uk.gov.hmrc.http.HttpResponse
+import viewmodels.checkAnswers.returns.TaxBandsViewModel
 import views.html.returns.WhatDoYouNeedToDeclareView
 
 import scala.concurrent.Future
@@ -38,16 +40,44 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val whatDoYouNeedToDeclareRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode).url
+  lazy val whatDoYouNeedToDeclareRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Beer).url
 
   val formProvider = new WhatDoYouNeedToDeclareFormProvider()
   val form         = formProvider()
+  val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+
+  private val rateBandList = Seq(
+    RateBand(
+      "311",
+      "some band",
+      RateType.Core,
+      Set(Beer),
+      AlcoholByVolume(1.2),
+      AlcoholByVolume(3.4),
+      Some(BigDecimal(10))
+    ),
+    RateBand(
+      "321",
+      "some band",
+      RateType.Core,
+      Set(Beer),
+      AlcoholByVolume(3.5),
+      AlcoholByVolume(8.4),
+      Some(BigDecimal(10))
+    ))
+
+  when(mockAlcoholDutyCalculatorConnector.rateBandByRegime(any(), any())) thenReturn Future.successful(
+    rateBandList
+  )
 
   "WhatDoYouNeedToDeclare Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))
+        .build()
+
 
       running(application) {
         val request = FakeRequest(GET, whatDoYouNeedToDeclareRoute)
@@ -57,8 +87,8 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
 
         status(result) mustEqual OK
-
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
+        contentAsString(result) mustEqual view(form, Beer, taxBandsViewModel, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -77,7 +107,8 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(WhatDoYouNeedToDeclare.values.toSet), NormalMode)(
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
+        contentAsString(result) mustEqual view(form.fill(WhatDoYouNeedToDeclare.values.toSet), Beer, taxBandsViewModel, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -126,7 +157,8 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
+        contentAsString(result) mustEqual view(boundForm, Beer, taxBandsViewModel, NormalMode)(request, messages(application)).toString
       }
     }
 

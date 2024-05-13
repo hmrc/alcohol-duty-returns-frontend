@@ -37,10 +37,10 @@ import scala.concurrent.{ExecutionContext, Future}
 class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with ModelGenerators {
 
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  protected implicit val hc: HeaderCarrier    = HeaderCarrier()
-  val mockConfig: FrontendAppConfig           = mock[FrontendAppConfig]
-  val connector                               = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val rateBand                                = RateBand(
+  protected implicit val hc: HeaderCarrier = HeaderCarrier()
+  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  val connector = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClient])
+  val rateBand = RateBand(
     "310",
     "some band",
     RateType.DraughtRelief,
@@ -49,8 +49,9 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
     AlcoholByVolume(5.8),
     Some(BigDecimal(10.99))
   )
-  val rateBandList: Seq[RateBand]             = Seq(rateBand)
-  val rateType                                = RateTypeResponse(DraughtRelief)
+  val rateBandList: Seq[RateBand] = Seq(rateBand)
+  val rateType = RateTypeResponse(DraughtRelief)
+  val ratePeriod = returnPeriodGen.sample.get
 
   "rates" - {
     "successfully retrieve rates" in {
@@ -171,6 +172,31 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
             any()
           )(any(), any(), any())
       }
+    }
+
+    "rateBandByRegime" - {
+      "successfully retrieve rate band list given a regime" in {
+        when {
+          connector.httpClient.GET[Seq[RateBand]](any(), any(), any())(any(), any(), any())
+        } thenReturn Future.successful(rateBandList)
+
+        whenReady(connector.rateBandByRegime(ratePeriod = ratePeriod, Beer))) {
+          result =>
+            result mustBe rateBandList
+            verify(connector.httpClient, atLeastOnce)
+              .GET[Seq[RateBand]](
+                any(),
+                ArgumentMatchers.eq(
+                  Seq(
+                    ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
+                    ("alcoholRegimes", Json.toJson(Beer).toString())
+                  )
+                ),
+                any()
+              )(any(), any(), any())
+        }
+      }
+
     }
   }
 }

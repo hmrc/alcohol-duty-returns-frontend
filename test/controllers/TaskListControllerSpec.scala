@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import models.{ReturnId, UserAnswers}
+import models.{AlcoholRegime, ReturnId, UserAnswers}
 import play.api.test.Helpers._
 import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView
@@ -51,7 +51,9 @@ class TaskListControllerSpec extends SpecBase {
 
         val view             = application.injector.instanceOf[TaskListView]
         val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
+          AlcoholDutyTaskListHelper.getTaskList(AlcoholRegime.values, emptyUserAnswers, validUntil)(
+            messages(application)
+          )
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(expectedTaskList)(request, messages(application)).toString
