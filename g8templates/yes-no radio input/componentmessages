@@ -1,0 +1,1 @@
+echo "$className;format="decap"$.error.$field$pre_index$Name$.required = $requirederror$pre_index$$" >> ../conf/messages.en

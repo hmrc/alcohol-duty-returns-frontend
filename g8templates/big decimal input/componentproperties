@@ -1,0 +1,11 @@
+field$pre_index$Name = field$pre_index$
+field$pre_index$MaxDp = 2
+field$pre_index$Min = 0
+field$pre_index$Max = 999999999.99
+subheading$pre_index$ = subheading$pre_index$
+requirederror$pre_index$ = This is required
+numbererror$pre_index$ = This must be a number
+maxerror$pre_index$ = This must be less than the maximum
+minerror$pre_index$ = This must be more than the minimum
+maxdperror$pre_index$ = Max dp must be no more than max dp
+hint$pre_index$ = This is a hint

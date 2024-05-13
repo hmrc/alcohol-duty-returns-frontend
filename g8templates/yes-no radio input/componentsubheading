@@ -1,0 +1,1 @@
+echo "$className;format="decap"$.subheading$pre_index$ = $pre_subheading$" >> ../conf/messages.en

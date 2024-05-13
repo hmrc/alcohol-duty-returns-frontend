@@ -1,0 +1,6 @@
+field$pre_index$Name = field$pre_index$
+field$pre_index$Length = 150
+subheading$pre_index$ = subheading$pre_index$
+requirederror$pre_index$ = This is required
+lengtherror$pre_index$ = This must be {0} characters or less
+hint$pre_index$ = This is a hint

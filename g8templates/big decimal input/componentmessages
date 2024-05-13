@@ -1,0 +1,6 @@
+echo "$className;format="decap"$.error.$field$pre_index$Name$.required = $requirederror$pre_index$$" >> ../conf/messages.en
+echo "$className;format="decap"$.error.$field$pre_index$Name$.nonNumeric = $numbererror$pre_index$$" >> ../conf/messages.en
+echo "$className;format="decap"$.error.$field$pre_index$Name$.maximumRequired = $maxerror$pre_index$$" >> ../conf/messages.en
+echo "$className;format="decap"$.error.$field$pre_index$Name$.minimumRequired = $minerror$pre_index$$" >> ../conf/messages.en
+echo "$className;format="decap"$.error.$field$pre_index$Name$.twoDecimalPlaces = $maxdperror$pre_index$$" >> ../conf/messages.en
+echo "$className;format="decap"$.hint$pre_index$ = $hint$pre_index$$" >> ../conf/messages.en

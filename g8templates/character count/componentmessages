@@ -1,0 +1,3 @@
+echo "$className;format="decap"$.error.$field$pre_index$Name$.required = $requirederror$pre_index$$" >> ../conf/messages.en
+echo "$className;format="decap"$.error.$field$pre_index$Name$.length = $lengtherror$pre_index$$" >> ../conf/messages.en
+echo "$className;format="decap"$.hint$pre_index$ = $hint$pre_index$$" >> ../conf/messages.en
