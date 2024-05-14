@@ -19,7 +19,7 @@ package navigation
 import controllers._
 import models._
 import pages._
-import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, GrainsUsedPage, SpiritTypePage}
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, SpiritTypePage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -41,14 +41,15 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
       _ => controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
     case pages.spiritsQuestions.AlcoholUsedPage               =>
       _ => controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage =>
-      _ => controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
+    case pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage => ethyleneGasOrMolassesRoute
+    case pages.spiritsQuestions.OtherIngredientsUsedPage      =>
+      _ => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
     case _                                                    => _ => routes.IndexController.onPageLoad
 
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad()
+    _ => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
   }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
@@ -74,5 +75,12 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
       case Some(_)                                                                 =>
         controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
       case _                                                                       => routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  private def ethyleneGasOrMolassesRoute(userAnswers: UserAnswers): Call =
+    userAnswers.get(EthyleneGasOrMolassesUsedPage).map(_.otherIngredients) match {
+      case Some(true)  => controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
+      case Some(false) => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      case _           => routes.JourneyRecoveryController.onPageLoad()
     }
 }

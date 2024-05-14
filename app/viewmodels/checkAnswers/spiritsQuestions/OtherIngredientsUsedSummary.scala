@@ -20,8 +20,6 @@ import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -30,13 +28,11 @@ object OtherIngredientsUsedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(OtherIngredientsUsedPage).map { answer =>
-      val value = HtmlFormat.escape(answer.otherIngredientsUsedTypes).toString + "<br/>" + HtmlFormat
-        .escape(messages(s"site.unit.${answer.otherIngredientsUsedUnit.entryName.toLowerCase}"))
-        .toString + "<br/>" + HtmlFormat.escape(answer.otherIngredientsUsedQuantity.toString()).toString
-
       SummaryListRowViewModel(
-        key = "otherIngredientsUsed.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = answer.otherIngredientsUsedTypes,
+        value = ValueViewModel(
+          s" ${answer.otherIngredientsUsedQuantity.toString()} ${answer.otherIngredientsUsedUnit.toString.toLowerCase}"
+        ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.OtherIngredientsUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("otherIngredientsUsed.change.hidden"))

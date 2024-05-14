@@ -18,6 +18,7 @@ package controllers.spiritsQuestions
 
 import controllers.actions._
 import forms.spiritsQuestions.SpiritTypeFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.QuarterlySpiritsQuestionsNavigator

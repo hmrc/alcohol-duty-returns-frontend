@@ -20,28 +20,54 @@ import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
 import pages.spiritsQuestions.AlcoholUsedPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AlcoholUsedSummary {
-
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def beerRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(AlcoholUsedPage).map { answer =>
-      val value = HtmlFormat.escape(answer.beer.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.wine.toString())
-        .toString + "<br/>" + HtmlFormat.escape(answer.madeWine.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.ciderOrPerry.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "alcoholUsed.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "alcoholUsed.beer.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.beer.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("alcoholUsed.change.hidden"))
+            .withVisuallyHiddenText(messages("alcoholUsed.beer.change.hidden"))
+        )
+      )
+    }
+  def wineRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AlcoholUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "alcoholUsed.wine.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.wine.toString} ${messages("site.unit.litres")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("alcoholUsed.wine.change.hidden"))
+        )
+      )
+    }
+
+  def madeWineRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AlcoholUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "alcoholUsed.madeWine.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.madeWine.toString} ${messages("site.unit.litres")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("alcoholUsed.madeWine.change.hidden"))
+        )
+      )
+    }
+
+  def ciderOrPerryRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AlcoholUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "alcoholUsed.ciderOrPerry.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.ciderOrPerry.toString} ${messages("site.unit.litres")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("alcoholUsed.ciderOrPerry.change.hidden"))
         )
       )
     }

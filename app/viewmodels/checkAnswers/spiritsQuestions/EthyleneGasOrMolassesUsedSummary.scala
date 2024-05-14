@@ -20,28 +20,31 @@ import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
 import pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object EthyleneGasOrMolassesUsedSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def ethyleneGasUsedRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(EthyleneGasOrMolassesUsedPage).map { answer =>
-      val value = HtmlFormat.escape(answer.ethyleneGas.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.molasses.toString())
-        .toString + "<br/>" + HtmlFormat
-        .escape(answer.otherIngredients.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "ethyleneGasOrMolassesUsed.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "ethyleneGasOrMolassesUsed.ethyleneGas.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.ethyleneGas.toString} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.EthyleneGasOrMolassesUsedController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.change.hidden"))
+            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.ethyleneGas.change.hidden"))
+        )
+      )
+    }
+  def molassesUsedRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow]    =
+    answers.get(EthyleneGasOrMolassesUsedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "ethyleneGasOrMolassesUsed.molasses.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.molasses.toString} ${messages("site.unit.tonnes")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.EthyleneGasOrMolassesUsedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.molasses.change.hidden"))
         )
       )
     }
