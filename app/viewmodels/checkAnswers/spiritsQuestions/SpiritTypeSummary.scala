@@ -38,8 +38,8 @@ object SpiritTypeSummary {
       else {
         val value = ValueViewModel(
           HtmlContent(
-            rowValue
-              .mkString(",<br>")
+            s"""<span aria-label=${messages("spiritType.checkYourAnswersLabel")}">${rowValue
+              .mkString(",<br>")}</span>"""
           )
         )
 
