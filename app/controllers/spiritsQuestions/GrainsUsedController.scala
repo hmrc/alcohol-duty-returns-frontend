@@ -20,12 +20,13 @@ import controllers.actions._
 import forms.spiritsQuestions.GrainsUsedFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.GrainsUsedPage
+import pages.spiritsQuestions.{GrainsUsedPage, OtherMaltedGrainsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import models.spiritsQuestions.GrainsUsed
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.GrainsUsedView
 
@@ -62,11 +63,23 @@ class GrainsUsedController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val (intermediateAnswers, hasChanged) = handleOtherMaltedGrainsChange(request.userAnswers, value)
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(GrainsUsedPage, value))
+              updatedAnswers <- Future.fromTry(intermediateAnswers.set(GrainsUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(GrainsUsedPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(GrainsUsedPage, mode, updatedAnswers, hasChanged))
+          }
         )
   }
+
+  def handleOtherMaltedGrainsChange(answers: UserAnswers, currentValue: GrainsUsed): (UserAnswers, Boolean) =
+    (
+      answers.get(GrainsUsedPage).exists(_.usedMaltedGrainNotBarley),
+      currentValue.usedMaltedGrainNotBarley
+    ) match {
+      case (true, false) => (answers.remove(OtherMaltedGrainsPage).get, false)
+      case (false, true) => (answers, true)
+      case (_, _)        => (answers, false)
+    }
 }

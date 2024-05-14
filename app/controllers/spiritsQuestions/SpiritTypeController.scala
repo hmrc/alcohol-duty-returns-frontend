@@ -20,9 +20,9 @@ import controllers.actions._
 import forms.spiritsQuestions.SpiritTypeFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, SpiritType, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.SpiritTypePage
+import pages.spiritsQuestions.{OtherSpiritsProducedPage, SpiritTypePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
@@ -62,11 +62,23 @@ class SpiritTypeController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val (intermediateAnswers, hasChanged) = handleOtherSpiritsChange(request.userAnswers, value)
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(SpiritTypePage, value))
+              updatedAnswers <- Future.fromTry(intermediateAnswers.set(SpiritTypePage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, hasChanged))
+          }
         )
   }
+
+  def handleOtherSpiritsChange(answers: UserAnswers, currentValue: Set[SpiritType]): (UserAnswers, Boolean) = {
+    val existingValue = answers.get(SpiritTypePage).getOrElse(Set.empty[SpiritType])
+    (SpiritTypePage.hasMadeOtherSpirits(existingValue), SpiritTypePage.hasMadeOtherSpirits(currentValue)) match {
+      case (true, false) => (answers.remove(OtherSpiritsProducedPage).get, false)
+      case (false, true) => (answers, true)
+      case (_, _)        => (answers, false)
+    }
+  }
+
 }

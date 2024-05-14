@@ -18,13 +18,15 @@ package controllers.spiritsQuestions
 
 import controllers.actions._
 import forms.spiritsQuestions.EthyleneGasOrMolassesUsedFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage
+import pages.spiritsQuestions.{EthyleneGasOrMolassesUsedPage, OtherIngredientsUsedPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.EthyleneGasOrMolassesUsedView
 
@@ -61,11 +63,26 @@ class EthyleneGasOrMolassesUsedController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val (intermediateAnswers, hasChanged) = handleOtherIngredientsChange(request.userAnswers, value)
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(EthyleneGasOrMolassesUsedPage, value))
+              updatedAnswers <- Future.fromTry(intermediateAnswers.set(EthyleneGasOrMolassesUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers, hasChanged))
+          }
         )
   }
+
+  def handleOtherIngredientsChange(
+    answers: UserAnswers,
+    currentValue: EthyleneGasOrMolassesUsed
+  ): (UserAnswers, Boolean) =
+    (
+      answers.get(EthyleneGasOrMolassesUsedPage).exists(_.otherIngredients),
+      currentValue.otherIngredients
+    ) match {
+      case (true, false) => (answers.remove(OtherIngredientsUsedPage).get, false)
+      case (false, true) => (answers, true)
+      case (_, _)        => (answers, false)
+    }
 }
