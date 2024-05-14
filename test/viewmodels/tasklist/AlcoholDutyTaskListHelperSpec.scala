@@ -17,6 +17,7 @@
 package viewmodels.tasklist
 
 import base.SpecBase
+import helpers.TestData._
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.productEntry.DeclareAlcoholDutyQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
@@ -44,7 +45,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
         ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
       )
 
-      val result           = AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
+      val result           =
+        AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)(messages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -53,7 +55,6 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
       )
 
       result.status mustBe "incomplete"
-      result.sections mustBe expectedSections
       result.totalTask mustBe expectedSections.size
       result.completedTask mustBe 0
     }
@@ -78,7 +79,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
           ReturnTaskListHelper.returnQSSection(userAnswers)
         )
 
-      val result           = AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil)(messages(application))
+      val result           = AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil, periodKeyMar)(messages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -87,10 +88,46 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
       )
 
       result.status mustBe "completed"
-      result.sections mustBe expectedSections
       result.totalTask mustBe expectedSections.size
       result.completedTask mustBe 3
     }
-  }
 
+    "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in {
+      val expectedSectionsWithQS = Seq(
+        ReturnTaskListHelper.returnSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
+      )
+
+      val expectedSectionsWithoutQS = Seq(
+        ReturnTaskListHelper.returnSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
+      )
+
+      for (periodKey <- Seq(periodKeyMar, periodKeyJun, periodKeySep, periodKeyDec)) {
+        val result =
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
+
+        result.sections mustBe expectedSectionsWithQS
+      }
+
+      for (
+        periodKey <- Seq(
+                       periodKeyJan,
+                       periodKeyFeb,
+                       periodKeyApr,
+                       periodKeyMay,
+                       periodKeyJul,
+                       periodKeyAug,
+                       periodKeyOct,
+                       periodKeyNov
+                     )
+      ) {
+        val result =
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
+
+        result.sections mustBe expectedSectionsWithoutQS
+      }
+    }
+  }
 }
