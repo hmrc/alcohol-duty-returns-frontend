@@ -42,8 +42,8 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val whatDoYouNeedToDeclareRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Beer).url
 
-  val formProvider = new WhatDoYouNeedToDeclareFormProvider()
-  val form         = formProvider()
+  val formProvider                       = new WhatDoYouNeedToDeclareFormProvider()
+  val form                               = formProvider()
   val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
 
   private val rateBandList = Seq(
@@ -64,7 +64,8 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
       AlcoholByVolume(3.5),
       AlcoholByVolume(8.4),
       Some(BigDecimal(10))
-    ))
+    )
+  )
 
   when(mockAlcoholDutyCalculatorConnector.rateBandByRegime(any(), any())) thenReturn Future.successful(
     rateBandList
@@ -78,7 +79,6 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
         .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))
         .build()
 
-
       running(application) {
         val request = FakeRequest(GET, whatDoYouNeedToDeclareRoute)
 
@@ -88,7 +88,10 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
-        contentAsString(result) mustEqual view(form, Beer, taxBandsViewModel, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, Beer, taxBandsViewModel, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -108,7 +111,12 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
-        contentAsString(result) mustEqual view(form.fill(WhatDoYouNeedToDeclare.values.toSet), Beer, taxBandsViewModel, NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(WhatDoYouNeedToDeclare.values.toSet),
+          Beer,
+          taxBandsViewModel,
+          NormalMode
+        )(
           request,
           messages(application)
         ).toString
@@ -158,7 +166,10 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual BAD_REQUEST
         val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
-        contentAsString(result) mustEqual view(boundForm, Beer, taxBandsViewModel, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, Beer, taxBandsViewModel, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

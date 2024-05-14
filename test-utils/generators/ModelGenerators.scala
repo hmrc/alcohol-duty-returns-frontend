@@ -291,4 +291,6 @@ trait ModelGenerators {
 
   def appaIdGen: Gen[String] = Gen.listOfN(10, Gen.numChar).map(id => s"XMADP${id.mkString}")
 
+  def regimeGen: Gen[AlcoholRegime] = Gen.oneOf(AlcoholRegime.values)
+
 }

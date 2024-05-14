@@ -17,6 +17,7 @@
 package viewmodels.tasklist
 
 import base.SpecBase
+import models.AlcoholRegime
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.returns.DeclareAlcoholDutyQuestionPage
 import play.api.Application
@@ -38,11 +39,12 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
     "must return an incomplete task list" in {
 
       val expectedSections = Seq(
-        ReturnTaskListHelper.returnSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnSection(AlcoholRegime.values, emptyUserAnswers),
         ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
       )
 
-      val result           = AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
+      val result           =
+        AlcoholDutyTaskListHelper.getTaskList(AlcoholRegime.values, emptyUserAnswers, validUntil)(messages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -67,9 +69,13 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
         .value
 
       val expectedSections =
-        Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers))
+        Seq(
+          ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers),
+          ReturnTaskListHelper.returnDSDSection(userAnswers)
+        )
 
-      val result           = AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil)(messages(application))
+      val result           =
+        AlcoholDutyTaskListHelper.getTaskList(AlcoholRegime.values, userAnswers, validUntil)(messages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
