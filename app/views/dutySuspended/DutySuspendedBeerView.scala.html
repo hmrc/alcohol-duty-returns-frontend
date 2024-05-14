@@ -48,12 +48,10 @@
 
         @paragraph(messages("dutySuspendedBeer.p1"))
 
-        @subHeading(messages("dutySuspendedBeer.subheading1"))
-
         @govukInput(
             InputViewModel(
                 field = form("totalBeer"),
-                label = LabelViewModel(messages("dutySuspendedBeer.subheading1")).asVisuallyHidden(),
+                label = LabelViewModel(messages("dutySuspendedBeer.subheading1")).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -61,17 +59,15 @@
             .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.1"))))
         )
 
-        @subHeading(messages("dutySuspendedBeer.subheading2"))
-
         @govukInput(
-        InputViewModel(
-        field = form("pureAlcoholInBeer"),
-        label = LabelViewModel(messages("dutySuspendedBeer.subheading2")).asVisuallyHidden(),
-        )
-        .asNumeric()
-        .withWidth(Fixed10)
-        .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-        .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.2"))))
+            InputViewModel(
+                field = form("pureAlcoholInBeer"),
+                label = LabelViewModel(messages("dutySuspendedBeer.subheading2")).asSubheading,
+            )
+            .asNumeric()
+            .withWidth(Fixed10)
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.2"))))
         )
 
         @govukButton(

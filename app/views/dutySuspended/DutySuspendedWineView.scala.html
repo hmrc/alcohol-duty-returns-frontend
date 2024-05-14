@@ -48,12 +48,10 @@
 
         @paragraph(messages("dutySuspendedWine.p1"))
 
-        @subHeading(messages("dutySuspendedWine.subheading1"))
-
         @govukInput(
             InputViewModel(
                 field = form("totalWine"),
-                label = LabelViewModel(messages("dutySuspendedWine.subheading1")).asVisuallyHidden(),
+                label = LabelViewModel(messages("dutySuspendedWine.subheading1")).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -61,12 +59,10 @@
             .withHint(Hint(content = HtmlContent(messages("dutySuspendedWine.hint.1"))))
         )
 
-        @subHeading(messages("dutySuspendedWine.subheading2"))
-
         @govukInput(
             InputViewModel(
                 field = form("pureAlcoholInWine"),
-                label = LabelViewModel(messages("dutySuspendedWine.subheading2")).asVisuallyHidden(),
+                label = LabelViewModel(messages("dutySuspendedWine.subheading2")).asSubheading,
             )
             .asNumeric()
             .withWidth(Fixed10)
