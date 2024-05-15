@@ -33,7 +33,7 @@ object EthyleneGasOrMolassesUsedSummary {
         value = ValueViewModel(s"${answer.ethyleneGas.toString} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.EthyleneGasOrMolassesUsedController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.change.hidden"))
+            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.ethyleneGas.change.hidden"))
         )
       )
     }
@@ -44,7 +44,7 @@ object EthyleneGasOrMolassesUsedSummary {
         value = ValueViewModel(s"${answer.molasses.toString} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.EthyleneGasOrMolassesUsedController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.change.hidden"))
+            .withVisuallyHiddenText(messages("ethyleneGasOrMolassesUsed.molasses.change.hidden"))
         )
       )
     }

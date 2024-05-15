@@ -33,7 +33,7 @@ object OtherMaltedGrainsSummary {
         value = ValueViewModel(s"${answer.otherMaltedGrainsQuantity.toString} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.OtherMaltedGrainsController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("otherMaltedGrains.change.hidden"))
+            .withVisuallyHiddenText(messages("otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden"))
         )
       )
     }
