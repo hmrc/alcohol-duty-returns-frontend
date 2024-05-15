@@ -63,21 +63,31 @@ class SpiritTypeController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val (intermediateAnswers, hasChanged) = handleOtherSpiritsChange(request.userAnswers, value)
+            val (intermediateAnswers, selectedOtherSpirits) =
+              handleOtherSpiritsChange(request.userAnswers, SpiritTypePage.hasMadeOtherSpirits(value))
             for {
               updatedAnswers <- Future.fromTry(intermediateAnswers.set(SpiritTypePage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, hasChanged))
+            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, selectedOtherSpirits))
           }
         )
   }
 
-  def handleOtherSpiritsChange(answers: UserAnswers, currentValue: Set[SpiritType]): (UserAnswers, Boolean) = {
-    val existingValue = answers.get(SpiritTypePage).getOrElse(Set.empty[SpiritType])
-    (SpiritTypePage.hasMadeOtherSpirits(existingValue), SpiritTypePage.hasMadeOtherSpirits(currentValue)) match {
-      case (true, false) => (answers.remove(OtherSpiritsProducedPage).get, false)
-      case (false, true) => (answers, true)
-      case (_, _)        => (answers, false)
+  def isNowSelected(oldValue: Boolean, newValue: Boolean) = !oldValue && newValue
+
+  def isNowUnselected(oldValue: Boolean, newValue: Boolean) = oldValue && !newValue
+
+  def handleOtherSpiritsChange(
+    answers: UserAnswers,
+    newValue: Boolean
+  ): (UserAnswers, Boolean) = {
+    val oldValue = SpiritTypePage.hasMadeOtherSpirits(answers.get(SpiritTypePage).getOrElse(Set.empty[SpiritType]))
+    if (isNowSelected(oldValue, newValue)) {
+      (answers, true)
+    } else if (isNowUnselected(oldValue, newValue)) {
+      (answers.remove(OtherSpiritsProducedPage).get, false)
+    } else {
+      (answers, false)
     }
   }
 

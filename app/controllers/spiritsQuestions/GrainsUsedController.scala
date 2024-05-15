@@ -26,7 +26,6 @@ import pages.spiritsQuestions.{GrainsUsedPage, OtherMaltedGrainsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.spiritsQuestions.GrainsUsed
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.GrainsUsedView
 
@@ -64,22 +63,31 @@ class GrainsUsedController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val (intermediateAnswers, hasChanged) = handleOtherMaltedGrainsChange(request.userAnswers, value)
+            val (intermediateAnswers, haveUsedMaltedGrainNotBarley) =
+              handleOtherMaltedGrainsChange(request.userAnswers, value.usedMaltedGrainNotBarley)
             for {
               updatedAnswers <- Future.fromTry(intermediateAnswers.set(GrainsUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(GrainsUsedPage, mode, updatedAnswers, hasChanged))
+            } yield Redirect(navigator.nextPage(GrainsUsedPage, mode, updatedAnswers, haveUsedMaltedGrainNotBarley))
           }
         )
   }
 
-  def handleOtherMaltedGrainsChange(answers: UserAnswers, currentValue: GrainsUsed): (UserAnswers, Boolean) =
-    (
-      answers.get(GrainsUsedPage).exists(_.usedMaltedGrainNotBarley),
-      currentValue.usedMaltedGrainNotBarley
-    ) match {
-      case (true, false) => (answers.remove(OtherMaltedGrainsPage).get, false)
-      case (false, true) => (answers, true)
-      case (_, _)        => (answers, false)
+  def isNowSelected(oldValue: Boolean, newValue: Boolean) = !oldValue && newValue
+
+  def isNowUnselected(oldValue: Boolean, newValue: Boolean) = oldValue && !newValue
+
+  def handleOtherMaltedGrainsChange(
+    answers: UserAnswers,
+    newValue: Boolean
+  ): (UserAnswers, Boolean) = {
+    val oldValue = answers.get(GrainsUsedPage).exists(_.usedMaltedGrainNotBarley)
+    if (isNowSelected(oldValue, newValue)) {
+      (answers, true)
+    } else if (isNowUnselected(oldValue, newValue)) {
+      (answers.remove(OtherMaltedGrainsPage).get, false)
+    } else {
+      (answers, false)
     }
+  }
 }

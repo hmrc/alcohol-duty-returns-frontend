@@ -48,24 +48,17 @@ class QuarterlySpiritsQuestionsNavigator @Inject() {
 
   }
 
-  private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
+  private def checkRouteMap(page: Page, hasChanged: Boolean): Call = page match {
     case pages.spiritsQuestions.SpiritTypePage                =>
-      _ =>
-        hasChanged =>
-          if (hasChanged) controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
-          else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
     case pages.spiritsQuestions.GrainsUsedPage                =>
-      _ =>
-        hasChanged =>
-          if (hasChanged) controllers.spiritsQuestions.routes.OtherMaltedGrainsController.onPageLoad(CheckMode)
-          else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherMaltedGrainsController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
     case pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage =>
-      _ =>
-        hasChanged =>
-          if (hasChanged) controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(CheckMode)
-          else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
-    case _                                                    =>
-      _ => _ => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+    case _                                                    => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
   }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
@@ -104,6 +97,6 @@ class QuarterlySpiritsQuestionsNavigator @Inject() {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode  =>
-      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
+      checkRouteMap(page, hasAnswerChanged)
   }
 }

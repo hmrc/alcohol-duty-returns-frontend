@@ -26,7 +26,6 @@ import pages.spiritsQuestions.{EthyleneGasOrMolassesUsedPage, OtherIngredientsUs
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.EthyleneGasOrMolassesUsedView
 
@@ -64,25 +63,33 @@ class EthyleneGasOrMolassesUsedController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val (intermediateAnswers, hasChanged) = handleOtherIngredientsChange(request.userAnswers, value)
+            val (intermediateAnswers, usedOtherIngredients) =
+              handleOtherIngredientsChange(request.userAnswers, value.otherIngredients)
             for {
               updatedAnswers <- Future.fromTry(intermediateAnswers.set(EthyleneGasOrMolassesUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers, hasChanged))
+            } yield Redirect(
+              navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers, usedOtherIngredients)
+            )
           }
         )
   }
 
+  def isNowSelected(oldValue: Boolean, newValue: Boolean) = !oldValue && newValue
+
+  def isNowUnselected(oldValue: Boolean, newValue: Boolean) = oldValue && !newValue
+
   def handleOtherIngredientsChange(
     answers: UserAnswers,
-    currentValue: EthyleneGasOrMolassesUsed
-  ): (UserAnswers, Boolean) =
-    (
-      answers.get(EthyleneGasOrMolassesUsedPage).exists(_.otherIngredients),
-      currentValue.otherIngredients
-    ) match {
-      case (true, false) => (answers.remove(OtherIngredientsUsedPage).get, false)
-      case (false, true) => (answers, true)
-      case (_, _)        => (answers, false)
+    newValue: Boolean
+  ): (UserAnswers, Boolean) = {
+    val oldValue = answers.get(EthyleneGasOrMolassesUsedPage).exists(_.otherIngredients)
+    if (isNowSelected(oldValue, newValue)) {
+      (answers, true)
+    } else if (isNowUnselected(oldValue, newValue)) {
+      (answers.remove(OtherIngredientsUsedPage).get, false)
+    } else {
+      (answers, false)
     }
+  }
 }
