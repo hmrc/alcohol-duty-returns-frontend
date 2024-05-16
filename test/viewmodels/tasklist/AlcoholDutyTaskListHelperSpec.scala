@@ -18,6 +18,7 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import helpers.TestData._
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.productEntry.DeclareAlcoholDutyQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
@@ -28,7 +29,7 @@ import viewmodels.govuk.all.FluentInstant
 import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
 
-class AlcoholDutyTaskListHelperSpec extends SpecBase {
+class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   val application: Application    = applicationBuilder().build()
   private val instant             = Instant.now.truncatedTo(ChronoUnit.MILLIS)
@@ -104,29 +105,18 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
         ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
       )
 
-      for (periodKey <- Seq(periodKeyMar, periodKeyJun, periodKeySep, periodKeyDec)) {
+      forAll(periodKeyGen) { case periodKey =>
         val result =
           AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
 
-        result.sections mustBe expectedSectionsWithQS
-      }
+        val periodQuarters = "CFIL"
+        val lastChar       = periodKey.last
 
-      for (
-        periodKey <- Seq(
-                       periodKeyJan,
-                       periodKeyFeb,
-                       periodKeyApr,
-                       periodKeyMay,
-                       periodKeyJul,
-                       periodKeyAug,
-                       periodKeyOct,
-                       periodKeyNov
-                     )
-      ) {
-        val result =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
-
-        result.sections mustBe expectedSectionsWithoutQS
+        if (periodQuarters.contains(lastChar)) {
+          result.sections mustBe expectedSectionsWithQS
+        } else {
+          result.sections mustBe expectedSectionsWithoutQS
+        }
       }
     }
   }

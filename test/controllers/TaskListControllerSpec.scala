@@ -60,7 +60,7 @@ class TaskListControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers.copy(validUntil = None))).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
@@ -88,7 +88,7 @@ class TaskListControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET if no existing data or period key is found" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers.copy(validUntil = None))).build()
 
       running(application) {
         val request = FakeRequestWithoutSession(GET, routes.TaskListController.onPageLoad.url)
