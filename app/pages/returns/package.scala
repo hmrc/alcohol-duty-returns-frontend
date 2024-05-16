@@ -17,5 +17,5 @@
 package pages
 
 package object returns {
-  val sectionPages: Seq[QuestionPage[_]] = Seq(WhatDoYouNeedToDeclarePage)
+  val sectionPages: Seq[QuestionPage[_]] = Seq(WhatDoYouNeedToDeclarePage, HowMuchDoYouNeedToDeclarePage)
 }

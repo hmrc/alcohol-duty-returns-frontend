@@ -181,6 +181,20 @@ whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = Draught {0} eligi
 whatDoYouNeedToDeclare.option.abv.interval = Between {0}% and {1}% ABV (tax type code {2})
 whatDoYouNeedToDeclare.option.abv.exceeding.max = Exceeding {0}% ABV (tax type code {1})
 
+howMuchDoYouNeedToDeclare.title = howMuchDoYouNeedToDeclare
+howMuchDoYouNeedToDeclare.heading = howMuchDoYouNeedToDeclare
+howMuchDoYouNeedToDeclare.p1 = Tell us about the beer you need to declare and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
+howMuchDoYouNeedToDeclare.warning = We will ask about beer eligible for Small Producer Relief on the next page.
+howMuchDoYouNeedToDeclare.hint = Give your answers in litres, to 2 decimal places.
+howMuchDoYouNeedToDeclare.field1 = field1
+howMuchDoYouNeedToDeclare.field2 = field2
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel = HowMuchDoYouNeedToDeclare
+howMuchDoYouNeedToDeclare.error.field1.required = Enter field1
+howMuchDoYouNeedToDeclare.error.field2.required = Enter field2
+howMuchDoYouNeedToDeclare.error.field1.length = field1 must be 100 characters or less
+howMuchDoYouNeedToDeclare.error.field2.length = field2 must be 100 characters or less
+howMuchDoYouNeedToDeclare.field1.change.hidden = field1
+howMuchDoYouNeedToDeclare.field2.change.hidden = field2
 
 productEntryGuidance.title = Tell us about your alcohol
 productEntryGuidance.heading = Tell us about your alcohol
@@ -864,3 +878,5 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
+
+

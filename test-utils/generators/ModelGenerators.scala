@@ -27,6 +27,14 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryHowMuchDoYouNeedToDeclare: Arbitrary[returns.HowMuchDoYouNeedToDeclare] =
+    Arbitrary {
+      for {
+        field1 <- arbitrary[String]
+        field2 <- arbitrary[String]
+      } yield returns.HowMuchDoYouNeedToDeclare(field1, field2)
+    }
+
   implicit lazy val arbitraryWhatDoYouNeedToDeclare: Arbitrary[returns.WhatDoYouNeedToDeclare] =
     Arbitrary {
       Gen.oneOf(returns.WhatDoYouNeedToDeclare.values)

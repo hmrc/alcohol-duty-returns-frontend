@@ -39,6 +39,10 @@ POST       /what-do-you-need-to-declare/:regime                controllers.retur
 GET        /change-what-do-you-need-to-declare/:regime         controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
 POST       /change-what-do-you-need-to-declare/:regime         controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
+GET        /how-much-do-you-need-to-declare/:regime                       controllers.returns.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /how-much-do-you-need-to-declare/:regime                           controllers.returns.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /change-how-much-do-you-need-to-declare/:regime                     controllers.returns.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /change-how-much-do-you-need-to-declare/:regime                     controllers.returns.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
 GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)
@@ -258,3 +262,5 @@ POST       /change-how-much-is-the-adjustment                        controllers
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
+
+
