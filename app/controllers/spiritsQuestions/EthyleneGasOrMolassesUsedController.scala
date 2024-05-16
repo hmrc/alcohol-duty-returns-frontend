@@ -63,13 +63,13 @@ class EthyleneGasOrMolassesUsedController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val (intermediateAnswers, usedOtherIngredients) =
+            val (intermediateAnswers, otherIngredientsNowSelected) =
               handleOtherIngredientsChange(request.userAnswers, value.otherIngredients)
             for {
               updatedAnswers <- Future.fromTry(intermediateAnswers.set(EthyleneGasOrMolassesUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(
-              navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers, usedOtherIngredients)
+              navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers, otherIngredientsNowSelected)
             )
           }
         )

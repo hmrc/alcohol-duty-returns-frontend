@@ -63,12 +63,12 @@ class SpiritTypeController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val (intermediateAnswers, selectedOtherSpirits) =
+            val (intermediateAnswers, otherSpiritsNowSelected) =
               handleOtherSpiritsChange(request.userAnswers, SpiritTypePage.hasMadeOtherSpirits(value))
             for {
               updatedAnswers <- Future.fromTry(intermediateAnswers.set(SpiritTypePage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, selectedOtherSpirits))
+            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, otherSpiritsNowSelected))
           }
         )
   }

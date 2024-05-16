@@ -63,12 +63,12 @@ class GrainsUsedController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val (intermediateAnswers, haveUsedMaltedGrainNotBarley) =
+            val (intermediateAnswers, maltedGrainNotBarleyNowSelected) =
               handleOtherMaltedGrainsChange(request.userAnswers, value.usedMaltedGrainNotBarley)
             for {
               updatedAnswers <- Future.fromTry(intermediateAnswers.set(GrainsUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(GrainsUsedPage, mode, updatedAnswers, haveUsedMaltedGrainNotBarley))
+            } yield Redirect(navigator.nextPage(GrainsUsedPage, mode, updatedAnswers, maltedGrainNotBarleyNowSelected))
           }
         )
   }
