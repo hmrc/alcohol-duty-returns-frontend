@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.EthyleneGasOrMolassesUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -26,7 +26,6 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -48,18 +47,17 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase with MockitoSugar
   val validMolasses    = 47.5
   val otherIngredients = true
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      EthyleneGasOrMolassesUsedPage.toString -> Json.obj(
-        "ethyleneGas"      -> validEthyleneGas,
-        "molasses"         -> validMolasses,
-        "otherIngredients" -> otherIngredients
+  val userAnswers = emptyUserAnswers
+    .set(
+      EthyleneGasOrMolassesUsedPage,
+      EthyleneGasOrMolassesUsed(
+        validEthyleneGas,
+        validMolasses,
+        otherIngredients
       )
     )
-  )
+    .success
+    .value
 
   "EthyleneGasOrMolassesUsed Controller" - {
 

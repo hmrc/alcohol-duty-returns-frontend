@@ -17,8 +17,9 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
+import connectors.CacheConnector
 import forms.spiritsQuestions.AlcoholUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.spiritsQuestions.AlcoholUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -26,10 +27,8 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.AlcoholUsedPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.AlcoholUsedView
 
@@ -49,19 +48,18 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
   val validCiderOrPerry = 55.6
   val validMadeWine     = 47.5
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      AlcoholUsedPage.toString -> Json.obj(
-        "beer"         -> validBeer,
-        "wine"         -> validWine,
-        "madeWine"     -> validMadeWine,
-        "ciderOrPerry" -> validCiderOrPerry
+  val userAnswers = emptyUserAnswers
+    .set(
+      AlcoholUsedPage,
+      AlcoholUsed(
+        validBeer,
+        validWine,
+        validMadeWine,
+        validCiderOrPerry
       )
     )
-  )
+    .success
+    .value
 
   "AlcoholUsed Controller" - {
 

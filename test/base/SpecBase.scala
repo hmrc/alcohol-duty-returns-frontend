@@ -19,15 +19,18 @@ package base
 import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
-import models.{ReturnId, UserAnswers}
+import models.{AlcoholRegime, ReturnId, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
+import pages.AlcoholRegimePage
+import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
 
 trait SpecBase
     extends AnyFreeSpec
@@ -44,7 +47,14 @@ trait SpecBase
   val userAnswersId: String = "id"
   val returnId: ReturnId    = ReturnId(appaId, periodKey)
 
-  def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, userAnswersId)
+  def emptyUserAnswers: UserAnswers = UserAnswers(
+    returnId,
+    groupId,
+    userAnswersId,
+    Json.obj(
+      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegime.values)
+    )
+  )
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 

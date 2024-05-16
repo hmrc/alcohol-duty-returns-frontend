@@ -16,10 +16,8 @@
 
 package viewmodels.tasklist
 
-import cats.kernel.Order
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
-import pages.AlcoholRegimePage
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{ProductEntryListPage, ProductListPage}
 import pages.returns.DeclareAlcoholDutyQuestionPage

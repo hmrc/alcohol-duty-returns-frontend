@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedSpiritsFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedSpirits
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -26,7 +26,6 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedSpiritsPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -46,17 +45,16 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val dutySuspendedSpiritsRoute = routes.DutySuspendedSpiritsController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      DutySuspendedSpiritsPage.toString -> Json.obj(
-        "totalSpirits"         -> validTotalSpirits,
-        "pureAlcoholInSpirits" -> validPureAlcoholInSpirits
+  val userAnswers = emptyUserAnswers
+    .set(
+      DutySuspendedSpiritsPage,
+      DutySuspendedSpirits(
+        validTotalSpirits,
+        validPureAlcoholInSpirits
       )
     )
-  )
+    .success
+    .value
 
   "DutySuspendedSpirits Controller" - {
 

@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedWineFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedWine
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -26,7 +26,6 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedWinePage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -46,17 +45,16 @@ class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
   val validTotalWine              = 23.45
   val validPureAlcoholInWine      = 16.46
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      DutySuspendedWinePage.toString -> Json.obj(
-        "totalWine"         -> validTotalWine,
-        "pureAlcoholInWine" -> validPureAlcoholInWine
+  val userAnswers = emptyUserAnswers
+    .set(
+      DutySuspendedWinePage,
+      DutySuspendedWine(
+        validTotalWine,
+        validPureAlcoholInWine
       )
     )
-  )
+    .success
+    .value
 
   "DutySuspendedWine Controller" - {
 

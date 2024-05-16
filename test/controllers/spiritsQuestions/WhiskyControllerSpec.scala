@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.WhiskyFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.spiritsQuestions.Whisky
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -26,7 +26,6 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.WhiskyPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -45,17 +44,17 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
   lazy val whiskyRoute  = routes.WhiskyController.onPageLoad(NormalMode).url
   val validScotchWhisky = 55.6
   val validIrishWhisky  = 47.5
-  val userAnswers       = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      WhiskyPage.toString -> Json.obj(
-        "scotchWhisky" -> validScotchWhisky,
-        "irishWhiskey" -> validIrishWhisky
+
+  val userAnswers = emptyUserAnswers
+    .set(
+      WhiskyPage,
+      Whisky(
+        validScotchWhisky,
+        validIrishWhisky
       )
     )
-  )
+    .success
+    .value
 
   "Whisky Controller" - {
 

@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedOtherFermented
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -26,7 +26,6 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedOtherFermentedPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -46,17 +45,16 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSug
 
   lazy val dutySuspendedOtherFermentedRoute = routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      DutySuspendedOtherFermentedPage.toString -> Json.obj(
-        "totalOtherFermented"         -> validTotalOtherFermented,
-        "pureAlcoholInOtherFermented" -> validPureAlcoholInOtherFermented
+  val userAnswers = emptyUserAnswers
+    .set(
+      DutySuspendedOtherFermentedPage,
+      DutySuspendedOtherFermented(
+        validTotalOtherFermented,
+        validPureAlcoholInOtherFermented
       )
     )
-  )
+    .success
+    .value
 
   "DutySuspendedOtherFermented Controller" - {
 

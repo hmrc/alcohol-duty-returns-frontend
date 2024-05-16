@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package forms.returns
+package pages.returns
 
-import javax.inject.Inject
-import forms.mappings.Mappings
-import play.api.data.Form
-import play.api.data.Forms.set
+import models.RateBand
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class WhatDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
+object RateBandsPage extends QuestionPage[Seq[RateBand]] {
+  override def path: JsPath = JsPath \ toString
 
-  def apply(): Form[Set[String]] =
-    Form(
-      "rateBand" -> set(text("whatDoYouNeedToDeclare.error.required"))
-//        .verifying(nonEmptySet("whatDoYouNeedToDeclare.error.required"))
-    )
+  override def toString: String = "rateBands"
 }

@@ -18,13 +18,12 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -49,18 +48,17 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
   val otherIngredientsUnit     = Tonnes
   val otherIngredientsQuantity = BigDecimal(100000)
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      OtherIngredientsUsedPage.toString -> Json.obj(
-        "otherIngredientsUsedTypes"    -> otherIngredientsTypes,
-        "otherIngredientsUsedUnit"     -> otherIngredientsUnit,
-        "otherIngredientsUsedQuantity" -> otherIngredientsQuantity
+  val userAnswers = emptyUserAnswers
+    .set(
+      OtherIngredientsUsedPage,
+      OtherIngredientsUsed(
+        otherIngredientsTypes,
+        otherIngredientsUnit,
+        otherIngredientsQuantity
       )
     )
-  )
+    .success
+    .value
 
   "OtherIngredientsUsed Controller" - {
 

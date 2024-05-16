@@ -17,19 +17,18 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
+import connectors.CacheConnector
 import forms.spiritsQuestions.GrainsUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
+import models.spiritsQuestions.GrainsUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.GrainsUsedPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
-import models.spiritsQuestions.GrainsUsed
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.GrainsUsedView
 
@@ -51,21 +50,20 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
   val unmaltedGrainQuantity    = BigDecimal(500000)
   val usedMaltedGrainNotBarley = true
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      GrainsUsedPage.toString -> Json.obj(
-        "maltedBarleyQuantity"     -> maltedBarleyQuantity,
-        "wheatQuantity"            -> wheatQuantity,
-        "maizeQuantity"            -> maizeQuantity,
-        "ryeQuantity"              -> ryeQuantity,
-        "unmaltedGrainQuantity"    -> unmaltedGrainQuantity,
-        "usedMaltedGrainNotBarley" -> usedMaltedGrainNotBarley
+  val userAnswers = emptyUserAnswers
+    .set(
+      GrainsUsedPage,
+      GrainsUsed(
+        maltedBarleyQuantity,
+        wheatQuantity,
+        maizeQuantity,
+        ryeQuantity,
+        unmaltedGrainQuantity,
+        usedMaltedGrainNotBarley
       )
     )
-  )
+    .success
+    .value
 
   "GrainsUsed Controller" - {
 

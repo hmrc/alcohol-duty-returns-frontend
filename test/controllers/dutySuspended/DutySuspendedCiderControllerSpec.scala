@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedCiderFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedCider
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -26,7 +26,6 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -46,17 +45,16 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      DutySuspendedCiderPage.toString -> Json.obj(
-        "totalCider"         -> validTotalCider,
-        "pureAlcoholInCider" -> validPureAlcoholInCider
+  val userAnswers = emptyUserAnswers
+    .set(
+      DutySuspendedCiderPage,
+      DutySuspendedCider(
+        validTotalCider,
+        validPureAlcoholInCider
       )
     )
-  )
+    .success
+    .value
 
   "DutySuspendedCider Controller" - {
 

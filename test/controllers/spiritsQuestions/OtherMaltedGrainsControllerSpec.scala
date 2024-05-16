@@ -18,13 +18,12 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherMaltedGrainsFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -47,17 +46,16 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
   val otherMaltedGrainsTypes    = "Coco Pops"
   val otherMaltedGrainsQuantity = BigDecimal(100000)
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      OtherMaltedGrainsPage.toString -> Json.obj(
-        "otherMaltedGrainsTypes"    -> otherMaltedGrainsTypes,
-        "otherMaltedGrainsQuantity" -> otherMaltedGrainsQuantity
+  val userAnswers = emptyUserAnswers
+    .set(
+      OtherMaltedGrainsPage,
+      OtherMaltedGrains(
+        otherMaltedGrainsTypes,
+        otherMaltedGrainsQuantity
       )
     )
-  )
+    .success
+    .value
 
   "OtherMaltedGrains Controller" - {
 

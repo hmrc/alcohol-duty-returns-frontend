@@ -180,7 +180,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
           connector.httpClient.GET[Seq[RateBand]](any(), any(), any())(any(), any(), any())
         } thenReturn Future.successful(rateBandList)
 
-        whenReady(connector.rateBandByRegime(ratePeriod = ratePeriod.period, Beer)) { result =>
+        whenReady(connector.rateBandByRegime(ratePeriod = ratePeriod.period, AlcoholRegime.values)) { result =>
           result mustBe rateBandList
           verify(connector.httpClient, atLeastOnce)
             .GET[Seq[RateBand]](
@@ -188,7 +188,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
               ArgumentMatchers.eq(
                 Seq(
                   ("ratePeriod", Json.toJson(ratePeriod.period)(RatePeriod.yearMonthFormat).toString),
-                  ("alcoholRegimes", Json.toJson(Beer).toString())
+                  ("alcoholRegimes", Json.toJson(AlcoholRegime.values).toString())
                 )
               ),
               any()

@@ -67,7 +67,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
     )
   )
 
-  when(mockAlcoholDutyCalculatorConnector.rateBandByRegime(any(), any())) thenReturn Future.successful(
+  when(mockAlcoholDutyCalculatorConnector.rateBandByRegime(any(), any())(any())) thenReturn Future.successful(
     rateBandList
   )
 

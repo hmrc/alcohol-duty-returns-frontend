@@ -18,6 +18,8 @@ package controllers
 
 import base.SpecBase
 import models.{AlcoholRegime, ReturnId, UserAnswers}
+import pages.AlcoholRegimePage
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView
@@ -35,7 +37,10 @@ class TaskListControllerSpec extends SpecBase {
     groupId = groupId,
     internalId = userAnswersId,
     lastUpdated = Instant.now(clock),
-    validUntil = Some(validUntil)
+    validUntil = Some(validUntil),
+    data = Json.obj(
+      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegime.values)
+    )
   )
 
   "TaskList Controller" - {
