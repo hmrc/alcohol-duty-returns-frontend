@@ -80,6 +80,12 @@ section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
 section.dutySuspended = Duty suspended alcohol
 
+section.return.Beer = Declare beer
+section.return.Cider = Declare cider
+section.return.Wine = Declare wine
+section.return.Spirits = Declare spirits
+section.return.OtherFermentedProduct = Declare other fermented products
+
 taskList.title = Alcohol Duty return
 taskList.status.completed = Return ready to submit
 taskList.status.incomplete = Return incomplete
