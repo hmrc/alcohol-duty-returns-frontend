@@ -26,6 +26,6 @@ class WhatDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
   def apply(): Form[Set[String]] =
     Form(
       "rateBand" -> set(text("whatDoYouNeedToDeclare.error.required"))
-//        .verifying(nonEmptySet("whatDoYouNeedToDeclare.error.required"))
+        .verifying(nonEmptySet("whatDoYouNeedToDeclare.error.required"))
     )
 }

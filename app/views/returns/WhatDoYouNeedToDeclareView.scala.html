@@ -51,7 +51,7 @@
         @paragraph(messages("whatDoYouNeedToDeclare.hint"), classes = "govuk-hint")
 
         @if(taxBandsViewModel.core.nonEmpty) {
-          @subHeading(messages(s"whatDoYouNeedToDeclare.$regime.core.heading"), classes="govuk-heading-m")
+          @subHeading(messages("whatDoYouNeedToDeclare.core.heading", messages(s"whatDoYouNeedToDeclare.regime.$regime")), classes="govuk-heading-m")
           @govukCheckboxes(CheckboxesViewModel(
             form   = form,
             name   = "value",
@@ -62,7 +62,7 @@
         }
 
         @if(taxBandsViewModel.draught.nonEmpty) {
-          @subHeading(messages(s"whatDoYouNeedToDeclare.$regime.draught.heading"), classes="govuk-heading-m")
+          @subHeading(messages(s"whatDoYouNeedToDeclare.draught.heading", messages(s"whatDoYouNeedToDeclare.regime.$regime")), classes="govuk-heading-m")
           @govukCheckboxes(CheckboxesViewModel(
             form   = form,
             name   = "value",
@@ -72,7 +72,7 @@
         }
 
         @if(taxBandsViewModel.smallProducerRelief.nonEmpty) {
-          @subHeading(messages(s"whatDoYouNeedToDeclare.$regime.smallProducerRelief.heading"), classes="govuk-heading-m")
+          @subHeading(messages(s"whatDoYouNeedToDeclare.smallProducerRelief.heading", messages(s"whatDoYouNeedToDeclare.regime.$regime")), classes="govuk-heading-m")
           @govukCheckboxes(CheckboxesViewModel(
             form   = form,
             name   = "value",
@@ -83,7 +83,7 @@
         }
 
         @if(taxBandsViewModel.draughtAndSmallProducerRelief.nonEmpty) {
-          @subHeading(messages(s"whatDoYouNeedToDeclare.$regime.draughtAndSmallProducerRelief.heading"), classes="govuk-heading-m")
+          @subHeading(messages(s"whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading", messages(s"whatDoYouNeedToDeclare.regime.$regime")), classes="govuk-heading-m")
           @govukCheckboxes(CheckboxesViewModel(
             form   = form,
             name   = "value",

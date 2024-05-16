@@ -20,7 +20,7 @@ import models.{AlcoholByVolume, RateBand, RateType}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.govuk.all.CheckboxItemViewModel
+import viewmodels.govuk.all.{CheckboxGroupedItemViewModel, CheckboxItemViewModel}
 
 case class TaxBandsViewModel(
   core: Seq[CheckboxItem],
@@ -35,14 +35,13 @@ object TaxBandsViewModel {
       .groupBy(_.rateType)
       .view
       .mapValues(rateBands =>
-        rateBands.zipWithIndex.map { case (rateBand, index) =>
-          CheckboxItemViewModel(
+        rateBands.map(rateBand =>
+          CheckboxGroupedItemViewModel(
             content = rateBandContent(rateBand),
             fieldId = "rateBand",
-            index = index,
             value = rateBand.taxType
           )
-        }
+        )
       )
       .toMap
 

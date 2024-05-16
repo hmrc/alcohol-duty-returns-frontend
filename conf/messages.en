@@ -160,10 +160,18 @@ whatDoYouNeedToDeclare.option2 = Option 2
 whatDoYouNeedToDeclare.checkYourAnswersLabel = whatDoYouNeedToDeclare
 whatDoYouNeedToDeclare.error.required = Select whatDoYouNeedToDeclare
 whatDoYouNeedToDeclare.change.hidden = WhatDoYouNeedToDeclare
-whatDoYouNeedToDeclare.Beer.core.heading = Non-draught beer (standard rate)
-whatDoYouNeedToDeclare.Beer.draught.heading = Draught beer (reduced rate)
-whatDoYouNeedToDeclare.Beer.smallProducerRelief.heading = Non-draught beer eligible for Small Producer Relief
-whatDoYouNeedToDeclare.Beer.draughtAndSmallProducerRelief.heading = Draught beer eligible for Small Producer Relief
+
+whatDoYouNeedToDeclare.regime.Beer = beer
+whatDoYouNeedToDeclare.regime.Cider = cider
+whatDoYouNeedToDeclare.regime.Wine = wine
+whatDoYouNeedToDeclare.regime.Spirits = spirits
+whatDoYouNeedToDeclare.regime.OtherFermentedProduct = other fermented products
+
+whatDoYouNeedToDeclare.core.heading = Non-draught {0} (standard rate)
+whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)
+whatDoYouNeedToDeclare.smallProducerRelief.heading = Non-draught {0} eligible for Small Producer Relief
+whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = Draught {0} eligible for Small Producer Relief
+
 whatDoYouNeedToDeclare.option.abv.interval = Between {0}% and {1}% ABV (tax type code {2})
 whatDoYouNeedToDeclare.option.abv.exceeding.max = Exceeding {0}% ABV (tax type code {1})
 
