@@ -68,7 +68,7 @@
                 field = form(s"volumes[${quantityViewModel.id}]"),
                 key = "totalLitres",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.totalLitres")),
-                value = form("how-much-to-declare-input").value
+                value = form(s"volumes[${quantityViewModel.id}].totalLitres").value
               )
               .asNumeric()
               .withWidth(Fixed10)
@@ -79,7 +79,7 @@
                 field = form(s"volumes[${quantityViewModel.id}]"),
                 key = "pureAlcohol",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.pureAlcohol")),
-                value = form("how-much-to-declare-input").value
+                value = form(s"volumes[${quantityViewModel.id}].pureAlcohol").value
               )
               .asNumeric()
               .withWidth(Fixed10)
@@ -106,7 +106,7 @@
                 field = form(s"volumes[${quantityViewModel.id}]"),
                 key = "totalLitres",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.totalLitres")),
-                value = form("how-much-to-declare-input").value
+                value = form(s"volumes[${quantityViewModel.id}].totalLitres").value
               )
               .asNumeric()
               .withWidth(Fixed10)
@@ -117,7 +117,7 @@
                 field = form(s"volumes[${quantityViewModel.id}]"),
                 key = "pureAlcohol",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.pureAlcohol")),
-                value = form("how-much-to-declare-input").value
+                value = form(s"volumes[${quantityViewModel.id}].pureAlcohol").value
               )
               .asNumeric()
               .withWidth(Fixed10)

@@ -72,7 +72,6 @@ class VolumesFormatter(
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
 
-    println("----------------------------  data: " + data)
     val fields = fieldKeys.map { field =>
       field -> data.get(s"$key.$field").filter(_.nonEmpty)
     }.toMap
@@ -81,8 +80,6 @@ class VolumesFormatter(
       .withFilter(_._2.isEmpty)
       .map(_._1)
       .toList
-
-    println("----------------------------  missing fields: " + missingFields)
 
     fields.count(_._2.isDefined) match {
       case 3     =>
@@ -94,13 +91,17 @@ class VolumesFormatter(
       case _     =>
         Left(List(FormError(key, allRequiredKey, args)))
     }
-
   }
 
-  override def unbind(key: String, value: VolumesByTaxType): Map[String, String] =
+  override def unbind(key: String, value: VolumesByTaxType): Map[String, String] = {
+
+    val newKey = replaceIndex(key, value.taxType)
     Map(
-      s"$key.taxType"     -> value.taxType,
-      s"$key.totalLitres" -> value.totalLitres.toString,
-      s"$key.pureAlcohol" -> value.pureAlcohol.toString
+      s"$newKey.taxType"     -> value.taxType,
+      s"$newKey.totalLitres" -> value.totalLitres.toString,
+      s"$newKey.pureAlcohol" -> value.pureAlcohol.toString
     )
+  }
+
+  def replaceIndex(key: String, index: String): String = key.replaceFirst("\\[\\d\\]", s"[$index]")
 }

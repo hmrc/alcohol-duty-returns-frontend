@@ -37,8 +37,9 @@ class ReturnsNavigator @Inject() () {
     case _                          => _ => _ => routes.IndexController.onPageLoad
   }
 
-  private val checkRouteMap: Page => UserAnswers => Boolean => Call = { case _ =>
-    _ => _ => routes.CheckYourAnswersController.onPageLoad()
+  private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
+    case pages.returns.DeclareAlcoholDutyQuestionPage => _ => _ => routes.TaskListController.onPageLoad
+    case _                                            => _ => _ => routes.IndexController.onPageLoad
   }
 
   def nextPageWithRegime(
