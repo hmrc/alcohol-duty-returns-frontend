@@ -37,7 +37,6 @@ class ProductEntryNavigator @Inject() {
     case pages.productEntry.TaxTypePage                            => taxTypePageRoute
     case pages.productEntry.DeclareSmallProducerReliefDutyRatePage =>
       _ => controllers.productEntry.routes.ProductVolumeController.onPageLoad(NormalMode)
-    case DeclareAlcoholDutyQuestionPage                            => declareAlcoholDutyQuestionPageRoute
     case pages.productEntry.ProductVolumePage                      =>
       _ => controllers.productEntry.routes.DutyDueController.onPageLoad()
     case pages.productEntry.ProductListPage                        => productListPageRoute

@@ -20,54 +20,90 @@ import controllers.actions._
 import forms.returns.HowMuchDoYouNeedToDeclareFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode}
+import models.{AlcoholRegime, Mode, RateBand}
 import navigation.ReturnsNavigator
-import pages.returns.HowMuchDoYouNeedToDeclarePage
+import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import models.returns.{DutyByTaxType, VolumesByTaxType}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.returns.HowMuchDoYouNeedToDeclareHelper
 import views.html.returns.HowMuchDoYouNeedToDeclareView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
-class HowMuchDoYouNeedToDeclareController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       cacheConnector: CacheConnector,
-                                       navigator: ReturnsNavigator,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       formProvider: HowMuchDoYouNeedToDeclareFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: HowMuchDoYouNeedToDeclareView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class HowMuchDoYouNeedToDeclareController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: ReturnsNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: HowMuchDoYouNeedToDeclareFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: HowMuchDoYouNeedToDeclareView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+    (identify andThen getData andThen requireData) { implicit request =>
+      request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+        case None            => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        case Some(rateBands) =>
+          val howMuchDoYouNeedToDeclareHelper = HowMuchDoYouNeedToDeclareHelper(regime, rateBands)
+          val preparedForm                    = request.userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
+            case None        => form
+            case Some(value) => form.fill(value.map(_.toVolumes))
+          }
 
-      val preparedForm = request.userAnswers.get(HowMuchDoYouNeedToDeclarePage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          Ok(view(preparedForm, regime, howMuchDoYouNeedToDeclareHelper, mode))
       }
 
-      Ok(view(preparedForm, regime, mode))
-  }
+    }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
+      request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+        case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case Some(rateBands) =>
+          val howMuchDoYouNeedToDeclareHelper = HowMuchDoYouNeedToDeclareHelper(regime, rateBands)
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                Future.successful(BadRequest(view(formWithErrors, regime, howMuchDoYouNeedToDeclareHelper, mode))),
+              value =>
+                for {
+                  dutyByTaxTypes <- Future.fromTry(rateBandFromTaxType(value, rateBands))
+                  updatedAnswers <-
+                    Future.fromTry(request.userAnswers.setByKey(HowMuchDoYouNeedToDeclarePage, regime, dutyByTaxTypes))
+                  _              <- cacheConnector.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(HowMuchDoYouNeedToDeclarePage, mode, updatedAnswers))
+            )
+      }
+    }
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, regime, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(HowMuchDoYouNeedToDeclarePage, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(HowMuchDoYouNeedToDeclarePage, mode, updatedAnswers))
+  private def rateBandFromTaxType(
+    volumeByTaxType: Seq[VolumesByTaxType],
+    rateBands: Set[RateBand]
+  ): Try[Seq[DutyByTaxType]] = Try {
+    volumeByTaxType.map { volumes =>
+      val rateBand = rateBands
+        .find(_.taxType == volumes.taxType)
+        .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: ${volumes.taxType}"))
+      DutyByTaxType(
+        taxType = volumes.taxType,
+        totalLitres = volumes.totalLitres,
+        pureAlcohol = volumes.pureAlcohol,
+        dutyRate = rateBand.rate.getOrElse(
+          throw new IllegalArgumentException(s"Rate not found for tax type: ${volumes.taxType}")
+        )
       )
+    }
   }
 }

@@ -17,21 +17,52 @@
 package navigation
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.Call
 import controllers.routes
 import pages._
 import models._
+import pages.returns.{DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 
 @Singleton
-class ReturnsNavigator @Inject() () extends BaseNavigator {
+class ReturnsNavigator @Inject() () {
 
-  override val normalRoutes: Page => UserAnswers => Call = { case _ =>
-    _ => routes.IndexController.onPageLoad
-
+  private val normalRoutes: Page => UserAnswers => Call = {
+    case DeclareAlcoholDutyQuestionPage => _ => routes.TaskListController.onPageLoad
+    case _                              => _ => routes.IndexController.onPageLoad
   }
 
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad()
+  private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegime => Call = {
+    case WhatDoYouNeedToDeclarePage =>
+      _ => regime => controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
+    case _                          => _ => _ => routes.IndexController.onPageLoad
+  }
+
+  private val checkRouteMap: Page => UserAnswers => Boolean => Call = { case _ =>
+    _ => _ => routes.CheckYourAnswersController.onPageLoad()
+  }
+
+  def nextPageWithRegime(
+    page: Page,
+    mode: Mode,
+    userAnswers: UserAnswers,
+    regime: AlcoholRegime,
+    hasAnswerChanged: Boolean = true
+  ): Call = mode match {
+    case NormalMode =>
+      normalRoutesReturnJourney(page)(userAnswers)(regime)
+    case CheckMode  =>
+      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
+  }
+
+  def nextPage(
+    page: Page,
+    mode: Mode,
+    userAnswers: UserAnswers,
+    hasAnswerChanged: Boolean = true
+  ): Call = mode match {
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode  =>
+      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
   }
 }

@@ -3,7 +3,7 @@ package controllers.returns
 import base.SpecBase
 import forms.returns.HowMuchDoYouNeedToDeclareFormProvider
 import models.NormalMode
-import models.returns.HowMuchDoYouNeedToDeclare
+import models.returns.DutyByTaxType
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -24,7 +24,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new HowMuchDoYouNeedToDeclareFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val howMuchDoYouNeedToDeclareRoute = routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode).url
 
@@ -70,7 +70,10 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(HowMuchDoYouNeedToDeclare("value 1", "value 2")), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(HowMuchDoYouNeedToDeclare("value 1", "value 2")), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

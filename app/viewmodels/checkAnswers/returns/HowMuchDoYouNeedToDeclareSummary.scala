@@ -27,21 +27,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object HowMuchDoYouNeedToDeclareSummary  {
+object HowMuchDoYouNeedToDeclareSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(HowMuchDoYouNeedToDeclarePage).map {
-      answer =>
+    answers.getByKey(HowMuchDoYouNeedToDeclarePage, Beer).map { answer =>
+      val value = ""
 
-      val value = HtmlFormat.escape(answer.field1).toString + "<br/>" + HtmlFormat.escape(answer.field2).toString
-
-        SummaryListRowViewModel(
-          key     = "howMuchDoYouNeedToDeclare.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.HowMuchDoYouNeedToDeclareController.onPageLoad(CheckMode, Beer).url)
-              .withVisuallyHiddenText(messages("howMuchDoYouNeedToDeclare.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "howMuchDoYouNeedToDeclare.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.HowMuchDoYouNeedToDeclareController.onPageLoad(CheckMode, Beer).url)
+            .withVisuallyHiddenText(messages("howMuchDoYouNeedToDeclare.change.hidden"))
         )
+      )
     }
 }

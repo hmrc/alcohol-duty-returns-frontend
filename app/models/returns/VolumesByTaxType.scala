@@ -16,10 +16,10 @@
 
 package models.returns
 
-import play.api.libs.json._
+import play.api.libs.json.Json
 
-case class HowMuchDoYouNeedToDeclare (field1: String, field2: String)
+case class VolumesByTaxType(taxType: String, totalLitres: BigDecimal, pureAlcohol: BigDecimal)
 
-object HowMuchDoYouNeedToDeclare {
-  implicit val format = Json.format[HowMuchDoYouNeedToDeclare]
+object VolumesByTaxType {
+  implicit val format = Json.format[VolumesByTaxType]
 }

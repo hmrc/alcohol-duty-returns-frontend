@@ -167,34 +167,32 @@ whatDoYouNeedToDeclare.checkYourAnswersLabel = whatDoYouNeedToDeclare
 whatDoYouNeedToDeclare.error.required = Select whatDoYouNeedToDeclare
 whatDoYouNeedToDeclare.change.hidden = WhatDoYouNeedToDeclare
 
-whatDoYouNeedToDeclare.regime.Beer = beer
-whatDoYouNeedToDeclare.regime.Cider = cider
-whatDoYouNeedToDeclare.regime.Wine = wine
-whatDoYouNeedToDeclare.regime.Spirits = spirits
-whatDoYouNeedToDeclare.regime.OtherFermentedProduct = other fermented products
+return.regime.Beer = beer
+return.regime.Cider = cider
+return.regime.Wine = wine
+return.regime.Spirits = spirits
+return.regime.OtherFermentedProduct = other fermented products
 
 whatDoYouNeedToDeclare.core.heading = Non-draught {0} (standard rate)
 whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)
 whatDoYouNeedToDeclare.smallProducerRelief.heading = Non-draught {0} eligible for Small Producer Relief
 whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = Draught {0} eligible for Small Producer Relief
-
 whatDoYouNeedToDeclare.option.abv.interval = Between {0}% and {1}% ABV (tax type code {2})
 whatDoYouNeedToDeclare.option.abv.exceeding.max = Exceeding {0}% ABV (tax type code {1})
 
-howMuchDoYouNeedToDeclare.title = howMuchDoYouNeedToDeclare
-howMuchDoYouNeedToDeclare.heading = howMuchDoYouNeedToDeclare
+howMuchDoYouNeedToDeclare.title = How much {0} do you need to declare?
+howMuchDoYouNeedToDeclare.heading = How much {0} do you need to declare?
 howMuchDoYouNeedToDeclare.p1 = Tell us about the beer you need to declare and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.warning = We will ask about beer eligible for Small Producer Relief on the next page.
 howMuchDoYouNeedToDeclare.hint = Give your answers in litres, to 2 decimal places.
-howMuchDoYouNeedToDeclare.field1 = field1
-howMuchDoYouNeedToDeclare.field2 = field2
+howMuchDoYouNeedToDeclare.core.heading = How much {0} (standard rate) do you need to declare?
+howMuchDoYouNeedToDeclare.draught.heading = How much draught {0} (reduced rate) do you need to declare?
+howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type code {3})
+howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres of spirits
+howMuchDoYouNeedToDeclare.legend.pureAlcohol = Litres of pure alcohol
+howMuchDoYouNeedToDeclare.error.required = Enter how much {0} you need to declare
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel = HowMuchDoYouNeedToDeclare
-howMuchDoYouNeedToDeclare.error.field1.required = Enter field1
-howMuchDoYouNeedToDeclare.error.field2.required = Enter field2
-howMuchDoYouNeedToDeclare.error.field1.length = field1 must be 100 characters or less
-howMuchDoYouNeedToDeclare.error.field2.length = field2 must be 100 characters or less
-howMuchDoYouNeedToDeclare.field1.change.hidden = field1
-howMuchDoYouNeedToDeclare.field2.change.hidden = field2
+
 
 productEntryGuidance.title = Tell us about your alcohol
 productEntryGuidance.heading = Tell us about your alcohol

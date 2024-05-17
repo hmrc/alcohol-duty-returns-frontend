@@ -55,7 +55,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       getRateBands(request.userAnswers, request.returnPeriod, request.regimes, regime).map { rateBands: Seq[RateBand] =>
         val taxBandsViewModel = TaxBandsViewModel(rateBands)
-        val preparedForm      = request.userAnswers.get(WhatDoYouNeedToDeclarePage) match {
+        val preparedForm      = request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
           case None        => form
           case Some(value) => form.fill(value.map(_.taxType))
         }
@@ -72,18 +72,14 @@ class WhatDoYouNeedToDeclareController @Inject() (
           form
             .bindFromRequest()
             .fold(
-              formWithErrors => {
-                println("formWithErrors: " + formWithErrors)
-                Future.successful(BadRequest(view(formWithErrors, regime, taxBandsViewModel, mode)))
-              },
-              value => {
-                println("value: " + value)
+              formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, taxBandsViewModel, mode))),
+              value =>
                 for {
                   rateBands      <- Future.fromTry(rateBandFromTaxType(value, rateBands))
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatDoYouNeedToDeclarePage, rateBands))
+                  updatedAnswers <-
+                    Future.fromTry(request.userAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands))
                   _              <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(WhatDoYouNeedToDeclarePage, mode, updatedAnswers))
-              }
+                } yield Redirect(navigator.nextPageWithRegime(WhatDoYouNeedToDeclarePage, mode, updatedAnswers, regime))
             )
       }
     }

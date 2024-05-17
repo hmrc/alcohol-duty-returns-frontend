@@ -118,7 +118,7 @@ final case class UserAnswers(
   def get[A](path: JsPath)(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(path)).reads(data).getOrElse(None)
 
-  def set[A](path: JsPath, value: A)(implicit writes: Writes[A]): Try[JsObject]    =
+  def set[A](path: JsPath, value: A)(implicit writes: Writes[A]): Try[JsObject] =
     data.setObject(path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
@@ -140,6 +140,24 @@ final case class UserAnswers(
     val updatedData = remove(path)
     cleanupPage(page, updatedData)
   }
+
+  def getByKey[A, B](page: Gettable[Map[A, B]], key: A)(implicit rds: Reads[B]): Option[B] = {
+    val path = page.path \ key.toString
+    get(path)
+  }
+
+  def setByKey[A, B](page: Settable[Map[A, B]], key: A, value: B)(implicit writes: Writes[B]): Try[UserAnswers] = {
+    val path        = page.path \ key.toString
+    val updatedData = set(path, value)
+    cleanupPage(page, updatedData)
+  }
+
+  def removeByKey[A, B](page: Settable[Map[A, B]], key: A): Try[UserAnswers] = {
+    val path        = page.path \ key.toString
+    val updatedData = remove(path)
+    cleanupPage(page, updatedData)
+  }
+
   def remove[A](path: JsPath): Try[JsObject]                                       =
     data.removeObject(path) match {
       case JsSuccess(jsValue, _) =>

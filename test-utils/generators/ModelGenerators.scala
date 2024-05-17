@@ -27,7 +27,7 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryHowMuchDoYouNeedToDeclare: Arbitrary[returns.HowMuchDoYouNeedToDeclare] =
+  implicit lazy val arbitraryHowMuchDoYouNeedToDeclare: Arbitrary[returns.DutyByTaxType] =
     Arbitrary {
       for {
         field1 <- arbitrary[String]

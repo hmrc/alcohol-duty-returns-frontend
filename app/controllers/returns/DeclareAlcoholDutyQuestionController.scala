@@ -21,9 +21,8 @@ import controllers.actions._
 import forms.returns.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegime, Mode, UserAnswers}
-import navigation.ProductEntryNavigator
-import pages.productEntry._
-import pages.returns.DeclareAlcoholDutyQuestionPage
+import navigation.ReturnsNavigator
+import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -36,7 +35,7 @@ import scala.util.Try
 class DeclareAlcoholDutyQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: ProductEntryNavigator,
+  navigator: ReturnsNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -83,15 +82,8 @@ class DeclareAlcoholDutyQuestionController @Inject() (
     } else {
       userAnswer.remove(
         List(
-          ProductNamePage,
-          AlcoholByVolumeQuestionPage,
-          DraughtReliefQuestionPage,
-          SmallProducerReliefQuestionPage,
-          DeclareSmallProducerReliefDutyRatePage,
-          ProductVolumePage,
-          ProductListPage,
-          ProductEntryListPage,
-          CurrentProductEntryPage
+          WhatDoYouNeedToDeclarePage,
+          HowMuchDoYouNeedToDeclarePage
         )
       )
     }

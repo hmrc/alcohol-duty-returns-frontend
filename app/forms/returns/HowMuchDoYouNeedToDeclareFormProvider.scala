@@ -17,20 +17,21 @@
 package forms.returns
 
 import javax.inject.Inject
-
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
-import models.returns.HowMuchDoYouNeedToDeclare
+import models.returns.VolumesByTaxType
 
 class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[HowMuchDoYouNeedToDeclare] = Form(
-     mapping(
-      "field1" -> text("howMuchDoYouNeedToDeclare.error.field1.required")
-        .verifying(maxLength(100, "howMuchDoYouNeedToDeclare.error.field1.length")),
-      "field2" -> text("howMuchDoYouNeedToDeclare.error.field2.required")
-        .verifying(maxLength(100, "howMuchDoYouNeedToDeclare.error.field2.length"))
-    )(HowMuchDoYouNeedToDeclare.apply)(HowMuchDoYouNeedToDeclare.unapply)
-   )
- }
+  def apply(): Form[Seq[VolumesByTaxType]] = Form(
+    "volumes" -> seq(
+      volumes(
+        "howMuchDoYouNeedToDeclare.error.invalid",
+        "howMuchDoYouNeedToDeclare.error.allRequired",
+        "howMuchDoYouNeedToDeclare.error.required",
+        "howMuchDoYouNeedToDeclare.error.decimalPlacesKey"
+      )
+    ).verifying(nonEmptySeq("howMuchDoYouNeedToDeclare.error.required"))
+  )
+}
