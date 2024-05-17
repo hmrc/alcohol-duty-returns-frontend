@@ -51,7 +51,7 @@ class TaskListControllerSpec extends SpecBase {
 
         val view             = application.injector.instanceOf[TaskListView]
         val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(expectedTaskList)(request, messages(application)).toString
@@ -60,10 +60,38 @@ class TaskListControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers.copy(validUntil = None))).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no period key is found" in {
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequestWithoutSession(GET, routes.TaskListController.onPageLoad.url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data or period key is found" in {
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers.copy(validUntil = None))).build()
+
+      running(application) {
+        val request = FakeRequestWithoutSession(GET, routes.TaskListController.onPageLoad.url)
 
         val result = route(application, request).value
 

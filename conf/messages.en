@@ -104,6 +104,14 @@ taskList.section.dutySuspended.notStarted = Tell us about your duty suspended de
 taskList.section.dutySuspended.inProgress = Change the deliveries you’ve told us about
 taskList.section.dutySuspended.completed = Change the deliveries you’ve told us about
 
+taskList.section.spirits.heading = Your spirits and ingredients
+taskList.section.spirits.needToDeclare.notStarted = Tell us about your spirits and ingredients
+taskList.section.spirits.needToDeclare.no = You don’t need to tell us about any spirits or ingredients
+taskList.section.spirits.needToDeclare.yes = You’ve told us you need to declare spirits and ingredients
+taskList.section.spirits.notStarted = Tell us about your spirits and ingredients
+taskList.section.spirits.inProgress = Change the spirits and ingredients you’ve told us about
+taskList.section.spirits.completed = Change the spirits and ingredients you’ve told us about
+
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
 beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty return for {0} to {1}.
