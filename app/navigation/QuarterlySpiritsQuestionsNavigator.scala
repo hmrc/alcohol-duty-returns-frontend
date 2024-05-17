@@ -25,9 +25,9 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
+class QuarterlySpiritsQuestionsNavigator @Inject() {
 
-  override val normalRoutes: Page => UserAnswers => Call = {
+  private val normalRoutes: Page => UserAnswers => Call = {
     case pages.spiritsQuestions.DeclareQuarterlySpiritsPage   => declareQuarterlySpiritsRoute
     case pages.spiritsQuestions.DeclareSpiritsTotalPage       =>
       _ => controllers.spiritsQuestions.routes.WhiskyController.onPageLoad(NormalMode)
@@ -48,8 +48,17 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
 
   }
 
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+  private def checkRouteMap(page: Page, hasChanged: Boolean): Call = page match {
+    case pages.spiritsQuestions.SpiritTypePage                =>
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+    case pages.spiritsQuestions.GrainsUsedPage                =>
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherMaltedGrainsController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+    case pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage =>
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+    case _                                                    => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
   }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
@@ -83,4 +92,11 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
       case Some(false) => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
+
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean = true): Call = mode match {
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode  =>
+      checkRouteMap(page, hasAnswerChanged)
+  }
 }
