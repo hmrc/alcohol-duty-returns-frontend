@@ -16,30 +16,105 @@
 
 package viewmodels.checkAnswers.returns
 
-import controllers.returns.routes
-import models.AlcoholRegime.Beer
-import models.{CheckMode, UserAnswers}
+import models.RateType.{Core, DraughtRelief, SmallProducerRelief}
+import models.returns.DutyByTaxType
+import models.{AlcoholByVolume, AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
 import pages.returns.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, Key, SummaryList, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object HowMuchDoYouNeedToDeclareSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.getByKey(HowMuchDoYouNeedToDeclarePage, Beer).map { answer =>
-      val value = ""
-
-      SummaryListRowViewModel(
-        key = "howMuchDoYouNeedToDeclare.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.HowMuchDoYouNeedToDeclareController.onPageLoad(CheckMode, Beer).url)
-            .withVisuallyHiddenText(messages("howMuchDoYouNeedToDeclare.change.hidden"))
+  def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand], userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryList] =
+    userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
+      case Some(dutyByTaxTypes) =>
+        Some(
+          SummaryList(
+            rows = rows(regime, rateBands, dutyByTaxTypes),
+            card = Some(
+              Card(
+                title = Some(
+                  CardTitle(content =
+                    Text(messages(s"howMuchDoYouNeedToDeclare.$regime.checkYourAnswersLabel.cardTitle"))
+                  )
+                ),
+                actions = Some(
+                  Actions(
+                    items = Seq(
+                      ActionItemViewModel(
+                        "site.change",
+                        controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
+                      )
+                        .withVisuallyHiddenText(messages("howMuchDoYouNeedToDeclare.change.hidden"))
+                    )
+                  )
+                )
+              )
+            )
+          )
         )
-      )
+      case _                    => None
     }
+
+  def rows(regime: AlcoholRegime, rateBands: Set[RateBand], dutyByTaxTypes: Seq[DutyByTaxType])(implicit
+    messages: Messages
+  ): Seq[SummaryListRow] = {
+    val rateBandsByRateType = rateBands
+      .groupBy(_.rateType)
+
+    val coreRows = rateBandsByRateType
+      .get(Core)
+      .map { coreRateBands =>
+        createRowValues(regime, Core, coreRateBands, dutyByTaxTypes)
+      }
+      .getOrElse(Seq.empty)
+
+    val draughtReliefRows = rateBandsByRateType
+      .get(DraughtRelief)
+      .map { draughtReliefRateBands =>
+        createRowValues(regime, DraughtRelief, draughtReliefRateBands, dutyByTaxTypes)
+      }
+      .getOrElse(Seq.empty)
+
+    coreRows ++ draughtReliefRows
+  }
+
+  def createRowValues(
+    regime: AlcoholRegime,
+    rateType: RateType,
+    rateBands: Set[RateBand],
+    dutyByTaxTypes: Seq[DutyByTaxType]
+  )(implicit messages: Messages): Seq[SummaryListRow] = {
+    val headRow = SummaryListRowViewModel(
+      key = messages(s"howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.${rateType.toString}"),
+      value = ValueViewModel("")
+    ).withCssClass("govuk-summary-list__row--no-border")
+
+    val dutyRows = rateBands.toSeq.map { rateBand =>
+      dutyByTaxTypes.find(_.taxType == rateBand.taxType) match {
+        case Some(dutyByTaxType) =>
+          Seq(
+            SummaryListRowViewModel(
+              key = KeyViewModel(WhatDoYouNeedToDeclareSummary.rateBandContent(regime, rateBand)),
+              value = Value()
+            ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
+            SummaryListRowViewModel(
+              key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres"),
+              value = ValueViewModel(s"${dutyByTaxType.totalLitres.toString} ${messages("site.unit.litres")}")
+            ).withCssClass("govuk-summary-list__row--no-border"),
+            SummaryListRowViewModel(
+              key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol"),
+              value = ValueViewModel(s"${dutyByTaxType.pureAlcohol.toString} ${messages("site.unit.litres")}")
+            )
+          )
+        case _                   => throw new IllegalArgumentException(s"Invalid tax type: ${rateBand.taxType}")
+      }
+    }
+    Seq(headRow) ++ dutyRows.flatten
+  }
 }

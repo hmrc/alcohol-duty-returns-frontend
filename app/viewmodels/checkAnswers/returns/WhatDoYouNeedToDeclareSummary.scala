@@ -16,39 +16,67 @@
 
 package viewmodels.checkAnswers.returns
 
-import controllers.returns.routes
-import models.AlcoholRegime.Beer
-import models.{CheckMode, UserAnswers}
-import pages.returns.WhatDoYouNeedToDeclarePage
+import models.{AlcoholByVolume, AlcoholRegime, CheckMode, RateBand, UserAnswers}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object WhatDoYouNeedToDeclareSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WhatDoYouNeedToDeclarePage).map { answers =>
-      val value = ValueViewModel(
-        HtmlContent(
-          answers
-            .map { answer =>
-              HtmlFormat.escape(messages(s"whatDoYouNeedToDeclare.$answer")).toString
-            }
-            .mkString(",<br>")
+  def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryList =
+    SummaryList(
+      rows = Seq(row(regime, rateBands)),
+      card = Some(
+        Card(
+          title =
+            Some(CardTitle(content = Text(messages(s"whatDoYouNeedToDeclare.$regime.checkYourAnswersLabel.card")))),
+          actions = Some(
+            Actions(
+              items = Seq(
+                ActionItemViewModel(
+                  "site.change",
+                  controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
+                )
+                  .withVisuallyHiddenText(messages("whatDoYouNeedToDeclare.change.hidden"))
+              )
+            )
+          )
         )
       )
+    )
 
-      SummaryListRowViewModel(
-        key = "whatDoYouNeedToDeclare.checkYourAnswersLabel",
-        value = value,
-        actions = Seq(
-          // TODO: insert the correct regime in the url
-          ActionItemViewModel("site.change", routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, Beer).url)
-            .withVisuallyHiddenText(messages("whatDoYouNeedToDeclare.change.hidden"))
+  def row(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = messages(s"whatDoYouNeedToDeclare.$regime.checkYourAnswersLabel.row"),
+      value = ValueViewModel(
+        HtmlContent(
+          "<ul>" +
+            rateBands
+              .map(answer => s"<li>${rateBandContent(regime, answer)}</li>")
+              .mkString("")
+            + "</ul>"
         )
-      )
+      ),
+      actions = Seq()
+    )
+
+  def rateBandContent(regime: AlcoholRegime, rateBand: RateBand)(implicit messages: Messages): String =
+    rateBand.maxABV match {
+      case AlcoholByVolume.MAX =>
+        messages(
+          s"whatDoYouNeedToDeclare.$regime.checkYourAnswersLabel.option.abv.exceeding.max.${rateBand.rateType}",
+          rateBand.minABV.value,
+          rateBand.taxType
+        )
+      case _                   =>
+        messages(
+          s"whatDoYouNeedToDeclare.$regime.checkYourAnswersLabel.option.abv.interval.${rateBand.rateType}",
+          rateBand.minABV.value,
+          rateBand.maxABV.value,
+          rateBand.taxType
+        )
     }
+
 }

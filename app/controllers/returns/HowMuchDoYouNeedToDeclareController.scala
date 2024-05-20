@@ -83,7 +83,9 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
                   updatedAnswers <-
                     Future.fromTry(request.userAnswers.setByKey(HowMuchDoYouNeedToDeclarePage, regime, dutyByTaxTypes))
                   _              <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(HowMuchDoYouNeedToDeclarePage, mode, updatedAnswers))
+                } yield Redirect(
+                  navigator.nextPageWithRegime(HowMuchDoYouNeedToDeclarePage, mode, updatedAnswers, regime)
+                )
             )
       }
     }

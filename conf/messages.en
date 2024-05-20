@@ -180,6 +180,18 @@ whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = Draught {0} eligi
 whatDoYouNeedToDeclare.option.abv.interval = Between {0}% and {1}% ABV (tax type code {2})
 whatDoYouNeedToDeclare.option.abv.exceeding.max = Exceeding {0}% ABV (tax type code {1})
 
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.card = Beer to declare
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.row = Selected beer to declare
+
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.interval.Core = Non-draught, between {0}% and {1}% ABV (tax type code {2})
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.exceeding.max.Core = Non-draught, exceeding {0}% ABV (tax type code {1})
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.interval.DraughtRelief = Draught, between {0}% and {1}% ABV (tax type code {2})
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.exceeding.max.DraughtRelief = Draught, exceeding {0}% ABV (tax type code {1})
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.interval.spr = Non-draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.exceeding.max.spr = Non-draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.interval.draught = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
+whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.exceeding.max.draughtSpr = Draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
+
 howMuchDoYouNeedToDeclare.title = How much {0} do you need to declare?
 howMuchDoYouNeedToDeclare.heading = How much {0} do you need to declare?
 howMuchDoYouNeedToDeclare.p1 = Tell us about the beer you need to declare and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
@@ -191,8 +203,17 @@ howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type
 howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres of spirits
 howMuchDoYouNeedToDeclare.legend.pureAlcohol = Litres of pure alcohol
 howMuchDoYouNeedToDeclare.error.required = Enter how much {0} you need to declare
-howMuchDoYouNeedToDeclare.checkYourAnswersLabel = HowMuchDoYouNeedToDeclare
 
+howMuchDoYouNeedToDeclare.Beer.checkYourAnswersLabel.cardTitle = Beer duty
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced rate
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total litres
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
+
+checkYourAnswers.title =  Check your answers
+checkYourAnswers.heading =  Check your answers
+
+# old return journey
 
 productEntryGuidance.title = Tell us about your alcohol
 productEntryGuidance.heading = Tell us about your alcohol
@@ -876,5 +897,3 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
-
-

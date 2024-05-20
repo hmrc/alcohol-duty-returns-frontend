@@ -44,6 +44,10 @@ POST       /how-much-do-you-need-to-declare/:regime                           co
 GET        /change-how-much-do-you-need-to-declare/:regime                     controllers.returns.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
 POST       /change-how-much-do-you-need-to-declare/:regime                     controllers.returns.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
+GET        /return-check-your-answers/:regime                      controllers.returns.CheckYourAnswersController.onPageLoad(regime: AlcoholRegime)
+
+# old journey
+
 GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)
 GET        /change-what-name-do-you-want-to-give-this-product                  controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = CheckMode)
@@ -262,5 +266,4 @@ POST       /change-how-much-is-the-adjustment                        controllers
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
-
 

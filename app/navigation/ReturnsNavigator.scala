@@ -21,7 +21,7 @@ import play.api.mvc.Call
 import controllers.routes
 import pages._
 import models._
-import pages.returns.{DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 
 @Singleton
 class ReturnsNavigator @Inject() () {
@@ -32,9 +32,11 @@ class ReturnsNavigator @Inject() () {
   }
 
   private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegime => Call = {
-    case WhatDoYouNeedToDeclarePage =>
+    case WhatDoYouNeedToDeclarePage    =>
       _ => regime => controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
-    case _                          => _ => _ => routes.IndexController.onPageLoad
+    case HowMuchDoYouNeedToDeclarePage =>
+      _ => regime => controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+    case _                             => _ => _ => routes.IndexController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {

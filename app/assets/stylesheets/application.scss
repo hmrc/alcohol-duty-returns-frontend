@@ -8,3 +8,8 @@
 .govuk-grid-column-two-thirds {
   min-height: 1px;
 }
+
+.govuk-summary-list__only_key {
+  width: 100%;
+  display: block ruby;
+}
