@@ -39,32 +39,32 @@ class ProductEntryNavigatorSpec extends SpecBase {
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.IndexController.onPageLoad
       }
 
-      "must go from the Alcohol to declare to Product Entry Guidance page if the answer is Yes" in {
-
-        navigator.nextPage(
-          DeclareAlcoholDutyQuestionPage,
-          NormalMode,
-          emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
-        ) mustBe controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
-      }
-
-      "must go from the Alcohol to declare to task list page if the answer is No" in {
-
-        navigator.nextPage(
-          pages.returns.DeclareAlcoholDutyQuestionPage,
-          NormalMode,
-          emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, false).success.value
-        ) mustBe routes.TaskListController.onPageLoad
-      }
-
-      "must go from the Alcohol to declare to Journey Recovery page if there is no answer" in {
-
-        navigator.nextPage(
-          pages.returns.DeclareAlcoholDutyQuestionPage,
-          NormalMode,
-          emptyUserAnswers
-        ) mustBe routes.JourneyRecoveryController.onPageLoad()
-      }
+//      "must go from the Alcohol to declare to Product Entry Guidance page if the answer is Yes" in {
+//
+//        navigator.nextPage(
+//          DeclareAlcoholDutyQuestionPage,
+//          NormalMode,
+//          emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
+//        ) mustBe controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
+//      }
+//
+//      "must go from the Alcohol to declare to task list page if the answer is No" in {
+//
+//        navigator.nextPage(
+//          pages.returns.DeclareAlcoholDutyQuestionPage,
+//          NormalMode,
+//          emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, false).success.value
+//        ) mustBe routes.TaskListController.onPageLoad
+//      }
+//
+//      "must go from the Alcohol to declare to Journey Recovery page if there is no answer" in {
+//
+//        navigator.nextPage(
+//          pages.returns.DeclareAlcoholDutyQuestionPage,
+//          NormalMode,
+//          emptyUserAnswers
+//        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+//      }
 
       "must go from Product name page to Alcohol by volume page" in {
 

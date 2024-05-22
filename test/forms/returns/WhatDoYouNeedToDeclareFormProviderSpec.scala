@@ -17,24 +17,26 @@
 package forms.returns
 
 import forms.behaviours.CheckboxFieldBehaviours
-import models.returns.WhatDoYouNeedToDeclare
-import play.api.data.FormError
 
 class WhatDoYouNeedToDeclareFormProviderSpec extends CheckboxFieldBehaviours {
 
   val form = new WhatDoYouNeedToDeclareFormProvider()()
 
-  ".value" - {
-
-    val fieldName   = "value"
+  ".rateBand" - {
+    val fieldName   = "rateBand"
     val requiredKey = "whatDoYouNeedToDeclare.error.required"
+    val values      = Seq("A", "B", "C")
 
-    behave like checkboxField[WhatDoYouNeedToDeclare](
-      form,
-      fieldName,
-      validValues = WhatDoYouNeedToDeclare.values,
-      invalidError = FormError(s"$fieldName[0]", "error.invalid")
-    )
+    for {
+      (value, i) <- values.zipWithIndex
+    } yield s"binds `$value` successfully" in {
+      val data   = Map(
+        s"$fieldName[$i]" -> value
+      )
+      val result = form.bind(data)
+      result.get mustEqual Set(value)
+      result.errors mustBe empty
+    }
 
     behave like mandatoryCheckboxField(
       form,

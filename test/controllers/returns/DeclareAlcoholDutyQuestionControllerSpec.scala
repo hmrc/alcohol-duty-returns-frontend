@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.CacheConnector
 import forms.returns.DeclareAlcoholDutyQuestionFormProvider
 import models.NormalMode
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.{FakeProductEntryNavigator, FakeReturnsNavigator, ProductEntryNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -91,7 +91,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -117,7 +117,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSuga
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

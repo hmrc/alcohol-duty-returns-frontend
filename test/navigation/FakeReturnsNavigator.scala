@@ -22,6 +22,15 @@ import models.{Mode, UserAnswers}
 
 class FakeReturnsNavigator(desiredRoute: Call) extends ReturnsNavigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, boolean: Boolean): Call =
+    desiredRoute
+
+  override def nextPageWithRegime(
+    page: Page,
+    mode: Mode,
+    userAnswers: UserAnswers,
+    regime: models.AlcoholRegime,
+    hasAnswerChanged: Boolean
+  ): Call =
     desiredRoute
 }

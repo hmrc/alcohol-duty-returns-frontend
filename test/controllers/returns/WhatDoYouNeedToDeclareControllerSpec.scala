@@ -18,8 +18,7 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.WhatDoYouNeedToDeclareFormProvider
-import models.{AlcoholByVolume, NormalMode, RateBand, RateType}
-import models.returns.WhatDoYouNeedToDeclare
+import models.NormalMode
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -29,7 +28,6 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
-import models.AlcoholRegime.Beer
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.returns.TaxBandsViewModel
 import views.html.returns.WhatDoYouNeedToDeclareView
@@ -40,43 +38,31 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val whatDoYouNeedToDeclareRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Beer).url
+  val regime                           = regimeGen.sample.value
+  lazy val whatDoYouNeedToDeclareRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
 
   val formProvider                       = new WhatDoYouNeedToDeclareFormProvider()
   val form                               = formProvider()
   val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
 
-  private val rateBandList = Seq(
-    RateBand(
-      "311",
-      "some band",
-      RateType.Core,
-      Set(Beer),
-      AlcoholByVolume(1.2),
-      AlcoholByVolume(3.4),
-      Some(BigDecimal(10))
-    ),
-    RateBand(
-      "321",
-      "some band",
-      RateType.Core,
-      Set(Beer),
-      AlcoholByVolume(3.5),
-      AlcoholByVolume(8.4),
-      Some(BigDecimal(10))
-    )
-  )
+  val rateBandList = arbitraryRateBandList(regime).arbitrary.sample.value
 
   when(mockAlcoholDutyCalculatorConnector.rateBandByRegime(any(), any())(any())) thenReturn Future.successful(
     rateBandList
   )
+
+  val mockCacheConnector = mock[CacheConnector]
+  when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
   "WhatDoYouNeedToDeclare Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
         .build()
 
       running(application) {
@@ -88,7 +74,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
-        contentAsString(result) mustEqual view(form, Beer, taxBandsViewModel, NormalMode)(
+        contentAsString(result) mustEqual view(form, regime, taxBandsViewModel, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -98,9 +84,14 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        emptyUserAnswers.set(WhatDoYouNeedToDeclarePage, WhatDoYouNeedToDeclare.values.toSet).success.value
+        emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, whatDoYouNeedToDeclareRoute)
@@ -112,8 +103,8 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
         val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
         contentAsString(result) mustEqual view(
-          form.fill(WhatDoYouNeedToDeclare.values.toSet),
-          Beer,
+          form.fill(rateBandList.map(_.taxType).toSet),
+          regime,
           taxBandsViewModel,
           NormalMode
         )(
@@ -125,22 +116,22 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockCacheConnector = mock[CacheConnector]
-
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
 
       running(application) {
+
+        val selectedRateBand = rateBandList.head
+
         val request =
           FakeRequest(POST, whatDoYouNeedToDeclareRoute)
-            .withFormUrlEncodedBody(("value[0]", WhatDoYouNeedToDeclare.values.head.toString))
+            .withFormUrlEncodedBody((s"rateBand[${selectedRateBand.taxType}]", selectedRateBand.taxType))
 
         val result = route(application, request).value
 
@@ -151,14 +142,19 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request =
           FakeRequest(POST, whatDoYouNeedToDeclareRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+            .withFormUrlEncodedBody((s"value[0]", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(Map(s"value[0]" -> "invalid value"))
 
         val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
 
@@ -166,7 +162,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual BAD_REQUEST
         val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
-        contentAsString(result) mustEqual view(boundForm, Beer, taxBandsViewModel, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, regime, taxBandsViewModel, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -192,9 +188,10 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request =
+        val selectedRateBand = rateBandList.head
+        val request          =
           FakeRequest(POST, whatDoYouNeedToDeclareRoute)
-            .withFormUrlEncodedBody(("value[0]", WhatDoYouNeedToDeclare.values.head.toString))
+            .withFormUrlEncodedBody((s"value[${selectedRateBand.taxType}]", selectedRateBand.toString))
 
         val result = route(application, request).value
 

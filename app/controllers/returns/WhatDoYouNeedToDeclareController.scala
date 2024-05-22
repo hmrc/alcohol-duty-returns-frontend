@@ -68,11 +68,11 @@ class WhatDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       getRateBands(request.userAnswers, request.returnPeriod, request.regimes, regime).flatMap {
         rateBands: Seq[RateBand] =>
-          val taxBandsViewModel = TaxBandsViewModel(rateBands)
           form
             .bindFromRequest()
             .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, taxBandsViewModel, mode))),
+              formWithErrors =>
+                Future.successful(BadRequest(view(formWithErrors, regime, TaxBandsViewModel(rateBands), mode))),
               value =>
                 for {
                   rateBands      <- Future.fromTry(rateBandFromTaxType(value, rateBands))

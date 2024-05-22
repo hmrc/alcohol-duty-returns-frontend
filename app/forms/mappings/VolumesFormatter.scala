@@ -41,14 +41,14 @@ class VolumesFormatter(
 
   private val pureAlcoholBigDecimalFormatter = bigDecimalFormatter(
     decimalPlaces = 2,
-    requiredKey = s"$requiredKey.totalLitres",
-    nonNumericKey = s"$invalidKey.totalLitres",
-    decimalPlacesKey = s"$decimalPlacesKey.totalLitres",
+    requiredKey = s"$requiredKey.pureAlcohol",
+    nonNumericKey = s"$invalidKey.pureAlcohol",
+    decimalPlacesKey = s"$decimalPlacesKey.pureAlcohol",
     args
   )
 
   private val taxTypeStringFormatter = stringFormatter(
-    errorKey = s"$requiredKey.pureAlcohol",
+    errorKey = s"$requiredKey.taxType",
     args
   )
 

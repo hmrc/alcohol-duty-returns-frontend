@@ -21,24 +21,12 @@ import models.productEntry.ProductEntry
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
-
 import enumeratum.scalacheck._
+import models.returns.DutyByTaxType
+
 import java.time.YearMonth
 
 trait ModelGenerators {
-
-  implicit lazy val arbitraryHowMuchDoYouNeedToDeclare: Arbitrary[returns.DutyByTaxType] =
-    Arbitrary {
-      for {
-        field1 <- arbitrary[String]
-        field2 <- arbitrary[String]
-      } yield returns.HowMuchDoYouNeedToDeclare(field1, field2)
-    }
-
-  implicit lazy val arbitraryWhatDoYouNeedToDeclare: Arbitrary[returns.WhatDoYouNeedToDeclare] =
-    Arbitrary {
-      Gen.oneOf(returns.WhatDoYouNeedToDeclare.values)
-    }
 
   implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =
     Arbitrary {
@@ -254,7 +242,8 @@ trait ModelGenerators {
   implicit val arbitraryProductEntryList: Arbitrary[List[ProductEntry]] = Arbitrary {
     Gen.listOf(productEntryGen)
   }
-  def productEntryGen: Gen[ProductEntry]                                = for {
+
+  def productEntryGen: Gen[ProductEntry] = for {
     name                <- Gen.alphaStr
     abv                 <- arbitrary[AlcoholByVolume]
     rateType            <- arbitrary[RateType]
@@ -300,5 +289,31 @@ trait ModelGenerators {
   def appaIdGen: Gen[String] = Gen.listOfN(10, Gen.numChar).map(id => s"XMADP${id.mkString}")
 
   def regimeGen: Gen[AlcoholRegime] = Gen.oneOf(AlcoholRegime.values)
+
+  def rateBandGen(regime: AlcoholRegime): Gen[RateBand] = for {
+    taxType     <- Gen.chooseNum(300, 400).map(_.toString)
+    description <- Gen.alphaStr
+    rateType    <- arbitrary[RateType]
+    minABV      <- arbitrary[AlcoholByVolume]
+    maxABV      <- arbitrary[AlcoholByVolume]
+    rate        <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
+  } yield RateBand(taxType, description, rateType, Set(regime), minABV, maxABV, rate)
+
+  def arbitraryRateBandList(regime: AlcoholRegime): Arbitrary[List[RateBand]] = Arbitrary {
+    Gen.listOfN(10, rateBandGen(regime))
+  }
+
+  def genDutyTaxTypesFromRateBand(rateBand: RateBand): Arbitrary[DutyByTaxType] = Arbitrary {
+    for {
+      totalLitres <- genAlcoholByVolumeValue
+      pureAlcohol <- genAlcoholByVolumeValue
+      sprDutyRate <- Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_))
+    } yield DutyByTaxType(
+      rateBand.taxType,
+      totalLitres,
+      pureAlcohol,
+      rateBand.rate.getOrElse(sprDutyRate)
+    )
+  }
 
 }
