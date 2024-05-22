@@ -24,21 +24,22 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DoYouHaveMultipleSPRDutyRatesSummary  {
+object DoYouHaveMultipleSPRDutyRatesSummary {
 
   def row(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime).map {
-      answer =>
+    answers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        val value = if (answer) "site.yes" else "site.no"
-
-        SummaryListRowViewModel(
-          key     = "doYouHaveMultipleSPRDutyRates.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(CheckMode, regime).url)
-              .withVisuallyHiddenText(messages("doYouHaveMultipleSPRDutyRates.change.hidden"))
+      SummaryListRowViewModel(
+        key = "doYouHaveMultipleSPRDutyRates.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(CheckMode, regime).url
           )
+            .withVisuallyHiddenText(messages("doYouHaveMultipleSPRDutyRates.change.hidden"))
         )
+      )
     }
 }

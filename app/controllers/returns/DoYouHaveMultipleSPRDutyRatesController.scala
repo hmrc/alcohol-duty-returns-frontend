@@ -31,43 +31,44 @@ import views.html.returns.DoYouHaveMultipleSPRDutyRatesView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DoYouHaveMultipleSPRDutyRatesController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         cacheConnector: CacheConnector,
-                                         navigator: ReturnsNavigator,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: DoYouHaveMultipleSPRDutyRatesFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: DoYouHaveMultipleSPRDutyRatesView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class DoYouHaveMultipleSPRDutyRatesController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: ReturnsNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: DoYouHaveMultipleSPRDutyRatesFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: DoYouHaveMultipleSPRDutyRatesView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-
+  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+    (identify andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime) match {
-        case None => form
+        case None        => form
         case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, regime, mode))
-  }
+    }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, regime, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(DoYouHaveMultipleSPRDutyRatesPage, mode, updatedAnswers))
-      )
-  }
+  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, mode))),
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, value))
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(DoYouHaveMultipleSPRDutyRatesPage, mode, updatedAnswers))
+        )
+    }
 }

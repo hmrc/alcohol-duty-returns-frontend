@@ -22,7 +22,7 @@ import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{ProductEntryListPage, ProductListPage}
-import pages.returns.DeclareAlcoholDutyQuestionPage
+import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -74,11 +74,11 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .success
         .value
 
-      "must have a link to ProductEntryGuidanceController if the user has not answer any other question" in {
+      "must have a link to the 'What do you need to declare?' screen if the user has not answered any other question" in {
         val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, declaredAlcoholDutyUserAnswer)
 
         result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
+        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
@@ -88,27 +88,36 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.returns.products.notStarted")
-        )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
+        AlcoholRegime.values.foreach(regime =>
+          result.taskList.items
+            .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
+            case Some(task) =>
+              task.status shouldBe AlcholDutyTaskListItemStatus.notStarted
+              task.href   shouldBe Some(
+                controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+              )
+            case None       => fail(s"Task for regime $regime not found")
+          }
         )
       }
 
-      "must have a link to ProductEntryGuidanceController if the user answer yes to ProductListPage question and the list is empty" in {
+      "must have a link to 'What do you need to declare?' screen and status set as 'In Progress' if the user has answered some questions" in {
         val userAnswers = declaredAlcoholDutyUserAnswer
           .set(ProductEntryListPage, Seq.empty)
           .success
           .value
-          .set(ProductListPage, true)
-          .success
-          .value
-        val result      = ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers)
 
+        val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
+          val rateBands = arbitraryRateBandList(regime).arbitrary.sample.value
+          ua
+            .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
+            .success
+            .value
+        }
+
+        val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, filledUserAnswers)
         result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
+        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
@@ -118,59 +127,42 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.returns.products.notStarted")
-        )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
-        )
-      }
-
-      "must have a link to ProductListController if the user answer yes to ProductListPage question and the list is not empty" in {
-        val productEntry = productEntryGen.sample.get
-        val userAnswers  = declaredAlcoholDutyUserAnswer
-          .set(ProductEntryListPage, Seq(productEntry))
-          .success
-          .value
-          .set(ProductListPage, true)
-          .success
-          .value
-        val result       = ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers)
-
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.returns.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.returns.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-        )
-
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.returns.products.inProgress")
-        )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.productEntry.routes.ProductListController.onPageLoad().url
+        AlcoholRegime.values.foreach(regime =>
+          result.taskList.items
+            .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
+            case Some(task) =>
+              task.status shouldBe AlcholDutyTaskListItemStatus.inProgress
+              task.href   shouldBe Some(
+                controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+              )
+            case None       => fail(s"Task for regime $regime not found")
+          }
         )
       }
 
-      "must have a link to ProductListController if the user answer no to ProductListPage question and the list is not empty" in {
-        val productEntry = productEntryGen.sample.get
-        val userAnswers  = declaredAlcoholDutyUserAnswer
-          .set(ProductEntryListPage, Seq(productEntry))
+      "must have a link to 'What do you need to declare?' screen and status set as 'Completed' if the user has answered all the questions" in {
+        val userAnswers = declaredAlcoholDutyUserAnswer
+          .set(ProductEntryListPage, Seq.empty)
           .success
           .value
-          .set(ProductListPage, false)
-          .success
-          .value
-        val result       = ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers)
 
+        val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
+          val rateBands     = arbitraryRateBandList(regime).arbitrary.sample.value
+          val dutyByTaxType = rateBands.map { rateBand =>
+            genDutyTaxTypesFromRateBand(rateBand).arbitrary.sample.value
+          }
+          ua
+            .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
+            .success
+            .value
+            .setByKey(HowMuchDoYouNeedToDeclarePage, regime, dutyByTaxType)
+            .success
+            .value
+        }
+
+        val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, filledUserAnswers)
         result.completedTask                     shouldBe true
-        result.taskList.items.size               shouldBe 2
+        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
@@ -180,12 +172,16 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.returns.products.completed")
-        )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.productEntry.routes.ProductListController.onPageLoad().url
+        AlcoholRegime.values.foreach(regime =>
+          result.taskList.items
+            .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
+            case Some(task) =>
+              task.status shouldBe AlcholDutyTaskListItemStatus.inProgress
+              task.href   shouldBe Some(
+                controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+              )
+            case None       => fail(s"Task for regime $regime not found")
+          }
         )
       }
     }

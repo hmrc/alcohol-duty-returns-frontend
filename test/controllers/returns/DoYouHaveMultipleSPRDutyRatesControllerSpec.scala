@@ -38,10 +38,11 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase with MockitoS
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DoYouHaveMultipleSPRDutyRatesFormProvider()
-  val form = formProvider()
-  val regime = regimeGen.sample.value
+  val form         = formProvider()
+  val regime       = regimeGen.sample.value
 
-  lazy val doYouHaveMultipleSPRDutyRatesRoute = controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime).url
+  lazy val doYouHaveMultipleSPRDutyRatesRoute =
+    controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime).url
 
   "DoYouHaveMultipleSPRDutyRates Controller" - {
 
@@ -75,7 +76,10 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), regime, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), regime, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

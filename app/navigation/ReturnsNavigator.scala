@@ -19,6 +19,7 @@ package navigation
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import controllers.routes
+import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
 import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
@@ -33,9 +34,35 @@ class ReturnsNavigator @Inject() () {
 
   private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegime => Call = {
     case WhatDoYouNeedToDeclarePage    =>
-      _ => regime => controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
+      ua =>
+        regime =>
+          ua.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+            case Some(rateBands)
+                if rateBands
+                  .map(_.rateType)
+                  .intersect(Set(Core, DraughtRelief))
+                  .nonEmpty =>
+              controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
+            case Some(_) =>
+              controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+            case _       =>
+              routes.IndexController.onPageLoad
+          }
     case HowMuchDoYouNeedToDeclarePage =>
-      _ => regime => controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+      ua =>
+        regime =>
+          ua.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+            case Some(rateBands)
+                if rateBands
+                  .map(_.rateType)
+                  .intersect(Set(SmallProducerRelief, DraughtAndSmallProducerRelief))
+                  .nonEmpty =>
+              controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+            case Some(_) =>
+              controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+            case _       =>
+              routes.IndexController.onPageLoad
+          }
     case _                             => _ => _ => routes.IndexController.onPageLoad
   }
 
