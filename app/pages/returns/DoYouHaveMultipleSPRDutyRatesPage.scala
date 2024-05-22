@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package pages
+package pages.returns
 
-package object returns {
-  val sectionPages: Seq[QuestionPage[_]] =
-    Seq(WhatDoYouNeedToDeclarePage, HowMuchDoYouNeedToDeclarePage, DoYouHaveMultipleSPRDutyRatesPage)
+import models.AlcoholRegime
+import models.returns.DutyByTaxType
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+
+case object DoYouHaveMultipleSPRDutyRatesPage extends QuestionPage[Map[AlcoholRegime, Boolean]] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "doYouHaveMultipleSPRDutyRates"
 }
