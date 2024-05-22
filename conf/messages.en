@@ -210,6 +210,19 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total litres
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 
+doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?
+doYouHaveMultipleSPRDutyRates.heading = More than one Small Producer Relief duty rate?
+doYouHaveMultipleSPRDutyRates.h1 = If you have more than one Small Producer Relief duty rate
+doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}. This may be for one of the following reasons:
+doYouHaveMultipleSPRDutyRates.l1 = Reason 1
+doYouHaveMultipleSPRDutyRates.l2 = Reason 2
+doYouHaveMultipleSPRDutyRates.l3 = Reason 3
+doYouHaveMultipleSPRDutyRates.p2 = If you do have more than one Small Producer Relief duty rate for the same type of beer you will need to input them individually. We need to know the type of beer, the total amount of beer, the litres of pure alcohol in beer and the applicable duty rate for each Small Producer Relief rate you have.
+doYouHaveMultipleSPRDutyRates.h2 = Do you have more than one Small Producer Relief duty rate?
+doYouHaveMultipleSPRDutyRates.checkYourAnswersLabel = doYouHaveMultipleSPRDutyRates
+doYouHaveMultipleSPRDutyRates.error.required = Select yes if you have multiple SPR duty rates
+doYouHaveMultipleSPRDutyRates.change.hidden = DoYouHaveMultipleSPRDutyRates
+
 checkYourAnswers.title =  Check your answers
 checkYourAnswers.heading =  Check your answers
 
@@ -897,3 +910,5 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
+
+

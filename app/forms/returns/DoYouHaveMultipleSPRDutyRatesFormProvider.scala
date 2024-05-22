@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-package pages
+package forms.returns
 
-package object returns {
-  val sectionPages: Seq[QuestionPage[_]] =
-    Seq(WhatDoYouNeedToDeclarePage, HowMuchDoYouNeedToDeclarePage, DoYouHaveMultipleSPRDutyRatesPage)
+import javax.inject.Inject
+
+import forms.mappings.Mappings
+import play.api.data.Form
+
+class DoYouHaveMultipleSPRDutyRatesFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "doYouHaveMultipleSPRDutyRates-yesNoValue" -> boolean("doYouHaveMultipleSPRDutyRates.error.required")
+    )
 }
