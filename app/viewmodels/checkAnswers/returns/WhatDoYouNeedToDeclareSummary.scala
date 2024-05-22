@@ -30,8 +30,16 @@ object WhatDoYouNeedToDeclareSummary {
       rows = Seq(row(regime, rateBands)),
       card = Some(
         Card(
-          title =
-            Some(CardTitle(content = Text(messages(s"whatDoYouNeedToDeclare.$regime.checkYourAnswersLabel.card")))),
+          title = Some(
+            CardTitle(content =
+              Text(
+                messages(
+                  s"whatDoYouNeedToDeclare.checkYourAnswersLabel.card",
+                  messages(s"return.regime.${regime.toString}")
+                ).capitalize
+              )
+            )
+          ),
           actions = Some(
             Actions(
               items = Seq(
@@ -49,12 +57,15 @@ object WhatDoYouNeedToDeclareSummary {
 
   def row(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
-      key = messages(s"whatDoYouNeedToDeclare.$regime.checkYourAnswersLabel.row"),
+      key = messages(
+        s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row",
+        messages(s"return.regime.${regime.toString}").capitalize
+      ),
       value = ValueViewModel(
         HtmlContent(
           "<ul>" +
             rateBands
-              .map(answer => s"<li>${rateBandContent(regime, answer)}</li>")
+              .map(answer => s"<li>${rateBandContent(answer)}</li>")
               .mkString("")
             + "</ul>"
         )
@@ -62,17 +73,17 @@ object WhatDoYouNeedToDeclareSummary {
       actions = Seq()
     )
 
-  def rateBandContent(regime: AlcoholRegime, rateBand: RateBand)(implicit messages: Messages): String =
+  def rateBandContent(rateBand: RateBand)(implicit messages: Messages): String =
     rateBand.maxABV match {
       case AlcoholByVolume.MAX =>
         messages(
-          s"whatDoYouNeedToDeclare.$regime.checkYourAnswersLabel.option.abv.exceeding.max.${rateBand.rateType}",
+          s"whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.${rateBand.rateType}",
           rateBand.minABV.value,
           rateBand.taxType
         )
       case _                   =>
         messages(
-          s"whatDoYouNeedToDeclare.$regime.checkYourAnswersLabel.option.abv.interval.${rateBand.rateType}",
+          s"whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.${rateBand.rateType}",
           rateBand.minABV.value,
           rateBand.maxABV.value,
           rateBand.taxType

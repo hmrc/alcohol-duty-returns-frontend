@@ -40,7 +40,12 @@ object HowMuchDoYouNeedToDeclareSummary {
               Card(
                 title = Some(
                   CardTitle(content =
-                    Text(messages(s"howMuchDoYouNeedToDeclare.$regime.checkYourAnswersLabel.cardTitle"))
+                    Text(
+                      messages(
+                        s"howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle",
+                        messages(s"return.regime.${regime.toString}")
+                      ).capitalize
+                    )
                   )
                 ),
                 actions = Some(
@@ -100,7 +105,7 @@ object HowMuchDoYouNeedToDeclareSummary {
         case Some(dutyByTaxType) =>
           Seq(
             SummaryListRowViewModel(
-              key = KeyViewModel(WhatDoYouNeedToDeclareSummary.rateBandContent(regime, rateBand)),
+              key = KeyViewModel(WhatDoYouNeedToDeclareSummary.rateBandContent(rateBand)),
               value = Value()
             ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
             SummaryListRowViewModel(

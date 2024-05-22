@@ -180,17 +180,17 @@ whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = Draught {0} eligi
 whatDoYouNeedToDeclare.option.abv.interval = Between {0}% and {1}% ABV (tax type code {2})
 whatDoYouNeedToDeclare.option.abv.exceeding.max = Exceeding {0}% ABV (tax type code {1})
 
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.card = Beer to declare
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.row = Selected beer to declare
+whatDoYouNeedToDeclare.checkYourAnswersLabel.card = {0} to declare
+whatDoYouNeedToDeclare.checkYourAnswersLabel.row = Selected {0} to declare
 
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.interval.Core = Non-draught, between {0}% and {1}% ABV (tax type code {2})
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.exceeding.max.Core = Non-draught, exceeding {0}% ABV (tax type code {1})
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.interval.DraughtRelief = Draught, between {0}% and {1}% ABV (tax type code {2})
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.exceeding.max.DraughtRelief = Draught, exceeding {0}% ABV (tax type code {1})
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.interval.spr = Non-draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.exceeding.max.spr = Non-draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.interval.draught = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
-whatDoYouNeedToDeclare.Beer.checkYourAnswersLabel.option.abv.exceeding.max.draughtSpr = Draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.Core = Non-draught, between {0}% and {1}% ABV (tax type code {2})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.Core = Non-draught, exceeding {0}% ABV (tax type code {1})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtRelief = Draught, between {0}% and {1}% ABV (tax type code {2})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtRelief = Draught, exceeding {0}% ABV (tax type code {1})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.spr = Non-draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.spr = Non-draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.draught = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.draughtSpr = Draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
 
 howMuchDoYouNeedToDeclare.title = How much {0} do you need to declare?
 howMuchDoYouNeedToDeclare.heading = How much {0} do you need to declare?
@@ -200,11 +200,11 @@ howMuchDoYouNeedToDeclare.hint = Give your answers in litres, to 2 decimal place
 howMuchDoYouNeedToDeclare.core.heading = How much {0} (standard rate) do you need to declare?
 howMuchDoYouNeedToDeclare.draught.heading = How much draught {0} (reduced rate) do you need to declare?
 howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type code {3})
-howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres of spirits
+howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres
 howMuchDoYouNeedToDeclare.legend.pureAlcohol = Litres of pure alcohol
 howMuchDoYouNeedToDeclare.error.required = Enter how much {0} you need to declare
 
-howMuchDoYouNeedToDeclare.Beer.checkYourAnswersLabel.cardTitle = Beer duty
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced rate
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total litres
