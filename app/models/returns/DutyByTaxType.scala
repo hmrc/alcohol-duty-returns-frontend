@@ -23,5 +23,5 @@ case class DutyByTaxType(taxType: String, totalLitres: BigDecimal, pureAlcohol: 
 }
 
 object DutyByTaxType {
-  implicit val format = Json.format[DutyByTaxType]
+  implicit val format: OFormat[DutyByTaxType] = Json.format[DutyByTaxType]
 }

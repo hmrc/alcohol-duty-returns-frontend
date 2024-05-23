@@ -18,10 +18,10 @@ package viewmodels.checkAnswers.returns
 
 import models.RateType.{Core, DraughtRelief, SmallProducerRelief}
 import models.returns.DutyByTaxType
-import models.{AlcoholByVolume, AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
 import pages.returns.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, Key, SummaryList, SummaryListRow, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._

@@ -42,7 +42,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
   lazy val whatDoYouNeedToDeclareRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
 
   val formProvider                       = new WhatDoYouNeedToDeclareFormProvider()
-  val form                               = formProvider()
+  val form                               = formProvider(regime)
   val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
 
   val rateBandList = arbitraryRateBandList(regime).arbitrary.sample.value

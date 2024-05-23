@@ -21,7 +21,7 @@ import models.returns.VolumesByTaxType
 import java.time.{LocalDate, YearMonth}
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
-import models.{Enumerable, RateBand}
+import models.Enumerable
 
 trait Mappings extends Formatters with Constraints {
 

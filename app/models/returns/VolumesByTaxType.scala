@@ -16,10 +16,10 @@
 
 package models.returns
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class VolumesByTaxType(taxType: String, totalLitres: BigDecimal, pureAlcohol: BigDecimal)
 
 object VolumesByTaxType {
-  implicit val format = Json.format[VolumesByTaxType]
+  implicit val format: OFormat[VolumesByTaxType] = Json.format[VolumesByTaxType]
 }

@@ -42,7 +42,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
   val regime = arbitrary[AlcoholRegime].sample.value
 
   val formProvider = new HowMuchDoYouNeedToDeclareFormProvider()
-  val form         = formProvider()
+  val form         = formProvider(regime)
 
   lazy val howMuchDoYouNeedToDeclareRoute =
     routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
