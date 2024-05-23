@@ -17,23 +17,27 @@
 package forms.returns
 
 import forms.behaviours.StringFieldBehaviours
+import generators.ModelGenerators
 import play.api.data.FormError
 
-class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours {
+class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours with ModelGenerators {
 
-  val form = new HowMuchDoYouNeedToDeclareFormProvider()()
+  val regime = regimeGen.sample.value
+  val form   = new HowMuchDoYouNeedToDeclareFormProvider()(regime)
 
   ".volumes" - {
 
     val fieldName            = "volumes"
-    val requiredKey          = "howMuchDoYouNeedToDeclare.error.required"
-    val allRequired          = "howMuchDoYouNeedToDeclare.error.allRequired"
-    val lengthKeyTotalLitres = "howMuchDoYouNeedToDeclare.error.decimalPlacesKey.totalLitres"
-    val lengthKeyPureAlcohol = "howMuchDoYouNeedToDeclare.error.decimalPlacesKey.pureAlcohol"
+    val requiredKey          = s"howMuchDoYouNeedToDeclare.error.required.${regime.toString}"
+    val allRequired          = s"howMuchDoYouNeedToDeclare.error.allRequired.${regime.toString}"
+    val lengthKeyTotalLitres = s"howMuchDoYouNeedToDeclare.error.decimalPlacesKey.${regime.toString}.totalLitres"
+    val lengthKeyPureAlcohol = s"howMuchDoYouNeedToDeclare.error.decimalPlacesKey.${regime.toString}.pureAlcohol"
+
+    val invalidKey = s"howMuchDoYouNeedToDeclare.error.invalid.${regime.toString}"
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
-      form.bind(data).errors must contain(FormError(fieldName, requiredKey))
+      form.bind(data).errors must contain(FormError(fieldName, allRequired))
     }
 
     "fail to bind when blank answer provided" in {
@@ -53,7 +57,9 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours {
           s"$fieldName[0].totalLitres" -> "1.1",
           s"$fieldName[0].pureAlcohol" -> "1.1"
         )
-        form.bind(data).errors must contain(FormError(s"$fieldName[0].taxType", requiredKey, Seq("taxType")))
+        form.bind(data).errors must contain(
+          FormError(s"${fieldName}_0.taxType", s"$requiredKey.taxType", Seq("taxType"))
+        )
       }
 
       "fail to bind when blank answer provided as total litres" in {
@@ -62,7 +68,9 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours {
           s"$fieldName[0].totalLitres" -> "",
           s"$fieldName[0].pureAlcohol" -> "1.1"
         )
-        form.bind(data).errors must contain(FormError(s"$fieldName[0].totalLitres", requiredKey, Seq("totalLitres")))
+        form.bind(data).errors must contain(
+          FormError(s"${fieldName}_0.totalLitres", s"$requiredKey.totalLitres", Seq("totalLitres"))
+        )
       }
 
       "fail to bind when blank answer provided as pure alcohol" in {
@@ -71,7 +79,9 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours {
           s"$fieldName[0].totalLitres" -> "1.1",
           s"$fieldName[0].pureAlcohol" -> ""
         )
-        form.bind(data).errors must contain(FormError(s"$fieldName[0].pureAlcohol", requiredKey, Seq("pureAlcohol")))
+        form.bind(data).errors must contain(
+          FormError(s"${fieldName}_0.pureAlcohol", s"$requiredKey.pureAlcohol", Seq("pureAlcohol"))
+        )
       }
 
     }
@@ -104,7 +114,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours {
           s"$fieldName[0].pureAlcohol" -> "1.1"
         )
         form.bind(data).errors must contain(
-          FormError(s"$fieldName[0]", "howMuchDoYouNeedToDeclare.error.invalid.totalLitres")
+          FormError(s"$fieldName[0]", s"$invalidKey.totalLitres")
         )
       }
 
@@ -115,7 +125,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours {
           s"$fieldName[0].pureAlcohol" -> "invalid"
         )
         form.bind(data).errors must contain(
-          FormError(s"$fieldName[0]", "howMuchDoYouNeedToDeclare.error.invalid.pureAlcohol")
+          FormError(s"$fieldName[0]", s"$invalidKey.pureAlcohol")
         )
       }
 

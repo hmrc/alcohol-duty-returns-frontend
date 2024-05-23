@@ -17,14 +17,17 @@
 package forms.returns
 
 import forms.behaviours.CheckboxFieldBehaviours
+import generators.ModelGenerators
 
-class WhatDoYouNeedToDeclareFormProviderSpec extends CheckboxFieldBehaviours {
+class WhatDoYouNeedToDeclareFormProviderSpec extends CheckboxFieldBehaviours with ModelGenerators {
 
-  val form = new WhatDoYouNeedToDeclareFormProvider()()
+  val regime = regimeGen.sample.value
+
+  val form = new WhatDoYouNeedToDeclareFormProvider()(regime)
 
   ".rateBand" - {
     val fieldName   = "rateBand"
-    val requiredKey = "whatDoYouNeedToDeclare.error.required"
+    val requiredKey = s"whatDoYouNeedToDeclare.error.required.${regime.toString}"
     val values      = Seq("A", "B", "C")
 
     for {
