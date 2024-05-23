@@ -49,10 +49,10 @@ class WhatDoYouNeedToDeclareController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
+      val form = formProvider(regime)
+
       getRateBands(request.userAnswers, request.returnPeriod, request.regimes, regime).map { rateBands: Seq[RateBand] =>
         val taxBandsViewModel = TaxBandsViewModel(rateBands)
         val preparedForm      = request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
@@ -68,7 +68,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       getRateBands(request.userAnswers, request.returnPeriod, request.regimes, regime).flatMap {
         rateBands: Seq[RateBand] =>
-          form
+          formProvider(regime)
             .bindFromRequest()
             .fold(
               formWithErrors =>

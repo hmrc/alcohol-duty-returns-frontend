@@ -48,10 +48,9 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
+      val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
@@ -72,7 +71,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
         case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
           val howMuchDoYouNeedToDeclareHelper = HowMuchDoYouNeedToDeclareHelper(regime, rateBands)
-          form
+          formProvider(regime)
             .bindFromRequest()
             .fold(
               formWithErrors =>

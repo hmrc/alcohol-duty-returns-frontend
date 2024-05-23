@@ -18,14 +18,15 @@ package forms.returns
 
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms.set
 
 class WhatDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Set[String]] =
+  def apply(regime: AlcoholRegime): Form[Set[String]] =
     Form(
-      "rateBand" -> set(text("whatDoYouNeedToDeclare.error.required"))
-        .verifying(nonEmptySet("whatDoYouNeedToDeclare.error.required"))
+      "rateBand" -> set(text(s"whatDoYouNeedToDeclare.error.required.${regime.toString}"))
+        .verifying(nonEmptySet(s"whatDoYouNeedToDeclare.error.required.${regime.toString}"))
     )
 }

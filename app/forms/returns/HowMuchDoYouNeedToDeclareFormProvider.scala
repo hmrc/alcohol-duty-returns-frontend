@@ -18,20 +18,21 @@ package forms.returns
 
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms._
 import models.returns.VolumesByTaxType
 
 class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Seq[VolumesByTaxType]] = Form(
+  def apply(regime: AlcoholRegime): Form[Seq[VolumesByTaxType]] = Form(
     "volumes" -> seq(
       volumes(
-        "howMuchDoYouNeedToDeclare.error.invalid",
-        "howMuchDoYouNeedToDeclare.error.allRequired",
-        "howMuchDoYouNeedToDeclare.error.required",
-        "howMuchDoYouNeedToDeclare.error.decimalPlacesKey"
+        s"howMuchDoYouNeedToDeclare.error.invalid.$regime",
+        s"howMuchDoYouNeedToDeclare.error.allRequired.$regime",
+        s"howMuchDoYouNeedToDeclare.error.required.$regime",
+        s"howMuchDoYouNeedToDeclare.error.decimalPlacesKey.$regime"
       )
-    ).verifying(nonEmptySeq("howMuchDoYouNeedToDeclare.error.required"))
+    ).verifying(nonEmptySeq(s"howMuchDoYouNeedToDeclare.error.allRequired.$regime"))
   )
 }

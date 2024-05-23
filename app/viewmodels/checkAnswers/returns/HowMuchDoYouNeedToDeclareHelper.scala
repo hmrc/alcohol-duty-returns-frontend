@@ -37,7 +37,7 @@ object HowMuchDoYouNeedToDeclareHelper {
       .groupBy(_.rateType)
       .view
       .mapValues { rateBands =>
-        rateBands.map { rateBand =>
+        rateBands.sortBy(_.taxType).map { rateBand =>
           QuantityViewModel(
             category = messages(
               "howMuchDoYouNeedToDeclare.abv.interval",

@@ -61,14 +61,14 @@
 
         @if(howMuchDoYouNeedToDeclareHelper.core.nonEmpty) {
           @subHeading(messages(s"howMuchDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
-          @for(quantityViewModel <- howMuchDoYouNeedToDeclareHelper.core) {
+          @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
             @subHeading(quantityViewModel.category, classes = "govuk-heading-s")
             @govukInput(
               InputViewModel(
-                field = form(s"volumes[${quantityViewModel.id}]"),
+                field = form(s"volumes[$index]"),
                 key = "totalLitres",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.totalLitres")),
-                value = form(s"volumes[${quantityViewModel.id}].totalLitres").value
+                value = form(s"volumes[$index].totalLitres").value
               )
               .asNumeric()
               .withWidth(Fixed10)
@@ -76,10 +76,10 @@
             )
             @govukInput(
               InputViewModel(
-                field = form(s"volumes[${quantityViewModel.id}]"),
+                field = form(s"volumes[$index]"),
                 key = "pureAlcohol",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.pureAlcohol")),
-                value = form(s"volumes[${quantityViewModel.id}].pureAlcohol").value
+                value = form(s"volumes[$index].pureAlcohol").value
               )
               .asNumeric()
               .withWidth(Fixed10)
@@ -88,7 +88,7 @@
 
             @govukInput(
               InputViewModel(
-                field = form(s"volumes[${quantityViewModel.id}]"),
+                field = form(s"volumes[$index]"),
                 key = "taxType",
                 label = LabelViewModel(Text("")),
                 value = Some(quantityViewModel.id)
@@ -99,14 +99,14 @@
 
         @if(howMuchDoYouNeedToDeclareHelper.draught.nonEmpty) {
           @subHeading(messages(s"howMuchDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
-          @for(quantityViewModel <- howMuchDoYouNeedToDeclareHelper.draught) {
+          @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
             @subHeading(quantityViewModel.category, classes = "govuk-heading-s")
             @govukInput(
               InputViewModel(
-                field = form(s"volumes[${quantityViewModel.id}]"),
+                field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                 key = "totalLitres",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.totalLitres")),
-                value = form(s"volumes[${quantityViewModel.id}].totalLitres").value
+                value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].totalLitres").value
               )
               .asNumeric()
               .withWidth(Fixed10)
@@ -114,10 +114,10 @@
             )
             @govukInput(
               InputViewModel(
-                field = form(s"volumes[${quantityViewModel.id}]"),
+                field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                 key = "pureAlcohol",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.pureAlcohol")),
-                value = form(s"volumes[${quantityViewModel.id}].pureAlcohol").value
+                value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].pureAlcohol").value
               )
               .asNumeric()
               .withWidth(Fixed10)
@@ -126,7 +126,7 @@
 
             @govukInput(
               InputViewModel(
-                field = form(s"volumes[${quantityViewModel.id}]"),
+                field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                 key = "taxType",
                 label = LabelViewModel(Text("")),
                 value = Some(quantityViewModel.id)

@@ -87,21 +87,23 @@ class VolumesFormatter(
           _.map(_.copy(key = key, args = args))
         }
       case 2 | 1 =>
-        Left(missingFields.map(field => FormError(s"$key.$field", requiredKey, missingFields ++ args)))
+        Left(
+          missingFields.map(field =>
+            FormError(s"${nameToId(key)}.$field", s"$requiredKey.$field", missingFields ++ args)
+          )
+        )
       case _     =>
         Left(List(FormError(key, allRequiredKey, args)))
     }
   }
 
-  override def unbind(key: String, value: VolumesByTaxType): Map[String, String] = {
+  private def nameToId(name: String): String = name.replace("[", "_").replace("]", "")
 
-    val newKey = replaceIndex(key, value.taxType)
+  override def unbind(key: String, value: VolumesByTaxType): Map[String, String] =
     Map(
-      s"$newKey.taxType"     -> value.taxType,
-      s"$newKey.totalLitres" -> value.totalLitres.toString,
-      s"$newKey.pureAlcohol" -> value.pureAlcohol.toString
+      s"$key.taxType"     -> value.taxType,
+      s"$key.totalLitres" -> value.totalLitres.toString,
+      s"$key.pureAlcohol" -> value.pureAlcohol.toString
     )
-  }
 
-  def replaceIndex(key: String, index: String): String = key.replaceFirst("\\[\\d\\]", s"[$index]")
 }
