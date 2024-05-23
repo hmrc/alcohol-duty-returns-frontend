@@ -20,43 +20,30 @@ import models.returns.VolumesByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
+import scala.util.control.Exception.nonFatalCatch
+
 class VolumesFormatter(
   invalidKey: String,
   allRequiredKey: String,
   requiredKey: String,
   decimalPlacesKey: String,
+  minimumValueKey: String,
+  maximumValueKey: String,
   args: Seq[String]
 ) extends Formatter[VolumesByTaxType]
     with Formatters {
 
+  val decimalPlaces: Int       = 2
+  val minimumValue: BigDecimal = BigDecimal(0.01)
+  val maximumValue: BigDecimal = BigDecimal(999999999.99)
+
   val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol")
-
-  private val totalLitresBigDecimalFormatter = bigDecimalFormatter(
-    decimalPlaces = 2,
-    requiredKey = s"$requiredKey.totalLitres",
-    nonNumericKey = s"$invalidKey.totalLitres",
-    decimalPlacesKey = s"$decimalPlacesKey.totalLitres",
-    args
-  )
-
-  private val pureAlcoholBigDecimalFormatter = bigDecimalFormatter(
-    decimalPlaces = 2,
-    requiredKey = s"$requiredKey.pureAlcohol",
-    nonNumericKey = s"$invalidKey.pureAlcohol",
-    decimalPlacesKey = s"$decimalPlacesKey.pureAlcohol",
-    args
-  )
-
-  private val taxTypeStringFormatter = stringFormatter(
-    errorKey = s"$requiredKey.taxType",
-    args
-  )
 
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
 
-    val taxType                                         = taxTypeStringFormatter.bind(s"$key.taxType", data)
-    val totalLitres: Either[Seq[FormError], BigDecimal] = totalLitresBigDecimalFormatter.bind(s"$key.totalLitres", data)
-    val pureAlcohol                                     = pureAlcoholBigDecimalFormatter.bind(s"$key.pureAlcohol", data)
+    val taxType     = stringFormatter(s"$requiredKey.taxType").bind(s"$key.taxType", data)
+    val totalLitres = volumeFormatter("totalLitres").bind(s"$key.totalLitres", data)
+    val pureAlcohol = volumeFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
 
     (taxType, totalLitres, pureAlcohol) match {
       case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue)) =>
@@ -82,15 +69,12 @@ class VolumesFormatter(
       .toList
 
     fields.count(_._2.isDefined) match {
-      case 3     =>
-        formatVolume(key, data).left.map {
-          _.map(_.copy(key = key, args = args))
-        }
+      case 3     => formatVolume(key, data)
       case 2 | 1 =>
         Left(
-          missingFields.map(field =>
+          missingFields.map { field =>
             FormError(s"${nameToId(key)}.$field", s"$requiredKey.$field", missingFields ++ args)
-          )
+          }
         )
       case _     =>
         Left(List(FormError(key, allRequiredKey, args)))
@@ -106,4 +90,37 @@ class VolumesFormatter(
       s"$key.pureAlcohol" -> value.pureAlcohol.toString
     )
 
+  def volumeFormatter(
+    fieldKey: String,
+    args: Seq[String] = Seq.empty
+  ): Formatter[BigDecimal] =
+    new Formatter[BigDecimal] {
+      val decimalRegexp = s"""^[+-]?[0-9]*(\\.[0-9]{0,$decimalPlaces})?$$"""
+
+      private val baseFormatter = stringFormatter(s"$requiredKey.$fieldKey", args)
+
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] =
+        baseFormatter
+          .bind(key, data)
+          .map(_.replace(",", ""))
+          .flatMap { s =>
+            nonFatalCatch
+              .either(BigDecimal(s))
+              .left
+              .map(_ => Seq(FormError(nameToId(key), s"$invalidKey.$fieldKey", args)))
+              .flatMap {
+                case res if res < minimumValue                    =>
+                  Left(Seq(FormError(nameToId(key), s"$minimumValueKey.$fieldKey", args)))
+                case res if res > maximumValue                    =>
+                  Left(Seq(FormError(nameToId(key), s"$maximumValueKey.$fieldKey", args)))
+                case res if res.toString().matches(decimalRegexp) =>
+                  Right(res)
+                case _                                            =>
+                  Left(Seq(FormError(nameToId(key), s"$decimalPlacesKey.$fieldKey", args)))
+              }
+          }
+
+      override def unbind(key: String, value: BigDecimal): Map[String, String] =
+        baseFormatter.unbind(key, value.toString)
+    }
 }

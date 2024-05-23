@@ -202,16 +202,16 @@ howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type
 howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres
 howMuchDoYouNeedToDeclare.legend.pureAlcohol = Litres of pure alcohol
 
-howMuchDoYouNeedToDeclare.error.invalid.Beer.totalLitres = Enter the total litres of beer
-howMuchDoYouNeedToDeclare.error.invalid.Beer.pureAlcohol = Enter the litres of pure alcohol in beer
-howMuchDoYouNeedToDeclare.error.invalid.Cider.totalLitres = Enter the total litres of cider
-howMuchDoYouNeedToDeclare.error.invalid.Cider.pureAlcohol = Enter the total litres of cider
-howMuchDoYouNeedToDeclare.error.invalid.Wine.totalLitres = Enter the total litres of wine
-howMuchDoYouNeedToDeclare.error.invalid.Wine.pureAlcohol = Enter the litres of pure alcohol in wine
-howMuchDoYouNeedToDeclare.error.invalid.Spirits.totalLitres = Enter the total litres of spirits
-howMuchDoYouNeedToDeclare.error.invalid.Spirits.pureAlcohol = Enter the litres of pure alcohol in spirits
-howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.totalLitres = Enter the total litres of other fermented products
-howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.pureAlcohol = Enter the litres of pure alcohol in other fermented products
+howMuchDoYouNeedToDeclare.error.invalid.Beer.totalLitres = Litres of beer must be a number
+howMuchDoYouNeedToDeclare.error.invalid.Beer.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.Cider.totalLitres = Litres of cider must be a number
+howMuchDoYouNeedToDeclare.error.invalid.Cider.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.Wine.totalLitres = Litres of wine must be a number
+howMuchDoYouNeedToDeclare.error.invalid.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.Spirits.totalLitres = Litres of spirits must be a number
+howMuchDoYouNeedToDeclare.error.invalid.Spirits.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.totalLitres = Litres of other fermented products must be a number
+howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
 
 howMuchDoYouNeedToDeclare.error.required.Beer.totalLitres = Enter the total litres of beer
 howMuchDoYouNeedToDeclare.error.required.Beer.pureAlcohol = Enter the litres of pure alcohol in beer
@@ -230,7 +230,38 @@ howMuchDoYouNeedToDeclare.error.allRequired.Wine = Select the wines you need to 
 howMuchDoYouNeedToDeclare.error.allRequired.Spirits = Select the type of spirits to declare
 howMuchDoYouNeedToDeclare.error.allRequired.OtherFermentedProduct = Select the type of other fermented product to declare
 
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey = Error decimalPlaces
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Beer.totalLitres = Litres of beer must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Beer.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Cider.totalLitres = Litres of cider must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Cider.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Wine.totalLitres = Litres of other fermented products must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Spirits.totalLitres = Litres of spirits must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Spirits.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.OtherFermentedProduct.totalLitres = Litres of wine must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.decimalPlacesKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+
+howMuchDoYouNeedToDeclare.error.minimumValueKey.Beer.totalLitres = Litres of beer must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.Beer.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.Cider.totalLitres = Litres of cider must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.Cider.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.Wine.totalLitres = Litres of wine must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.Wine.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.Spirits.totalLitres = Litres of spirits must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.Spirits.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.OtherFermentedProduct.totalLitres = Litres of other fermented products must be 0.01 or more
+howMuchDoYouNeedToDeclare.error.minimumValueKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+
+howMuchDoYouNeedToDeclare.error.maximumValueKey.Beer.totalLitres = Litres of beer must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.Beer.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.Cider.totalLitres = Litres of cider must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.Cider.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.Wine.totalLitres = Litres of wine must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.Wine.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.Spirits.totalLitres = Litres of spirits must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.Spirits.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.OtherFermentedProduct.totalLitres = Litres of other fermented products must be 99.99 million or less
+howMuchDoYouNeedToDeclare.error.maximumValueKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
 
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate

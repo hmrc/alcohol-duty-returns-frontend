@@ -54,7 +54,7 @@
 
         @govukWarningText(WarningText(
             iconFallbackText = Some("Warning"),
-            content = Text("You can be fined up to £5,000 if you do not register.")
+            content = Text(messages("howMuchDoYouNeedToDeclare.warning"))
         ))
 
         @paragraph(messages("howMuchDoYouNeedToDeclare.hint"), classes = "govuk-hint")
@@ -68,6 +68,7 @@
                 field = form(s"volumes[$index]"),
                 key = "totalLitres",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.totalLitres")),
+                errorMessageField = form(s"volumes_$index.totalLitres"),
                 value = form(s"volumes[$index].totalLitres").value
               )
               .asNumeric()
@@ -79,6 +80,7 @@
                 field = form(s"volumes[$index]"),
                 key = "pureAlcohol",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.pureAlcohol")),
+                errorMessageField = form(s"volumes_$index.pureAlcohol"),
                 value = form(s"volumes[$index].pureAlcohol").value
               )
               .asNumeric()
@@ -91,6 +93,7 @@
                 field = form(s"volumes[$index]"),
                 key = "taxType",
                 label = LabelViewModel(Text("")),
+                errorMessageField = form(s"volumes_$index.taxType"),
                 value = Some(quantityViewModel.id)
               ).hidden
             )
@@ -106,6 +109,7 @@
                 field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                 key = "totalLitres",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.totalLitres")),
+                errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}.totalLitres"),
                 value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].totalLitres").value
               )
               .asNumeric()
@@ -117,6 +121,7 @@
                 field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                 key = "pureAlcohol",
                 label = LabelViewModel(messages("howMuchDoYouNeedToDeclare.legend.pureAlcohol")),
+                errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}.pureAlcohol"),
                 value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].pureAlcohol").value
               )
               .asNumeric()
@@ -129,6 +134,7 @@
                 field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                 key = "taxType",
                 label = LabelViewModel(Text("")),
+                errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}.taxType"),
                 value = Some(quantityViewModel.id)
               ).hidden
             )

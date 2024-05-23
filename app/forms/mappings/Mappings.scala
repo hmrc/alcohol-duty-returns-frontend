@@ -81,7 +81,19 @@ trait Mappings extends Formatters with Constraints {
     allRequiredKey: String,
     requiredKey: String,
     decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[VolumesByTaxType] =
-    of(new VolumesFormatter(invalidKey, allRequiredKey, requiredKey, decimalPlacesKey, args))
+    of(
+      new VolumesFormatter(
+        invalidKey,
+        allRequiredKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        args
+      )
+    )
 }

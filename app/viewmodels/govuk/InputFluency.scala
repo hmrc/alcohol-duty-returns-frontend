@@ -46,6 +46,7 @@ trait InputFluency {
       field: Field,
       key: String,
       label: Label,
+      errorMessageField: Field,
       value: Option[String]
     )(implicit messages: Messages): Input =
       Input(
@@ -53,7 +54,7 @@ trait InputFluency {
         name = s"${field.name}.$key",
         value = value,
         label = label,
-        errorMessage = errorMessage(field)
+        errorMessage = errorMessage(errorMessageField)
       )
   }
 
