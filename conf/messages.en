@@ -127,8 +127,7 @@ beforeStartReturn.text.guidance4 = After you tell us this information, we will c
 
 # Beginning of product entry sub-journey
 
-declareAlcoholDutyQuestion.title = Do you need to declare duty on any alcoholic products?
-
+declareAlcoholDutyQuestion.title = Declaring your alcohol duty
 declareAlcoholDutyQuestion.heading = Declaring your alcohol duty
 declareAlcoholDutyQuestion.p1 = If you need to declare your alcohol, we will need to know the total amount you have produced and litres of pure alcohol in your beer across the following ABV strength bandings:
 declareAlcoholDutyQuestion.p1.l1 = between 1.2% and 3.4%
@@ -153,7 +152,7 @@ declareAlcoholDutyQuestion.cider.p2.l2 = cider between 3.5% and 8.4% and sparkli
 declareAlcoholDutyQuestion.cider.p2.l3 = sparkling cider between 5.6% and 8.4%
 declareAlcoholDutyQuestion.h4 = Do you have any alcohol to declare?
 declareAlcoholDutyQuestion.checkYourAnswersLabel = declareAlcoholDutyQuestion
-declareAlcoholDutyQuestion.error.required = Select yes if you need to declare duty on any alcoholic products
+declareAlcoholDutyQuestion.error.required = Select yes if you need to declare any alcohol
 declareAlcoholDutyQuestion.change.hidden = alcohol duty to declare
 
 return.regime.Beer = beer
