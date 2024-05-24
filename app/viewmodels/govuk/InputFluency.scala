@@ -50,7 +50,7 @@ trait InputFluency {
       value: Option[String]
     )(implicit messages: Messages): Input =
       Input(
-        id = s"${field.id}.$key",
+        id = s"${field.id}_$key",
         name = s"${field.name}.$key",
         value = value,
         label = label,

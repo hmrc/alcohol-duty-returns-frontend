@@ -73,7 +73,7 @@ class VolumesFormatter(
       case 2 | 1 =>
         Left(
           missingFields.map { field =>
-            FormError(s"${nameToId(key)}.$field", s"$requiredKey.$field", missingFields ++ args)
+            FormError(s"${nameToId(key)}_$field", s"$requiredKey.$field", missingFields ++ args)
           }
         )
       case _     =>
@@ -81,7 +81,7 @@ class VolumesFormatter(
     }
   }
 
-  private def nameToId(name: String): String = name.replace("[", "_").replace("]", "")
+  private def nameToId(name: String): String = name.replace("[", "_").replace("]", "").replace(".", "_")
 
   override def unbind(key: String, value: VolumesByTaxType): Map[String, String] =
     Map(
