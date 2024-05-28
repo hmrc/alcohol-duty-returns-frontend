@@ -40,6 +40,7 @@ class AlcoholByVolumeQuestionController @Inject() (
   cacheConnector: CacheConnector,
   alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
   navigator: ProductEntryNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -52,19 +53,20 @@ class AlcoholByVolumeQuestionController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val abv = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.abv)
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val abv = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.abv)
 
-    val preparedForm = abv match {
-      case Some(abvValue) => form.fill(abvValue.value)
-      case None           => form
-    }
+      val preparedForm = abv match {
+        case Some(abvValue) => form.fill(abvValue.value)
+        case None           => form
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent]                                                 = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent]                                                 =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -87,7 +89,7 @@ class AlcoholByVolumeQuestionController @Inject() (
             } yield Redirect(navigator.nextPage(AlcoholByVolumeQuestionPage, mode, updatedAnswers, hasChanged))
           }
         )
-  }
+    }
 
   def fetchRateType(abv: AlcoholByVolume)(implicit hc: HeaderCarrier): (Future[RateType]) = {
 

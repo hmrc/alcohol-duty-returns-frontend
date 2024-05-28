@@ -39,6 +39,7 @@ class AdjustmentTaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: AdjustmentNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -52,18 +53,19 @@ class AdjustmentTaxTypeController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                   => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.taxCode.isDefined =>
-        Ok(view(form.fill(value.taxCode.get.toInt), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      case Some(value)                            => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+        case None                                   => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        case Some(value) if value.taxCode.isDefined =>
+          Ok(view(form.fill(value.taxCode.get.toInt), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+        case Some(value)                            => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      }
 
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -109,7 +111,7 @@ class AdjustmentTaxTypeController @Inject() (
                 )
             }
         )
-  }
+    }
 
   private def fetchAdjustmentRateBand(taxCode: String)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
     //hardcoded for now, will need to get this from obligation period

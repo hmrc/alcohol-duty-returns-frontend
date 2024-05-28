@@ -36,6 +36,7 @@ class ProductNameController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: ProductEntryNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -48,19 +49,20 @@ class ProductNameController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val name = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.name)
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val name = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.name)
 
-    val preparedForm = name match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+      val preparedForm = name match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -74,5 +76,5 @@ class ProductNameController @Inject() (
             } yield Redirect(navigator.nextPage(ProductNamePage, mode, updatedAnswers))
           }
         )
-  }
+    }
 }

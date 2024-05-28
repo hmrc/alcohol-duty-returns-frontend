@@ -36,6 +36,7 @@ class DraughtReliefQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: ProductEntryNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -48,19 +49,20 @@ class DraughtReliefQuestionController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val draughtRelief = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.draughtRelief)
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val draughtRelief = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.draughtRelief)
 
-    val preparedForm = draughtRelief match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+      val preparedForm = draughtRelief match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -77,7 +79,7 @@ class DraughtReliefQuestionController @Inject() (
             } yield Redirect(navigator.nextPage(DraughtReliefQuestionPage, mode, updatedAnswers, hasChanged))
           }
         )
-  }
+    }
 
   def updateDraughtRelief(productEntry: ProductEntry, currentValue: Boolean): (ProductEntry, Boolean) =
     productEntry.draughtRelief match {

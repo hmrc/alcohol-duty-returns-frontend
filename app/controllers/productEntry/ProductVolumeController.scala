@@ -36,6 +36,7 @@ class ProductVolumeController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: ProductEntryNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -48,19 +49,20 @@ class ProductVolumeController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val volume = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.volume)
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val volume = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.volume)
 
-    val preparedForm = volume match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+      val preparedForm = volume match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -76,7 +78,7 @@ class ProductVolumeController @Inject() (
             } yield Redirect(navigator.nextPage(ProductVolumePage, mode, updatedAnswers, hasChanged))
           }
         )
-  }
+    }
 
   def updateProductVolume(productEntry: ProductEntry, currentValue: BigDecimal): (ProductEntry, Boolean) =
     productEntry.volume match {

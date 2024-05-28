@@ -36,6 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -46,31 +47,32 @@ class CheckYourAnswersController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(index: Option[Int] = None): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onPageLoad(index: Option[Int] = None): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       val result = for {
         productEntry <- getProductEntry(request.userAnswers, index)
         summaryList  <- CheckYourAnswersSummaryListHelper.currentProductEntrySummaryList(productEntry)
       } yield setCurrentProductEntry(request.userAnswers, productEntry, summaryList)
 
       result.getOrElse(Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
-  }
-
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    request.userAnswers.get(CurrentProductEntryPage) match {
-      case Some(productEntry) if productEntry.isComplete  =>
-        for {
-          updatedAnswers <- saveProductEntry(request.userAnswers, productEntry)
-          cleanedAnswers <- Future.fromTry(updatedAnswers.remove(CurrentProductEntryPage))
-          _              <- cacheConnector.set(cleanedAnswers)
-        } yield Redirect(controllers.productEntry.routes.ProductListController.onPageLoad())
-      case Some(productEntry) if !productEntry.isComplete =>
-        logger.logger.error("Product Entry not completed")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      case _                                              =>
-        logger.logger.error("Can't fetch product entry from cache")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
+
+  def onSubmit(): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData).async {
+    implicit request =>
+      request.userAnswers.get(CurrentProductEntryPage) match {
+        case Some(productEntry) if productEntry.isComplete  =>
+          for {
+            updatedAnswers <- saveProductEntry(request.userAnswers, productEntry)
+            cleanedAnswers <- Future.fromTry(updatedAnswers.remove(CurrentProductEntryPage))
+            _              <- cacheConnector.set(cleanedAnswers)
+          } yield Redirect(controllers.productEntry.routes.ProductListController.onPageLoad())
+        case Some(productEntry) if !productEntry.isComplete =>
+          logger.logger.error("Product Entry not completed")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case _                                              =>
+          logger.logger.error("Can't fetch product entry from cache")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      }
   }
 
   private def getProductEntry(answers: UserAnswers, index: Option[Int]): Option[ProductEntry] = {

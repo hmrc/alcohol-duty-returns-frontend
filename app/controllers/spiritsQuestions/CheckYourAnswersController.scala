@@ -15,15 +15,18 @@
  */
 
 package controllers.spiritsQuestions
+
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{AuthorisedAction, DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.spiritsQuestions.CheckYourAnswersSummaryListHelper
 import views.html.spiritsQuestions.CheckYourAnswersView
+
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -32,13 +35,14 @@ class CheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val result = for {
-      spiritsList          <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
-      alcoholList          <- CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers)
-      grainsList           <- CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
-      otherIngredientsList <- CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
-    } yield Ok(view(spiritsList, alcoholList, grainsList, otherIngredientsList))
-    result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+  def onPageLoad(): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val result = for {
+        spiritsList          <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
+        alcoholList          <- CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers)
+        grainsList           <- CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
+        otherIngredientsList <- CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
+      } yield Ok(view(spiritsList, alcoholList, grainsList, otherIngredientsList))
+      result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
   }
 }

@@ -20,8 +20,6 @@ import base.SpecBase
 import forms.spiritsQuestions.OtherMaltedGrainsFormProvider
 import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -35,7 +33,7 @@ import views.html.spiritsQuestions.OtherMaltedGrainsView
 
 import scala.concurrent.Future
 
-class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
+class OtherMaltedGrainsControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

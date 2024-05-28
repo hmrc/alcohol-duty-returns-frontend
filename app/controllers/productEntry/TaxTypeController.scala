@@ -41,6 +41,7 @@ class TaxTypeController @Inject() (
   cacheConnector: CacheConnector,
   alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
   navigator: ProductEntryNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -53,8 +54,8 @@ class TaxTypeController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       val preparedForm = request.userAnswers.get(CurrentProductEntryPage) match {
         case None               => form
         case Some(productEntry) =>
@@ -86,10 +87,10 @@ class TaxTypeController @Inject() (
             )
           )
       }
-  }
+    }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       val (
         abv: AlcoholByVolume,
         eligibleForDraughtRelief: Boolean,
@@ -129,7 +130,7 @@ class TaxTypeController @Inject() (
               _                           <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(TaxTypePage, mode, updatedAnswers, hasChanged))
         )
-  }
+    }
 
   def updateTaxType(productEntry: ProductEntry, currentValue: String): (ProductEntry, Boolean) =
     (productEntry.taxCode, productEntry.regime) match {

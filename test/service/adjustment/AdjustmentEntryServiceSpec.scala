@@ -23,13 +23,10 @@ import models.AlcoholByVolume
 import models.adjustment.AdjustmentEntry
 import models.productEntry.TaxDuty
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import services.adjustment.AdjustmentEntryServiceImpl
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AdjustmentEntryServiceSpec extends SpecBase {

@@ -34,6 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AdjustmentDutyDueController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -44,12 +45,13 @@ class AdjustmentDutyDueController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    for {
-      adjustment  <- adjustmentEntryService.createAdjustment(request.userAnswers)
-      userAnswers <- Future.fromTry(request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment))
-      _           <- cacheConnector.set(userAnswers)
-    } yield getView(adjustment)
+  def onPageLoad: Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData).async {
+    implicit request =>
+      for {
+        adjustment  <- adjustmentEntryService.createAdjustment(request.userAnswers)
+        userAnswers <- Future.fromTry(request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment))
+        _           <- cacheConnector.set(userAnswers)
+      } yield getView(adjustment)
 
   }
 

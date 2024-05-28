@@ -33,6 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DutyDueController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -43,12 +44,13 @@ class DutyDueController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    for {
-      product     <- productEntryService.createProduct(request.userAnswers)
-      userAnswers <- Future.fromTry(request.userAnswers.set(CurrentProductEntryPage, product))
-      _           <- cacheConnector.set(userAnswers)
-    } yield getView(product)
+  def onPageLoad: Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData).async {
+    implicit request =>
+      for {
+        product     <- productEntryService.createProduct(request.userAnswers)
+        userAnswers <- Future.fromTry(request.userAnswers.set(CurrentProductEntryPage, product))
+        _           <- cacheConnector.set(userAnswers)
+      } yield getView(product)
   }
 
   private def getView(productEntry: ProductEntry)(implicit request: Request[_]): Result = {

@@ -25,6 +25,7 @@ import views.html.productEntry.ProductEntryGuidanceView
 
 class ProductEntryGuidanceController @Inject() (
   override val messagesApi: MessagesApi,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -33,7 +34,8 @@ class ProductEntryGuidanceController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(view())
+  def onPageLoad: Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      Ok(view())
   }
 }

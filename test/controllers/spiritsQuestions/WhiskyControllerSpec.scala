@@ -22,8 +22,6 @@ import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.Whisky
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.WhiskyPage
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -35,7 +33,7 @@ import views.html.spiritsQuestions.WhiskyView
 
 import scala.concurrent.Future
 
-class WhiskyControllerSpec extends SpecBase with MockitoSugar {
+class WhiskyControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

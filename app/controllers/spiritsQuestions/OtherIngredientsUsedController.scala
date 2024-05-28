@@ -35,6 +35,7 @@ class OtherIngredientsUsedController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: QuarterlySpiritsQuestionsNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -47,17 +48,18 @@ class OtherIngredientsUsedController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(OtherIngredientsUsedPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(OtherIngredientsUsedPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -68,5 +70,5 @@ class OtherIngredientsUsedController @Inject() (
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(OtherIngredientsUsedPage, mode, updatedAnswers))
         )
-  }
+    }
 }

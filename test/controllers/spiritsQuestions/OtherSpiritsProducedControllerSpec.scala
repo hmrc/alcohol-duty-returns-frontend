@@ -20,8 +20,6 @@ import base.SpecBase
 import forms.spiritsQuestions.OtherSpiritsProducedFormProvider
 import models.NormalMode
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.OtherSpiritsProducedPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.spiritsQuestions.OtherSpiritsProducedView
 
 import scala.concurrent.Future
 
-class OtherSpiritsProducedControllerSpec extends SpecBase with MockitoSugar {
+class OtherSpiritsProducedControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

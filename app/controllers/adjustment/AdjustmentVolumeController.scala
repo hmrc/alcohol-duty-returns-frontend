@@ -37,6 +37,7 @@ class AdjustmentVolumeController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: AdjustmentNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -49,17 +50,18 @@ class AdjustmentVolumeController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                  => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.volume.isDefined =>
-        Ok(view(form.fill(value.volume.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      case Some(value)                           => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+        case None                                  => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        case Some(value) if value.volume.isDefined =>
+          Ok(view(form.fill(value.volume.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+        case Some(value)                           => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -82,5 +84,5 @@ class AdjustmentVolumeController @Inject() (
             } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers))
           }
         )
-  }
+    }
 }

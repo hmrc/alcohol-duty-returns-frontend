@@ -37,6 +37,7 @@ class ProductListController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: ProductEntryNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -49,27 +50,29 @@ class ProductListController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val table        = ProductListSummaryHelper.productEntryTable(request.userAnswers)
-    val preparedForm = request.userAnswers.get(ProductListPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val table        = ProductListSummaryHelper.productEntryTable(request.userAnswers)
+      val preparedForm = request.userAnswers.get(ProductListPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, table))
+      Ok(view(preparedForm, table))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val table = ProductListSummaryHelper.productEntryTable(request.userAnswers)
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, table))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ProductListPage, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ProductListPage, NormalMode, updatedAnswers))
-      )
+  def onSubmit(): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData).async {
+    implicit request =>
+      val table = ProductListSummaryHelper.productEntryTable(request.userAnswers)
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, table))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ProductListPage, value))
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(ProductListPage, NormalMode, updatedAnswers))
+        )
   }
 }

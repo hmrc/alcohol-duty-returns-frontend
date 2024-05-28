@@ -32,6 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BeforeStartReturnController @Inject() (
   cacheConnector: CacheConnector,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   val controllerComponents: MessagesControllerComponents,
@@ -41,22 +42,23 @@ class BeforeStartReturnController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(periodKey: String): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    ReturnPeriod.fromPeriodKey(periodKey) match {
-      case None               =>
-        logger.warn("Period key is not valid")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      case Some(returnPeriod) =>
-        val session = request.session + (periodKeySessionKey, periodKey)
-        cacheConnector.get(request.appaId, periodKey).map {
-          case Some(_) => Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
-          case None    =>
-            Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
-        }
-    }
+  def onPageLoad(periodKey: String): Action[AnyContent] = (authorise andThen identify andThen getData).async {
+    implicit request =>
+      ReturnPeriod.fromPeriodKey(periodKey) match {
+        case None               =>
+          logger.warn("Period key is not valid")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case Some(returnPeriod) =>
+          val session = request.session + (periodKeySessionKey, periodKey)
+          cacheConnector.get(request.appaId, periodKey).map {
+            case Some(_) => Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+            case None    =>
+              Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
+          }
+      }
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = (authorise andThen identify andThen getData).async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case None            =>
         logger.warn("Period key not present in session")

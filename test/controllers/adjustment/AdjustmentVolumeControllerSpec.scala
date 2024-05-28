@@ -21,8 +21,6 @@ import forms.adjustment.AdjustmentVolumeFormProvider
 import models.NormalMode
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -35,7 +33,7 @@ import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.Future
 
-class AdjustmentVolumeControllerSpec extends SpecBase with MockitoSugar {
+class AdjustmentVolumeControllerSpec extends SpecBase {
 
   val formProvider = new AdjustmentVolumeFormProvider()
   val form         = formProvider()

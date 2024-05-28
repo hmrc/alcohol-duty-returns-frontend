@@ -35,6 +35,7 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: DeclareDutySuspendedDeliveriesNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -47,17 +48,18 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -72,7 +74,7 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
               _                <- cacheConnector.set(filterUserAnswer)
             } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, filterUserAnswer))
         )
-  }
+    }
 
   def filterDSDQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
     if (value) {

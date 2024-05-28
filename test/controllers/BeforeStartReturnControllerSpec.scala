@@ -20,8 +20,6 @@ import base.SpecBase
 import connectors.CacheConnector
 import models.{ReturnId, ReturnPeriod, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
 import play.api.test.Helpers._
 import play.api.inject.bind
 import uk.gov.hmrc.http.HttpResponse

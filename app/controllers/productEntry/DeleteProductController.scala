@@ -34,6 +34,7 @@ class DeleteProductController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: ProductEntryNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -46,17 +47,18 @@ class DeleteProductController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(index: Int): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeleteProductPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(index: Int): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(DeleteProductPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, index))
+      Ok(view(preparedForm, index))
   }
 
-  def onSubmit(index: Int): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(index: Int): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -71,5 +73,5 @@ class DeleteProductController @Inject() (
               Future.successful(Redirect(controllers.productEntry.routes.ProductListController.onPageLoad()))
             }
         )
-  }
+    }
 }

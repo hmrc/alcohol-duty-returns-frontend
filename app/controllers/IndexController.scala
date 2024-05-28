@@ -16,7 +16,8 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
+import controllers.actions.{AuthorisedAction, IdentifierAction}
+
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -25,12 +26,13 @@ import views.html.IndexView
 
 class IndexController @Inject() (
   val controllerComponents: MessagesControllerComponents,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   view: IndexView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify {
+  def onPageLoad: Action[AnyContent] = (authorise andThen identify) {
     Redirect("/manage-alcohol-duty/task-list/your-alcohol-duty-return")
   }
 }

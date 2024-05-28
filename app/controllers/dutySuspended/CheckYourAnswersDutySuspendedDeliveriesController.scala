@@ -17,7 +17,7 @@
 package controllers.dutySuspended
 
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{AuthorisedAction, DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -26,6 +26,7 @@ import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 
 class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   override val messagesApi: MessagesApi,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -34,11 +35,12 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper(request.userAnswers)
-    checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList match {
-      case Some(summaryList) if summaryList.rows.nonEmpty => Ok(view(summaryList))
-      case _                                              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-    }
+  def onPageLoad(): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper(request.userAnswers)
+      checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList match {
+        case Some(summaryList) if summaryList.rows.nonEmpty => Ok(view(summaryList))
+        case _                                              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
   }
 }

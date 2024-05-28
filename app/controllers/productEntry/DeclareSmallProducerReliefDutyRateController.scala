@@ -36,6 +36,7 @@ class DeclareSmallProducerReliefDutyRateController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: ProductEntryNavigator,
+  authorise: AuthorisedAction,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -48,19 +49,20 @@ class DeclareSmallProducerReliefDutyRateController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val sprDutyRate = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.sprDutyRate)
+  def onPageLoad(mode: Mode): Action[AnyContent] = (authorise andThen identify andThen getData andThen requireData) {
+    implicit request =>
+      val sprDutyRate = request.userAnswers.get(CurrentProductEntryPage).flatMap(_.sprDutyRate)
 
-    val preparedForm = sprDutyRate match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+      val preparedForm = sprDutyRate match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (authorise andThen identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -80,7 +82,7 @@ class DeclareSmallProducerReliefDutyRateController @Inject() (
             )
           }
         )
-  }
+    }
 
   def updateSPRDutyRate(productEntry: ProductEntry, currentValue: BigDecimal): (ProductEntry, Boolean) =
     productEntry.sprDutyRate match {

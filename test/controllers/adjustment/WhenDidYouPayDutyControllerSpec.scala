@@ -21,8 +21,6 @@ import forms.adjustment.WhenDidYouPayDutyFormProvider
 import models.NormalMode
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -35,7 +33,7 @@ import views.html.adjustment.WhenDidYouPayDutyView
 import java.time.YearMonth
 import scala.concurrent.Future
 
-class WhenDidYouPayDutyControllerSpec extends SpecBase with MockitoSugar {
+class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
