@@ -28,6 +28,14 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryTellUsAboutSingleSPRRate: Arbitrary[returns.TellUsAboutSingleSPRRate] =
+    Arbitrary {
+      for {
+        field1 <- arbitrary[String]
+        field2 <- arbitrary[String]
+      } yield returns.TellUsAboutSingleSPRRate(field1, field2)
+    }
+
   implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =
     Arbitrary {
       for {

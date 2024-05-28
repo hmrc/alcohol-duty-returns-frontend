@@ -49,6 +49,13 @@ POST       /do-you-have-multiple-small-producer-relief-duty-rates/:regime       
 GET        /change-do-you-have-multiple-small-producer-relief-duty-rates/:regime                  controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
 POST       /change-do-you-have-multiple-small-producer-relief-duty-rates/:regime                  controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
+
+GET        /tell-us-about-single-spr-rate/:regime                        controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /tell-us-about-single-spr-rate/:regime                        controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /change-tell-us-about-single-spr-rate/:regime                 controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /change-tell-us-about-single-spr-rate/:regime                  controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+
+
 GET        /return-check-your-answers/:regime                      controllers.returns.CheckYourAnswersController.onPageLoad(regime: AlcoholRegime)
 
 # old journey
@@ -271,6 +278,3 @@ POST       /change-how-much-is-the-adjustment                        controllers
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
-
-
-

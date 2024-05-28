@@ -17,11 +17,11 @@
 package forms.mappings
 
 import forms.mappings.BigDecimalFieldFormatter.nameToId
-import models.returns.VolumesByTaxType
+import models.returns.DutyByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
-class VolumesFormatter(
+class VolumesAndRateFormatter(
   invalidKey: String,
   allRequiredKey: String,
   requiredKey: String,
@@ -29,48 +29,60 @@ class VolumesFormatter(
   minimumValueKey: String,
   maximumValueKey: String,
   args: Seq[String]
-) extends Formatter[VolumesByTaxType]
+) extends Formatter[DutyByTaxType]
     with Formatters {
 
-  def bigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    args
+    minimumValue = BigDecimal(0.01),
+    args = args
   )
 
-  val NUMBER_OF_FIELDS = 3
+  def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+    requiredKey,
+    invalidKey,
+    decimalPlacesKey,
+    minimumValueKey,
+    maximumValueKey,
+    fieldKey,
+    minimumValue = BigDecimal(0.0),
+    args = args
+  )
 
-  val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol")
+  val NUMBER_OF_FIELDS        = 4
+  val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol", "dutyRate")
 
   def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
   def requiredAllFieldsFormError(key: String): FormError =
-    FormError(key, allRequiredKey, args)
+    FormError(nameToId(key), allRequiredKey, args)
 
-  def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
-
+  def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], DutyByTaxType] = {
     val taxType     = stringFormatter(s"$requiredKey.taxType").bind(s"$key.taxType", data)
-    val totalLitres = bigDecimalFormatter("totalLitres").bind(s"$key.totalLitres", data)
-    val pureAlcohol = bigDecimalFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
+    val totalLitres = volumeFormatter("totalLitres").bind(s"$key.totalLitres", data)
+    val pureAlcohol = volumeFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
+    val dutyRate    = dutyRateFormatter("dutyRate").bind(s"$key.dutyRate", data)
 
-    (taxType, totalLitres, pureAlcohol) match {
-      case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue)) =>
-        Right(VolumesByTaxType(taxTypeValue, totalLitresValue, pureAlcoholValue))
-      case (taxTypeError, totalLitresError, pureAlcoholError)                      =>
+    (taxType, totalLitres, pureAlcohol, dutyRate) match {
+      case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue), Right(dutyRate)) =>
+        Right(DutyByTaxType(taxTypeValue, totalLitresValue, pureAlcoholValue, dutyRate))
+      case (taxTypeError, totalLitresError, pureAlcoholError, dutyRateError)                        =>
         Left(
           taxTypeError.left.getOrElse(Seq.empty)
             ++ totalLitresError.left.getOrElse(Seq.empty)
             ++ pureAlcoholError.left.getOrElse(Seq.empty)
+            ++ dutyRateError.left.getOrElse(Seq.empty)
         )
     }
   }
 
-  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
+  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], DutyByTaxType] = {
     val fields = fieldKeys.map { field =>
       field -> data.get(s"$key.$field").filter(_.nonEmpty)
     }.toMap
@@ -94,10 +106,12 @@ class VolumesFormatter(
     }
   }
 
-  override def unbind(key: String, value: VolumesByTaxType): Map[String, String] =
+  override def unbind(key: String, value: DutyByTaxType): Map[String, String] =
     Map(
       s"$key.taxType"     -> value.taxType,
       s"$key.totalLitres" -> value.totalLitres.toString,
-      s"$key.pureAlcohol" -> value.pureAlcohol.toString
+      s"$key.pureAlcohol" -> value.pureAlcohol.toString,
+      s"$key.dutyRate"    -> value.dutyRate.toString
     )
+
 }

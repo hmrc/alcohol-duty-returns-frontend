@@ -22,7 +22,7 @@ import controllers.routes
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
-import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 
 @Singleton
 class ReturnsNavigator @Inject() () {
@@ -33,7 +33,7 @@ class ReturnsNavigator @Inject() () {
   }
 
   private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegime => Call = {
-    case WhatDoYouNeedToDeclarePage    =>
+    case WhatDoYouNeedToDeclarePage        =>
       ua =>
         regime =>
           ua.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
@@ -48,7 +48,7 @@ class ReturnsNavigator @Inject() () {
             case _       =>
               routes.IndexController.onPageLoad
           }
-    case HowMuchDoYouNeedToDeclarePage =>
+    case HowMuchDoYouNeedToDeclarePage     =>
       ua =>
         regime =>
           ua.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
@@ -63,7 +63,9 @@ class ReturnsNavigator @Inject() () {
             case _       =>
               routes.IndexController.onPageLoad
           }
-    case _                             => _ => _ => routes.IndexController.onPageLoad
+    case DoYouHaveMultipleSPRDutyRatesPage =>
+      _ => regime => controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
+    case _                                 => _ => _ => routes.IndexController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {

@@ -30,7 +30,7 @@ import play.api.test.Helpers._
 import connectors.CacheConnector
 import org.scalacheck.Arbitrary._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.returns.HowMuchDoYouNeedToDeclareHelper
+import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
 import views.html.returns.HowMuchDoYouNeedToDeclareView
 
 import scala.concurrent.Future
@@ -73,7 +73,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        val expectedReturnSummaryList = HowMuchDoYouNeedToDeclareHelper(regime, rateBands)(messages(application))
+        val expectedReturnSummaryList = CategoriesByRateTypeHelper(regime, rateBands)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, regime, expectedReturnSummaryList, NormalMode)(
@@ -94,7 +94,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        val expectedReturnSummaryList = HowMuchDoYouNeedToDeclareHelper(regime, rateBands)(messages(application))
+        val expectedReturnSummaryList = CategoriesByRateTypeHelper(regime, rateBands)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -159,7 +159,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        val summaryList = HowMuchDoYouNeedToDeclareHelper(regime, rateBands)(messages(application))
+        val summaryList = CategoriesByRateTypeHelper(regime, rateBands)(messages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, summaryList, NormalMode)(

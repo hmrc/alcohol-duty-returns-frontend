@@ -68,7 +68,9 @@ class DoYouHaveMultipleSPRDutyRatesController @Inject() (
               updatedAnswers <-
                 Future.fromTry(request.userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DoYouHaveMultipleSPRDutyRatesPage, mode, updatedAnswers))
+            } yield Redirect(
+              navigator.nextPageWithRegime(DoYouHaveMultipleSPRDutyRatesPage, mode, updatedAnswers, regime)
+            )
         )
     }
 }

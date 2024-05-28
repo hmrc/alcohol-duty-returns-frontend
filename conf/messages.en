@@ -282,6 +282,82 @@ doYouHaveMultipleSPRDutyRates.checkYourAnswersLabel = doYouHaveMultipleSPRDutyRa
 doYouHaveMultipleSPRDutyRates.error.required = Select yes if you have multiple SPR duty rates
 doYouHaveMultipleSPRDutyRates.change.hidden = DoYouHaveMultipleSPRDutyRates
 
+tellUsAboutSingleSPRRate.title = Tell us about the beer that is eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.heading = Tell us about the beer that is eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.p1 = Tell us about the beer you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
+tellUsAboutSingleSPRRate.hint = Give your volume answers in litres, to 2 decimal places.
+tellUsAboutSingleSPRRate.legend.totalLitres = Total litres
+tellUsAboutSingleSPRRate.legend.pureAlcohol = Litres of pure alcohol
+tellUsAboutSingleSPRRate.legend.dutyRate = Duty rate
+
+tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught beer that is eligible for Small Producer Relief do you need to declare?
+tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught beer that is eligible for Small Producer Relief do you need to declare?
+
+tellUsAboutSingleSPRRate.error.required.Beer.totalLitres = Enter the total litres of beer
+tellUsAboutSingleSPRRate.error.required.Beer.pureAlcohol = 	Enter the litres of pure alcohol in beer
+tellUsAboutSingleSPRRate.error.required.Beer.dutyRate = Enter your Small Producer Relief duty rate
+tellUsAboutSingleSPRRate.error.required.Cider.totalLitres = Enter the total litres of cider
+tellUsAboutSingleSPRRate.error.required.Cider.pureAlcohol = Enter the litres of pure alcohol in cider
+tellUsAboutSingleSPRRate.error.required.Cider.dutyRate = Enter your Small Producer Relief duty rate
+tellUsAboutSingleSPRRate.error.required.Spirits.totalLitres = Enter the total litres of spirits
+tellUsAboutSingleSPRRate.error.required.Spirits.pureAlcohol = Enter the litres of pure alcohol in spirits
+tellUsAboutSingleSPRRate.error.required.Spirits.dutyRate = Enter your Small Producer Relief duty rate
+tellUsAboutSingleSPRRate.error.required.Wine.totalLitres = Enter the total litres of wine
+tellUsAboutSingleSPRRate.error.required.Wine.pureAlcohol = Enter the litres of pure alcohol in wine
+tellUsAboutSingleSPRRate.error.required.Wine.dutyRate = Enter your Small Producer Relief duty rate
+
+tellUsAboutSingleSPRRate.error.invalid.Beer.totalLitres = Litres of beer must be a number
+tellUsAboutSingleSPRRate.error.invalid.Beer.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.invalid.Beer.dutyRate = Your Small Producer Relief duty rate must be a number
+tellUsAboutSingleSPRRate.error.invalid.Cider.totalLitres = Litres of cider must be a number
+tellUsAboutSingleSPRRate.error.invalid.Cider.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.invalid.Cider.dutyRate = Your Small Producer Relief duty rate must be a number
+tellUsAboutSingleSPRRate.error.invalid.Spirits.totalLitres = Litres of spirits must be a number
+tellUsAboutSingleSPRRate.error.invalid.Spirits.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.invalid.Spirits.dutyRate = Your Small Producer Relief duty rate must be a number
+tellUsAboutSingleSPRRate.error.invalid.Wine.totalLitres = Litres of wine must be a number
+tellUsAboutSingleSPRRate.error.invalid.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.invalid.Wine.dutyRate = Your Small Producer Relief duty rate must be a number
+
+tellUsAboutSingleSPRRate.error.maximumValueKey.Beer.totalLitres = Litres of beer must be 99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Beer.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Beer.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Cider.totalLitres = Litres of cider must be 99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Cider.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Cider.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Spirits.totalLitres = Litres of spirits must be 99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Spirits.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Spirits.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Wine.totalLitres = Litres of wine must be 99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Wine.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+tellUsAboutSingleSPRRate.error.maximumValueKey.Wine.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
+
+tellUsAboutSingleSPRRate.error.minimumValueKey.Beer.totalLitres = Litres of beer must be 0.01 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Beer.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Beer.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Cider.totalLitres = Litres of cider must be 0.01 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Cider.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Cider.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Spirits.totalLitres = Litres of spirits must be 0.01 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Spirits.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Spirits.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Wine.totalLitres = Litres of wine must be 0.01 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Wine.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+tellUsAboutSingleSPRRate.error.minimumValueKey.Wine.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
+
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Beer.totalLitres = Litres of beer must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Beer.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Beer.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Cider.totalLitres = Litres of cider must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Cider.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Cider.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Spirits.totalLitres = Litres of spirits must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Spirits.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Spirits.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Wine.totalLitres = Litres of wine must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+tellUsAboutSingleSPRRate.error.decimalPlacesKey.Wine.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
+
 checkYourAnswers.title =  Check your answers
 checkYourAnswers.heading =  Check your answers
 
@@ -969,5 +1045,3 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
-
-

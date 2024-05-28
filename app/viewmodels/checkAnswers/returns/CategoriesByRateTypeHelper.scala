@@ -19,26 +19,28 @@ package viewmodels.checkAnswers.returns
 import models.{AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
 
-case class QuantityViewModel(
+case class CategoryViewModel(
   category: String,
   id: String
 )
 
-case class HowMuchDoYouNeedToDeclareViewModel(
-  core: Seq[QuantityViewModel],
-  draught: Seq[QuantityViewModel]
+case class CategoriesByRateTypeViewModel(
+  core: Seq[CategoryViewModel],
+  draught: Seq[CategoryViewModel],
+  smallProducer: Seq[CategoryViewModel],
+  draughtAndSmallProducer: Seq[CategoryViewModel]
 )
 
-object HowMuchDoYouNeedToDeclareHelper {
+object CategoriesByRateTypeHelper {
   def apply(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit
     messages: Messages
-  ): HowMuchDoYouNeedToDeclareViewModel = {
+  ): CategoriesByRateTypeViewModel = {
     val rateBandsByType = rateBands.toSeq
       .groupBy(_.rateType)
       .view
       .mapValues { rateBands =>
         rateBands.sortBy(_.taxType).map { rateBand =>
-          QuantityViewModel(
+          CategoryViewModel(
             category = messages(
               "howMuchDoYouNeedToDeclare.abv.interval",
               messages(s"return.regime.$regime"),
@@ -52,9 +54,11 @@ object HowMuchDoYouNeedToDeclareHelper {
       }
       .toMap
 
-    HowMuchDoYouNeedToDeclareViewModel(
+    CategoriesByRateTypeViewModel(
       core = rateBandsByType.getOrElse(RateType.Core, Seq.empty),
-      draught = rateBandsByType.getOrElse(RateType.DraughtRelief, Seq.empty)
+      draught = rateBandsByType.getOrElse(RateType.DraughtRelief, Seq.empty),
+      smallProducer = rateBandsByType.getOrElse(RateType.SmallProducerRelief, Seq.empty),
+      draughtAndSmallProducer = rateBandsByType.getOrElse(RateType.DraughtAndSmallProducerRelief, Seq.empty)
     )
   }
 }
