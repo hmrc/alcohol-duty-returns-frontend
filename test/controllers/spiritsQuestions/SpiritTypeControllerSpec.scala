@@ -21,8 +21,6 @@ import forms.spiritsQuestions.SpiritTypeFormProvider
 import models.{NormalMode, SpiritType}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.SpiritTypePage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import uk.gov.hmrc.http.HttpResponse
 
 import scala.concurrent.Future
 
-class SpiritTypeControllerSpec extends SpecBase with MockitoSugar {
+class SpiritTypeControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

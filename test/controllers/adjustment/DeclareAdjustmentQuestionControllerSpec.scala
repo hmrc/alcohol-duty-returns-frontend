@@ -21,8 +21,6 @@ import forms.adjustment.DeclareAdjustmentQuestionFormProvider
 import models.NormalMode
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.DeclareAdjustmentQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.adjustment.DeclareAdjustmentQuestionView
 
 import scala.concurrent.Future
 
-class DeclareAdjustmentQuestionControllerSpec extends SpecBase with MockitoSugar {
+class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

@@ -21,8 +21,6 @@ import forms.spiritsQuestions.GrainsUsedFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.GrainsUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -35,7 +33,7 @@ import views.html.spiritsQuestions.GrainsUsedView
 
 import scala.concurrent.Future
 
-class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
+class GrainsUsedControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -54,7 +52,7 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       GrainsUsedPage.toString -> Json.obj(
         "maltedBarleyQuantity"     -> maltedBarleyQuantity,

@@ -21,8 +21,6 @@ import forms.adjustment.AdjustmentSmallProducerReliefDutyRateFormProvider
 import models.NormalMode
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -35,7 +33,7 @@ import views.html.adjustment.AdjustmentSmallProducerReliefDutyRateView
 
 import scala.concurrent.Future
 
-class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase with MockitoSugar {
+class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
   val formProvider = new AdjustmentSmallProducerReliefDutyRateFormProvider()
   val form         = formProvider()

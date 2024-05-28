@@ -23,9 +23,13 @@ import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
+import uk.gov.hmrc.auth.core.CredentialStrength.strong
+import uk.gov.hmrc.auth.core.{ConfidenceLevel, CredentialStrength, Enrolment, _}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
+import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -44,11 +48,18 @@ class AuthenticatedIdentifierAction @Inject() (
     with AuthorisedFunctions
     with Logging {
 
+  protected def predicate: Predicate =
+    AuthProviders(GovernmentGateway) and
+      Enrolment(config.enrolmentServiceName) and
+      CredentialStrength(strong) and
+      Organisation and
+      ConfidenceLevel.L50
+
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(internalId and groupIdentifier and allEnrolments) {
+    authorised(predicate).retrieve(internalId and groupIdentifier and allEnrolments) {
       case optInternalId ~ optGroupId ~ enrolments =>
         val internalId: String = getOrElseFailWithUnauthorised(optInternalId, "Unable to retrieve internalId")
         val groupId: String    = getOrElseFailWithUnauthorised(optGroupId, "Unable to retrieve groupIdentifier")
@@ -58,8 +69,20 @@ class AuthenticatedIdentifierAction @Inject() (
       case _: NoActiveSession        =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       case _: AuthorisationException =>
+        handleAuthException
         Redirect(routes.UnauthorisedController.onPageLoad)
     }
+  }
+
+  private def handleAuthException: PartialFunction[Throwable, Result] = {
+    case _: InsufficientEnrolments      => Redirect(routes.UnauthorisedController.onPageLoad)
+    case _: InsufficientConfidenceLevel => Redirect(routes.UnauthorisedController.onPageLoad)
+    case _: UnsupportedAuthProvider     => Redirect(routes.UnauthorisedController.onPageLoad)
+    case _: UnsupportedAffinityGroup    => Redirect(routes.UnauthorisedController.onPageLoad)
+    case _: UnsupportedCredentialRole   => Redirect(routes.UnauthorisedController.onPageLoad)
+    case _: IncorrectCredentialStrength => Redirect(routes.UnauthorisedController.onPageLoad)
+    case _: UnauthorizedException       => Redirect(routes.UnauthorisedController.onPageLoad)
+    case _: AuthorisationException      => Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
   }
 
   private def getAppaId(enrolments: Enrolments): String = {
