@@ -1,0 +1,97 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import viewmodels.InputWidth._
+@import viewmodels.LegendSize
+@import components.{SectionHeading, PageHeading, Paragraph}
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    paragraph: Paragraph,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading,
+    govukWarningText: GovukWarningText
+)
+
+@(form: Form[_], mode: Mode, regime: AlcoholRegime, rateBandRadioItems: Seq[RadioItem])(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("tellUsAboutMultipleSPRRate.title", messages(s"return.regime.$regime")))) {
+
+    @formHelper(action = controllers.returns.routes.TellUsAboutMultipleSPRRateController.onSubmit(mode, regime), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @sectionHeading(
+            id = "tellUsAboutMultipleSPRRate-section",
+            text = messages(s"section.return.$regime")
+        )
+
+        @pageHeading(messages("tellUsAboutMultipleSPRRate.heading", messages(s"return.regime.$regime")))
+
+        @paragraph(messages("tellUsAboutMultipleSPRRate.p1"))
+
+        @govukWarningText(WarningText(
+        iconFallbackText = Some("Warning"),
+        content = Text(messages("tellUsAboutMultipleSPRRate.warning"))
+        ))
+
+        @govukRadios(
+            RadiosViewModel(
+                field  = form("taxType"),
+                legend = LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(s"return.regime.$regime"))).withSize(LegendSize.Medium),
+                items  = rateBandRadioItems
+            )
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("totalLitres"),
+                label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.totalLitres", messages(s"return.regime.$regime")))
+            )
+            .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("pureAlcohol"),
+                label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.pureAlcohol", messages(s"return.regime.$regime")))
+            )
+            .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
+            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("dutyRate"),
+                label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.dutyRate", messages(s"return.regime.$regime")))
+            )
+            .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
+            .withPoundPrefix
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+        )
+    }
+}

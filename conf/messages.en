@@ -358,6 +358,20 @@ tellUsAboutSingleSPRRate.error.decimalPlacesKey.Wine.totalLitres = Litres of win
 tellUsAboutSingleSPRRate.error.decimalPlacesKey.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
 tellUsAboutSingleSPRRate.error.decimalPlacesKey.Wine.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 
+tellUsAboutMultipleSPRRate.title = Tell us about the {0} you need to declare that is eligible for Small Producer Relief
+tellUsAboutMultipleSPRRate.heading = Tell us about the {0} you need to declare that is eligible for Small Producer Relief
+tellUsAboutMultipleSPRRate.radioHeading = What type of {0} do you need to declare?
+tellUsAboutMultipleSPRRate.p1 = For each beer you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
+tellUsAboutMultipleSPRRate.warning = If you have more than one duty rate for beer in the same ABV range enter them one at a time.
+tellUsAboutMultipleSPRRate.h2 = What type of {0} do you need to declare?
+tellUsAboutMultipleSPRRate.label.totalLitres = Total litres of this {0}
+tellUsAboutMultipleSPRRate.label.pureAlcohol = Litres of pure alcohol in this {0}
+tellUsAboutMultipleSPRRate.label.dutyRate = Your Small Producer Relief Duty rate for this {0}
+tellUsAboutMultipleSPRRate.hint.litres = In litres, to 2 decimal places.
+tellUsAboutMultipleSPRRate.hint.currency = Include pounds and pence
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel = TellUsAboutMultipleSPRRate
+
+
 checkYourAnswers.title =  Check your answers
 checkYourAnswers.heading =  Check your answers
 
@@ -1045,3 +1059,4 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
+
