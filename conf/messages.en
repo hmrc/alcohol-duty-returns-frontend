@@ -92,6 +92,9 @@ viewPastReturns.submitReturn = Submit Return
 viewPastReturns.submitReturn.hidden = submit return
 viewPastReturns.viewReturn = View Return
 viewPastReturns.viewReturn.hidden = view return
+viewPastReturns.status.due = DUE
+viewPastReturns.status.overdue = OVERDUE
+viewPastReturns.status.completed = COMPLETED
 
 taskList.title = Alcohol Duty return
 taskList.status.completed = Return ready to submit
