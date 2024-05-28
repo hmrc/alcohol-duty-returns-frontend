@@ -20,6 +20,7 @@ site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
 site.currency.2DP = £{0,number,#,##0.00}
+site.returnToBusinessAccount = Return to your Business Tax Account
 
 date.day = Day
 date.month = Month
@@ -68,6 +69,13 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+noAppaId.title = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
+noAppaId.heading = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
+noAppaId.text = Register with HMRC to receive an Alcoholic Products Producer approval ID and manage your alcohol duty online.
+noAppaId.link.id = register-for-alcohol-duty
+noAppaId.link.url = http://localhost/url.html
+noAppaId.link.text = Read guidance on paying Alcohol Duty (opens in a new tab)
 
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty return
