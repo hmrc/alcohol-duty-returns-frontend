@@ -34,19 +34,19 @@ import uk.gov.hmrc.http.UnauthorizedException
 import scala.concurrent.Future
 
 class IdentifierActionSpec extends SpecBase {
-  val loginUrl = "loginUrl"
-  val loginContinueUrl = "continueUrl"
-  val testContent = "Test"
-  val enrolment = "HMRC-AD-ORG"
-  val appaIdKey = "APPAID"
-  val state = "Activated"
-  val enrolments = Enrolments(Set(Enrolment(enrolment, Seq(EnrolmentIdentifier(appaIdKey, appaId)), state)))
-  val emptyEnrolments = Enrolments(Set.empty)
+  val loginUrl                = "loginUrl"
+  val loginContinueUrl        = "continueUrl"
+  val testContent             = "Test"
+  val enrolment               = "HMRC-AD-ORG"
+  val appaIdKey               = "APPAID"
+  val state                   = "Activated"
+  val enrolments              = Enrolments(Set(Enrolment(enrolment, Seq(EnrolmentIdentifier(appaIdKey, appaId)), state)))
+  val emptyEnrolments         = Enrolments(Set.empty)
   val enrolmentsWithoutAppaId = Enrolments(Set(Enrolment(enrolment, Seq.empty, state)))
 
-  val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  val appConfig: FrontendAppConfig           = mock[FrontendAppConfig]
   val defaultBodyParser: BodyParsers.Default = app.injector.instanceOf[BodyParsers.Default]
-  val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  val mockAuthConnector: AuthConnector       = mock[AuthConnector]
 
   val identifierAction = new AuthenticatedIdentifierAction(mockAuthConnector, appConfig, defaultBodyParser)
 

@@ -48,7 +48,7 @@ class AuthenticatedIdentifierAction @Inject() (
     with AuthorisedFunctions
     with Logging {
 
-  protected def predicate: Predicate =
+  private def predicate: Predicate =
     AuthProviders(GovernmentGateway) and
       Enrolment(config.enrolmentServiceName) and
       CredentialStrength(strong) and
