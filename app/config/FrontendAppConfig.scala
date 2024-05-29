@@ -54,6 +54,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val loginUrl: String           = configuration.get[String]("urls.login")
   val loginContinueUrl: String   = configuration.get[String]("urls.loginContinue")
   val signOutUrl: String         = configuration.get[String]("urls.signOut")
+  val appaIdRegisterUrl: String  = configuration.get[String]("urls.appaIdRegister")
   val businessTaxAccount: String = configuration.get[String]("urls.businessTaxAccount")
 
   private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl

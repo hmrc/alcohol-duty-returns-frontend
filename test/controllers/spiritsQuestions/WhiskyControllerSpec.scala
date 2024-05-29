@@ -48,7 +48,7 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
   val userAnswers       = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       WhiskyPage.toString -> Json.obj(
         "scotchWhisky" -> validScotchWhisky,

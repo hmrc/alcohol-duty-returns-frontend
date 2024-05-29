@@ -31,7 +31,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
   val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       DutySuspendedBeerPage.toString           -> Json.obj(
         "totalBeer"         -> validTotal,
@@ -86,7 +86,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
       val beerScreenAnswer: UserAnswers = UserAnswers(
         returnId,
         groupId,
-        userAnswersId,
+        internalId,
         Json.obj(
           DutySuspendedBeerPage.toString -> Json.obj(
             "totalBeer"         -> validTotal,

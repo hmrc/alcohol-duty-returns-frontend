@@ -49,7 +49,7 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(
         "totalCider"         -> validTotalCider,

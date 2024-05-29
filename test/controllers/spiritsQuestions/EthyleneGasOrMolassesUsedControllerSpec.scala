@@ -51,7 +51,7 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase with MockitoSugar
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       EthyleneGasOrMolassesUsedPage.toString -> Json.obj(
         "ethyleneGas"      -> validEthyleneGas,

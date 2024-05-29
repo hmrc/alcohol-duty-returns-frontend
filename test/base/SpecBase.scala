@@ -38,13 +38,13 @@ trait SpecBase
     with IntegrationPatience
     with ModelGenerators {
 
-  val appaId: String        = appaIdGen.sample.get
-  val periodKey: String     = periodKeyGen.sample.get
-  val groupId: String       = "groupid"
-  val userAnswersId: String = "id"
-  val returnId: ReturnId    = ReturnId(appaId, periodKey)
+  val appaId: String     = appaIdGen.sample.get
+  val periodKey: String  = periodKeyGen.sample.get
+  val groupId: String    = "groupid"
+  val internalId: String = "id"
+  val returnId: ReturnId = ReturnId(appaId, periodKey)
 
-  def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, userAnswersId)
+  def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, internalId)
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
@@ -53,6 +53,7 @@ trait SpecBase
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifierWithoutEnrolmentAction].to[FakeIdentifierWithoutEnrolmentAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
 

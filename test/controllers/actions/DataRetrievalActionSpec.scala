@@ -46,7 +46,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(None)
         val action         = new Harness(cacheConnector)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), appaId, groupId, userAnswersId)).futureValue
+        val result = action.callTransform(IdentifierRequest(FakeRequest(), appaId, groupId, internalId)).futureValue
 
         result.userAnswers must not be defined
       }
@@ -67,7 +67,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
                 FakeRequest().withSession((periodKeySessionKey, periodKey)),
                 appaId,
                 groupId,
-                userAnswersId
+                internalId
               )
             )
             .futureValue
@@ -88,7 +88,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
                 play.api.test.FakeRequest(),
                 appaId,
                 groupId,
-                userAnswersId
+                internalId
               )
             )
             .futureValue

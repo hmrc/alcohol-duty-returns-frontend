@@ -23,7 +23,7 @@ import views.html.auth.NoAppaIdView
 
 class NoAppaIdControllerSpec extends SpecBase {
 
-  "AppaId Controller" - {
+  "NoAppaId Controller" - {
 
     lazy val noAppaIdRoute = routes.NoAppaIdController.onPageLoad().url
 
@@ -34,12 +34,13 @@ class NoAppaIdControllerSpec extends SpecBase {
       running(application) {
         val request = FakeRequest(GET, noAppaIdRoute)
 
-        val view = application.injector.instanceOf[NoAppaIdView]
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val view      = application.injector.instanceOf[NoAppaIdView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(appConfig)(request, messages(application)).toString
       }
     }
 

@@ -44,7 +44,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
   private val userAnswers = UserAnswers(
     ReturnId(appaId, validPeriodKey),
     groupId = groupId,
-    internalId = userAnswersId,
+    internalId = internalId,
     lastUpdated = Instant.now(clock),
     validUntil = Some(validUntil)
   )

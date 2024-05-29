@@ -49,7 +49,7 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase with MockitoSugar {
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       DutySuspendedSpiritsPage.toString -> Json.obj(
         "totalSpirits"         -> validTotalSpirits,

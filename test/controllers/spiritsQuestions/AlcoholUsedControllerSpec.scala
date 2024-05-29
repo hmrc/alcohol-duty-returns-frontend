@@ -52,7 +52,7 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       AlcoholUsedPage.toString -> Json.obj(
         "beer"         -> validBeer,

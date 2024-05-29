@@ -54,7 +54,7 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       GrainsUsedPage.toString -> Json.obj(
         "maltedBarleyQuantity"     -> maltedBarleyQuantity,

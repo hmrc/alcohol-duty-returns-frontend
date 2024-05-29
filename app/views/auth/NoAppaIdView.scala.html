@@ -17,6 +17,7 @@
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, Paragraph}
 @import components.Link
+@import config.FrontendAppConfig
 
 @this(
     layout: templates.Layout,
@@ -29,7 +30,7 @@
     paragraph: Paragraph
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("noAppaId.title"))) {
     @formHelper(action = controllers.auth.routes.NoAppaIdController.onSubmit(), Symbol("autoComplete") -> "off") {
@@ -41,7 +42,7 @@
             @link(
                 id = "noAppaId.link.id",
                 text = messages("noAppaId.link.text"),
-                href = messages("noAppaId.link.url"),
+                href = appConfig.appaIdRegisterUrl,
                 newTab = true
             )
         </p>

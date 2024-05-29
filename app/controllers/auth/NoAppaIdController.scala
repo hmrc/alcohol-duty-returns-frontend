@@ -17,7 +17,7 @@
 package controllers.auth
 
 import config.FrontendAppConfig
-import controllers.actions.IdentifierAction
+import controllers.actions.IdentifierWithoutEnrolmentAction
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class NoAppaIdController @Inject() (
   appConfig: FrontendAppConfig,
-  identify: IdentifierAction,
+  identify: IdentifierWithoutEnrolmentAction,
   override val messagesApi: MessagesApi,
   val controllerComponents: MessagesControllerComponents,
   view: NoAppaIdView
@@ -35,7 +35,7 @@ class NoAppaIdController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = identify { implicit request =>
-    Ok(view())
+    Ok(view(appConfig))
   }
 
   def onSubmit: Action[AnyContent] = identify { _ =>

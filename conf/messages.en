@@ -74,7 +74,6 @@ noAppaId.title = You need an Alcoholic Products Producer approval ID to access A
 noAppaId.heading = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
 noAppaId.text = Register with HMRC to receive an Alcoholic Products Producer approval ID and manage your alcohol duty online.
 noAppaId.link.id = register-for-alcohol-duty
-noAppaId.link.url = http://localhost/url.html
 noAppaId.link.text = Read guidance on paying Alcohol Duty (opens in a new tab)
 
 section.visuallyHidden = This section is:

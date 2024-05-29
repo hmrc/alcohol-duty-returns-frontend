@@ -20,8 +20,8 @@ GET         /account/signed-out                          controllers.auth.Signed
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET         /no-approval                                 controllers.auth.NoAppaIdController.onPageLoad()
-POST        /no-approval                                 controllers.auth.NoAppaIdController.onSubmit()
+GET         /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onPageLoad()
+POST        /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onSubmit()
 
 GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
 

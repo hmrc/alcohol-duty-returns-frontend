@@ -49,7 +49,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSug
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
         "totalOtherFermented"         -> validTotalOtherFermented,
