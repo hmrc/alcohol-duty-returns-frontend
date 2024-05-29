@@ -186,10 +186,10 @@ whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.Core = Non-drau
 whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.Core = Non-draught, exceeding {0}% ABV (tax type code {1})
 whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtRelief = Draught, between {0}% and {1}% ABV (tax type code {2})
 whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtRelief = Draught, exceeding {0}% ABV (tax type code {1})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.spr = Non-draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.spr = Non-draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.draught = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.draughtSpr = Draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.SmallProducerRelief = Non-draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.SmallProducerRelief = Non-draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtSmallProducerRelief = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtSmallProducerRelief = Draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
 
 howMuchDoYouNeedToDeclare.title = Tell us about the {0} you need to declare
 howMuchDoYouNeedToDeclare.heading = Tell us about the {0} you need to declare
@@ -394,6 +394,14 @@ tellUsAboutMultipleSPRRate.error.taxType.OtherFermentedProduct.required = Select
 
 checkYourAnswers.title =  Check your answers
 checkYourAnswers.heading =  Check your answers
+
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType = Description
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label = Total {0}
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.value = {0} litres
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label = Total pure alcohol
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value = {0} Lpa
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label = Duty rate
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,##0.00} per litre
 
 # old return journey
 

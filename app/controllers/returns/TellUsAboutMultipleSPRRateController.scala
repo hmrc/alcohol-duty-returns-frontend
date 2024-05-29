@@ -77,7 +77,9 @@ class TellUsAboutMultipleSPRRateController @Inject() (
                   updatedAnswers <-
                     Future.fromTry(request.userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, value))
                   _              <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(TellUsAboutMultipleSPRRatePage, mode, updatedAnswers))
+                } yield Redirect(
+                  navigator.nextPageWithRegime(TellUsAboutMultipleSPRRatePage, mode, updatedAnswers, regime)
+                )
             )
       }
     }

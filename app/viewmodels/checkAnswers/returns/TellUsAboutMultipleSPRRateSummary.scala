@@ -17,32 +17,82 @@
 package viewmodels.checkAnswers.returns
 
 import controllers.returns.routes
-import models.AlcoholRegime.Beer
-import models.{CheckMode, UserAnswers}
-import pages.returns.TellUsAboutMultipleSPRRatePage
+import models.{AlcoholRegime, CheckMode, UserAnswers}
+import pages.returns.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
+import viewmodels.checkAnswers.returns.WhatDoYouNeedToDeclareSummary.rateBandContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object TellUsAboutMultipleSPRRateSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TellUsAboutMultipleSPRRatePage).map { answer =>
-      val value = ""
+  def rows(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] =
+    (
+      answers.getByKey(WhatDoYouNeedToDeclarePage, regime),
+      answers.getByKey(TellUsAboutMultipleSPRRatePage, regime)
+    ) match {
+      case (Some(rateBands), Some(answer)) =>
+        rateBands
+          .find(_.taxType == answer.taxType)
+          .map { rateBand =>
+            val taxTypeRowViewModel =
+              SummaryListRowViewModel(
+                key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType",
+                value = ValueViewModel(content = rateBandContent(rateBand)),
+                actions = actions("taxType", regime)
+              )
 
-      SummaryListRowViewModel(
-        key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, Beer).url
-          )
-            .withVisuallyHiddenText(messages("tellUsAboutMultipleSPRRate.change.hidden"))
-        )
-      )
+            val totalLitresRowViewModel =
+              SummaryListRowViewModel(
+                key = KeyViewModel(
+                  messages(
+                    "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
+                    messages(s"return.regime.$regime")
+                  )
+                ),
+                value = ValueViewModel(
+                  HtmlContent(
+                    messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.value", answer.totalLitres)
+                  )
+                ),
+                actions = actions("totalLitres", regime)
+              )
+
+            val pureAlcoholRowViewModel =
+              SummaryListRowViewModel(
+                key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label",
+                value = ValueViewModel(
+                  HtmlContent(
+                    messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value", answer.pureAlcohol)
+                  )
+                ),
+                actions = actions("pureAlcohol", regime)
+              )
+
+            val dutyRateRowViewModel =
+              SummaryListRowViewModel(
+                key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label",
+                value = ValueViewModel(
+                  HtmlContent(
+                    messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value", answer.dutyRate)
+                  )
+                ),
+                actions = actions("dutyRate", regime)
+              )
+
+            Seq(taxTypeRowViewModel, totalLitresRowViewModel, pureAlcoholRowViewModel, dutyRateRowViewModel)
+          }
+          .getOrElse(Seq.empty)
+      case _                               => Seq.empty
     }
+
+  def actions(elementId: String, regime: AlcoholRegime)(implicit messages: Messages): Seq[ActionItem] = Seq(
+    ActionItemViewModel(
+      "site.change",
+      routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime).url + s"#$elementId"
+    )
+      .withVisuallyHiddenText(messages("tellUsAboutMultipleSPRRate.change.hidden"))
+  )
 }
