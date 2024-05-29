@@ -16,44 +16,49 @@
 
 package forms.returns
 
+import config.Constants._
+
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms._
 import models.returns.{DutyByTaxType, TellUsAboutMultipleSPRRate}
 
 class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[DutyByTaxType] = Form(
-     mapping(
-      "taxType" -> text("tellUsAboutMultipleSPRRate.error.field1.required"),
-      "totalLitres"      -> bigDecimal(
-       2,
-       "tellUsAboutMultipleSPRRate.error.totalLitres.required",
-       "tellUsAboutMultipleSPRRate.error.totalLitres.nonNumeric",
-       "tellUsAboutMultipleSPRRate.error.totalLitres.twoDecimalPlaces"
-     ).verifying(minimumValue(BigDecimal(0.00), "tellUsAboutMultipleSPRRate.error.totalLitres.minimumRequired"))
-       .verifying(
-         maximumValue(BigDecimal(999999999.99), "tellUsAboutMultipleSPRRate.error.totalLitres.maximumRequired")
-       ),
-       "pureAlcohol"      -> bigDecimal(
-         2,
-         "tellUsAboutMultipleSPRRate.error.pureAlcohol.required",
-         "tellUsAboutMultipleSPRRate.error.pureAlcohol.nonNumeric",
-         "tellUsAboutMultipleSPRRate.error.pureAlcohol.twoDecimalPlaces"
-       ).verifying(minimumValue(BigDecimal(0.00), "tellUsAboutMultipleSPRRate.error.pureAlcohol.minimumRequired"))
-         .verifying(
-           maximumValue(BigDecimal(999999999.99), "tellUsAboutMultipleSPRRate.error.pureAlcohol.maximumRequired")
-         ),
-       "dutyRate"      -> bigDecimal(
-         2,
-         "tellUsAboutMultipleSPRRate.error.dutyRate.required",
-         "tellUsAboutMultipleSPRRate.error.dutyRate.nonNumeric",
-         "tellUsAboutMultipleSPRRate.error.dutyRate.twoDecimalPlaces"
-       ).verifying(minimumValue(BigDecimal(0.00), "tellUsAboutMultipleSPRRate.error.dutyRate.minimumRequired"))
-         .verifying(
-           maximumValue(BigDecimal(999999999.99), "tellUsAboutMultipleSPRRate.error.dutyRate.maximumRequired")
-         ),
+  def apply(regime: AlcoholRegime): Form[DutyByTaxType] = Form(
+    mapping(
+      "taxType"     -> text(s"tellUsAboutMultipleSPRRate.error.taxType.$regime.required"),
+      "totalLitres" -> bigDecimal(
+        maximumDecimalPlaces,
+        s"tellUsAboutSPRRate.error.required.$regime.totalLitres",
+        s"tellUsAboutSPRRate.error.invalid.$regime.totalLitres",
+        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime.totalLitres"
+      ).verifying(
+        minimumValue(volumeMinimumValue, s"tellUsAboutSPRRate.error.minimumValueKey.$regime.totalLitres")
+      ).verifying(
+        maximumValue(volumeMaximumValue, s"tellUsAboutSPRRate.error.maximumValueKey.$regime.totalLitres")
+      ),
+      "pureAlcohol" -> bigDecimal(
+        maximumDecimalPlaces,
+        s"tellUsAboutSPRRate.error.required.$regime.pureAlcohol",
+        s"tellUsAboutSPRRate.error.invalid.$regime.pureAlcohol",
+        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime.pureAlcohol"
+      ).verifying(
+        minimumValue(volumeMinimumValue, s"tellUsAboutSPRRate.error.minimumValueKey.$regime.pureAlcohol")
+      ).verifying(
+        maximumValue(volumeMaximumValue, s"tellUsAboutSPRRate.error.maximumValueKey.$regime.pureAlcohol")
+      ),
+      "dutyRate"    -> bigDecimal(
+        maximumDecimalPlaces,
+        s"tellUsAboutSPRRate.error.required.$regime.dutyRate",
+        s"tellUsAboutSPRRate.error.invalid.$regime.dutyRate",
+        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime.dutyRate"
+      ).verifying(minimumValue(dutyMinimumValue, s"tellUsAboutSPRRate.error.minimumValueKey.$regime.dutyRate"))
+        .verifying(
+          maximumValue(dutyMaximumValue, s"tellUsAboutSPRRate.error.maximumValueKey.$regime.dutyRate")
+        )
     )(DutyByTaxType.apply)(DutyByTaxType.unapply)
-   )
- }
+  )
+}

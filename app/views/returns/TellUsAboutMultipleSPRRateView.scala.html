@@ -68,6 +68,7 @@
                 field = form("totalLitres"),
                 label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.totalLitres", messages(s"return.regime.$regime")))
             )
+            .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
@@ -77,6 +78,7 @@
                 field = form("pureAlcohol"),
                 label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.pureAlcohol", messages(s"return.regime.$regime")))
             )
+            .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
@@ -86,6 +88,7 @@
                 field = form("dutyRate"),
                 label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.dutyRate", messages(s"return.regime.$regime")))
             )
+            .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
             .withPoundPrefix
         )

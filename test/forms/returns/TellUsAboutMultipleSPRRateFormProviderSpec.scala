@@ -9,10 +9,10 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours {
 
   ".field1" - {
 
-    val fieldName = "field1"
+    val fieldName   = "field1"
     val requiredKey = "tellUsAboutMultipleSPRRate.error.field1.required"
-    val lengthKey = "tellUsAboutMultipleSPRRate.error.field1.length"
-    val maxLength = 100
+    val lengthKey   = "tellUsAboutMultipleSPRRate.error.field1.length"
+    val maxLength   = 100
 
     behave like fieldThatBindsValidData(
       form,
@@ -36,10 +36,10 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours {
 
   ".field2" - {
 
-    val fieldName = "field2"
+    val fieldName   = "field2"
     val requiredKey = "tellUsAboutMultipleSPRRate.error.field2.required"
-    val lengthKey = "tellUsAboutMultipleSPRRate.error.field2.length"
-    val maxLength = 100
+    val lengthKey   = "tellUsAboutMultipleSPRRate.error.field2.length"
+    val maxLength   = 100
 
     behave like fieldThatBindsValidData(
       form,

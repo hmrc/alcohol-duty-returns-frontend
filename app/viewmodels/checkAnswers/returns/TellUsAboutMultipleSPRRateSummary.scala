@@ -27,21 +27,22 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TellUsAboutMultipleSPRRateSummary  {
+object TellUsAboutMultipleSPRRateSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TellUsAboutMultipleSPRRatePage).map {
-      answer =>
-
+    answers.get(TellUsAboutMultipleSPRRatePage).map { answer =>
       val value = ""
 
-        SummaryListRowViewModel(
-          key     = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, Beer).url)
-              .withVisuallyHiddenText(messages("tellUsAboutMultipleSPRRate.change.hidden"))
+      SummaryListRowViewModel(
+        key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, Beer).url
           )
+            .withVisuallyHiddenText(messages("tellUsAboutMultipleSPRRate.change.hidden"))
         )
+      )
     }
 }

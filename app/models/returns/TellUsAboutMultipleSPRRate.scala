@@ -18,7 +18,7 @@ package models.returns
 
 import play.api.libs.json._
 
-case class TellUsAboutMultipleSPRRate (field1: String, field2: String)
+case class TellUsAboutMultipleSPRRate(field1: String, field2: String)
 
 object TellUsAboutMultipleSPRRate {
   implicit val format = Json.format[TellUsAboutMultipleSPRRate]

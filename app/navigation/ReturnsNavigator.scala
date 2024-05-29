@@ -64,8 +64,16 @@ class ReturnsNavigator @Inject() () {
               routes.IndexController.onPageLoad
           }
     case DoYouHaveMultipleSPRDutyRatesPage =>
-      _ => regime => controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
-    case _                                 => _ => _ => routes.IndexController.onPageLoad
+      ua =>
+        regime =>
+          ua.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime) match {
+            case Some(true)  =>
+              controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime)
+            case Some(false) =>
+              controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
+            case _           =>
+              routes.IndexController.onPageLoad
+          }
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {

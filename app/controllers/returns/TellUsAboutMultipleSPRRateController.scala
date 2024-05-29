@@ -20,13 +20,12 @@ import controllers.actions._
 import forms.returns.TellUsAboutMultipleSPRRateFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode}
+import models.{AlcoholRegime, Mode, RateBand}
 import navigation.ReturnsNavigator
 import pages.returns.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import uk.gov.hmrc.govukfrontend.views.Aliases.Label
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,54 +34,69 @@ import views.html.returns.TellUsAboutMultipleSPRRateView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TellUsAboutMultipleSPRRateController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       cacheConnector: CacheConnector,
-                                       navigator: ReturnsNavigator,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       formProvider: TellUsAboutMultipleSPRRateFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: TellUsAboutMultipleSPRRateView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class TellUsAboutMultipleSPRRateController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: ReturnsNavigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: TellUsAboutMultipleSPRRateFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: TellUsAboutMultipleSPRRateView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
-  val form = formProvider()
-
-  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+    (identify andThen getData andThen requireData) { implicit request =>
+      val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-        case None => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        case None            => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
           val preparedForm = request.userAnswers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
-            case None => form
+            case None        => form
             case Some(value) => form.fill(value)
           }
-
-          val categoryViewModels = CategoriesByRateTypeHelper(regime, rateBands)
-          val smallProducerRadioItems = categoryViewModels.smallProducer.map{
-            category => RadioItem (content = Text(category.category), value = Some(category.id))
-          }.sortBy(_.id)
-          val draughtAndSmallProducerRadioItems = categoryViewModels.draughtAndSmallProducer.map{
-            category => RadioItem (content = Text(category.category), value = Some(category.id))
-          }.sortBy(_.id)
-
-          Ok(view(preparedForm, mode, regime, smallProducerRadioItems ++ draughtAndSmallProducerRadioItems))
+          Ok(view(preparedForm, mode, regime, radioItems(regime, rateBands)))
       }
-  }
+    }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
+      request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+        case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case Some(rateBands) =>
+          formProvider(regime)
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                Future.successful(BadRequest(view(formWithErrors, mode, regime, radioItems(regime, rateBands)))),
+              value =>
+                for {
+                  updatedAnswers <-
+                    Future.fromTry(request.userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, value))
+                  _              <- cacheConnector.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(TellUsAboutMultipleSPRRatePage, mode, updatedAnswers))
+            )
+      }
+    }
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode, regime, Seq.empty))),
+  private def radioItems(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit
+    messages: Messages
+  ): Seq[RadioItem] = {
+    val categoryViewModels                = CategoriesByRateTypeHelper(regime, rateBands)
+    val smallProducerRadioItems           = categoryViewModels.smallProducer
+      .map { category =>
+        RadioItem(content = Text(category.category), value = Some(category.id))
+      }
+      .sortBy(_.id)
+    val draughtAndSmallProducerRadioItems = categoryViewModels.draughtAndSmallProducer
+      .map { category =>
+        RadioItem(content = Text(category.category), value = Some(category.id))
+      }
+      .sortBy(_.id)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(TellUsAboutMultipleSPRRatePage, mode, updatedAnswers))
-      )
+    smallProducerRadioItems ++ draughtAndSmallProducerRadioItems
   }
 }

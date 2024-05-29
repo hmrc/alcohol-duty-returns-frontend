@@ -24,7 +24,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new TellUsAboutMultipleSPRRateFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val tellUsAboutMultipleSPRRateRoute = routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode).url
 
@@ -70,7 +70,10 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(TellUsAboutMultipleSPRRate("value 1", "value 2")), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(TellUsAboutMultipleSPRRate("value 1", "value 2")), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
