@@ -23,25 +23,24 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResp
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
-import play.api.http.Status.{NOT_FOUND, OK}
+import play.api.http.Status.OK
 
 class AlcoholDutyReturnsConnector @Inject() (
-                                              config: FrontendAppConfig,
-                                              implicit val httpClient: HttpClient
-                                            )(implicit ec: ExecutionContext)
-  extends HttpReadsInstances {
+  config: FrontendAppConfig,
+  implicit val httpClient: HttpClient
+)(implicit ec: ExecutionContext)
+    extends HttpReadsInstances {
 
-  def getObligationDetails(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[ObligationData]] = {
-
-    httpClient.GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetObligationDetailsUrl(appaId)).flatMap{
-        case Right(response) if response.status == OK => Try(response.json.as[Seq[ObligationData]]) match {
-          case Success(data)=> Future.successful(data)
-          case Failure(exception) => Future.failed(new Exception("Invalid JSON format "+exception))
-        }
-        case Left(errorResponse) =>       Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
-        case Right(response) => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
-    }.recoverWith {
-      case ex: Exception => Future.failed(ex)
-    }
-  }
+  def obligationDetails(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[ObligationData]] =
+    httpClient
+      .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetObligationDetailsUrl(appaId))
+      .flatMap {
+        case Right(response) if response.status == OK =>
+          Try(response.json.as[Seq[ObligationData]]) match {
+            case Success(data)      => Future.successful(data)
+            case Failure(exception) => Future.failed(new Exception("Invalid JSON format " + exception))
+          }
+        case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
+        case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
+      }
 }

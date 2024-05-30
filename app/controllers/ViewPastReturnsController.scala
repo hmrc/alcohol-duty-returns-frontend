@@ -19,7 +19,6 @@ package controllers
 import controllers.actions._
 
 import javax.inject.Inject
-import models.ObligationData
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.AlcoholDutyReturnsConnector
@@ -32,25 +31,26 @@ import viewmodels.ViewPastReturnsHelper
 import scala.concurrent.ExecutionContext
 
 class ViewPastReturnsController @Inject() (
-                                            override val messagesApi: MessagesApi,
-                                            identify: IdentifierAction,
-                                            val controllerComponents: MessagesControllerComponents,
-                                            view: ViewPastReturnsView,
-                                            alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector
-                                          )(implicit ec: ExecutionContext)
-  extends FrontendBaseController
-    with I18nSupport with Logging{
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  val controllerComponents: MessagesControllerComponents,
+  view: ViewPastReturnsView,
+  alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport
+    with Logging {
 
-
-  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    alcoholDutyReturnsConnector.getObligationDetails(request.appaId).map{
-      obligations: Seq[ObligationData] =>
-        val fulfilledObligations = obligations.filter(_.status == Fulfilled)
-        val openObligations = obligations.filter(_.status == Open)
-        val outstandingReturnsTable = ViewPastReturnsHelper.outstandingReturnsTable(openObligations)
-        val completedReturnsTable = ViewPastReturnsHelper.completedReturnsTable(fulfilledObligations)
-        Ok(view(outstandingReturnsTable, completedReturnsTable))
+  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
+    (for { obligations <- alcoholDutyReturnsConnector.obligationDetails(request.appaId) } yield {
+      val fulfilledObligations    = obligations.filter(_.status == Fulfilled)
+      val openObligations         = obligations.filter(_.status == Open)
+      val outstandingReturnsTable = ViewPastReturnsHelper.outstandingReturnsTable(openObligations)
+      val completedReturnsTable   = ViewPastReturnsHelper.completedReturnsTable(fulfilledObligations)
+      Ok(view(outstandingReturnsTable, completedReturnsTable))
+    }).recover { case _ =>
+      logger.warn("Unable to fetch obligation data")
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
-
 }

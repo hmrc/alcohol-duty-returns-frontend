@@ -16,7 +16,8 @@
 
 package viewmodels
 import models.ObligationStatus.Open
-import models.{ObligationData, ObligationStatusToDisplay, ReturnPeriod, UserAnswers}
+import models.{ObligationData, ObligationStatusToDisplay, ReturnPeriod}
+import play.api.Logging
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, Text}
@@ -25,48 +26,42 @@ import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, YearMonth}
 
-object ViewPastReturnsHelper {
+object ViewPastReturnsHelper extends Logging {
 
-  def outstandingReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
-    TableViewModel(head = getTableHeader(messages),
-      rows= getObligationDataTableRows(obligationData),
-    total= 0)
-  }
+  def outstandingReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel =
+    TableViewModel(head = getTableHeader(messages), rows = getObligationDataTableRows(obligationData), total = 0)
 
-  def completedReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
-    println(obligationData)
-    TableViewModel(head = getTableHeader(messages),
-      rows = getObligationDataTableRows(obligationData),
-      total = 0)
-  }
+  def completedReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel =
+    TableViewModel(head = getTableHeader(messages), rows = getObligationDataTableRows(obligationData), total = 0)
 
-  private def getTableHeader(messages: Messages): Seq[HeadCell] = {
+  private def getTableHeader(messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(content = Text(messages("viewPastReturns.period")), classes = "govuk-!-width-one-quarter"),
       HeadCell(content = Text(messages("viewPastReturns.status")), classes = "govuk-!-width-one-quarter"),
       HeadCell(content = Text(messages("viewPastReturns.action")), classes = "govuk-!-width-one-quarter")
     )
-  }
 
   private def getObligationDataTableRows(obligationData: Seq[ObligationData])(implicit
-                                                                              messages: Messages
+    messages: Messages
   ): Seq[TableRowViewModel] =
-    obligationData.map{
-      obligationData  => {
-        val status = getObligationStatus(obligationData, LocalDate.now())
-        val statusTag = createStatusTag(status)
-        TableRowViewModel(
-          cells = Seq(
-            Text(formatYearMonth(getPeriod(obligationData.periodKey))),
-            HtmlContent(statusTag)
-          ),
-          actions = getAction(messages, obligationData, status)
-        )
-      }
+    obligationData.map { obligationData =>
+      val status    = getObligationStatus(obligationData, LocalDate.now())
+      val statusTag = createStatusTag(status)
+      TableRowViewModel(
+        cells = Seq(
+          Text(formatYearMonth(getPeriod(obligationData.periodKey))),
+          HtmlContent(statusTag)
+        ),
+        actions = getAction(messages, obligationData, status)
+      )
 
     }
 
-  private def getAction(messages: Messages, obligationData: ObligationData, status: ObligationStatusToDisplay): Seq[TableRowActionViewModel] = {
+  private def getAction(
+    messages: Messages,
+    obligationData: ObligationData,
+    status: ObligationStatusToDisplay
+  ): Seq[TableRowActionViewModel] =
     if (status.equals(ObligationStatusToDisplay.Completed)) {
       Seq(
         TableRowActionViewModel(
@@ -75,8 +70,7 @@ object ViewPastReturnsHelper {
           visuallyHiddenText = Some(messages("viewPastReturns.viewReturn.hidden"))
         )
       )
-    }
-    else{
+    } else {
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastReturns.submitReturn"),
@@ -85,48 +79,45 @@ object ViewPastReturnsHelper {
         )
       )
     }
+
+  private def formatYearMonth(yearMonth: YearMonth): String = {
+    val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
+    yearMonth.format(formatter)
   }
 
-  private def formatYearMonth(yearMonth: YearMonth): String =
-    {
-      val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
-      yearMonth.format(formatter)
-    }
-
   private def getObligationStatus(obligationData: ObligationData, today: LocalDate): ObligationStatusToDisplay =
-    {
-      if(obligationData.status == Open){
-        if(obligationData.dueDate.isBefore(today)) {
-          ObligationStatusToDisplay.Overdue
-        }
-        else {
-          ObligationStatusToDisplay.Due
-        }
+    if (obligationData.status == Open) {
+      if (obligationData.dueDate.isBefore(today)) {
+        ObligationStatusToDisplay.Overdue
+      } else {
+        ObligationStatusToDisplay.Due
       }
-      else
-        {
-          ObligationStatusToDisplay.Completed
-        }
+    } else {
+      ObligationStatusToDisplay.Completed
     }
 
   private def createStatusTag(status: ObligationStatusToDisplay)(implicit
-                                              messages: Messages
-  ): Html ={
-    val tag = status match{
-      case ObligationStatusToDisplay.Due => Tag(content= Text(messages("viewPastReturns.status.due")), classes= "govuk-tag--blue")
-      case ObligationStatusToDisplay.Overdue => Tag(content= Text(messages("viewPastReturns.status.overdue")), classes= "govuk-tag--red")
-      case ObligationStatusToDisplay.Completed => Tag(content= Text(messages("viewPastReturns.status.completed")), classes= "govuk-tag--green")
-      case _ => throw new RuntimeException("Couldn't create status for obligation data")
+    messages: Messages
+  ): Html = {
+    val tag = status match {
+      case ObligationStatusToDisplay.Due       =>
+        Tag(content = Text(messages("viewPastReturns.status.due")), classes = "govuk-tag--blue")
+      case ObligationStatusToDisplay.Overdue   =>
+        Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = "govuk-tag--red")
+      case ObligationStatusToDisplay.Completed =>
+        Tag(content = Text(messages("viewPastReturns.status.completed")), classes = "govuk-tag--green")
+      case _                                   => throw new RuntimeException("Couldn't create status for obligation data")
     }
     new GovukTag()(tag)
   }
 
-  private def getPeriod(periodKey: String): YearMonth ={
+  private def getPeriod(periodKey: String): YearMonth =
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case Some(returnPeriod) => returnPeriod.period
-      case _ => throw new RuntimeException("Couldn't fetch period from periodKey")// do match case if None log and throw exception
+      case _                  =>
+        logger.logger.error("Couldn't fetch period from periodKey")
+        throw new RuntimeException(
+          "Couldn't fetch period from periodKey"
+        )
     }
-  }
-
-
 }

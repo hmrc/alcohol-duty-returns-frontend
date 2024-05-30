@@ -31,16 +31,14 @@ object ObligationStatus extends Enum[ObligationStatus] with PlayJsonEnum[Obligat
 }
 
 case class ObligationData(
-                           status: ObligationStatus,
-                           fromDate: LocalDate,
-                           toDate: LocalDate,
-                           dueDate: LocalDate,
-                           periodKey: String
-                         )
+  status: ObligationStatus,
+  fromDate: LocalDate,
+  toDate: LocalDate,
+  dueDate: LocalDate,
+  periodKey: String
+)
 object ObligationData {
   implicit val format: Format[ObligationData] = Json.format[ObligationData]
-
-  override def toString: String = "obligationData"
 }
 
 sealed trait ObligationStatusToDisplay extends EnumEntry
