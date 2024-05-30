@@ -28,9 +28,9 @@ import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import java.time.LocalDate
 
 class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
-  val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
-  val obligationDataSingleOpen = ObligationData(
+  val application: Application      = applicationBuilder().build()
+  implicit val messages: Messages   = messages(application)
+  val obligationDataSingleOpen      = ObligationData(
     ObligationStatus.Open,
     LocalDate.of(2024, 5, 1),
     LocalDate.of(2024, 5, 31),
@@ -44,7 +44,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
     LocalDate.of(2024, 1, 1),
     periodKey
   )
-  val invalidPeriodKeyData = ObligationData(
+  val invalidPeriodKeyData          = ObligationData(
     ObligationStatus.Fulfilled,
     LocalDate.of(2024, 1, 1),
     LocalDate.of(2024, 1, 1),
@@ -59,32 +59,36 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
     }
 
     "must return a table with the correct rows" in {
-        val obligationData = Seq(obligationDataSingleOpen)
-        val table = ViewPastReturnsHelper.outstandingReturnsTable(obligationData)
-        table.rows.size shouldBe obligationData.size
-        table.rows.map { case row =>
-          row.actions.head.href shouldBe controllers.routes.BeforeStartReturnController.onPageLoad(periodKey)
-    }
+      val obligationData = Seq(obligationDataSingleOpen)
+      val table          = ViewPastReturnsHelper.outstandingReturnsTable(obligationData)
+      table.rows.size shouldBe obligationData.size
+      table.rows.map { case row =>
+        row.actions.head.href shouldBe controllers.routes.BeforeStartReturnController.onPageLoad(periodKey)
+      }
     }
     "must return the correct status" in {
       val obligationData = Seq(obligationDataSingleFulfilled)
-      val table = ViewPastReturnsHelper.outstandingReturnsTable(obligationData)
+      val table          = ViewPastReturnsHelper.outstandingReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { case row =>
-        row.cells(1).asHtml shouldBe new GovukTag()(Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green"))
+        row.cells(1).asHtml shouldBe new GovukTag()(
+          Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green")
+        )
       }
     }
     "must throw an exception for incorrect periodKey" in {
       val obligationData = Seq(obligationDataSingleFulfilled)
-      val table = ViewPastReturnsHelper.outstandingReturnsTable(obligationData)
+      val table          = ViewPastReturnsHelper.outstandingReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { case row =>
-        row.cells(1).asHtml shouldBe new GovukTag()(Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green"))
+        row.cells(1).asHtml shouldBe new GovukTag()(
+          Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green")
+        )
       }
     }
     "must throw an exception for an invalid period" in {
       val obligationData = Seq(invalidPeriodKeyData)
-      val exception = intercept[RuntimeException] {
+      val exception      = intercept[RuntimeException] {
         ViewPastReturnsHelper.outstandingReturnsTable(obligationData)
       }
       exception.getMessage shouldBe "Couldn't fetch period from periodKey"
@@ -93,4 +97,3 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   }
 
 }
-
