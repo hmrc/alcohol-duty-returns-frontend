@@ -56,7 +56,9 @@ trait SpecBase
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
 
-  def FakeRequest()                            = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
-  def FakeRequest(verb: String, route: String) =
+  def FakeRequest()                                          = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
+  def FakeRequest(verb: String, route: String)               =
     play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
+  def FakeRequestWithoutSession()                            = play.api.test.FakeRequest()
+  def FakeRequestWithoutSession(verb: String, route: String) = play.api.test.FakeRequest(verb, route)
 }

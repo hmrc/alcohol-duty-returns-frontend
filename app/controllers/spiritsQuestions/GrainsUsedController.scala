@@ -20,9 +20,9 @@ import controllers.actions._
 import forms.spiritsQuestions.GrainsUsedFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.GrainsUsedPage
+import pages.spiritsQuestions.{GrainsUsedPage, OtherMaltedGrainsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
@@ -62,11 +62,32 @@ class GrainsUsedController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val (intermediateAnswers, maltedGrainNotBarleyNowSelected) =
+              handleOtherMaltedGrainsChange(request.userAnswers, value.usedMaltedGrainNotBarley)
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(GrainsUsedPage, value))
+              updatedAnswers <- Future.fromTry(intermediateAnswers.set(GrainsUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(GrainsUsedPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(GrainsUsedPage, mode, updatedAnswers, maltedGrainNotBarleyNowSelected))
+          }
         )
+  }
+
+  def isNowSelected(oldValue: Boolean, newValue: Boolean) = !oldValue && newValue
+
+  def isNowUnselected(oldValue: Boolean, newValue: Boolean) = oldValue && !newValue
+
+  def handleOtherMaltedGrainsChange(
+    answers: UserAnswers,
+    newValue: Boolean
+  ): (UserAnswers, Boolean) = {
+    val oldValue = answers.get(GrainsUsedPage).exists(_.usedMaltedGrainNotBarley)
+    if (isNowSelected(oldValue, newValue)) {
+      (answers, true)
+    } else if (isNowUnselected(oldValue, newValue)) {
+      (answers.remove(OtherMaltedGrainsPage).get, false)
+    } else {
+      (answers, false)
+    }
   }
 }

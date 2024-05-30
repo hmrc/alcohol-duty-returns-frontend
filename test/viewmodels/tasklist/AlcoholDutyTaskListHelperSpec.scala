@@ -17,8 +17,11 @@
 package viewmodels.tasklist
 
 import base.SpecBase
+import helpers.TestData._
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
@@ -26,7 +29,7 @@ import viewmodels.govuk.all.FluentInstant
 import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
 
-class AlcoholDutyTaskListHelperSpec extends SpecBase {
+class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   val application: Application    = applicationBuilder().build()
   private val instant             = Instant.now.truncatedTo(ChronoUnit.MILLIS)
@@ -39,10 +42,12 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
 
       val expectedSections = Seq(
         ReturnTaskListHelper.returnSection(emptyUserAnswers),
-        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
+        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
       )
 
-      val result           = AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil)(messages(application))
+      val result           =
+        AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)(messages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -51,7 +56,6 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
       )
 
       result.status mustBe "incomplete"
-      result.sections mustBe expectedSections
       result.totalTask mustBe expectedSections.size
       result.completedTask mustBe 0
     }
@@ -65,11 +69,18 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
         .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
         .success
         .value
+        .set(DeclareQuarterlySpiritsPage, false)
+        .success
+        .value
 
       val expectedSections =
-        Seq(ReturnTaskListHelper.returnSection(userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers))
+        Seq(
+          ReturnTaskListHelper.returnSection(userAnswers),
+          ReturnTaskListHelper.returnDSDSection(userAnswers),
+          ReturnTaskListHelper.returnQSSection(userAnswers)
+        )
 
-      val result           = AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil)(messages(application))
+      val result           = AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil, periodKeyMar)(messages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -78,10 +89,35 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase {
       )
 
       result.status mustBe "completed"
-      result.sections mustBe expectedSections
       result.totalTask mustBe expectedSections.size
-      result.completedTask mustBe 2
+      result.completedTask mustBe 3
+    }
+
+    "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in {
+      val expectedSectionsWithQS = Seq(
+        ReturnTaskListHelper.returnSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
+      )
+
+      val expectedSectionsWithoutQS = Seq(
+        ReturnTaskListHelper.returnSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
+      )
+
+      forAll(periodKeyGen) { case periodKey =>
+        val result =
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
+
+        val periodQuarters = "CFIL"
+        val lastChar       = periodKey.last
+
+        if (periodQuarters.contains(lastChar)) {
+          result.sections mustBe expectedSectionsWithQS
+        } else {
+          result.sections mustBe expectedSectionsWithoutQS
+        }
+      }
     }
   }
-
 }

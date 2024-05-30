@@ -18,10 +18,11 @@ package controllers.spiritsQuestions
 
 import controllers.actions._
 import forms.spiritsQuestions.EthyleneGasOrMolassesUsedFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage
+import pages.spiritsQuestions.{EthyleneGasOrMolassesUsedPage, OtherIngredientsUsedPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
@@ -61,11 +62,34 @@ class EthyleneGasOrMolassesUsedController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val (intermediateAnswers, otherIngredientsNowSelected) =
+              handleOtherIngredientsChange(request.userAnswers, value.otherIngredients)
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(EthyleneGasOrMolassesUsedPage, value))
+              updatedAnswers <- Future.fromTry(intermediateAnswers.set(EthyleneGasOrMolassesUsedPage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers))
+            } yield Redirect(
+              navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers, otherIngredientsNowSelected)
+            )
+          }
         )
+  }
+
+  def isNowSelected(oldValue: Boolean, newValue: Boolean) = !oldValue && newValue
+
+  def isNowUnselected(oldValue: Boolean, newValue: Boolean) = oldValue && !newValue
+
+  def handleOtherIngredientsChange(
+    answers: UserAnswers,
+    newValue: Boolean
+  ): (UserAnswers, Boolean) = {
+    val oldValue = answers.get(EthyleneGasOrMolassesUsedPage).exists(_.otherIngredients)
+    if (isNowSelected(oldValue, newValue)) {
+      (answers, true)
+    } else if (isNowUnselected(oldValue, newValue)) {
+      (answers.remove(OtherIngredientsUsedPage).get, false)
+    } else {
+      (answers, false)
+    }
   }
 }
