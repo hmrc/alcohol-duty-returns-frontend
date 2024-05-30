@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.CredentialStrength.strong
-import uk.gov.hmrc.auth.core.retrieve.{~ => combine}
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, groupIdentifier, internalId => retriveInternalId}
 import uk.gov.hmrc.http.UnauthorizedException
@@ -73,7 +73,7 @@ class IdentifierActionSpec extends SpecBase {
           )
         )(any(), any())
       )
-        .thenReturn(Future(combine(combine(Some(internalId), Some(groupId)), enrolments)))
+        .thenReturn(Future(new ~(new ~(Some(internalId), Some(groupId)), enrolments)))
 
       val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
 
@@ -98,7 +98,7 @@ class IdentifierActionSpec extends SpecBase {
           )
         )(any(), any())
       )
-        .thenReturn(Future(combine(combine(None, Some(groupId)), enrolments)))
+        .thenReturn(Future(new ~(new ~(None, Some(groupId)), enrolments)))
 
       intercept[UnauthorizedException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
@@ -122,7 +122,7 @@ class IdentifierActionSpec extends SpecBase {
           )
         )(any(), any())
       )
-        .thenReturn(Future(combine(combine(Some(internalId), None), enrolments)))
+        .thenReturn(Future(new ~(new ~(Some(internalId), None), enrolments)))
 
       intercept[UnauthorizedException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
@@ -146,7 +146,7 @@ class IdentifierActionSpec extends SpecBase {
           )
         )(any(), any())
       )
-        .thenReturn(Future(combine(combine(Some(internalId), Some(groupId)), emptyEnrolments)))
+        .thenReturn(Future(new ~(new ~(Some(internalId), Some(groupId)), emptyEnrolments)))
 
       intercept[UnauthorizedException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
@@ -170,7 +170,7 @@ class IdentifierActionSpec extends SpecBase {
           )
         )(any(), any())
       )
-        .thenReturn(Future(combine(combine(Some(internalId), Some(groupId)), enrolmentsWithoutAppaId)))
+        .thenReturn(Future(new ~(new ~(Some(internalId), Some(groupId)), enrolmentsWithoutAppaId)))
 
       intercept[UnauthorizedException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
