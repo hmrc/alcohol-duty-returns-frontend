@@ -68,9 +68,8 @@ class AuthenticatedIdentifierWithoutEnrolmentAction @Inject() (
     } recover {
       case _: NoActiveSession        =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
-      case _: AuthorisationException =>
-        handleAuthException
-        Redirect(routes.UnauthorisedController.onPageLoad)
+      case e: AuthorisationException =>
+        handleAuthException(e)
     }
   }
 
@@ -82,7 +81,7 @@ class AuthenticatedIdentifierWithoutEnrolmentAction @Inject() (
     case _: UnsupportedCredentialRole   => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: IncorrectCredentialStrength => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: UnauthorizedException       => Redirect(routes.UnauthorisedController.onPageLoad)
-    case _: AuthorisationException      => Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+    case _                              => Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
   }
 
   def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =

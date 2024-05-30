@@ -30,7 +30,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.CredentialStrength.strong
-import uk.gov.hmrc.auth.core.retrieve.{~ => combine}
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{groupIdentifier, internalId => retriveInternalId}
 import uk.gov.hmrc.http.UnauthorizedException
@@ -70,7 +70,7 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase with GuiceOneAppPerS
           )
         )(any(), any())
       )
-        .thenReturn(Future(combine(Some(internalId), Some(groupId))))
+        .thenReturn(Future(new ~(Some(internalId), Some(groupId))))
 
       val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
 
@@ -92,7 +92,7 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase with GuiceOneAppPerS
           )
         )(any(), any())
       )
-        .thenReturn(Future(combine(None, Some(groupId))))
+        .thenReturn(Future(new ~(None, Some(groupId))))
 
       intercept[UnauthorizedException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
@@ -113,7 +113,7 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase with GuiceOneAppPerS
           )
         )(any(), any())
       )
-        .thenReturn(Future(combine(Some(internalId), None)))
+        .thenReturn(Future(new ~(Some(internalId), None)))
 
       intercept[UnauthorizedException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
