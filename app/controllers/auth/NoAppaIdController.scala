@@ -39,6 +39,6 @@ class NoAppaIdController @Inject() (
   }
 
   def onSubmit: Action[AnyContent] = identify { _ =>
-    Redirect(appConfig.businessTaxAccount)
+    Redirect(appConfig.businessTaxAccountUrl)
   }
 }
