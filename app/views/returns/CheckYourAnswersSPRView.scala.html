@@ -18,6 +18,7 @@
 
 @this(
         layout: templates.Layout,
+        formHelper: FormWithCSRF,
         govukButton: GovukButton,
         govukSummaryList: GovukSummaryList,
         sectionHeading: SectionHeading,
@@ -27,10 +28,10 @@
 @(regime:AlcoholRegime, list: SummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
-
+  @formHelper(action = controllers.returns.routes.CheckYourAnswersSPRController.onSubmit(regime), Symbol("autoComplete") -> "off") {
     @sectionHeading(
-        id = "checkYourAnswerSPR-section",
-        text =  messages(s"section.return.$regime")
+      id = "checkYourAnswerSPR-section",
+      text = messages(s"section.return.$regime")
     )
 
     @pageHeading(messages("checkYourAnswers.heading"))
@@ -38,7 +39,7 @@
     @govukSummaryList(list)
 
     @govukButton(
-        ButtonViewModel("continueButton", messages("site.saveAndContinue"))
+      ButtonViewModel("continueButton", messages("site.saveAndContinue"))
     )
-
+  }
 }

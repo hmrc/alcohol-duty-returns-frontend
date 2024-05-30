@@ -403,6 +403,14 @@ tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value = {0} Lpa
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label = Duty rate
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,##0.00} per litre
 
+multipleSPRList.title = Small Producer Reliefs to declare
+multipleSPRList.heading = Small Producer Reliefs to declare
+multipleSPRList.question = Do you want to add another?
+multipleSPRList.subheading = Small Producer Relief list
+multipleSPRList.checkYourAnswersLabel = multipleSPRList
+multipleSPRList.error.required = Select yes if multipleSPRList
+multipleSPRList.change.hidden = MultipleSPRList
+
 # old return journey
 
 productEntryGuidance.title = Tell us about your alcohol
@@ -1087,4 +1095,3 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
-

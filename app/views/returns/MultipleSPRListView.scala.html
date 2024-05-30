@@ -1,0 +1,83 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{SectionHeading, SubHeading, PageHeading, TableRowAction, TableRowActionList}
+@import viewmodels.TableViewModel
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    govukTable: GovukTable,
+    pageHeading: PageHeading,
+    subHeading: SubHeading,
+    sectionHeading: SectionHeading,
+    tableRowActionList: TableRowActionList,
+    tableRowAction: TableRowAction
+)
+
+@(form: Form[_], mode: Mode, regime:AlcoholRegime, sprTable:TableViewModel)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("multipleSPRList.title"))) {
+
+    @formHelper(action = controllers.returns.routes.MultipleSPRListController.onSubmit(mode, regime), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+        @sectionHeading(
+            id = "multipleSPRList-section",
+            text = messages(s"section.return.$regime")
+        )
+
+        @pageHeading(messages(s"multipleSPRList.heading"))
+
+        @subHeading(messages("multipleSPRList.subheading"), classes = "govuk-heading-m")
+
+        @govukTable(Table(
+          caption = Some(messages("multipleSPRList.caption")),
+          captionClasses = "govuk-table__caption--m",
+          head = Some(sprTable.head),
+          rows = sprTable.rows.map(row => {
+            val labelRows = row.cells.map(cell => TableRow(cell))
+            val actionList = TableRow(content = HtmlContent(tableRowActionList(
+              id = "productList",
+              actions = row.actions.map(action => tableRowAction(
+                id = "",
+                text = action.label,
+                href = action.href,
+                visuallyHiddenContent = action.visuallyHiddenText
+              )
+              ))))
+            labelRows :+ actionList
+          }
+          ))
+        )
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("multipleSPRList-yesNoValue"),
+                legend = LegendViewModel(messages("multipleSPRList.question")).asSubheading
+            )
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+        )
+    }
+}

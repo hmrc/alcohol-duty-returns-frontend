@@ -16,8 +16,10 @@
 
 package controllers.returns
 
+import connectors.CacheConnector
 import controllers.actions._
-import models.AlcoholRegime
+import models.{AlcoholRegime, NormalMode}
+import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage}
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -26,14 +28,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.returns.CheckYourAnswersSPRSummaryListHelper
 import views.html.returns.CheckYourAnswersSPRView
 
+import scala.concurrent.{ExecutionContext, Future}
+
 class CheckYourAnswersSPRController @Inject() (
   override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersSPRView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
@@ -44,5 +50,21 @@ class CheckYourAnswersSPRController @Inject() (
         case Some(summaryList) =>
           Ok(view(regime, summaryList))
       }
+  }
+
+  def onSubmit(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      request.userAnswers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
+        case None               =>
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case Some(sprRateEntry) =>
+          for {
+            updatedUserAnswers <-
+              Future.fromTry(request.userAnswers.addToSeqByKey(MultipleSPRListPage, regime, sprRateEntry))
+            cleanedUserAnswers <- Future.fromTry(updatedUserAnswers.removeByKey(TellUsAboutMultipleSPRRatePage, regime))
+            _                  <- cacheConnector.set(cleanedUserAnswers)
+          } yield Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(NormalMode, regime))
+      }
+
   }
 }

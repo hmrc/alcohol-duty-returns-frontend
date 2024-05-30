@@ -110,6 +110,21 @@ final case class UserAnswers(
     }
   }
 
+  def addToSeqByKey[A, B](page: Settable[Map[A, Seq[B]]], key: A, value: B)(implicit
+    writes: Writes[B],
+    rds: Reads[B]
+  ): Try[UserAnswers] = {
+    val path        = page.path \ key.toString
+    val data        = get[Seq[B]](path)
+    val updatedData = data match {
+      case Some(valueSeq: Seq[B]) => set(path, valueSeq :+ value)
+      case _                      => set(path, Seq(value))
+    }
+    updatedData.flatMap { d =>
+      Try(copy(data = d))
+    }
+  }
+
   def getByIndex[A](page: Gettable[Seq[A]], index: Int)(implicit rds: Reads[A]): Option[A] = {
     val path = page.path \ index
     get(path)
