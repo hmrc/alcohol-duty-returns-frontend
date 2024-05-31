@@ -22,6 +22,7 @@ import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.AlcoholDutyReturnsConnector
+import models.ObligationData
 import models.ObligationStatus.{Fulfilled, Open}
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -42,15 +43,18 @@ class ViewPastReturnsController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
-    (for { obligations <- alcoholDutyReturnsConnector.obligationDetails(request.appaId) } yield {
-      val fulfilledObligations    = obligations.filter(_.status == Fulfilled)
-      val openObligations         = obligations.filter(_.status == Open)
-      val outstandingReturnsTable = ViewPastReturnsHelper.outstandingReturnsTable(openObligations)
-      val completedReturnsTable   = ViewPastReturnsHelper.completedReturnsTable(fulfilledObligations)
-      Ok(view(outstandingReturnsTable, completedReturnsTable))
-    }).recover { case _ =>
-      logger.warn("Unable to fetch obligation data")
-      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-    }
+    alcoholDutyReturnsConnector
+      .obligationDetails(request.appaId)
+      .map { obligations: Seq[ObligationData] =>
+        val fulfilledObligations    = obligations.filter(_.status == Fulfilled)
+        val openObligations         = obligations.filter(_.status == Open)
+        val outstandingReturnsTable = ViewPastReturnsHelper.getReturnsTable(openObligations)
+        val completedReturnsTable   = ViewPastReturnsHelper.getReturnsTable(fulfilledObligations)
+        Ok(view(outstandingReturnsTable, completedReturnsTable))
+      }
+      .recover { case _ =>
+        logger.warn("Unable to fetch obligation data")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
   }
 }

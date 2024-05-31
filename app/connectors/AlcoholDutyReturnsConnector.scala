@@ -38,7 +38,7 @@ class AlcoholDutyReturnsConnector @Inject() (
         case Right(response) if response.status == OK =>
           Try(response.json.as[Seq[ObligationData]]) match {
             case Success(data)      => Future.successful(data)
-            case Failure(exception) => Future.failed(new Exception("Invalid JSON format " + exception))
+            case Failure(exception) => Future.failed(new Exception(s"Invalid JSON format $exception"))
           }
         case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
         case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))

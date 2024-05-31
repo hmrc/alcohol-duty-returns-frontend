@@ -28,10 +28,7 @@ import java.time.{LocalDate, YearMonth}
 
 object ViewPastReturnsHelper extends Logging {
 
-  def outstandingReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel =
-    TableViewModel(head = getTableHeader(messages), rows = getObligationDataTableRows(obligationData), total = 0)
-
-  def completedReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel =
+  def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel =
     TableViewModel(head = getTableHeader(messages), rows = getObligationDataTableRows(obligationData), total = 0)
 
   private def getTableHeader(messages: Messages): Seq[HeadCell] =
@@ -106,7 +103,6 @@ object ViewPastReturnsHelper extends Logging {
         Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = "govuk-tag--red")
       case ObligationStatusToDisplay.Completed =>
         Tag(content = Text(messages("viewPastReturns.status.completed")), classes = "govuk-tag--green")
-      case _                                   => throw new RuntimeException("Couldn't create status for obligation data")
     }
     new GovukTag()(tag)
   }
@@ -115,7 +111,7 @@ object ViewPastReturnsHelper extends Logging {
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case Some(returnPeriod) => returnPeriod.period
       case _                  =>
-        logger.logger.error("Couldn't fetch period from periodKey")
+        logger.logger.warn("Couldn't fetch period from periodKey")
         throw new RuntimeException(
           "Couldn't fetch period from periodKey"
         )

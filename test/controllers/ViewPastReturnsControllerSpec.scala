@@ -60,9 +60,9 @@ class ViewPastReturnsControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ViewPastReturnsView]
 
         val outstandingReturnsTable =
-          ViewPastReturnsHelper.outstandingReturnsTable(Seq(obligationDataSingleOpen))(messages(application))
+          ViewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleOpen))(messages(application))
         val completedReturnsTable   =
-          ViewPastReturnsHelper.completedReturnsTable(Seq(obligationDataSingleFulfilled))(messages(application))
+          ViewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleFulfilled))(messages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable)(
           request,
