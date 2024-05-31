@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegime, Error, RateBand, UserAnswers}
+import models.{AlcoholRegime, CheckMode, Error, NormalMode, RateBand, UserAnswers}
 import models.returns.DutyByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
@@ -36,22 +36,23 @@ object MultipleSPRListHelper {
             head = Seq(
               HeadCell(
                 content = Text(messages("multipleSPRList.description.label")),
-                classes = "govuk-!-width-one-half"
+                classes = "govuk-!-width-half"
               ),
               HeadCell(
-                content = Text(messages("multipleSPRList.totalLitres.label")),
-                classes = "govuk-!-width-one-quarter"
+                content = Text(messages("multipleSPRList.totalLitres.label"))
               ),
               HeadCell(
-                content = Text(messages("multipleSPRList.pureAlcohol.label")),
-                classes = "govuk-!-width-one-quarter"
+                content = Text(messages("multipleSPRList.pureAlcohol.label"))
               ),
               HeadCell(
-                content = Text(messages("multipleSPRList.dutyRate.label")),
+                content = Text(messages("multipleSPRList.dutyRate.label"))
+              ),
+              HeadCell(
+                content = Text(messages("multipleSPRList.action.label")),
                 classes = "govuk-!-width-one-quarter"
               )
             ),
-            rows = getSPREntryRows(sprList),
+            rows = getSPREntryRows(sprList, regime),
             total = BigDecimal(0)
           )
         )
@@ -80,7 +81,9 @@ object MultipleSPRListHelper {
       case _                                       => Left(Error("error"))
     }
 
-  def getSPREntryRows(sprList: Seq[SprDutyRateEntry])(implicit messages: Messages): Seq[TableRowViewModel] =
+  def getSPREntryRows(sprList: Seq[SprDutyRateEntry], regime: AlcoholRegime)(implicit
+    messages: Messages
+  ): Seq[TableRowViewModel] =
     sprList.zipWithIndex.map { case (sprEntry, index) =>
       TableRowViewModel(
         cells = Seq(
@@ -92,7 +95,8 @@ object MultipleSPRListHelper {
         actions = Seq(
           TableRowActionViewModel(
             label = messages("site.change"),
-            href = controllers.productEntry.routes.CheckYourAnswersController.onPageLoad(Some(index)),
+            href = controllers.returns.routes.TellUsAboutMultipleSPRRateController
+              .onPageLoad(CheckMode, regime, Some(index)),
             visuallyHiddenText = Some(messages("productList.change.hidden"))
           ),
           TableRowActionViewModel(

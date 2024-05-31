@@ -25,10 +25,10 @@
         pageHeading: PageHeading
 )
 
-@(regime:AlcoholRegime, list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(regime:AlcoholRegime, list: SummaryList, index:Option[Int])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
-  @formHelper(action = controllers.returns.routes.CheckYourAnswersSPRController.onSubmit(regime), Symbol("autoComplete") -> "off") {
+  @formHelper(action = controllers.returns.routes.CheckYourAnswersSPRController.onSubmit(regime, index), Symbol("autoComplete") -> "off") {
     @sectionHeading(
       id = "checkYourAnswerSPR-section",
       text = messages(s"section.return.$regime")

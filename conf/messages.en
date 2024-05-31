@@ -188,8 +188,8 @@ whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtRelief =
 whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtRelief = Draught, exceeding {0}% ABV (tax type code {1})
 whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.SmallProducerRelief = Non-draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
 whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.SmallProducerRelief = Non-draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtSmallProducerRelief = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtSmallProducerRelief = Draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtAndSmallProducerRelief = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
+whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
 
 howMuchDoYouNeedToDeclare.title = Tell us about the {0} you need to declare
 howMuchDoYouNeedToDeclare.heading = Tell us about the {0} you need to declare
@@ -410,6 +410,18 @@ multipleSPRList.subheading = Small Producer Relief list
 multipleSPRList.checkYourAnswersLabel = multipleSPRList
 multipleSPRList.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare
 multipleSPRList.change.hidden = MultipleSPRList
+
+multipleSPRList.description.label = Description
+multipleSPRList.totalLitres.label = Total volume declared
+multipleSPRList.pureAlcohol.label = Pure alcohol declared
+multipleSPRList.dutyRate.label = SPR duty rate
+multipleSPRList.action.label = Action
+
+multipleSPRList.totalLitres.value = {0}l
+multipleSPRList.pureAlcohol.value = {0} Lpa
+multipleSPRList.dutyRate.value = £{0,number,#,##0.00} per litre
+
+
 
 # old return journey
 

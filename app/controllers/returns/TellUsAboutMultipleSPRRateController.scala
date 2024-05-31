@@ -20,19 +20,21 @@ import controllers.actions._
 import forms.returns.TellUsAboutMultipleSPRRateFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode, RateBand}
+import models.{AlcoholRegime, CheckMode, Mode, NormalMode, UserAnswers}
 import navigation.ReturnsNavigator
-import pages.returns.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import models.returns.DutyByTaxType
+import play.api.Logging
+import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
+import viewmodels.checkAnswers.returns.TellUsAboutMultipleSPRRateHelper
 import views.html.returns.TellUsAboutMultipleSPRRateView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class TellUsAboutMultipleSPRRateController @Inject() (
   override val messagesApi: MessagesApi,
@@ -46,59 +48,91 @@ class TellUsAboutMultipleSPRRateController @Inject() (
   view: TellUsAboutMultipleSPRRateView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onPageLoad(mode: Mode, regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val form = formProvider(regime)
-      request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-        case None            => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        case Some(rateBands) =>
-          val preparedForm = request.userAnswers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
-            case None        => form
-            case Some(value) => form.fill(value)
-          }
-          Ok(view(preparedForm, mode, regime, radioItems(regime, rateBands)))
-      }
+      val result = for {
+        rateBands <- request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
+        form      <- prepareForm(request.userAnswers, regime, index)
+      } yield Ok(view(form, mode, regime, TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands), index))
+
+      result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onSubmit(mode: Mode, regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-        case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case None            =>
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
           formProvider(regime)
             .bindFromRequest()
             .fold(
               formWithErrors =>
-                Future.successful(BadRequest(view(formWithErrors, mode, regime, radioItems(regime, rateBands)))),
-              value =>
+                Future.successful(
+                  BadRequest(
+                    view(
+                      formWithErrors,
+                      mode,
+                      regime,
+                      TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands),
+                      index
+                    )
+                  )
+                ),
+              value => {
+                val hasChanged = hasValueChanged(regime, index, request.userAnswers, value)
                 for {
                   updatedAnswers <-
                     Future.fromTry(request.userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, value))
                   _              <- cacheConnector.set(updatedAnswers)
                 } yield Redirect(
-                  navigator.nextPageWithRegime(TellUsAboutMultipleSPRRatePage, mode, updatedAnswers, regime)
+                  navigator
+                    .nextPageWithRegime(TellUsAboutMultipleSPRRatePage, mode, updatedAnswers, regime, hasChanged, index)
                 )
+              }
             )
       }
     }
 
-  private def radioItems(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit
-    messages: Messages
-  ): Seq[RadioItem] = {
-    val categoryViewModels                = CategoriesByRateTypeHelper(regime, rateBands)
-    val smallProducerRadioItems           = categoryViewModels.smallProducer
-      .map { category =>
-        RadioItem(content = Text(category.category), value = Some(category.id))
-      }
-      .sortBy(_.id)
-    val draughtAndSmallProducerRadioItems = categoryViewModels.draughtAndSmallProducer
-      .map { category =>
-        RadioItem(content = Text(category.category), value = Some(category.id))
-      }
-      .sortBy(_.id)
+  private def hasValueChanged(
+    regime: AlcoholRegime,
+    index: Option[Int],
+    userAnswers: UserAnswers,
+    value: DutyByTaxType
+  ) =
+    index match {
+      case Some(i) => hasValueChangedAtIndex(userAnswers, regime, i, value)
+      case None    => false
+    }
 
-    smallProducerRadioItems ++ draughtAndSmallProducerRadioItems
+  private def hasValueChangedAtIndex(userAnswers: UserAnswers, regime: AlcoholRegime, i: Int, value: DutyByTaxType) =
+    userAnswers.getByKeyAndIndex(MultipleSPRListPage, regime, i) match {
+      case Some(existingValue) => existingValue != value
+      case None                => false
+    }
+
+  private def prepareForm(userAnswers: UserAnswers, regime: AlcoholRegime, index: Option[Int]): Option[Form[_]] =
+    index match {
+      case Some(i) => fillPreviousAnswersWithIndex(userAnswers, regime, i)
+      case None    => fillPreviousAnswers(userAnswers, regime)
+    }
+
+  private def fillPreviousAnswersWithIndex(answers: UserAnswers, regime: AlcoholRegime, i: Int): Option[Form[_]] =
+    answers.getByKeyAndIndex(MultipleSPRListPage, regime, i) match {
+      case Some(value) => Some(formProvider(regime).fill(value))
+      case None        =>
+        logger.warn(s"Failed to retrieve SPR list entry for regime $regime at index $i")
+        None
+    }
+
+  private def fillPreviousAnswers(answers: UserAnswers, regime: AlcoholRegime): Option[Form[_]] = {
+    val form = formProvider(regime)
+    answers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
+      case Some(value) => Some(form.fill(value))
+      case None        => Some(form)
+    }
   }
 }

@@ -55,13 +55,13 @@ POST       /tell-us-about-single-spr-rate/:regime                        control
 GET        /change-tell-us-about-single-spr-rate/:regime                 controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
 POST       /change-tell-us-about-single-spr-rate/:regime                  controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
-GET        /multiple-spr-rates/:regime                         controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
-POST       /multiple-spr-rates/:regime                         controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
-GET        /change-multiple-spr-rates/:regime                   controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
-POST       /change-multiple-spr-rates/:regime                   controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+GET        /multiple-spr-rates/:regime                         controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+POST       /multiple-spr-rates/:regime                         controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+GET        /change-multiple-spr-rates/:regime                   controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+POST       /change-multiple-spr-rates/:regime                   controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime, index:Option[Int] ?= None)
 
-GET        /check-your-answers-spr/:regime                       controllers.returns.CheckYourAnswersSPRController.onPageLoad(regime:AlcoholRegime)
-POST       /check-your-answers-spr/:regime                       controllers.returns.CheckYourAnswersSPRController.onSubmit(regime:AlcoholRegime)
+GET        /check-your-answers-spr/:regime                       controllers.returns.CheckYourAnswersSPRController.onPageLoad(regime:AlcoholRegime, index:Option[Int] ?= None)
+POST       /check-your-answers-spr/:regime                       controllers.returns.CheckYourAnswersSPRController.onSubmit(regime:AlcoholRegime, index:Option[Int] ?= None)
 
 GET        /return-check-your-answers/:regime                      controllers.returns.CheckYourAnswersController.onPageLoad(regime:AlcoholRegime)
 

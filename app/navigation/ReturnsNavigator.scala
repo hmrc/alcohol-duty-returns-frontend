@@ -22,7 +22,7 @@ import controllers.routes
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
-import pages.returns.{DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, HowMuchDoYouNeedToDeclarePage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, DoYouWantToAddMultipleSPRToListPage, HowMuchDoYouNeedToDeclarePage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 
 @Singleton
 class ReturnsNavigator @Inject() () {
@@ -78,7 +78,31 @@ class ReturnsNavigator @Inject() () {
     case TellUsAboutMultipleSPRRatePage =>
       _ => regime => controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime)
 
+    case DoYouWantToAddMultipleSPRToListPage =>
+      ua =>
+        regime =>
+          ua.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
+            case Some(true)  =>
+              controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
+            case Some(false) => routes.TaskListController.onPageLoad
+            case _           => routes.IndexController.onPageLoad
+          }
+
     case _ => _ => _ => routes.IndexController.onPageLoad
+  }
+
+  private val checkRouteMapReturnJourney: Page => UserAnswers => AlcoholRegime => Boolean => Option[Int] => Call = {
+    case TellUsAboutMultipleSPRRatePage =>
+      _ =>
+        regime =>
+          hasChanged =>
+            index =>
+              if (hasChanged)
+                controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime, index)
+              else
+                controllers.returns.routes.MultipleSPRListController.onPageLoad(NormalMode, regime)
+    case _                              =>
+      _ => _ => _ => _ => routes.IndexController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
@@ -91,12 +115,13 @@ class ReturnsNavigator @Inject() () {
     mode: Mode,
     userAnswers: UserAnswers,
     regime: AlcoholRegime,
-    hasAnswerChanged: Boolean = true
+    hasAnswerChanged: Boolean = true,
+    index: Option[Int] = None
   ): Call = mode match {
     case NormalMode =>
       normalRoutesReturnJourney(page)(userAnswers)(regime)
     case CheckMode  =>
-      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
+      checkRouteMapReturnJourney(page)(userAnswers)(regime)(hasAnswerChanged)(index)
   }
 
   def nextPage(

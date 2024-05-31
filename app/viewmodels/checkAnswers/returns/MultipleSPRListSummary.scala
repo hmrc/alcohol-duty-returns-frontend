@@ -29,7 +29,7 @@ object MultipleSPRListSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DoYouWantToAddMultipleSPRToListPage).map { answer =>
-      val value = if (answer) "site.yes" else "site.no"
+      val value = ""
 
       SummaryListRowViewModel(
         key = "multipleSPRList.checkYourAnswersLabel",

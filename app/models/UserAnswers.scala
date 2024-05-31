@@ -16,6 +16,8 @@
 
 package models
 
+import models.returns.DutyByTaxType
+import pages.returns.MultipleSPRListPage
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
@@ -161,8 +163,19 @@ final case class UserAnswers(
     get(path)
   }
 
+  def getByKeyAndIndex[A, B](page: Gettable[Map[A, Seq[B]]], key: A, index: Int)(implicit rds: Reads[B]) = {
+    val path = page.path \ key.toString \ index
+    get(path)
+  }
+
   def setByKey[A, B](page: Settable[Map[A, B]], key: A, value: B)(implicit writes: Writes[B]): Try[UserAnswers] = {
     val path        = page.path \ key.toString
+    val updatedData = set(path, value)
+    cleanupPage(page, updatedData)
+  }
+
+  def setByKeyAndIndex[A, B](page: Settable[Map[A, Seq[B]]], key: A, value: DutyByTaxType, index: Int) = {
+    val path        = page.path \ key.toString \ index
     val updatedData = set(path, value)
     cleanupPage(page, updatedData)
   }

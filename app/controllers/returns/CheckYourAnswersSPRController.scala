@@ -18,7 +18,8 @@ package controllers.returns
 
 import connectors.CacheConnector
 import controllers.actions._
-import models.{AlcoholRegime, NormalMode}
+import models.returns.DutyByTaxType
+import models.{AlcoholRegime, NormalMode, UserAnswers}
 import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage}
 
 import javax.inject.Inject
@@ -29,6 +30,7 @@ import viewmodels.checkAnswers.returns.CheckYourAnswersSPRSummaryListHelper
 import views.html.returns.CheckYourAnswersSPRView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class CheckYourAnswersSPRController @Inject() (
   override val messagesApi: MessagesApi,
@@ -42,29 +44,39 @@ class CheckYourAnswersSPRController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
+    (identify andThen getData andThen requireData) { implicit request =>
       CheckYourAnswersSPRSummaryListHelper(regime, request.userAnswers) match {
         case None              =>
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(summaryList) =>
-          Ok(view(regime, summaryList))
+          Ok(view(regime, summaryList, index))
       }
-  }
+    }
 
-  def onSubmit(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
         case None               =>
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(sprRateEntry) =>
           for {
-            updatedUserAnswers <-
-              Future.fromTry(request.userAnswers.addToSeqByKey(MultipleSPRListPage, regime, sprRateEntry))
+            updatedUserAnswers <- Future.fromTry(updateUserAnswer(request.userAnswers, regime, sprRateEntry, index))
             cleanedUserAnswers <- Future.fromTry(updatedUserAnswers.removeByKey(TellUsAboutMultipleSPRRatePage, regime))
             _                  <- cacheConnector.set(cleanedUserAnswers)
           } yield Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(NormalMode, regime))
       }
+    }
 
-  }
+  def updateUserAnswer(
+    userAnswers: UserAnswers,
+    regime: AlcoholRegime,
+    sprRateEntry: DutyByTaxType,
+    index: Option[Int]
+  ): Try[UserAnswers] =
+    index match {
+      case Some(i) => userAnswers.setByKeyAndIndex(MultipleSPRListPage, regime, sprRateEntry, i)
+      case None    => userAnswers.addToSeqByKey(MultipleSPRListPage, regime, sprRateEntry)
+    }
+
 }

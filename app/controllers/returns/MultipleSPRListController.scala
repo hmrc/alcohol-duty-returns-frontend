@@ -52,7 +52,7 @@ class MultipleSPRListController @Inject() (
 
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(DoYouWantToAddMultipleSPRToListPage) match {
+      val preparedForm = request.userAnswers.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -85,9 +85,12 @@ class MultipleSPRListController @Inject() (
               ),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DoYouWantToAddMultipleSPRToListPage, value))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DoYouWantToAddMultipleSPRToListPage, mode, updatedAnswers))
+            } yield Redirect(
+              navigator.nextPageWithRegime(DoYouWantToAddMultipleSPRToListPage, mode, updatedAnswers, regime)
+            )
         )
     }
 }

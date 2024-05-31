@@ -31,11 +31,11 @@
     govukWarningText: GovukWarningText
 )
 
-@(form: Form[_], mode: Mode, regime: AlcoholRegime, rateBandRadioItems: Seq[RadioItem])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, regime: AlcoholRegime, rateBandRadioItems: Seq[RadioItem], index:Option[Int])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("tellUsAboutMultipleSPRRate.title", messages(s"return.regime.$regime")))) {
 
-    @formHelper(action = controllers.returns.routes.TellUsAboutMultipleSPRRateController.onSubmit(mode, regime), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.returns.routes.TellUsAboutMultipleSPRRateController.onSubmit(mode, regime, index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
