@@ -56,6 +56,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val signOutUrl: String            = configuration.get[String]("urls.signOut")
   val appaIdRegisterUrl: String     = configuration.get[String]("urls.appaIdRegister")
   val businessTaxAccountUrl: String = configuration.get[String]("urls.businessTaxAccount")
+  val requestAccessUrl: String      = configuration.get[String]("urls.requestAccess")
 
   private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/alcohol-duty-returns-frontend"

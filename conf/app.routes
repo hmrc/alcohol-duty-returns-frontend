@@ -20,6 +20,8 @@ GET         /account/signed-out                          controllers.auth.Signed
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
+GET         /enrol/approval-id                           controllers.auth.DoYouHaveAnAppaIdController.onPageLoad()
+POST        /enrol/approval-id                           controllers.auth.DoYouHaveAnAppaIdController.onSubmit()
 GET         /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onPageLoad()
 POST        /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onSubmit()
 

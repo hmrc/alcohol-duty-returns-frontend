@@ -70,6 +70,11 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
+doYouHaveAnAppaId.title = Do you have an Alcoholic Products Producer approval ID?
+doYouHaveAnAppaId.heading = Do you have an Alcoholic Products Producer approval ID?
+doYouHaveAnAppaId.hint = This is 15-digits, for example XMADP0123456789
+doYouHaveAnAppaId.error.required = Select yes if you have an Alcoholic Products Producer approval ID
+
 noAppaId.title = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
 noAppaId.heading = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
 noAppaId.text = Register with HMRC to receive an Alcoholic Products Producer approval ID and manage your alcohol duty online.
