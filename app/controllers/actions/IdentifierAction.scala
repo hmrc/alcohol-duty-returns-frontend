@@ -26,7 +26,7 @@ import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -75,7 +75,7 @@ class AuthenticatedIdentifierAction @Inject() (
   def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
     o.getOrElse {
       logger.warn(s"Identifier Action failed with error: $failureMessage")
-      throw new UnauthorizedException(failureMessage)
+      throw new IllegalStateException(failureMessage)
     }
 
 }

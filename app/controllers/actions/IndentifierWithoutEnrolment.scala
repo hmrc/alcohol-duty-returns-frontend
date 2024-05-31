@@ -66,10 +66,10 @@ class AuthenticatedIdentifierWithoutEnrolmentAction @Inject() (
       val groupId: String    = getOrElseFailWithUnauthorised(optGroupId, "Unable to retrieve groupIdentifier")
       block(IdentifierWithoutEnrolmentRequest(request, groupId, internalId))
     } recover {
-      case _: NoActiveSession        =>
-        Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       case e: AuthorisationException =>
         handleAuthException(e)
+      case _: UnauthorizedException  =>
+        Redirect(routes.UnauthorisedController.onPageLoad)
     }
   }
 
@@ -80,13 +80,12 @@ class AuthenticatedIdentifierWithoutEnrolmentAction @Inject() (
     case _: UnsupportedAffinityGroup    => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: UnsupportedCredentialRole   => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: IncorrectCredentialStrength => Redirect(routes.UnauthorisedController.onPageLoad)
-    case _: UnauthorizedException       => Redirect(routes.UnauthorisedController.onPageLoad)
     case _                              => Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
   }
 
   def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
     o.getOrElse {
       logger.warn(s"Identifier Action failed with error: $failureMessage")
-      throw new UnauthorizedException(failureMessage)
+      throw new IllegalStateException(failureMessage)
     }
 }

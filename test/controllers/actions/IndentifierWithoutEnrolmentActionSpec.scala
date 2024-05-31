@@ -78,7 +78,7 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase with GuiceOneAppPerS
       contentAsString(result) mustBe testContent
     }
 
-    "execute the block and throw UnauthorizedException if cannot get the internalId" in {
+    "execute the block and throw IllegalStateException if cannot get the internalId" in {
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -94,12 +94,12 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase with GuiceOneAppPerS
       )
         .thenReturn(Future(new ~(None, Some(groupId))))
 
-      intercept[UnauthorizedException] {
+      intercept[IllegalStateException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
       }
     }
 
-    "execute the block and throw UnauthorizedException if cannot get the groupId" in {
+    "execute the block and throw IllegalStateException if cannot get the groupId" in {
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -115,19 +115,20 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase with GuiceOneAppPerS
       )
         .thenReturn(Future(new ~(Some(internalId), None)))
 
-      intercept[UnauthorizedException] {
+      intercept[IllegalStateException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
       }
     }
 
-    "redirect to the authorised page if not be authorised" in {
+    "redirect to the unauthorised page if not authorised" in {
       List(
         InsufficientEnrolments(),
         InsufficientConfidenceLevel(),
         UnsupportedAuthProvider(),
         UnsupportedAffinityGroup(),
         UnsupportedCredentialRole(),
-        IncorrectCredentialStrength()
+        IncorrectCredentialStrength(),
+        new UnauthorizedException("")
       ).foreach { exception =>
         when(mockAuthConnector.authorise[Unit](any(), any())(any(), any())).thenReturn(Future.failed(exception))
 
