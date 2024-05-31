@@ -203,20 +203,20 @@ howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres
 howMuchDoYouNeedToDeclare.legend.pureAlcohol = Litres of pure alcohol
 
 howMuchDoYouNeedToDeclare.error.invalid.Beer.totalLitres = Litres of beer must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Beer.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.Beer.pureAlcohol = Litres of pure alcohol must be a number
 howMuchDoYouNeedToDeclare.error.invalid.Cider.totalLitres = Litres of cider must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Cider.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.Cider.pureAlcohol = Litres of pure alcohol must be a number
 howMuchDoYouNeedToDeclare.error.invalid.Wine.totalLitres = Litres of wine must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.Wine.pureAlcohol = Litres of pure alcohol must be a number
 howMuchDoYouNeedToDeclare.error.invalid.Spirits.totalLitres = Litres of spirits must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Spirits.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.Spirits.pureAlcohol = Litres of pure alcohol must be a number
 howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.totalLitres = Litres of other fermented products must be a number
-howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number
 
 howMuchDoYouNeedToDeclare.error.required.Beer.totalLitres = Enter the total litres of beer
 howMuchDoYouNeedToDeclare.error.required.Beer.pureAlcohol = Enter the litres of pure alcohol in beer
 howMuchDoYouNeedToDeclare.error.required.Cider.totalLitres = Enter the total litres of cider
-howMuchDoYouNeedToDeclare.error.required.Cider.pureAlcohol = Enter the total litres of cider
+howMuchDoYouNeedToDeclare.error.required.Cider.pureAlcohol = Enter the total litres pure alcohol in cider
 howMuchDoYouNeedToDeclare.error.required.Wine.totalLitres = Enter the total litres of wine
 howMuchDoYouNeedToDeclare.error.required.Wine.pureAlcohol = Enter the litres of pure alcohol in wine
 howMuchDoYouNeedToDeclare.error.required.Spirits.totalLitres = Enter the total litres of spirits
@@ -269,8 +269,8 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total litres
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 
-doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?
-doYouHaveMultipleSPRDutyRates.heading = More than one Small Producer Relief duty rate?
+doYouHaveMultipleSPRDutyRates.title = If you have more than one Small Producer Relief duty rate
+doYouHaveMultipleSPRDutyRates.heading = If you have more than one Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.h1 = If you have more than one Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}. This may be for one of the following reasons:
 doYouHaveMultipleSPRDutyRates.l1 = Reason 1
@@ -408,7 +408,7 @@ multipleSPRList.heading = Small Producer Reliefs to declare
 multipleSPRList.question = Do you want to add another?
 multipleSPRList.subheading = Small Producer Relief list
 multipleSPRList.checkYourAnswersLabel = multipleSPRList
-multipleSPRList.error.required = Select yes if multipleSPRList
+multipleSPRList.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare
 multipleSPRList.change.hidden = MultipleSPRList
 
 # old return journey
