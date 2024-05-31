@@ -81,7 +81,7 @@ class IdentifierActionSpec extends SpecBase {
       contentAsString(result) mustBe testContent
     }
 
-    "execute the block and throw UnauthorizedException if cannot get the internalId" in {
+    "execute the block and throw IllegalStateException if cannot get the internalId" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
@@ -100,12 +100,12 @@ class IdentifierActionSpec extends SpecBase {
       )
         .thenReturn(Future(new ~(new ~(None, Some(groupId)), enrolments)))
 
-      intercept[UnauthorizedException] {
+      intercept[IllegalStateException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
       }
     }
 
-    "execute the block and throw UnauthorizedException if cannot get the groupId" in {
+    "execute the block and throw IllegalStateException if cannot get the groupId" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
@@ -124,12 +124,12 @@ class IdentifierActionSpec extends SpecBase {
       )
         .thenReturn(Future(new ~(new ~(Some(internalId), None), enrolments)))
 
-      intercept[UnauthorizedException] {
+      intercept[IllegalStateException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
       }
     }
 
-    "execute the block and throw UnauthorizedException if cannot get the enrolment" in {
+    "execute the block and throw IllegalStateException if cannot get the enrolment" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
@@ -148,12 +148,12 @@ class IdentifierActionSpec extends SpecBase {
       )
         .thenReturn(Future(new ~(new ~(Some(internalId), Some(groupId)), emptyEnrolments)))
 
-      intercept[UnauthorizedException] {
+      intercept[IllegalStateException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
       }
     }
 
-    "execute the block and throw UnauthorizedException if cannot get the APPAID enrolment" in {
+    "execute the block and throw IllegalStateException if cannot get the APPAID enrolment" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
@@ -172,19 +172,20 @@ class IdentifierActionSpec extends SpecBase {
       )
         .thenReturn(Future(new ~(new ~(Some(internalId), Some(groupId)), enrolmentsWithoutAppaId)))
 
-      intercept[UnauthorizedException] {
+      intercept[IllegalStateException] {
         await(identifierAction.invokeBlock(FakeRequest(), testAction))
       }
     }
 
-    "redirect to the authorised page if not be authorised" in {
+    "redirect to the unauthorised page if not authorised" in {
       List(
         InsufficientEnrolments(),
         InsufficientConfidenceLevel(),
         UnsupportedAuthProvider(),
         UnsupportedAffinityGroup(),
         UnsupportedCredentialRole(),
-        IncorrectCredentialStrength()
+        IncorrectCredentialStrength(),
+        new UnauthorizedException("")
       ).foreach { exception =>
         when(appConfig.enrolmentServiceName).thenReturn(enrolment)
         when(mockAuthConnector.authorise[Unit](any(), any())(any(), any())).thenReturn(Future.failed(exception))
