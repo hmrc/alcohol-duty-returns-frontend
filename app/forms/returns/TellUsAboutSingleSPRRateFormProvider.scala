@@ -28,12 +28,13 @@ class TellUsAboutSingleSPRRateFormProvider @Inject() extends Mappings {
   def apply(regime: AlcoholRegime): Form[Seq[DutyByTaxType]] = Form(
     "volumesWithRate" -> seq(
       volumesWithRate(
-        s"tellUsAboutSingleSPRRate.error.invalid.$regime",
-        s"tellUsAboutSingleSPRRate.error.allRequired.$regime",
-        s"tellUsAboutSingleSPRRate.error.required.$regime",
-        s"tellUsAboutSingleSPRRate.error.decimalPlacesKey.$regime",
-        s"tellUsAboutSingleSPRRate.error.minimumValueKey.$regime",
-        s"tellUsAboutSingleSPRRate.error.maximumValueKey.$regime"
+        s"tellUsAboutSPRRate.error.invalid.$regime",
+        s"tellUsAboutSPRRate.error.allRequired.$regime",
+        s"tellUsAboutSPRRate.error.required.$regime",
+        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime",
+        s"tellUsAboutSPRRate.error.minimumValueKey.$regime",
+        s"tellUsAboutSPRRate.error.maximumValueKey.$regime",
+        s"tellUsAboutSPRRate.error.inconsistent"
       )
     ).verifying(nonEmptySeq(s"tellUsAboutSingleSPRRate.error.allRequired.$regime"))
   )

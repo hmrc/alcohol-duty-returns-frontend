@@ -57,7 +57,7 @@
 
         @govukRadios(
             RadiosViewModel(
-                field  = form("taxType"),
+                field  = form("volumesWithRate.taxType"),
                 legend = LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(s"return.regime.$regime"))).withSize(LegendSize.Medium),
                 items  = rateBandRadioItems
             )
@@ -65,8 +65,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("totalLitres"),
-                label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.totalLitres", messages(s"return.regime.$regime")))
+              field = form(s"volumesWithRate"),
+              key = "totalLitres",
+              label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.totalLitres", messages(s"return.regime.$regime"))),
+              errorMessageField = form(s"volumesWithRate_totalLitres"),
+              value = form(s"volumesWithRate.totalLitres").value
             )
             .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
@@ -75,8 +78,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("pureAlcohol"),
-                label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.pureAlcohol", messages(s"return.regime.$regime")))
+              field = form(s"volumesWithRate"),
+              key = "pureAlcohol",
+              label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.pureAlcohol", messages(s"return.regime.$regime"))),
+              errorMessageField = form(s"volumesWithRate_pureAlcohol"),
+              value = form(s"volumesWithRate.pureAlcohol").value
             )
             .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
@@ -85,8 +91,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("dutyRate"),
-                label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.dutyRate", messages(s"return.regime.$regime")))
+              field = form(s"volumesWithRate"),
+              key = "dutyRate",
+              label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.dutyRate", messages(s"return.regime.$regime"))),
+              errorMessageField = form(s"volumesWithRate_dutyRate"),
+              value = form(s"volumesWithRate.dutyRate").value
             )
             .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))

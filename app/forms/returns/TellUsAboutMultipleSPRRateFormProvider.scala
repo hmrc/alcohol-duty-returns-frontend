@@ -16,49 +16,24 @@
 
 package forms.returns
 
-import config.Constants._
-
 import javax.inject.Inject
 import forms.mappings.Mappings
 import models.AlcoholRegime
 import play.api.data.Form
-import play.api.data.Forms._
 import models.returns.DutyByTaxType
 
 class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
 
   def apply(regime: AlcoholRegime): Form[DutyByTaxType] = Form(
-    mapping(
-      "taxType"     -> text(s"tellUsAboutMultipleSPRRate.error.taxType.$regime.required"),
-      "totalLitres" -> bigDecimal(
-        maximumDecimalPlaces,
-        s"tellUsAboutSPRRate.error.required.$regime.totalLitres",
-        s"tellUsAboutSPRRate.error.invalid.$regime.totalLitres",
-        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime.totalLitres"
-      ).verifying(
-        minimumValue(volumeMinimumValue, s"tellUsAboutSPRRate.error.minimumValueKey.$regime.totalLitres")
-      ).verifying(
-        maximumValue(volumeMaximumValue, s"tellUsAboutSPRRate.error.maximumValueKey.$regime.totalLitres")
-      ),
-      "pureAlcohol" -> bigDecimal(
-        maximumDecimalPlaces,
-        s"tellUsAboutSPRRate.error.required.$regime.pureAlcohol",
-        s"tellUsAboutSPRRate.error.invalid.$regime.pureAlcohol",
-        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime.pureAlcohol"
-      ).verifying(
-        minimumValue(volumeMinimumValue, s"tellUsAboutSPRRate.error.minimumValueKey.$regime.pureAlcohol")
-      ).verifying(
-        maximumValue(volumeMaximumValue, s"tellUsAboutSPRRate.error.maximumValueKey.$regime.pureAlcohol")
-      ),
-      "dutyRate"    -> bigDecimal(
-        maximumDecimalPlaces,
-        s"tellUsAboutSPRRate.error.required.$regime.dutyRate",
-        s"tellUsAboutSPRRate.error.invalid.$regime.dutyRate",
-        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime.dutyRate"
-      ).verifying(minimumValue(dutyMinimumValue, s"tellUsAboutSPRRate.error.minimumValueKey.$regime.dutyRate"))
-        .verifying(
-          maximumValue(dutyMaximumValue, s"tellUsAboutSPRRate.error.maximumValueKey.$regime.dutyRate")
-        )
-    )(DutyByTaxType.apply)(DutyByTaxType.unapply)
+    "volumesWithRate" ->
+      volumesWithRate(
+        s"tellUsAboutSPRRate.error.invalid.$regime",
+        s"tellUsAboutSPRRate.error.allRequired.$regime",
+        s"tellUsAboutSPRRate.error.required.$regime",
+        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime",
+        s"tellUsAboutSPRRate.error.minimumValueKey.$regime",
+        s"tellUsAboutSPRRate.error.maximumValueKey.$regime",
+        s"tellUsAboutSPRRate.error.inconsistent"
+      )
   )
 }

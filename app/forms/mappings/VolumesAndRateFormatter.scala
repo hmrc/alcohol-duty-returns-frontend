@@ -28,6 +28,7 @@ class VolumesAndRateFormatter(
   decimalPlacesKey: String,
   minimumValueKey: String,
   maximumValueKey: String,
+  inconsistentKey: String,
   args: Seq[String]
 ) extends Formatter[DutyByTaxType]
     with Formatters {
@@ -82,6 +83,17 @@ class VolumesAndRateFormatter(
     }
   }
 
+  def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], DutyByTaxType] =
+    formatVolume(key, data).fold(
+      errors => Left(errors),
+      dutyByTaxType =>
+        if (dutyByTaxType.totalLitres < dutyByTaxType.pureAlcohol) {
+          Left(Seq(FormError(nameToId(s"$key.pureAlcohol"), inconsistentKey)))
+        } else {
+          Right(dutyByTaxType)
+        }
+    )
+
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], DutyByTaxType] = {
     val fields = fieldKeys.map { field =>
       field -> data.get(s"$key.$field").filter(_.nonEmpty)
@@ -93,16 +105,14 @@ class VolumesAndRateFormatter(
       .toList
 
     fields.count(_._2.isDefined) match {
-      case NUMBER_OF_FIELDS                            =>
-        formatVolume(key, data)
-      case size if size < NUMBER_OF_FIELDS && size > 0 =>
+      case NUMBER_OF_FIELDS =>
+        checkValues(key, data)
+      case _                =>
         Left(
           missingFields.map { field =>
             requiredFieldFormError(key, field)
           }
         )
-      case _                                           =>
-        Left(List(requiredAllFieldsFormError(key)))
     }
   }
 

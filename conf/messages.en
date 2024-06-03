@@ -202,6 +202,8 @@ howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type
 howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres
 howMuchDoYouNeedToDeclare.legend.pureAlcohol = Litres of pure alcohol
 
+howMuchDoYouNeedToDeclare.error.inconsistent = Litres of pure alcohol must be the same or less than the litres of beer
+
 howMuchDoYouNeedToDeclare.error.invalid.Beer.totalLitres = Litres of beer must be a number
 howMuchDoYouNeedToDeclare.error.invalid.Beer.pureAlcohol = Litres of pure alcohol must be a number
 howMuchDoYouNeedToDeclare.error.invalid.Cider.totalLitres = Litres of cider must be a number
@@ -293,18 +295,25 @@ tellUsAboutSingleSPRRate.legend.dutyRate = Duty rate
 tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught beer that is eligible for Small Producer Relief do you need to declare?
 tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught beer that is eligible for Small Producer Relief do you need to declare?
 
+tellUsAboutSPRRate.error.inconsistent = Litres of pure alcohol must be the same or less than the litres of beer
+
+tellUsAboutSPRRate.error.required.Beer.taxType = Select the type of beer to declare
 tellUsAboutSPRRate.error.required.Beer.totalLitres = Enter the total litres of beer
 tellUsAboutSPRRate.error.required.Beer.pureAlcohol = 	Enter the litres of pure alcohol in beer
 tellUsAboutSPRRate.error.required.Beer.dutyRate = Enter your Small Producer Relief duty rate
+tellUsAboutSPRRate.error.required.Cider.taxType = Select the type of cider to declare
 tellUsAboutSPRRate.error.required.Cider.totalLitres = Enter the total litres of cider
 tellUsAboutSPRRate.error.required.Cider.pureAlcohol = Enter the litres of pure alcohol in cider
 tellUsAboutSPRRate.error.required.Cider.dutyRate = Enter your Small Producer Relief duty rate
+tellUsAboutSPRRate.error.required.Spirits.taxType = Select the type of spirits to declare
 tellUsAboutSPRRate.error.required.Spirits.totalLitres = Enter the total litres of spirits
 tellUsAboutSPRRate.error.required.Spirits.pureAlcohol = Enter the litres of pure alcohol in spirits
 tellUsAboutSPRRate.error.required.Spirits.dutyRate = Enter your Small Producer Relief duty rate
+tellUsAboutSPRRate.error.required.Wine.taxType = Select the type of wine to declare
 tellUsAboutSPRRate.error.required.Wine.totalLitres = Enter the total litres of wine
 tellUsAboutSPRRate.error.required.Wine.pureAlcohol = Enter the litres of pure alcohol in wine
 tellUsAboutSPRRate.error.required.Wine.dutyRate = Enter your Small Producer Relief duty rate
+tellUsAboutSPRRate.error.required.OtherFermentedProduct.taxType = Select the type of other fermented product to declare
 tellUsAboutSPRRate.error.required.OtherFermentedProduct.totalLitres = Enter the total litres of other fermented products
 tellUsAboutSPRRate.error.required.OtherFermentedProduct.pureAlcohol = Enter the litres of pure alcohol in other fermented products
 tellUsAboutSPRRate.error.required.OtherFermentedProduct.dutyRate = Enter your Small Producer Relief duty rate

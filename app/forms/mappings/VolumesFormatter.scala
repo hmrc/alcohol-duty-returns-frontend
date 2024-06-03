@@ -17,7 +17,7 @@
 package forms.mappings
 
 import forms.mappings.BigDecimalFieldFormatter.nameToId
-import models.returns.VolumesByTaxType
+import models.returns.{DutyByTaxType, VolumesByTaxType}
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
@@ -28,6 +28,7 @@ class VolumesFormatter(
   decimalPlacesKey: String,
   minimumValueKey: String,
   maximumValueKey: String,
+  inconsistentKey: String,
   args: Seq[String]
 ) extends Formatter[VolumesByTaxType]
     with Formatters {
@@ -70,6 +71,17 @@ class VolumesFormatter(
     }
   }
 
+  def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] =
+    formatVolume(key, data).fold(
+      errors => Left(errors),
+      volumesByTaxType =>
+        if (volumesByTaxType.totalLitres < volumesByTaxType.pureAlcohol) {
+          Left(Seq(FormError(nameToId(s"$key.pureAlcohol"), inconsistentKey)))
+        } else {
+          Right(volumesByTaxType)
+        }
+    )
+
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
     val fields = fieldKeys.map { field =>
       field -> data.get(s"$key.$field").filter(_.nonEmpty)
@@ -82,7 +94,7 @@ class VolumesFormatter(
 
     fields.count(_._2.isDefined) match {
       case NUMBER_OF_FIELDS                            =>
-        formatVolume(key, data)
+        checkValues(key, data)
       case size if size < NUMBER_OF_FIELDS && size > 0 =>
         Left(
           missingFields.map { field =>

@@ -33,7 +33,8 @@ class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
         s"howMuchDoYouNeedToDeclare.error.required.$regime",
         s"howMuchDoYouNeedToDeclare.error.decimalPlacesKey.$regime",
         s"howMuchDoYouNeedToDeclare.error.minimumValueKey.$regime",
-        s"howMuchDoYouNeedToDeclare.error.maximumValueKey.$regime"
+        s"howMuchDoYouNeedToDeclare.error.maximumValueKey.$regime",
+        s"howMuchDoYouNeedToDeclare.error.inconsistent"
       )
     ).verifying(nonEmptySeq(s"howMuchDoYouNeedToDeclare.error.allRequired.$regime"))
   )
