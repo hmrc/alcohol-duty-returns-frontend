@@ -28,7 +28,9 @@ import viewmodels.implicits._
 
 object TellUsAboutMultipleSPRRateSummary {
 
-  def rows(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] =
+  def rows(regime: AlcoholRegime, answers: UserAnswers, index: Option[Int])(implicit
+    messages: Messages
+  ): Seq[SummaryListRow] =
     (
       answers.getByKey(WhatDoYouNeedToDeclarePage, regime),
       answers.getByKey(TellUsAboutMultipleSPRRatePage, regime)
@@ -41,7 +43,7 @@ object TellUsAboutMultipleSPRRateSummary {
               SummaryListRowViewModel(
                 key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType",
                 value = ValueViewModel(content = rateBandContent(rateBand)),
-                actions = actions("taxType", regime)
+                actions = actions("taxType", regime, index)
               )
 
             val totalLitresRowViewModel =
@@ -57,7 +59,7 @@ object TellUsAboutMultipleSPRRateSummary {
                     messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.value", answer.totalLitres)
                   )
                 ),
-                actions = actions("totalLitres", regime)
+                actions = actions("totalLitres", regime, index)
               )
 
             val pureAlcoholRowViewModel =
@@ -68,7 +70,7 @@ object TellUsAboutMultipleSPRRateSummary {
                     messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value", answer.pureAlcohol)
                   )
                 ),
-                actions = actions("pureAlcohol", regime)
+                actions = actions("pureAlcohol", regime, index)
               )
 
             val dutyRateRowViewModel =
@@ -79,7 +81,7 @@ object TellUsAboutMultipleSPRRateSummary {
                     messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value", answer.dutyRate)
                   )
                 ),
-                actions = actions("dutyRate", regime)
+                actions = actions("dutyRate", regime, index)
               )
 
             Seq(taxTypeRowViewModel, totalLitresRowViewModel, pureAlcoholRowViewModel, dutyRateRowViewModel)
@@ -88,10 +90,12 @@ object TellUsAboutMultipleSPRRateSummary {
       case _                               => Seq.empty
     }
 
-  def actions(elementId: String, regime: AlcoholRegime)(implicit messages: Messages): Seq[ActionItem] = Seq(
+  def actions(elementId: String, regime: AlcoholRegime, index: Option[Int])(implicit
+    messages: Messages
+  ): Seq[ActionItem] = Seq(
     ActionItemViewModel(
       "site.change",
-      routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime).url + s"#$elementId"
+      routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime, index).url + s"#$elementId"
     )
       .withVisuallyHiddenText(messages("tellUsAboutMultipleSPRRate.change.hidden"))
   )

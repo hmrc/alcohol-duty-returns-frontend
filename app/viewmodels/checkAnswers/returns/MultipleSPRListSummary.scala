@@ -35,7 +35,7 @@ object MultipleSPRListSummary {
         key = "multipleSPRList.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.MultipleSPRListController.onPageLoad(CheckMode, Beer).url)
+          ActionItemViewModel("site.change", routes.MultipleSPRListController.onPageLoad(Beer).url)
             .withVisuallyHiddenText(messages("multipleSPRList.change.hidden"))
         )
       )

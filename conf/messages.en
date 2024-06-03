@@ -421,6 +421,10 @@ multipleSPRList.totalLitres.value = {0}l
 multipleSPRList.pureAlcohol.value = {0} Lpa
 multipleSPRList.dutyRate.value = £{0,number,#,##0.00} per litre
 
+deleteMultipleSPREntry.title = Are you sure you want to remove this product?
+deleteMultipleSPREntry.heading = Are you sure you want to remove this product?
+deleteMultipleSPREntry.hint = This will remove this product and its information from the product list.
+deleteMultipleSPREntry.error.required = Select yes if you want to remove this product
 
 
 # old return journey

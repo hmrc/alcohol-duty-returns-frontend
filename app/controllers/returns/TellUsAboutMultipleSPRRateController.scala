@@ -34,7 +34,6 @@ import viewmodels.checkAnswers.returns.TellUsAboutMultipleSPRRateHelper
 import views.html.returns.TellUsAboutMultipleSPRRateView
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 class TellUsAboutMultipleSPRRateController @Inject() (
   override val messagesApi: MessagesApi,
@@ -83,7 +82,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
                   )
                 ),
               value => {
-                val hasChanged = hasValueChanged(regime, index, request.userAnswers, value)
+                val hasChanged = hasValueChanged(regime, index, request.userAnswers, mode, value)
                 for {
                   updatedAnswers <-
                     Future.fromTry(request.userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, value))
@@ -101,11 +100,13 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     regime: AlcoholRegime,
     index: Option[Int],
     userAnswers: UserAnswers,
+    mode: Mode,
     value: DutyByTaxType
   ) =
-    index match {
-      case Some(i) => hasValueChangedAtIndex(userAnswers, regime, i, value)
-      case None    => false
+    (mode, index) match {
+      case (CheckMode, _)        => true
+      case (NormalMode, Some(i)) => hasValueChangedAtIndex(userAnswers, regime, i, value)
+      case _                     => false
     }
 
   private def hasValueChangedAtIndex(userAnswers: UserAnswers, regime: AlcoholRegime, i: Int, value: DutyByTaxType) =

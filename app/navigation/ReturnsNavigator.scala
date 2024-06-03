@@ -100,7 +100,7 @@ class ReturnsNavigator @Inject() () {
               if (hasChanged)
                 controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime, index)
               else
-                controllers.returns.routes.MultipleSPRListController.onPageLoad(NormalMode, regime)
+                controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
     case _                              =>
       _ => _ => _ => _ => routes.IndexController.onPageLoad
   }

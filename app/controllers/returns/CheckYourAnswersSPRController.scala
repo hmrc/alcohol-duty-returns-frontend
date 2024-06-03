@@ -46,7 +46,7 @@ class CheckYourAnswersSPRController @Inject() (
 
   def onPageLoad(regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      CheckYourAnswersSPRSummaryListHelper(regime, request.userAnswers) match {
+      CheckYourAnswersSPRSummaryListHelper.summaryList(regime, request.userAnswers, index) match {
         case None              =>
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(summaryList) =>
@@ -64,7 +64,7 @@ class CheckYourAnswersSPRController @Inject() (
             updatedUserAnswers <- Future.fromTry(updateUserAnswer(request.userAnswers, regime, sprRateEntry, index))
             cleanedUserAnswers <- Future.fromTry(updatedUserAnswers.removeByKey(TellUsAboutMultipleSPRRatePage, regime))
             _                  <- cacheConnector.set(cleanedUserAnswers)
-          } yield Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(NormalMode, regime))
+          } yield Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(regime))
       }
     }
 

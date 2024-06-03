@@ -65,10 +65,11 @@ POST       /check-your-answers-spr/:regime                       controllers.ret
 
 GET        /return-check-your-answers/:regime                      controllers.returns.CheckYourAnswersController.onPageLoad(regime:AlcoholRegime)
 
-GET        /multiple-spr-list/:regime                        controllers.returns.MultipleSPRListController.onPageLoad(mode: Mode = NormalMode, regime:AlcoholRegime)
-POST       /multiple-spr-list/:regime                        controllers.returns.MultipleSPRListController.onSubmit(mode: Mode = NormalMode, regime:AlcoholRegime)
-GET        /change-multiple-spr-list/:regime                 controllers.returns.MultipleSPRListController.onPageLoad(mode: Mode = CheckMode, regime:AlcoholRegime)
-POST       /change-multiple-spr-list/:regime                 controllers.returns.MultipleSPRListController.onSubmit(mode: Mode = CheckMode, regime:AlcoholRegime)
+GET        /multiple-spr-list/:regime                        controllers.returns.MultipleSPRListController.onPageLoad(regime:AlcoholRegime)
+POST       /multiple-spr-list/:regime                        controllers.returns.MultipleSPRListController.onSubmit(regime:AlcoholRegime)
+
+GET        /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onPageLoad(regime:AlcoholRegime, index: Int)
+POST       /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onSubmit(regime:AlcoholRegime, index: Int)
 
 # old journey
 

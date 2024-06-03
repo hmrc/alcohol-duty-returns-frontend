@@ -31,12 +31,12 @@
     tableRowAction: TableRowAction
 )
 
-@(form: Form[_], mode: Mode, regime:AlcoholRegime, sprTable:TableViewModel)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime:AlcoholRegime, sprTable:TableViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("multipleSPRList.title")), fullWidth = true) {
+@layout(pageTitle = title(form, messages("multipleSPRList.title")), fullWidth = true, showBackLink = false) {
 
     <div class="">
-    @formHelper(action = controllers.returns.routes.MultipleSPRListController.onSubmit(mode, regime), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.returns.routes.MultipleSPRListController.onSubmit(regime), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

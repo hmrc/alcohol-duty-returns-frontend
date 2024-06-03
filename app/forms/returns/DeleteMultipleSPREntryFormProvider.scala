@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package models.returns
+package forms.returns
 
-import play.api.libs.json._
+import javax.inject.Inject
 
-case class TellUsAboutMultipleSPRRate(field1: String, field2: String)
+import forms.mappings.Mappings
+import play.api.data.Form
 
-object TellUsAboutMultipleSPRRate {
-  implicit val format = Json.format[TellUsAboutMultipleSPRRate]
+class DeleteMultipleSPREntryFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "deleteMultipleSPREntry-yesNoValue" -> boolean("deleteMultipleSPREntry.error.required")
+    )
 }

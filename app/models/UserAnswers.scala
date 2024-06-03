@@ -186,13 +186,20 @@ final case class UserAnswers(
     cleanupPage(page, updatedData)
   }
 
-  def remove[A](path: JsPath): Try[JsObject]                                       =
+  def removeByKeyAndIndex[A, B](page: Settable[B], key: A, index: Int): Try[UserAnswers] = {
+    val path        = page.path \ key.toString \ index
+    val updatedData = remove(path)
+    cleanupPage(page, updatedData)
+  }
+
+  def remove[A](path: JsPath): Try[JsObject] =
     data.removeObject(path) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
       case JsError(_)            =>
         Success(data)
     }
+
   def cleanupPage(page: Settable[_], updatedData: Try[JsObject]): Try[UserAnswers] =
     updatedData.flatMap { d =>
       val updatedAnswers = copy(data = d)

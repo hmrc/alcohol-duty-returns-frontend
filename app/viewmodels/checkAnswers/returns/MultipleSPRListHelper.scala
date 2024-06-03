@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegime, CheckMode, Error, NormalMode, RateBand, UserAnswers}
+import models.{AlcoholRegime, Error, NormalMode, RateBand, UserAnswers}
 import models.returns.DutyByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
@@ -96,12 +96,12 @@ object MultipleSPRListHelper {
           TableRowActionViewModel(
             label = messages("site.change"),
             href = controllers.returns.routes.TellUsAboutMultipleSPRRateController
-              .onPageLoad(CheckMode, regime, Some(index)),
+              .onPageLoad(NormalMode, regime, Some(index)),
             visuallyHiddenText = Some(messages("productList.change.hidden"))
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
-            href = controllers.productEntry.routes.DeleteProductController.onPageLoad(index: Int),
+            href = controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, index),
             visuallyHiddenText = Some(messages("productList.remove.hidden"))
           )
         )

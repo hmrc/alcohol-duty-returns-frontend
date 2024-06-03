@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.MultipleSPRListFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode}
+import models.{AlcoholRegime, Mode, NormalMode}
 import navigation.ReturnsNavigator
 import pages.returns.DoYouWantToAddMultipleSPRToListPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -50,7 +50,7 @@ class MultipleSPRListController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onPageLoad(regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
         case None        => form
@@ -64,11 +64,11 @@ class MultipleSPRListController @Inject() (
             logger.warn(s"Failed to create SPR table: $error")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           },
-          sprTable => Ok(view(preparedForm, mode, regime, sprTable))
+          sprTable => Ok(view(preparedForm, regime, sprTable))
         )
     }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onSubmit(regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
@@ -81,7 +81,7 @@ class MultipleSPRListController @Inject() (
                   logger.warn(s"Failed to create SPR table: $error")
                   Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
                 },
-                sprTable => Future.successful(BadRequest(view(formWithErrors, mode, regime, sprTable)))
+                sprTable => Future.successful(BadRequest(view(formWithErrors, regime, sprTable)))
               ),
           value =>
             for {
@@ -89,7 +89,7 @@ class MultipleSPRListController @Inject() (
                 Future.fromTry(request.userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, value))
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(
-              navigator.nextPageWithRegime(DoYouWantToAddMultipleSPRToListPage, mode, updatedAnswers, regime)
+              navigator.nextPageWithRegime(DoYouWantToAddMultipleSPRToListPage, NormalMode, updatedAnswers, regime)
             )
         )
     }

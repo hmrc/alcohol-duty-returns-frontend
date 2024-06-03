@@ -17,80 +17,65 @@
 package controllers.returns
 
 import base.SpecBase
-import forms.returns.TellUsAboutMultipleSPRRateFormProvider
+import forms.returns.DeleteMultipleSPREntryFormProvider
 import models.NormalMode
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.returns.TellUsAboutMultipleSPRRatePage
+import pages.returns.DeleteMultipleSPREntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.returns.TellUsAboutMultipleSPRRateHelper
-import views.html.returns.TellUsAboutMultipleSPRRateView
+import views.html.returns.DeleteMultipleSPREntryView
 
 import scala.concurrent.Future
 
-class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSugar {
-
-  val regime = regimeGen.sample.value
+class DeleteMultipleSPREntryControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new TellUsAboutMultipleSPRRateFormProvider()
-  val form         = formProvider(regime)
+  val formProvider = new DeleteMultipleSPREntryFormProvider()
+  val form         = formProvider()
 
-  lazy val tellUsAboutMultipleSPRRateRoute =
-    routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime).url
+  lazy val deleteMultipleSPREntryRoute =
+    controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(NormalMode).url
 
-  val rateBands     = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
-  val dutyByTaxType = genDutyTaxTypesFromRateBand(rateBands.head).arbitrary.sample.value
-  val userAnswers   = emptyUserAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, dutyByTaxType).success.value
-
-  "TellUsAboutMultipleSPRRate Controller" - {
+  "DeleteMultipleSPREntry Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, tellUsAboutMultipleSPRRateRoute)
-
-        val view = application.injector.instanceOf[TellUsAboutMultipleSPRRateView]
+        val request = FakeRequest(GET, deleteMultipleSPREntryRoute)
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands)(messages(application))
+        val view = application.injector.instanceOf[DeleteMultipleSPREntryView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, regime, rateBandRadioButton, None)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
+      val userAnswers = emptyUserAnswers.set(DeleteMultipleSPREntryPage, true).success.value
+
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, tellUsAboutMultipleSPRRateRoute)
+        val request = FakeRequest(GET, deleteMultipleSPREntryRoute)
 
-        val view = application.injector.instanceOf[TellUsAboutMultipleSPRRateView]
+        val view = application.injector.instanceOf[DeleteMultipleSPREntryView]
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands)(messages(application))
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(dutyByTaxType), NormalMode, regime, rateBandRadioButton, None)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -110,8 +95,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
-            .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
+          FakeRequest(POST, deleteMultipleSPREntryRoute)
+            .withFormUrlEncodedBody(("deleteMultipleSPREntry-yesNoValue", "true"))
 
         val result = route(application, request).value
 
@@ -126,22 +111,17 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+          FakeRequest(POST, deleteMultipleSPREntryRoute)
+            .withFormUrlEncodedBody(("value", ""))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[TellUsAboutMultipleSPRRateView]
+        val view = application.injector.instanceOf[DeleteMultipleSPREntryView]
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands)(messages(application))
-
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, regime, rateBandRadioButton, None)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -150,7 +130,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, tellUsAboutMultipleSPRRateRoute)
+        val request = FakeRequest(GET, deleteMultipleSPREntryRoute)
 
         val result = route(application, request).value
 
@@ -165,8 +145,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
-            .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
+          FakeRequest(POST, deleteMultipleSPREntryRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 

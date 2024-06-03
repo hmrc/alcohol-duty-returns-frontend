@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package pages.returns
 
-import models.{AlcoholRegime, UserAnswers}
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-object CheckYourAnswersSPRSummaryListHelper {
+case object DeleteMultipleSPREntryPage extends QuestionPage[Boolean] {
 
-  def summaryList(regime: AlcoholRegime, userAnswers: UserAnswers, index: Option[Int])(implicit
-    messages: Messages
-  ): Option[SummaryList] = {
-    val rows = TellUsAboutMultipleSPRRateSummary.rows(regime, userAnswers, index)
-    if (rows.isEmpty) None else Some(SummaryList(rows = rows))
-  }
+  override def path: JsPath = JsPath \ toString
 
+  override def toString: String = "deleteMultipleSPREntry"
 }

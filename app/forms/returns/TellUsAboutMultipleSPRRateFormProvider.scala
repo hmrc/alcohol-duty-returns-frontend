@@ -23,7 +23,7 @@ import forms.mappings.Mappings
 import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms._
-import models.returns.{DutyByTaxType, TellUsAboutMultipleSPRRate}
+import models.returns.DutyByTaxType
 
 class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
 
