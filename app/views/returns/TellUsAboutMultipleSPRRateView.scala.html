@@ -53,7 +53,7 @@
 
         @govukWarningText(WarningText(
         iconFallbackText = Some("Warning"),
-        content = Text(messages("tellUsAboutMultipleSPRRate.warning"))
+        content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(s"return.regime.$regime")))
         ))
 
         @govukRadios(
