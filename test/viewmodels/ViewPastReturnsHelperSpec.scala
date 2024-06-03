@@ -80,7 +80,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val obligationData = Seq(obligationDataSingleOpen)
       val table          = ViewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
-      table.rows.map { case row =>
+      table.rows.map { row =>
         row.cells(1).asHtml shouldBe new GovukTag()(
           Tag(content = Text(messages("DUE")), classes = "govuk-tag--blue")
         )
