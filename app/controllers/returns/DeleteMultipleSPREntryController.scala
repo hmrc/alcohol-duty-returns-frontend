@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.DeleteMultipleSPREntryFormProvider
 
 import javax.inject.Inject
-import models.AlcoholRegime
+import models.{AlcoholRegime, NormalMode}
 import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -67,7 +67,14 @@ class DeleteMultipleSPREntryController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.removeByKeyAndIndex(MultipleSPRListPage, regime, index))
                 _              <- cacheConnector.set(updatedAnswers)
-              } yield Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(regime))
+              } yield updatedAnswers.getByKey(MultipleSPRListPage, regime) match {
+                case Some(list) if list.nonEmpty =>
+                  Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(regime))
+                case _                           =>
+                  Redirect(
+                    controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+                  )
+              }
             } else {
               Future.successful(Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)))
             }

@@ -22,7 +22,7 @@ import controllers.routes
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
-import pages.returns.{DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, DoYouWantToAddMultipleSPRToListPage, HowMuchDoYouNeedToDeclarePage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, DoYouWantToAddMultipleSPRToListPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 
 @Singleton
 class ReturnsNavigator @Inject() () {
@@ -66,12 +66,14 @@ class ReturnsNavigator @Inject() () {
     case DoYouHaveMultipleSPRDutyRatesPage =>
       ua =>
         regime =>
-          ua.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime) match {
-            case Some(true)  =>
+          (ua.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime), ua.getByKey(MultipleSPRListPage, regime)) match {
+            case (Some(true), Some(list)) if list.nonEmpty =>
+              controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+            case (Some(true), _)                           =>
               controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime)
-            case Some(false) =>
+            case (Some(false), _)                          =>
               controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
-            case _           =>
+            case _                                         =>
               routes.IndexController.onPageLoad
           }
 
