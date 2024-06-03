@@ -61,8 +61,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
 
-  val enrolmentServiceName = configuration.get[String]("enrolment.serviceName")
-
+  val enrolmentServiceName   = configuration.get[String]("enrolment.serviceName")
   val enrolmentIdentifierKey = configuration.get[String]("enrolment.identifierKey")
 
   def languageMap: Map[String, Lang] = Map(

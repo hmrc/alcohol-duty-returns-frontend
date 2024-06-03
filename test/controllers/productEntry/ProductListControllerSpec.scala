@@ -20,14 +20,11 @@ import base.SpecBase
 import forms.productEntry.ProductListFormProvider
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.{ProductEntryListPage, ProductListPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import generators.ModelGenerators
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.TableViewModel
 import viewmodels.checkAnswers.productEntry.ProductListSummaryHelper
@@ -35,7 +32,7 @@ import views.html.productEntry.ProductListView
 
 import scala.concurrent.Future
 
-class ProductListControllerSpec extends SpecBase with MockitoSugar with ModelGenerators {
+class ProductListControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
