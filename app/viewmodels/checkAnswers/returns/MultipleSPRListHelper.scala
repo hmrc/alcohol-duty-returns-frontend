@@ -21,7 +21,7 @@ import models.returns.DutyByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
-import viewmodels.checkAnswers.returns.WhatDoYouNeedToDeclareSummary.rateBandContent
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object MultipleSPRListHelper {
@@ -87,7 +87,7 @@ object MultipleSPRListHelper {
     sprList.zipWithIndex.map { case (sprEntry, index) =>
       TableRowViewModel(
         cells = Seq(
-          Text(rateBandContent(sprEntry.rateBand)),
+          Text(rateBandContent(sprEntry.rateBand, "whatDoYouNeedToDeclare.checkYourAnswersLabel.option")),
           Text(messages("multipleSPRList.totalLitres.value", sprEntry.dutyByTaxType.totalLitres)),
           Text(messages("multipleSPRList.pureAlcohol.value", sprEntry.dutyByTaxType.pureAlcohol)),
           Text(messages("multipleSPRList.dutyRate.value", sprEntry.dutyByTaxType.dutyRate))

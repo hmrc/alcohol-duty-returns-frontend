@@ -22,7 +22,7 @@ import pages.returns.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
-import viewmodels.checkAnswers.returns.WhatDoYouNeedToDeclareSummary.rateBandContent
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -42,7 +42,9 @@ object TellUsAboutMultipleSPRRateSummary {
             val taxTypeRowViewModel =
               SummaryListRowViewModel(
                 key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType",
-                value = ValueViewModel(content = rateBandContent(rateBand)),
+                value = ValueViewModel(content =
+                  rateBandContent(rateBand, "whatDoYouNeedToDeclare.checkYourAnswersLabel.option")
+                ),
                 actions = actions("taxType", regime, index)
               )
 

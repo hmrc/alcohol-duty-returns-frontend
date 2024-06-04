@@ -16,32 +16,43 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.AlcoholRegime.Beer
-import models.{CheckMode, UserAnswers}
-import pages.returns.TellUsAboutSingleSPRRatePage
+import models.{AlcoholRegime, RateBand, UserAnswers}
+import pages.returns.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object TellUsAboutSingleSPRRateSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TellUsAboutSingleSPRRatePage).map { answer =>
-      val value = ""
-
-      SummaryListRowViewModel(
-        key = "tellUsAboutSingleSPRRate.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(CheckMode, Beer).url
-          )
-            .withVisuallyHiddenText(messages("tellUsAboutSingleSPRRate.change.hidden"))
+  def rows(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] = {
+    val rows = for {
+      rateBands         <- answers.getByKey(WhatDoYouNeedToDeclarePage, regime)
+      dutyByTaxTypeList <- answers.getByKey(TellUsAboutSingleSPRRatePage, regime)
+    } yield dutyByTaxTypeList.flatMap { dutyByTaxType =>
+      val rateBand = rateBands
+        .find(_.taxType == dutyByTaxType.taxType)
+        .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: ${dutyByTaxType.taxType}"))
+      Seq(
+        SummaryListRowViewModel(
+          key = KeyViewModel(rateBandContent(rateBand, "checkYourAnswers.label")),
+          value = Value()
+        ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
+        SummaryListRowViewModel(
+          key = messages("checkYourAnswersLabel.row.totalLitres"),
+          value = ValueViewModel(s"${dutyByTaxType.totalLitres.toString} ${messages("site.unit.litres")}")
+        ).withCssClass("govuk-summary-list__row--no-border"),
+        SummaryListRowViewModel(
+          key = messages("checkYourAnswersLabel.row.pureAlcohol"),
+          value = ValueViewModel(s"${dutyByTaxType.pureAlcohol.toString} ${messages("site.unit.litres")}")
+        ).withCssClass("govuk-summary-list__row--no-border"),
+        SummaryListRowViewModel(
+          key = messages("checkYourAnswersLabel.row.dutyRate"),
+          value = ValueViewModel(messages("site.currency.2DP", dutyByTaxType.dutyRate))
         )
       )
     }
+    rows.getOrElse(Seq.empty)
+  }
 }

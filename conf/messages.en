@@ -291,7 +291,7 @@ tellUsAboutSingleSPRRate.hint = Give your volume answers in litres, to 2 decimal
 tellUsAboutSingleSPRRate.legend.totalLitres = Total litres
 tellUsAboutSingleSPRRate.legend.pureAlcohol = Litres of pure alcohol
 tellUsAboutSingleSPRRate.legend.dutyRate = Duty rate
-
+tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief (multiple duty rates)
 tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught beer that is eligible for Small Producer Relief do you need to declare?
 tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught beer that is eligible for Small Producer Relief do you need to declare?
 
@@ -400,9 +400,7 @@ tellUsAboutMultipleSPRRate.error.taxType.Cider.required = Select the type of cid
 tellUsAboutMultipleSPRRate.error.taxType.Spirits.required = Select the type of spirits to declare
 tellUsAboutMultipleSPRRate.error.taxType.Wine.required = Select the type of wine to declare
 tellUsAboutMultipleSPRRate.error.taxType.OtherFermentedProduct.required = Select the type of other fermented product to declare
-
-checkYourAnswers.title =  Check your answers
-checkYourAnswers.heading =  Check your answers
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief
 
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType = Description
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label = Total {0}
@@ -411,6 +409,9 @@ tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label = Total pure 
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value = {0} Lpa
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label = Duty rate
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,##0.00} per litre
+
+checkYourAnswers.title =  Check your answers
+checkYourAnswers.heading =  Check your answers
 
 multipleSPRList.title = Small Producer Reliefs to declare
 multipleSPRList.heading = Small Producer Reliefs to declare
@@ -429,6 +430,17 @@ multipleSPRList.action.label = Action
 multipleSPRList.totalLitres.value = {0}l
 multipleSPRList.pureAlcohol.value = {0} Lpa
 multipleSPRList.dutyRate.value = £{0,number,#,##0.00} per litre
+
+checkYourAnswersLabel.row.totalLitres = Total volume
+checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
+checkYourAnswersLabel.row.dutyRate = SPR duty rate
+checkYourAnswersLabel.row.rateBand.abv.interval = Between {0}% and {1}% ABV
+
+checkYourAnswers.label.abv.interval.SmallProducerRelief = Non-draught, between {0}% and {1}% ABV (tax type code {2})
+checkYourAnswers.label.abv.exceeding.max.SmallProducerRelief = Non-draught, exceeding {0}% ABV (tax type code {1})
+checkYourAnswers.label.abv.interval.DraughtAndSmallProducerRelief = Draught, between {0}% and {1}% ABV (tax type code {2})
+checkYourAnswers.label.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught, exceeding {0}% ABV (tax type code {1})
+
 
 deleteMultipleSPREntry.title = Are you sure you want to remove this product?
 deleteMultipleSPREntry.heading = Are you sure you want to remove this product?

@@ -16,28 +16,46 @@
 
 package viewmodels.checkAnswers.returns
 
-import controllers.returns.routes
-import models.AlcoholRegime.Beer
-import models.{CheckMode, UserAnswers}
-import pages.returns.DoYouWantToAddMultipleSPRToListPage
+import models.{AlcoholRegime, UserAnswers}
+import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object MultipleSPRListSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DoYouWantToAddMultipleSPRToListPage).map { answer =>
-      val value = ""
+  def rows(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] = {
+    val rows = for {
+      rateBands         <- answers.getByKey(WhatDoYouNeedToDeclarePage, regime)
+      dutyByTaxTypeList <- answers.getByKey(MultipleSPRListPage, regime)
+    } yield dutyByTaxTypeList
+      .groupBy(_.taxType)
+      .flatMap { case (taxType, dutiesByTaxType) =>
+        val rateBand = rateBands
+          .find(_.taxType == taxType)
+          .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: $taxType"))
 
-      SummaryListRowViewModel(
-        key = "multipleSPRList.checkYourAnswersLabel",
-        value = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.MultipleSPRListController.onPageLoad(Beer).url)
-            .withVisuallyHiddenText(messages("multipleSPRList.change.hidden"))
+        val totalLitres = dutiesByTaxType.map(_.totalLitres).sum
+        val pureAlcohol = dutiesByTaxType.map(_.pureAlcohol).sum
+
+        Seq(
+          SummaryListRowViewModel(
+            key = KeyViewModel(rateBandContent(rateBand, "checkYourAnswers.label")),
+            value = Value()
+          ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
+          SummaryListRowViewModel(
+            key = messages("checkYourAnswersLabel.row.totalLitres"),
+            value = ValueViewModel(s"${totalLitres.toString} ${messages("site.unit.litres")}")
+          ).withCssClass("govuk-summary-list__row--no-border"),
+          SummaryListRowViewModel(
+            key = messages("checkYourAnswersLabel.row.pureAlcohol"),
+            value = ValueViewModel(s"${pureAlcohol.toString} ${messages("site.unit.litres")}")
+          )
         )
-      )
-    }
+      }
+      .toSeq
+    rows.getOrElse(Seq.empty)
+  }
 }

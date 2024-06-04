@@ -38,7 +38,7 @@ object CheckYourAnswersSummaryListHelper {
             whatDoYouNeedToDeclareSummary = WhatDoYouNeedToDeclareSummary.summaryList(regime, whatDoYouNeedToDeclare),
             howMuchDoYouNeedToDeclareSummary =
               HowMuchDoYouNeedToDeclareSummary.summaryList(regime, whatDoYouNeedToDeclare, userAnswers),
-            smallProducerReliefSummary = None
+            smallProducerReliefSummary = SmallProducerReliefSummary.summaryList(regime, userAnswers)
           )
         )
       case _                            => None

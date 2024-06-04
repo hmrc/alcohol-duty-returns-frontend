@@ -23,6 +23,7 @@ import pages.returns.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow, Value}
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -105,7 +106,7 @@ object HowMuchDoYouNeedToDeclareSummary {
         case Some(dutyByTaxType) =>
           Seq(
             SummaryListRowViewModel(
-              key = KeyViewModel(WhatDoYouNeedToDeclareSummary.rateBandContent(rateBand)),
+              key = KeyViewModel(rateBandContent(rateBand, "whatDoYouNeedToDeclare.checkYourAnswersLabel.option")),
               value = Value()
             ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
             SummaryListRowViewModel(

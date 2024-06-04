@@ -20,6 +20,7 @@ import models.{AlcoholByVolume, AlcoholRegime, CheckMode, RateBand, UserAnswers}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow}
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -65,7 +66,9 @@ object WhatDoYouNeedToDeclareSummary {
         HtmlContent(
           "<ul>" +
             rateBands
-              .map(answer => s"<li>${rateBandContent(answer)}</li>")
+              .map(answer =>
+                s"<li>${rateBandContent(answer, "whatDoYouNeedToDeclare.checkYourAnswersLabel.option")}</li>"
+              )
               .mkString("")
             + "</ul>"
         )
@@ -73,21 +76,21 @@ object WhatDoYouNeedToDeclareSummary {
       actions = Seq()
     )
 
-  def rateBandContent(rateBand: RateBand)(implicit messages: Messages): String =
-    rateBand.maxABV match {
-      case AlcoholByVolume.MAX =>
-        messages(
-          s"whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.${rateBand.rateType}",
-          rateBand.minABV.value,
-          rateBand.taxType
-        )
-      case _                   =>
-        messages(
-          s"whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.${rateBand.rateType}",
-          rateBand.minABV.value,
-          rateBand.maxABV.value,
-          rateBand.taxType
-        )
-    }
+//  def rateBandContent(rateBand: RateBand)(implicit messages: Messages): String =
+//    rateBand.maxABV match {
+//      case AlcoholByVolume.MAX =>
+//        messages(
+//          s"whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.${rateBand.rateType}",
+//          rateBand.minABV.value,
+//          rateBand.taxType
+//        )
+//      case _                   =>
+//        messages(
+//          s"whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.${rateBand.rateType}",
+//          rateBand.minABV.value,
+//          rateBand.maxABV.value,
+//          rateBand.taxType
+//        )
+//    }
 
 }
