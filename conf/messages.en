@@ -193,7 +193,11 @@ whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtAnd
 
 howMuchDoYouNeedToDeclare.title = Tell us about the {0} you need to declare
 howMuchDoYouNeedToDeclare.heading = Tell us about the {0} you need to declare
-howMuchDoYouNeedToDeclare.p1 = Tell us about the beer you need to declare and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
+howMuchDoYouNeedToDeclare.p1.Beer = Tell us about the beer you need to declare and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
+howMuchDoYouNeedToDeclare.p1.Cider = Tell us about the cider you need to declare and the pure alcohol in that cider at the following Alcohol by Volume (ABV) strengths.
+howMuchDoYouNeedToDeclare.p1.Wine = Tell us about the wine you need to declare and the pure alcohol in that wine at the following Alcohol by Volume (ABV) strengths.
+howMuchDoYouNeedToDeclare.p1.Spirits = Tell us about the spirits you need to declare and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.
+howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Tell us about the other fermented product you need to declare and the pure alcohol in that other fermented product at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.warning = We will ask about beer eligible for Small Producer Relief on the next page.
 howMuchDoYouNeedToDeclare.hint = Give your answers in litres, to 2 decimal places.
 howMuchDoYouNeedToDeclare.core.heading = How much {0} (standard rate) do you need to declare?
@@ -271,7 +275,7 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total litres
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 
-doYouHaveMultipleSPRDutyRates.title = If you have more than one Small Producer Relief duty rate
+doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?
 doYouHaveMultipleSPRDutyRates.heading = If you have more than one Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.h1 = If you have more than one Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}. This may be for one of the following reasons:
@@ -281,25 +285,40 @@ doYouHaveMultipleSPRDutyRates.l3 = Reason 3
 doYouHaveMultipleSPRDutyRates.p2 = If you do have more than one Small Producer Relief duty rate for the same type of {0} you will need to input them individually. We need to know the type of {0}, the total amount of {0}, the litres of pure alcohol in {0} and the applicable duty rate for each Small Producer Relief rate you have.
 doYouHaveMultipleSPRDutyRates.h2 = Do you have more than one Small Producer Relief duty rate?
 doYouHaveMultipleSPRDutyRates.checkYourAnswersLabel = doYouHaveMultipleSPRDutyRates
-doYouHaveMultipleSPRDutyRates.error.required = Select yes if you have multiple SPR duty rates
+doYouHaveMultipleSPRDutyRates.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare
 doYouHaveMultipleSPRDutyRates.change.hidden = DoYouHaveMultipleSPRDutyRates
 
-tellUsAboutSingleSPRRate.title = Tell us about the beer that is eligible for Small Producer Relief
-tellUsAboutSingleSPRRate.heading = Tell us about the beer that is eligible for Small Producer Relief
-tellUsAboutSingleSPRRate.p1 = Tell us about the beer you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
+tellUsAboutSingleSPRRate.title.Beer = Tell us about the beer that is eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.title.Cider = Tell us about the cider that is eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.title.Wine = Tell us about the wine that is eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.title.Spirits = Tell us about the spirits that are eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.title.OtherFermentedProduct = Tell us about the other fermented product that is eligible for Small Producer Relief
+
+tellUsAboutSingleSPRRate.heading.Beer = Tell us about the beer that is eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.heading.Cider = Tell us about the cider that is eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.heading.Wine = Tell us about the wine that is eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.heading.Spirits = Tell us about the spirits that are eligible for Small Producer Relief
+tellUsAboutSingleSPRRate.heading.OtherFermentedProduct = Tell us about the other fermented product that is eligible for Small Producer Relief
+
+tellUsAboutSingleSPRRate.p1.Beer = Tell us about the beer you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
+tellUsAboutSingleSPRRate.p1.Cider = Tell us about the cider you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that cider at the following Alcohol by Volume (ABV) strengths.
+tellUsAboutSingleSPRRate.p1.Wine = Tell us about the wine you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that wine at the following Alcohol by Volume (ABV) strengths.
+tellUsAboutSingleSPRRate.p1.Spirits = Tell us about the spirits you need to declare that is eligible for Small Producer Relief, and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.
+tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Tell us about the other fermented product you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that other fermented product at the following Alcohol by Volume (ABV) strengths.
+
 tellUsAboutSingleSPRRate.hint = Give your volume answers in litres, to 2 decimal places.
 tellUsAboutSingleSPRRate.legend.totalLitres = Total litres
 tellUsAboutSingleSPRRate.legend.pureAlcohol = Litres of pure alcohol
-tellUsAboutSingleSPRRate.legend.dutyRate = Duty rate
+tellUsAboutSingleSPRRate.legend.dutyRate = Your Small Producer Relief Duty rate for this {0}
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief (multiple duty rates)
-tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught beer that is eligible for Small Producer Relief do you need to declare?
+tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught {0} that is eligible for Small Producer Relief do you need to declare?
 tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught beer that is eligible for Small Producer Relief do you need to declare?
 
 tellUsAboutSPRRate.error.inconsistent = Litres of pure alcohol must be the same or less than the litres of beer
 
 tellUsAboutSPRRate.error.required.Beer.taxType = Select the type of beer to declare
 tellUsAboutSPRRate.error.required.Beer.totalLitres = Enter the total litres of beer
-tellUsAboutSPRRate.error.required.Beer.pureAlcohol = 	Enter the litres of pure alcohol in beer
+tellUsAboutSPRRate.error.required.Beer.pureAlcohol = Enter the litres of pure alcohol in beer
 tellUsAboutSPRRate.error.required.Beer.dutyRate = Enter your Small Producer Relief duty rate
 tellUsAboutSPRRate.error.required.Cider.taxType = Select the type of cider to declare
 tellUsAboutSPRRate.error.required.Cider.totalLitres = Enter the total litres of cider
@@ -382,12 +401,17 @@ tellUsAboutSPRRate.error.decimalPlacesKey.OtherFermentedProduct.totalLitres = Li
 tellUsAboutSPRRate.error.decimalPlacesKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
 tellUsAboutSPRRate.error.decimalPlacesKey.OtherFermentedProduct.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 
-tellUsAboutMultipleSPRRate.title = Tell us about the {0} you need to declare that is eligible for Small Producer Relief
-tellUsAboutMultipleSPRRate.heading = Tell us about the {0} you need to declare that is eligible for Small Producer Relief
+tellUsAboutMultipleSPRRate.title = Tell us about the {0} that is eligible for Small Producer Relief
+tellUsAboutMultipleSPRRate.heading = Tell us about the {0} that is eligible for Small Producer Relief
 tellUsAboutMultipleSPRRate.radioHeading = What type of {0} do you need to declare?
 tellUsAboutMultipleSPRRate.p1 = For each beer you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
-tellUsAboutMultipleSPRRate.warning = If you have more than one duty rate for beer in the same ABV range enter them one at a time.
+tellUsAboutMultipleSPRRate.warning = If you have more than one duty rate for {0} in the same ABV range enter them one at a time.
 tellUsAboutMultipleSPRRate.h2 = What type of {0} do you need to declare?
+tellUsAboutMultipleSPRRate.h3.Beer = How much of this beer do you need to declare?
+tellUsAboutMultipleSPRRate.h3.Cider = How much of this cider do you need to declare?
+tellUsAboutMultipleSPRRate.h3.Spirits = How much of these spirits do you need to declare?
+tellUsAboutMultipleSPRRate.h3.Wine = How much of this wine do you need to declare?
+tellUsAboutMultipleSPRRate.h3.OtherFermentedProduct = How much of this other fermented product do you need to declare?
 tellUsAboutMultipleSPRRate.label.totalLitres = Total litres of this {0}
 tellUsAboutMultipleSPRRate.label.pureAlcohol = Litres of pure alcohol in this {0}
 tellUsAboutMultipleSPRRate.label.dutyRate = Your Small Producer Relief Duty rate for this {0}

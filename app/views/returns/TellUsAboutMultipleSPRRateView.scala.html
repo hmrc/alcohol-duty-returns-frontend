@@ -16,7 +16,7 @@
 
 @import viewmodels.InputWidth._
 @import viewmodels.LegendSize
-@import components.{SectionHeading, PageHeading, Paragraph}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -27,6 +27,7 @@
     govukButton: GovukButton,
     paragraph: Paragraph,
     sectionHeading: SectionHeading,
+    subHeading: SubHeading,
     pageHeading: PageHeading,
     govukWarningText: GovukWarningText
 )
@@ -52,7 +53,7 @@
 
         @govukWarningText(WarningText(
         iconFallbackText = Some("Warning"),
-        content = Text(messages("tellUsAboutMultipleSPRRate.warning"))
+        content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(s"return.regime.$regime")))
         ))
 
         @govukRadios(
@@ -62,6 +63,8 @@
                 items  = rateBandRadioItems
             )
         )
+
+        @subHeading(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"), classes = "govuk-heading-m")
 
         @govukInput(
             InputViewModel(

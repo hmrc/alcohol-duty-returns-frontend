@@ -32,65 +32,83 @@ class ReturnsNavigator @Inject() () {
     case _                              => _ => routes.IndexController.onPageLoad
   }
 
-  private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegime => Call = {
-    case WhatDoYouNeedToDeclarePage        =>
+  private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegime => Boolean => Option[Int] => Call = {
+    case WhatDoYouNeedToDeclarePage =>
       ua =>
         regime =>
-          ua.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-            case Some(rateBands)
-                if rateBands
-                  .map(_.rateType)
-                  .intersect(Set(Core, DraughtRelief))
-                  .nonEmpty =>
-              controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
-            case Some(_) =>
-              controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
-            case _       =>
-              routes.IndexController.onPageLoad
-          }
-    case HowMuchDoYouNeedToDeclarePage     =>
+          _ =>
+            _ =>
+              ua.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+                case Some(rateBands)
+                    if rateBands
+                      .map(_.rateType)
+                      .intersect(Set(Core, DraughtRelief))
+                      .nonEmpty =>
+                  controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
+                case Some(_) =>
+                  controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+                case _       =>
+                  routes.IndexController.onPageLoad
+              }
+
+    case HowMuchDoYouNeedToDeclarePage =>
       ua =>
         regime =>
-          ua.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-            case Some(rateBands)
-                if rateBands
-                  .map(_.rateType)
-                  .intersect(Set(SmallProducerRelief, DraughtAndSmallProducerRelief))
-                  .nonEmpty =>
-              controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
-            case Some(_) =>
-              controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
-            case _       =>
-              routes.IndexController.onPageLoad
-          }
+          _ =>
+            _ =>
+              ua.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+                case Some(rateBands)
+                    if rateBands
+                      .map(_.rateType)
+                      .intersect(Set(SmallProducerRelief, DraughtAndSmallProducerRelief))
+                      .nonEmpty =>
+                  controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+                case Some(_) =>
+                  controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+                case _       =>
+                  routes.IndexController.onPageLoad
+              }
+
     case DoYouHaveMultipleSPRDutyRatesPage =>
       ua =>
         regime =>
-          (ua.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime), ua.getByKey(MultipleSPRListPage, regime)) match {
-            case (Some(true), Some(list)) if list.nonEmpty =>
-              controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
-            case (Some(true), _)                           =>
-              controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime)
-            case (Some(false), _)                          =>
-              controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
-            case _                                         =>
-              routes.IndexController.onPageLoad
-          }
+          _ =>
+            _ =>
+              (ua.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime), ua.getByKey(MultipleSPRListPage, regime)) match {
+                case (Some(true), Some(list)) if list.nonEmpty =>
+                  controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+                case (Some(true), _)                           =>
+                  controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime)
+                case (Some(false), _)                          =>
+                  controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
+                case _                                         =>
+                  routes.IndexController.onPageLoad
+              }
 
     case TellUsAboutMultipleSPRRatePage =>
-      _ => regime => controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime)
+      _ =>
+        regime =>
+          hasValueChanged =>
+            index =>
+              if (hasValueChanged || index.isEmpty) {
+                controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime, index)
+              } else {
+                controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+              }
 
     case DoYouWantToAddMultipleSPRToListPage =>
       ua =>
         regime =>
-          ua.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
-            case Some(true)  =>
-              controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
-            case Some(false) => routes.TaskListController.onPageLoad
-            case _           => routes.IndexController.onPageLoad
-          }
+          _ =>
+            _ =>
+              ua.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
+                case Some(true)  =>
+                  controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
+                case Some(false) => controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+                case _           => routes.IndexController.onPageLoad
+              }
 
-    case _ => _ => _ => routes.IndexController.onPageLoad
+    case _ => _ => _ => _ => _ => routes.IndexController.onPageLoad
   }
 
   private val checkRouteMapReturnJourney: Page => UserAnswers => AlcoholRegime => Boolean => Option[Int] => Call = {
@@ -117,11 +135,11 @@ class ReturnsNavigator @Inject() () {
     mode: Mode,
     userAnswers: UserAnswers,
     regime: AlcoholRegime,
-    hasAnswerChanged: Boolean = true,
+    hasAnswerChanged: Boolean = false,
     index: Option[Int] = None
   ): Call = mode match {
     case NormalMode =>
-      normalRoutesReturnJourney(page)(userAnswers)(regime)
+      normalRoutesReturnJourney(page)(userAnswers)(regime)(hasAnswerChanged)(index) // TODO: Check if this is correct
     case CheckMode  =>
       checkRouteMapReturnJourney(page)(userAnswers)(regime)(hasAnswerChanged)(index)
   }

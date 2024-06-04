@@ -50,11 +50,11 @@
 
         @pageHeading(messages(s"howMuchDoYouNeedToDeclare.heading", messages(s"return.regime.$regime")))
 
-        @paragraph(messages("howMuchDoYouNeedToDeclare.p1"))
+        @paragraph(messages(s"howMuchDoYouNeedToDeclare.p1.$regime"))
 
         @govukWarningText(WarningText(
             iconFallbackText = Some("Warning"),
-            content = Text(messages("howMuchDoYouNeedToDeclare.warning"))
+            content = Text(messages(s"howMuchDoYouNeedToDeclare.warning", messages(s"return.regime.$regime")))
         ))
 
         @paragraph(messages("howMuchDoYouNeedToDeclare.hint"), classes = "govuk-hint")

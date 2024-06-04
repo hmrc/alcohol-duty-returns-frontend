@@ -32,7 +32,7 @@
 
 @(form: Form[_], regime:AlcoholRegime, categories:CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("tellUsAboutSingleSPRRate.title"))) {
+@layout(pageTitle = title(form, messages(s"tellUsAboutSingleSPRRate.title.$regime"))) {
 
     @formHelper(action = controllers.returns.routes.TellUsAboutSingleSPRRateController.onSubmit(mode, regime), Symbol("autoComplete") -> "off") {
 
@@ -45,9 +45,9 @@
             text = messages(s"section.return.$regime")
         )
 
-        @pageHeading(messages("tellUsAboutSingleSPRRate.heading"))
+        @pageHeading(messages(s"tellUsAboutSingleSPRRate.heading.$regime"))
 
-        @paragraph(messages("tellUsAboutSingleSPRRate.p1"))
+        @paragraph(messages(s"tellUsAboutSingleSPRRate.p1.$regime"))
 
         @paragraph(messages("tellUsAboutSingleSPRRate.hint"), classes = "govuk-hint")
 

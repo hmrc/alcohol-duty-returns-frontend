@@ -54,7 +54,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     (identify andThen getData andThen requireData) { implicit request =>
       val result = for {
         rateBands <- request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
-        form      <- prepareForm(request.userAnswers, regime, index)
+        form      <- prepareForm(request.userAnswers, regime, mode, index)
       } yield Ok(view(form, mode, regime, TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands), index))
 
       result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
@@ -115,10 +115,15 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       case None                => false
     }
 
-  private def prepareForm(userAnswers: UserAnswers, regime: AlcoholRegime, index: Option[Int]): Option[Form[_]] =
-    index match {
-      case Some(i) => fillPreviousAnswersWithIndex(userAnswers, regime, i)
-      case None    => fillPreviousAnswers(userAnswers, regime)
+  private def prepareForm(
+    userAnswers: UserAnswers,
+    regime: AlcoholRegime,
+    mode: Mode,
+    index: Option[Int]
+  ): Option[Form[_]] =
+    (mode, index) match {
+      case (NormalMode, Some(i)) => fillPreviousAnswersWithIndex(userAnswers, regime, i)
+      case _                     => fillPreviousAnswers(userAnswers, regime)
     }
 
   private def fillPreviousAnswersWithIndex(answers: UserAnswers, regime: AlcoholRegime, i: Int): Option[Form[_]] =
