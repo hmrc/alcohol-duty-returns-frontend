@@ -23,13 +23,10 @@ import connectors.CacheConnector
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito._
-import org.scalatestplus.mockito.MockitoSugar
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
+class DataRetrievalActionSpec extends SpecBase {
   val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(mockConfig, cacheConnector) {
@@ -63,7 +60,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         val result =
           action
             .callTransform(
-              new IdentifierRequest(
+              IdentifierRequest(
                 FakeRequest().withSession((periodKeySessionKey, periodKey)),
                 appaId,
                 groupId,

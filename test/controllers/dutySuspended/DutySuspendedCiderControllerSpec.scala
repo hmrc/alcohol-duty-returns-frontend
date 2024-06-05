@@ -22,8 +22,6 @@ import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedCider
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -35,7 +33,7 @@ import views.html.dutySuspended.DutySuspendedCiderView
 
 import scala.concurrent.Future
 
-class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
+class DutySuspendedCiderControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

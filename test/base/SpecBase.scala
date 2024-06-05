@@ -20,14 +20,19 @@ import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
 import models.{ReturnId, UserAnswers}
+import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Results
+
+import scala.concurrent.ExecutionContext
 
 trait SpecBase
     extends AnyFreeSpec
@@ -35,6 +40,9 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
+    with Results
+    with GuiceOneAppPerSuite
+    with MockitoSugar
     with IntegrationPatience
     with ModelGenerators {
 
@@ -56,10 +64,11 @@ trait SpecBase
         bind[IdentifierWithoutEnrolmentAction].to[FakeIdentifierWithoutEnrolmentAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
-
-  def FakeRequest()                                          = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
-  def FakeRequest(verb: String, route: String)               =
+  def FakeRequest()                                                                                  = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
+  def FakeRequest(verb: String, route: String)                                                       =
     play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
-  def FakeRequestWithoutSession()                            = play.api.test.FakeRequest()
-  def FakeRequestWithoutSession(verb: String, route: String) = play.api.test.FakeRequest(verb, route)
+  def FakeRequestWithoutSession()                                                                    = play.api.test.FakeRequest()
+  def FakeRequestWithoutSession(verb: String, route: String)                                         = play.api.test.FakeRequest(verb, route)
+
+  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }
