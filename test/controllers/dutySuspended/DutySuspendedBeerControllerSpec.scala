@@ -22,8 +22,6 @@ import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedBeer
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedBeerPage
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -35,7 +33,7 @@ import views.html.dutySuspended.DutySuspendedBeerView
 
 import scala.concurrent.Future
 
-class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
+class DutySuspendedBeerControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -50,7 +48,7 @@ class DutySuspendedBeerControllerSpec extends SpecBase with MockitoSugar {
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       DutySuspendedBeerPage.toString -> Json.obj(
         "totalBeer"         -> validTotalBeer,

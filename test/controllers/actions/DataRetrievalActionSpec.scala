@@ -23,13 +23,10 @@ import connectors.CacheConnector
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito._
-import org.scalatestplus.mockito.MockitoSugar
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
+class DataRetrievalActionSpec extends SpecBase {
   val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(mockConfig, cacheConnector) {
@@ -46,7 +43,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(None)
         val action         = new Harness(cacheConnector)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), appaId, groupId, userAnswersId)).futureValue
+        val result = action.callTransform(IdentifierRequest(FakeRequest(), appaId, groupId, internalId)).futureValue
 
         result.userAnswers must not be defined
       }
@@ -63,11 +60,11 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         val result =
           action
             .callTransform(
-              new IdentifierRequest(
+              IdentifierRequest(
                 FakeRequest().withSession((periodKeySessionKey, periodKey)),
                 appaId,
                 groupId,
-                userAnswersId
+                internalId
               )
             )
             .futureValue
@@ -88,7 +85,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
                 play.api.test.FakeRequest(),
                 appaId,
                 groupId,
-                userAnswersId
+                internalId
               )
             )
             .futureValue

@@ -22,8 +22,6 @@ import forms.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkFormProvider
 import models.NormalMode
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkView
 
 import scala.concurrent.Future
 
-class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase with MockitoSugar {
+class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase {
 
   val formProvider = new DeclareDutySuspendedDeliveriesOutsideUkFormProvider()
   val form         = formProvider()

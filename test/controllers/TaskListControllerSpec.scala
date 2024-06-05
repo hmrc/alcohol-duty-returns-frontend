@@ -33,7 +33,7 @@ class TaskListControllerSpec extends SpecBase {
   private val userAnswers  = UserAnswers(
     ReturnId(appaId, periodKey),
     groupId = groupId,
-    internalId = userAnswersId,
+    internalId = internalId,
     lastUpdated = Instant.now(clock),
     validUntil = Some(validUntil)
   )
