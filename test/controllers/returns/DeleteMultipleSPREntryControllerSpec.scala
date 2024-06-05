@@ -18,16 +18,14 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.DeleteMultipleSPREntryFormProvider
-import models.NormalMode
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.returns.DeleteMultipleSPREntryPage
+import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.NormalMode
 import uk.gov.hmrc.http.HttpResponse
 import views.html.returns.DeleteMultipleSPREntryView
 
@@ -35,13 +33,15 @@ import scala.concurrent.Future
 
 class DeleteMultipleSPREntryControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  val regime = regimeGen.sample.value
+
+  val index = 0
 
   val formProvider = new DeleteMultipleSPREntryFormProvider()
   val form         = formProvider()
 
   lazy val deleteMultipleSPREntryRoute =
-    controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(NormalMode).url
+    controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, index).url
 
   "DeleteMultipleSPREntry Controller" - {
 
@@ -57,7 +57,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[DeleteMultipleSPREntryView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, regime, index)(request, messages(application)).toString
       }
     }
 
@@ -75,20 +75,27 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), regime, index)(request, messages(application)).toString
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to the Multiple SPR list page when valid data is submitted and the list is not empty" in {
 
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
+      val rateBandList    = arbitraryRateBandList(regime).arbitrary.suchThat(_.nonEmpty).sample.value
+      val dutiesByTaxType = rateBandList.map(rateBand => genDutyTaxTypesFromRateBand(rateBand).arbitrary.sample.value)
+
+      val userAnswers = emptyUserAnswers
+        .setByKey(MultipleSPRListPage, regime, dutiesByTaxType)
+        .success
+        .value
+
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -101,7 +108,36 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual controllers.returns.routes.MultipleSPRListController
+          .onPageLoad(regime)
+          .url
+      }
+    }
+
+    "must redirect to the DoYouHaveMultipleSPRDutyRates page when valid data is submitted and the list is empty" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, deleteMultipleSPREntryRoute)
+            .withFormUrlEncodedBody(("deleteMultipleSPREntry-yesNoValue", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController
+          .onPageLoad(NormalMode, regime)
+          .url
       }
     }
 
@@ -121,7 +157,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, regime, index)(request, messages(application)).toString
       }
     }
 

@@ -465,12 +465,16 @@ checkYourAnswers.label.abv.exceeding.max.SmallProducerRelief = Non-draught, exce
 checkYourAnswers.label.abv.interval.DraughtAndSmallProducerRelief = Draught, between {0}% and {1}% ABV (tax type code {2})
 checkYourAnswers.label.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught, exceeding {0}% ABV (tax type code {1})
 
-
 deleteMultipleSPREntry.title = Are you sure you want to remove this product?
 deleteMultipleSPREntry.heading = Are you sure you want to remove this product?
 deleteMultipleSPREntry.hint = This will remove this product and its information from the product list.
 deleteMultipleSPREntry.error.required = Select yes if you want to remove this product
 
+dutyCalculation.title = You will owe £{0,number,#,##0.00}
+dutyCalculation.heading = You will owe £{0,number,#,##0.00}
+dutyCalculation.paragraph = We worked this out by:
+dutyCalculation.list = multiplying the volume of pure alcohol you entered by its duty rate
+dutyCalculation.h2 = Duty due
 
 # old return journey
 

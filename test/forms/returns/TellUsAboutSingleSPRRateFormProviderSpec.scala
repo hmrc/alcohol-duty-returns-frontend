@@ -21,7 +21,9 @@ import play.api.data.FormError
 
 class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new TellUsAboutSingleSPRRateFormProvider()()
+  val regime = regimeGen.sample.value
+
+  val form = new TellUsAboutSingleSPRRateFormProvider()(regime)
 
   ".field1" - {
 

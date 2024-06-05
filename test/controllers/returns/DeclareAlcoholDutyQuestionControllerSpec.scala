@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.CacheConnector
 import forms.returns.DeclareAlcoholDutyQuestionFormProvider
 import models.NormalMode
-import navigation.{FakeProductEntryNavigator, FakeReturnsNavigator, ProductEntryNavigator, ReturnsNavigator}
+import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar

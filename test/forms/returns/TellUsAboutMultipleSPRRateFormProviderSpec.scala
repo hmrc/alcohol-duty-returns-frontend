@@ -21,7 +21,9 @@ import play.api.data.FormError
 
 class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new TellUsAboutMultipleSPRRateFormProvider()()
+  val regime = regimeGen.sample.value
+
+  val form = new TellUsAboutMultipleSPRRateFormProvider()(regime)
 
   ".field1" - {
 

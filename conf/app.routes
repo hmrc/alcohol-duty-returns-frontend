@@ -71,6 +71,8 @@ POST       /multiple-spr-list/:regime                        controllers.returns
 GET        /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onPageLoad(regime:AlcoholRegime, index: Int)
 POST       /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onSubmit(regime:AlcoholRegime, index: Int)
 
+GET        /duty-due/:regime                                  controllers.returns.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
+
 # old journey
 
 GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)

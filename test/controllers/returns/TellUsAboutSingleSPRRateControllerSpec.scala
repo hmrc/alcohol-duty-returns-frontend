@@ -18,19 +18,19 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.TellUsAboutSingleSPRRateFormProvider
-import models.NormalMode
-import models.returns.TellUsAboutSingleSPRRate
+import models.{AlcoholRegime, NormalMode, RateBand}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.TellUsAboutSingleSPRRatePage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.returns.DutyByTaxType
 import uk.gov.hmrc.http.HttpResponse
+import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
 import views.html.returns.TellUsAboutSingleSPRRateView
 
 import scala.concurrent.Future
@@ -39,22 +39,17 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
   def onwardRoute = Call("GET", "/foo")
 
+  val regime: AlcoholRegime = regimeGen.sample.value
+
   val formProvider = new TellUsAboutSingleSPRRateFormProvider()
-  val form         = formProvider()
+  val form         = formProvider(regime)
 
-  lazy val tellUsAboutSingleSPRRateRoute = routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode).url
+  lazy val tellUsAboutSingleSPRRateRoute = routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    userAnswersId,
-    Json.obj(
-      TellUsAboutSingleSPRRatePage.toString -> Json.obj(
-        "field1" -> "value 1",
-        "field2" -> "value 2"
-      )
-    )
-  )
+  val rateBand: RateBand             = rateBandGen(regime).sample.value
+  val dutiesByTaxType: DutyByTaxType = genDutyTaxTypesFromRateBand(rateBand).arbitrary.sample.value
+
+  val userAnswers = emptyUserAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, Seq(dutiesByTaxType)).success.value
 
   "TellUsAboutSingleSPRRate Controller" - {
 
@@ -69,8 +64,13 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
         val result = route(application, request).value
 
+        val categoriesByRateTypeViewModel = CategoriesByRateTypeHelper(regime, Set(rateBand))(messages(application))
+
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, regime, categoriesByRateTypeViewModel, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -83,10 +83,16 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
         val view = application.injector.instanceOf[TellUsAboutSingleSPRRateView]
 
-        val result = route(application, request).value
+        val result                        = route(application, request).value
+        val categoriesByRateTypeViewModel = CategoriesByRateTypeHelper(regime, Set(rateBand))(messages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(TellUsAboutSingleSPRRate("value 1", "value 2")), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(Seq(dutiesByTaxType)),
+          regime,
+          categoriesByRateTypeViewModel,
+          NormalMode
+        )(
           request,
           messages(application)
         ).toString
@@ -134,8 +140,13 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
         val result = route(application, request).value
 
+        val categoriesByRateTypeViewModel = CategoriesByRateTypeHelper(regime, Set(rateBand))(messages(application))
+
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, regime, categoriesByRateTypeViewModel, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
