@@ -21,10 +21,6 @@ import config.FrontendAppConfig
 import controllers.routes
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.mvc.Results.Ok
 import play.api.mvc.{BodyParsers, Request, Result}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
@@ -36,9 +32,8 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{groupIdentifier, internalId
 import uk.gov.hmrc.http.UnauthorizedException
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
-class IdentifierWithoutEnrolmentActionSpec extends SpecBase with GuiceOneAppPerSuite {
+class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
   val loginUrl         = "loginUrl"
   val loginContinueUrl = "continueUrl"
   val testContent      = "Test"
