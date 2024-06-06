@@ -17,7 +17,7 @@
 package controllers.dutySuspended
 
 import controllers.actions._
-import models.{Mode, NormalMode}
+import models.NormalMode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
 import pages.dutySuspended.DutySuspendedGuidancePage
 

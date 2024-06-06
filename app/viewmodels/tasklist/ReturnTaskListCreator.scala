@@ -31,12 +31,12 @@ import javax.inject.Inject
 class ReturnTaskListCreator @Inject() () {
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
-    createTaskListSection: () => Either[Throwable, TaskListItem],
+    createTaskListSection: () => Result[TaskListItem],
     declarationController: Mode => String,
     sectionName: String
   )(implicit
     messages: Messages
-  ): Either[Throwable, Section] = {
+  ): Result[Section] = {
     val eitherTaskListItems = declareQuestionAnswer match {
       case Some(true) =>
         createTaskListSection().map(

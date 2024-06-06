@@ -17,6 +17,10 @@
 package controllers.dutySuspended
 
 import base.SpecBase
+import models.NormalMode
+import navigation.DeclareDutySuspendedDeliveriesNavigator
+import pages.dutySuspended.DutySuspendedGuidancePage
+import play.api.inject.bind
 import play.api.test.Helpers._
 import views.html.dutySuspended.DutySuspendedDeliveriesGuidanceView
 
@@ -25,7 +29,6 @@ class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
   "DutySuspendedDeliveriesGuidance Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -37,6 +40,27 @@ class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
+      }
+    }
+
+    "must return redirect OK to the first appropriate DSD page for a POST" in {
+      val mockNavigator = mock[DeclareDutySuspendedDeliveriesNavigator]
+
+      when(mockNavigator.nextPage(DutySuspendedGuidancePage, NormalMode, emptyUserAnswers))
+        .thenReturn(routes.DutySuspendedBeerController.onPageLoad(NormalMode))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(mockNavigator)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.DutySuspendedDeliveriesGuidanceController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
       }
     }
 
