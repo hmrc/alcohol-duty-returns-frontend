@@ -17,10 +17,9 @@
 package viewmodels.tasklist
 
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
-import models.{AlcoholRegime, CheckMode, NormalMode, RateBand, UserAnswers}
+import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -118,57 +117,29 @@ object ReturnTaskListHelper {
     messages: Messages
   ): Seq[TaskListItem] =
     for (regime <- regimes.sortBy(alcoholRegimeViewOrder.indexOf))
-      yield (userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)) match {
-        case Some(rateBands) if rateBands.nonEmpty =>
-          returnJourneyCompletionTaskListItem(regime, rateBands, userAnswers)
-        case None                                  =>
+      yield (
+        userAnswers.getByKey(AlcoholDutyPage, regime),
+        userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
+      ) match {
+        case (Some(_), _)    =>
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url)
+          )
+        case (None, Some(_)) =>
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+            status = AlcholDutyTaskListItemStatus.inProgress,
+            href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+          )
+        case _               =>
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
             status = AlcholDutyTaskListItemStatus.notStarted,
             href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
           )
       }
-
-  // TODO: refactor this
-  private def returnJourneyCompletionTaskListItem(
-    regime: AlcoholRegime,
-    rateBands: Set[RateBand],
-    userAnswers: UserAnswers
-  )(implicit
-    messages: Messages
-  ): TaskListItem = {
-    val rateTypes = rateBands.map(_.rateType)
-
-    val coreAndDraughtCompleted = if (rateTypes.intersect(Set(Core, DraughtRelief)).nonEmpty) {
-      userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
-        case Some(duties) if duties.nonEmpty => true
-        case None                            => false
-      }
-    } else true
-
-    val sprCompleted =
-      if (
-        rateTypes
-          .intersect(Set(SmallProducerRelief, DraughtAndSmallProducerRelief))
-          .nonEmpty
-      ) false
-      else true // TODO: update when SPR is developed
-
-    if (coreAndDraughtCompleted && sprCompleted) {
-      TaskListItem(
-        title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
-        status = AlcholDutyTaskListItemStatus.completed,
-        href = Some(controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url)
-      )
-    } else {
-      TaskListItem(
-        title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
-        status = AlcholDutyTaskListItemStatus.inProgress,
-        href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
-      )
-    }
-
-  }
 
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val beer           = userAnswers.get(DutySuspendedBeerPage).isDefined

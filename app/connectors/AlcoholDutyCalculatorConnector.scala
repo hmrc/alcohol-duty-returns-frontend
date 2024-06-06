@@ -18,6 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import models.productEntry.TaxDuty
+import models.returns.AlcoholDuty
 import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
@@ -38,6 +39,14 @@ class AlcoholDutyCalculatorConnector @Inject() (
     val body: DutyCalculationRequest = DutyCalculationRequest(abv, volume, rate)
     httpClient.POST[DutyCalculationRequest, TaxDuty](url = config.adrCalculatorCalculateDutyUrl(), body = body)
   }
+
+  def calculateTotalDuty(requestBody: TotalDutyCalculationRequest)(implicit
+    hc: HeaderCarrier
+  ): Future[AlcoholDuty] =
+    httpClient.POST[TotalDutyCalculationRequest, AlcoholDuty](
+      url = config.adrCalculatorCalculateTotalDutyUrl(),
+      body = requestBody
+    )
 
   def rates(
     rateType: RateType,

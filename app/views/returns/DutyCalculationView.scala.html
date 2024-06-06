@@ -19,6 +19,7 @@
 
 @this(
         bulletList:BulletList,
+        formHelper: FormWithCSRF,
         layout: templates.Layout,
         govukButton: GovukButton,
         paragraph: Paragraph,
@@ -35,9 +36,10 @@
 
 @layout(pageTitle = titleNoForm(messages("dutyCalculation.title", dutyDueViewModel.total))) {
 
+  @formHelper(action = controllers.returns.routes.DutyCalculationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
     @sectionHeading(
-        id = "dutyCalculation-section",
-        text = messages(s"section.return.$regime")
+      id = "dutyCalculation-section",
+      text = messages(s"section.return.$regime")
     )
 
     @pageHeading(messages("dutyCalculation.heading", dutyDueViewModel.total))
@@ -69,7 +71,7 @@
     )
 
     @govukButton(
-        ButtonViewModel("continueButton", messages("site.continue"))
+      ButtonViewModel("continueButton", messages("site.continue"))
     )
-
+  }
 }

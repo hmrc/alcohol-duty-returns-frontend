@@ -72,6 +72,7 @@ GET        /delete-multiple-spr-entry/:regime/:index                        cont
 POST       /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onSubmit(regime:AlcoholRegime, index: Int)
 
 GET        /duty-due/:regime                                  controllers.returns.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
+POST       /duty-due/:regime                                  controllers.returns.DutyCalculationController.onSubmit(regime:AlcoholRegime)
 
 # old journey
 

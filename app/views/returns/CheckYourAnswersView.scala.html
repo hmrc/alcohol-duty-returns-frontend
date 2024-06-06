@@ -45,10 +45,10 @@
     @if(summaryList.smallProducerReliefSummary.isDefined) {
       @govukSummaryList(summaryList.smallProducerReliefSummary.get)
     }
-
-
+  
     @govukButton(
-      ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue")).asLink(routes.TaskListController.onPageLoad.url)
+      ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+        .asLink(controllers.returns.routes.DutyCalculationController.onPageLoad(regime).url)
     )
 
 }

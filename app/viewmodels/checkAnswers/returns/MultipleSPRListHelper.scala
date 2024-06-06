@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.returns
 
 import models.{AlcoholRegime, Error, NormalMode, RateBand, UserAnswers}
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
@@ -59,7 +59,7 @@ object MultipleSPRListHelper {
       case Left(e: Error) => Left(e)
     }
 
-  case class SprDutyRateEntry(dutyByTaxType: DutyByTaxType, rateBand: RateBand)
+  case class SprDutyRateEntry(dutyByTaxType: VolumeAndRateByTaxType, rateBand: RateBand)
 
   def getSprListEntries(userAnswers: UserAnswers, regime: AlcoholRegime): Either[Error, Seq[SprDutyRateEntry]] =
     (

@@ -21,11 +21,11 @@ import forms.mappings.Mappings
 import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms._
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 
 class TellUsAboutSingleSPRRateFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime): Form[Seq[DutyByTaxType]] = Form(
+  def apply(regime: AlcoholRegime): Form[Seq[VolumeAndRateByTaxType]] = Form(
     "volumesWithRate" -> seq(
       volumesWithRate(
         s"tellUsAboutSPRRate.error.invalid.$regime",

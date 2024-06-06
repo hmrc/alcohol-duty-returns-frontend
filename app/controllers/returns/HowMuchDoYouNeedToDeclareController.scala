@@ -26,7 +26,7 @@ import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.returns.{DutyByTaxType, VolumesByTaxType}
+import models.returns.{VolumeAndRateByTaxType, VolumesByTaxType}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
 import views.html.returns.HowMuchDoYouNeedToDeclareView
@@ -92,12 +92,12 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
   private def rateBandFromTaxType(
     volumeByTaxType: Seq[VolumesByTaxType],
     rateBands: Set[RateBand]
-  ): Try[Seq[DutyByTaxType]] = Try {
+  ): Try[Seq[VolumeAndRateByTaxType]] = Try {
     volumeByTaxType.map { volumes =>
       val rateBand = rateBands
         .find(_.taxType == volumes.taxType)
         .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: ${volumes.taxType}"))
-      DutyByTaxType(
+      VolumeAndRateByTaxType(
         taxType = volumes.taxType,
         totalLitres = volumes.totalLitres,
         pureAlcohol = volumes.pureAlcohol,

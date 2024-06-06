@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package models.returns
+package pages.returns
 
-import play.api.libs.json._
+import models.AlcoholRegime
+import models.returns.AlcoholDuty
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case class DutyByTaxType(taxType: String, totalLitres: BigDecimal, pureAlcohol: BigDecimal, dutyRate: BigDecimal) {
-  def toVolumes: VolumesByTaxType = VolumesByTaxType(taxType, totalLitres, pureAlcohol)
-}
+object DutyCalculationPage extends QuestionPage[Map[AlcoholRegime, AlcoholDuty]] {
 
-object DutyByTaxType {
-  implicit val format: OFormat[DutyByTaxType] = Json.format[DutyByTaxType]
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "dutyCalculation"
 }

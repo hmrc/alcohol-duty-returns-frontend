@@ -18,7 +18,7 @@ package controllers.returns
 
 import connectors.CacheConnector
 import controllers.actions._
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 import models.{AlcoholRegime, NormalMode, UserAnswers}
 import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage}
 
@@ -71,7 +71,7 @@ class CheckYourAnswersSPRController @Inject() (
   def updateUserAnswer(
     userAnswers: UserAnswers,
     regime: AlcoholRegime,
-    sprRateEntry: DutyByTaxType,
+    sprRateEntry: VolumeAndRateByTaxType,
     index: Option[Int]
   ): Try[UserAnswers] =
     index match {

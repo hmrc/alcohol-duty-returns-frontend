@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.returns
 
 import models.RateType.{Core, DraughtRelief}
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 import models.{AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
 import pages.returns.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
@@ -67,7 +67,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       case _                    => None
     }
 
-  def rows(regime: AlcoholRegime, rateBands: Set[RateBand], dutyByTaxTypes: Seq[DutyByTaxType])(implicit
+  def rows(regime: AlcoholRegime, rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
     val rateBandsByRateType = rateBands
@@ -94,7 +94,7 @@ object HowMuchDoYouNeedToDeclareSummary {
     regime: AlcoholRegime,
     rateType: RateType,
     rateBands: Set[RateBand],
-    dutyByTaxTypes: Seq[DutyByTaxType]
+    dutyByTaxTypes: Seq[VolumeAndRateByTaxType]
   )(implicit messages: Messages): Seq[SummaryListRow] = {
     val headRow = SummaryListRowViewModel(
       key = messages(s"howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.${rateType.toString}"),

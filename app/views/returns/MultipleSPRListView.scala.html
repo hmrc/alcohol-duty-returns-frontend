@@ -35,7 +35,6 @@
 
 @layout(pageTitle = title(form, messages("multipleSPRList.title")), fullWidth = true, showBackLink = false) {
 
-    <div class="">
     @formHelper(action = controllers.returns.routes.MultipleSPRListController.onSubmit(regime), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {

@@ -20,11 +20,11 @@ import javax.inject.Inject
 import forms.mappings.Mappings
 import models.AlcoholRegime
 import play.api.data.Form
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 
 class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime): Form[DutyByTaxType] = Form(
+  def apply(regime: AlcoholRegime): Form[VolumeAndRateByTaxType] = Form(
     "volumesWithRate" ->
       volumesWithRate(
         s"tellUsAboutSPRRate.error.invalid.$regime",

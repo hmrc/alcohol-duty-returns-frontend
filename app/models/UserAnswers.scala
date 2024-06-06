@@ -16,7 +16,7 @@
 
 package models
 
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 import pages.returns.MultipleSPRListPage
 import play.api.libs.json._
 import queries.{Gettable, Settable}
@@ -174,7 +174,7 @@ final case class UserAnswers(
     cleanupPage(page, updatedData)
   }
 
-  def setByKeyAndIndex[A, B](page: Settable[Map[A, Seq[B]]], key: A, value: DutyByTaxType, index: Int) = {
+  def setByKeyAndIndex[A, B](page: Settable[Map[A, Seq[B]]], key: A, value: VolumeAndRateByTaxType, index: Int) = {
     val path        = page.path \ key.toString \ index
     val updatedData = set(path, value)
     cleanupPage(page, updatedData)

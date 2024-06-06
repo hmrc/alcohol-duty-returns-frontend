@@ -17,7 +17,7 @@
 package forms.mappings
 
 import forms.mappings.BigDecimalFieldFormatter.nameToId
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
@@ -30,7 +30,7 @@ class VolumesAndRateFormatter(
   maximumValueKey: String,
   inconsistentKey: String,
   args: Seq[String]
-) extends Formatter[DutyByTaxType]
+) extends Formatter[VolumeAndRateByTaxType]
     with Formatters {
 
   def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
@@ -64,7 +64,7 @@ class VolumesAndRateFormatter(
   def requiredAllFieldsFormError(key: String): FormError =
     FormError(nameToId(key), allRequiredKey, args)
 
-  def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], DutyByTaxType] = {
+  def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
     val taxType     = stringFormatter(s"$requiredKey.taxType").bind(s"$key.taxType", data)
     val totalLitres = volumeFormatter("totalLitres").bind(s"$key.totalLitres", data)
     val pureAlcohol = volumeFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
@@ -72,7 +72,7 @@ class VolumesAndRateFormatter(
 
     (taxType, totalLitres, pureAlcohol, dutyRate) match {
       case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue), Right(dutyRate)) =>
-        Right(DutyByTaxType(taxTypeValue, totalLitresValue, pureAlcoholValue, dutyRate))
+        Right(VolumeAndRateByTaxType(taxTypeValue, totalLitresValue, pureAlcoholValue, dutyRate))
       case (taxTypeError, totalLitresError, pureAlcoholError, dutyRateError)                        =>
         Left(
           taxTypeError.left.getOrElse(Seq.empty)
@@ -83,7 +83,7 @@ class VolumesAndRateFormatter(
     }
   }
 
-  def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], DutyByTaxType] =
+  def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] =
     formatVolume(key, data).fold(
       errors => Left(errors),
       dutyByTaxType =>
@@ -94,7 +94,7 @@ class VolumesAndRateFormatter(
         }
     )
 
-  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], DutyByTaxType] = {
+  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
     val fields = fieldKeys.map { field =>
       field -> data.get(s"$key.$field").filter(_.nonEmpty)
     }.toMap
@@ -116,7 +116,7 @@ class VolumesAndRateFormatter(
     }
   }
 
-  override def unbind(key: String, value: DutyByTaxType): Map[String, String] =
+  override def unbind(key: String, value: VolumeAndRateByTaxType): Map[String, String] =
     Map(
       s"$key.taxType"     -> value.taxType,
       s"$key.totalLitres" -> value.totalLitres.toString,

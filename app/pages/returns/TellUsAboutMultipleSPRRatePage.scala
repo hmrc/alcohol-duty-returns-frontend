@@ -17,11 +17,11 @@
 package pages.returns
 
 import models.AlcoholRegime
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object TellUsAboutMultipleSPRRatePage extends QuestionPage[Map[AlcoholRegime, DutyByTaxType]] {
+case object TellUsAboutMultipleSPRRatePage extends QuestionPage[Map[AlcoholRegime, VolumeAndRateByTaxType]] {
 
   override def path: JsPath = JsPath \ toString
 

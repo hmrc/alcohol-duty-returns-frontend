@@ -26,7 +26,7 @@ import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatD
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -101,7 +101,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     index: Option[Int],
     userAnswers: UserAnswers,
     mode: Mode,
-    value: DutyByTaxType
+    value: VolumeAndRateByTaxType
   ) =
     (mode, index) match {
       case (CheckMode, _)        => true
@@ -109,7 +109,12 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       case _                     => false
     }
 
-  private def hasValueChangedAtIndex(userAnswers: UserAnswers, regime: AlcoholRegime, i: Int, value: DutyByTaxType) =
+  private def hasValueChangedAtIndex(
+    userAnswers: UserAnswers,
+    regime: AlcoholRegime,
+    i: Int,
+    value: VolumeAndRateByTaxType
+  ) =
     userAnswers.getByKeyAndIndex(MultipleSPRListPage, regime, i) match {
       case Some(existingValue) => existingValue != value
       case None                => false

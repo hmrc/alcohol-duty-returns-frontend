@@ -22,7 +22,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 import enumeratum.scalacheck._
-import models.returns.DutyByTaxType
+import models.returns.VolumeAndRateByTaxType
 
 import java.time.YearMonth
 
@@ -303,12 +303,12 @@ trait ModelGenerators {
     Gen.listOfN(10, rateBandGen(regime))
   }
 
-  def genDutyTaxTypesFromRateBand(rateBand: RateBand): Arbitrary[DutyByTaxType] = Arbitrary {
+  def genDutyTaxTypesFromRateBand(rateBand: RateBand): Arbitrary[VolumeAndRateByTaxType] = Arbitrary {
     for {
       totalLitres <- genAlcoholByVolumeValue
       pureAlcohol <- genAlcoholByVolumeValue
       sprDutyRate <- Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_))
-    } yield DutyByTaxType(
+    } yield VolumeAndRateByTaxType(
       rateBand.taxType,
       totalLitres,
       pureAlcohol,
