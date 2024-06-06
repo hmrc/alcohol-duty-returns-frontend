@@ -22,8 +22,6 @@ import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.NormalMode
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.dutySuspended.DeclareDutySuspendedDeliveriesQuestionView
 
 import scala.concurrent.Future
 
-class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase with MockitoSugar {
+class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

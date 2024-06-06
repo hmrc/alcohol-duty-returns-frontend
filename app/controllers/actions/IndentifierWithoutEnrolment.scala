@@ -19,13 +19,13 @@ package controllers.actions
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.routes
-import models.requests.IdentifierRequest
+import models.requests.IdentifierWithoutEnrolmentRequest
 import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.CredentialStrength.strong
-import uk.gov.hmrc.auth.core.{ConfidenceLevel, CredentialStrength, Enrolment, _}
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
@@ -35,36 +35,36 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait IdentifierAction
-    extends ActionBuilder[IdentifierRequest, AnyContent]
-    with ActionFunction[Request, IdentifierRequest]
+trait IdentifierWithoutEnrolmentAction
+    extends ActionBuilder[IdentifierWithoutEnrolmentRequest, AnyContent]
+    with ActionFunction[Request, IdentifierWithoutEnrolmentRequest]
 
-class AuthenticatedIdentifierAction @Inject() (
+class AuthenticatedIdentifierWithoutEnrolmentAction @Inject() (
   override val authConnector: AuthConnector,
   config: FrontendAppConfig,
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
-    extends IdentifierAction
+    extends IdentifierWithoutEnrolmentAction
     with AuthorisedFunctions
     with Logging {
 
   private def predicate: Predicate =
     AuthProviders(GovernmentGateway) and
-      Enrolment(config.enrolmentServiceName) and
       CredentialStrength(strong) and
       Organisation and
       ConfidenceLevel.L50
 
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
+  override def invokeBlock[A](
+    request: Request[A],
+    block: IdentifierWithoutEnrolmentRequest[A] => Future[Result]
+  ): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised(predicate).retrieve(internalId and groupIdentifier and allEnrolments) {
-      case optInternalId ~ optGroupId ~ enrolments =>
-        val internalId: String = getOrElseFailWithUnauthorised(optInternalId, "Unable to retrieve internalId")
-        val groupId: String    = getOrElseFailWithUnauthorised(optGroupId, "Unable to retrieve groupIdentifier")
-        val appaId             = getAppaId(enrolments)
-        block(IdentifierRequest(request, appaId, groupId, internalId))
+    authorised(predicate).retrieve(internalId and groupIdentifier) { case optInternalId ~ optGroupId =>
+      val internalId: String = getOrElseFailWithUnauthorised(optInternalId, "Unable to retrieve internalId")
+      val groupId: String    = getOrElseFailWithUnauthorised(optGroupId, "Unable to retrieve groupIdentifier")
+      block(IdentifierWithoutEnrolmentRequest(request, groupId, internalId))
     } recover {
       case e: AuthorisationException =>
         handleAuthException(e)
@@ -81,16 +81,6 @@ class AuthenticatedIdentifierAction @Inject() (
     case _: UnsupportedCredentialRole   => Redirect(routes.UnauthorisedController.onPageLoad)
     case _: IncorrectCredentialStrength => Redirect(routes.UnauthorisedController.onPageLoad)
     case _                              => Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
-  }
-
-  private def getAppaId(enrolments: Enrolments): String = {
-    val adrEnrolments: Enrolment  = getOrElseFailWithUnauthorised(
-      enrolments.enrolments.find(_.key == config.enrolmentServiceName),
-      s"Unable to retrieve enrolment: ${config.enrolmentServiceName}"
-    )
-    val appaIdOpt: Option[String] =
-      adrEnrolments.getIdentifier(config.enrolmentIdentifierKey).map(_.value)
-    getOrElseFailWithUnauthorised(appaIdOpt, "Unable to retrieve APPAID from enrolments")
   }
 
   def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =

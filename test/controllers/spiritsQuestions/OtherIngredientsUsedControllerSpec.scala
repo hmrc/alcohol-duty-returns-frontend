@@ -20,8 +20,6 @@ import base.SpecBase
 import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
 import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -36,7 +34,7 @@ import views.html.spiritsQuestions.OtherIngredientsUsedView
 
 import scala.concurrent.Future
 
-class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
+class OtherIngredientsUsedControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -52,7 +50,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       OtherIngredientsUsedPage.toString -> Json.obj(
         "otherIngredientsUsedTypes"    -> otherIngredientsTypes,

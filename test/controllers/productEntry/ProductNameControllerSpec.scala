@@ -23,8 +23,6 @@ import models.productEntry.ProductEntry
 import models.NormalMode
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -34,7 +32,7 @@ import views.html.productEntry.ProductNameView
 
 import scala.concurrent.Future
 
-class ProductNameControllerSpec extends SpecBase with MockitoSugar {
+class ProductNameControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

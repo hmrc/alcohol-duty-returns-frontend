@@ -262,7 +262,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         val incompleteDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
           returnId,
           groupId,
-          userAnswersId,
+          internalId,
           Json.obj(
             DutySuspendedBeerPage.toString    -> Json.obj(
               "totalBeer"         -> validTotal,
@@ -314,7 +314,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
           returnId,
           groupId,
-          userAnswersId,
+          internalId,
           Json.obj(
             DutySuspendedBeerPage.toString           -> Json.obj(
               "totalBeer"         -> validTotal,
@@ -459,7 +459,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         def setUserAnswers(pages: Seq[JsObject]): UserAnswers = UserAnswers(
           returnId,
           groupId,
-          userAnswersId,
+          internalId,
           pages.reduce(_ ++ _)
         )
 

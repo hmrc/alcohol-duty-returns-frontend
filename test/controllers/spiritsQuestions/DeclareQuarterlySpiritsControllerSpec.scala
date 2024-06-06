@@ -21,8 +21,6 @@ import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
 import models.NormalMode
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
 import scala.concurrent.Future
 
-class DeclareQuarterlySpiritsControllerSpec extends SpecBase with MockitoSugar {
+class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

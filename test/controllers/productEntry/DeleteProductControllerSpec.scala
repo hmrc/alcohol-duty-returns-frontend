@@ -20,8 +20,6 @@ import base.SpecBase
 import forms.productEntry.DeleteProductFormProvider
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{times, verify, when}
-import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.DeleteProductPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -32,7 +30,7 @@ import views.html.productEntry.DeleteProductView
 
 import scala.concurrent.Future
 
-class DeleteProductControllerSpec extends SpecBase with MockitoSugar {
+class DeleteProductControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
