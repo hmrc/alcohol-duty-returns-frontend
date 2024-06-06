@@ -23,13 +23,11 @@ import viewmodels.ViewPastReturnsHelper
 import views.html.ViewPastReturnsView
 import connectors.AlcoholDutyReturnsConnector
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 
 import java.time.LocalDate
 import scala.concurrent.Future
-class ViewPastReturnsControllerSpec extends SpecBase with MockitoSugar {
+class ViewPastReturnsControllerSpec extends SpecBase {
   val obligationDataSingleOpen      = ObligationData(
     ObligationStatus.Open,
     LocalDate.of(2024, 1, 1),
