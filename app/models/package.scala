@@ -19,6 +19,7 @@ import play.api.libs.json._
 import scala.annotation.nowarn
 
 package object models {
+  type Result[T] = Either[Throwable, T]
 
   implicit class RichJsObject(jsObject: JsObject) {
 

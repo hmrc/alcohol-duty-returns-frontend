@@ -17,50 +17,51 @@
 package controllers
 
 import base.SpecBase
-import models.{ReturnId, UserAnswers}
+import models.UserAnswers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import play.api.inject.bind
 import play.api.test.Helpers._
-import viewmodels.tasklist.AlcoholDutyTaskListHelper
+import services.tasklist.TaskListService
+import viewmodels.tasklist.AlcoholDutyTaskList
 import views.html.TaskListView
 
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
 
 class TaskListControllerSpec extends SpecBase {
-  private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
-  private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
-  private val A_DAY_IN_SEC = 86400
-  private val validUntil   = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
-  private val userAnswers  = UserAnswers(
-    ReturnId(appaId, periodKey),
-    groupId = groupId,
-    internalId = internalId,
-    lastUpdated = Instant.now(clock),
-    validUntil = Some(validUntil)
-  )
-
   "TaskList Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[TaskListService].toInstance(mockTaskListService)
+        )
+        .build()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockTaskListService.getTaskList(any, eqTo(validUntil), eqTo(periodKey))(any)).thenReturn(Right(taskList))
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
 
         val result = route(application, request).value
 
-        val view             = application.injector.instanceOf[TaskListView]
-        val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
+        val view = application.injector.instanceOf[TaskListView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(expectedTaskList)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(taskList)(request, messages(application)).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET when the taskListService returns an error" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[TaskListService].toInstance(mockTaskListService)
+        )
+        .build()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers.copy(validUntil = None))).build()
+      when(mockTaskListService.getTaskList(any, eqTo(validUntil), eqTo(periodKey))(any))
+        .thenReturn(Left(new IllegalArgumentException("error")))
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
@@ -72,8 +73,22 @@ class TaskListControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no period key is found" in {
+    "must redirect to Journey Recovery for a GET if no validUntil is found" in new SetUp {
+      override def userAnswers: UserAnswers = super.userAnswers.copy(validUntil = None)
 
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no period key is found" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -86,9 +101,10 @@ class TaskListControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data or period key is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data nor period key is found" in new SetUp {
+      override def userAnswers: UserAnswers = super.userAnswers.copy(validUntil = None)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers.copy(validUntil = None))).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequestWithoutSession(GET, routes.TaskListController.onPageLoad.url)
@@ -99,5 +115,18 @@ class TaskListControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+  }
+
+  class SetUp {
+    private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+    private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
+    private val A_DAY_IN_SEC = 86400
+    val validUntil: Instant  = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
+
+    def userAnswers: UserAnswers = emptyUserAnswers.copy(validUntil = Some(validUntil))
+
+    val taskList = AlcoholDutyTaskList(Seq.empty, "")
+
+    val mockTaskListService = mock[TaskListService]
   }
 }

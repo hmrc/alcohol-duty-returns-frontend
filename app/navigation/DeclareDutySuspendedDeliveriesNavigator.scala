@@ -20,26 +20,27 @@ import controllers._
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models._
 import pages._
+import play.api.Logging
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator {
+class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator with Logging {
 
   override val normalRoutes: Page => UserAnswers => Call = {
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage  =>
       declareDutySuspendedDeliveriesQuestionPageRoute
-    case pages.dutySuspended.DutySuspendedGuidancePage  =>
+    case pages.dutySuspended.DutySuspendedGuidancePage                   =>
       userAnswers => nextRegimePage(userAnswers, None, NormalMode)
     case pages.dutySuspended.DutySuspendedBeerPage                       =>
-      _ => controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)
+      userAnswers => nextRegimePage(userAnswers, Some(Beer), NormalMode)
     case pages.dutySuspended.DutySuspendedCiderPage                      =>
-      _ => controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)
+      userAnswers => nextRegimePage(userAnswers, Some(Cider), NormalMode)
     case pages.dutySuspended.DutySuspendedWinePage                       =>
-      _ => controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)
+      userAnswers => nextRegimePage(userAnswers, Some(Wine), NormalMode)
     case pages.dutySuspended.DutySuspendedSpiritsPage                    =>
-      _ => controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
+      userAnswers => nextRegimePage(userAnswers, Some(Spirits), NormalMode)
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
     case pages.dutySuspended.DutySuspendedDeliveriesPage                 =>
@@ -64,27 +65,23 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
 
-  private val nextPageMapping: Map[Option[AlcoholRegime], Seq[(Set[AlcoholRegime], Mode => Call)]] = Map(
-    None -> Seq((Set(Beer), controllers.dutySuspended.routes.DutySuspendedBeerController.onPageLoad),
-                (Set(Cider), controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad),
-                (Set(Wine), controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad),
-                (Set(Spirits), controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad),
-                (Set(OtherFermentedProduct), controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad)),
-    Some(Beer) -> Seq((Set(Cider), controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad),
-                      (Set(Wine), controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad),
-                      (Set(Spirits), controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad),
-                      (Set(OtherFermentedProduct), controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad)),
-    Some(Cider) -> Seq((Set(Wine), controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad),
-                       (Set(Spirits), controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad),
-                       (Set(Cider), controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad)),
-    Some(Wine) -> Seq((Set(Spirits), controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad),
-                       (Set(Wine), controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad)),
-    Some(Spirits) -> Seq((Set(Cider, Wine, OtherFermentedProduct), controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad))
+  private val pageMapping: Map[AlcoholRegime, Mode => Call] = Map(
+    Beer                  -> controllers.dutySuspended.routes.DutySuspendedBeerController.onPageLoad,
+    Cider                 -> controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad,
+    Wine                  -> controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad,
+    Spirits               -> controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad,
+    OtherFermentedProduct -> controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad
   )
 
-  private def nextRegimePage(regimes: Set[AlcoholRegime], lastPageRegime: Option[AlcoholRegime], mode: Mode): Call =
-    nextPageMapping.get(lastPageRegime)
-      .flatMap(_.find { case (regimesPossible, _) => (regimesPossible & regimes).nonEmpty} )
-      .map { case (_, pageLoadFunc ) => pageLoadFunc(mode) }
-      .getOrElse(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad())
+  private def nextRegimePage(userAnswers: UserAnswers, lastPageRegime: Option[AlcoholRegime], mode: Mode): Call =
+    AlcoholRegimes
+      .fromUserAnswers(userAnswers)
+      .fold {
+        logger.warn("Unable to get alcoholRegime from userAnswers")
+        controllers.routes.JourneyRecoveryController.onPageLoad()
+      }(
+        _.nextRegime(lastPageRegime)
+          .flatMap(pageMapping.get(_).map(_(mode)))
+          .getOrElse(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad())
+      )
 }

@@ -16,7 +16,7 @@
 
 package viewmodels.tasklist
 
-import models.{CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import models.{AlcoholRegimes, CheckMode, Mode, NormalMode, Result, SpiritType, UserAnswers}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.{DeclareAlcoholDutyQuestionPage, ProductEntryListPage, ProductListPage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
@@ -26,50 +26,60 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
 import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 
-object ReturnTaskListHelper {
+import javax.inject.Inject
+
+class ReturnTaskListCreator @Inject() () {
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
-    createTaskListSection: () => TaskListItem,
+    createTaskListSection: () => Either[Throwable, TaskListItem],
     declarationController: Mode => String,
     sectionName: String
   )(implicit
     messages: Messages
-  ): Section = {
-    val taskListItems = declareQuestionAnswer match {
+  ): Either[Throwable, Section] = {
+    val eitherTaskListItems = declareQuestionAnswer match {
       case Some(true) =>
-        Seq(
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.yes"))),
-            status = AlcholDutyTaskListItemStatus.completed,
-            href = Some(declarationController(CheckMode))
-          ),
-          createTaskListSection()
+        createTaskListSection().map(
+          Seq(
+            TaskListItem(
+              title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.yes"))),
+              status = AlcholDutyTaskListItemStatus.completed,
+              href = Some(declarationController(CheckMode))
+            ),
+            _
+          )
         )
 
       case Some(false) =>
-        Seq(
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.no"))),
-            status = AlcholDutyTaskListItemStatus.completed,
-            href = Some(declarationController(CheckMode))
+        Right(
+          Seq(
+            TaskListItem(
+              title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.no"))),
+              status = AlcholDutyTaskListItemStatus.completed,
+              href = Some(declarationController(CheckMode))
+            )
           )
         )
 
       case None =>
-        Seq(
-          TaskListItem(
-            title =
-              TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.notStarted"))),
-            status = AlcholDutyTaskListItemStatus.notStarted,
-            href = Some(declarationController(NormalMode))
+        Right(
+          Seq(
+            TaskListItem(
+              title =
+                TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.notStarted"))),
+              status = AlcholDutyTaskListItemStatus.notStarted,
+              href = Some(declarationController(NormalMode))
+            )
           )
         )
     }
 
-    Section(
-      title = messages(s"taskList.section.$sectionName.heading"),
-      taskList = TaskList(items = taskListItems),
-      statusCompleted = AlcholDutyTaskListItemStatus.completed
+    eitherTaskListItems.map(taskListItems =>
+      Section(
+        title = messages(s"taskList.section.$sectionName.heading"),
+        taskList = TaskList(items = taskListItems),
+        statusCompleted = AlcholDutyTaskListItemStatus.completed
+      )
     )
   }
 
@@ -101,7 +111,7 @@ object ReturnTaskListHelper {
         )
     }
 
-  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
+  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): Result[TaskListItem] = {
     val getDeclarationState = () =>
       (userAnswers.get(ProductListPage), userAnswers.get(ProductEntryListPage)) match {
         case (Some(false), Some(list)) if list.nonEmpty => Completed
@@ -109,44 +119,58 @@ object ReturnTaskListHelper {
         case _                                          => NotStarted
       }
 
-    createDeclarationTask(
-      getDeclarationState,
-      "returns.products",
-      controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url,
-      controllers.productEntry.routes.ProductListController.onPageLoad().url,
-      controllers.productEntry.routes.ProductListController.onPageLoad().url
+    Right(
+      createDeclarationTask(
+        getDeclarationState,
+        "returns.products",
+        controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url,
+        controllers.productEntry.routes.ProductListController.onPageLoad().url,
+        controllers.productEntry.routes.ProductListController.onPageLoad().url
+      )
     )
   }
 
-  private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
-    val getDeclarationState = () => {
-      val beer           = userAnswers.get(DutySuspendedBeerPage).isDefined
-      val cider          = userAnswers.get(DutySuspendedCiderPage).isDefined
-      val wine           = userAnswers.get(DutySuspendedWinePage).isDefined
-      val spirits        = userAnswers.get(DutySuspendedSpiritsPage).isDefined
-      val otherFermented = userAnswers.get(DutySuspendedOtherFermentedPage).isDefined
+  private def returnDSDJourneyTaskListItem(
+    userAnswers: UserAnswers
+  )(implicit messages: Messages): Result[TaskListItem] =
+    AlcoholRegimes
+      .fromUserAnswers(userAnswers)
+      .fold[Result[TaskListItem]](Left(new IllegalStateException("Unable to get regimes"))) { regimes =>
+        val getDeclarationState = () => {
+          val maybeBeer           = if (regimes.hasBeer()) Some(userAnswers.get(DutySuspendedBeerPage).isDefined) else None
+          val maybeCider          = if (regimes.hasCider()) Some(userAnswers.get(DutySuspendedCiderPage).isDefined) else None
+          val maybeWine           = if (regimes.hasWine()) Some(userAnswers.get(DutySuspendedWinePage).isDefined) else None
+          val maybeSpirits        =
+            if (regimes.hasSpirits()) Some(userAnswers.get(DutySuspendedSpiritsPage).isDefined) else None
+          val maybeOtherFermented =
+            if (regimes.hasOtherFermentedProduct()) Some(userAnswers.get(DutySuspendedOtherFermentedPage).isDefined)
+            else None
 
-      val pagesCompleted = Seq(beer, cider, wine, spirits, otherFermented)
+          val pagesCompleted = Seq(maybeBeer, maybeCider, maybeWine, maybeSpirits, maybeOtherFermented).flatten
 
-      if (pagesCompleted.forall(_ == false)) {
-        NotStarted
-      } else if (pagesCompleted.forall(_ == true)) {
-        Completed
-      } else {
-        InProgress
+          if (pagesCompleted.forall(_ == false)) {
+            NotStarted
+          } else if (pagesCompleted.forall(_ == true)) {
+            Completed
+          } else {
+            InProgress
+          }
+        }
+
+        Right(
+          createDeclarationTask(
+            getDeclarationState,
+            "dutySuspended",
+            controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
+            controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+          )
+        )
       }
-    }
 
-    createDeclarationTask(
-      getDeclarationState,
-      "dutySuspended",
-      controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
-      controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
-      controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-    )
-  }
-
-  private def returnQSJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
+  private def returnQSJourneyTaskListItem(
+    userAnswers: UserAnswers
+  )(implicit messages: Messages): Result[TaskListItem] = {
     val getDeclarationState = () => {
       val declareSpiritsTotal = userAnswers.get(DeclareSpiritsTotalPage).isDefined
       val whisky              = userAnswers.get(WhiskyPage).isDefined
@@ -178,16 +202,18 @@ object ReturnTaskListHelper {
         InProgress
     }
 
-    createDeclarationTask(
-      getDeclarationState,
-      "spirits",
-      controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
-      controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
-      controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
+    Right(
+      createDeclarationTask(
+        getDeclarationState,
+        "spirits",
+        controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
+        controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
+        controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
+      )
     )
   }
 
-  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
+  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Result[Section] =
     createSection(
       userAnswers.get(DeclareAlcoholDutyQuestionPage),
       () => returnJourneyTaskListItem(userAnswers),
@@ -195,7 +221,7 @@ object ReturnTaskListHelper {
       sectionName = "returns"
     )
 
-  def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
+  def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Result[Section] =
     createSection(
       userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
       () => returnDSDJourneyTaskListItem(userAnswers),
@@ -203,7 +229,7 @@ object ReturnTaskListHelper {
       sectionName = "dutySuspended"
     )
 
-  def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
+  def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Result[Section] =
     createSection(
       userAnswers.get(DeclareQuarterlySpiritsPage),
       () => returnQSJourneyTaskListItem(userAnswers),

@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-package pages.dutySuspended
+package models
 
-import pages.Page
+import enumeratum.{Enum, EnumEntry}
 
-case object DutySuspendedGuidancePage extends Page
+sealed trait TaskListStatus extends EnumEntry
+
+object TaskListStatus extends Enum[TaskListStatus] {
+  val values = findValues
+
+  case object Completed extends TaskListStatus
+  case object Incomplete extends TaskListStatus
+}

@@ -18,13 +18,12 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedWineFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedWine
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.dutySuspended.DutySuspendedWinePage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -34,8 +33,7 @@ import views.html.dutySuspended.DutySuspendedWineView
 import scala.concurrent.Future
 
 class DutySuspendedWineControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
+  val onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DutySuspendedWineFormProvider()
   val form         = formProvider()
@@ -44,23 +42,13 @@ class DutySuspendedWineControllerSpec extends SpecBase {
   val validTotalWine              = 23.45
   val validPureAlcoholInWine      = 16.46
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
-    Json.obj(
-      DutySuspendedWinePage.toString -> Json.obj(
-        "totalWine"         -> validTotalWine,
-        "pureAlcoholInWine" -> validPureAlcoholInWine
-      )
-    )
-  )
+  val userAnswers =
+    userAnswersWithWine.set(DutySuspendedWinePage, DutySuspendedWine(validTotalWine, validPureAlcoholInWine)).get
 
   "DutySuspendedWine Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithWine)).build()
 
       running(application) {
         val request = FakeRequest(GET, dutySuspendedWineRoute)
@@ -75,7 +63,6 @@ class DutySuspendedWineControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -94,13 +81,12 @@ class DutySuspendedWineControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithWine))
           .overrides(
             bind[DeclareDutySuspendedDeliveriesNavigator]
               .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
@@ -124,8 +110,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithWine)).build()
 
       running(application) {
         val request =
@@ -144,7 +129,6 @@ class DutySuspendedWineControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -157,8 +141,20 @@ class DutySuspendedWineControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if not authorised for Wine" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutWine)).build()
 
+      running(application) {
+        val request = FakeRequest(GET, dutySuspendedWineRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -173,6 +169,24 @@ class DutySuspendedWineControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if not authorised for Wine" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutWine)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, dutySuspendedWineRoute)
+            .withFormUrlEncodedBody(
+              ("totalWine", validTotalWine.toString),
+              ("pureAlcoholInWine", validPureAlcoholInWine.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
       }
     }
   }

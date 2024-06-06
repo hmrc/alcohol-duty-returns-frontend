@@ -173,7 +173,7 @@ class TaxTypeController @Inject() (
                                   case Array(code: String, regime: String) => Future.successful(Array(code, regime))
                                   case _                                   => Future.failed(new RuntimeException("Couldn't parse tax type code"))
                                 }
-      regime: AlcoholRegime  <- AlcoholRegime.fromString(regimeStr) match {
+      regime: AlcoholRegime  <- AlcoholRegime.withNameOption(regimeStr) match {
                                   case Some(regime) => Future.successful(regime)
                                   case _            => Future.failed(new RuntimeException("Couldn't parse alcohol regime"))
                                 }

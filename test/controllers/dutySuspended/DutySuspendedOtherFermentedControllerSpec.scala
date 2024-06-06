@@ -18,13 +18,12 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedOtherFermented
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.dutySuspended.DutySuspendedOtherFermentedPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -34,8 +33,7 @@ import views.html.dutySuspended.DutySuspendedOtherFermentedView
 import scala.concurrent.Future
 
 class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
+  val onwardRoute = Call("GET", "/foo")
 
   val formProvider                     = new DutySuspendedOtherFermentedFormProvider()
   val form                             = formProvider()
@@ -44,23 +42,17 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
   lazy val dutySuspendedOtherFermentedRoute = routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
-    Json.obj(
-      DutySuspendedOtherFermentedPage.toString -> Json.obj(
-        "totalOtherFermented"         -> validTotalOtherFermented,
-        "pureAlcoholInOtherFermented" -> validPureAlcoholInOtherFermented
-      )
+  val userAnswers = userAnswersWithOtherFermentedProduct
+    .set(
+      DutySuspendedOtherFermentedPage,
+      DutySuspendedOtherFermented(validTotalOtherFermented, validPureAlcoholInOtherFermented)
     )
-  )
+    .get
 
   "DutySuspendedOtherFermented Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithOtherFermentedProduct)).build()
 
       running(application) {
         val request = FakeRequest(GET, dutySuspendedOtherFermentedRoute)
@@ -75,7 +67,6 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -94,13 +85,12 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithOtherFermentedProduct))
           .overrides(
             bind[DeclareDutySuspendedDeliveriesNavigator]
               .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
@@ -124,8 +114,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithOtherFermentedProduct)).build()
 
       running(application) {
         val request =
@@ -144,7 +133,6 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -157,8 +145,20 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if not authorised for Cider, Wine or OtherFermentedProduct" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutOtherFermentedProduct)).build()
 
+      running(application) {
+        val request = FakeRequest(GET, dutySuspendedOtherFermentedRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -170,6 +170,21 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if not authorised for Cider, Wine or OtherFermentedProduct" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutOtherFermentedProduct)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, dutySuspendedOtherFermentedRoute)
+            .withFormUrlEncodedBody(("totalOtherFermented", "value 1"), ("pureAlcoholInOtherFermented", "value 2"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
       }
     }
   }

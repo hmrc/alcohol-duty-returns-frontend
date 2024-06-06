@@ -21,8 +21,8 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierA
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.tasklist.TaskListService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView
 
 import javax.inject.Inject
@@ -32,7 +32,8 @@ class TaskListController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  view: TaskListView
+  view: TaskListView,
+  taskListService: TaskListService
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
@@ -40,7 +41,15 @@ class TaskListController @Inject() (
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     (request.userAnswers.validUntil, request.session.get(periodKeySessionKey)) match {
       case (Some(validUntil), Some(periodKey)) =>
-        Ok(view(AlcoholDutyTaskListHelper.getTaskList(request.userAnswers, validUntil, periodKey)))
+        taskListService
+          .getTaskList(request.userAnswers, validUntil, periodKey)
+          .fold(
+            e => {
+              logger.warn(s"Error while getting taskList: ${e.getMessage}")
+              Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            },
+            taskList => Ok(view(taskList))
+          )
       case (None, Some(_))                     =>
         logger.warn("'Valid until' property not defined in User Answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())

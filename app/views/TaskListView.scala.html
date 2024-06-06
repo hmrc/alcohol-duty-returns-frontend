@@ -24,15 +24,15 @@
         govukTaskList: GovukTaskList
 )
 
-@(taskList:AlcoholDutyTaskList)(implicit request: Request[_], messages: Messages)
+@(taskList: AlcoholDutyTaskList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("taskList.title"))) {
 
   @heading(messages("taskList.title"))
 
-  @subheading(text = messages(s"taskList.status.${taskList.status}"), classes = "govuk-heading-s")
+  @subheading(text = messages(s"taskList.status.${taskList.status.entryName.toLowerCase}"), classes = "govuk-heading-s")
 
-  @paragraph(messages("taskList.section.completed", taskList.completedTask, taskList.totalTask))
+  @paragraph(messages("taskList.section.completed", taskList.completedTasks, taskList.totalTasks))
 
   @paragraph(messages("taskList.expiry.date", taskList.sessionExpiryDate))
 

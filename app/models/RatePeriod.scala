@@ -54,46 +54,11 @@ object RateType {
     override def writes(o: RateType): JsValue = JsString(o.toString)
   }
 }
+
 case class RateTypeResponse(rateType: RateType)
 
 object RateTypeResponse {
   implicit val format: Format[RateTypeResponse] = Json.format[RateTypeResponse]
-}
-sealed trait AlcoholRegime
-
-object AlcoholRegime {
-  case object Beer extends AlcoholRegime
-  case object Cider extends AlcoholRegime
-  case object Wine extends AlcoholRegime
-  case object Spirits extends AlcoholRegime
-  case object OtherFermentedProduct extends AlcoholRegime
-
-  implicit val format: Format[AlcoholRegime] = new Format[AlcoholRegime] {
-    override def reads(json: JsValue): JsResult[AlcoholRegime] = json.validate[String] match {
-      case JsSuccess(value, _) =>
-        value match {
-          case "Beer"                  => JsSuccess(Beer)
-          case "Cider"                 => JsSuccess(Cider)
-          case "Wine"                  => JsSuccess(Wine)
-          case "Spirits"               => JsSuccess(Spirits)
-          case "OtherFermentedProduct" => JsSuccess(OtherFermentedProduct)
-          case s                       => JsError(s"$s is not a valid AlcoholRegime")
-        }
-      case e: JsError          => e
-    }
-
-    override def writes(o: AlcoholRegime): JsValue = JsString(o.toString)
-  }
-
-  def fromString(str: String): Option[AlcoholRegime] =
-    str match {
-      case "Beer"                  => Some(Beer)
-      case "Cider"                 => Some(Cider)
-      case "Wine"                  => Some(Wine)
-      case "Spirits"               => Some(Spirits)
-      case "OtherFermentedProduct" => Some(OtherFermentedProduct)
-      case _                       => None
-    }
 }
 
 case class AlcoholByVolume private (value: BigDecimal) {

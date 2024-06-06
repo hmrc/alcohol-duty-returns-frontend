@@ -18,6 +18,7 @@
 
 @this(
         layout: templates.Layout,
+        formHelper: FormWithCSRF,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
@@ -28,28 +29,29 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("dutySuspendedDeliveriesGuidance.title"))) {
+    @formHelper(action = controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onSubmit(), Symbol("autoComplete") -> "off") {
 
-    @sectionHeading(
-        id = "duty-suspended-deliveries-guidance-section",
-        text = messages("section.alcoholDutyReturn"),
-    )
+        @sectionHeading(
+            id = "duty-suspended-deliveries-guidance-section",
+            text = messages("section.alcoholDutyReturn"),
+        )
 
-    @pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
+        @pageHeading(messages("dutySuspendedDeliveriesGuidance.heading"))
 
-    @paragraph(messages("dutySuspendedDeliveriesGuidance.p1"))
+        @paragraph(messages("dutySuspendedDeliveriesGuidance.p1"))
 
-    @paragraph(messages("dutySuspendedDeliveriesGuidance.p2"))
+        @paragraph(messages("dutySuspendedDeliveriesGuidance.p2"))
 
-    @numberedList(Seq(
-        messages("dutySuspendedDeliveriesGuidance.para.list.1"),
-        messages("dutySuspendedDeliveriesGuidance.para.list.2"),
-        messages("dutySuspendedDeliveriesGuidance.para.list.3")
-    ))
+        @numberedList(Seq(
+            messages("dutySuspendedDeliveriesGuidance.para.list.1"),
+            messages("dutySuspendedDeliveriesGuidance.para.list.2"),
+            messages("dutySuspendedDeliveriesGuidance.para.list.3")
+        ))
 
-    @paragraph(messages("dutySuspendedDeliveriesGuidance.p3"))
+        @paragraph(messages("dutySuspendedDeliveriesGuidance.p3"))
 
-    @govukButton(
-        ButtonViewModel("continueButton", messages("site.continue"))
-        .asLink(controllers.dutySuspended.routes.DutySuspendedBeerController.onPageLoad(NormalMode).url)
-    )
+        @govukButton(
+            ButtonViewModel("continueButton", messages("site.continue"))
+        )
+    }
 }

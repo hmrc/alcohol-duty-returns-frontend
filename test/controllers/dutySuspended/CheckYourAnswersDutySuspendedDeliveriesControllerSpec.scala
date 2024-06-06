@@ -28,33 +28,46 @@ import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase with SummaryListFluency {
   val validTotal                                              = 42.34
   val validPureAlcohol                                        = 34.23
-  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
-    Json.obj(
-      DutySuspendedBeerPage.toString           -> Json.obj(
-        "totalBeer"         -> validTotal,
-        "pureAlcoholInBeer" -> validPureAlcohol
+  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers =
+    Seq(
+      (
+        DutySuspendedBeerPage.path,
+        Json.obj(
+          "totalBeer"         -> validTotal,
+          "pureAlcoholInBeer" -> validPureAlcohol
+        )
       ),
-      DutySuspendedCiderPage.toString          -> Json.obj(
-        "totalCider"         -> validTotal,
-        "pureAlcoholInCider" -> validPureAlcohol
+      (
+        DutySuspendedCiderPage.path,
+        Json.obj(
+          "totalCider"         -> validTotal,
+          "pureAlcoholInCider" -> validPureAlcohol
+        )
       ),
-      DutySuspendedSpiritsPage.toString        -> Json.obj(
-        "totalSpirits"         -> validTotal,
-        "pureAlcoholInSpirits" -> validPureAlcohol
+      (
+        DutySuspendedWinePage.path,
+        Json.obj(
+          "totalWine"         -> validTotal,
+          "pureAlcoholInWine" -> validPureAlcohol
+        )
       ),
-      DutySuspendedWinePage.toString           -> Json.obj(
-        "totalWine"         -> validTotal,
-        "pureAlcoholInWine" -> validPureAlcohol
+      (
+        DutySuspendedSpiritsPage.path,
+        Json.obj(
+          "totalSpirits"         -> validTotal,
+          "pureAlcoholInSpirits" -> validPureAlcohol
+        )
       ),
-      DutySuspendedOtherFermentedPage.toString -> Json.obj(
-        "totalOtherFermented"         -> validTotal,
-        "pureAlcoholInOtherFermented" -> validPureAlcohol
+      (
+        DutySuspendedOtherFermentedPage.path,
+        Json.obj(
+          "totalOtherFermented"         -> validTotal,
+          "pureAlcoholInOtherFermented" -> validPureAlcohol
+        )
       )
-    )
-  )
+    ).foldLeft(userAnswersWithAllRegimes) { case (userAnswers, (path, obj)) =>
+      userAnswers.copy(data = userAnswers.set(path, obj).get)
+    }
 
   "Check Your Answers Duty Suspended Deliveries Controller" - {
 
@@ -83,16 +96,16 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
 
     "must return OK and the correct view for a GET if all relevant regime questions are answered" in {
 
-      val beerScreenAnswer: UserAnswers = UserAnswers(
-        returnId,
-        groupId,
-        internalId,
-        Json.obj(
-          DutySuspendedBeerPage.toString -> Json.obj(
-            "totalBeer"         -> validTotal,
-            "pureAlcoholInBeer" -> validPureAlcohol
+      val beerScreenAnswer: UserAnswers = userAnswersWithBeer.copy(data =
+        userAnswersWithBeer
+          .set(
+            DutySuspendedBeerPage.path,
+            Json.obj(
+              "totalBeer"         -> validTotal,
+              "pureAlcoholInBeer" -> validPureAlcohol
+            )
           )
-        )
+          .get
       )
 
       val application = applicationBuilder(userAnswers = Some(beerScreenAnswer)).build()
