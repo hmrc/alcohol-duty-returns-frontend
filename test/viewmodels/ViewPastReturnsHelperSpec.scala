@@ -28,45 +28,37 @@ import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import java.time.LocalDate
 
 class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
-  val application: Application        = applicationBuilder().build()
-  implicit val messages: Messages     = messages(application)
-  val obligationDataSingleOpen        = ObligationData(
+  val application: Application      = applicationBuilder().build()
+  implicit val messages: Messages   = messages(application)
+  val obligationDataSingleOpen      = ObligationData(
     ObligationStatus.Open,
     LocalDate.of(2024, 5, 1),
     LocalDate.of(2024, 5, 31),
-    LocalDate.of(2030, 5, 30),
-    periodKey
+    LocalDate.of(2099, 5, 30),
+    "99AE"
   )
-  val obligationDataSingleFulfilled   = ObligationData(
+  val obligationDataSingleFulfilled = ObligationData(
     ObligationStatus.Fulfilled,
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    periodKey
+    LocalDate.of(2023, 8, 1),
+    LocalDate.of(2023, 8, 1),
+    LocalDate.of(2023, 8, 1),
+    "24AH"
   )
-  val invalidPeriodKeyData            = ObligationData(
-    ObligationStatus.Fulfilled,
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    invalidPeriodKeyGen.sample.get
+  val invalidPeriodKeyData          = obligationDataSingleFulfilled.copy(periodKey = invalidPeriodKeyGen.sample.get)
+
+  val multipleOpen = Seq(
+    obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 11, 30), periodKey = "24AK"),
+    obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 12, 30), periodKey = "24AL"),
+    obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 9, 30), periodKey = "24AI"),
+    obligationDataSingleOpen,
+    obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 10, 28), periodKey = "24AJ")
   )
-  val obligationDataSingleOpenOverdue = ObligationData(
-    ObligationStatus.Open,
-    LocalDate.of(2024, 5, 1),
-    LocalDate.of(2024, 5, 31),
-    LocalDate.of(2024, 4, 30),
-    periodKey
-  )
-  val multipleFulfilled               = Seq(
+
+  val multipleFulfilled = Seq(
     obligationDataSingleFulfilled,
-    ObligationData(
-      ObligationStatus.Fulfilled,
-      LocalDate.of(2023, 12, 1),
-      LocalDate.of(2023, 12, 1),
-      LocalDate.of(2023, 12, 1),
-      periodKey
-    )
+    obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 6, 30), periodKey = "24AF"),
+    obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 7, 30), periodKey = "24AG"),
+    obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 5, 30), periodKey = "24AE")
   )
   "ViewPastReturnsHelper" - {
 
@@ -80,7 +72,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val table          = ViewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>
-        row.actions.head.href shouldBe controllers.routes.BeforeStartReturnController.onPageLoad(periodKey)
+        row.actions.head.href shouldBe controllers.routes.BeforeStartReturnController.onPageLoad("99AE")
       }
     }
     "must return the COMPLETED status for a fulfilled obligation" in {
@@ -112,28 +104,24 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
     }
 
     "must return a sorted table by due date in descending order for Open obligations" in {
-      val obligationData = Seq(obligationDataSingleOpen, obligationDataSingleOpenOverdue)
-      val table          = ViewPastReturnsHelper.getReturnsTable(obligationData)
-      table.rows.size                            shouldBe obligationData.size
-      table.rows.map(row => row.cells(1).asHtml) shouldBe Seq(
-        new GovukTag()(
-          Tag(content = Text(messages("DUE")), classes = "govuk-tag--blue")
-        ),
-        new GovukTag()(
-          Tag(content = Text(messages("OVERDUE")), classes = "govuk-tag--red")
-        )
+      val table = ViewPastReturnsHelper.getReturnsTable(multipleOpen)
+      table.rows.size                                         shouldBe multipleOpen.size
+      table.rows.map(row => row.cells.head.asHtml.toString()) shouldBe Seq(
+        Text("May 2099").asHtml.toString(),
+        Text("December 2024").asHtml.toString(),
+        Text("November 2024").asHtml.toString(),
+        Text("October 2024").asHtml.toString(),
+        Text("September 2024").asHtml.toString()
       )
     }
     "must return a sorted table by due date in descending order for fulfilled obligations" in {
       val table = ViewPastReturnsHelper.getReturnsTable(multipleFulfilled)
-      table.rows.size                            shouldBe multipleFulfilled.size
-      table.rows.map(row => row.cells(1).asHtml) shouldBe Seq(
-        new GovukTag()(
-          Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green")
-        ),
-        new GovukTag()(
-          Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green")
-        )
+      table.rows.size                                         shouldBe multipleFulfilled.size
+      table.rows.map(row => row.cells.head.asHtml.toString()) shouldBe Seq(
+        Text("August 2024").asHtml.toString(),
+        Text("July 2024").asHtml.toString(),
+        Text("June 2024").asHtml.toString(),
+        Text("May 2024").asHtml.toString()
       )
     }
 
