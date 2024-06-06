@@ -28,8 +28,10 @@ import java.time.{LocalDate, YearMonth}
 
 object ViewPastReturnsHelper extends Logging {
 
-  def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel =
-    TableViewModel(head = getTableHeader(messages), rows = getObligationDataTableRows(obligationData), total = 0)
+  def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
+    val sortedObligationData = obligationData.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+    TableViewModel(head = getTableHeader(messages), rows = getObligationDataTableRows(sortedObligationData), total = 0)
+  }
 
   private def getTableHeader(messages: Messages): Seq[HeadCell] =
     Seq(

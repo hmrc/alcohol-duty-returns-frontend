@@ -28,28 +28,45 @@ import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import java.time.LocalDate
 
 class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
-  val application: Application      = applicationBuilder().build()
-  implicit val messages: Messages   = messages(application)
-  val obligationDataSingleOpen      = ObligationData(
+  val application: Application        = applicationBuilder().build()
+  implicit val messages: Messages     = messages(application)
+  val obligationDataSingleOpen        = ObligationData(
     ObligationStatus.Open,
     LocalDate.of(2024, 5, 1),
     LocalDate.of(2024, 5, 31),
-    LocalDate.of(9999, 5, 30),
+    LocalDate.of(2030, 5, 30),
     periodKey
   )
-  val obligationDataSingleFulfilled = ObligationData(
+  val obligationDataSingleFulfilled   = ObligationData(
     ObligationStatus.Fulfilled,
     LocalDate.of(2024, 1, 1),
     LocalDate.of(2024, 1, 1),
     LocalDate.of(2024, 1, 1),
     periodKey
   )
-  val invalidPeriodKeyData          = ObligationData(
+  val invalidPeriodKeyData            = ObligationData(
     ObligationStatus.Fulfilled,
     LocalDate.of(2024, 1, 1),
     LocalDate.of(2024, 1, 1),
     LocalDate.of(2024, 1, 1),
     invalidPeriodKeyGen.sample.get
+  )
+  val obligationDataSingleOpenOverdue = ObligationData(
+    ObligationStatus.Open,
+    LocalDate.of(2024, 5, 1),
+    LocalDate.of(2024, 5, 31),
+    LocalDate.of(2024, 4, 30),
+    periodKey
+  )
+  val multipleFulfilled               = Seq(
+    obligationDataSingleFulfilled,
+    ObligationData(
+      ObligationStatus.Fulfilled,
+      LocalDate.of(2023, 12, 1),
+      LocalDate.of(2023, 12, 1),
+      LocalDate.of(2023, 12, 1),
+      periodKey
+    )
   )
   "ViewPastReturnsHelper" - {
 
@@ -92,6 +109,32 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
         ViewPastReturnsHelper.getReturnsTable(obligationData)
       }
       exception.getMessage shouldBe "Couldn't fetch period from periodKey"
+    }
+
+    "must return a sorted table by due date in descending order for Open obligations" in {
+      val obligationData = Seq(obligationDataSingleOpen, obligationDataSingleOpenOverdue)
+      val table          = ViewPastReturnsHelper.getReturnsTable(obligationData)
+      table.rows.size                            shouldBe obligationData.size
+      table.rows.map(row => row.cells(1).asHtml) shouldBe Seq(
+        new GovukTag()(
+          Tag(content = Text(messages("DUE")), classes = "govuk-tag--blue")
+        ),
+        new GovukTag()(
+          Tag(content = Text(messages("OVERDUE")), classes = "govuk-tag--red")
+        )
+      )
+    }
+    "must return a sorted table by due date in descending order for fulfilled obligations" in {
+      val table = ViewPastReturnsHelper.getReturnsTable(multipleFulfilled)
+      table.rows.size                            shouldBe multipleFulfilled.size
+      table.rows.map(row => row.cells(1).asHtml) shouldBe Seq(
+        new GovukTag()(
+          Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green")
+        ),
+        new GovukTag()(
+          Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green")
+        )
+      )
     }
 
   }
