@@ -83,7 +83,7 @@
             InputViewModel(
               field = form(s"volumesWithRate[$index]"),
               key = "dutyRate",
-              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.dutyRate")),
+              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.dutyRate", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
               value = form(s"volumesWithRate[$index].dutyRate").value
             )
@@ -136,7 +136,7 @@
             InputViewModel(
               field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
               key = "dutyRate",
-              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.dutyRate")),
+              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.dutyRate", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
               value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
             )
