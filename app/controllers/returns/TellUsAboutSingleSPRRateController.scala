@@ -78,7 +78,9 @@ class TellUsAboutSingleSPRRateController @Inject() (
                   updatedAnswers <-
                     Future.fromTry(request.userAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, value))
                   _              <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(TellUsAboutSingleSPRRatePage, mode, updatedAnswers))
+                } yield Redirect(
+                  navigator.nextPageWithRegime(TellUsAboutSingleSPRRatePage, mode, updatedAnswers, regime)
+                )
             )
       }
     }

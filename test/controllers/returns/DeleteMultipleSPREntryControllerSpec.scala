@@ -86,7 +86,8 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase with MockitoSugar {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val rateBandList    = arbitraryRateBandList(regime).arbitrary.suchThat(_.nonEmpty).sample.value
-      val dutiesByTaxType = rateBandList.map(rateBand => genDutyTaxTypesFromRateBand(rateBand).arbitrary.sample.value)
+      val dutiesByTaxType =
+        rateBandList.map(rateBand => genVolumeAndRateByTaxTypeRateBand(rateBand).arbitrary.sample.value)
 
       val userAnswers = emptyUserAnswers
         .setByKey(MultipleSPRListPage, regime, dutiesByTaxType)

@@ -22,7 +22,7 @@ import controllers.routes
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
-import pages.returns.{DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, DoYouWantToAddMultipleSPRToListPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, DoYouWantToAddMultipleSPRToListPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 
 @Singleton
 class ReturnsNavigator @Inject() () {
@@ -96,6 +96,9 @@ class ReturnsNavigator @Inject() () {
                 controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
               }
 
+    case TellUsAboutSingleSPRRatePage =>
+      _ => regime => _ => _ => controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+
     case DoYouWantToAddMultipleSPRToListPage =>
       ua =>
         regime =>
@@ -139,7 +142,7 @@ class ReturnsNavigator @Inject() () {
     index: Option[Int] = None
   ): Call = mode match {
     case NormalMode =>
-      normalRoutesReturnJourney(page)(userAnswers)(regime)(hasAnswerChanged)(index) // TODO: Check if this is correct
+      normalRoutesReturnJourney(page)(userAnswers)(regime)(hasAnswerChanged)(index)
     case CheckMode  =>
       checkRouteMapReturnJourney(page)(userAnswers)(regime)(hasAnswerChanged)(index)
   }

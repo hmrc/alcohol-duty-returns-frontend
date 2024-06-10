@@ -48,7 +48,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
     routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
 
   val rateBands      = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
-  val dutyByTaxTypes = rateBands.map(genDutyTaxTypesFromRateBand(_).arbitrary.sample.value).toSeq
+  val dutyByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
 
   val userAnswers = emptyUserAnswers
     .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)

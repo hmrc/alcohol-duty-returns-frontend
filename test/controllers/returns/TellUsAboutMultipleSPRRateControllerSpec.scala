@@ -47,7 +47,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
     routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime).url
 
   val rateBands     = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
-  val dutyByTaxType = genDutyTaxTypesFromRateBand(rateBands.head).arbitrary.sample.value
+  val dutyByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
   val userAnswers   = emptyUserAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, dutyByTaxType).success.value
 
   "TellUsAboutMultipleSPRRate Controller" - {

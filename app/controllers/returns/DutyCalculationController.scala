@@ -22,6 +22,7 @@ import models.returns.VolumeAndRateByTaxType
 import models.{AlcoholRegime, UserAnswers}
 import pages.QuestionPage
 import pages.returns.{AlcoholDutyPage, DoYouWantToAddMultipleSPRToListPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
+import play.api.{Logger, Logging}
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -43,7 +44,8 @@ class DutyCalculationController @Inject() (
   view: DutyCalculationView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
@@ -52,9 +54,11 @@ class DutyCalculationController @Inject() (
         totalDuty          <- calculatorConnector.calculateTotalDuty(totalDutyCalculatorRequest)
         updatedUserAnswers <- Future.fromTry(request.userAnswers.setByKey(DutyCalculationPage, regime, totalDuty))
         _                  <- cacheConnector.set(updatedUserAnswers)
-      } yield {
-        val dutyDueViewModel = DutyCalculationHelper.dutyDueTableViewModel(totalDuty, request.userAnswers, regime)
-        Ok(view(regime, dutyDueViewModel))
+      } yield DutyCalculationHelper.dutyDueTableViewModel(totalDuty, request.userAnswers, regime) match {
+        case Left(errorMessage)      =>
+          logger.warn(s"Failed to create duty due table view model: $errorMessage")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        case Right(dutyDueViewModel) => Ok(view(regime, dutyDueViewModel))
       }
   }
 

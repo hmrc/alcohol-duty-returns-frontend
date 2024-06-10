@@ -18,11 +18,12 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import generators.ModelGenerators
+import models.returns.AlcoholDuty
 import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.ProductEntryListPage
-import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -140,22 +141,27 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         )
       }
 
-      "must have a link to 'What do you need to declare?' screen and status set as 'Completed' if the user has answered all the questions" in {
+      "must have a link to 'CheckYourAnswers' screen and status set as 'Completed' if the user has answered all the questions" in {
         val userAnswers = declaredAlcoholDutyUserAnswer
           .set(ProductEntryListPage, Seq.empty)
           .success
           .value
 
         val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
-          val rateBands     = arbitraryRateBandList(regime).arbitrary.sample.value
-          val dutyByTaxType = rateBands.map { rateBand =>
-            genDutyTaxTypesFromRateBand(rateBand).arbitrary.sample.value
-          }
+          val rateBands = arbitraryRateBandList(regime).arbitrary.sample.value
+
+          val dutiesByTaxType = arbitraryDutyByTaxType(rateBands).arbitrary.sample.value
+
+          val alcoholDutyMock = AlcoholDuty(
+            dutiesByTaxType = dutiesByTaxType,
+            totalDuty = dutiesByTaxType.map(_.dutyRate).sum
+          )
+
           ua
             .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
             .success
             .value
-            .setByKey(HowMuchDoYouNeedToDeclarePage, regime, dutyByTaxType)
+            .setByKey(AlcoholDutyPage, regime, alcoholDutyMock)
             .success
             .value
         }

@@ -31,7 +31,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     val regime = arbitrary[AlcoholRegime].sample.value
 
     val rateBands      = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
-    val dutyByTaxTypes = rateBands.map(genDutyTaxTypesFromRateBand(_).arbitrary.sample.value).toSeq
+    val dutyByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
 
     val userAnswers = emptyUserAnswers
       .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)

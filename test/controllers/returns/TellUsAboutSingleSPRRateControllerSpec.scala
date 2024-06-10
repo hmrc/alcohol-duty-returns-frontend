@@ -47,7 +47,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
   lazy val tellUsAboutSingleSPRRateRoute = routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime).url
 
   val rateBand: RateBand                      = rateBandGen(regime).sample.value
-  val dutiesByTaxType: VolumeAndRateByTaxType = genDutyTaxTypesFromRateBand(rateBand).arbitrary.sample.value
+  val dutiesByTaxType: VolumeAndRateByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBand).arbitrary.sample.value
 
   val userAnswers = emptyUserAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, Seq(dutiesByTaxType)).success.value
 

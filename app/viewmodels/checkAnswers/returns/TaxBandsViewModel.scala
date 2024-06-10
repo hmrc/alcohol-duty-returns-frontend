@@ -20,7 +20,7 @@ import models.{AlcoholByVolume, RateBand, RateType}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.govuk.all.{CheckboxGroupedItemViewModel, CheckboxItemViewModel}
+import viewmodels.govuk.all.CheckboxGroupedItemViewModel
 
 case class TaxBandsViewModel(
   core: Seq[CheckboxItem],
