@@ -103,11 +103,11 @@ trait Constraints {
         Invalid(errorKey)
     }
 
-  protected def nonEmptySeq(errorKey: String): Constraint[Seq[_]] =
+  protected def nonEmptySeq(errorKey: String, args: Any*): Constraint[Seq[_]] =
     Constraint {
       case seq if seq.nonEmpty =>
         Valid
       case _                   =>
-        Invalid(errorKey)
+        Invalid(errorKey, args: _*)
     }
 }

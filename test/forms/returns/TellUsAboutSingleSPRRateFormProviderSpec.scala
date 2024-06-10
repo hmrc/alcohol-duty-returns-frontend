@@ -17,13 +17,17 @@
 package forms.returns
 
 import forms.behaviours.StringFieldBehaviours
+import org.mockito.MockitoSugar.mock
 import play.api.data.FormError
+import play.api.i18n.Messages
 
 class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
 
   val regime = regimeGen.sample.value
 
-  val form = new TellUsAboutSingleSPRRateFormProvider()(regime)
+  val messages = mock[Messages]
+
+  val form = new TellUsAboutSingleSPRRateFormProvider()(regime)(messages)
 
   ".field1" - {
 

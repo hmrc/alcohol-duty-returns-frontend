@@ -22,20 +22,22 @@ import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms._
 import models.returns.VolumesByTaxType
+import play.api.i18n.Messages
 
 class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime): Form[Seq[VolumesByTaxType]] = Form(
+  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[Seq[VolumesByTaxType]] = Form(
     "volumes" -> seq(
       volumes(
-        s"howMuchDoYouNeedToDeclare.error.invalid.$regime",
-        s"howMuchDoYouNeedToDeclare.error.allRequired.$regime",
-        s"howMuchDoYouNeedToDeclare.error.required.$regime",
-        s"howMuchDoYouNeedToDeclare.error.decimalPlacesKey.$regime",
-        s"howMuchDoYouNeedToDeclare.error.minimumValueKey.$regime",
-        s"howMuchDoYouNeedToDeclare.error.maximumValueKey.$regime",
-        s"howMuchDoYouNeedToDeclare.error.inconsistent"
+        "return.journey.error.invalid",
+        "return.journey.error.allRequired",
+        "return.journey.error.noValue",
+        "return.journey.error.tooManyDecimalPlaces",
+        "return.journey.error.minimumValue",
+        "return.journey.error.maximumValue",
+        "return.journey.error.lessThanExpected",
+        Seq(messages(s"return.regime.$regime"))
       )
-    ).verifying(nonEmptySeq(s"howMuchDoYouNeedToDeclare.error.allRequired.$regime"))
+    ).verifying(nonEmptySeq("return.journey.error.allRequired", Seq(messages(s"return.regime.$regime"))))
   )
 }

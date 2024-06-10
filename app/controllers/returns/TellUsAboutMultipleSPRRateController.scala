@@ -23,7 +23,7 @@ import javax.inject.Inject
 import models.{AlcoholRegime, CheckMode, Mode, NormalMode, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import models.returns.VolumeAndRateByTaxType
@@ -125,13 +125,15 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     regime: AlcoholRegime,
     mode: Mode,
     index: Option[Int]
-  ): Option[Form[_]] =
+  )(implicit messages: Messages): Option[Form[_]] =
     (mode, index) match {
       case (NormalMode, Some(i)) => fillPreviousAnswersWithIndex(userAnswers, regime, i)
       case _                     => fillPreviousAnswers(userAnswers, regime)
     }
 
-  private def fillPreviousAnswersWithIndex(answers: UserAnswers, regime: AlcoholRegime, i: Int): Option[Form[_]] =
+  private def fillPreviousAnswersWithIndex(answers: UserAnswers, regime: AlcoholRegime, i: Int)(implicit
+    messages: Messages
+  ): Option[Form[_]] =
     answers.getByKeyAndIndex(MultipleSPRListPage, regime, i) match {
       case Some(value) => Some(formProvider(regime).fill(value))
       case None        =>
@@ -139,7 +141,9 @@ class TellUsAboutMultipleSPRRateController @Inject() (
         None
     }
 
-  private def fillPreviousAnswers(answers: UserAnswers, regime: AlcoholRegime): Option[Form[_]] = {
+  private def fillPreviousAnswers(answers: UserAnswers, regime: AlcoholRegime)(implicit
+    messages: Messages
+  ): Option[Form[_]] = {
     val form = formProvider(regime)
     answers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
       case Some(value) => Some(form.fill(value))

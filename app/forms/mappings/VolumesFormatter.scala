@@ -76,7 +76,7 @@ class VolumesFormatter(
       errors => Left(errors),
       volumesByTaxType =>
         if (volumesByTaxType.totalLitres < volumesByTaxType.pureAlcohol) {
-          Left(Seq(FormError(nameToId(s"$key.pureAlcohol"), inconsistentKey)))
+          Left(Seq(FormError(nameToId(s"$key.pureAlcohol"), inconsistentKey, args)))
         } else {
           Right(volumesByTaxType)
         }

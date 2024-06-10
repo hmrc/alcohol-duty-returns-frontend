@@ -42,7 +42,6 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
   val regime: AlcoholRegime = regimeGen.sample.value
 
   val formProvider = new TellUsAboutSingleSPRRateFormProvider()
-  val form         = formProvider(regime)
 
   lazy val tellUsAboutSingleSPRRateRoute = routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime).url
 
@@ -66,6 +65,8 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
         val categoriesByRateTypeViewModel = CategoriesByRateTypeHelper(regime, Set(rateBand))(messages(application))
 
+        val form = formProvider(regime)(messages(application))
+
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, regime, categoriesByRateTypeViewModel, NormalMode)(
           request,
@@ -85,6 +86,8 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
         val result                        = route(application, request).value
         val categoriesByRateTypeViewModel = CategoriesByRateTypeHelper(regime, Set(rateBand))(messages(application))
+
+        val form = formProvider(regime)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -133,6 +136,8 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
         val request =
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
+
+        val form = formProvider(regime)(messages(application))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 

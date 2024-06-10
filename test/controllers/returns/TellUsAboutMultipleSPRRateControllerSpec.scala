@@ -41,7 +41,6 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new TellUsAboutMultipleSPRRateFormProvider()
-  val form         = formProvider(regime)
 
   lazy val tellUsAboutMultipleSPRRateRoute =
     routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime).url
@@ -65,6 +64,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
 
         val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands)(messages(application))
 
+        val form = formProvider(regime)(messages(application))
+
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, regime, rateBandRadioButton, None)(
           request,
@@ -85,6 +86,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands)(messages(application))
+
+        val form = formProvider(regime)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(dutyByTaxType), NormalMode, regime, rateBandRadioButton, None)(
@@ -128,6 +131,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
         val request =
           FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
+
+        val form = formProvider(regime)(messages(application))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 

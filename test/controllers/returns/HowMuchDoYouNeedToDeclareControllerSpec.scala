@@ -42,7 +42,6 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
   val regime = arbitrary[AlcoholRegime].sample.value
 
   val formProvider = new HowMuchDoYouNeedToDeclareFormProvider()
-  val form         = formProvider(regime)
 
   lazy val howMuchDoYouNeedToDeclareRoute =
     routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
@@ -74,6 +73,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         val expectedReturnSummaryList = CategoriesByRateTypeHelper(regime, rateBands)(messages(application))
+        val form                      = formProvider(regime)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, regime, expectedReturnSummaryList, NormalMode)(
@@ -95,7 +95,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         val expectedReturnSummaryList = CategoriesByRateTypeHelper(regime, rateBands)(messages(application))
-
+        val form                      = formProvider(regime)(messages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(dutyByTaxTypes.map(_.toVolumes)),
@@ -152,6 +152,8 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
         val request =
           FakeRequest(POST, howMuchDoYouNeedToDeclareRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
+
+        val form = formProvider(regime)(messages(application))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 

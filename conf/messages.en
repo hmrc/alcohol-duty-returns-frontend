@@ -127,6 +127,29 @@ beforeStartReturn.text.guidance4 = After you tell us this information, we will c
 
 # Beginning of product entry sub-journey
 
+return.journey.error.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
+
+return.journey.error.allRequired = Select the type of {0}
+return.journey.error.noValue.taxType = Select the type of {0}
+
+return.journey.error.noValue.totalLitres = Enter the total litres of {0}
+return.journey.error.invalid.totalLitres = Litres of {0} must be a number
+return.journey.error.maximumValue.totalLitres = Litres of {0} must be 99.99 million or less
+return.journey.error.minimumValue.totalLitres = Litres of {0} must be 0.01 or more
+return.journey.error.tooManyDecimalPlaces.totalLitres = Litres of {0} must be a number to 2 decimal places
+
+return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in {0}
+return.journey.error.invalid.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
+return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol must be 0.01 or more
+return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+
+return.journey.error.noValue.dutyRate = Enter your Small Producer Relief duty rate
+return.journey.error.invalid.dutyRate = Your Small Producer Relief duty rate must be a number
+return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
+return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
+return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
+
 declareAlcoholDutyQuestion.title = Declaring your alcohol duty
 declareAlcoholDutyQuestion.heading = Declaring your alcohol duty
 declareAlcoholDutyQuestion.p1 = If you need to declare your alcohol, we will need to know the total amount you have produced and litres of pure alcohol in your beer across the following ABV strength bandings:
@@ -206,69 +229,6 @@ howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type
 howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres
 howMuchDoYouNeedToDeclare.legend.pureAlcohol = Litres of pure alcohol
 
-howMuchDoYouNeedToDeclare.error.inconsistent = Litres of pure alcohol must be the same or less than the litres of beer
-
-howMuchDoYouNeedToDeclare.error.invalid.Beer.totalLitres = Litres of beer must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Beer.pureAlcohol = Litres of pure alcohol must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Cider.totalLitres = Litres of cider must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Cider.pureAlcohol = Litres of pure alcohol must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Wine.totalLitres = Litres of wine must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Wine.pureAlcohol = Litres of pure alcohol must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Spirits.totalLitres = Litres of spirits must be a number
-howMuchDoYouNeedToDeclare.error.invalid.Spirits.pureAlcohol = Litres of pure alcohol must be a number
-howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.totalLitres = Litres of other fermented products must be a number
-howMuchDoYouNeedToDeclare.error.invalid.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number
-
-howMuchDoYouNeedToDeclare.error.required.Beer.totalLitres = Enter the total litres of beer
-howMuchDoYouNeedToDeclare.error.required.Beer.pureAlcohol = Enter the litres of pure alcohol in beer
-howMuchDoYouNeedToDeclare.error.required.Cider.totalLitres = Enter the total litres of cider
-howMuchDoYouNeedToDeclare.error.required.Cider.pureAlcohol = Enter the total litres pure alcohol in cider
-howMuchDoYouNeedToDeclare.error.required.Wine.totalLitres = Enter the total litres of wine
-howMuchDoYouNeedToDeclare.error.required.Wine.pureAlcohol = Enter the litres of pure alcohol in wine
-howMuchDoYouNeedToDeclare.error.required.Spirits.totalLitres = Enter the total litres of spirits
-howMuchDoYouNeedToDeclare.error.required.Spirits.pureAlcohol = Enter the litres of pure alcohol in spirits
-howMuchDoYouNeedToDeclare.error.required.OtherFermentedProduct.totalLitres = Enter the total litres of other fermented products
-howMuchDoYouNeedToDeclare.error.required.OtherFermentedProduct.pureAlcohol = Enter the litres of pure alcohol in other fermented products
-
-howMuchDoYouNeedToDeclare.error.allRequired.Beer = Select the type of beer to declare
-howMuchDoYouNeedToDeclare.error.allRequired.Cider = Select the type of cider to declare
-howMuchDoYouNeedToDeclare.error.allRequired.Wine = Select the wines you need to declare
-howMuchDoYouNeedToDeclare.error.allRequired.Spirits = Select the type of spirits to declare
-howMuchDoYouNeedToDeclare.error.allRequired.OtherFermentedProduct = Select the type of other fermented product to declare
-
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Beer.totalLitres = Litres of beer must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Beer.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Cider.totalLitres = Litres of cider must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Cider.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Wine.totalLitres = Litres of other fermented products must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Spirits.totalLitres = Litres of spirits must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.Spirits.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.OtherFermentedProduct.totalLitres = Litres of wine must be a number to 2 decimal places
-howMuchDoYouNeedToDeclare.error.decimalPlacesKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-
-howMuchDoYouNeedToDeclare.error.minimumValueKey.Beer.totalLitres = Litres of beer must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.Beer.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.Cider.totalLitres = Litres of cider must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.Cider.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.Wine.totalLitres = Litres of wine must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.Wine.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.Spirits.totalLitres = Litres of spirits must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.Spirits.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.OtherFermentedProduct.totalLitres = Litres of other fermented products must be 0.01 or more
-howMuchDoYouNeedToDeclare.error.minimumValueKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-
-howMuchDoYouNeedToDeclare.error.maximumValueKey.Beer.totalLitres = Litres of beer must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.Beer.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.Cider.totalLitres = Litres of cider must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.Cider.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.Wine.totalLitres = Litres of wine must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.Wine.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.Spirits.totalLitres = Litres of spirits must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.Spirits.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.OtherFermentedProduct.totalLitres = Litres of other fermented products must be 99.99 million or less
-howMuchDoYouNeedToDeclare.error.maximumValueKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced rate
@@ -313,93 +273,6 @@ tellUsAboutSingleSPRRate.legend.dutyRate = Your Small Producer Relief Duty rate 
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief (multiple duty rates)
 tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught {0} that is eligible for Small Producer Relief do you need to declare?
 tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught beer that is eligible for Small Producer Relief do you need to declare?
-
-tellUsAboutSPRRate.error.inconsistent = Litres of pure alcohol must be the same or less than the litres of beer
-
-tellUsAboutSPRRate.error.required.Beer.taxType = Select the type of beer to declare
-tellUsAboutSPRRate.error.required.Beer.totalLitres = Enter the total litres of beer
-tellUsAboutSPRRate.error.required.Beer.pureAlcohol = Enter the litres of pure alcohol in beer
-tellUsAboutSPRRate.error.required.Beer.dutyRate = Enter your Small Producer Relief duty rate
-tellUsAboutSPRRate.error.required.Cider.taxType = Select the type of cider to declare
-tellUsAboutSPRRate.error.required.Cider.totalLitres = Enter the total litres of cider
-tellUsAboutSPRRate.error.required.Cider.pureAlcohol = Enter the litres of pure alcohol in cider
-tellUsAboutSPRRate.error.required.Cider.dutyRate = Enter your Small Producer Relief duty rate
-tellUsAboutSPRRate.error.required.Spirits.taxType = Select the type of spirits to declare
-tellUsAboutSPRRate.error.required.Spirits.totalLitres = Enter the total litres of spirits
-tellUsAboutSPRRate.error.required.Spirits.pureAlcohol = Enter the litres of pure alcohol in spirits
-tellUsAboutSPRRate.error.required.Spirits.dutyRate = Enter your Small Producer Relief duty rate
-tellUsAboutSPRRate.error.required.Wine.taxType = Select the type of wine to declare
-tellUsAboutSPRRate.error.required.Wine.totalLitres = Enter the total litres of wine
-tellUsAboutSPRRate.error.required.Wine.pureAlcohol = Enter the litres of pure alcohol in wine
-tellUsAboutSPRRate.error.required.Wine.dutyRate = Enter your Small Producer Relief duty rate
-tellUsAboutSPRRate.error.required.OtherFermentedProduct.taxType = Select the type of other fermented product to declare
-tellUsAboutSPRRate.error.required.OtherFermentedProduct.totalLitres = Enter the total litres of other fermented products
-tellUsAboutSPRRate.error.required.OtherFermentedProduct.pureAlcohol = Enter the litres of pure alcohol in other fermented products
-tellUsAboutSPRRate.error.required.OtherFermentedProduct.dutyRate = Enter your Small Producer Relief duty rate
-
-tellUsAboutSPRRate.error.invalid.Beer.totalLitres = Litres of beer must be a number
-tellUsAboutSPRRate.error.invalid.Beer.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.invalid.Beer.dutyRate = Your Small Producer Relief duty rate must be a number
-tellUsAboutSPRRate.error.invalid.Cider.totalLitres = Litres of cider must be a number
-tellUsAboutSPRRate.error.invalid.Cider.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.invalid.Cider.dutyRate = Your Small Producer Relief duty rate must be a number
-tellUsAboutSPRRate.error.invalid.Spirits.totalLitres = Litres of spirits must be a number
-tellUsAboutSPRRate.error.invalid.Spirits.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.invalid.Spirits.dutyRate = Your Small Producer Relief duty rate must be a number
-tellUsAboutSPRRate.error.invalid.Wine.totalLitres = Litres of wine must be a number
-tellUsAboutSPRRate.error.invalid.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.invalid.Wine.dutyRate = Your Small Producer Relief duty rate must be a number
-tellUsAboutSPRRate.error.invalid.OtherFermentedProduct.totalLitres = Litres of other fermented products must be a number
-tellUsAboutSPRRate.error.invalid.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.invalid.OtherFermentedProduct.dutyRate = Your Small Producer Relief duty rate must be a number
-
-tellUsAboutSPRRate.error.maximumValueKey.Beer.totalLitres = Litres of beer must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Beer.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Beer.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Cider.totalLitres = Litres of cider must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Cider.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Cider.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Spirits.totalLitres = Litres of spirits must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Spirits.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Spirits.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Wine.totalLitres = Litres of wine must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Wine.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.Wine.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.OtherFermentedProduct.totalLitres = Litres of other fermented products must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
-tellUsAboutSPRRate.error.maximumValueKey.OtherFermentedProduct.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
-
-tellUsAboutSPRRate.error.minimumValueKey.Beer.totalLitres = Litres of beer must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.Beer.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.Beer.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
-tellUsAboutSPRRate.error.minimumValueKey.Cider.totalLitres = Litres of cider must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.Cider.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.Cider.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
-tellUsAboutSPRRate.error.minimumValueKey.Spirits.totalLitres = Litres of spirits must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.Spirits.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.Spirits.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
-tellUsAboutSPRRate.error.minimumValueKey.Wine.totalLitres = Litres of wine must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.Wine.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.Wine.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
-tellUsAboutSPRRate.error.minimumValueKey.OtherFermentedProduct.totalLitres = Litres of other fermented products must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be 0.01 or more
-tellUsAboutSPRRate.error.minimumValueKey.OtherFermentedProduct.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
-
-tellUsAboutSPRRate.error.decimalPlacesKey.Beer.totalLitres = Litres of beer must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Beer.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Beer.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Cider.totalLitres = Litres of cider must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Cider.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Cider.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Spirits.totalLitres = Litres of spirits must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Spirits.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Spirits.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Wine.totalLitres = Litres of wine must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Wine.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.Wine.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.OtherFermentedProduct.totalLitres = Litres of other fermented products must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.OtherFermentedProduct.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
-tellUsAboutSPRRate.error.decimalPlacesKey.OtherFermentedProduct.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 
 tellUsAboutMultipleSPRRate.title = Tell us about the {0} that is eligible for Small Producer Relief
 tellUsAboutMultipleSPRRate.heading = Tell us about the {0} that is eligible for Small Producer Relief

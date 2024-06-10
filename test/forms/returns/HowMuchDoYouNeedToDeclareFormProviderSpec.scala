@@ -16,14 +16,19 @@
 
 package forms.returns
 
+import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
 import generators.ModelGenerators
+import org.mockito.MockitoSugar.mock
 import play.api.data.FormError
+import play.api.i18n.Messages
 
-class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours with ModelGenerators {
+class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours with ModelGenerators with SpecBase {
 
   val regime = regimeGen.sample.value
-  val form   = new HowMuchDoYouNeedToDeclareFormProvider()(regime)
+
+  val messages = mock[Messages]
+  val form     = new HowMuchDoYouNeedToDeclareFormProvider()(regime)(messages)
 
   ".volumes" - {
 

@@ -21,19 +21,21 @@ import forms.mappings.Mappings
 import models.AlcoholRegime
 import play.api.data.Form
 import models.returns.VolumeAndRateByTaxType
+import play.api.i18n.Messages
 
 class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime): Form[VolumeAndRateByTaxType] = Form(
+  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[VolumeAndRateByTaxType] = Form(
     "volumesWithRate" ->
       volumesWithRate(
-        s"tellUsAboutSPRRate.error.invalid.$regime",
-        s"tellUsAboutSPRRate.error.allRequired.$regime",
-        s"tellUsAboutSPRRate.error.required.$regime",
-        s"tellUsAboutSPRRate.error.decimalPlacesKey.$regime",
-        s"tellUsAboutSPRRate.error.minimumValueKey.$regime",
-        s"tellUsAboutSPRRate.error.maximumValueKey.$regime",
-        s"tellUsAboutSPRRate.error.inconsistent"
+        "return.journey.error.invalid",
+        "return.journey.error.allRequired",
+        "return.journey.error.noValue",
+        "return.journey.error.tooManyDecimalPlaces",
+        "return.journey.error.minimumValue",
+        "return.journey.error.maximumValue",
+        "return.journey.error.lessThanExpected",
+        Seq(messages(s"return.regime.$regime"))
       )
   )
 }
