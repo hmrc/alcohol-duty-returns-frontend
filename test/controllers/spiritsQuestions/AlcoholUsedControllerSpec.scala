@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.AlcoholUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.spiritsQuestions.AlcoholUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -47,10 +47,7 @@ class AlcoholUsedControllerSpec extends SpecBase {
   val validCiderOrPerry = 55.6
   val validMadeWine     = 47.5
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       AlcoholUsedPage.toString -> Json.obj(
         "beer"         -> validBeer,

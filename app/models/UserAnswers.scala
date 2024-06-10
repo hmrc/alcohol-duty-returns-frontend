@@ -52,9 +52,10 @@ object ReturnId {
 }
 
 final case class UserAnswers(
-  id: ReturnId,
+  returnId: ReturnId,
   groupId: String,
   internalId: String,
+  regimes: AlcoholRegimes,
   data: JsObject = Json.obj(),
   lastUpdated: Instant = Instant.now,
   validUntil: Option[Instant] = None
@@ -164,6 +165,7 @@ object UserAnswers {
       (__ \ "_id").read[ReturnId] and
         (__ \ "groupId").read[String] and
         (__ \ "internalId").read[String] and
+        AlcoholRegimes.alcoholRegimesFormat and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat) and
         (__ \ "validUntil").readNullable(MongoJavatimeFormats.instantFormat)
@@ -178,6 +180,7 @@ object UserAnswers {
       (__ \ "_id").write[ReturnId] and
         (__ \ "groupId").write[String] and
         (__ \ "internalId").write[String] and
+        AlcoholRegimes.alcoholRegimesFormat and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat) and
         (__ \ "validUntil").writeNullable(MongoJavatimeFormats.instantFormat)

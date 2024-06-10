@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedOtherFermented
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -44,10 +44,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
   lazy val dutySuspendedOtherFermentedRoute = routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
         "totalOtherFermented"         -> validTotalOtherFermented,

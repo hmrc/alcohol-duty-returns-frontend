@@ -19,10 +19,11 @@ package controllers
 import config.Constants.periodKeySessionKey
 import connectors.CacheConnector
 import controllers.actions._
-import models.{ReturnId, ReturnPeriod, UserAnswers}
+import models.{ReturnId, ReturnPeriod}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
@@ -62,8 +63,9 @@ class BeforeStartReturnController @Inject() (
         logger.warn("Period key not present in session")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(periodKey) =>
-        val userAnswers = UserAnswers(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
-        cacheConnector.add(userAnswers).map { _ =>
+        val returnAndUserDetails =
+          ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
+        cacheConnector.createUserAnswers(returnAndUserDetails).map { _ =>
           Redirect(controllers.routes.TaskListController.onPageLoad)
         }
     }

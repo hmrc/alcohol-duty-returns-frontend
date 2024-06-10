@@ -16,6 +16,7 @@
 
 package repositories
 
+import common.TestData
 import config.FrontendAppConfig
 import generators.ModelGenerators
 import models.{ReturnId, UserAnswers}
@@ -26,7 +27,6 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.libs.json.Json
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import java.time.{Clock, Instant, ZoneId}
@@ -41,17 +41,11 @@ class SessionRepositorySpec
     with IntegrationPatience
     with OptionValues
     with MockitoSugar
+    with TestData
     with ModelGenerators {
 
   private val instant          = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
-
-  private val appaId = appaIdGen.sample.get
-  private val periodKey = periodKeyGen.sample.get
-  private val groupId = "groupId"
-  private val userId = "id"
-  private val id = ReturnId(appaId, periodKey)
-  private val userAnswers = UserAnswers(id, groupId, userId, Json.obj("foo" -> "bar"), Instant.ofEpochSecond(1))
 
   private val mockAppConfig = mock[FrontendAppConfig]
   when(mockAppConfig.cacheTtl) thenReturn 1
@@ -66,10 +60,10 @@ class SessionRepositorySpec
 
     "must set the last updated time on the supplied user answers to `now`, and save them" in {
 
-      val expectedResult = userAnswers copy (lastUpdated = instant)
+      val expectedResult = emptyUserAnswers.copy(lastUpdated = instant)
 
-      val setResult     = repository.set(userAnswers).futureValue
-      val updatedRecord = find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
+      val setResult     = repository.set(emptyUserAnswers).futureValue
+      val updatedRecord = find(Filters.equal("_id", emptyUserAnswers.returnId)).futureValue.headOption.value
 
       setResult mustEqual true
       updatedRecord mustEqual expectedResult
@@ -82,10 +76,10 @@ class SessionRepositorySpec
 
       "must update the lastUpdated time and get the record" in {
 
-        insert(userAnswers).futureValue
+        insert(emptyUserAnswers).futureValue
 
-        val result         = repository.get(userAnswers.id).futureValue
-        val expectedResult = userAnswers copy (lastUpdated = instant)
+        val result         = repository.get(emptyUserAnswers.returnId).futureValue
+        val expectedResult = emptyUserAnswers.copy(lastUpdated = instant)
 
         result.value mustEqual expectedResult
       }
@@ -104,12 +98,12 @@ class SessionRepositorySpec
 
     "must remove a record" in {
 
-      insert(userAnswers).futureValue
+      insert(emptyUserAnswers).futureValue
 
-      val result = repository.clear(id).futureValue
+      val result = repository.clear(emptyUserAnswers.returnId).futureValue
 
       result mustEqual true
-      repository.get(userAnswers.id).futureValue must not be defined
+      repository.get(emptyUserAnswers.returnId).futureValue must not be defined
     }
 
     "must return true when there is no record to remove" in {
@@ -125,14 +119,14 @@ class SessionRepositorySpec
 
       "must update its lastUpdated to `now` and return true" in {
 
-        insert(userAnswers).futureValue
+        insert(emptyUserAnswers).futureValue
 
-        val result = repository.keepAlive(userAnswers.id).futureValue
+        val result = repository.keepAlive(emptyUserAnswers.returnId).futureValue
 
-        val expectedUpdatedAnswers = userAnswers copy (lastUpdated = instant)
+        val expectedUpdatedAnswers = emptyUserAnswers.copy(lastUpdated = instant)
 
         result mustEqual true
-        val updatedAnswers = find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
+        val updatedAnswers = find(Filters.equal("_id", emptyUserAnswers.returnId)).futureValue.headOption.value
         updatedAnswers mustEqual expectedUpdatedAnswers
       }
     }

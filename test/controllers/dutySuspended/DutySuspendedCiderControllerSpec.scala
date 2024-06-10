@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedCiderFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedCider
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -44,10 +44,7 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
 
   lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(
         "totalCider"         -> validTotalCider,

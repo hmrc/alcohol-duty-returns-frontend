@@ -16,10 +16,11 @@
 
 package base
 
+import common.TestData
 import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
-import models.{ReturnId, UserAnswers}
+import models.UserAnswers
 import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -44,15 +45,8 @@ trait SpecBase
     with GuiceOneAppPerSuite
     with MockitoSugar
     with IntegrationPatience
-    with ModelGenerators {
-
-  val appaId: String     = appaIdGen.sample.get
-  val periodKey: String  = periodKeyGen.sample.get
-  val groupId: String    = "groupid"
-  val internalId: String = "id"
-  val returnId: ReturnId = ReturnId(appaId, periodKey)
-
-  def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, internalId)
+    with ModelGenerators
+    with TestData {
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
