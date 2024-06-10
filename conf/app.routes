@@ -195,8 +195,8 @@ POST       /do-you-need-to-make-any-adjustments-from-a-previous-return          
 GET        /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /what-type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
 
@@ -225,5 +225,13 @@ POST       /how-much-is-the-adjustment                 controllers.adjustment.Ad
 GET        /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /adjustment-volume                        controllers.adjustment.HowMuchDoYouNeedToAdjustController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-volume                        controllers.adjustment.HowMuchDoYouNeedToAdjustController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-volume                  controllers.adjustment.HowMuchDoYouNeedToAdjustController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-volume                  controllers.adjustment.HowMuchDoYouNeedToAdjustController.onSubmit(mode: Mode = CheckMode)
+
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
+
+GET        /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
+POST       /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onSubmit()
 # End of adjustments sub-journey

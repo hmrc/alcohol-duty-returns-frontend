@@ -16,8 +16,9 @@
 
 package viewmodels.checkAnswers.adjustment
 
+import controllers.adjustment.routes
 import models.adjustment.AdjustmentEntry
-import models.{CheckMode, YearMonthModelFormatter}
+import models.CheckMode
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -25,24 +26,27 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object WhenDidYouPayDutySummary extends YearMonthModelFormatter {
+object HowMuchDoYouNeedToAdjustSummary {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    adjustmentEntry.period.map { period =>
-      val value =
-        HtmlFormat.escape(period.getMonth.toString).toString + " " + HtmlFormat
-          .escape(period.getYear.toString)
-          .toString
+    for {
+      totalLitres <- adjustmentEntry.totalLitresVolume
+      pureAlcohol <- adjustmentEntry.pureAlcoholVolume
+    } yield {
+
+      val value = HtmlFormat.escape(totalLitres.toString()).toString + " " + messages(
+        "howMuchDoYouNeedToAdjust.totalLitres",
+        "Beer_placeholder"
+      ) + "<br/>" + HtmlFormat.escape(pureAlcohol.toString()).toString + " " + messages(
+        "howMuchDoYouNeedToAdjust.pureAlcohol"
+      )
 
       SummaryListRowViewModel(
-        key = "whenDidYouPayDuty.checkYourAnswersLabel",
+        key = "howMuchDoYouNeedToAdjust.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode).url
-          )
-            .withVisuallyHiddenText(messages("whenDidYouPayDuty.change.hidden"))
+          ActionItemViewModel("site.change", routes.HowMuchDoYouNeedToAdjustController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("howMuchDoYouNeedToAdjust.change.hidden"))
         )
       )
     }

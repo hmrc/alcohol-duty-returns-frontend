@@ -31,6 +31,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.WhenDidYouPayDutyView
 
+import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
 class WhenDidYouPayDutyController @Inject() (
@@ -72,16 +73,35 @@ class WhenDidYouPayDutyController @Inject() (
                 )
             },
           value => {
-            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val (updatedAdjustment, hasChanged) = updatePeriod(adjustment, value)
             for {
               updatedAnswers <-
                 Future.fromTry(
                   request.userAnswers
-                    .set(CurrentAdjustmentEntryPage, adjustment.copy(period = Some(value)))
+                    .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(period = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(WhenDidYouPayDutyPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(WhenDidYouPayDutyPage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+
+  def updatePeriod(adjustmentEntry: AdjustmentEntry, currentValue: YearMonth): (AdjustmentEntry, Boolean) =
+    adjustmentEntry.period match {
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case _                                                    =>
+        (
+          adjustmentEntry.copy(
+            sprDutyRate = None,
+            period = None,
+            taxCode = None,
+            taxRate = None,
+            totalLitresVolume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 }

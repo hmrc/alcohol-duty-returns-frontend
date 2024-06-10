@@ -26,7 +26,7 @@ import pages.adjustment.{AdjustmentTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.AdjustmentTypeView
 
@@ -65,16 +65,36 @@ class AdjustmentTypeController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value => {
-            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val (updatedAdjustment, hasChanged) = updateAdjustmentType(adjustment, value)
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(adjustmentType = Some(value)))
+                  request.userAnswers
+                    .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(adjustmentType = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AdjustmentTypePage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(AdjustmentTypePage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+
+  def updateAdjustmentType(adjustmentEntry: AdjustmentEntry, currentValue: AdjustmentType): (AdjustmentEntry, Boolean) =
+    adjustmentEntry.adjustmentType match {
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case _                                                    =>
+        (
+          adjustmentEntry.copy(
+            sprDutyRate = None,
+            period = None,
+            taxCode = None,
+            taxRate = None,
+            totalLitresVolume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 
 }

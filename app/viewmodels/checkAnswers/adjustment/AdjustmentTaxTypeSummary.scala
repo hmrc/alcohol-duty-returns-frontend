@@ -17,8 +17,8 @@
 package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
-import models.{CheckMode, UserAnswers}
-import pages.adjustment.AdjustmentTaxTypePage
+import models.adjustment.AdjustmentEntry
+import models.CheckMode
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -26,11 +26,11 @@ import viewmodels.implicits._
 
 object AdjustmentTaxTypeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdjustmentTaxTypePage).map { answer =>
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    adjustmentEntry.taxCode.map { taxCode =>
       SummaryListRowViewModel(
         key = "adjustmentTaxType.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(taxCode),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("adjustmentTaxType.change.hidden"))

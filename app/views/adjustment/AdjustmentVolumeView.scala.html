@@ -23,7 +23,8 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading,
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
@@ -41,15 +42,26 @@
             text = messages(s"section.adjustment.$adjustmentType"),
         )
 
+        @pageHeading(messages("adjustmentVolume.heading"))
+
         @govukInput(
             InputViewModel(
-                field = form("adjustment-volume-input"),
-                label = LabelViewModel(messages("adjustmentVolume.heading")).asPageHeading()
+                field = form("adjustment-total-liters-input"),
+                label = LabelViewModel(messages("adjustmentTotalLitersVolume.heading"))
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            .withHint(Hint(content = HtmlContent(messages("adjustmentVolume.hint"))))
+        )
+
+        @govukInput(
+        InputViewModel(
+            field = form("adjustment-pure-alcohol-input"),
+            label = LabelViewModel(messages("adjustmentPureAlcoholVolume.heading"))
+        )
+        .asNumeric()
+        .withWidth(Fixed10)
+        .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
 
         @govukButton(

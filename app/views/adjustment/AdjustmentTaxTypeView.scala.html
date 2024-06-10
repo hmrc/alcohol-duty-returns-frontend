@@ -48,7 +48,14 @@
             )
             .asNumeric()
             .withWidth(Fixed10)
-        )
+            .withHint(HintViewModel(
+            if(adjustmentType == "under-declaration"){
+            messages("adjustmentTaxType.underDeclaration.hint")
+            } else {
+            messages("adjustmentTaxType.default.hint")
+            }
+            )))
+
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))

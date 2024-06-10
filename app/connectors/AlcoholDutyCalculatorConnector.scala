@@ -32,10 +32,10 @@ class AlcoholDutyCalculatorConnector @Inject() (
   implicit val httpClient: HttpClient
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances {
-  def calculateTaxDuty(abv: AlcoholByVolume, volume: BigDecimal, rate: BigDecimal)(implicit
+  def calculateTaxDuty(pureAlcoholVolume: BigDecimal, rate: BigDecimal)(implicit
     hc: HeaderCarrier
   ): Future[TaxDuty] = {
-    val body: DutyCalculationRequest = DutyCalculationRequest(abv, volume, rate)
+    val body: DutyCalculationRequest = DutyCalculationRequest(pureAlcoholVolume, rate)
     httpClient.POST[DutyCalculationRequest, TaxDuty](url = config.adrCalculatorCalculateDutyUrl(), body = body)
   }
 

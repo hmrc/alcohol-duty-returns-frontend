@@ -40,7 +40,9 @@ object ViewUtils {
     s"$percentage${messages("site.unit.percentage")}"
 
   def valueFormatter(value: BigDecimal): String = {
-    val decimalFormat = new DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(Locale.UK))
-    decimalFormat.format(value)
+    val decimalFormat  = new DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(Locale.UK))
+    val formattedValue = decimalFormat.format(value.abs)
+    if (value < 0) { s"-£$formattedValue" }
+    else { s"£$formattedValue" }
   }
 }

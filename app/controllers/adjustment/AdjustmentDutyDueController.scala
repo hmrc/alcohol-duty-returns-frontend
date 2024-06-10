@@ -55,16 +55,16 @@ class AdjustmentDutyDueController @Inject() (
 
   private def getView(adjustmentEntry: AdjustmentEntry)(implicit request: Request[_]): Result = {
     val result = for {
-      abv               <- adjustmentEntry.abv
-      volume            <- adjustmentEntry.volume
+      volume            <- adjustmentEntry.totalLitresVolume
       pureAlcoholVolume <- adjustmentEntry.pureAlcoholVolume
       taxCode           <- adjustmentEntry.taxCode
       duty              <- adjustmentEntry.duty
       rate              <- adjustmentEntry.rate
       adjustmentType    <- Some(AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry))
 
-    } yield Ok(view(adjustmentType, abv.value, volume, duty, pureAlcoholVolume, taxCode, rate))
+    } yield Ok(view(adjustmentType, volume, duty, pureAlcoholVolume, taxCode, rate))
 
     result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
   }
+
 }

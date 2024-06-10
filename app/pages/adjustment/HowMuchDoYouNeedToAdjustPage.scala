@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package connectors
+package pages.adjustment
 
-import play.api.libs.json.{Json, OFormat}
+import models.adjustment.HowMuchDoYouNeedToAdjust
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-case class DutyCalculationRequest(
-  pureAlcoholVolume: BigDecimal,
-  rate: BigDecimal
-)
+case object HowMuchDoYouNeedToAdjustPage extends QuestionPage[HowMuchDoYouNeedToAdjust] {
 
-object DutyCalculationRequest {
-  implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "howMuchDoYouNeedToAdjust"
 }

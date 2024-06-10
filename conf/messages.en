@@ -72,6 +72,7 @@ unauthorised.heading = You can’t access this service with this account
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty return
 section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits return
+section.adjustment = Adjust a previous return
 section.adjustment.default = Alcohol Duty adjustment
 section.adjustment.under-declaration = Adjust for under-declared alcohol
 section.adjustment.over-declaration = Adjust for over-declared alcohol
@@ -744,9 +745,9 @@ spiritsQuestions.checkYourAnswersLabel.card4 = Other ingredients you’ve used
 
 # Beginning of adjustments sub-journey
 
-declareAdjustmentQuestion.title = Do you need to make any adjustments from a previously submitted return?
-declareAdjustmentQuestion.heading = Do you need to make any adjustments from a previously submitted return?
-declareAdjustmentQuestion.p1 = You should make an adjustment to a previously submitted return if you need to do any of the following:
+declareAdjustmentQuestion.title = Do you need to make an adjustment to a previously submitted return?
+declareAdjustmentQuestion.heading = Do you need to make an adjustment to a previously submitted return?
+declareAdjustmentQuestion.p1 = You should make an adjustment to a previously submitted return if you have done any of the following:
 declareAdjustmentQuestion.para1.list1 = you have under-declared alcohol on a previous return and have not paid enough duty
 declareAdjustmentQuestion.para1.list2 = you have over-declared alcohol on a previous return and paid too much duty
 declareAdjustmentQuestion.para1.list3 = you have paid duty on alcohol and it is now spoilt and cannot be consumed
@@ -768,12 +769,16 @@ adjustmentType.drawback = Drawback
 adjustmentType.drawback.hint = You have paid duty on alcohol and have now exported it.
 adjustmentType.repackaged-draught-products = Repackaged draught products
 adjustmentType.repackaged-draught-products.hint = You have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate.
-adjustmentType.checkYourAnswersLabel = adjustment
-adjustmentType.error.required = Select the adjustment you need to make
+adjustmentType.checkYourAnswersLabel = Adjustment
+adjustmentType.error.required = Select the type of adjustment you need to make
 adjustmentType.change.hidden = which type of adjustment do you need to make
 
-whenDidYouPayDuty.title = When did you pay duty on this?
-whenDidYouPayDuty.heading = When did you pay duty on this?
+whenDidYouPayDuty.default.title = When did you pay duty on this?
+whenDidYouPayDuty.default.heading = When did you pay duty on this?
+whenDidYouPayDuty.under-declaration.title = When should you have paid duty?
+whenDidYouPayDuty.spoilt.title = To the nearest month, when did you pay duty on this?
+whenDidYouPayDuty.under-declaration.heading = When should you have paid duty?
+whenDidYouPayDuty.spoilt.heading = To the nearest month, when did you pay duty on this?
 whenDidYouPayDuty.paragraph = Contact HMRC if this was originally declared before August 2023.
 whenDidYouPayDuty.hint = For example, 3 2007
 whenDidYouPayDuty.date.error.required.all = Enter a month and year
@@ -782,6 +787,7 @@ whenDidYouPayDuty.date.error.invalid.future = Enter a date that’s in the past
 whenDidYouPayDuty.date.error.invalid.month = Enter a valid month. It must be a number between 1 and 12
 whenDidYouPayDuty.date.error.invalid.year = Enter a valid year. It must be a 4-digit number
 whenDidYouPayDuty.date.error.invalid.past = The date must be after 31st August 2023
+whenDidYouPayDuty.checkYourAnswersLabel = Original return period
 
 alcoholByVolume.title = What is the Alcohol by Volume (ABV) strength for this adjustment?
 alcoholByVolume.heading = What is the Alcohol by Volume (ABV) strength for this adjustment?
@@ -795,7 +801,9 @@ alcoholByVolume.change.hidden = What is the Alcohol by Volume (ABV) strength for
 
 adjustmentTaxType.title = What is the tax type for this adjustment?
 adjustmentTaxType.heading = What is the tax type for this adjustment?
-adjustmentTaxType.checkYourAnswersLabel = AdjustmentTaxType
+adjustmentTaxType.underDeclaration.hint = The 3 digit tax type code for the under-declared alcohol
+adjustmentTaxType.default.hint = The 3 digit tax type code used on your previous return
+adjustmentTaxType.checkYourAnswersLabel = Tax
 adjustmentTaxType.error.valid = Enter a valid 3 digit tax type
 adjustmentTaxType.error.invalid = Enter the previous tax type
 adjustmentTaxType.change.hidden = what is the tax type for this adjustment
@@ -824,19 +832,40 @@ adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Your Small Produce
 adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
 adjustmentSmallProducerReliefDutyRate.change.hidden = what is your Small Producer Relief duty rate
 
-adjustmentDutyDue.title = Your calculations
-adjustmentDutyDue.heading = Your calculations
-adjustmentDutyDue.paragraph1 = Based on everything you’ve told us about this entry, we’ve worked out the litres of pure alcohol (Lpa) and the duty due for this entry.
+howMuchDoYouNeedToAdjust.title = How much do you need to adjust?
+howMuchDoYouNeedToAdjust.heading = How much do you need to adjust?
+howMuchDoYouNeedToAdjust.hint = Give your answers as volumes in litres, to 2 decimal places. For example, 500.50
+howMuchDoYouNeedToAdjust.totalLitersVolume = totalLitersVolume
+howMuchDoYouNeedToAdjust.pureAlcoholVolume = pureAlcoholVolume
+howMuchDoYouNeedToAdjust.checkYourAnswersLabel = HowMuchDoYouNeedToAdjust
+howMuchDoYouNeedToAdjust.error.totalLitersVolume.required = Enter the total litres
+howMuchDoYouNeedToAdjust.error.pureAlcoholVolume.required = Enter the litres of pure alcohol
+howMuchDoYouNeedToAdjust.error.totalLitersVolume.nonNumeric = Total litres must be a number
+howMuchDoYouNeedToAdjust.error.pureAlcoholVolume.nonNumeric = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToAdjust.error.totalLitersVolume.twoDecimalPlaces = Total litres must be a number to 2 decimal places
+howMuchDoYouNeedToAdjust.error.pureAlcoholVolume.twoDecimalPlaces = Litres of pure alcohol must be a number to 2 decimal places
+howMuchDoYouNeedToAdjust.error.totalLitersVolume.minimumRequired = Total litres must be 0.01 or more
+howMuchDoYouNeedToAdjust.error.pureAlcoholVolume.minimumRequired = Litres of pure alcohol must be 0.01 or more
+howMuchDoYouNeedToAdjust.error.totalLitersVolume.maximumRequired = Total litres must be 99.99 million or less
+owMuchDoYouNeedToAdjust.error.pureAlcoholVolume.maximumRequired = Litres of pure alcohol must be 99.99 million or less
+howMuchDoYouNeedToAdjust.pureAlcohol = litres of pure alcohol (Lpa)
+howMuchDoYouNeedToAdjust.totalLitres = litres of {0}
+howMuchDoYouNeedToAdjust.totalLitersVolume.change.hidden = totalLitersVolume
+howMuchDoYouNeedToAdjust.pureAlcoholVolume.change.hidden = pureAlcoholVolume
+
+adjustmentDutyDue.title = The duty value for this adjustment is {0}
+adjustmentDutyDue.heading = The duty value for this adjustment is {0}
+adjustmentDutyDue.paragraph1 = This is based on:
 adjustmentDutyDue.subheading1 = {0} litres of pure alcohol (Lpa)
 adjustmentDutyDue.paragraph2 = This is based on:
-adjustmentDutyDue.bulletList.1 = the Alcohol by Volume (ABV) strength of this entry is {0}%
-adjustmentDutyDue.bulletList.2 = you need to declare {0} litres of this entry
-adjustmentDutyDue.subheading2 = The duty value of this entry is £{0}
-adjustmentDutyDue.paragraph3 = This is based on:
-adjustmentDutyDue.bulletList.3 = the entry having {0} litres of pure alcohol (Lpa)
-adjustmentDutyDue.bulletList.4 = the duty rate for this entry being £{0} per litre  of pure alcohol
+adjustmentDutyDue.bulletList.1 = you declared {0} litres of pure alcohol (Lpa)
+adjustmentDutyDue.bulletList.2 = the duty rate is {0} per litre of pure alcohol
+adjustmentDutyDue.bulletList.3 = the duty to pay is {0}: duty rate multiplied by the litres of pure alcohol
 adjustmentDutyDue.rate.checkYourAnswersLabel = Duty rate
-adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
+adjustmentDutyDue.duty.checkYourAnswersLabel = Duty value
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
+checkYourAnswers.subHeading = Adjustment details
+
 # End of adjustments sub-journey
+

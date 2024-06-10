@@ -18,7 +18,7 @@ package models.productEntry
 
 import play.api.libs.json.{Json, OFormat}
 
-case class TaxDuty(pureAlcoholVolume: BigDecimal, duty: BigDecimal)
+case class TaxDuty(duty: BigDecimal)
 
 object TaxDuty {
   implicit val formats: OFormat[TaxDuty] = Json.format[TaxDuty]

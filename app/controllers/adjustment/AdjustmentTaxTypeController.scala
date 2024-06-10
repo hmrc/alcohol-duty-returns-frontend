@@ -26,6 +26,7 @@ import pages.adjustment.{AdjustmentTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import models.adjustment.AdjustmentEntry
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
@@ -33,7 +34,6 @@ import views.html.adjustment.AdjustmentTaxTypeView
 
 import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 class AdjustmentTaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
@@ -75,25 +75,27 @@ class AdjustmentTaxTypeController @Inject() (
                   BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
                 )
             },
-          value =>
-            fetchAdjustmentRateBand(value.toString).flatMap {
+          value => {
+            val currentAdjustmentEntry          = request.userAnswers.get(CurrentAdjustmentEntryPage).get
+            val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
+            fetchAdjustmentRateBand(value.toString, updatedAdjustment.period.getOrElse(YearMonth.of(1999, 1))).flatMap {
               case Some(rateBand) =>
                 for {
-                  currentAdjustmentEntry <- Future.fromTry(Try(request.userAnswers.get(CurrentAdjustmentEntryPage).get))
-                  updatedAnswers         <-
+
+                  updatedAnswers <-
                     Future.fromTry(
                       request.userAnswers
                         .set(
                           CurrentAdjustmentEntryPage,
-                          currentAdjustmentEntry.copy(
+                          updatedAdjustment.copy(
                             taxCode = Some(value.toString),
                             taxRate = rateBand.rate,
                             rateType = Some(rateBand.rateType)
                           )
                         )
                     )
-                  _                      <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers))
+                  _              <- cacheConnector.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers, hasChanged))
               case None           =>
                 Future.successful(
                   BadRequest(
@@ -103,17 +105,32 @@ class AdjustmentTaxTypeController @Inject() (
                         .fill(value),
                       mode,
                       AdjustmentTypeHelper
-                        .getAdjustmentTypeValue(request.userAnswers.get(CurrentAdjustmentEntryPage).get)
+                        .getAdjustmentTypeValue(updatedAdjustment)
                     )
                   )
                 )
             }
+          }
         )
   }
 
-  private def fetchAdjustmentRateBand(taxCode: String)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
-    //hardcoded for now, will need to get this from obligation period
-    val ratePeriod: YearMonth = YearMonth.of(2024, 1)
-    alcoholDutyCalculatorConnector.rateBand(taxCode, ratePeriod)
-  }
+  private def fetchAdjustmentRateBand(taxCode: String, period: YearMonth)(implicit
+    hc: HeaderCarrier
+  ): Future[Option[RateBand]] =
+    alcoholDutyCalculatorConnector.rateBand(taxCode, period)
+
+  def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
+    adjustmentEntry.taxCode match {
+      case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, false)
+      case _                                                             =>
+        (
+          adjustmentEntry.copy(
+            sprDutyRate = None,
+            totalLitresVolume = None,
+            pureAlcoholVolume = None,
+            duty = None
+          ),
+          true
+        )
+    }
 }

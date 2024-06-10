@@ -51,10 +51,10 @@ class AdjustmentVolumeController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                  => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.volume.isDefined =>
-        Ok(view(form.fill(value.volume.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      case Some(value)                           => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case None                                             => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(value) if value.totalLitresVolume.isDefined =>
+        Ok(view(form.fill(value.totalLitresVolume.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                                      => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
     }
   }
 
@@ -76,7 +76,7 @@ class AdjustmentVolumeController @Inject() (
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(volume = Some(value)))
+                  request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(totalLitresVolume = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers))

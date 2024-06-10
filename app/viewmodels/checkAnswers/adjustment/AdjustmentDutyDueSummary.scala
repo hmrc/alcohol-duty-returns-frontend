@@ -17,33 +17,18 @@
 package viewmodels.checkAnswers.adjustment
 
 import models.adjustment.AdjustmentEntry
-import models.{CheckMode, YearMonthModelFormatter}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.ViewUtils.valueFormatter
 
-object WhenDidYouPayDutySummary extends YearMonthModelFormatter {
-
+object AdjustmentDutyDueSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    adjustmentEntry.period.map { period =>
-      val value =
-        HtmlFormat.escape(period.getMonth.toString).toString + " " + HtmlFormat
-          .escape(period.getYear.toString)
-          .toString
-
+    adjustmentEntry.duty.map { duty =>
       SummaryListRowViewModel(
-        key = "whenDidYouPayDuty.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode).url
-          )
-            .withVisuallyHiddenText(messages("whenDidYouPayDuty.change.hidden"))
-        )
+        key = "adjustmentDutyDue.duty.checkYourAnswersLabel",
+        value = ValueViewModel(valueFormatter(duty))
       )
     }
 }

@@ -27,6 +27,14 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryHowMuchDoYouNeedToAdjust: Arbitrary[adjustment.HowMuchDoYouNeedToAdjust] =
+    Arbitrary {
+      for {
+        totalLitersVolume <- arbitrary[String]
+        pureAlcoholVolume <- arbitrary[String]
+      } yield adjustment.HowMuchDoYouNeedToAdjust(totalLitersVolume, pureAlcoholVolume)
+    }
+
   implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =
     Arbitrary {
       for {

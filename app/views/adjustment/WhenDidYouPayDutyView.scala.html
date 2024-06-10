@@ -29,7 +29,14 @@
 
 @(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whenDidYouPayDuty.title"))) {
+@layout(pageTitle = title(form, if(adjustmentType == "under-declaration"){
+                                    messages("whenDidYouPayDuty.under-declaration.title")
+                                    } else if(adjustmentType == "spoilt"){
+                                    messages("whenDidYouPayDuty.spoilt.title")
+                                    } else {
+                                    messages("whenDidYouPayDuty.default.title")
+                                 }
+)) {
 
     @formHelper(action = controllers.adjustment.routes.WhenDidYouPayDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -42,7 +49,15 @@
             messages(s"section.adjustment.$adjustmentType"),
         )
 
-        @pageHeading(messages("whenDidYouPayDuty.heading"))
+        @pageHeading(
+                    if(adjustmentType == "under-declaration"){
+                    messages("whenDidYouPayDuty.under-declaration.heading")
+                    } else if(adjustmentType == "spoilt"){
+                    messages("whenDidYouPayDuty.spoilt.heading")
+                    } else {
+                    messages("whenDidYouPayDuty.default.heading")
+                    }
+                    )
 
         @paragraph(messages("whenDidYouPayDuty.paragraph"))
 
@@ -55,7 +70,7 @@
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }

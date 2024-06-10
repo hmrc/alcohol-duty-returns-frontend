@@ -22,17 +22,28 @@ import play.api.libs.json.{Json, OFormat}
 import java.time.YearMonth
 
 case class AdjustmentEntry(
+  index: Option[Int] = None,
   adjustmentType: Option[AdjustmentType] = None,
   abv: Option[AlcoholByVolume] = None,
   taxCode: Option[String] = None,
   rateType: Option[RateType] = None,
   taxRate: Option[BigDecimal] = None,
-  volume: Option[BigDecimal] = None,
+  totalLitresVolume: Option[BigDecimal] = None,
+  pureAlcoholVolume: Option[BigDecimal] = None,
   period: Option[YearMonth] = None,
   sprDutyRate: Option[BigDecimal] = None,
-  duty: Option[BigDecimal] = None,
-  pureAlcoholVolume: Option[BigDecimal] = None
+  duty: Option[BigDecimal] = None
 ) {
+  def isComplete: Boolean      =
+    abv.isDefined &&
+      rateType.isDefined &&
+      // volume.isDefined &&
+      taxCode.isDefined &&
+      // reliefQuestionDefined &&
+      // regime.isDefined &&
+      (taxRate.isDefined || sprDutyRate.isDefined) &&
+      duty.isDefined &&
+      pureAlcoholVolume.isDefined
   def rate: Option[BigDecimal] = (taxRate, sprDutyRate) match {
     case (Some(_), None) => taxRate
     case (None, Some(_)) => sprDutyRate

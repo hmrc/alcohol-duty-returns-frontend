@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package connectors
+package models.adjustment
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
 
-case class DutyCalculationRequest(
+case class HowMuchDoYouNeedToAdjust(
+  totalLitersVolume: BigDecimal,
   pureAlcoholVolume: BigDecimal,
-  rate: BigDecimal
+  sprDutyRate: Option[BigDecimal]
 )
 
-object DutyCalculationRequest {
-  implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
+object HowMuchDoYouNeedToAdjust {
+  implicit val format: OFormat[HowMuchDoYouNeedToAdjust] = Json.format[HowMuchDoYouNeedToAdjust]
 }

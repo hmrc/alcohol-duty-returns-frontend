@@ -24,28 +24,47 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AdjustmentNavigator @Inject() () extends BaseNavigator {
+class AdjustmentNavigator @Inject() () {
 
-  override val normalRoutes: Page => UserAnswers => Call = {
+  private val normalRoutes: Page => UserAnswers => Call = {
     case pages.adjustment.DeclareAdjustmentQuestionPage             =>
       _ => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
-    case pages.adjustment.AlcoholByVolumePage                       =>
-      _ => controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
     case pages.adjustment.AdjustmentTypePage                        =>
       _ => controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
     case pages.adjustment.WhenDidYouPayDutyPage                     =>
-      _ => controllers.adjustment.routes.AlcoholByVolumeController.onPageLoad(NormalMode)
-    case pages.adjustment.AdjustmentVolumePage                      =>
+      _ => controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
+    case pages.adjustment.AdjustmentTaxTypePage                     =>
+      _ => controllers.adjustment.routes.HowMuchDoYouNeedToAdjustController.onPageLoad(NormalMode)
+    case pages.adjustment.HowMuchDoYouNeedToAdjustPage              =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
-    case pages.adjustment.AdjustmentTaxTypePage                     => adjustmentTaxTypePageRoute
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
-      _ => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      _ => controllers.adjustment.routes.HowMuchDoYouNeedToAdjustController.onPageLoad(NormalMode)
     case _                                                          =>
       _ => routes.IndexController.onPageLoad
   }
 
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad()
+  private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
+    case pages.adjustment.AdjustmentTypePage           =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode)
+          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    case pages.adjustment.WhenDidYouPayDutyPage        =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
+          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    case pages.adjustment.AdjustmentTaxTypePage        =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.adjustment.routes.HowMuchDoYouNeedToAdjustController.onPageLoad(CheckMode)
+          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    case pages.adjustment.HowMuchDoYouNeedToAdjustPage =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    case _                                             => _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
   }
 
   private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers): Call = {
@@ -54,14 +73,21 @@ class AdjustmentNavigator @Inject() () extends BaseNavigator {
       rateType   <- adjustment.rateType
     } yield rateType
     rateType match {
-      case Some(Core)                          => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      case Some(Core)                          => controllers.adjustment.routes.HowMuchDoYouNeedToAdjustController.onPageLoad(NormalMode)
       case Some(DraughtRelief)                 =>
-        controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+        controllers.adjustment.routes.HowMuchDoYouNeedToAdjustController.onPageLoad(NormalMode)
       case Some(DraughtAndSmallProducerRelief) =>
         controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
       case Some(SmallProducerRelief)           =>
         controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
       case _                                   => routes.JourneyRecoveryController.onPageLoad()
     }
+  }
+
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean = true): Call = mode match {
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode  =>
+      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
   }
 }

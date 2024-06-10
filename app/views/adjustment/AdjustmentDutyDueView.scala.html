@@ -27,39 +27,27 @@
         subHeading: SubHeading
 )
 
-@(adjustmentType: String, abv:BigDecimal, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentType: String, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title"))) {
+@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", valueFormatter(duty)))) {
 
     @sectionHeading(
     id = "adjustment-duty-due-section",
     text = messages(s"section.adjustment.$adjustmentType"),
     )
-    @pageHeading(messages("adjustmentDutyDue.heading"))
+    @pageHeading(messages("adjustmentDutyDue.heading", valueFormatter(duty)))
 
     @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
-    @subHeading(messages("adjustmentDutyDue.subheading1", pureAlcoholVolume))
-
-    @paragraph(messages("adjustmentDutyDue.paragraph2"))
-
     @bulletList(Seq(
-    messages("adjustmentDutyDue.bulletList.1", abv),
-    messages("adjustmentDutyDue.bulletList.2", volume),
-
-    ))
-
-    @subHeading(messages("adjustmentDutyDue.subheading2", valueFormatter(duty)))
-
-    @paragraph(messages("adjustmentDutyDue.paragraph3"))
-
-    @bulletList(Seq(
-    messages("adjustmentDutyDue.bulletList.3", pureAlcoholVolume),
-    messages("adjustmentDutyDue.bulletList.4", valueFormatter(rate))
+    messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
+    messages("adjustmentDutyDue.bulletList.2", valueFormatter(rate)),
+    messages("adjustmentDutyDue.bulletList.3", valueFormatter(duty))
     ))
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
     )
 
 }

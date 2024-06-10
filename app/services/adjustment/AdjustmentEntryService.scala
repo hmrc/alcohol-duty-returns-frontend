@@ -20,8 +20,10 @@ import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Underdeclaration}
 import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HeaderCarrier
+import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,20 +36,25 @@ class AdjustmentEntryServiceImpl @Inject() (
     userAnswers: UserAnswers
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry] = {
 
-    val adjustmentEntry =
+    val adjustmentEntry   =
       userAnswers
         .get(CurrentAdjustmentEntryPage)
         .getOrElse(throw new RuntimeException("Can't fetch adjustment entry from cache"))
-    val abv             = adjustmentEntry.abv.getOrElse(throw new RuntimeException("Can't fetch ABV from cache"))
-    val volume          = adjustmentEntry.volume.getOrElse(throw new RuntimeException("Can't fetch volume from cache"))
-    val rate            = adjustmentEntry.rate.getOrElse(throw getError(adjustmentEntry))
+    val pureAlcoholVolume =
+      adjustmentEntry.pureAlcoholVolume.getOrElse(
+        throw new RuntimeException("Can't fetch pure alcohol volume from cache")
+      )
+    val rate              = adjustmentEntry.rate.getOrElse(throw getError(adjustmentEntry))
 
     for {
-      taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(abv, volume, rate)
-    } yield adjustmentEntry.copy(
-      pureAlcoholVolume = Some(taxDuty.pureAlcoholVolume),
-      duty = Some(taxDuty.duty)
-    )
+      taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, rate)
+    } yield {
+      val adjustmentType = AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry)
+      val dutyValue      = checkDutyValue(taxDuty.duty, adjustmentType)
+      adjustmentEntry.copy(
+        duty = Some(dutyValue)
+      )
+    }
   }
 
   private def getError(adjustmentEntry: AdjustmentEntry): RuntimeException =
@@ -56,6 +63,13 @@ class AdjustmentEntryServiceImpl @Inject() (
         new RuntimeException("Failed to get rate, both tax rate and spr duty rate are defined.")
       case (None, None)       => new RuntimeException("Failed to get rate, neither tax rate nor spr duty rate are defined.")
       case (_, _)             => new RuntimeException("Failed to get rate.")
+    }
+
+  private def checkDutyValue(duty: BigDecimal, adjustmentType: String): BigDecimal =
+    if (adjustmentType.equals(Underdeclaration.toString) || adjustmentType.equals(RepackagedDraughtProducts.toString)) {
+      duty
+    } else {
+      duty * -1
     }
 }
 

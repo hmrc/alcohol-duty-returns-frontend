@@ -17,8 +17,8 @@
 package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
-import models.{CheckMode, UserAnswers}
-import pages.adjustment.AdjustmentTypePage
+import models.adjustment.AdjustmentEntry
+import models.CheckMode
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -28,11 +28,11 @@ import viewmodels.implicits._
 
 object AdjustmentTypeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdjustmentTypePage).map { answer =>
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    adjustmentEntry.adjustmentType.map { adjustmentType =>
       val value = ValueViewModel(
         HtmlContent(
-          HtmlFormat.escape(messages(s"adjustmentType.$answer"))
+          HtmlFormat.escape(messages(s"adjustmentType.$adjustmentType"))
         )
       )
 
