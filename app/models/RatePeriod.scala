@@ -16,6 +16,11 @@
 
 package models
 
+//import cats.data.NonEmptySeq
+import cats._
+import cats.data._
+import cats.implicits._
+import play.api.libs.functional.syntax._
 import enumeratum.{Enum, EnumEntry, PlayEnum}
 import play.api.libs.json._
 
@@ -125,18 +130,45 @@ object AlcoholByVolume {
   val MAX: AlcoholByVolume = AlcoholByVolume(100)
 }
 
+sealed trait ABVIntervalLabel extends EnumEntry
+object ABVIntervalLabel extends Enum[ABVIntervalLabel] with PlayEnum[ABVIntervalLabel] {
+  val values = findValues
+
+  case object Beer extends ABVIntervalLabel
+  case object Cider extends ABVIntervalLabel
+  case object SparklingCider extends ABVIntervalLabel
+  case object Wine extends ABVIntervalLabel
+  case object Spirits extends ABVIntervalLabel
+  case object OtherFermentedProduct extends ABVIntervalLabel
+}
+
+case class ABVInterval(label: ABVIntervalLabel, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
+
+object ABVInterval {
+  implicit val format: Format[ABVInterval] = Json.format[ABVInterval]
+}
+
 case class RateBand(
   taxType: String,
   description: String,
   rateType: RateType,
   alcoholRegime: Set[AlcoholRegime],
-  minABV: AlcoholByVolume,
-  maxABV: AlcoholByVolume,
+  intervals: NonEmptySeq[ABVInterval],
   rate: Option[BigDecimal]
 )
 
 object RateBand {
-  implicit val formats: OFormat[RateBand] = Json.format[RateBand]
+  implicit val formats: Format[RateBand] = Json.format[RateBand]
+
+  implicit val nonEmptySeqFormat: Format[NonEmptySeq[ABVInterval]] = new Format[NonEmptySeq[ABVInterval]] {
+    override def reads(json: JsValue): JsResult[NonEmptySeq[ABVInterval]] =
+      json.validate[Seq[ABVInterval]].flatMap {
+        case head +: tail => JsSuccess(NonEmptySeq.fromSeqUnsafe(Seq(head) ++ tail))
+        case _            => JsError("Empty sequence")
+      }
+
+    override def writes(o: NonEmptySeq[ABVInterval]): JsValue = Writes.seq(ABVInterval.format).writes(o.toList)
+  }
 }
 
 case class RatePeriod(

@@ -20,6 +20,7 @@ import models.{AlcoholByVolume, RateBand, RateType}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 import viewmodels.govuk.all.CheckboxGroupedItemViewModel
 
 case class TaxBandsViewModel(
@@ -37,7 +38,7 @@ object TaxBandsViewModel {
       .mapValues(rateBands =>
         rateBands.map(rateBand =>
           CheckboxGroupedItemViewModel(
-            content = rateBandContent(rateBand),
+            content = Text(rateBandContent(rateBand)),
             fieldId = "rateBand",
             value = rateBand.taxType
           )
@@ -52,22 +53,4 @@ object TaxBandsViewModel {
       draughtAndSmallProducerRelief = rateBandsByType.getOrElse(RateType.DraughtAndSmallProducerRelief, Seq.empty)
     )
   }
-
-  private def rateBandContent(rateBand: RateBand)(implicit messages: Messages): Text = Text(
-    rateBand.maxABV match {
-      case AlcoholByVolume.MAX =>
-        messages(
-          s"whatDoYouNeedToDeclare.option.abv.exceeding.max",
-          rateBand.minABV.value,
-          rateBand.taxType
-        )
-      case _                   =>
-        messages(
-          s"whatDoYouNeedToDeclare.option.abv.interval",
-          rateBand.minABV.value,
-          rateBand.maxABV.value,
-          rateBand.taxType
-        )
-    }
-  )
 }

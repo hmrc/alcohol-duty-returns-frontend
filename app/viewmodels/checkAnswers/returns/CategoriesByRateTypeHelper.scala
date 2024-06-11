@@ -41,13 +41,15 @@ object CategoriesByRateTypeHelper {
       .mapValues { rateBands =>
         rateBands.sortBy(_.taxType).map { rateBand =>
           CategoryViewModel(
-            category = messages(
-              "howMuchDoYouNeedToDeclare.abv.interval",
-              messages(s"return.regime.$regime"),
-              rateBand.minABV.value,
-              rateBand.maxABV.value,
-              rateBand.taxType
-            ).capitalize,
+            category = "",
+            // TODO: use RateBandHelper
+//            category = messages(
+//              "howMuchDoYouNeedToDeclare.abv.interval",
+//              messages(s"return.regime.$regime"),
+//              rateBand.minABV.value,
+//              rateBand.maxABV.value,
+//              rateBand.taxType
+//            ).capitalize,
             id = rateBand.taxType
           )
         }

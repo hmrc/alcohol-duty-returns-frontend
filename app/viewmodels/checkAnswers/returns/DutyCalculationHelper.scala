@@ -79,7 +79,7 @@ object DutyCalculationHelper {
   ) =
     TableRowViewModel(
       cells = Seq(
-        Text(rateBandContent(rateBand, "checkYourAnswers.label")),
+        Text(rateBandContent(rateBand)),
         Text(messages("dutyCalculation.pureAlcohol.value", totalByTaxType.pureAlcohol)),
         Text(messages("dutyCalculation.dutyRate.value", totalByTaxType.dutyRate)),
         Text(messages("site.currency.2DP", totalByTaxType.dutyDue))

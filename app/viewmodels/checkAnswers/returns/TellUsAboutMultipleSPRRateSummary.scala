@@ -42,9 +42,7 @@ object TellUsAboutMultipleSPRRateSummary {
             val taxTypeRowViewModel =
               SummaryListRowViewModel(
                 key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType",
-                value = ValueViewModel(content =
-                  rateBandContent(rateBand, "whatDoYouNeedToDeclare.checkYourAnswersLabel.option")
-                ),
+                value = ValueViewModel(content = rateBandContent(rateBand)),
                 actions = actions("taxType", regime, index)
               )
 

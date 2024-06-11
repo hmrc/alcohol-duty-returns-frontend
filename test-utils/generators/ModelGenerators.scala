@@ -16,6 +16,7 @@
 
 package generators
 
+import cats.data.NonEmptySeq
 import models._
 import models.productEntry.ProductEntry
 import org.scalacheck.Arbitrary.arbitrary
@@ -209,16 +210,31 @@ trait ModelGenerators {
   implicit val chooseBigDecimal: Choose[BigDecimal] =
     Choose.xmap[Double, BigDecimal](d => BigDecimal(d), bd => bd.toDouble)(implicitly[Choose[Double]])
 
+  implicit val arbitraryABVIntervalLabel: Arbitrary[ABVIntervalLabel] = Arbitrary {
+    Gen.oneOf(ABVIntervalLabel.values)
+  }
+
+  implicit val abvIntervalGen: Arbitrary[ABVInterval] = Arbitrary {
+    (for {
+      label  <- arbitrary[ABVIntervalLabel]
+      minABV <- arbitrary[AlcoholByVolume]
+      maxABV <- arbitrary[AlcoholByVolume]
+    } yield ABVInterval(label, minABV, maxABV)).suchThat(interval => interval.minABV.value < interval.maxABV.value)
+  }
+
+  implicit val arbitraryABVIntervals: Arbitrary[List[ABVInterval]] = Arbitrary {
+    Gen.listOfN(2, abvIntervalGen.arbitrary)
+  }
+
   implicit val arbitraryRateBand: Arbitrary[RateBand] = Arbitrary {
     for {
       taxType       <- Gen.alphaStr
       description   <- Gen.alphaStr
       rateType      <- arbitraryRateType.arbitrary
       alcoholRegime <- arbitrarySetOfAlcoholRegimes.arbitrary
-      minABV        <- arbitraryAlcoholByVolume.arbitrary
-      maxABV        <- arbitraryAlcoholByVolume.arbitrary
+      intervals     <- arbitraryABVIntervals.arbitrary.suchThat(_.nonEmpty)
       rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
-    } yield RateBand(taxType, description, rateType, alcoholRegime, minABV, maxABV, rate)
+    } yield RateBand(taxType, description, rateType, alcoholRegime, NonEmptySeq.fromSeqUnsafe(intervals), rate)
   }
 
   implicit val arbitraryRatePeriod: Arbitrary[RatePeriod] = Arbitrary {
@@ -290,17 +306,8 @@ trait ModelGenerators {
 
   def regimeGen: Gen[AlcoholRegime] = Gen.oneOf(AlcoholRegime.values)
 
-  def rateBandGen(regime: AlcoholRegime): Gen[RateBand] = for {
-    taxType     <- Gen.chooseNum(300, 400).map(_.toString)
-    description <- Gen.alphaStr
-    rateType    <- arbitrary[RateType]
-    minABV      <- arbitrary[AlcoholByVolume]
-    maxABV      <- arbitrary[AlcoholByVolume]
-    rate        <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
-  } yield RateBand(taxType, description, rateType, Set(regime), minABV, maxABV, rate)
-
   def arbitraryRateBandList(regime: AlcoholRegime): Arbitrary[List[RateBand]] = Arbitrary {
-    Gen.listOfN(10, rateBandGen(regime))
+    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.alcoholRegime.contains(regime)))
   }
 
   def genVolumeAndRateByTaxTypeRateBand(rateBand: RateBand): Arbitrary[VolumeAndRateByTaxType] = Arbitrary {

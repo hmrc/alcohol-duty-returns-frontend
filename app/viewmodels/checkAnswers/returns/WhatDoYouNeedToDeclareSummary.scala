@@ -66,31 +66,12 @@ object WhatDoYouNeedToDeclareSummary {
         HtmlContent(
           "<ul>" +
             rateBands
-              .map(answer =>
-                s"<li>${rateBandContent(answer, "whatDoYouNeedToDeclare.checkYourAnswersLabel.option")}</li>"
-              )
+              .map(answer => s"<li>${rateBandContent(answer)}</li>")
               .mkString("")
             + "</ul>"
         )
       ),
       actions = Seq()
     )
-
-//  def rateBandContent(rateBand: RateBand)(implicit messages: Messages): String =
-//    rateBand.maxABV match {
-//      case AlcoholByVolume.MAX =>
-//        messages(
-//          s"whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.${rateBand.rateType}",
-//          rateBand.minABV.value,
-//          rateBand.taxType
-//        )
-//      case _                   =>
-//        messages(
-//          s"whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.${rateBand.rateType}",
-//          rateBand.minABV.value,
-//          rateBand.maxABV.value,
-//          rateBand.taxType
-//        )
-//    }
 
 }

@@ -106,7 +106,7 @@ object HowMuchDoYouNeedToDeclareSummary {
         case Some(dutyByTaxType) =>
           Seq(
             SummaryListRowViewModel(
-              key = KeyViewModel(rateBandContent(rateBand, "whatDoYouNeedToDeclare.checkYourAnswersLabel.option")),
+              key = KeyViewModel(rateBandContent(rateBand)),
               value = Value()
             ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
             SummaryListRowViewModel(

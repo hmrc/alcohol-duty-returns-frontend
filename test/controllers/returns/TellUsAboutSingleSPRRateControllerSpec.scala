@@ -29,6 +29,7 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.returns.VolumeAndRateByTaxType
+import org.scalacheck.Arbitrary._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
 import views.html.returns.TellUsAboutSingleSPRRateView
@@ -45,7 +46,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
   lazy val tellUsAboutSingleSPRRateRoute = routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime).url
 
-  val rateBand: RateBand                      = rateBandGen(regime).sample.value
+  val rateBand: RateBand                      = arbitrary[RateBand].sample.value
   val dutiesByTaxType: VolumeAndRateByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBand).arbitrary.sample.value
 
   val userAnswers = emptyUserAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, Seq(dutiesByTaxType)).success.value

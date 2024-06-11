@@ -17,12 +17,13 @@
 package connectors
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.productEntry.TaxDuty
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.{ABVInterval, ABVIntervalLabel, AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{atLeastOnce, mock, verify, when}
@@ -45,8 +46,13 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
     "some band",
     RateType.DraughtRelief,
     Set(AlcoholRegime.Beer),
-    AlcoholByVolume(0.1),
-    AlcoholByVolume(5.8),
+    intervals = NonEmptySeq.one(
+      ABVInterval(
+        ABVIntervalLabel.Beer,
+        AlcoholByVolume(0.1),
+        AlcoholByVolume(5.8)
+      )
+    ),
     Some(BigDecimal(10.99))
   )
   val rateBandList: Seq[RateBand]             = Seq(rateBand)

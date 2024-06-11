@@ -17,8 +17,9 @@
 package controllers.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import forms.adjustment.AdjustmentTaxTypeFormProvider
-import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType}
+import models.{ABVInterval, ABVIntervalLabel, AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -57,8 +58,13 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
     "some band",
     RateType.DraughtRelief,
     Set(alcoholRegime),
-    AlcoholByVolume(0.1),
-    AlcoholByVolume(5.8),
+    intervals = NonEmptySeq.one(
+      ABVInterval(
+        ABVIntervalLabel.Beer,
+        AlcoholByVolume(0.1),
+        AlcoholByVolume(5.8)
+      )
+    ),
     rate
   )
 

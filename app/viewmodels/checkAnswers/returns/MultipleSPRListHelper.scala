@@ -87,7 +87,7 @@ object MultipleSPRListHelper {
     sprList.zipWithIndex.map { case (sprEntry, index) =>
       TableRowViewModel(
         cells = Seq(
-          Text(rateBandContent(sprEntry.rateBand, "whatDoYouNeedToDeclare.checkYourAnswersLabel.option")),
+          Text(rateBandContent(sprEntry.rateBand)),
           Text(messages("multipleSPRList.totalLitres.value", sprEntry.dutyByTaxType.totalLitres)),
           Text(messages("multipleSPRList.pureAlcohol.value", sprEntry.dutyByTaxType.pureAlcohol)),
           Text(messages("multipleSPRList.dutyRate.value", sprEntry.dutyByTaxType.dutyRate))

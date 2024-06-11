@@ -150,6 +150,30 @@ return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rat
 return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
 return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 
+return.journey.abv.interval.label.Beer = beer
+return.journey.abv.interval.label.Cider = cider
+return.journey.abv.interval.label.SparklingCider = sparkling cider
+return.journey.abv.interval.label.Wine = wine
+return.journey.abv.interval.label.Spirits = spirits
+return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
+
+return.journey.abv.interval.exceeding.max = {0} exceeding {1}% ABV (tax type code {2})
+return.journey.abv.single.interval = {0} between {1}% and {2}% ABV (tax type code {3})
+return.journey.abv.multi.interval = {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV (tax type code {6})
+
+return.journey.abv.recap.interval.exceeding.max.Core = Non-draught {0} exceeding {1}% ABV ({2})
+return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
+return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.interval.exceeding.max.DraughtRelief = Draught {0} exceeding {1}% ABV ({2})
+return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})
+return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = Non-draught {0} exceeding {1}% ABV ({2} SPR)
+return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)
+return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} exceeding {1}% ABV ({2} SPR)
+return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
+return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+
 declareAlcoholDutyQuestion.title = Declaring your alcohol duty
 declareAlcoholDutyQuestion.heading = Declaring your alcohol duty
 declareAlcoholDutyQuestion.p1 = If you need to declare your alcohol, we will need to know the total amount you have produced and litres of pure alcohol in your beer across the following ABV strength bandings:

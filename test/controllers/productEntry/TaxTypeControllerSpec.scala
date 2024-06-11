@@ -17,10 +17,11 @@
 package controllers.productEntry
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType}
+import models.{ABVInterval, ABVIntervalLabel, AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -65,8 +66,13 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     "some band",
     RateType.DraughtRelief,
     Set(alcoholRegime),
-    AlcoholByVolume(0.1),
-    AlcoholByVolume(5.8),
+    intervals = NonEmptySeq.one(
+      ABVInterval(
+        ABVIntervalLabel.Beer,
+        AlcoholByVolume(0.1),
+        AlcoholByVolume(5.8)
+      )
+    ),
     rate
   )
   val rateBandList = Seq(rateBand)

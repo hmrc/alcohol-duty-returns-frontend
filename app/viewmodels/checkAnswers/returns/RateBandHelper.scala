@@ -16,24 +16,101 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholByVolume, RateBand}
+import cats.data.NonEmptySeq
+import models.{ABVInterval, AlcoholByVolume, RateBand, RateType}
 import play.api.i18n.Messages
 
 object RateBandHelper {
-  def rateBandContent(rateBand: RateBand, key: String)(implicit messages: Messages): String =
-    rateBand.maxABV match {
+
+  def rateBandContent(rateBand: RateBand)(implicit messages: Messages): String =
+    rateBand.intervals.length match {
+      case 1 =>
+        singleInterval(rateBand.intervals.head, rateBand.taxType)
+      case _ =>
+        multipleIntervals(rateBand.intervals, rateBand.taxType)
+    }
+
+  private def singleInterval(interval: ABVInterval, taxType: String)(implicit messages: Messages): String =
+    interval.maxABV match {
       case AlcoholByVolume.MAX =>
         messages(
-          s"$key.abv.exceeding.max.${rateBand.rateType}",
-          rateBand.minABV.value,
-          rateBand.taxType
-        )
+          "return.journey.abv.interval.exceeding.max",
+          messages(s"return.journey.abv.interval.label.${interval.label}"),
+          interval.minABV.value,
+          taxType
+        ).capitalize
       case _                   =>
         messages(
-          s"$key.abv.interval.${rateBand.rateType}",
-          rateBand.minABV.value,
-          rateBand.maxABV.value,
-          rateBand.taxType
-        )
+          "return.journey.abv.single.interval",
+          messages(s"return.journey.abv.interval.label.${interval.label}"),
+          interval.minABV.value,
+          interval.maxABV.value,
+          taxType
+        ).capitalize
     }
+
+  private def multipleIntervals(intervals: NonEmptySeq[ABVInterval], taxType: String)(implicit
+    messages: Messages
+  ): String = {
+    val firstInterval = intervals.head
+    val lastInterval  = intervals.last
+
+    messages(
+      "return.journey.abv.multi.interval",
+      messages(s"return.journey.abv.interval.label.${firstInterval.label}"),
+      firstInterval.minABV.value,
+      firstInterval.maxABV.value,
+      messages(s"return.journey.abv.interval.label.${lastInterval.label}"),
+      lastInterval.minABV.value,
+      lastInterval.maxABV.value,
+      taxType
+    ).capitalize
+  }
+
+  def rateBandRecap(rateBand: RateBand)(implicit messages: Messages): String =
+    rateBand.intervals.length match {
+      case 1 =>
+        singleIntervalRecap(rateBand.intervals.head, rateBand.taxType, rateBand.rateType)
+      case _ =>
+        multipleIntervalsRecap(rateBand.intervals, rateBand.taxType)
+    }
+
+  private def singleIntervalRecap(interval: ABVInterval, taxType: String, rateType: RateType)(implicit
+    messages: Messages
+  ): String =
+    interval.maxABV match {
+      case AlcoholByVolume.MAX =>
+        messages(
+          s"return.journey.abv.recap.interval.exceeding.max.$rateType",
+          messages(s"return.journey.abv.interval.label.${interval.label}"),
+          interval.minABV.value,
+          taxType
+        ).capitalize
+      case _                   =>
+        messages(
+          s"return.journey.abv.recap.single.interval.$rateType",
+          messages(s"return.journey.abv.interval.label.${interval.label}"),
+          interval.minABV.value,
+          interval.maxABV.value,
+          taxType
+        ).capitalize
+    }
+
+  private def multipleIntervalsRecap(intervals: NonEmptySeq[ABVInterval], taxType: String)(implicit
+    messages: Messages
+  ): String = {
+    val firstInterval = intervals.head
+    val lastInterval  = intervals.last
+
+    messages(
+      "return.journey.abv.multi.interval",
+      messages(s"return.journey.abv.interval.label.${firstInterval.label}"),
+      firstInterval.minABV.value,
+      firstInterval.maxABV.value,
+      messages(s"return.journey.abv.interval.label.${lastInterval.label}"),
+      lastInterval.minABV.value,
+      lastInterval.maxABV.value,
+      taxType
+    ).capitalize
+  }
 }
