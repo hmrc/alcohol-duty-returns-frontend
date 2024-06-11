@@ -86,6 +86,22 @@ section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
 section.dutySuspended = Duty suspended alcohol
 
+viewPastReturns.heading = Your Alcohol Duty returns
+viewPastReturns.title = Your Alcohol Duty returns
+viewPastReturns.outstandingReturns.caption = Outstanding returns
+viewPastReturns.completedReturns.caption = Completed returns
+viewPastReturns.period = Period
+viewPastReturns.reference = Reference
+viewPastReturns.status = Status
+viewPastReturns.action = Action
+viewPastReturns.submitReturn = Submit Return
+viewPastReturns.submitReturn.hidden = submit return
+viewPastReturns.viewReturn = View Return
+viewPastReturns.viewReturn.hidden = view return
+viewPastReturns.status.due = DUE
+viewPastReturns.status.overdue = OVERDUE
+viewPastReturns.status.completed = COMPLETED
+
 taskList.title = Alcohol Duty return
 taskList.status.completed = Return ready to submit
 taskList.status.incomplete = Return incomplete
