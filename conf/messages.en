@@ -174,6 +174,10 @@ return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = 
 return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
 return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
 
+return.journey.totalLitres = Total litres of {0}
+return.journey.pureAlcohol = Litres of pure alcohol
+return.journey.spr.dutyRate = Your Small Producer Relief Duty rate for this {0}
+
 declareAlcoholDutyQuestion.title = Declaring your alcohol duty
 declareAlcoholDutyQuestion.heading = Declaring your alcohol duty
 declareAlcoholDutyQuestion.p1 = If you need to declare your alcohol, we will need to know the total amount you have produced and litres of pure alcohol in your beer across the following ABV strength bandings:
@@ -245,13 +249,11 @@ howMuchDoYouNeedToDeclare.p1.Cider = Tell us about the cider you need to declare
 howMuchDoYouNeedToDeclare.p1.Wine = Tell us about the wine you need to declare and the pure alcohol in that wine at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.p1.Spirits = Tell us about the spirits you need to declare and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Tell us about the other fermented product you need to declare and the pure alcohol in that other fermented product at the following Alcohol by Volume (ABV) strengths.
-howMuchDoYouNeedToDeclare.warning = We will ask about beer eligible for Small Producer Relief on the next page.
+howMuchDoYouNeedToDeclare.warning = We will ask about {0} eligible for Small Producer Relief on the next page.
 howMuchDoYouNeedToDeclare.hint = Give your answers in litres, to 2 decimal places.
 howMuchDoYouNeedToDeclare.core.heading = How much {0} (standard rate) do you need to declare?
 howMuchDoYouNeedToDeclare.draught.heading = How much draught {0} (reduced rate) do you need to declare?
 howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type code {3})
-howMuchDoYouNeedToDeclare.legend.totalLitres = Total litres
-howMuchDoYouNeedToDeclare.legend.pureAlcohol = Litres of pure alcohol
 
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate
@@ -309,9 +311,6 @@ tellUsAboutMultipleSPRRate.h3.Cider = How much of this cider do you need to decl
 tellUsAboutMultipleSPRRate.h3.Spirits = How much of these spirits do you need to declare?
 tellUsAboutMultipleSPRRate.h3.Wine = How much of this wine do you need to declare?
 tellUsAboutMultipleSPRRate.h3.OtherFermentedProduct = How much of this other fermented product do you need to declare?
-tellUsAboutMultipleSPRRate.label.totalLitres = Total litres of this {0}
-tellUsAboutMultipleSPRRate.label.pureAlcohol = Litres of pure alcohol in this {0}
-tellUsAboutMultipleSPRRate.label.dutyRate = Your Small Producer Relief Duty rate for this {0}
 tellUsAboutMultipleSPRRate.hint.litres = In litres, to 2 decimal places.
 tellUsAboutMultipleSPRRate.hint.currency = Include pounds and pence
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel = TellUsAboutMultipleSPRRate

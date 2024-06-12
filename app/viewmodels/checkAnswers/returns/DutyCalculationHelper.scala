@@ -22,7 +22,7 @@ import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object DutyCalculationHelper {
@@ -79,7 +79,7 @@ object DutyCalculationHelper {
   ) =
     TableRowViewModel(
       cells = Seq(
-        Text(rateBandContent(rateBand)),
+        Text(rateBandRecap(rateBand)),
         Text(messages("dutyCalculation.pureAlcohol.value", totalByTaxType.pureAlcohol)),
         Text(messages("dutyCalculation.dutyRate.value", totalByTaxType.dutyRate)),
         Text(messages("site.currency.2DP", totalByTaxType.dutyDue))

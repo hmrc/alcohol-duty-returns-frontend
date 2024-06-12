@@ -72,7 +72,7 @@ object RateBandHelper {
       case 1 =>
         singleIntervalRecap(rateBand.intervals.head, rateBand.taxType, rateBand.rateType)
       case _ =>
-        multipleIntervalsRecap(rateBand.intervals, rateBand.taxType)
+        multipleIntervalsRecap(rateBand.intervals, rateBand.taxType, rateBand.rateType)
     }
 
   private def singleIntervalRecap(interval: ABVInterval, taxType: String, rateType: RateType)(implicit
@@ -96,14 +96,14 @@ object RateBandHelper {
         ).capitalize
     }
 
-  private def multipleIntervalsRecap(intervals: NonEmptySeq[ABVInterval], taxType: String)(implicit
+  private def multipleIntervalsRecap(intervals: NonEmptySeq[ABVInterval], taxType: String, rateType: RateType)(implicit
     messages: Messages
   ): String = {
     val firstInterval = intervals.head
     val lastInterval  = intervals.last
 
     messages(
-      "return.journey.abv.multi.interval",
+      s"return.journey.abv.recap.multi.interval.$rateType",
       messages(s"return.journey.abv.interval.label.${firstInterval.label}"),
       firstInterval.minABV.value,
       firstInterval.maxABV.value,

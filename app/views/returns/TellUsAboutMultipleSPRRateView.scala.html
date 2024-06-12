@@ -52,8 +52,8 @@
         @paragraph(messages("tellUsAboutMultipleSPRRate.p1"))
 
         @govukWarningText(WarningText(
-        iconFallbackText = Some("Warning"),
-        content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(s"return.regime.$regime")))
+            iconFallbackText = Some("Warning"),
+            content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(s"return.regime.$regime")))
         ))
 
         @govukRadios(
@@ -70,7 +70,7 @@
             InputViewModel(
               field = form(s"volumesWithRate"),
               key = "totalLitres",
-              label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.totalLitres", messages(s"return.regime.$regime"))),
+              label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_totalLitres"),
               value = form(s"volumesWithRate.totalLitres").value
             )
@@ -83,7 +83,7 @@
             InputViewModel(
               field = form(s"volumesWithRate"),
               key = "pureAlcohol",
-              label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.pureAlcohol", messages(s"return.regime.$regime"))),
+              label = LabelViewModel(messages("return.journey.pureAlcohol", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_pureAlcohol"),
               value = form(s"volumesWithRate.pureAlcohol").value
             )
@@ -96,7 +96,7 @@
             InputViewModel(
               field = form(s"volumesWithRate"),
               key = "dutyRate",
-              label = LabelViewModel(messages("tellUsAboutMultipleSPRRate.label.dutyRate", messages(s"return.regime.$regime"))),
+              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_dutyRate"),
               value = form(s"volumesWithRate.dutyRate").value
             )

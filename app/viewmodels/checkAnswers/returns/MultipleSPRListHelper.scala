@@ -21,7 +21,7 @@ import models.returns.VolumeAndRateByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
+import viewmodels.checkAnswers.returns.RateBandHelper.{rateBandContent, rateBandRecap}
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object MultipleSPRListHelper {
@@ -87,7 +87,7 @@ object MultipleSPRListHelper {
     sprList.zipWithIndex.map { case (sprEntry, index) =>
       TableRowViewModel(
         cells = Seq(
-          Text(rateBandContent(sprEntry.rateBand)),
+          Text(rateBandRecap(sprEntry.rateBand)),
           Text(messages("multipleSPRList.totalLitres.value", sprEntry.dutyByTaxType.totalLitres)),
           Text(messages("multipleSPRList.pureAlcohol.value", sprEntry.dutyByTaxType.pureAlcohol)),
           Text(messages("multipleSPRList.dutyRate.value", sprEntry.dutyByTaxType.dutyRate))

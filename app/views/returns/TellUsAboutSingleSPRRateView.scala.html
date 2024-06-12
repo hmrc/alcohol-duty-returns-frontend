@@ -59,7 +59,7 @@
             InputViewModel(
               field = form(s"volumesWithRate[$index]"),
               key = "totalLitres",
-              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.totalLitres")),
+              label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_${index}_totalLitres"),
               value = form(s"volumesWithRate[$index].totalLitres").value
             )
@@ -71,7 +71,7 @@
             InputViewModel(
               field = form(s"volumesWithRate[$index]"),
               key = "pureAlcohol",
-              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.pureAlcohol")),
+              label = LabelViewModel(messages("return.journey.pureAlcohol")),
               errorMessageField = form(s"volumesWithRate_${index}_pureAlcohol"),
               value = form(s"volumesWithRate[$index].pureAlcohol").value
             )
@@ -83,7 +83,7 @@
             InputViewModel(
               field = form(s"volumesWithRate[$index]"),
               key = "dutyRate",
-              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.dutyRate", messages(s"return.regime.$regime"))),
+              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
               value = form(s"volumesWithRate[$index].dutyRate").value
             )
@@ -112,7 +112,7 @@
             InputViewModel(
               field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
               key = "totalLitres",
-              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.totalLitres")),
+              label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_totalLitres"),
               value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
             )
@@ -124,7 +124,7 @@
             InputViewModel(
               field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
               key = "pureAlcohol",
-              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.pureAlcohol")),
+              label = LabelViewModel(messages("return.journey.pureAlcohol")),
               errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_pureAlcohol"),
               value = form(s"volumesWithRate[${index + categories.smallProducer.size}].pureAlcohol").value
             )
@@ -136,7 +136,7 @@
             InputViewModel(
               field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
               key = "dutyRate",
-              label = LabelViewModel(messages("tellUsAboutSingleSPRRate.legend.dutyRate", messages(s"return.regime.$regime"))),
+              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
               errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
               value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
             )
