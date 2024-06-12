@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.WhatDoYouNeedToDeclareFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode, RateBand, ReturnPeriod, UserAnswers}
+import models.{AlcoholRegimeName, Mode, RateBand, ReturnPeriod, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -49,7 +49,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onPageLoad(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(regime)
 
@@ -64,7 +64,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
       }
     }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onSubmit(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       getRateBands(request.userAnswers, request.returnPeriod, request.regimes, regime).flatMap {
         rateBands: Seq[RateBand] =>
@@ -87,17 +87,17 @@ class WhatDoYouNeedToDeclareController @Inject() (
   private def getRateBands(
     userAnswers: UserAnswers,
     returnPeriod: ReturnPeriod,
-    approvedAlcoholRegimes: Seq[AlcoholRegime],
-    selectedRegime: AlcoholRegime
+    approvedAlcoholRegimes: Seq[AlcoholRegimeName],
+    selectedRegime: AlcoholRegimeName
   )(implicit hc: HeaderCarrier): Future[Seq[RateBand]] =
     userAnswers.get(RateBandsPage) match {
-      case Some(rateBands) => Future.successful(rateBands.filter(_.alcoholRegime.contains(selectedRegime)))
+      case Some(rateBands) => Future.successful(rateBands.filter(_.alcoholRegimes.map(_.name).contains(selectedRegime)))
       case None            =>
         for {
           rateBands      <- calculatorConnector.rateBandByRegime(returnPeriod.period, approvedAlcoholRegimes)
           updatedAnswers <- Future.fromTry(userAnswers.set(RateBandsPage, rateBands))
           _              <- cacheConnector.set(updatedAnswers)
-        } yield rateBands.filter(_.alcoholRegime.contains(selectedRegime))
+        } yield rateBands.filter(_.alcoholRegimes.map(_.name).contains(selectedRegime))
     }
 
   private def rateBandFromTaxType(rateBandTaxTypes: Set[String], rateBands: Seq[RateBand]): Try[Set[RateBand]] = Try {

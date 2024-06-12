@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegime, Error, NormalMode, RateBand, UserAnswers}
+import models.{AlcoholRegimeName, Error, NormalMode, RateBand, UserAnswers}
 import models.returns.VolumeAndRateByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
@@ -26,7 +26,7 @@ import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object MultipleSPRListHelper {
 
-  def sprTableViewModel(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit
+  def sprTableViewModel(userAnswers: UserAnswers, regime: AlcoholRegimeName)(implicit
     messages: Messages
   ): Either[Error, TableViewModel] =
     getSprListEntries(userAnswers, regime) match {
@@ -61,7 +61,7 @@ object MultipleSPRListHelper {
 
   case class SprDutyRateEntry(dutyByTaxType: VolumeAndRateByTaxType, rateBand: RateBand)
 
-  def getSprListEntries(userAnswers: UserAnswers, regime: AlcoholRegime): Either[Error, Seq[SprDutyRateEntry]] =
+  def getSprListEntries(userAnswers: UserAnswers, regime: AlcoholRegimeName): Either[Error, Seq[SprDutyRateEntry]] =
     (
       userAnswers.getByKey(MultipleSPRListPage, regime),
       userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
@@ -81,7 +81,7 @@ object MultipleSPRListHelper {
       case _                                       => Left(Error("error"))
     }
 
-  def getSPREntryRows(sprList: Seq[SprDutyRateEntry], regime: AlcoholRegime)(implicit
+  def getSPREntryRows(sprList: Seq[SprDutyRateEntry], regime: AlcoholRegimeName)(implicit
     messages: Messages
   ): Seq[TableRowViewModel] =
     sprList.zipWithIndex.map { case (sprEntry, index) =>

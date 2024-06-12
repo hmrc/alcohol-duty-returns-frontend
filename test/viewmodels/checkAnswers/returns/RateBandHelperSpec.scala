@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.returns
 import base.SpecBase
 import cats.data.NonEmptySeq
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
-import models.{ABVInterval, ABVIntervalLabel, AlcoholByVolume, RateBand}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, RateBand}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen
 
@@ -31,9 +31,9 @@ class RateBandHelperSpec extends SpecBase {
     val regime                = regimeGen.sample.value
     val taxType               = "001"
     val description           = "test"
-    val label                 = arbitrary[ABVIntervalLabel].sample.value
+    val label                 = arbitrary[ABVRangeName].sample.value
     val alcoholLabel          = messages(application).messages(s"return.journey.abv.interval.label.$label")
-    val secondaryLabel        = arbitrary[ABVIntervalLabel].suchThat(_ != label).sample.value
+    val secondaryLabel        = arbitrary[ABVRangeName].suchThat(_ != label).sample.value
     val secondaryAlcoholLabel = messages(application).messages(s"return.journey.abv.interval.label.$secondaryLabel")
 
     val rateTypeStandard = Gen.oneOf(Core, DraughtRelief).sample.value
@@ -52,7 +52,7 @@ class RateBandHelperSpec extends SpecBase {
           rateTypeStandard,
           Set(regime),
           NonEmptySeq.one(
-            ABVInterval(
+            ABVRange(
               label,
               AlcoholByVolume(lowerLimit),
               AlcoholByVolume(upperLimit)
@@ -80,12 +80,12 @@ class RateBandHelperSpec extends SpecBase {
           rateTypeStandard,
           Set(regime),
           NonEmptySeq.of(
-            ABVInterval(
+            ABVRange(
               label,
               AlcoholByVolume(lowerLimit1),
               AlcoholByVolume(upperLimit1)
             ),
-            ABVInterval(
+            ABVRange(
               secondaryLabel,
               AlcoholByVolume(lowerLimit2),
               AlcoholByVolume(upperLimit2)
@@ -109,7 +109,7 @@ class RateBandHelperSpec extends SpecBase {
           rateTypeStandard,
           Set(regime),
           NonEmptySeq.one(
-            ABVInterval(
+            ABVRange(
               label,
               AlcoholByVolume(lowerLimit),
               AlcoholByVolume.MAX
@@ -136,7 +136,7 @@ class RateBandHelperSpec extends SpecBase {
           Core,
           Set(regime),
           NonEmptySeq.one(
-            ABVInterval(
+            ABVRange(
               label,
               AlcoholByVolume(lowerLimit),
               AlcoholByVolume(upperLimit)
@@ -162,12 +162,12 @@ class RateBandHelperSpec extends SpecBase {
           Core,
           Set(regime),
           NonEmptySeq.of(
-            ABVInterval(
+            ABVRange(
               label,
               AlcoholByVolume(lowerLimit1),
               AlcoholByVolume(upperLimit1)
             ),
-            ABVInterval(
+            ABVRange(
               secondaryLabel,
               AlcoholByVolume(lowerLimit2),
               AlcoholByVolume(upperLimit2)
@@ -190,7 +190,7 @@ class RateBandHelperSpec extends SpecBase {
           Core,
           Set(regime),
           NonEmptySeq.one(
-            ABVInterval(
+            ABVRange(
               label,
               AlcoholByVolume(lowerLimit),
               AlcoholByVolume.MAX

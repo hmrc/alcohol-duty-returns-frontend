@@ -18,7 +18,7 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.HowMuchDoYouNeedToDeclareFormProvider
-import models.{AlcoholRegime, NormalMode}
+import models.{AlcoholRegimeName, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -39,7 +39,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
 
   def onwardRoute = Call("GET", "/foo")
 
-  val regime = arbitrary[AlcoholRegime].sample.value
+  val regime = arbitrary[AlcoholRegimeName].sample.value
 
   val formProvider = new HowMuchDoYouNeedToDeclareFormProvider()
 

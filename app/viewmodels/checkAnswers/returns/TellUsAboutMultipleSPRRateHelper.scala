@@ -16,13 +16,13 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegime, RateBand}
+import models.{AlcoholRegimeName, RateBand}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 object TellUsAboutMultipleSPRRateHelper {
-  def radioItems(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): Seq[RadioItem] = {
+  def radioItems(regime: AlcoholRegimeName, rateBands: Set[RateBand])(implicit messages: Messages): Seq[RadioItem] = {
     val categoryViewModels                = CategoriesByRateTypeHelper(regime, rateBands)
     val smallProducerRadioItems           = categoryViewModels.smallProducer
       .map { category =>

@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegime, UserAnswers}
+import models.{AlcoholRegimeName, UserAnswers}
 import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -28,7 +28,7 @@ case class ReturnSummaryList(
 )
 
 object CheckYourAnswersSummaryListHelper {
-  def createSummaryList(regime: AlcoholRegime, userAnswers: UserAnswers)(implicit
+  def createSummaryList(regime: AlcoholRegimeName, userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[ReturnSummaryList] =
     userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {

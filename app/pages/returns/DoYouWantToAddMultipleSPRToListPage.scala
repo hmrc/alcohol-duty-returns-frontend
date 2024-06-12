@@ -16,11 +16,11 @@
 
 package pages.returns
 
-import models.AlcoholRegime
+import models.AlcoholRegimeName
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object DoYouWantToAddMultipleSPRToListPage extends QuestionPage[Map[AlcoholRegime, Boolean]] {
+case object DoYouWantToAddMultipleSPRToListPage extends QuestionPage[Map[AlcoholRegimeName, Boolean]] {
 
   override def path: JsPath = JsPath \ toString
 

@@ -19,7 +19,7 @@ package base
 import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
-import models.{AlcoholRegime, ReturnId, UserAnswers}
+import models.{AlcoholRegimeName, ReturnId, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -51,7 +51,7 @@ trait SpecBase
     groupId,
     userAnswersId,
     Json.obj(
-      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegime.values)
+      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegimeName.values)
     )
   )
 

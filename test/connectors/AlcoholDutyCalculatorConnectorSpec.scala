@@ -20,10 +20,10 @@ import base.SpecBase
 import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import generators.ModelGenerators
-import models.AlcoholRegime.{Beer, Wine}
+import models.AlcoholRegimeName.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.productEntry.TaxDuty
-import models.{ABVInterval, ABVIntervalLabel, AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{atLeastOnce, mock, verify, when}
@@ -45,10 +45,10 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
     "310",
     "some band",
     RateType.DraughtRelief,
-    Set(AlcoholRegime.Beer),
+    Set(AlcoholRegimeName.Beer),
     intervals = NonEmptySeq.one(
-      ABVInterval(
-        ABVIntervalLabel.Beer,
+      ABVRange(
+        ABVRangeName.Beer,
         AlcoholByVolume(0.1),
         AlcoholByVolume(5.8)
       )
@@ -186,7 +186,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
           connector.httpClient.GET[Seq[RateBand]](any(), any(), any())(any(), any(), any())
         } thenReturn Future.successful(rateBandList)
 
-        whenReady(connector.rateBandByRegime(ratePeriod = ratePeriod.period, AlcoholRegime.values)) { result =>
+        whenReady(connector.rateBandByRegime(ratePeriod = ratePeriod.period, AlcoholRegimeName.values)) { result =>
           result mustBe rateBandList
           verify(connector.httpClient, atLeastOnce)
             .GET[Seq[RateBand]](
@@ -194,7 +194,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
               ArgumentMatchers.eq(
                 Seq(
                   ("ratePeriod", Json.toJson(ratePeriod.period)(RatePeriod.yearMonthFormat).toString),
-                  ("alcoholRegimes", Json.toJson(AlcoholRegime.values).toString())
+                  ("alcoholRegimes", Json.toJson(AlcoholRegimeName.values).toString())
                 )
               ),
               any()

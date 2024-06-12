@@ -298,7 +298,7 @@ tellUsAboutSingleSPRRate.legend.pureAlcohol = Litres of pure alcohol
 tellUsAboutSingleSPRRate.legend.dutyRate = Your Small Producer Relief Duty rate for this {0}
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief (multiple duty rates)
 tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught {0} that is eligible for Small Producer Relief do you need to declare?
-tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught beer that is eligible for Small Producer Relief do you need to declare?
+tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught {0} that is eligible for Small Producer Relief do you need to declare?
 
 tellUsAboutMultipleSPRRate.title = Tell us about the {0} that is eligible for Small Producer Relief
 tellUsAboutMultipleSPRRate.heading = Tell us about the {0} that is eligible for Small Producer Relief

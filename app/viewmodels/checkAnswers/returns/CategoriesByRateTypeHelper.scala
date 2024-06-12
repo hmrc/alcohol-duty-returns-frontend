@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegime, RateBand, RateType}
+import models.{AlcoholRegimeName, RateBand, RateType}
 import play.api.i18n.Messages
 
 case class CategoryViewModel(
@@ -32,7 +32,7 @@ case class CategoriesByRateTypeViewModel(
 )
 
 object CategoriesByRateTypeHelper {
-  def apply(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit
+  def apply(regime: AlcoholRegimeName, rateBands: Set[RateBand])(implicit
     messages: Messages
   ): CategoriesByRateTypeViewModel = {
     val rateBandsByType = rateBands.toSeq

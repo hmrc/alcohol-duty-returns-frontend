@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import models.{AlcoholRegime, ReturnId, UserAnswers}
+import models.{AlcoholRegimeName, ReturnId, UserAnswers}
 import pages.AlcoholRegimePage
 import play.api.libs.json.Json
 import play.api.test.Helpers._
@@ -39,7 +39,7 @@ class TaskListControllerSpec extends SpecBase {
     lastUpdated = Instant.now(clock),
     validUntil = Some(validUntil),
     data = Json.obj(
-      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegime.values)
+      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegimeName.values)
     )
   )
 
@@ -56,7 +56,7 @@ class TaskListControllerSpec extends SpecBase {
 
         val view             = application.injector.instanceOf[TaskListView]
         val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(AlcoholRegime.values, emptyUserAnswers, validUntil)(
+          AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, emptyUserAnswers, validUntil)(
             messages(application)
           )
 

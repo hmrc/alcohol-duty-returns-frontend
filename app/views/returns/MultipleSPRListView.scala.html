@@ -31,7 +31,7 @@
     tableRowAction: TableRowAction
 )
 
-@(form: Form[_], regime:AlcoholRegime, sprTable:TableViewModel)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime:AlcoholRegimeName, sprTable:TableViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("multipleSPRList.title")), fullWidth = true, showBackLink = false) {
 

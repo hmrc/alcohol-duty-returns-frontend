@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.HowMuchDoYouNeedToDeclareFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode, RateBand}
+import models.{AlcoholRegimeName, Mode, RateBand}
 import navigation.ReturnsNavigator
 import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -48,7 +48,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onPageLoad(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
@@ -65,7 +65,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
 
     }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onSubmit(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))

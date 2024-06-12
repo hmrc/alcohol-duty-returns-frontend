@@ -19,7 +19,7 @@ package service.productEntry
 import base.SpecBase
 import connectors.AlcoholDutyCalculatorConnector
 import pages.productEntry._
-import models.{AlcoholByVolume, AlcoholRegime}
+import models.{AlcoholByVolume, AlcoholRegimeName}
 import models.productEntry.{ProductEntry, TaxDuty}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -48,7 +48,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
       val updatedProductEntry = productEntry.copy(
         taxCode = Some("ALC"),
-        regime = Some(AlcoholRegime.Beer),
+        regime = Some(AlcoholRegimeName.Beer),
         taxRate = Some(BigDecimal(1))
       )
 
@@ -80,7 +80,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
       val updatedProductEntry = productEntry.copy(
         taxCode = Some("ALC"),
-        regime = Some(AlcoholRegime.Beer),
+        regime = Some(AlcoholRegimeName.Beer),
         smallProducerRelief = Some(true),
         sprDutyRate = Some(BigDecimal(2))
       )
@@ -129,7 +129,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
         val updatedProductEntry = productEntry.copy(
           taxCode = Some("ALC"),
-          regime = Some(AlcoholRegime.Beer),
+          regime = Some(AlcoholRegimeName.Beer),
           taxRate = Some(BigDecimal(1)),
           smallProducerRelief = Some(true),
           sprDutyRate = Some(BigDecimal(2))
@@ -157,7 +157,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
         val updatedProductEntry = productEntry.copy(
           taxCode = Some("ALC"),
-          regime = Some(AlcoholRegime.Beer),
+          regime = Some(AlcoholRegimeName.Beer),
           smallProducerRelief = Some(true)
         )
 

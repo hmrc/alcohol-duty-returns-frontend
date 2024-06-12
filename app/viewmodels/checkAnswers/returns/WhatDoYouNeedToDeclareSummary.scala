@@ -16,17 +16,17 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholByVolume, AlcoholRegime, CheckMode, RateBand, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegimeName, CheckMode, RateBand, UserAnswers}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow}
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
+import viewmodels.checkAnswers.returns.RateBandHelper.{rateBandContent, rateBandRecap}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object WhatDoYouNeedToDeclareSummary {
 
-  def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryList =
+  def summaryList(regime: AlcoholRegimeName, rateBands: Set[RateBand])(implicit messages: Messages): SummaryList =
     SummaryList(
       rows = Seq(row(regime, rateBands)),
       card = Some(
@@ -56,7 +56,7 @@ object WhatDoYouNeedToDeclareSummary {
       )
     )
 
-  def row(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
+  def row(regime: AlcoholRegimeName, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = messages(
         s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row",
@@ -66,7 +66,7 @@ object WhatDoYouNeedToDeclareSummary {
         HtmlContent(
           "<ul>" +
             rateBands
-              .map(answer => s"<li>${rateBandContent(answer)}</li>")
+              .map(answer => s"<li>${rateBandRecap(answer)}</li>")
               .mkString("")
             + "</ul>"
         )

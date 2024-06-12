@@ -18,18 +18,18 @@ package viewmodels.checkAnswers.returns
 
 import models.RateType.{Core, DraughtRelief}
 import models.returns.VolumeAndRateByTaxType
-import models.{AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholRegimeName, CheckMode, RateBand, RateType, UserAnswers}
 import pages.returns.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow, Value}
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
+import viewmodels.checkAnswers.returns.RateBandHelper.{rateBandContent, rateBandRecap}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object HowMuchDoYouNeedToDeclareSummary {
 
-  def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand], userAnswers: UserAnswers)(implicit
+  def summaryList(regime: AlcoholRegimeName, rateBands: Set[RateBand], userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[SummaryList] =
     userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
@@ -67,7 +67,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       case _                    => None
     }
 
-  def rows(regime: AlcoholRegime, rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
+  def rows(regime: AlcoholRegimeName, rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
     val rateBandsByRateType = rateBands
@@ -91,7 +91,7 @@ object HowMuchDoYouNeedToDeclareSummary {
   }
 
   def createRowValues(
-    regime: AlcoholRegime,
+    regime: AlcoholRegimeName,
     rateType: RateType,
     rateBands: Set[RateBand],
     dutyByTaxTypes: Seq[VolumeAndRateByTaxType]
@@ -106,7 +106,7 @@ object HowMuchDoYouNeedToDeclareSummary {
         case Some(dutyByTaxType) =>
           Seq(
             SummaryListRowViewModel(
-              key = KeyViewModel(rateBandContent(rateBand)),
+              key = KeyViewModel(rateBandRecap(rateBand)),
               value = Value()
             ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
             SummaryListRowViewModel(

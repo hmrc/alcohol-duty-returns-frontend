@@ -18,7 +18,7 @@ package forms.returns
 
 import javax.inject.Inject
 import forms.mappings.Mappings
-import models.AlcoholRegime
+import models.AlcoholRegimeName
 import play.api.data.Form
 import play.api.data.Forms._
 import models.returns.VolumesByTaxType
@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 
 class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[Seq[VolumesByTaxType]] = Form(
+  def apply(regime: AlcoholRegimeName)(implicit messages: Messages): Form[Seq[VolumesByTaxType]] = Form(
     "volumes" -> seq(
       volumes(
         "return.journey.error.invalid",

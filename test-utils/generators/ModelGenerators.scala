@@ -157,12 +157,12 @@ trait ModelGenerators {
     Gen.oneOf(RateType.Core, RateType.DraughtRelief)
   }
 
-  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime]       = Arbitrary {
+  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegimeName]   = Arbitrary {
     Gen.oneOf(
-      AlcoholRegime.Beer,
-      AlcoholRegime.Cider,
-      AlcoholRegime.Wine,
-      AlcoholRegime.Spirits
+      AlcoholRegimeName.Beer,
+      AlcoholRegimeName.Cider,
+      AlcoholRegimeName.Wine,
+      AlcoholRegimeName.Spirits
     )
   }
   implicit val arbitraryRateTypeResponse: Arbitrary[RateTypeResponse] = Arbitrary {
@@ -174,8 +174,8 @@ trait ModelGenerators {
     )
   }
 
-  implicit val arbitrarySetOfAlcoholRegimes: Arbitrary[Set[AlcoholRegime]] = Arbitrary {
-    Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
+  implicit val arbitrarySetOfAlcoholRegimes: Arbitrary[Set[AlcoholRegimeName]] = Arbitrary {
+    Gen.containerOf[Set, AlcoholRegimeName](arbitraryAlcoholRegime.arbitrary)
   }
 
   val genAlcoholByVolumeValue: Gen[BigDecimal] =
@@ -210,19 +210,19 @@ trait ModelGenerators {
   implicit val chooseBigDecimal: Choose[BigDecimal] =
     Choose.xmap[Double, BigDecimal](d => BigDecimal(d), bd => bd.toDouble)(implicitly[Choose[Double]])
 
-  implicit val arbitraryABVIntervalLabel: Arbitrary[ABVIntervalLabel] = Arbitrary {
-    Gen.oneOf(ABVIntervalLabel.values)
+  implicit val arbitraryABVIntervalLabel: Arbitrary[ABVRangeName] = Arbitrary {
+    Gen.oneOf(ABVRangeName.values)
   }
 
-  implicit val abvIntervalGen: Arbitrary[ABVInterval] = Arbitrary {
+  implicit val abvIntervalGen: Arbitrary[ABVRange] = Arbitrary {
     (for {
-      label  <- arbitrary[ABVIntervalLabel]
+      label  <- arbitrary[ABVRangeName]
       minABV <- arbitrary[AlcoholByVolume]
       maxABV <- arbitrary[AlcoholByVolume]
-    } yield ABVInterval(label, minABV, maxABV)).suchThat(interval => interval.minABV.value < interval.maxABV.value)
+    } yield ABVRange(label, minABV, maxABV)).suchThat(interval => interval.minABV.value < interval.maxABV.value)
   }
 
-  implicit val arbitraryABVIntervals: Arbitrary[List[ABVInterval]] = Arbitrary {
+  implicit val arbitraryABVIntervals: Arbitrary[List[ABVRange]] = Arbitrary {
     Gen.listOfN(2, abvIntervalGen.arbitrary)
   }
 
@@ -267,7 +267,7 @@ trait ModelGenerators {
     draughtRelief       <- Gen.oneOf(true, false)
     smallProducerRelief <- Gen.oneOf(true, false)
     taxCode             <- Gen.alphaStr
-    regime              <- arbitrary[AlcoholRegime]
+    regime              <- arbitrary[AlcoholRegimeName]
     taxRate             <- Gen.posNum[BigDecimal]
     sprDutyRate         <- Gen.posNum[BigDecimal]
     duty                <- Gen.posNum[BigDecimal]
@@ -304,10 +304,10 @@ trait ModelGenerators {
 
   def appaIdGen: Gen[String] = Gen.listOfN(10, Gen.numChar).map(id => s"XMADP${id.mkString}")
 
-  def regimeGen: Gen[AlcoholRegime] = Gen.oneOf(AlcoholRegime.values)
+  def regimeGen: Gen[AlcoholRegimeName] = Gen.oneOf(AlcoholRegimeName.values)
 
-  def arbitraryRateBandList(regime: AlcoholRegime): Arbitrary[List[RateBand]] = Arbitrary {
-    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.alcoholRegime.contains(regime)))
+  def arbitraryRateBandList(regime: AlcoholRegimeName): Arbitrary[List[RateBand]] = Arbitrary {
+    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.alcoholRegimes.contains(regime)))
   }
 
   def genVolumeAndRateByTaxTypeRateBand(rateBand: RateBand): Arbitrary[VolumeAndRateByTaxType] = Arbitrary {

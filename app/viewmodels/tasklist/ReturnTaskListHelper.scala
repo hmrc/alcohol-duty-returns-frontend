@@ -16,8 +16,8 @@
 
 package viewmodels.tasklist
 
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
+import models.AlcoholRegimeName.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.{AlcoholRegimeName, CheckMode, NormalMode, UserAnswers}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
@@ -26,7 +26,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
 
 object ReturnTaskListHelper {
-  def returnSection(regimes: Seq[AlcoholRegime], userAnswers: UserAnswers)(implicit messages: Messages): Section = {
+  def returnSection(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit messages: Messages): Section = {
 
     val declareDutyQuestion = userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
       case Some(true)  =>
@@ -111,9 +111,9 @@ object ReturnTaskListHelper {
     )
   }
 
-  private val alcoholRegimeViewOrder: Seq[AlcoholRegime] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
+  private val alcoholRegimeViewOrder: Seq[AlcoholRegimeName] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
 
-  private def returnJourneyTaskListItems(regimes: Seq[AlcoholRegime], userAnswers: UserAnswers)(implicit
+  private def returnJourneyTaskListItems(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Seq[TaskListItem] =
     for (regime <- regimes.sortBy(alcoholRegimeViewOrder.indexOf))

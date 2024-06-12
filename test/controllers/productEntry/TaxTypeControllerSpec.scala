@@ -21,7 +21,7 @@ import cats.data.NonEmptySeq
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
 import models.productEntry.ProductEntry
-import models.{ABVInterval, ABVIntervalLabel, AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegimeName, CheckMode, NormalMode, RateBand, RateType}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -58,7 +58,7 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     .value
 
   val taxCode       = "310"
-  val alcoholRegime = AlcoholRegime.Beer
+  val alcoholRegime = AlcoholRegimeName.Beer
   val rate          = Some(BigDecimal(10.99))
 
   val rateBand     = RateBand(
@@ -67,8 +67,8 @@ class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
     RateType.DraughtRelief,
     Set(alcoholRegime),
     intervals = NonEmptySeq.one(
-      ABVInterval(
-        ABVIntervalLabel.Beer,
+      ABVRange(
+        ABVRangeName.Beer,
         AlcoholByVolume(0.1),
         AlcoholByVolume(5.8)
       )

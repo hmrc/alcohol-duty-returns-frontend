@@ -18,7 +18,7 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.TellUsAboutSingleSPRRateFormProvider
-import models.{AlcoholRegime, NormalMode, RateBand}
+import models.{AlcoholRegimeName, NormalMode, RateBand}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -40,7 +40,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
   def onwardRoute = Call("GET", "/foo")
 
-  val regime: AlcoholRegime = regimeGen.sample.value
+  val regime: AlcoholRegimeName = regimeGen.sample.value
 
   val formProvider = new TellUsAboutSingleSPRRateFormProvider()
 

@@ -16,17 +16,17 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegime, UserAnswers}
+import models.{AlcoholRegimeName, UserAnswers}
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
+import viewmodels.checkAnswers.returns.RateBandHelper.{rateBandContent, rateBandRecap}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object MultipleSPRListSummary {
 
-  def rows(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] = {
+  def rows(regime: AlcoholRegimeName, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] = {
     val rows = for {
       rateBands         <- answers.getByKey(WhatDoYouNeedToDeclarePage, regime)
       dutyByTaxTypeList <- answers.getByKey(MultipleSPRListPage, regime)
@@ -42,7 +42,7 @@ object MultipleSPRListSummary {
 
         Seq(
           SummaryListRowViewModel(
-            key = KeyViewModel(rateBandContent(rateBand)),
+            key = KeyViewModel(rateBandRecap(rateBand)),
             value = Value()
           ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
           SummaryListRowViewModel(

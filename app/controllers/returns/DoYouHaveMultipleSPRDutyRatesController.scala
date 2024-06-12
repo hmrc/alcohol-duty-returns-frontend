@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.DoYouHaveMultipleSPRDutyRatesFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode}
+import models.{AlcoholRegimeName, Mode}
 import navigation.ReturnsNavigator
 import pages.returns.DoYouHaveMultipleSPRDutyRatesPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -47,7 +47,7 @@ class DoYouHaveMultipleSPRDutyRatesController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onPageLoad(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime) match {
         case None        => form
@@ -57,7 +57,7 @@ class DoYouHaveMultipleSPRDutyRatesController @Inject() (
       Ok(view(preparedForm, regime, mode))
     }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
+  def onSubmit(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()

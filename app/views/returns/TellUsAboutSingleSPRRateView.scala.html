@@ -30,7 +30,7 @@
     pageHeading: PageHeading
 )
 
-@(form: Form[_], regime:AlcoholRegime, categories:CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime:AlcoholRegimeName, categories:CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages(s"tellUsAboutSingleSPRRate.title.$regime"))) {
 
@@ -105,7 +105,7 @@
       }
 
       @if(categories.draughtAndSmallProducer.nonEmpty) {
-        @subHeading(messages(s"tellUsAboutSingleSPRRate.smallProducer.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
+        @subHeading(messages(s"tellUsAboutSingleSPRRate.draughtSmallProducer.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
         @for((categoryViewModel, index) <- categories.draughtAndSmallProducer.zipWithIndex) {
           @subHeading(categoryViewModel.category, classes = "govuk-heading-s")
           @govukInput(

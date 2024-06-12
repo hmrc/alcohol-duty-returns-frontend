@@ -19,7 +19,7 @@ package models
 import base.SpecBase
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
-import models.AlcoholRegime.Beer
+import models.AlcoholRegimeName.Beer
 import models.RateType.Core
 import org.scalacheck.Gen
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
@@ -72,24 +72,24 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
   "AlcoholRegime" - {
     "when writing to json" - {
       "should return the correct string representation" in {
-        Json.toJson[AlcoholRegime](AlcoholRegime.Beer) mustEqual JsString("Beer")
-        Json.toJson[AlcoholRegime](AlcoholRegime.Cider) mustEqual JsString("Cider")
-        Json.toJson[AlcoholRegime](AlcoholRegime.Wine) mustEqual JsString("Wine")
-        Json.toJson[AlcoholRegime](AlcoholRegime.Spirits) mustEqual JsString("Spirits")
+        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Beer) mustEqual JsString("Beer")
+        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Cider) mustEqual JsString("Cider")
+        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Wine) mustEqual JsString("Wine")
+        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Spirits) mustEqual JsString("Spirits")
       }
     }
     "when reading from json" - {
       "should translate from the string rep, to the correct case object" in {
-        JsString("Beer").as[AlcoholRegime] mustEqual AlcoholRegime.Beer
-        JsString("Cider").as[AlcoholRegime] mustEqual AlcoholRegime.Cider
-        JsString("Wine").as[AlcoholRegime] mustEqual AlcoholRegime.Wine
-        JsString("Spirits").as[AlcoholRegime] mustEqual AlcoholRegime.Spirits
+        JsString("Beer").as[AlcoholRegimeName] mustEqual AlcoholRegimeName.Beer
+        JsString("Cider").as[AlcoholRegimeName] mustEqual AlcoholRegimeName.Cider
+        JsString("Wine").as[AlcoholRegimeName] mustEqual AlcoholRegimeName.Wine
+        JsString("Spirits").as[AlcoholRegimeName] mustEqual AlcoholRegimeName.Spirits
       }
       "should return an exception in response to an unrecognised string" in {
-        JsString("some-other").validate[AlcoholRegime] mustEqual JsError("some-other is not a valid AlcoholRegime")
+        JsString("some-other").validate[AlcoholRegimeName] mustEqual JsError("some-other is not a valid AlcoholRegime")
       }
       "should return a JsError when passed a type that is not a string" in {
-        val result = Json.fromJson[AlcoholRegime](JsBoolean(true))
+        val result = Json.fromJson[AlcoholRegimeName](JsBoolean(true))
         result mustBe a[JsError]
       }
     }
@@ -204,9 +204,9 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       result mustBe a[RateBand]
       result.taxType mustBe "311"
       result.rateType mustBe Core
-      result.alcoholRegime mustBe Set(Beer)
+      result.alcoholRegimes mustBe Set(Beer)
       result.intervals.length mustBe 1
-      result.intervals.head mustBe ABVInterval(ABVIntervalLabel.Beer, AlcoholByVolume(1.3), AlcoholByVolume(3.4))
+      result.intervals.head mustBe ABVRange(ABVRangeName.Beer, AlcoholByVolume(1.3), AlcoholByVolume(3.4))
       result.rate mustBe Some(BigDecimal(9.27))
     }
 
@@ -215,8 +215,8 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
         taxType = "311",
         description = "description",
         rateType = Core,
-        alcoholRegime = Set(Beer),
-        intervals = NonEmptySeq.one(ABVInterval(ABVIntervalLabel.Beer, AlcoholByVolume(1.3), AlcoholByVolume(3.4))),
+        alcoholRegimes = Set(Beer),
+        intervals = NonEmptySeq.one(ABVRange(ABVRangeName.Beer, AlcoholByVolume(1.3), AlcoholByVolume(3.4))),
         rate = Some(BigDecimal(9.27))
       )
 

@@ -19,7 +19,7 @@ package viewmodels.tasklist
 import base.SpecBase
 import generators.ModelGenerators
 import models.returns.AlcoholDuty
-import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
+import models.{AlcoholRegimeName, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.productEntry.ProductEntryListPage
@@ -36,7 +36,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
   "returnSection" - {
 
     "when the user answers object is empty, must return the not started section" in {
-      val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, emptyUserAnswers)
+      val result = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, emptyUserAnswers)
 
       result.completedTask                     shouldBe false
       result.taskList.items.size               shouldBe 1
@@ -55,7 +55,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
         .value
-      val result      = ReturnTaskListHelper.returnSection(AlcoholRegime.values, userAnswers)
+      val result      = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, userAnswers)
 
       result.completedTask                     shouldBe true
       result.taskList.items.size               shouldBe 1
@@ -76,10 +76,10 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .value
 
       "must have a link to the 'What do you need to declare?' screen if the user has not answered any other question" in {
-        val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, declaredAlcoholDutyUserAnswer)
+        val result = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, declaredAlcoholDutyUserAnswer)
 
         result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
+        result.taskList.items.size               shouldBe AlcoholRegimeName.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
@@ -89,7 +89,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
-        AlcoholRegime.values.foreach(regime =>
+        AlcoholRegimeName.values.foreach(regime =>
           result.taskList.items
             .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
             case Some(task) =>
@@ -108,7 +108,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .success
           .value
 
-        val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
+        val filledUserAnswers = AlcoholRegimeName.values.foldRight(userAnswers) { (regime, ua) =>
           val rateBands = arbitraryRateBandList(regime).arbitrary.sample.value
           ua
             .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
@@ -116,9 +116,9 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
             .value
         }
 
-        val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, filledUserAnswers)
+        val result = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, filledUserAnswers)
         result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
+        result.taskList.items.size               shouldBe AlcoholRegimeName.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
@@ -128,7 +128,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
-        AlcoholRegime.values.foreach(regime =>
+        AlcoholRegimeName.values.foreach(regime =>
           result.taskList.items
             .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
             case Some(task) =>
@@ -147,7 +147,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .success
           .value
 
-        val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
+        val filledUserAnswers = AlcoholRegimeName.values.foldRight(userAnswers) { (regime, ua) =>
           val rateBands = arbitraryRateBandList(regime).arbitrary.sample.value
 
           val dutiesByTaxType = arbitraryDutyByTaxType(rateBands).arbitrary.sample.value
@@ -166,9 +166,9 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
             .value
         }
 
-        val result = ReturnTaskListHelper.returnSection(AlcoholRegime.values, filledUserAnswers)
+        val result = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, filledUserAnswers)
         result.completedTask                     shouldBe true
-        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
+        result.taskList.items.size               shouldBe AlcoholRegimeName.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
@@ -178,7 +178,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
-        AlcoholRegime.values.foreach(regime =>
+        AlcoholRegimeName.values.foreach(regime =>
           result.taskList.items
             .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
             case Some(task) =>

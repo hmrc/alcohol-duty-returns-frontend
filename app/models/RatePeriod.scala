@@ -63,18 +63,18 @@ object RateTypeResponse {
   implicit val format: Format[RateTypeResponse] = Json.format[RateTypeResponse]
 }
 
-sealed trait AlcoholRegime extends EnumEntry
-object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {
+sealed trait AlcoholRegimeName extends EnumEntry
+object AlcoholRegimeName extends Enum[AlcoholRegimeName] with PlayEnum[AlcoholRegimeName] {
   val values = findValues
 
-  case object Beer extends AlcoholRegime
-  case object Cider extends AlcoholRegime
-  case object Wine extends AlcoholRegime
-  case object Spirits extends AlcoholRegime
-  case object OtherFermentedProduct extends AlcoholRegime
+  case object Beer extends AlcoholRegimeName
+  case object Cider extends AlcoholRegimeName
+  case object Wine extends AlcoholRegimeName
+  case object Spirits extends AlcoholRegimeName
+  case object OtherFermentedProduct extends AlcoholRegimeName
 
-  implicit val format: Format[AlcoholRegime] = new Format[AlcoholRegime] {
-    override def reads(json: JsValue): JsResult[AlcoholRegime] = json.validate[String] match {
+  implicit val format: Format[AlcoholRegimeName] = new Format[AlcoholRegimeName] {
+    override def reads(json: JsValue): JsResult[AlcoholRegimeName] = json.validate[String] match {
       case JsSuccess(value, _) =>
         value match {
           case "Beer"                  => JsSuccess(Beer)
@@ -87,10 +87,10 @@ object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {
       case e: JsError          => e
     }
 
-    override def writes(o: AlcoholRegime): JsValue = JsString(o.toString)
+    override def writes(o: AlcoholRegimeName): JsValue = JsString(o.toString)
   }
 
-  def fromString(str: String): Option[AlcoholRegime] =
+  def fromString(str: String): Option[AlcoholRegimeName] =
     str match {
       case "Beer"                  => Some(Beer)
       case "Cider"                 => Some(Cider)
@@ -127,44 +127,49 @@ object AlcoholByVolume {
   val MAX: AlcoholByVolume = AlcoholByVolume(100)
 }
 
-sealed trait ABVIntervalLabel extends EnumEntry
-object ABVIntervalLabel extends Enum[ABVIntervalLabel] with PlayEnum[ABVIntervalLabel] {
+sealed trait ABVRangeName extends EnumEntry
+object ABVRangeName extends Enum[ABVRangeName] with PlayEnum[ABVRangeName] {
   val values = findValues
 
-  case object Beer extends ABVIntervalLabel
-  case object Cider extends ABVIntervalLabel
-  case object SparklingCider extends ABVIntervalLabel
-  case object Wine extends ABVIntervalLabel
-  case object Spirits extends ABVIntervalLabel
-  case object OtherFermentedProduct extends ABVIntervalLabel
+  case object Beer extends ABVRangeName
+  case object Cider extends ABVRangeName
+  case object SparklingCider extends ABVRangeName
+  case object Wine extends ABVRangeName
+  case object Spirits extends ABVRangeName
+  case object OtherFermentedProduct extends ABVRangeName
 }
 
-case class ABVInterval(label: ABVIntervalLabel, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
+case class ABVRange(name: ABVRangeName, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
 
-object ABVInterval {
-  implicit val format: Format[ABVInterval] = Json.format[ABVInterval]
+object ABVRange {
+  implicit val format: Format[ABVRange] = Json.format[ABVRange]
+}
+
+case class AlcoholRegime(name: AlcoholRegimeName, abvRanges: NonEmptySeq[ABVRange])
+
+object AlcoholRegime {
+  implicit val nonEmptySeqFormat: Format[NonEmptySeq[ABVRange]] = new Format[NonEmptySeq[ABVRange]] {
+    override def reads(json: JsValue): JsResult[NonEmptySeq[ABVRange]] =
+      json.validate[Seq[ABVRange]].flatMap {
+        case head +: tail => JsSuccess(NonEmptySeq.fromSeqUnsafe(Seq(head) ++ tail))
+        case _            => JsError("Empty sequence")
+      }
+
+    override def writes(o: NonEmptySeq[ABVRange]): JsValue = Writes.seq(ABVRange.format).writes(o.toList)
+  }
+
+  implicit val format: Format[AlcoholRegime] = Json.format[AlcoholRegime]
 }
 
 case class RateBand(
   taxType: String,
   description: String,
   rateType: RateType,
-  alcoholRegime: Set[AlcoholRegime],
-  intervals: NonEmptySeq[ABVInterval],
+  alcoholRegimes: Set[AlcoholRegime],
   rate: Option[BigDecimal]
 )
 
 object RateBand {
-  implicit val nonEmptySeqFormat: Format[NonEmptySeq[ABVInterval]] = new Format[NonEmptySeq[ABVInterval]] {
-    override def reads(json: JsValue): JsResult[NonEmptySeq[ABVInterval]] =
-      json.validate[Seq[ABVInterval]].flatMap {
-        case head +: tail => JsSuccess(NonEmptySeq.fromSeqUnsafe(Seq(head) ++ tail))
-        case _            => JsError("Empty sequence")
-      }
-
-    override def writes(o: NonEmptySeq[ABVInterval]): JsValue = Writes.seq(ABVInterval.format).writes(o.toList)
-  }
-
   implicit val formats: Format[RateBand] = Json.format[RateBand]
 }
 

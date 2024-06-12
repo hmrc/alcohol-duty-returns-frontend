@@ -19,7 +19,7 @@ package controllers.returns
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector, TotalDutyCalculationRequest}
 import controllers.actions._
 import models.returns.VolumeAndRateByTaxType
-import models.{AlcoholRegime, UserAnswers}
+import models.{AlcoholRegimeName, UserAnswers}
 import pages.QuestionPage
 import pages.returns.{AlcoholDutyPage, DoYouWantToAddMultipleSPRToListPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
 import play.api.{Logger, Logging}
@@ -47,7 +47,7 @@ class DutyCalculationController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad(regime: AlcoholRegimeName): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val totalDutyCalculatorRequest = createTotalDutyRequest(regime, request.userAnswers)
       for {
@@ -62,7 +62,7 @@ class DutyCalculationController @Inject() (
       }
   }
 
-  def onSubmit(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(regime: AlcoholRegimeName): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       request.userAnswers.getByKey(DutyCalculationPage, regime) match {
         case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
@@ -74,8 +74,11 @@ class DutyCalculationController @Inject() (
       }
   }
 
-  private def createTotalDutyRequest(regime: AlcoholRegime, userAnswers: UserAnswers): TotalDutyCalculationRequest = {
-    val sprPage: QuestionPage[Map[AlcoholRegime, Seq[VolumeAndRateByTaxType]]] =
+  private def createTotalDutyRequest(
+    regime: AlcoholRegimeName,
+    userAnswers: UserAnswers
+  ): TotalDutyCalculationRequest = {
+    val sprPage: QuestionPage[Map[AlcoholRegimeName, Seq[VolumeAndRateByTaxType]]] =
       userAnswers.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
         case Some(true) => MultipleSPRListPage
         case _          => TellUsAboutSingleSPRRatePage
