@@ -16,11 +16,8 @@
 
 package models
 
-//import cats.data.NonEmptySeq
-import cats._
 import cats.data._
 import cats.implicits._
-import play.api.libs.functional.syntax._
 import enumeratum.{Enum, EnumEntry, PlayEnum}
 import play.api.libs.json._
 
@@ -158,8 +155,6 @@ case class RateBand(
 )
 
 object RateBand {
-  implicit val formats: Format[RateBand] = Json.format[RateBand]
-
   implicit val nonEmptySeqFormat: Format[NonEmptySeq[ABVInterval]] = new Format[NonEmptySeq[ABVInterval]] {
     override def reads(json: JsValue): JsResult[NonEmptySeq[ABVInterval]] =
       json.validate[Seq[ABVInterval]].flatMap {
@@ -169,6 +164,8 @@ object RateBand {
 
     override def writes(o: NonEmptySeq[ABVInterval]): JsValue = Writes.seq(ABVInterval.format).writes(o.toList)
   }
+
+  implicit val formats: Format[RateBand] = Json.format[RateBand]
 }
 
 case class RatePeriod(
