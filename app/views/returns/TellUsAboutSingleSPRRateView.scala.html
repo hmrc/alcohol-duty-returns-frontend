@@ -90,6 +90,7 @@
             .asNumeric()
             .withWidth(Fixed10)
             .withPoundPrefix
+            .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
           )
 
           @govukInput(
@@ -143,6 +144,7 @@
             .asNumeric()
             .withWidth(Fixed10)
             .withPoundPrefix
+            .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
           )
 
           @govukInput(
