@@ -127,7 +127,8 @@ beforeStartReturn.text.guidance4 = After you tell us this information, we will c
 
 # Beginning of product entry sub-journey
 
-return.journey.error.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
+return.journey.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
+return.journey.error.moreThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
 
 return.journey.error.allRequired = Select the type of {0}
 return.journey.error.noValue.taxType = Select the type of {0}
@@ -139,7 +140,7 @@ return.journey.error.minimumValue.totalLitres = Litres of {0} must be 0.01 or mo
 return.journey.error.tooManyDecimalPlaces.totalLitres = Litres of {0} must be a number to 2 decimal places
 
 return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in {0}
-return.journey.error.invalid.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
+return.journey.error.invalid.pureAlcohol = Litres of pure alcohol must be a number
 return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol must be 99.99 million or less
 return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol must be 0.01 or more
 return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol must be a number to 2 decimal places
@@ -251,7 +252,7 @@ howMuchDoYouNeedToDeclare.p1.Spirits = Tell us about the spirits you need to dec
 howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Tell us about the other fermented product you need to declare and the pure alcohol in that other fermented product at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.warning = We will ask about {0} eligible for Small Producer Relief on the next page.
 howMuchDoYouNeedToDeclare.hint = Give your answers in litres, to 2 decimal places.
-howMuchDoYouNeedToDeclare.core.heading = How much {0} (standard rate) do you need to declare?
+howMuchDoYouNeedToDeclare.core.heading = How much non-draught {0} (standard rate) do you need to declare?
 howMuchDoYouNeedToDeclare.draught.heading = How much draught {0} (reduced rate) do you need to declare?
 howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type code {3})
 

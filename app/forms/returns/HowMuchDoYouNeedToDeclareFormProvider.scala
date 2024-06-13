@@ -35,6 +35,7 @@ class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
         "return.journey.error.tooManyDecimalPlaces",
         "return.journey.error.minimumValue",
         "return.journey.error.maximumValue",
+        "return.journey.error.moreThanExpected",
         "return.journey.error.lessThanExpected",
         Seq(messages(s"return.regime.$regime"))
       )
