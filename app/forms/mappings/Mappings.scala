@@ -108,7 +108,8 @@ trait Mappings extends Formatters with Constraints {
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    inconsistentKey: String,
+    moreOrEqualKey: String,
+    lessOrEqualKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[VolumeAndRateByTaxType] =
     of(
@@ -119,7 +120,8 @@ trait Mappings extends Formatters with Constraints {
         decimalPlacesKey,
         minimumValueKey,
         maximumValueKey,
-        inconsistentKey,
+        moreOrEqualKey,
+        lessOrEqualKey,
         args
       )
     )

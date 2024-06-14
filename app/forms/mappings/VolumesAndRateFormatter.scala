@@ -28,7 +28,8 @@ class VolumesAndRateFormatter(
   decimalPlacesKey: String,
   minimumValueKey: String,
   maximumValueKey: String,
-  inconsistentKey: String,
+  moreOrEqualKey: String,
+  lessOrEqualKey: String,
   args: Seq[String]
 ) extends Formatter[VolumeAndRateByTaxType]
     with Formatters {
@@ -88,7 +89,12 @@ class VolumesAndRateFormatter(
       errors => Left(errors),
       dutyByTaxType =>
         if (dutyByTaxType.totalLitres < dutyByTaxType.pureAlcohol) {
-          Left(Seq(FormError(nameToId(s"$key.pureAlcohol"), inconsistentKey)))
+          Left(
+            Seq(
+              FormError(nameToId(s"$key.totalLitres"), moreOrEqualKey, args),
+              FormError(nameToId(s"$key.pureAlcohol"), lessOrEqualKey, args)
+            )
+          )
         } else {
           Right(dutyByTaxType)
         }

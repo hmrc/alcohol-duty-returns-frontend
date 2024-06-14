@@ -55,7 +55,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       val result = for {
         rateBands <- request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
         form      <- prepareForm(request.userAnswers, regime, mode, index)
-      } yield Ok(view(form, mode, regime, TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands), index))
+      } yield Ok(view(form, mode, regime, TellUsAboutMultipleSPRRateHelper.radioItems(rateBands), index))
 
       result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
@@ -76,7 +76,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
                       formWithErrors,
                       mode,
                       regime,
-                      TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands),
+                      TellUsAboutMultipleSPRRateHelper.radioItems(rateBands),
                       index
                     )
                   )

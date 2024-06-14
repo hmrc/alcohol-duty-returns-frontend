@@ -22,8 +22,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 object TellUsAboutMultipleSPRRateHelper {
-  def radioItems(regime: AlcoholRegimeName, rateBands: Set[RateBand])(implicit messages: Messages): Seq[RadioItem] = {
-    val categoryViewModels                = CategoriesByRateTypeHelper(regime, rateBands)
+  def radioItems(rateBands: Set[RateBand])(implicit messages: Messages): Seq[RadioItem] = {
+    val categoryViewModels                = CategoriesByRateTypeHelper.rateBandCategories(rateBands, isRecap = true)
     val smallProducerRadioItems           = categoryViewModels.smallProducer
       .map { category =>
         RadioItem(content = Text(category.category), value = Some(category.id))
