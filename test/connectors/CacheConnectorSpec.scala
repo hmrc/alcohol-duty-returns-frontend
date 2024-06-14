@@ -51,9 +51,9 @@ class CacheConnectorSpec extends SpecBase {
     "successfully write cache" in {
       Mockito.reset(connector.httpClient)
 
-      val postUrl = s"/cache/create-user-answers"
+      val postUrl = "/cache/user-answers"
 
-      when(mockConfig.adrCacheCreateUserAnswersUrl()).thenReturn("/cache/create-user-answers")
+      when(mockConfig.adrCacheCreateUserAnswersUrl()).thenReturn(postUrl)
 
       connector.createUserAnswers(returnAndUserDetails)
       verify(connector.httpClient, atLeastOnce)
@@ -65,9 +65,9 @@ class CacheConnectorSpec extends SpecBase {
     "successfully write cache" in {
       Mockito.reset(connector.httpClient)
 
-      val putUrl = s"/cache/set"
+      val putUrl = "/cache/set"
 
-      when(mockConfig.adrCacheSetUrl()).thenReturn("/cache/set")
+      when(mockConfig.adrCacheSetUrl()).thenReturn(putUrl)
 
       connector.set(emptyUserAnswers)
       verify(connector.httpClient, atLeastOnce)

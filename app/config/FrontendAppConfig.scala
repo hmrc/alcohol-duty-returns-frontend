@@ -83,7 +83,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     s"$adrReturnsHost/alcohol-duty-returns/cache/set"
 
   def adrCacheCreateUserAnswersUrl(): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/create-user-answers"
+    s"$adrReturnsHost/alcohol-duty-returns/cache/user-answers"
 
   def adrCacheClearAllUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-all"
