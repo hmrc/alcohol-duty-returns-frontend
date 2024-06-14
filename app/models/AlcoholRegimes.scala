@@ -16,25 +16,15 @@
 
 package models
 
-import cats.data.NonEmptySet
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import play.api.libs.json._
 
-import scala.collection.immutable.SortedSet
-
-case class AlcoholRegimes(regimes: NonEmptySet[AlcoholRegime]) {
+case class AlcoholRegimes(regimes: Set[AlcoholRegime]) {
   def hasBeer()                  = regimes.contains(Beer)
   def hasCider()                 = regimes.contains(Cider)
   def hasWine()                  = regimes.contains(Wine)
   def hasSpirits()               = regimes.contains(Spirits)
-  def hasOtherFermentedProduct() = hasCider() || hasWine() || regimes.contains(OtherFermentedProduct)
-
-  def authorisedForRegime(regime: AlcoholRegime) =
-    if (regime == OtherFermentedProduct) {
-      hasOtherFermentedProduct()
-    } else {
-      hasRegime(regime)
-    }
+  def hasOtherFermentedProduct() = regimes.contains(OtherFermentedProduct)
 
   def hasRegime(regime: AlcoholRegime) = regimes.contains(regime)
 }
@@ -42,19 +32,16 @@ case class AlcoholRegimes(regimes: NonEmptySet[AlcoholRegime]) {
 object AlcoholRegimes {
   private[models] val reads: Reads[AlcoholRegimes] =
     (JsPath \ "regimes")
-      .read[SortedSet[AlcoholRegime]]
+      .read[Set[AlcoholRegime]]
       .map(regimes =>
-        AlcoholRegimes(NonEmptySet.fromSet(regimes).getOrElse(throw new IllegalArgumentException("No regimes found")))
+        if (regimes.nonEmpty) {
+          AlcoholRegimes(regimes)
+        } else {
+          throw new IllegalArgumentException("Expecting at least one regime to be approved")
+        }
       )
 
-  private[models] val writes: Writes[AlcoholRegimes] =
-    (JsPath \ "regimes").write[SortedSet[AlcoholRegime]].contramap(_.regimes.toSortedSet)
+  private[models] val writes: OWrites[AlcoholRegimes] = Json.writes[AlcoholRegimes]
 
-  private val format: Format[AlcoholRegimes] = Format[AlcoholRegimes](reads, writes)
-
-  implicit val alcoholRegimesFormat: OFormat[AlcoholRegimes] = new OFormat[AlcoholRegimes] {
-    override def writes(o: AlcoholRegimes): JsObject = format.writes(o).as[JsObject]
-
-    override def reads(json: JsValue): JsResult[AlcoholRegimes] = format.reads(json)
-  }
+  implicit val alcoholRegimesFormat: OFormat[AlcoholRegimes] = OFormat[AlcoholRegimes](reads, writes)
 }

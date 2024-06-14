@@ -47,7 +47,6 @@ trait SpecBase
     with IntegrationPatience
     with ModelGenerators
     with TestData {
-
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =

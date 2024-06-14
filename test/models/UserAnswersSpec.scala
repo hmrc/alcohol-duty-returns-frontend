@@ -17,18 +17,15 @@
 package models
 
 import base.SpecBase
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsPath, Json}
 import queries.{Gettable, Settable}
 
+import java.time.Instant
 import scala.util.Success
 
 class UserAnswersSpec extends SpecBase {
-  case object TestSeqPage extends Gettable[Seq[String]] with Settable[Seq[String]] {
-    override def path: JsPath = JsPath \ toString
-  }
-  "UserAnswer" - {
-    "should add a value to a set for a given page and get the same value" in {
-
+  "UserAnswers" - {
+    "should add a value to a set for a given page and get the same value" in new SetUp {
       val expectedValue = "value"
 
       val updatedUserAnswer = emptyUserAnswers.addToSeq(TestSeqPage, expectedValue) match {
@@ -44,7 +41,7 @@ class UserAnswersSpec extends SpecBase {
       expectedValue mustBe actualValue
     }
 
-    "should remove a value for a given Page" in {
+    "should remove a value for a given Page" in new SetUp {
       val userAnswers = emptyUserAnswers.set(TestSeqPage, Seq("123")).success.value
 
       val updatedUserAnswer = userAnswers.removeBySeqIndex(TestSeqPage, 0) match {
@@ -54,6 +51,32 @@ class UserAnswersSpec extends SpecBase {
       val actualValueOption = updatedUserAnswer.getByIndex(TestSeqPage, 0)
       actualValueOption mustBe None
     }
+
+    "should serialise to json" in new SetUp {
+      Json
+        .toJson(userAnswersWithAllRegimes.copy(lastUpdated = Instant.ofEpochMilli(1718118467838L)))
+        .toString() mustBe json
+    }
+
+    "should deserialise from json" in new SetUp {
+      Json.parse(json).as[UserAnswers] mustBe userAnswersWithAllRegimes.copy(lastUpdated =
+        Instant.ofEpochMilli(1718118467838L)
+      )
+    }
+
+    "should throw an error if no regimes found" in new SetUp {
+      an[IllegalArgumentException] mustBe thrownBy(Json.parse(noRegimesJson).as[UserAnswers])
+    }
   }
 
+  class SetUp {
+    case object TestSeqPage extends Gettable[Seq[String]] with Settable[Seq[String]] {
+      override def path: JsPath = JsPath \ toString
+    }
+
+    val json          =
+      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":["Spirits","Wine","Cider","OtherFermentedProduct","Beer"],"data":{},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
+    val noRegimesJson =
+      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":[],"data":{},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
+  }
 }

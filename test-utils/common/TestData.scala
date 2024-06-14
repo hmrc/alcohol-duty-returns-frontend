@@ -16,13 +16,10 @@
 
 package common
 
-import cats.data.NonEmptySet
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegime, AlcoholRegimes, ReturnId, UserAnswers}
+import models.{AlcoholRegimes, ReturnId, UserAnswers}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
-
-import scala.collection.immutable.SortedSet
 
 trait TestData extends ModelGenerators {
   val appaId: String     = appaIdGen.sample.get
@@ -54,45 +51,39 @@ trait TestData extends ModelGenerators {
     returnId,
     groupId,
     internalId,
-    regimes = AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Beer)).get)
+    regimes = AlcoholRegimes(Set(Beer))
   )
 
   val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers
   val userAnswersWithoutBeer: UserAnswers                  = emptyUserAnswers.copy(
-    regimes =
-      AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Cider, Wine, Spirits, OtherFermentedProduct)).get)
+    regimes = AlcoholRegimes(Set(Cider, Wine, Spirits, OtherFermentedProduct))
   )
   val userAnswersWithCider: UserAnswers                    = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Cider)).get)
+    regimes = AlcoholRegimes(Set(Cider))
   )
   val userAnswersWithoutCider: UserAnswers                 = emptyUserAnswers.copy(
-    regimes =
-      AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Beer, Wine, Spirits, OtherFermentedProduct)).get)
+    regimes = AlcoholRegimes(Set(Beer, Wine, Spirits, OtherFermentedProduct))
   )
   val userAnswersWithWine: UserAnswers                     = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Wine)).get)
+    regimes = AlcoholRegimes(Set(Wine))
   )
   val userAnswersWithoutWine: UserAnswers                  = emptyUserAnswers.copy(
-    regimes =
-      AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Beer, Cider, Spirits, OtherFermentedProduct)).get)
+    regimes = AlcoholRegimes(Set(Beer, Cider, Spirits, OtherFermentedProduct))
   )
   val userAnswersWithSpirits: UserAnswers                  = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Spirits)).get)
+    regimes = AlcoholRegimes(Set(Spirits))
   )
   val userAnswersWithoutSpirits: UserAnswers               = emptyUserAnswers.copy(
-    regimes =
-      AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Beer, Cider, Wine, OtherFermentedProduct)).get)
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct))
   )
   val userAnswersWithOtherFermentedProduct: UserAnswers    = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](OtherFermentedProduct)).get)
+    regimes = AlcoholRegimes(Set(OtherFermentedProduct))
   )
   val userAnswersWithoutOtherFermentedProduct: UserAnswers = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(NonEmptySet.fromSet(SortedSet[AlcoholRegime](Beer, Cider, Wine, Spirits)).get)
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits))
   )
 
   val userAnswersWithAllRegimes: UserAnswers = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(
-      NonEmptySet.fromSet(SortedSet[AlcoholRegime](Beer, Cider, Wine, Spirits, OtherFermentedProduct)).get
-    )
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
   )
 }

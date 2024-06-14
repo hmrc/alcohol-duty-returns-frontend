@@ -29,7 +29,6 @@ import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
 
 class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
-
   val application: Application    = applicationBuilder().build()
   private val instant             = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val clock: Clock        = Clock.fixed(instant, ZoneId.systemDefault)
