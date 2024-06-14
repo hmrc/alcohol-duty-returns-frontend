@@ -16,10 +16,11 @@
 
 package models
 
+import cats.data.NonEmptySet
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import play.api.libs.json.JsPath
+import play.api.libs.json.{Json, OFormat}
 
-case class AlcoholRegimes(regimes: Set[AlcoholRegime]) {
+case class AlcoholRegimes(regimes: NonEmptySet[AlcoholRegime]) {
   def hasBeer()                  = regimes.contains(Beer)
   def hasCider()                 = regimes.contains(Cider)
   def hasWine()                  = regimes.contains(Wine)
@@ -33,19 +34,9 @@ case class AlcoholRegimes(regimes: Set[AlcoholRegime]) {
       hasRegime(regime)
     }
 
-  private def hasRegime(regime: AlcoholRegime) = regimes.contains(regime)
-
-  def nextRegime(current: Option[AlcoholRegime]): Option[AlcoholRegime] = current match {
-    case None                                        => Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).find(hasRegime)
-    case Some(Beer)                                  => Seq(Cider, Wine, Spirits, OtherFermentedProduct).find(hasRegime)
-    case Some(Cider)                                 => Seq(Wine, Spirits).find(hasRegime).orElse(Some(OtherFermentedProduct))
-    case Some(Wine)                                  => Seq(Spirits).find(hasRegime).orElse(Some(OtherFermentedProduct))
-    case Some(Spirits) if hasOtherFermentedProduct() => Some(OtherFermentedProduct)
-    case _                                           => None
-  }
+  def hasRegime(regime: AlcoholRegime) = regimes.contains(regime)
 }
 
 object AlcoholRegimes {
-  def fromUserAnswers(userAnswers: UserAnswers): Option[AlcoholRegimes] =
-    userAnswers.get[Set[AlcoholRegime]](JsPath \ "alcoholRegime").map(AlcoholRegimes(_))
+  implicit val alcoholRegimesFormat: OFormat[AlcoholRegimes] = Json.format[AlcoholRegimes]
 }

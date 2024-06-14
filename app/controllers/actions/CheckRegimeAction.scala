@@ -30,13 +30,10 @@ trait CheckRegimeAction extends ActionRefiner[DataRequest, DataRequest] with Log
   val regime: AlcoholRegime
 
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] =
-    AlcoholRegimes.fromUserAnswers(request.userAnswers) match {
-      case Some(regimes) if regimes.authorisedForRegime(regime) => Future.successful(Right(request))
-      case Some(_)                                              =>
-        Future.successful(Left(Redirect(controllers.routes.UnauthorisedController.onPageLoad)))
-      case None                                                 =>
-        logger.warn("Unable to get regimes from userAnswers")
-        Future.successful(Left(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
+    if (request.userAnswers.regimes.authorisedForRegime(regime)) {
+      Future.successful(Right(request))
+    } else {
+      Future.successful(Left(Redirect(controllers.routes.UnauthorisedController.onPageLoad)))
     }
 }
 

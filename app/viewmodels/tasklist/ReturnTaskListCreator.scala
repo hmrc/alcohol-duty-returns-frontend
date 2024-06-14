@@ -31,27 +31,24 @@ import javax.inject.Inject
 class ReturnTaskListCreator @Inject() () {
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
-    createTaskListSection: () => Result[TaskListItem],
+    createTaskListSection: () => TaskListItem,
     declarationController: Mode => String,
     sectionName: String
   )(implicit
     messages: Messages
-  ): Result[Section] = {
-    val eitherTaskListItems = declareQuestionAnswer match {
+  ): Section = {
+    val taskListItems = declareQuestionAnswer match {
       case Some(true) =>
-        createTaskListSection().map(
           Seq(
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.yes"))),
               status = AlcholDutyTaskListItemStatus.completed,
               href = Some(declarationController(CheckMode))
             ),
-            _
+            createTaskListSection()
           )
-        )
 
       case Some(false) =>
-        Right(
           Seq(
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.no"))),
@@ -59,10 +56,8 @@ class ReturnTaskListCreator @Inject() () {
               href = Some(declarationController(CheckMode))
             )
           )
-        )
 
       case None =>
-        Right(
           Seq(
             TaskListItem(
               title =
@@ -71,15 +66,12 @@ class ReturnTaskListCreator @Inject() () {
               href = Some(declarationController(NormalMode))
             )
           )
-        )
     }
 
-    eitherTaskListItems.map(taskListItems =>
-      Section(
-        title = messages(s"taskList.section.$sectionName.heading"),
-        taskList = TaskList(items = taskListItems),
-        statusCompleted = AlcholDutyTaskListItemStatus.completed
-      )
+    Section(
+      title = messages(s"taskList.section.$sectionName.heading"),
+      taskList = TaskList(items = taskListItems),
+      statusCompleted = AlcholDutyTaskListItemStatus.completed
     )
   }
 
@@ -111,7 +103,7 @@ class ReturnTaskListCreator @Inject() () {
         )
     }
 
-  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): Result[TaskListItem] = {
+  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () =>
       (userAnswers.get(ProductListPage), userAnswers.get(ProductEntryListPage)) match {
         case (Some(false), Some(list)) if list.nonEmpty => Completed
@@ -119,7 +111,6 @@ class ReturnTaskListCreator @Inject() () {
         case _                                          => NotStarted
       }
 
-    Right(
       createDeclarationTask(
         getDeclarationState,
         "returns.products",
@@ -127,15 +118,13 @@ class ReturnTaskListCreator @Inject() () {
         controllers.productEntry.routes.ProductListController.onPageLoad().url,
         controllers.productEntry.routes.ProductListController.onPageLoad().url
       )
-    )
   }
 
   private def returnDSDJourneyTaskListItem(
     userAnswers: UserAnswers
-  )(implicit messages: Messages): Result[TaskListItem] =
-    AlcoholRegimes
-      .fromUserAnswers(userAnswers)
-      .fold[Result[TaskListItem]](Left(new IllegalStateException("Unable to get regimes"))) { regimes =>
+  )(implicit messages: Messages): TaskListItem = {
+    val regimes = userAnswers.regimes
+
         val getDeclarationState = () => {
           val maybeBeer           = if (regimes.hasBeer()) Some(userAnswers.get(DutySuspendedBeerPage).isDefined) else None
           val maybeCider          = if (regimes.hasCider()) Some(userAnswers.get(DutySuspendedCiderPage).isDefined) else None
@@ -157,7 +146,6 @@ class ReturnTaskListCreator @Inject() () {
           }
         }
 
-        Right(
           createDeclarationTask(
             getDeclarationState,
             "dutySuspended",
@@ -165,12 +153,11 @@ class ReturnTaskListCreator @Inject() () {
             controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
             controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
           )
-        )
       }
 
   private def returnQSJourneyTaskListItem(
     userAnswers: UserAnswers
-  )(implicit messages: Messages): Result[TaskListItem] = {
+  )(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
       val declareSpiritsTotal = userAnswers.get(DeclareSpiritsTotalPage).isDefined
       val whisky              = userAnswers.get(WhiskyPage).isDefined
@@ -202,18 +189,16 @@ class ReturnTaskListCreator @Inject() () {
         InProgress
     }
 
-    Right(
       createDeclarationTask(
         getDeclarationState,
         "spirits",
         controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
         controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
         controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
-      )
     )
   }
 
-  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Result[Section] =
+  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareAlcoholDutyQuestionPage),
       () => returnJourneyTaskListItem(userAnswers),
@@ -221,7 +206,7 @@ class ReturnTaskListCreator @Inject() () {
       sectionName = "returns"
     )
 
-  def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Result[Section] =
+  def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
       () => returnDSDJourneyTaskListItem(userAnswers),
@@ -229,7 +214,7 @@ class ReturnTaskListCreator @Inject() () {
       sectionName = "dutySuspended"
     )
 
-  def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Result[Section] =
+  def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareQuarterlySpiritsPage),
       () => returnQSJourneyTaskListItem(userAnswers),

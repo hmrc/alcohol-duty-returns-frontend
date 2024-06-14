@@ -16,6 +16,7 @@
 
 package models
 
+import cats.data.NonEmptySet
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
@@ -56,6 +57,7 @@ final case class UserAnswers(
   groupId: String,
   internalId: String,
   data: JsObject = Json.obj(),
+  regimes: AlcoholRegimes,
   lastUpdated: Instant = Instant.now,
   validUntil: Option[Instant] = None
 ) {
@@ -165,6 +167,7 @@ object UserAnswers {
         (__ \ "groupId").read[String] and
         (__ \ "internalId").read[String] and
         (__ \ "data").read[JsObject] and
+        (__ \ "regimes").read[AlcoholRegimes] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat) and
         (__ \ "validUntil").readNullable(MongoJavatimeFormats.instantFormat)
     )(UserAnswers.apply _)
