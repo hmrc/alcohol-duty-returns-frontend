@@ -32,11 +32,12 @@ object HowMuchDoYouNeedToAdjustSummary {
     for {
       totalLitres <- adjustmentEntry.totalLitresVolume
       pureAlcohol <- adjustmentEntry.pureAlcoholVolume
+      regime      <- adjustmentEntry.rateBand.map(_.alcoholRegime)
     } yield {
 
       val value = HtmlFormat.escape(totalLitres.toString()).toString + " " + messages(
         "howMuchDoYouNeedToAdjust.totalLitres",
-        "Beer_placeholder"
+        regime.head
       ) + "<br/>" + HtmlFormat.escape(pureAlcohol.toString()).toString + " " + messages(
         "howMuchDoYouNeedToAdjust.pureAlcohol"
       )
@@ -45,7 +46,7 @@ object HowMuchDoYouNeedToAdjustSummary {
         key = "howMuchDoYouNeedToAdjust.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.HowMuchDoYouNeedToAdjustController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("howMuchDoYouNeedToAdjust.change.hidden"))
         )
       )

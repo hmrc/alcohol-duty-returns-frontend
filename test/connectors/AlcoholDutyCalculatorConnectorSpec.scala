@@ -78,14 +78,14 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     "successfully retrieve tax duty" in {
       when {
         connector.httpClient.POST[DutyCalculationRequest, TaxDuty](any(), any(), any())(any(), any(), any(), any())
-      } thenReturn Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1)))
+      } thenReturn Future.successful(TaxDuty(BigDecimal(1)))
 
-      whenReady(connector.calculateTaxDuty(AlcoholByVolume(3.5), BigDecimal(1), BigDecimal(1))) { result =>
-        result mustBe TaxDuty(BigDecimal(1), BigDecimal(1))
+      whenReady(connector.calculateTaxDuty(BigDecimal(1), BigDecimal(1))) { result =>
+        result mustBe TaxDuty(BigDecimal(1))
         verify(connector.httpClient, atLeastOnce)
           .POST[DutyCalculationRequest, TaxDuty](
             any(),
-            ArgumentMatchers.eq(DutyCalculationRequest(AlcoholByVolume(3.5), BigDecimal(1), BigDecimal(1))),
+            ArgumentMatchers.eq(DutyCalculationRequest(BigDecimal(1), BigDecimal(1))),
             any()
           )(any(), any(), any(), any())
       }

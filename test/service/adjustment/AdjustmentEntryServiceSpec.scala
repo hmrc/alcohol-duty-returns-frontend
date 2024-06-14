@@ -18,9 +18,12 @@ package service.adjustment
 
 import base.SpecBase
 import connectors.AlcoholDutyCalculatorConnector
+import models.AlcoholRegime.Beer
+import models.RateType.Core
 import pages.adjustment._
-import models.AlcoholByVolume
+import models.{AlcoholByVolume, RateBand, RateType}
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Underdeclaration
 import models.productEntry.TaxDuty
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
@@ -35,35 +38,41 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
+    val rateBand = RateBand(
+      "310",
+      "some band",
+      RateType.DraughtRelief,
+      Set(Beer),
+      AlcoholByVolume(0.1),
+      AlcoholByVolume(5.8),
+      Some(BigDecimal(10.99))
+    )
+
     val adjustmentEntry = AdjustmentEntry(
-      abv = Some(AlcoholByVolume(3.5)),
-      volume = Some(BigDecimal(1))
+      adjustmentType = Some(Underdeclaration),
+      totalLitresVolume = Some(BigDecimal(1)),
+      pureAlcoholVolume = Some(BigDecimal(1)),
+      rateBand = Some(rateBand)
     )
 
     "must create an adjustment entry when TaxType contains rate" in {
 
-      val updatedAdjustmentEntry = adjustmentEntry.copy(
-        taxCode = Some("ALC"),
-        taxRate = Some(BigDecimal(1))
-      )
-
       val userAnswerWithRate = emptyUserAnswers
-        .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
+        .set(CurrentAdjustmentEntryPage, adjustmentEntry)
         .success
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+      when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new AdjustmentEntryServiceImpl(mockConnector)
 
       val result = service.createAdjustment(userAnswerWithRate).futureValue
 
       result                   shouldBe a[AdjustmentEntry]
-      result.abv               shouldBe Some(AlcoholByVolume(3.5))
-      result.rate              shouldBe Some(BigDecimal(1))
-      result.volume            shouldBe Some(BigDecimal(1))
+      result.rate              shouldBe Some(BigDecimal(10.99))
+      result.totalLitresVolume shouldBe Some(BigDecimal(1))
       result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
       result.duty              shouldBe Some(BigDecimal(1))
 
@@ -72,7 +81,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
     "must create an adjustment entry when TaxType does not contain rate but the Small Producer Relief duty rate is present" in {
 
       val updatedAdjustmentEntry = adjustmentEntry.copy(
-        taxCode = Some("ALC"),
+        rateBand = Some(rateBand.copy(rate = None)),
         sprDutyRate = Some(BigDecimal(2))
       )
 
@@ -82,17 +91,16 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+      when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new AdjustmentEntryServiceImpl(mockConnector)
 
       val result = service.createAdjustment(userAnswerWithRate).futureValue
 
       result                   shouldBe a[AdjustmentEntry]
-      result.abv               shouldBe Some(AlcoholByVolume(3.5))
       result.rate              shouldBe Some(BigDecimal(2))
-      result.volume            shouldBe Some(BigDecimal(1))
+      result.totalLitresVolume shouldBe Some(BigDecimal(1))
       result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
       result.duty              shouldBe Some(BigDecimal(1))
     }
@@ -102,8 +110,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
       "if both, TaxType and SmallProducerReliefDuty contain rate" in {
 
         val updatedAdjustmentEntry = adjustmentEntry.copy(
-          taxCode = Some("ALC"),
-          taxRate = Some(BigDecimal(1)),
+          rateBand = Some(rateBand),
           sprDutyRate = Some(BigDecimal(2))
         )
 
@@ -113,8 +120,8 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
 
@@ -127,18 +134,14 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
       "if neither TaxType or SmallProducerReliefDutyRate contain rate" in {
 
-        val updatedAdjustmentEntry = adjustmentEntry.copy(
-          taxCode = Some("ALC")
-        )
-
         val userAnswerWithRate = emptyUserAnswers
-          .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
+          .set(CurrentAdjustmentEntryPage, adjustmentEntry)
           .success
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
 
@@ -151,16 +154,16 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         )
       }
 
-      "if Adjustment Entry doesn't contain ABV value" in {
+      "if Product Entry doesn't contain total litres volume value" in {
 
         val userAnswers = emptyUserAnswers
-          .set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(abv = None))
+          .set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(totalLitresVolume = None))
           .success
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
 
@@ -168,19 +171,19 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           service.createAdjustment(userAnswers).futureValue
         }
 
-        exception.getLocalizedMessage must include(s"Can't fetch ABV from cache")
+        exception.getLocalizedMessage must include(s"Can't fetch volume from cache") //check this
       }
 
-      "if Product Entry doesn't contain Volume value" in {
+      "if Product Entry doesn't contain pure alcohol volume value" in {
 
         val userAnswers = emptyUserAnswers
-          .set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(volume = None))
+          .set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(pureAlcoholVolume = None))
           .success
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
 
@@ -188,7 +191,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           service.createAdjustment(userAnswers).futureValue
         }
 
-        exception.getLocalizedMessage must include(s"Can't fetch volume from cache")
+        exception.getLocalizedMessage must include(s"Can't fetch volume from cache") //check this
       }
     }
 

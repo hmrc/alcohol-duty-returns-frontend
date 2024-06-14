@@ -18,24 +18,23 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.HowMuchDoYouNeedToAdjustFormProvider
-import models.NormalMode
-import models.adjustment.HowMuchDoYouNeedToAdjust
+import models.{NormalMode, UserAnswers}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.HowMuchDoYouNeedToAdjustPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.HowMuchDoYouNeedToAdjust
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.HowMuchDoYouNeedToAdjustView
 
 import scala.concurrent.Future
 
-class HowMuchDoYouNeedToAdjustControllerSpec extends SpecBase with MockitoSugar {
+class HowMuchDoYouNeedToAdjustControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -44,10 +43,12 @@ class HowMuchDoYouNeedToAdjustControllerSpec extends SpecBase with MockitoSugar 
 
   lazy val howMuchDoYouNeedToAdjustRoute = routes.HowMuchDoYouNeedToAdjustController.onPageLoad(NormalMode).url
 
+  val spoilt = Spoilt.toString
+
   val userAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       HowMuchDoYouNeedToAdjustPage.toString -> Json.obj(
         "totalLitersVolume" -> "value 1",
@@ -70,7 +71,7 @@ class HowMuchDoYouNeedToAdjustControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, spoilt)(request, messages(application)).toString
       }
     }
 
@@ -86,7 +87,11 @@ class HowMuchDoYouNeedToAdjustControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(HowMuchDoYouNeedToAdjust("value 1", "value 2")), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(HowMuchDoYouNeedToAdjust(123, 12, Some(123))),
+          NormalMode,
+          spoilt
+        )(
           request,
           messages(application)
         ).toString
@@ -102,7 +107,7 @@ class HowMuchDoYouNeedToAdjustControllerSpec extends SpecBase with MockitoSugar 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -135,7 +140,7 @@ class HowMuchDoYouNeedToAdjustControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, spoilt)(request, messages(application)).toString
       }
     }
 

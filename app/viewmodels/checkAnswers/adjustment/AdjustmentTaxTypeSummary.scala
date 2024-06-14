@@ -27,10 +27,10 @@ import viewmodels.implicits._
 object AdjustmentTaxTypeSummary {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    adjustmentEntry.taxCode.map { taxCode =>
+    adjustmentEntry.rateBand.map { rateBand =>
       SummaryListRowViewModel(
         key = "adjustmentTaxType.checkYourAnswersLabel",
-        value = ValueViewModel(taxCode),
+        value = ValueViewModel(rateBand.taxType),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("adjustmentTaxType.change.hidden"))

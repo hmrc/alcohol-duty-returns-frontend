@@ -25,14 +25,14 @@
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
-    paragraph: Paragraph,
+    paragraph: Paragraph
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String, sprApplicable: Boolean = false)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("howMuchDoYouNeedToAdjust.title"))) {
 
-    @formHelper(action = controllers.adjustment.routes.HowMuchDoYouNeedToAdjustController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -43,14 +43,14 @@
             text = messages(s"section.adjustment.$adjustmentType"),
         )
 
-        @pageHeading(messages("howMuchDoYouNeedToAdjust.heading"))
+        @pageHeading(messages("adjustmentVolume.heading"))
 
-        @paragraph(messages("howMuchDoYouNeedToAdjust.hint"), classes = "govuk-hint")
+        @paragraph(messages("adjustmentVolume.hint"), classes = "govuk-hint")
 
         @govukInput(
             InputViewModel(
-                field = form("totalLitersVolume"),
-                label = LabelViewModel(messages("howMuchDoYouNeedToAdjust.totalLitersVolume"))
+                field = form("adjustment-total-liters-input"),
+                label = LabelViewModel(messages("adjustmentVolume.totalLitersVolume.heading"))
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -59,24 +59,24 @@
 
         @govukInput(
             InputViewModel(
-                field = form("pureAlcoholVolume"),
-                label = LabelViewModel(messages("howMuchDoYouNeedToAdjust.pureAlcoholVolume"))
+                field = form("adjustment-pure-alcohol-input"),
+                label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading"))
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
-        @if(sprApplicable){
-            @govukInput(
+
+
+        @govukInput(
             InputViewModel(
-            field = form("smallProducerReliefDutyRate"),
-            label = LabelViewModel(messages("howMuchDoYouNeedToAdjust.smallProducerReliefDutyRate"))
+            field = form("adjustment-small-producer-relief-duty-rate"),
+            label = LabelViewModel(messages("adjustmentVolume.smallProducerReliefDutyRate.heading"))
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            )
-        }
+        )
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))

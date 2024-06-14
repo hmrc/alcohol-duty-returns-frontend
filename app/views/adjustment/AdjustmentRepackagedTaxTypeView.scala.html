@@ -28,31 +28,36 @@
 
 @(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("alcoholByVolume.title"))) {
+@layout(pageTitle = title(form, messages("adjustmentRepackagedTaxType.title"))) {
 
-    @formHelper(action = controllers.adjustment.routes.AlcoholByVolumeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
-            id = "alcoholByVolume-section",
-            messages(s"section.adjustment.$adjustmentType"),
+            id = "adjustment-repackaged-tax-type-section",
+            text = messages(s"section.adjustment.$adjustmentType")
         )
 
         @govukInput(
             InputViewModel(
-                field = form("alcoholByVolume-input"),
-                label = LabelViewModel(messages("alcoholByVolume.heading")).asPageHeading()
+                field = form("new-tax-type-code"),
+                label = LabelViewModel(messages("adjustmentRepackagedTaxType.heading")).asPageHeading()
             )
             .asNumeric()
             .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = "site.unit.percentage"))
-        )
+            .withHint(HintViewModel(
+            if(adjustmentType == "under-declaration"){
+            messages("adjustmentRepackagedTaxType.underDeclaration.hint")
+            } else {
+            messages("adjustmentRepackagedTaxType.default.hint")
+            }
+            )))
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
         )
     }
 }

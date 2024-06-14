@@ -55,8 +55,8 @@ class ProductEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+      when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new ProductEntryServiceImpl(mockConnector)
 
@@ -88,8 +88,8 @@ class ProductEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-        .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+      when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new ProductEntryServiceImpl(mockConnector)
 
@@ -138,8 +138,8 @@ class ProductEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new ProductEntryServiceImpl(mockConnector)
 
@@ -164,8 +164,8 @@ class ProductEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new ProductEntryServiceImpl(mockConnector)
 
@@ -186,8 +186,8 @@ class ProductEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new ProductEntryServiceImpl(mockConnector)
 
@@ -206,8 +206,8 @@ class ProductEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1))))
+        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new ProductEntryServiceImpl(mockConnector)
 

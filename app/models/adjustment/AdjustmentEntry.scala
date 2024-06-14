@@ -16,7 +16,7 @@
 
 package models.adjustment
 
-import models.{AlcoholByVolume, RateType, YearMonthModelFormatter}
+import models.{RateBand, YearMonthModelFormatter}
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.YearMonth
@@ -24,33 +24,33 @@ import java.time.YearMonth
 case class AdjustmentEntry(
   index: Option[Int] = None,
   adjustmentType: Option[AdjustmentType] = None,
-  abv: Option[AlcoholByVolume] = None,
-  taxCode: Option[String] = None,
-  rateType: Option[RateType] = None,
-  taxRate: Option[BigDecimal] = None,
+  rateBand: Option[RateBand] = None,
+  repackagedRateBand: Option[RateBand] = None,
   totalLitresVolume: Option[BigDecimal] = None,
   pureAlcoholVolume: Option[BigDecimal] = None,
   period: Option[YearMonth] = None,
   sprDutyRate: Option[BigDecimal] = None,
+  repackagedSprDutyRate: Option[BigDecimal] = None,
   duty: Option[BigDecimal] = None
 ) {
-  def isComplete: Boolean      =
-    abv.isDefined &&
-      rateType.isDefined &&
-      // volume.isDefined &&
-      taxCode.isDefined &&
-      // reliefQuestionDefined &&
-      // regime.isDefined &&
-      (taxRate.isDefined || sprDutyRate.isDefined) &&
-      duty.isDefined &&
-      pureAlcoholVolume.isDefined
-  def rate: Option[BigDecimal] = (taxRate, sprDutyRate) match {
-    case (Some(_), None) => taxRate
-    case (None, Some(_)) => sprDutyRate
-    case _               => None
-  }
-}
+  def isComplete: Boolean =
+    adjustmentType.isDefined &&
+      period.isDefined &&
+      rateBand.isDefined &&
+      repackagedRateBand.isDefined &&
+      totalLitresVolume.isDefined &&
+      pureAlcoholVolume.isDefined &&
+      (rateBand.flatMap(_.rate).isDefined || sprDutyRate.isDefined) &&
+      //  (repackagedRateBand.flatMap(_.rate).isDefined || repackagedSprDutyRate.isDefined) && how to check
+      duty.isDefined
 
+  def rate: Option[BigDecimal] =
+    (rateBand.flatMap(_.rate), sprDutyRate) match {
+      case (Some(_), None) => rateBand.map(_.rate).get
+      case (None, Some(_)) => sprDutyRate
+      case _               => None
+    }
+}
 object AdjustmentEntry extends YearMonthModelFormatter {
   implicit val formats: OFormat[AdjustmentEntry] = Json.format[AdjustmentEntry]
 }

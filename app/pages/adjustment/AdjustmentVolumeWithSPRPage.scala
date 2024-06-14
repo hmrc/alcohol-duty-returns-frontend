@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package forms.adjustment
+package pages.adjustment
 
-import forms.mappings.Mappings
-import javax.inject.Inject
-import play.api.data.Form
+import models.adjustment.AdjustmentVolumeWithSPR
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class AlcoholByVolumeFormProvider @Inject() extends Mappings {
+case object AdjustmentVolumeWithSPRPage extends QuestionPage[AdjustmentVolumeWithSPR] {
 
-  def apply(): Form[BigDecimal] =
-    Form(
-      "alcoholByVolume-input" -> bigDecimal(
-        1,
-        "alcoholByVolume.error.required",
-        "alcoholByVolume.error.nonNumeric",
-        "alcoholByVolume.error.oneDecimalPlace"
-      )
-        .verifying(minimumValue(BigDecimal(0.1), "alcoholByVolume.error.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(100), "alcoholByVolume.error.maximumRequired"))
-    )
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "howMuchDoYouNeedToAdjust"
 }

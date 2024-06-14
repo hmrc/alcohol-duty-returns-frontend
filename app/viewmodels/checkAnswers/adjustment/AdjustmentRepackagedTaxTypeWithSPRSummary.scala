@@ -16,8 +16,9 @@
 
 package viewmodels.checkAnswers.adjustment
 
-import models.adjustment.AdjustmentEntry
-import models.{CheckMode, YearMonthModelFormatter}
+import controllers.adjustment.routes
+import models.{CheckMode, UserAnswers}
+import pages.adjustment.AdjustmentRepackagedTaxTypeWithSPRPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -25,25 +26,21 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object WhenDidYouPayDutySummary extends YearMonthModelFormatter {
+object AdjustmentRepackagedTaxTypeWithSPRSummary  {
 
-  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    adjustmentEntry.period.map { period =>
-      val value =
-        HtmlFormat.escape(period.getMonth.getValue.toString).toString + " " + HtmlFormat
-          .escape(period.getYear.toString)
-          .toString
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AdjustmentRepackagedTaxTypeWithSPRPage).map {
+      answer =>
 
-      SummaryListRowViewModel(
-        key = "whenDidYouPayDuty.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode).url
+      val value = HtmlFormat.escape(answer.newTaxTypeCode.toString).toString + "<br/>" + HtmlFormat.escape(answer.newSprDutyRate.toString()).toString
+
+        SummaryListRowViewModel(
+          key     = "adjustmentRepackagedTaxTypeWithSPR.checkYourAnswersLabel",
+          value   = ValueViewModel(HtmlContent(value)),
+          actions = Seq(
+            ActionItemViewModel("site.change", routes.AdjustmentRepackagedTaxTypeWithSPRController.onPageLoad(CheckMode).url)
+              .withVisuallyHiddenText(messages("adjustmentRepackagedTaxTypeWithSPR.change.hidden"))
           )
-            .withVisuallyHiddenText(messages("whenDidYouPayDuty.change.hidden"))
         )
-      )
     }
 }

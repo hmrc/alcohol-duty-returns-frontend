@@ -125,6 +125,19 @@ beforeStartReturn.text.guidance3.usecase4 = products you need to claim drawback 
 beforeStartReturn.text.guidance3.usecase5 = repackaged draught products
 beforeStartReturn.text.guidance4 = After you tell us this information, we will calculate how much you owe for this period.
 
+regime.Beer = beer
+regime.OtherFermentedProduct = other fermented products
+regime.Wine = wine
+regime.Cider = cider
+regime.Spirits = spirits
+
+regime.capital.Beer = Beer
+regime.capital.OtherFermentedProduct = Other fermented products
+regime.capital.Wine = Wine
+regime.capital.Cider = Cider
+regime.capital.Spirits = Spirits
+
+
 # Beginning of product entry sub-journey
 
 declareAlcoholDutyQuestion.title = Do you need to declare duty on any alcoholic products?
@@ -806,18 +819,30 @@ adjustmentTaxType.default.hint = The 3 digit tax type code used on your previous
 adjustmentTaxType.checkYourAnswersLabel = Tax
 adjustmentTaxType.error.valid = Enter a valid 3 digit tax type
 adjustmentTaxType.error.invalid = Enter the previous tax type
+adjustmentTaxType.error.notDraught = Tax type code must apply a reduced rate on draught products
 adjustmentTaxType.change.hidden = what is the tax type for this adjustment
 
 adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
 adjustmentVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
 adjustmentVolume.checkYourAnswersLabel = Adjustment Volume
-adjustmentVolume.error.nonNumeric = The volume of this adjustment must be a number
-adjustmentVolume.error.required = Enter the volume of this adjustment
-adjustmentVolume.error.minimumRequired = The volume of this adjustment must be higher than 0
-adjustmentVolume.error.maximumRequired = The volume of adjustments must be less than 100 million litres
-adjustmentVolume.error.twoDecimalPlaces = The volume must be up to 2 decimal places
+adjustmentVolume.error.totalLitersVolume.nonNumeric = Litres of {0} must be a number
+adjustmentVolume.error.totalLitersVolume.required = Enter the total litres of {0}
+adjustmentVolume.error.totalLitersVolume.minimumRequired = Litres of {0} must be 0.01 or more
+adjustmentVolume.error.totalLitersVolume.maximumRequired = Litres of {0} must be 99.99 million or less
+adjustmentVolume.error.totalLitersVolume.twoDecimalPlaces = Litres of {0} must be a number to 2 decimal places
+adjustmentVolume.error.totalLitersVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
+adjustmentVolume.error.pureAlcoholVolume.nonNumeric = Litres of {0} must be a number
+adjustmentVolume.error.pureAlcoholVolume.required = Enter the total litres of {0}
+adjustmentVolume.error.pureAlcoholVolume.minimumRequired = Litres of {0} must be 0.01 or more
+adjustmentVolume.error.pureAlcoholVolume.maximumRequired = Litres of {0} must be 99.99 million or less
+adjustmentVolume.error.pureAlcoholVolume.twoDecimalPlaces = Litres of {0} must be a number to 2 decimal places
+adjustmentVolume.error.pureAlcoholVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
 adjustmentVolume.change.hidden = Adjustment Volume
+adjustmentVolume.subHeading = {0} between {1}% and {2}% ABV (tax type code {3})
+adjustmentVolume.totalLitersVolume.heading = Total litres of beer
+adjustmentVolume.pureAlcoholVolume.heading = Litres of pure alcohol
+adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief duty rate
 
 adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief duty rate?
 adjustmentSmallProducerReliefDutyRate.heading = What is your Small Producer Relief duty rate?
@@ -831,27 +856,6 @@ adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Your Small Produce
 adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be 999999999.99 or less
 adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
 adjustmentSmallProducerReliefDutyRate.change.hidden = what is your Small Producer Relief duty rate
-
-howMuchDoYouNeedToAdjust.title = How much do you need to adjust?
-howMuchDoYouNeedToAdjust.heading = How much do you need to adjust?
-howMuchDoYouNeedToAdjust.hint = Give your answers as volumes in litres, to 2 decimal places. For example, 500.50
-howMuchDoYouNeedToAdjust.totalLitersVolume = totalLitersVolume
-howMuchDoYouNeedToAdjust.pureAlcoholVolume = pureAlcoholVolume
-howMuchDoYouNeedToAdjust.checkYourAnswersLabel = HowMuchDoYouNeedToAdjust
-howMuchDoYouNeedToAdjust.error.totalLitersVolume.required = Enter the total litres
-howMuchDoYouNeedToAdjust.error.pureAlcoholVolume.required = Enter the litres of pure alcohol
-howMuchDoYouNeedToAdjust.error.totalLitersVolume.nonNumeric = Total litres must be a number
-howMuchDoYouNeedToAdjust.error.pureAlcoholVolume.nonNumeric = Litres of pure alcohol must be a number to 2 decimal places
-howMuchDoYouNeedToAdjust.error.totalLitersVolume.twoDecimalPlaces = Total litres must be a number to 2 decimal places
-howMuchDoYouNeedToAdjust.error.pureAlcoholVolume.twoDecimalPlaces = Litres of pure alcohol must be a number to 2 decimal places
-howMuchDoYouNeedToAdjust.error.totalLitersVolume.minimumRequired = Total litres must be 0.01 or more
-howMuchDoYouNeedToAdjust.error.pureAlcoholVolume.minimumRequired = Litres of pure alcohol must be 0.01 or more
-howMuchDoYouNeedToAdjust.error.totalLitersVolume.maximumRequired = Total litres must be 99.99 million or less
-owMuchDoYouNeedToAdjust.error.pureAlcoholVolume.maximumRequired = Litres of pure alcohol must be 99.99 million or less
-howMuchDoYouNeedToAdjust.pureAlcohol = litres of pure alcohol (Lpa)
-howMuchDoYouNeedToAdjust.totalLitres = litres of {0}
-howMuchDoYouNeedToAdjust.totalLitersVolume.change.hidden = totalLitersVolume
-howMuchDoYouNeedToAdjust.pureAlcoholVolume.change.hidden = pureAlcoholVolume
 
 adjustmentDutyDue.title = The duty value for this adjustment is {0}
 adjustmentDutyDue.heading = The duty value for this adjustment is {0}
@@ -869,3 +873,24 @@ checkYourAnswers.subHeading = Adjustment details
 
 # End of adjustments sub-journey
 
+
+adjustmentRepackagedTaxType.title = AdjustmentRepackagedTaxType
+adjustmentRepackagedTaxType.heading = AdjustmentRepackagedTaxType
+adjustmentRepackagedTaxType.checkYourAnswersLabel = AdjustmentRepackagedTaxType
+adjustmentRepackagedTaxType.error.nonNumeric = Enter your adjustmentRepackagedTaxType using numbers
+adjustmentRepackagedTaxType.error.required = Enter your adjustmentRepackagedTaxType
+adjustmentRepackagedTaxType.error.wholeNumber = Enter your adjustmentRepackagedTaxType using whole numbers
+adjustmentRepackagedTaxType.error.outOfRange = AdjustmentRepackagedTaxType must be between {0} and {1}
+adjustmentRepackagedTaxType.change.hidden = AdjustmentRepackagedTaxType
+
+adjustmentRepackagedTaxTypeWithSPR.title = adjustmentRepackagedTaxTypeWithSPR
+adjustmentRepackagedTaxTypeWithSPR.heading = adjustmentRepackagedTaxTypeWithSPR
+adjustmentRepackagedTaxTypeWithSPR.tax-type-code = tax-type-code
+adjustmentRepackagedTaxTypeWithSPR.new-spr-duty-rate = new-spr-duty-rate
+adjustmentRepackagedTaxTypeWithSPR.checkYourAnswersLabel = AdjustmentRepackagedTaxTypeWithSPR
+adjustmentRepackagedTaxTypeWithSPR.error.tax-type-code.required = Enter tax-type-code
+adjustmentRepackagedTaxTypeWithSPR.error.new-spr-duty-rate.required = Enter new-spr-duty-rate
+adjustmentRepackagedTaxTypeWithSPR.error.tax-type-code.length = tax-type-code must be 999 characters or less
+adjustmentRepackagedTaxTypeWithSPR.error.new-spr-duty-rate.length = new-spr-duty-rate must be 999 characters or less
+adjustmentRepackagedTaxTypeWithSPR.tax-type-code.change.hidden = tax-type-code
+adjustmentRepackagedTaxTypeWithSPR.new-spr-duty-rate.change.hidden = new-spr-duty-rate

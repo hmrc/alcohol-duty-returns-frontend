@@ -80,7 +80,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), taxCode = Some(validAnswer.toString))
+      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), rateBand = Some(rateBand))
 
       val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
@@ -115,7 +115,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
@@ -147,7 +147,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
@@ -182,7 +182,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )

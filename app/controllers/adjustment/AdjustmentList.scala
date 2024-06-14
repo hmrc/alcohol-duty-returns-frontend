@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-package navigation
+package controllers.adjustment
 
-import play.api.mvc.Call
-import pages._
-import models.{Mode, UserAnswers}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+class AdjustmentList {
 
-class FakeAdjustmentNavigator(desiredRoute: Call, hasValueChanged: Boolean) extends AdjustmentNavigator {
-
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call = {
-    hasValueChanged shouldBe hasChanged
-    desiredRoute
-  }
 }

@@ -95,8 +95,7 @@ class WhenDidYouPayDutyController @Inject() (
           adjustmentEntry.copy(
             sprDutyRate = None,
             period = None,
-            taxCode = None,
-            taxRate = None,
+            rateBand = None,
             totalLitresVolume = None,
             pureAlcoholVolume = None,
             duty = None

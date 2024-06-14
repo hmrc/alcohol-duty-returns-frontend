@@ -18,23 +18,25 @@ package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
 import models.{CheckMode, UserAnswers}
-import pages.adjustment.AlcoholByVolumePage
+import pages.adjustment.AdjustmentRepackagedTaxTypePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AlcoholByVolumeSummary {
+object AdjustmentRepackagedTaxTypeSummary  {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AlcoholByVolumePage).map { answer =>
-      SummaryListRowViewModel(
-        key = "alcoholByVolume.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.AlcoholByVolumeController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("alcoholByVolume.change.hidden"))
+    answers.get(AdjustmentRepackagedTaxTypePage).map {
+      answer =>
+
+        SummaryListRowViewModel(
+          key     = "adjustmentRepackagedTaxType.checkYourAnswersLabel",
+          value   = ValueViewModel(answer.toString),
+          actions = Seq(
+            ActionItemViewModel("site.change", routes.AdjustmentRepackagedTaxTypeController.onPageLoad(CheckMode).url)
+              .withVisuallyHiddenText(messages("adjustmentRepackagedTaxType.change.hidden"))
+          )
         )
-      )
     }
 }

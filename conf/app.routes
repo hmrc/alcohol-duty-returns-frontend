@@ -205,11 +205,6 @@ POST       /when-did-you-pay-duty                        controllers.adjustment.
 GET        /change-when-did-you-pay-duty                  controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-when-did-you-pay-duty                  controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /what-is-the-adjustment-abv                  controllers.adjustment.AlcoholByVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-the-adjustment-abv                  controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = CheckMode)
-
 GET        /what-is-the-adjustment-tax-type                  controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-is-the-adjustment-tax-type                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
@@ -225,13 +220,23 @@ POST       /how-much-is-the-adjustment                 controllers.adjustment.Ad
 GET        /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /adjustment-volume                        controllers.adjustment.HowMuchDoYouNeedToAdjustController.onPageLoad(mode: Mode = NormalMode)
-POST       /adjustment-volume                        controllers.adjustment.HowMuchDoYouNeedToAdjustController.onSubmit(mode: Mode = NormalMode)
-GET        /change-adjustment-volume                  controllers.adjustment.HowMuchDoYouNeedToAdjustController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-adjustment-volume                  controllers.adjustment.HowMuchDoYouNeedToAdjustController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-volume                        controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-volume                        controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-volume                  controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-volume                  controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = CheckMode)
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 
 GET        /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
 POST       /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onSubmit()
 # End of adjustments sub-journey
+
+GET        /new-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /new-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-/new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-/new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /new-tax-type-code-with-spr                        controllers.adjustment.AdjustmentRepackagedTaxTypeWithSPRController.onPageLoad(mode: Mode = NormalMode)
+POST       /new-tax-type-code-with-spr                        controllers.adjustment.AdjustmentRepackagedTaxTypeWithSPRController.onSubmit(mode: Mode = NormalMode)
+GET        /change-new-tax-type-code-with-spr                  controllers.adjustment.AdjustmentRepackagedTaxTypeWithSPRController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-new-tax-type-code-with-spr                  controllers.adjustment.AdjustmentRepackagedTaxTypeWithSPRController.onSubmit(mode: Mode = CheckMode)

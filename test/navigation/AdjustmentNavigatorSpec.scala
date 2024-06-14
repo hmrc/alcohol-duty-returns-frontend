@@ -18,6 +18,7 @@ package navigation
 
 import base.SpecBase
 import controllers._
+import models.AlcoholRegime.Beer
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
@@ -26,6 +27,15 @@ import models.adjustment.AdjustmentEntry
 class AdjustmentNavigatorSpec extends SpecBase {
 
   val navigator = new AdjustmentNavigator
+  val rateBand  = RateBand(
+    "310",
+    "some band",
+    RateType.DraughtRelief,
+    Set(Beer),
+    AlcoholByVolume(0.1),
+    AlcoholByVolume(5.8),
+    Some(BigDecimal(10.99))
+  )
 
   "AdjustmentNavigator" - {
 
@@ -55,16 +65,6 @@ class AdjustmentNavigatorSpec extends SpecBase {
           controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
       }
 
-      "must go from WhenDidYouPayDutyPage to AlcoholByVolumeController" in {
-
-        navigator.nextPage(
-          pages.adjustment.WhenDidYouPayDutyPage,
-          NormalMode,
-          emptyUserAnswers
-        ) mustBe
-          controllers.adjustment.routes.AlcoholByVolumeController.onPageLoad(NormalMode)
-      }
-
       "must go from the Alcohol By Volume Page to Adjustment Tax Type page" in {
 
         navigator.nextPage(
@@ -82,7 +82,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           emptyUserAnswers
             .set(
               pages.adjustment.CurrentAdjustmentEntryPage,
-              AdjustmentEntry(rateType = Some(Core))
+              AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = Core)))
             )
             .success
             .value
@@ -97,7 +97,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           emptyUserAnswers
             .set(
               pages.adjustment.CurrentAdjustmentEntryPage,
-              AdjustmentEntry(rateType = Some(DraughtRelief))
+              AdjustmentEntry(rateBand = Some(rateBand))
             )
             .success
             .value
@@ -112,7 +112,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           emptyUserAnswers
             .set(
               pages.adjustment.CurrentAdjustmentEntryPage,
-              AdjustmentEntry(rateType = Some(SmallProducerRelief))
+              AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = SmallProducerRelief)))
             )
             .success
             .value
@@ -127,7 +127,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           emptyUserAnswers
             .set(
               pages.adjustment.CurrentAdjustmentEntryPage,
-              AdjustmentEntry(rateType = Some(DraughtAndSmallProducerRelief))
+              AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = DraughtAndSmallProducerRelief)))
             )
             .success
             .value

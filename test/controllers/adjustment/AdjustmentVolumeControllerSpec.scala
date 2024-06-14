@@ -66,7 +66,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), volume = Some(validAnswer))
+      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), totalLitresVolume = Some(validAnswer))
 
       val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
@@ -96,7 +96,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

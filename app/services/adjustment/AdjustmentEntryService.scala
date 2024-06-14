@@ -58,7 +58,7 @@ class AdjustmentEntryServiceImpl @Inject() (
   }
 
   private def getError(adjustmentEntry: AdjustmentEntry): RuntimeException =
-    (adjustmentEntry.taxRate, adjustmentEntry.sprDutyRate) match {
+    (adjustmentEntry.rateBand.flatMap(_.rate), adjustmentEntry.sprDutyRate) match {
       case (Some(_), Some(_)) =>
         new RuntimeException("Failed to get rate, both tax rate and spr duty rate are defined.")
       case (None, None)       => new RuntimeException("Failed to get rate, neither tax rate nor spr duty rate are defined.")

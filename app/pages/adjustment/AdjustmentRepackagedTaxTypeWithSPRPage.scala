@@ -16,13 +16,13 @@
 
 package pages.adjustment
 
-import models.adjustment.HowMuchDoYouNeedToAdjust
+import models.adjustment.AdjustmentRepackagedTaxTypeWithSPR
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object HowMuchDoYouNeedToAdjustPage extends QuestionPage[HowMuchDoYouNeedToAdjust] {
+case object AdjustmentRepackagedTaxTypeWithSPRPage extends QuestionPage[AdjustmentRepackagedTaxTypeWithSPR] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "howMuchDoYouNeedToAdjust"
+  override def toString: String = "adjustmentRepackagedTaxTypeWithSPR"
 }

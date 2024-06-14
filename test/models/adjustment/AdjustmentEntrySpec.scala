@@ -18,11 +18,23 @@ package models.adjustment
 
 import base.SpecBase
 import generators.ModelGenerators
+import models.AlcoholRegime.Beer
+import models.RateType.Core
+import models.{AlcoholByVolume, RateBand, RateType}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckPropertyChecks with ModelGenerators {
+  val rateBand = RateBand(
+    "310",
+    "some band",
+    RateType.DraughtRelief,
+    Set(Beer),
+    AlcoholByVolume(0.1),
+    AlcoholByVolume(5.8),
+    Some(BigDecimal(10.99))
+  )
 
   "AdjustmentEntry" - {
 
@@ -39,16 +51,15 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
     }
 
     "when taxType has a rate and spr relief is not applied" in {
-      val taxRate         = Some(BigDecimal(1))
-      val adjustmentEntry = AdjustmentEntry(taxRate = taxRate)
+      val taxRate         = Some(BigDecimal(10.99))
+      val adjustmentEntry = AdjustmentEntry(rateBand = Some(rateBand))
 
       adjustmentEntry.rate shouldBe taxRate
     }
 
     "when both spr relief is true and taxType has a rate" in {
-      val taxRate         = Some(BigDecimal(1))
       val sprDutyRate     = Some(BigDecimal(1))
-      val adjustmentEntry = AdjustmentEntry(taxRate = taxRate, sprDutyRate = sprDutyRate)
+      val adjustmentEntry = AdjustmentEntry(rateBand = Some(rateBand), sprDutyRate = sprDutyRate)
 
       adjustmentEntry.rate shouldBe None
     }

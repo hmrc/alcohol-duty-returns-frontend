@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -25,9 +25,11 @@
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
+    paragraph: Paragraph,
+    subHeading: SubHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: String, regime: String, minABV: BigDecimal, maxABV: BigDecimal, taxCode:String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentVolume.title"))) {
 
@@ -44,10 +46,14 @@
 
         @pageHeading(messages("adjustmentVolume.heading"))
 
+        @paragraph(messages("adjustmentVolume.hint"), classes = "govuk-hint")
+
+        @subHeading(messages("adjustmentVolume.subHeading", regime , minABV , maxABV, taxCode), "govuk-heading-s" )
+
         @govukInput(
             InputViewModel(
                 field = form("adjustment-total-liters-input"),
-                label = LabelViewModel(messages("adjustmentTotalLitersVolume.heading"))
+                label = LabelViewModel(messages("adjustmentVolume.totalLitersVolume.heading", "draught", "beer", "abv range"))
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -57,7 +63,7 @@
         @govukInput(
         InputViewModel(
             field = form("adjustment-pure-alcohol-input"),
-            label = LabelViewModel(messages("adjustmentPureAlcoholVolume.heading"))
+            label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading"))
         )
         .asNumeric()
         .withWidth(Fixed10)

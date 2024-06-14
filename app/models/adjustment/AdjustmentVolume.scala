@@ -18,12 +18,11 @@ package models.adjustment
 
 import play.api.libs.json._
 
-case class HowMuchDoYouNeedToAdjust(
-  totalLitersVolume: BigDecimal,
-  pureAlcoholVolume: BigDecimal,
-  sprDutyRate: Option[BigDecimal]
-)
+case class AdjustmentVolume(
+                                    totalLitersVolume: BigDecimal,
+                                    pureAlcoholVolume: BigDecimal
+                                  )
 
-object HowMuchDoYouNeedToAdjust {
-  implicit val format: OFormat[HowMuchDoYouNeedToAdjust] = Json.format[HowMuchDoYouNeedToAdjust]
+object AdjustmentVolume {
+  implicit val format: OFormat[AdjustmentVolume] = Json.format[AdjustmentVolume]
 }

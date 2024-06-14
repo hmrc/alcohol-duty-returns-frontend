@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package navigation
+package forms.adjustment
 
-import play.api.mvc.Call
-import pages._
-import models.{Mode, UserAnswers}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-class FakeAdjustmentNavigator(desiredRoute: Call, hasValueChanged: Boolean) extends AdjustmentNavigator {
+class AdjustmentRepackagedTaxTypeFormProvider @Inject() extends Mappings {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call = {
-    hasValueChanged shouldBe hasChanged
-    desiredRoute
-  }
+  def apply(): Form[Int] =
+    Form(
+      "new-tax-type-code" -> int(
+        "adjustmentRepackagedTaxType.error.required",
+        "adjustmentRepackagedTaxType.error.valid",
+        "adjustmentRepackagedTaxType.error.valid")
+          .verifying(inRange(0, 999, "adjustmentRepackagedTaxType.error.valid"))
+    )
 }

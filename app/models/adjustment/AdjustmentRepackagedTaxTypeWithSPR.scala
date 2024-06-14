@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package navigation
+package models.adjustment
 
-import play.api.mvc.Call
-import pages._
-import models.{Mode, UserAnswers}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import play.api.libs.json._
 
-class FakeAdjustmentNavigator(desiredRoute: Call, hasValueChanged: Boolean) extends AdjustmentNavigator {
+case class AdjustmentRepackagedTaxTypeWithSPR (newTaxTypeCode: Int, newSprDutyRate: BigDecimal)
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call = {
-    hasValueChanged shouldBe hasChanged
-    desiredRoute
-  }
+object AdjustmentRepackagedTaxTypeWithSPR {
+  implicit val format = Json.format[AdjustmentRepackagedTaxTypeWithSPR]
 }

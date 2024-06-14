@@ -17,47 +17,54 @@
 package controllers.adjustment
 
 import controllers.actions._
-import forms.adjustment.HowMuchDoYouNeedToAdjustFormProvider
+import forms.adjustment.AdjustmentVolumeWithSPRFormProvider
 
 import javax.inject.Inject
 import models.Mode
 import navigation.AdjustmentNavigator
-import pages.adjustment.{CurrentAdjustmentEntryPage, HowMuchDoYouNeedToAdjustPage}
+import pages.adjustment.{AdjustmentVolumeWithSPRPage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.RateType.{DraughtAndSmallProducerRelief, SmallProducerRelief}
-import models.adjustment.{AdjustmentEntry, HowMuchDoYouNeedToAdjust}
+import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
+import models.requests.DataRequest
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
-import views.html.adjustment.HowMuchDoYouNeedToAdjustView
+import views.html.adjustment.AdjustmentVolumeWithSPRView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class HowMuchDoYouNeedToAdjustController @Inject() (
+class AdjustmentVolumeWithSPRController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: HowMuchDoYouNeedToAdjustFormProvider,
+  formProvider: AdjustmentVolumeWithSPRFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: HowMuchDoYouNeedToAdjustView
+  view: AdjustmentVolumeWithSPRView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
+  private def getRegime(implicit request: DataRequest[_]): String = {
+    val rateBand = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.rateBand)
+    rateBand
+      .map(_.alcoholRegime.head)
+      .getOrElse(throw new RuntimeException("Couldn't fetch regime value from cache"))
+      .toString
+  }
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val form                            = formProvider(getRegime)
     val (preparedForm, adjustmentEntry) = request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case None                  => (form, AdjustmentEntry())
       case Some(adjustmentEntry) =>
         val filledForm = (for {
           totalLitresVolume <- adjustmentEntry.totalLitresVolume
           pureAlcoholVolume <- adjustmentEntry.pureAlcoholVolume
-        } yield form.fill(HowMuchDoYouNeedToAdjust(totalLitresVolume, pureAlcoholVolume, adjustmentEntry.sprDutyRate)))
+          sprDutyRate       <- adjustmentEntry.sprDutyRate
+        } yield form.fill(AdjustmentVolumeWithSPR(totalLitresVolume, pureAlcoholVolume, sprDutyRate)))
           .getOrElse(form)
         (filledForm, adjustmentEntry)
     }
@@ -66,14 +73,14 @@ class HowMuchDoYouNeedToAdjustController @Inject() (
       view(
         preparedForm,
         mode,
-        AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry),
-        checkSprApplicable(adjustmentEntry)
+        AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry)
       )
     )
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val form = formProvider(getRegime)
       form
         .bindFromRequest()
         .fold(
@@ -90,20 +97,13 @@ class HowMuchDoYouNeedToAdjustController @Inject() (
                                     adjustment.copy(
                                       totalLitresVolume = Some(value.totalLitersVolume),
                                       pureAlcoholVolume = Some(value.pureAlcoholVolume),
-                                      sprDutyRate = value.sprDutyRate
+                                      sprDutyRate = Some(value.sprDutyRate)
                                     )
                                   )
                                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(HowMuchDoYouNeedToAdjustPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(AdjustmentVolumeWithSPRPage, mode, updatedAnswers))
           }
         )
   }
-
-  private def checkSprApplicable(adjustmentEntry: AdjustmentEntry): Boolean =
-    adjustmentEntry.rateType match {
-      case Some(DraughtAndSmallProducerRelief) => true
-      case Some(SmallProducerRelief)           => true
-      case _                                   => false
-    }
 }
