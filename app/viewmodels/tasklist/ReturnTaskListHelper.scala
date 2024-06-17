@@ -26,12 +26,11 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
 import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
-import viewmodels.tasklist.ReturnTaskListHelper.{alcoholRegimeViewOrder, returnJourneyTaskListItems}
 
 object ReturnTaskListHelper {
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
-    createTaskListSection: () => TaskListItem,
+    createTaskListSection: () => Seq[TaskListItem],
     declarationController: Mode => String,
     sectionName: String
   )(implicit
@@ -44,9 +43,8 @@ object ReturnTaskListHelper {
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.yes"))),
             status = AlcholDutyTaskListItemStatus.completed,
             href = Some(declarationController(CheckMode))
-          ),
-          createTaskListSection()
-        )
+          )
+        ) ++ createTaskListSection()
 
       case Some(false) =>
         Seq(
@@ -105,12 +103,14 @@ object ReturnTaskListHelper {
 
   private val alcoholRegimeViewOrder: Seq[AlcoholRegimeName] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
 
-  private def returnJourneyTaskListItem(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit messages: Messages): Seq[TaskListItem] = {
-      for (regime <- regimes.sortBy(alcoholRegimeViewOrder.indexOf))
-        yield (
-          userAnswers.getByKey(AlcoholDutyPage, regime),
-          userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
-        ) match {
+  private def returnJourneyTaskListItem(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Seq[TaskListItem] =
+    for (regime <- regimes.sortBy(alcoholRegimeViewOrder.indexOf))
+      yield (
+        userAnswers.getByKey(AlcoholDutyPage, regime),
+        userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
+      ) match {
         case (Some(_), _)    =>
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
@@ -131,7 +131,6 @@ object ReturnTaskListHelper {
           )
 
       }
-  }
 
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
@@ -202,55 +201,18 @@ object ReturnTaskListHelper {
     )
   }
 
-//def returnSection(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit messages: Messages): Section =
-//  createSection(
-//    userAnswers.get(DeclareAlcoholDutyQuestionPage),
-//    () => returnJourneyTaskListItem(regimes, userAnswers),
-//    controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(_).url,
-//    sectionName = "returns"
-//  )
-
-  def returnSection(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit messages: Messages): Section = {
-
-    val declareDutyQuestion = userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
-      case Some(true)  =>
-        Seq(
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare.yes"))),
-            status = AlcholDutyTaskListItemStatus.completed,
-            href = Some(controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
-          )
-        ) ++ returnJourneyTaskListItems(regimes, userAnswers)
-      case Some(false) =>
-        Seq(
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare.no"))),
-            status = AlcholDutyTaskListItemStatus.completed,
-            href = Some(controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
-          )
-        )
-      case None        =>
-        Seq(
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare.notStarted"))),
-            status = AlcholDutyTaskListItemStatus.notStarted,
-            href = Some(controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url)
-          )
-        )
-    }
-
-    Section(
-      title = messages("taskList.section.returns.heading"),
-      taskList = TaskList(items = declareDutyQuestion),
-      statusCompleted = AlcholDutyTaskListItemStatus.completed
+  def returnSection(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit messages: Messages): Section =
+    createSection(
+      userAnswers.get(DeclareAlcoholDutyQuestionPage),
+      () => returnJourneyTaskListItem(regimes, userAnswers),
+      controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(_).url,
+      sectionName = "returns"
     )
-  }
-
 
   def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
-      () => returnDSDJourneyTaskListItem(userAnswers),
+      () => Seq(returnDSDJourneyTaskListItem(userAnswers)),
       controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(_).url,
       sectionName = "dutySuspended"
     )
@@ -258,7 +220,7 @@ object ReturnTaskListHelper {
   def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareQuarterlySpiritsPage),
-      () => returnQSJourneyTaskListItem(userAnswers),
+      () => Seq(returnQSJourneyTaskListItem(userAnswers)),
       controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(_).url,
       sectionName = "spirits"
     )

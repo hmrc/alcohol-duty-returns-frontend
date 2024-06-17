@@ -16,11 +16,11 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholByVolume, AlcoholRegimeName, CheckMode, RateBand, UserAnswers}
+import models.{AlcoholRegimeName, CheckMode, RateBand}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow}
-import viewmodels.checkAnswers.returns.RateBandHelper.{rateBandContent, rateBandRecap}
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

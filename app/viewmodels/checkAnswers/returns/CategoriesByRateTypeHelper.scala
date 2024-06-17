@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegimeName, RateBand, RateType}
+import models.{RateBand, RateType}
 import play.api.i18n.Messages
 
 case class CategoryViewModel(

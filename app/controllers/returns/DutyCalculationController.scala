@@ -22,7 +22,7 @@ import models.returns.VolumeAndRateByTaxType
 import models.{AlcoholRegimeName, UserAnswers}
 import pages.QuestionPage
 import pages.returns.{AlcoholDutyPage, DoYouWantToAddMultipleSPRToListPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
-import play.api.{Logger, Logging}
+import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}

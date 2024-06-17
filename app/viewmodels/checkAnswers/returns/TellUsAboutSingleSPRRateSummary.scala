@@ -20,7 +20,7 @@ import models.{AlcoholRegimeName, UserAnswers}
 import pages.returns.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
-import viewmodels.checkAnswers.returns.RateBandHelper.{rateBandContent, rateBandRecap}
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

@@ -22,7 +22,7 @@ import pages.returns.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, SummaryListRow}
-import viewmodels.checkAnswers.returns.RateBandHelper.{rateBandContent, rateBandRecap}
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

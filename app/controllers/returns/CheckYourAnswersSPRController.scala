@@ -19,7 +19,7 @@ package controllers.returns
 import connectors.CacheConnector
 import controllers.actions._
 import models.returns.VolumeAndRateByTaxType
-import models.{AlcoholRegimeName, NormalMode, UserAnswers}
+import models.{AlcoholRegimeName, UserAnswers}
 import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage}
 
 import javax.inject.Inject

@@ -21,7 +21,7 @@ import models.returns.VolumeAndRateByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
-import viewmodels.checkAnswers.returns.RateBandHelper.{rateBandContent, rateBandRecap}
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object MultipleSPRListHelper {

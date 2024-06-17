@@ -53,7 +53,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
   )
   val rateBandList: Seq[RateBand]          = Seq(rateBand)
   val rateType                             = RateTypeResponse(DraughtRelief)
-  val ratePeriod                              = returnPeriodGen.sample.get
+  val ratePeriod                           = returnPeriodGen.sample.get
 
   "rates" - {
     "successfully retrieve rates" in {

@@ -17,7 +17,7 @@
 package forms.mappings
 
 import forms.mappings.BigDecimalFieldFormatter.nameToId
-import models.returns.{VolumeAndRateByTaxType, VolumesByTaxType}
+import models.returns.VolumesByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
 

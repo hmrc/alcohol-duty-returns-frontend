@@ -22,7 +22,6 @@ import controllers._
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
-import pages.returns.DeclareAlcoholDutyQuestionPage
 
 @Singleton
 class ProductEntryNavigator @Inject() {

@@ -16,7 +16,6 @@
 
 package viewmodels.checkAnswers.returns
 
-import cats.data.NonEmptySeq
 import models.{ABVRange, AlcoholByVolume, RateBand, RateType}
 import play.api.i18n.Messages
 

@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.MultipleSPRListFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegimeName, Mode, NormalMode}
+import models.{AlcoholRegimeName, NormalMode}
 import navigation.ReturnsNavigator
 import pages.returns.DoYouWantToAddMultipleSPRToListPage
 import play.api.i18n.{I18nSupport, MessagesApi}

@@ -79,13 +79,14 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       val expectedSections =
         Seq(
           ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, userAnswers),
-          ReturnTaskListHelper.returnDSDSection(userAnswers)
-        ,
+          ReturnTaskListHelper.returnDSDSection(userAnswers),
           ReturnTaskListHelper.returnQSSection(userAnswers)
         )
 
       val result           =
-        AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, userAnswers, validUntil, periodKeyMar)(messages(application))
+        AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, userAnswers, validUntil, periodKeyMar)(
+          messages(application)
+        )
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(

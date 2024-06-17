@@ -23,8 +23,8 @@ import viewmodels.govuk.all.FluentInstant
 import java.time.Instant
 
 object AlcoholDutyTaskListHelper {
-  def getTaskList(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers, validUntil: Instant, periodKey: String)(implicit
-    messages: Messages
+  def getTaskList(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers, validUntil: Instant, periodKey: String)(
+    implicit messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
       Seq(
