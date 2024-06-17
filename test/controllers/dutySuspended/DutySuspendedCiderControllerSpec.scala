@@ -18,12 +18,10 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedCiderFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedCider
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -34,7 +32,7 @@ import views.html.dutySuspended.DutySuspendedCiderView
 
 import scala.concurrent.Future
 
-class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
+class DutySuspendedCiderControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -45,16 +43,17 @@ class DutySuspendedCiderControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
 
-  val userAnswers = emptyUserAnswers
-    .set(
-      DutySuspendedCiderPage,
-      DutySuspendedCider(
-        validTotalCider,
-        validPureAlcoholInCider
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      DutySuspendedCiderPage.toString -> Json.obj(
+        "totalCider"         -> validTotalCider,
+        "pureAlcoholInCider" -> validPureAlcoholInCider
       )
     )
-    .success
-    .value
+  )
 
   "DutySuspendedCider Controller" - {
 

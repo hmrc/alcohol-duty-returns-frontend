@@ -18,14 +18,13 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.EthyleneGasOrMolassesUsedFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -34,7 +33,7 @@ import views.html.spiritsQuestions.EthyleneGasOrMolassesUsedView
 
 import scala.concurrent.Future
 
-class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase with MockitoSugar {
+class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -47,17 +46,18 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase with MockitoSugar
   val validMolasses    = 47.5
   val otherIngredients = true
 
-  val userAnswers = emptyUserAnswers
-    .set(
-      EthyleneGasOrMolassesUsedPage,
-      EthyleneGasOrMolassesUsed(
-        validEthyleneGas,
-        validMolasses,
-        otherIngredients
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      EthyleneGasOrMolassesUsedPage.toString -> Json.obj(
+        "ethyleneGas"      -> validEthyleneGas,
+        "molasses"         -> validMolasses,
+        "otherIngredients" -> otherIngredients
       )
     )
-    .success
-    .value
+  )
 
   "EthyleneGasOrMolassesUsed Controller" - {
 
@@ -109,7 +109,7 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase with MockitoSugar
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -121,6 +121,68 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase with MockitoSugar
               ("ethyleneGas", validEthyleneGas.toString),
               ("molasses", validMolasses.toString),
               ("otherIngredients", otherIngredients.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when other ingredients question is answered as No" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, ethyleneGasOrMolassesUsedRoute)
+            .withFormUrlEncodedBody(
+              ("ethyleneGas", validEthyleneGas.toString),
+              ("molasses", validMolasses.toString),
+              ("otherIngredients", "false")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when other ingredients question was answered Yes previously and is now updated to No" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, ethyleneGasOrMolassesUsedRoute)
+            .withFormUrlEncodedBody(
+              ("ethyleneGas", validEthyleneGas.toString),
+              ("molasses", validMolasses.toString),
+              ("otherIngredients", "false")
             )
 
         val result = route(application, request).value

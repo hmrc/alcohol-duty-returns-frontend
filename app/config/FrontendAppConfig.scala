@@ -53,9 +53,11 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def feedbackUrl(implicit request: RequestHeader): java.net.URL =
     url"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
-  val loginUrl: String         = configuration.get[String]("urls.login")
-  val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
-  val signOutUrl: String       = configuration.get[String]("urls.signOut")
+  val loginUrl: String              = configuration.get[String]("urls.login")
+  val loginContinueUrl: String      = configuration.get[String]("urls.loginContinue")
+  val signOutUrl: String            = configuration.get[String]("urls.signOut")
+  val appaIdRegisterUrl: String     = configuration.get[String]("urls.appaIdRegister")
+  val businessTaxAccountUrl: String = configuration.get[String]("urls.businessTaxAccount")
 
   private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/alcohol-duty-returns-frontend"
@@ -63,8 +65,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
 
-  val enrolmentServiceName = configuration.get[String]("enrolment.serviceName")
-
+  val enrolmentServiceName   = configuration.get[String]("enrolment.serviceName")
   val enrolmentIdentifierKey = configuration.get[String]("enrolment.identifierKey")
 
   def languageMap: Map[String, Lang] = Map(
@@ -88,6 +89,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrCacheClearAllUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-all"
+
+  def adrGetObligationDetailsUrl(appaId: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/$appaId"
 
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart

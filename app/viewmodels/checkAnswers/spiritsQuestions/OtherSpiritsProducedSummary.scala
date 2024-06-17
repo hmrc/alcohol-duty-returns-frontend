@@ -30,7 +30,7 @@ object OtherSpiritsProducedSummary {
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(OtherSpiritsProducedPage).map { answer =>
       SummaryListRowViewModel(
-        key = "otherSpiritsProduced.checkYourAnswersLabel",
+        key = "spiritType.other.checkYourAnswersLabel",
         value = ValueViewModel(HtmlFormat.escape(answer).toString),
         actions = Seq(
           ActionItemViewModel("site.change", routes.OtherSpiritsProducedController.onPageLoad(CheckMode).url)

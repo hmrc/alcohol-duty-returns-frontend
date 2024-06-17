@@ -20,16 +20,21 @@ import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
 import models.{AlcoholRegimeName, ReturnId, UserAnswers}
+import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
 import pages.AlcoholRegimePage
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import play.api.mvc.Results
+
+import scala.concurrent.ExecutionContext
 
 trait SpecBase
     extends AnyFreeSpec
@@ -37,19 +42,22 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
+    with Results
+    with GuiceOneAppPerSuite
+    with MockitoSugar
     with IntegrationPatience
     with ModelGenerators {
 
-  val appaId: String        = appaIdGen.sample.get
-  val periodKey: String     = periodKeyGen.sample.get
-  val groupId: String       = "groupid"
-  val userAnswersId: String = "id"
-  val returnId: ReturnId    = ReturnId(appaId, periodKey)
+  val appaId: String     = appaIdGen.sample.get
+  val periodKey: String  = periodKeyGen.sample.get
+  val groupId: String    = "groupid"
+  val internalId: String = "id"
+  val returnId: ReturnId = ReturnId(appaId, periodKey)
 
   def emptyUserAnswers: UserAnswers = UserAnswers(
     returnId,
     groupId,
-    userAnswersId,
+    internalId,
     Json.obj(
       AlcoholRegimePage.toString -> Json.toJson(AlcoholRegimeName.values)
     )
@@ -62,10 +70,14 @@ trait SpecBase
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifierWithoutEnrolmentAction].to[FakeIdentifierWithoutEnrolmentAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
-
-  def FakeRequest()                            = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
-  def FakeRequest(verb: String, route: String) =
+  def FakeRequest()                                                                                  = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
+  def FakeRequest(verb: String, route: String)                                                       =
     play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
+  def FakeRequestWithoutSession()                                                                    = play.api.test.FakeRequest()
+  def FakeRequestWithoutSession(verb: String, route: String)                                         = play.api.test.FakeRequest(verb, route)
+
+  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }

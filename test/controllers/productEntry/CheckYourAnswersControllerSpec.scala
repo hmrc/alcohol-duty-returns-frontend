@@ -23,8 +23,6 @@ import models.RateType.Core
 import models.productEntry.ProductEntry
 import models.{AlcoholByVolume, AlcoholRegimeName, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{times, verify, when}
-import org.mockito.MockitoSugar.mock
 import pages.productEntry._
 import play.api.inject.bind
 import play.api.test.Helpers._

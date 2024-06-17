@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package forms.spiritsQuestions
+package viewmodels.tasklist
 
-import forms.mappings.Mappings
-import javax.inject.Inject
-import play.api.data.Form
+import enumeratum._
 
-class WheatUsedFormProvider @Inject() extends Mappings {
+private[tasklist] sealed trait DeclarationState extends EnumEntry
 
-  def apply(): Form[BigDecimal] =
-    Form(
-      "wheat-used-input" -> bigDecimal(
-        2,
-        "wheatUsed.error.required",
-        "wheatUsed.error.nonNumeric",
-        "wheatUsed.error.twoDecimalPlaces"
-      )
-        .verifying(minimumValue(BigDecimal(0.01), "wheatUsed.error.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "wheatUsed.error.maximumRequired"))
-    )
+private[tasklist] object DeclarationState extends Enum[DeclarationState] {
+  val values = findValues
+
+  case object NotStarted extends DeclarationState
+  case object InProgress extends DeclarationState
+  case object Completed extends DeclarationState
 }

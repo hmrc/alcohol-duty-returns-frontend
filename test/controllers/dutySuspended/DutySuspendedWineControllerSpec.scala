@@ -18,14 +18,13 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedWineFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedWine
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedWinePage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -34,7 +33,7 @@ import views.html.dutySuspended.DutySuspendedWineView
 
 import scala.concurrent.Future
 
-class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
+class DutySuspendedWineControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -45,16 +44,17 @@ class DutySuspendedWineControllerSpec extends SpecBase with MockitoSugar {
   val validTotalWine              = 23.45
   val validPureAlcoholInWine      = 16.46
 
-  val userAnswers = emptyUserAnswers
-    .set(
-      DutySuspendedWinePage,
-      DutySuspendedWine(
-        validTotalWine,
-        validPureAlcoholInWine
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      DutySuspendedWinePage.toString -> Json.obj(
+        "totalWine"         -> validTotalWine,
+        "pureAlcoholInWine" -> validPureAlcoholInWine
       )
     )
-    .success
-    .value
+  )
 
   "DutySuspendedWine Controller" - {
 

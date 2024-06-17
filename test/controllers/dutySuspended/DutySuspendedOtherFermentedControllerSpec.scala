@@ -18,12 +18,10 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedOtherFermented
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.dutySuspended.DutySuspendedOtherFermentedPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -34,7 +32,7 @@ import views.html.dutySuspended.DutySuspendedOtherFermentedView
 
 import scala.concurrent.Future
 
-class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSugar {
+class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -45,16 +43,17 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase with MockitoSug
 
   lazy val dutySuspendedOtherFermentedRoute = routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode).url
 
-  val userAnswers = emptyUserAnswers
-    .set(
-      DutySuspendedOtherFermentedPage,
-      DutySuspendedOtherFermented(
-        validTotalOtherFermented,
-        validPureAlcoholInOtherFermented
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      DutySuspendedOtherFermentedPage.toString -> Json.obj(
+        "totalOtherFermented"         -> validTotalOtherFermented,
+        "pureAlcoholInOtherFermented" -> validPureAlcoholInOtherFermented
       )
     )
-    .success
-    .value
+  )
 
   "DutySuspendedOtherFermented Controller" - {
 

@@ -35,7 +35,7 @@ class TaskListControllerSpec extends SpecBase {
   private val userAnswers  = UserAnswers(
     ReturnId(appaId, periodKey),
     groupId = groupId,
-    internalId = userAnswersId,
+    internalId = internalId,
     lastUpdated = Instant.now(clock),
     validUntil = Some(validUntil),
     data = Json.obj(
@@ -56,7 +56,7 @@ class TaskListControllerSpec extends SpecBase {
 
         val view             = application.injector.instanceOf[TaskListView]
         val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, emptyUserAnswers, validUntil)(
+          AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, emptyUserAnswers, validUntil, periodKey)(
             messages(application)
           )
 
@@ -67,10 +67,38 @@ class TaskListControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers.copy(validUntil = None))).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no period key is found" in {
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequestWithoutSession(GET, routes.TaskListController.onPageLoad.url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data or period key is found" in {
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers.copy(validUntil = None))).build()
+
+      running(application) {
+        val request = FakeRequestWithoutSession(GET, routes.TaskListController.onPageLoad.url)
 
         val result = route(application, request).value
 

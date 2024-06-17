@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,9 @@
  * limitations under the License.
  */
 
-package pages.spiritsQuestions
+package models.requests
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.mvc.{Request, WrappedRequest}
 
-case object RyeUsedPage extends QuestionPage[BigDecimal] {
-
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "ryeUsed"
-}
+case class IdentifierWithoutEnrolmentRequest[A](request: Request[A], groupId: String, userId: String)
+    extends WrappedRequest[A](request)

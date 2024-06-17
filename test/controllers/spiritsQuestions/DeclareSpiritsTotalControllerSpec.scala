@@ -22,8 +22,6 @@ import forms.spiritsQuestions.DeclareSpiritsTotalFormProvider
 import models.NormalMode
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.DeclareSpiritsTotalPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.spiritsQuestions.DeclareSpiritsTotalView
 
 import scala.concurrent.Future
 
-class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
+class DeclareSpiritsTotalControllerSpec extends SpecBase {
 
   val formProvider = new DeclareSpiritsTotalFormProvider()
   val form         = formProvider()
@@ -95,7 +93,7 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase with MockitoSugar {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

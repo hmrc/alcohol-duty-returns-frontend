@@ -22,8 +22,6 @@ import forms.adjustment.AdjustmentTaxTypeFormProvider
 import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegimeName, NormalMode, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -36,7 +34,7 @@ import views.html.adjustment.AdjustmentTaxTypeView
 
 import scala.concurrent.Future
 
-class AdjustmentTaxTypeControllerSpec extends SpecBase with MockitoSugar {
+class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
   val formProvider = new AdjustmentTaxTypeFormProvider()
   val form         = formProvider()

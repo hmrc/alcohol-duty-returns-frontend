@@ -20,6 +20,11 @@ GET         /account/signed-out                          controllers.auth.Signed
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
+GET         /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onPageLoad()
+POST        /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onSubmit()
+
+GET         /check-your-returns                          controllers.ViewPastReturnsController.onPageLoad
+
 GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
 
 GET         /before-you-start-your-return/:periodKey     controllers.BeforeStartReturnController.onPageLoad(periodKey: String)
@@ -193,50 +198,25 @@ POST       /how-much-whiskey-have-you-made                        controllers.sp
 GET        /change-how-much-whiskey-have-you-made                  controllers.spiritsQuestions.WhiskyController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-how-much-whiskey-have-you-made                  controllers.spiritsQuestions.WhiskyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /how-much-unmalted-grain-have-you-used                  controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-unmalted-grain-have-you-used                 controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-unmalted-grain-have-you-used                         controllers.spiritsQuestions.UnmaltedGrainUsedController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-unmalted-grain-have-you-used                         controllers.spiritsQuestions.UnmaltedGrainUsedController.onSubmit(mode: Mode = CheckMode)
-
-GET        /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-malted-barley-have-you-used                  controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-malted-barley-have-you-used                       controllers.spiritsQuestions.MaltedBarleyUsedController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-malted-barley-have-you-used                        controllers.spiritsQuestions.MaltedBarleyUsedController.onSubmit(mode: Mode = CheckMode)
-
-GET        /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-rye-have-you-used                 controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-rye-have-you-used                       controllers.spiritsQuestions.RyeUsedController.onSubmit(mode: Mode = CheckMode)
-
-GET        /how-much-wheat-have-you-used                  controllers.spiritsQuestions.WheatUsedController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-wheat-have-you-used                  controllers.spiritsQuestions.WheatUsedController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-wheat-have-you-used                        controllers.spiritsQuestions.WheatUsedController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-wheat-have-you-used                        controllers.spiritsQuestions.WheatUsedController.onSubmit(mode: Mode = CheckMode)
-
 GET        /which-of-these-spirits-have-you-made                        controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = NormalMode)
 POST       /which-of-these-spirits-have-you-made                        controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-which-of-these-spirits-have-you-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
-
-GET        /how-much-ethylene-gas-have-you-used                  controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-ethylene-gas-have-you-used                  controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-ethylene-gas-have-you-used                        controllers.spiritsQuestions.EthyleneGasUsedController.onSubmit(mode: Mode = CheckMode)
 
 GET        /tell-us-about-the-other-spirits-you-have-produced                        controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = NormalMode)
 POST       /tell-us-about-the-other-spirits-you-have-produced                        controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-tell-us-about-the-other-spirits-you-have-produced                 controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-the-other-spirits-you-have-produced                 controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = CheckMode)
 
-GET        /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = NormalMode)
-POST       /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = CheckMode)
-
 GET        /tell-us-about-the-grains-you-have-used                        controllers.spiritsQuestions.GrainsUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /tell-us-about-the-grains-you-have-used                        controllers.spiritsQuestions.GrainsUsedController.onSubmit(mode: Mode = NormalMode)
 GET        /change-tell-us-about-the-grains-you-have-used                  controllers.spiritsQuestions.GrainsUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-the-grains-you-have-used                  controllers.spiritsQuestions.GrainsUsedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = NormalMode)
+POST       /tell-us-about-the-other-malted-grains-you-have-used                        controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-tell-us-about-the-other-malted-grains-you-have-used                  controllers.spiritsQuestions.OtherMaltedGrainsController.onSubmit(mode: Mode = CheckMode)
 
 GET        /tell-us-about-the-alcohol-you-have-used                        controllers.spiritsQuestions.AlcoholUsedController.onPageLoad(mode: Mode = NormalMode)
 POST       /tell-us-about-the-alcohol-you-have-used                        controllers.spiritsQuestions.AlcoholUsedController.onSubmit(mode: Mode = NormalMode)
@@ -253,6 +233,7 @@ POST       /tell-us-about-the-other-ingredients-you-have-used                   
 GET        /change-tell-us-about-the-other-ingredients-you-have-used                  controllers.spiritsQuestions.OtherIngredientsUsedController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-tell-us-about-the-other-ingredients-you-have-used                  controllers.spiritsQuestions.OtherIngredientsUsedController.onSubmit(mode: Mode = CheckMode)
 
+GET        /spirits-check-your-answers                 controllers.spiritsQuestions.CheckYourAnswersController.onPageLoad()
 # End of quarterly spirits questions sub-journey
 
 

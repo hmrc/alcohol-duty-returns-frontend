@@ -22,8 +22,6 @@ import forms.returns.DeclareAlcoholDutyQuestionFormProvider
 import models.NormalMode
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.DeclareAlcoholDutyQuestionPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.returns.DeclareAlcoholDutyQuestionView
 
 import scala.concurrent.Future
 
-class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase with MockitoSugar {
+class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

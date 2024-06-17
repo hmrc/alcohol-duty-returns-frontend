@@ -20,26 +20,32 @@ import controllers.spiritsQuestions.routes
 import models.{CheckMode, UserAnswers}
 import pages.spiritsQuestions.WhiskyPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object WhiskySummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def scotchWhiskyRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(WhiskyPage).map { answer =>
-      val value = HtmlFormat.escape(answer.scotchWhisky.toString()).toString + "<br/>" + HtmlFormat
-        .escape(answer.irishWhiskey.toString())
-        .toString
-
       SummaryListRowViewModel(
-        key = "whisky.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "whisky.scotchWhisky.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.scotchWhisky.toString} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.WhiskyController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("whisky.change.hidden"))
+            .withVisuallyHiddenText(messages("whisky.scotchWhisky.change.hidden"))
+        )
+      )
+    }
+
+  def irishWhiskeyRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(WhiskyPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "whisky.irishWhiskey.checkYourAnswersLabel",
+        value = ValueViewModel(s"${answer.irishWhiskey.toString} ${messages("site.unit.litres")}"),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.WhiskyController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("whisky.irishWhiskey.change.hidden"))
         )
       )
     }

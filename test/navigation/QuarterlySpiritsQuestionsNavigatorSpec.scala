@@ -19,7 +19,7 @@ package navigation
 import base.SpecBase
 import controllers._
 import models._
-import models.spiritsQuestions.GrainsUsed
+import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, GrainsUsed}
 import pages._
 
 class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
@@ -29,6 +29,12 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
   "QuarterlySpiritQuestionsNavigator" - {
 
     "in Normal mode" - {
+      "must go from a page that doesn't exist in the route map to Index" in {
+
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.IndexController.onPageLoad
+      }
+
       "the Declare Quarterly Spirits page" - {
 
         "must go to the Declare Spirits Total page if the answer is Yes" in {
@@ -192,13 +198,50 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
       }
 
       "the Ethylene Gas Or Molasses page" - {
-        "must go to Other Ingredients Used page" in {
+        "must go to Other Ingredients Used page if other ingredients question's answer is yes" in {
 
           navigator.nextPage(
             pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
             NormalMode,
             emptyUserAnswers
+              .set(
+                pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
+                EthyleneGasOrMolassesUsed(BigDecimal(0), BigDecimal(0), true)
+              )
+              .success
+              .value
           ) mustBe controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
+        }
+        "must go to Check your answers page if other ingredients question's answer is no" in {
+
+          navigator.nextPage(
+            pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
+            NormalMode,
+            emptyUserAnswers
+              .set(
+                pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
+                EthyleneGasOrMolassesUsed(BigDecimal(0), BigDecimal(0), false)
+              )
+              .success
+              .value
+          ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+        }
+        "must go to Journey recover page if there is an issue" in {
+
+          navigator.nextPage(
+            pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
+        }
+      }
+      "the Other Ingredients Used page" - {
+        "must go to the Check your answers page" in {
+          navigator.nextPage(
+            pages.spiritsQuestions.OtherIngredientsUsedPage,
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
         }
       }
     }
@@ -212,7 +255,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe routes.CheckYourAnswersController.onPageLoad()
+        ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }

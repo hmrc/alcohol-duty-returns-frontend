@@ -19,29 +19,25 @@ package connectors
 import base.SpecBase
 import cats.data.NonEmptySeq
 import config.FrontendAppConfig
-import generators.ModelGenerators
 import models.AlcoholRegimeName.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.productEntry.TaxDuty
 import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{atLeastOnce, mock, verify, when}
-import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import java.time.YearMonth
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with ModelGenerators {
+class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
-  protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  protected implicit val hc: HeaderCarrier    = HeaderCarrier()
-  val mockConfig: FrontendAppConfig           = mock[FrontendAppConfig]
-  val connector                               = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val rateBand                                = RateBand(
+  protected implicit val hc: HeaderCarrier = HeaderCarrier()
+  val mockConfig: FrontendAppConfig        = mock[FrontendAppConfig]
+  val connector                            = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClient])
+  val rateBand                             = RateBand(
     "310",
     "some band",
     RateType.DraughtRelief,
@@ -55,8 +51,8 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase with ScalaFutures with
     ),
     Some(BigDecimal(10.99))
   )
-  val rateBandList: Seq[RateBand]             = Seq(rateBand)
-  val rateType                                = RateTypeResponse(DraughtRelief)
+  val rateBandList: Seq[RateBand]          = Seq(rateBand)
+  val rateType                             = RateTypeResponse(DraughtRelief)
   val ratePeriod                              = returnPeriodGen.sample.get
 
   "rates" - {

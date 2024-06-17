@@ -18,10 +18,11 @@ package controllers.spiritsQuestions
 
 import controllers.actions._
 import forms.spiritsQuestions.SpiritTypeFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, SpiritType, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.SpiritTypePage
+import pages.spiritsQuestions.{OtherSpiritsProducedPage, SpiritTypePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
@@ -61,11 +62,33 @@ class SpiritTypeController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
+          value => {
+            val (intermediateAnswers, otherSpiritsNowSelected) =
+              handleOtherSpiritsChange(request.userAnswers, SpiritTypePage.hasMadeOtherSpirits(value))
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(SpiritTypePage, value))
+              updatedAnswers <- Future.fromTry(intermediateAnswers.set(SpiritTypePage, value))
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, otherSpiritsNowSelected))
+          }
         )
   }
+
+  def isNowSelected(oldValue: Boolean, newValue: Boolean) = !oldValue && newValue
+
+  def isNowUnselected(oldValue: Boolean, newValue: Boolean) = oldValue && !newValue
+
+  def handleOtherSpiritsChange(
+    answers: UserAnswers,
+    newValue: Boolean
+  ): (UserAnswers, Boolean) = {
+    val oldValue = SpiritTypePage.hasMadeOtherSpirits(answers.get(SpiritTypePage).getOrElse(Set.empty[SpiritType]))
+    if (isNowSelected(oldValue, newValue)) {
+      (answers, true)
+    } else if (isNowUnselected(oldValue, newValue)) {
+      (answers.remove(OtherSpiritsProducedPage).get, false)
+    } else {
+      (answers, false)
+    }
+  }
+
 }

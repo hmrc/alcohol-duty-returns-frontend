@@ -18,12 +18,11 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -35,7 +34,7 @@ import views.html.spiritsQuestions.OtherIngredientsUsedView
 
 import scala.concurrent.Future
 
-class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
+class OtherIngredientsUsedControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -48,17 +47,18 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
   val otherIngredientsUnit     = Tonnes
   val otherIngredientsQuantity = BigDecimal(100000)
 
-  val userAnswers = emptyUserAnswers
-    .set(
-      OtherIngredientsUsedPage,
-      OtherIngredientsUsed(
-        otherIngredientsTypes,
-        otherIngredientsUnit,
-        otherIngredientsQuantity
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      OtherIngredientsUsedPage.toString -> Json.obj(
+        "otherIngredientsUsedTypes"    -> otherIngredientsTypes,
+        "otherIngredientsUsedUnit"     -> otherIngredientsUnit,
+        "otherIngredientsUsedQuantity" -> otherIngredientsQuantity
       )
     )
-    .success
-    .value
+  )
 
   "OtherIngredientsUsed Controller" - {
 
@@ -107,7 +107,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase with MockitoSugar {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

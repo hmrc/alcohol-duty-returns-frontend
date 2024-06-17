@@ -22,21 +22,18 @@ import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
-import org.mockito.MockitoSugar.{atLeastOnce, mock, verify, when}
-import org.scalatest.concurrent.ScalaFutures
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import java.time.LocalDateTime
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class CacheConnectorSpec extends SpecBase with ScalaFutures {
+class CacheConnectorSpec extends SpecBase {
 
-  protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  protected implicit val hc: HeaderCarrier    = HeaderCarrier()
-  val mockConfig: FrontendAppConfig           = mock[FrontendAppConfig]
-  val connector                               = new CacheConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val dateVal: LocalDateTime                  = LocalDateTime.now
-  val answers: UserAnswers                    = emptyUserAnswers
+  protected implicit val hc: HeaderCarrier = HeaderCarrier()
+  val mockConfig: FrontendAppConfig        = mock[FrontendAppConfig]
+  val connector                            = new CacheConnector(config = mockConfig, httpClient = mock[HttpClient])
+  val dateVal: LocalDateTime               = LocalDateTime.now
+  val answers: UserAnswers                 = emptyUserAnswers
 
   "GET" - {
     "successfully fetch cache" in {

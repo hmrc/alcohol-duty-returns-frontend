@@ -19,12 +19,10 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.CacheConnector
 import forms.spiritsQuestions.AlcoholUsedFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.AlcoholUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.AlcoholUsedPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -34,7 +32,7 @@ import views.html.spiritsQuestions.AlcoholUsedView
 
 import scala.concurrent.Future
 
-class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
+class AlcoholUsedControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -48,18 +46,19 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
   val validCiderOrPerry = 55.6
   val validMadeWine     = 47.5
 
-  val userAnswers = emptyUserAnswers
-    .set(
-      AlcoholUsedPage,
-      AlcoholUsed(
-        validBeer,
-        validWine,
-        validMadeWine,
-        validCiderOrPerry
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      AlcoholUsedPage.toString -> Json.obj(
+        "beer"         -> validBeer,
+        "wine"         -> validWine,
+        "madeWine"     -> validMadeWine,
+        "ciderOrPerry" -> validCiderOrPerry
       )
     )
-    .success
-    .value
+  )
 
   "AlcoholUsed Controller" - {
 
@@ -111,7 +110,7 @@ class AlcoholUsedControllerSpec extends SpecBase with MockitoSugar {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

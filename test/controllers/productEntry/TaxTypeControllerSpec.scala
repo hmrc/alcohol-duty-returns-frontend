@@ -24,8 +24,6 @@ import models.productEntry.ProductEntry
 import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegimeName, CheckMode, NormalMode, RateBand, RateType}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -36,7 +34,7 @@ import views.html.productEntry.TaxTypeView
 
 import scala.concurrent.Future
 
-class TaxTypeControllerSpec extends SpecBase with MockitoSugar {
+class TaxTypeControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

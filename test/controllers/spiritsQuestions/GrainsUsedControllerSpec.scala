@@ -17,24 +17,23 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
-import connectors.CacheConnector
 import forms.spiritsQuestions.GrainsUsedFormProvider
-import models.NormalMode
-import models.spiritsQuestions.GrainsUsed
+import models.{NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.GrainsUsedPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
+import connectors.CacheConnector
+import models.spiritsQuestions.GrainsUsed
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.GrainsUsedView
 
 import scala.concurrent.Future
 
-class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
+class GrainsUsedControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -50,20 +49,21 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
   val unmaltedGrainQuantity    = BigDecimal(500000)
   val usedMaltedGrainNotBarley = true
 
-  val userAnswers = emptyUserAnswers
-    .set(
-      GrainsUsedPage,
-      GrainsUsed(
-        maltedBarleyQuantity,
-        wheatQuantity,
-        maizeQuantity,
-        ryeQuantity,
-        unmaltedGrainQuantity,
-        usedMaltedGrainNotBarley
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      GrainsUsedPage.toString -> Json.obj(
+        "maltedBarleyQuantity"     -> maltedBarleyQuantity,
+        "wheatQuantity"            -> wheatQuantity,
+        "maizeQuantity"            -> maizeQuantity,
+        "ryeQuantity"              -> ryeQuantity,
+        "unmaltedGrainQuantity"    -> unmaltedGrainQuantity,
+        "usedMaltedGrainNotBarley" -> usedMaltedGrainNotBarley
       )
     )
-    .success
-    .value
+  )
 
   "GrainsUsed Controller" - {
 
@@ -121,7 +121,7 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -136,6 +136,74 @@ class GrainsUsedControllerSpec extends SpecBase with MockitoSugar {
               ("ryeQuantity", ryeQuantity.toString()),
               ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString()),
               ("usedMaltedGrainNotBarley", usedMaltedGrainNotBarley.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when have you used Malted Grain other than Barley question is answered as No" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, grainsUsedRoute)
+            .withFormUrlEncodedBody(
+              ("maltedBarleyQuantity", maltedBarleyQuantity.toString()),
+              ("wheatQuantity", wheatQuantity.toString()),
+              ("maizeQuantity", maizeQuantity.toString()),
+              ("ryeQuantity", ryeQuantity.toString()),
+              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString()),
+              ("usedMaltedGrainNotBarley", "false")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when have you used Malted Grain other than Barley question was answered Yes previously and is now updated to No" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, grainsUsedRoute)
+            .withFormUrlEncodedBody(
+              ("maltedBarleyQuantity", maltedBarleyQuantity.toString()),
+              ("wheatQuantity", wheatQuantity.toString()),
+              ("maizeQuantity", maizeQuantity.toString()),
+              ("ryeQuantity", ryeQuantity.toString()),
+              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString()),
+              ("usedMaltedGrainNotBarley", "false")
             )
 
         val result = route(application, request).value

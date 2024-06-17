@@ -18,14 +18,13 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.WhiskyFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.Whisky
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.WhiskyPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -34,7 +33,7 @@ import views.html.spiritsQuestions.WhiskyView
 
 import scala.concurrent.Future
 
-class WhiskyControllerSpec extends SpecBase with MockitoSugar {
+class WhiskyControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -44,17 +43,17 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
   lazy val whiskyRoute  = routes.WhiskyController.onPageLoad(NormalMode).url
   val validScotchWhisky = 55.6
   val validIrishWhisky  = 47.5
-
-  val userAnswers = emptyUserAnswers
-    .set(
-      WhiskyPage,
-      Whisky(
-        validScotchWhisky,
-        validIrishWhisky
+  val userAnswers       = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      WhiskyPage.toString -> Json.obj(
+        "scotchWhisky" -> validScotchWhisky,
+        "irishWhiskey" -> validIrishWhisky
       )
     )
-    .success
-    .value
+  )
 
   "Whisky Controller" - {
 
@@ -103,7 +102,7 @@ class WhiskyControllerSpec extends SpecBase with MockitoSugar {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

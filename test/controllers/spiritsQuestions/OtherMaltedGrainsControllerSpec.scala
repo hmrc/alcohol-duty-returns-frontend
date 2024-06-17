@@ -18,12 +18,11 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherMaltedGrainsFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -34,7 +33,7 @@ import views.html.spiritsQuestions.OtherMaltedGrainsView
 
 import scala.concurrent.Future
 
-class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
+class OtherMaltedGrainsControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -46,16 +45,17 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
   val otherMaltedGrainsTypes    = "Coco Pops"
   val otherMaltedGrainsQuantity = BigDecimal(100000)
 
-  val userAnswers = emptyUserAnswers
-    .set(
-      OtherMaltedGrainsPage,
-      OtherMaltedGrains(
-        otherMaltedGrainsTypes,
-        otherMaltedGrainsQuantity
+  val userAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    Json.obj(
+      OtherMaltedGrainsPage.toString -> Json.obj(
+        "otherMaltedGrainsTypes"    -> otherMaltedGrainsTypes,
+        "otherMaltedGrainsQuantity" -> otherMaltedGrainsQuantity
       )
     )
-    .success
-    .value
+  )
 
   "OtherMaltedGrains Controller" - {
 
@@ -104,7 +104,7 @@ class OtherMaltedGrainsControllerSpec extends SpecBase with MockitoSugar {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute)),
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

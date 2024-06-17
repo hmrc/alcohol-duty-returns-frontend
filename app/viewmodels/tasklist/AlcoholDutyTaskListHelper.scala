@@ -23,11 +23,20 @@ import viewmodels.govuk.all.FluentInstant
 import java.time.Instant
 
 object AlcoholDutyTaskListHelper {
-  def getTaskList(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers, validUntil: Instant)(implicit
+  def getTaskList(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers, validUntil: Instant, periodKey: String)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
-      Seq(ReturnTaskListHelper.returnSection(regimes, userAnswers), ReturnTaskListHelper.returnDSDSection(userAnswers)),
+      Seq(
+        Some(ReturnTaskListHelper.returnSection(regimes, userAnswers)),
+        Some(ReturnTaskListHelper.returnDSDSection(userAnswers)),
+        if (shouldIncludeQSSection(periodKey)) Some(ReturnTaskListHelper.returnQSSection(userAnswers)) else None
+      ).flatten,
       validUntil.toLocalDateString()
     )
+
+  private def shouldIncludeQSSection(periodKey: String): Boolean = periodKey.last match {
+    case 'C' | 'F' | 'I' | 'L' => true
+    case _                     => false
+  }
 }

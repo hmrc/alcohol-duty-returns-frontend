@@ -19,15 +19,15 @@ package navigation
 import controllers._
 import models._
 import pages._
-import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, GrainsUsedPage, SpiritTypePage}
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, SpiritTypePage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
+class QuarterlySpiritsQuestionsNavigator @Inject() {
 
-  override val normalRoutes: Page => UserAnswers => Call = {
+  private val normalRoutes: Page => UserAnswers => Call = {
     case pages.spiritsQuestions.DeclareQuarterlySpiritsPage   => declareQuarterlySpiritsRoute
     case pages.spiritsQuestions.DeclareSpiritsTotalPage       =>
       _ => controllers.spiritsQuestions.routes.WhiskyController.onPageLoad(NormalMode)
@@ -41,14 +41,24 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
       _ => controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
     case pages.spiritsQuestions.AlcoholUsedPage               =>
       _ => controllers.spiritsQuestions.routes.EthyleneGasOrMolassesUsedController.onPageLoad(NormalMode)
-    case pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage =>
-      _ => controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
+    case pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage => ethyleneGasOrMolassesRoute
+    case pages.spiritsQuestions.OtherIngredientsUsedPage      =>
+      _ => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
     case _                                                    => _ => routes.IndexController.onPageLoad
 
   }
 
-  override val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad()
+  private def checkRouteMap(page: Page, hasChanged: Boolean): Call = page match {
+    case pages.spiritsQuestions.SpiritTypePage                =>
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+    case pages.spiritsQuestions.GrainsUsedPage                =>
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherMaltedGrainsController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+    case pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage =>
+      if (hasChanged) controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(CheckMode)
+      else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+    case _                                                    => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
   }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
@@ -75,4 +85,18 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () extends BaseNavigator {
         controllers.spiritsQuestions.routes.AlcoholUsedController.onPageLoad(NormalMode)
       case _                                                                       => routes.JourneyRecoveryController.onPageLoad()
     }
+
+  private def ethyleneGasOrMolassesRoute(userAnswers: UserAnswers): Call =
+    userAnswers.get(EthyleneGasOrMolassesUsedPage).map(_.otherIngredients) match {
+      case Some(true)  => controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
+      case Some(false) => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean = true): Call = mode match {
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode  =>
+      checkRouteMap(page, hasAnswerChanged)
+  }
 }
