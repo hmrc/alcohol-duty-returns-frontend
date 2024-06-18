@@ -32,11 +32,15 @@ class NoAppaIdController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view(appConfig))
+  def onPageLoad(wasReferredFromBTA: Boolean): Action[AnyContent] = Action { implicit request =>
+    Ok(view(appConfig, wasReferredFromBTA))
   }
 
-  def onSubmit: Action[AnyContent] = Action { _ =>
-    Redirect(appConfig.businessTaxAccountUrl)
+  def onSubmit(wasReferredFromBTA: Boolean): Action[AnyContent] = Action { _ =>
+    if (wasReferredFromBTA) {
+      Redirect(appConfig.businessTaxAccountUrl)
+    } else {
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 }
