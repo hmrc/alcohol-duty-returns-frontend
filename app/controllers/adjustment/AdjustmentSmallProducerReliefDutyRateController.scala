@@ -51,10 +51,10 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                       => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.sprDutyRate.isDefined =>
-        Ok(view(form.fill(value.sprDutyRate.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      case Some(value)                                => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case None                                                 => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(value) if value.repackagedSprDutyRate.isDefined =>
+        Ok(view(form.fill(value.repackagedSprDutyRate.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                                          => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
     }
   }
 
@@ -76,7 +76,8 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(sprDutyRate = Some(value)))
+                  request.userAnswers
+                    .set(CurrentAdjustmentEntryPage, adjustment.copy(repackagedSprDutyRate = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(AdjustmentSmallProducerReliefDutyRatePage, mode, updatedAnswers))

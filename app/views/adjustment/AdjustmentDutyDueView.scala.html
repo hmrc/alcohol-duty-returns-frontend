@@ -27,7 +27,7 @@
         subHeading: SubHeading
 )
 
-@(adjustmentType: String, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentType: String, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal, repackagedRate:BigDecimal, repackagedDuty:BigDecimal)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", valueFormatter(duty)))) {
 
@@ -39,11 +39,25 @@
 
     @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
-    @bulletList(Seq(
-    messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
-    messages("adjustmentDutyDue.bulletList.2", valueFormatter(rate)),
-    messages("adjustmentDutyDue.bulletList.3", valueFormatter(duty))
-    ))
+    @if(adjustmentType != "repackaged-draught-products") {
+        @bulletList(Seq(
+        messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
+        messages("adjustmentDutyDue.bulletList.2", valueFormatter(rate)),
+        messages("adjustmentDutyDue.bulletList.3", valueFormatter(duty))
+        ))
+    }
+
+    @if(adjustmentType == "repackaged-draught-products") {
+        @bulletList(Seq(
+        messages("adjustmentDutyDue.repackaged.bulletList.1", valueFormatter(rate)),
+        messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
+        messages("adjustmentDutyDue.repackaged.bulletList.2", valueFormatter(duty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.3", valueFormatter(duty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.4", valueFormatter(repackagedRate)),
+        messages("adjustmentDutyDue.repackaged.bulletList.5", valueFormatter(repackagedRate), valueFormatter(repackagedDuty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.6", valueFormatter(duty))
+))
+    }
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))

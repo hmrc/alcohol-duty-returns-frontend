@@ -16,17 +16,16 @@
 
 package controllers.adjustment
 
+import connectors.CacheConnector
 import controllers.actions._
 import forms.adjustment.AdjustmentVolumeFormProvider
 
 import javax.inject.Inject
-import models.{Mode, RateBand}
+import models.Mode
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
-import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
 import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
 import models.requests.DataRequest
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController

@@ -23,5 +23,5 @@ case object AdjustmentSmallProducerReliefDutyRatePage extends QuestionPage[BigDe
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "adjustmentSmallProducerReliefDutyRate"
+  override def toString: String = "repackagedSprDutyRate"
 }

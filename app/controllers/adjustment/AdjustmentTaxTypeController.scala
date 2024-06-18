@@ -156,7 +156,10 @@ class AdjustmentTaxTypeController @Inject() (
             sprDutyRate = None,
             totalLitresVolume = None,
             pureAlcoholVolume = None,
-            duty = None
+            duty = None,
+            repackagedRateBand = None,
+            repackagedDuty = None,
+            repackagedSprDutyRate = None
           ),
           true
         )

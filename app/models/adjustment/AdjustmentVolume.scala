@@ -19,9 +19,9 @@ package models.adjustment
 import play.api.libs.json._
 
 case class AdjustmentVolume(
-                                    totalLitersVolume: BigDecimal,
-                                    pureAlcoholVolume: BigDecimal
-                                  )
+  totalLitersVolume: BigDecimal,
+  pureAlcoholVolume: BigDecimal
+)
 
 object AdjustmentVolume {
   implicit val format: OFormat[AdjustmentVolume] = Json.format[AdjustmentVolume]

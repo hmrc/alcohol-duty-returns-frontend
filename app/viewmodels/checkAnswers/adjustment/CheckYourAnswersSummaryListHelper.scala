@@ -25,22 +25,23 @@ object CheckYourAnswersSummaryListHelper {
 
   def currentAdjustmentEntrySummaryList(
     adjustmentEntry: AdjustmentEntry
-  )(implicit messages: Messages): Option[SummaryList] =
-    // val newTaxType         = getOptionalRow(AdjustmentTypeSummary.row(adjustmentEntry))
+  )(implicit messages: Messages): Option[SummaryList] = {
+    val newTaxType = getOptionalRow(AdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry))
     for {
       adjustmentType <- AdjustmentTypeSummary.row(adjustmentEntry)
       returnPeriod   <- WhenDidYouPayDutySummary.row(adjustmentEntry)
       taxType        <- AdjustmentTaxTypeSummary.row(adjustmentEntry)
-      volume         <- HowMuchDoYouNeedToAdjustSummary.row(adjustmentEntry)
+      volume         <- AdjustmentVolumeSummary.row(adjustmentEntry)
       duty           <- AdjustmentDutyDueSummary.row(adjustmentEntry)
     } yield SummaryListViewModel(
       rows = Seq(adjustmentType) ++
         Seq(returnPeriod) ++
         Seq(taxType) ++
+        newTaxType ++
         Seq(volume) ++
-        Seq(duty) /*++
-        newTaxType*/
+        Seq(duty)
     )
+  }
 
   private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
     row match {

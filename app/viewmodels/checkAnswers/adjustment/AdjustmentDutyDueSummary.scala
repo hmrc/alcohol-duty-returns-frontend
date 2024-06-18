@@ -24,11 +24,19 @@ import viewmodels.implicits._
 import views.ViewUtils.valueFormatter
 
 object AdjustmentDutyDueSummary {
-  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    adjustmentEntry.duty.map { duty =>
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
+    val dutyValue = if (adjustmentEntry.newDuty.isDefined) {
+      adjustmentEntry.newDuty
+    } else {
+      adjustmentEntry.duty
+    }
+    Some(
       SummaryListRowViewModel(
         key = "adjustmentDutyDue.duty.checkYourAnswersLabel",
-        value = ValueViewModel(valueFormatter(duty))
+        value = ValueViewModel(
+          valueFormatter(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache")))
+        )
       )
-    }
+    )
+  }
 }

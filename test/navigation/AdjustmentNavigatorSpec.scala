@@ -19,7 +19,7 @@ package navigation
 import base.SpecBase
 import controllers._
 import models.AlcoholRegime.Beer
-import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
+import models.RateType.{Core, DraughtAndSmallProducerRelief, SmallProducerRelief}
 import pages._
 import models._
 import models.adjustment.AdjustmentEntry

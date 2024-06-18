@@ -61,8 +61,10 @@ class AdjustmentDutyDueController @Inject() (
       duty              <- adjustmentEntry.duty
       rate              <- adjustmentEntry.rate
       adjustmentType    <- Some(AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry))
+      repackagedRate    <- adjustmentEntry.repackagedRate
+      repackagedDuty    <- adjustmentEntry.repackagedDuty
 
-    } yield Ok(view(adjustmentType, volume, duty, pureAlcoholVolume, taxCode, rate))
+    } yield Ok(view(adjustmentType, volume, duty, pureAlcoholVolume, taxCode, rate, repackagedRate, repackagedDuty))
 
     result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
   }

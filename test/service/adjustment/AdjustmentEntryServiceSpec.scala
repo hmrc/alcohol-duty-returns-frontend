@@ -19,7 +19,6 @@ package service.adjustment
 import base.SpecBase
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.Beer
-import models.RateType.Core
 import pages.adjustment._
 import models.{AlcoholByVolume, RateBand, RateType}
 import models.adjustment.AdjustmentEntry

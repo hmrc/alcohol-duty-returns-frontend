@@ -45,16 +45,28 @@ class AdjustmentEntryServiceImpl @Inject() (
         throw new RuntimeException("Can't fetch pure alcohol volume from cache")
       )
     val rate              = adjustmentEntry.rate.getOrElse(throw getError(adjustmentEntry))
+    val adjustmentType    = AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry)
 
-    for {
+    val taxDutyFuture           = for {
       taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, rate)
     } yield {
-      val adjustmentType = AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry)
-      val dutyValue      = checkDutyValue(taxDuty.duty, adjustmentType)
+      val dutyValue = checkDutyValue(taxDuty.duty, adjustmentType)
       adjustmentEntry.copy(
         duty = Some(dutyValue)
       )
     }
+    val updatedAdjustmentFuture = if (adjustmentType.equals(RepackagedDraughtProducts.toString)) {
+      val repackagedRate = adjustmentEntry.repackagedRate.getOrElse(throw getRepackagedError(adjustmentEntry))
+      for {
+        updatedAdjustment <- taxDutyFuture
+        repackagedtaxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, repackagedRate)
+      } yield updatedAdjustment.copy(
+        repackagedDuty = Some(repackagedtaxDuty.duty)
+      )
+    } else {
+      taxDutyFuture
+    }
+    updatedAdjustmentFuture
   }
 
   private def getError(adjustmentEntry: AdjustmentEntry): RuntimeException =
@@ -63,6 +75,19 @@ class AdjustmentEntryServiceImpl @Inject() (
         new RuntimeException("Failed to get rate, both tax rate and spr duty rate are defined.")
       case (None, None)       => new RuntimeException("Failed to get rate, neither tax rate nor spr duty rate are defined.")
       case (_, _)             => new RuntimeException("Failed to get rate.")
+    }
+
+  private def getRepackagedError(adjustmentEntry: AdjustmentEntry): RuntimeException =
+    (adjustmentEntry.repackagedRateBand.flatMap(_.rate), adjustmentEntry.repackagedSprDutyRate) match {
+      case (Some(_), Some(_)) =>
+        new RuntimeException(
+          "Failed to get rate, both tax rate and spr duty rate are defined for repackaged draught products."
+        )
+      case (None, None)       =>
+        new RuntimeException(
+          "Failed to get rate, neither tax rate nor spr duty rate are defined for repackaged draught products."
+        )
+      case (_, _)             => new RuntimeException("Failed to get rate for repackaged draught products.")
     }
 
   private def checkDutyValue(duty: BigDecimal, adjustmentType: String): BigDecimal =

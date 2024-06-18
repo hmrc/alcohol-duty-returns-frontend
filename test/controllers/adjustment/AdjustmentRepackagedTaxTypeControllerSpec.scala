@@ -1,9 +1,25 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AdjustmentRepackagedTaxTypeFormProvider
 import models.NormalMode
-import navigation.{FakeAdjustmentNavigator, AdjustmentNavigator}
+import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -20,13 +36,14 @@ import scala.concurrent.Future
 class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new AdjustmentRepackagedTaxTypeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = 0
 
-  lazy val adjustmentRepackagedTaxTypeRoute = controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode).url
+  lazy val adjustmentRepackagedTaxTypeRoute =
+    controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode).url
 
   "AdjustmentRepackagedTaxType Controller" - {
 
@@ -60,7 +77,10 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

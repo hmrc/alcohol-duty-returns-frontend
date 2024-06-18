@@ -31,7 +31,9 @@ case class AdjustmentEntry(
   period: Option[YearMonth] = None,
   sprDutyRate: Option[BigDecimal] = None,
   repackagedSprDutyRate: Option[BigDecimal] = None,
-  duty: Option[BigDecimal] = None
+  duty: Option[BigDecimal] = None,
+  repackagedDuty: Option[BigDecimal] = None,
+  newDuty: Option[BigDecimal] = None
 ) {
   def isComplete: Boolean =
     adjustmentType.isDefined &&
@@ -48,6 +50,13 @@ case class AdjustmentEntry(
     (rateBand.flatMap(_.rate), sprDutyRate) match {
       case (Some(_), None) => rateBand.map(_.rate).get
       case (None, Some(_)) => sprDutyRate
+      case _               => None
+    }
+
+  def repackagedRate: Option[BigDecimal] =
+    (repackagedRateBand.flatMap(_.rate), repackagedSprDutyRate) match {
+      case (Some(_), None) => repackagedRateBand.map(_.rate).get
+      case (None, Some(_)) => repackagedSprDutyRate
       case _               => None
     }
 }

@@ -19,17 +19,23 @@ package viewmodels.checkAnswers.adjustment
 import controllers.adjustment.routes
 import models.adjustment.AdjustmentEntry
 import models.CheckMode
+import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper.getAdjustmentTypeValue
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AdjustmentTaxTypeSummary {
 
-  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
+    val adjustmentType = getAdjustmentTypeValue(adjustmentEntry)
+    val label          = if (adjustmentType.equals(RepackagedDraughtProducts.toString)) {
+      "adjustmentTaxType.repackaged.checkYourAnswersLabel"
+    } else { "adjustmentTaxType.checkYourAnswersLabel" }
     adjustmentEntry.rateBand.map { rateBand =>
       SummaryListRowViewModel(
-        key = "adjustmentTaxType.checkYourAnswersLabel",
+        key = label,
         value = ValueViewModel(rateBand.taxType),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
@@ -37,4 +43,5 @@ object AdjustmentTaxTypeSummary {
         )
       )
     }
+  }
 }

@@ -821,11 +821,12 @@ adjustmentTaxType.error.valid = Enter a valid 3 digit tax type
 adjustmentTaxType.error.invalid = Enter the previous tax type
 adjustmentTaxType.error.notDraught = Tax type code must apply a reduced rate on draught products
 adjustmentTaxType.change.hidden = what is the tax type for this adjustment
+adjustmentTaxType.repackaged.checkYourAnswersLabel = Original tax
 
 adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
 adjustmentVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
-adjustmentVolume.checkYourAnswersLabel = Adjustment Volume
+adjustmentVolume.checkYourAnswersLabel = Volume
 adjustmentVolume.error.totalLitersVolume.nonNumeric = Litres of {0} must be a number
 adjustmentVolume.error.totalLitersVolume.required = Enter the total litres of {0}
 adjustmentVolume.error.totalLitersVolume.minimumRequired = Litres of {0} must be 0.01 or more
@@ -843,18 +844,18 @@ adjustmentVolume.subHeading = {0} between {1}% and {2}% ABV (tax type code {3})
 adjustmentVolume.totalLitersVolume.heading = Total litres of beer
 adjustmentVolume.pureAlcoholVolume.heading = Litres of pure alcohol
 adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief duty rate
+adjustmentVolume.pureAlcohol = litres of pure alcohol (Lpa)
+adjustmentVolume.totalLitres = litres of {0}
 
-adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief duty rate?
-adjustmentSmallProducerReliefDutyRate.heading = What is your Small Producer Relief duty rate?
+adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief Duty rate for the newly repackaged products?
+adjustmentSmallProducerReliefDutyRate.heading = What is your Small Producer Relief Duty rate for the newly repackaged products?
 adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel = AdjustmentSmallProducerReliefDutyRate
-adjustmentSmallProducerReliefDutyRate.paragraph = You need to tell us your Small Producer Relief duty rate.
-adjustmentSmallProducerReliefDutyRate.guidance.link.text = Work out your Small Producer Relief duty rate here (opens in a new tab).
-adjustmentSmallProducerReliefDutyRate.guidance.link.url = https://www.gov.uk/guidance/find-out-your-alcohol-duty-rates-if-youre-eligible-for-small-producer-relief
+adjustmentSmallProducerReliefDutyRate.hint = Include pounds and pence
 adjustmentSmallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
 adjustmentSmallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
-adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be 0.00 or more
-adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be 999999999.99 or less
-adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
+adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be £0.00 or more
+adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be £99.99 million or less
+adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be to 2 decimal places
 adjustmentSmallProducerReliefDutyRate.change.hidden = what is your Small Producer Relief duty rate
 
 adjustmentDutyDue.title = The duty value for this adjustment is {0}
@@ -868,20 +869,28 @@ adjustmentDutyDue.bulletList.3 = the duty to pay is {0}: duty rate multiplied by
 adjustmentDutyDue.rate.checkYourAnswersLabel = Duty rate
 adjustmentDutyDue.duty.checkYourAnswersLabel = Duty value
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
+adjustmentDutyDue.repackaged.bulletList.1 = the reduced duty rate was {0} per litre of pure alcohol
+adjustmentDutyDue.repackaged.bulletList.2 = you originally paid {0}
+adjustmentDutyDue.repackaged.bulletList.3 = repackaged draught products are not eligible for reduced rates
+adjustmentDutyDue.repackaged.bulletList.4 = the standard duty rate is {0} per litre of pure alcohol
+adjustmentDutyDue.repackaged.bulletList.5 = the new duty value {0} is {1}
+adjustmentDutyDue.repackaged.bulletList.6 = the duty to pay is £[new duty value]: the new duty value minus the old duty value
 
 checkYourAnswers.subHeading = Adjustment details
 
 # End of adjustments sub-journey
 
 
-adjustmentRepackagedTaxType.title = AdjustmentRepackagedTaxType
-adjustmentRepackagedTaxType.heading = AdjustmentRepackagedTaxType
-adjustmentRepackagedTaxType.checkYourAnswersLabel = AdjustmentRepackagedTaxType
+adjustmentRepackagedTaxType.title = What is the tax type code for the newly repackaged products?
+adjustmentRepackagedTaxType.heading = What is the tax type code for the newly repackaged products?
+adjustmentRepackagedTaxType.checkYourAnswersLabel = New tax type
 adjustmentRepackagedTaxType.error.nonNumeric = Enter your adjustmentRepackagedTaxType using numbers
 adjustmentRepackagedTaxType.error.required = Enter your adjustmentRepackagedTaxType
 adjustmentRepackagedTaxType.error.wholeNumber = Enter your adjustmentRepackagedTaxType using whole numbers
 adjustmentRepackagedTaxType.error.outOfRange = AdjustmentRepackagedTaxType must be between {0} and {1}
+adjustmentRepackagedTaxType.error.nonDraught = Enter a valid non-draught {0} tax type code
 adjustmentRepackagedTaxType.change.hidden = AdjustmentRepackagedTaxType
+adjustmentRepackagedTaxType.hint = A non-draught 3 digit tax type code
 
 adjustmentRepackagedTaxTypeWithSPR.title = adjustmentRepackagedTaxTypeWithSPR
 adjustmentRepackagedTaxTypeWithSPR.heading = adjustmentRepackagedTaxTypeWithSPR

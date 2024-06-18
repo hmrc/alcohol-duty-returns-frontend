@@ -27,7 +27,8 @@ class AdjustmentRepackagedTaxTypeFormProvider @Inject() extends Mappings {
       "new-tax-type-code" -> int(
         "adjustmentRepackagedTaxType.error.required",
         "adjustmentRepackagedTaxType.error.valid",
-        "adjustmentRepackagedTaxType.error.valid")
-          .verifying(inRange(0, 999, "adjustmentRepackagedTaxType.error.valid"))
+        "adjustmentRepackagedTaxType.error.valid"
+      )
+        .verifying(inRange(0, 999, "adjustmentRepackagedTaxType.error.valid"))
     )
 }

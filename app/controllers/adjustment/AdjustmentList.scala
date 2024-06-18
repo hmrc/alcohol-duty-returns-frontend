@@ -16,6 +16,4 @@
 
 package controllers.adjustment
 
-class AdjustmentList {
-
-}
+class AdjustmentList {}

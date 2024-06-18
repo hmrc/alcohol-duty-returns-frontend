@@ -19,7 +19,6 @@ package models.adjustment
 import base.SpecBase
 import generators.ModelGenerators
 import models.AlcoholRegime.Beer
-import models.RateType.Core
 import models.{AlcoholByVolume, RateBand, RateType}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.mockito.MockitoSugar
