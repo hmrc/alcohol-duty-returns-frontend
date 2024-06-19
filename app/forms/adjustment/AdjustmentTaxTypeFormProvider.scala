@@ -25,10 +25,10 @@ class AdjustmentTaxTypeFormProvider @Inject() extends Mappings {
   def apply(): Form[Int] =
     Form(
       "adjustment-tax-type-input" -> int(
-        "adjustmentTaxType.error.valid",
-        "adjustmentTaxType.error.valid",
-        "adjustmentTaxType.error.valid"
+        "adjustmentTaxType.error.required",
+        "adjustmentTaxType.error.invalid",
+        "adjustmentTaxType.error.invalid"
       )
-        .verifying(inRange(100, 999, "adjustmentTaxType.error.valid"))
+        .verifying(inRange(100, 999, "adjustmentTaxType.error.invalid"))
     )
 }

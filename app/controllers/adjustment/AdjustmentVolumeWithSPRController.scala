@@ -73,7 +73,17 @@ class AdjustmentVolumeWithSPRController @Inject() (
       view(
         preparedForm,
         mode,
-        AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry)
+        AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry),
+        getRegime, // change this
+        adjustmentEntry.rateBand
+          .map(_.minABV.value)
+          .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
+        adjustmentEntry.rateBand
+          .map(_.maxABV.value)
+          .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
+        adjustmentEntry.rateBand
+          .map(_.taxType)
+          .getOrElse(throw new RuntimeException("Couldn't fetch taxType value from cache"))
       )
     )
   }
@@ -85,9 +95,29 @@ class AdjustmentVolumeWithSPRController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors =>
-            Future.successful(
-              BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(AdjustmentEntry())))
-            ),
+            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+              case Some(value) =>
+                Future.successful(
+                  BadRequest(
+                    view(
+                      formWithErrors,
+                      mode,
+                      AdjustmentTypeHelper.getAdjustmentTypeValue(AdjustmentEntry()),
+                      getRegime, // change this
+                      value.rateBand
+                        .map(_.minABV.value)
+                        .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
+                      value.rateBand
+                        .map(_.maxABV.value)
+                        .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
+                      value.rateBand
+                        .map(_.taxType)
+                        .getOrElse(throw new RuntimeException("Couldn't fetch taxType value from cache"))
+                    )
+                  )
+                )
+            },
           value => {
             val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
             for {

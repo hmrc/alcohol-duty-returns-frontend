@@ -764,14 +764,14 @@ declareAdjustmentQuestion.p1 = You should make an adjustment to a previously sub
 declareAdjustmentQuestion.para1.list1 = you have under-declared alcohol on a previous return and have not paid enough duty
 declareAdjustmentQuestion.para1.list2 = you have over-declared alcohol on a previous return and paid too much duty
 declareAdjustmentQuestion.para1.list3 = you have paid duty on alcohol and it is now spoilt and cannot be consumed
-declareAdjustmentQuestion.para1.list4 = you have paid duty on alcohol and have now exported it
-declareAdjustmentQuestion.para1.list5 = you have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate
+declareAdjustmentQuestion.para1.list4 = you have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate
+declareAdjustmentQuestion.para1.list5 = you have paid duty on alcohol and have now exported it
 declareAdjustmentQuestion.checkYourAnswersLabel = declareAdjustmentQuestion
-declareAdjustmentQuestion.error.required = Select yes if you need to enter an adjustment.
+declareAdjustmentQuestion.error.required = Select yes if you need to tell us about adjustments to any previous returns
 declareAdjustmentQuestion.change.hidden = whether you need to make any adjustments from a previously submitted return
 
-adjustmentType.title = Which type of adjustment do you need to make?
-adjustmentType.heading = Which type of adjustment do you need to make?
+adjustmentType.title = What type of adjustment do you need to make?
+adjustmentType.heading = What type of adjustment do you need to make?
 adjustmentType.under-declaration = Under-declaration
 adjustmentType.under-declaration.hint = You have under-declared alcohol on a previous return and have not paid enough duty.
 adjustmentType.over-declaration = Over-declaration
@@ -794,38 +794,28 @@ whenDidYouPayDuty.under-declaration.heading = When should you have paid duty?
 whenDidYouPayDuty.spoilt.heading = To the nearest month, when did you pay duty on this?
 whenDidYouPayDuty.paragraph = Contact HMRC if this was originally declared before August 2023.
 whenDidYouPayDuty.hint = For example, 3 2007
-whenDidYouPayDuty.date.error.required.all = Enter a month and year
-whenDidYouPayDuty.date.error.required = Enter a {0}
-whenDidYouPayDuty.date.error.invalid.future = Enter a date that’s in the past
-whenDidYouPayDuty.date.error.invalid.month = Enter a valid month. It must be a number between 1 and 12
-whenDidYouPayDuty.date.error.invalid.year = Enter a valid year. It must be a 4-digit number
+whenDidYouPayDuty.date.error.required.all = Enter the date you paid duty
+whenDidYouPayDuty.date.error.required = The date you paid duty must include a {0}
+whenDidYouPayDuty.date.error.invalid.future = The date you paid duty must be in the past
+whenDidYouPayDuty.date.error.invalid.month = The date you paid duty must be a real date
+whenDidYouPayDuty.date.error.invalid.year = Year must include 4 numbers
 whenDidYouPayDuty.date.error.invalid.past = The date must be after 31st August 2023
 whenDidYouPayDuty.checkYourAnswersLabel = Original return period
 
-alcoholByVolume.title = What is the Alcohol by Volume (ABV) strength for this adjustment?
-alcoholByVolume.heading = What is the Alcohol by Volume (ABV) strength for this adjustment?
-alcoholByVolume.checkYourAnswersLabel = AlcoholByVolume
-alcoholByVolume.error.nonNumeric = The ABV must be a number
-alcoholByVolume.error.required = Enter the ABV of this adjustment
-alcoholByVolume.error.minimumRequired = The ABV must be higher than 0
-alcoholByVolume.error.maximumRequired = The ABV must be 100 or lower
-alcoholByVolume.error.oneDecimalPlace = The ABV must be to 1 decimal place or less
-alcoholByVolume.change.hidden = What is the Alcohol by Volume (ABV) strength for this adjustment
-
-adjustmentTaxType.title = What is the tax type for this adjustment?
-adjustmentTaxType.heading = What is the tax type for this adjustment?
+adjustmentTaxType.title = What is the tax type code for the alcohol you are adjusting?
+adjustmentTaxType.heading = What is the tax type code for the alcohol you are adjusting?
 adjustmentTaxType.underDeclaration.hint = The 3 digit tax type code for the under-declared alcohol
 adjustmentTaxType.default.hint = The 3 digit tax type code used on your previous return
 adjustmentTaxType.checkYourAnswersLabel = Tax
-adjustmentTaxType.error.valid = Enter a valid 3 digit tax type
-adjustmentTaxType.error.invalid = Enter the previous tax type
-adjustmentTaxType.error.notDraught = Tax type code must apply a reduced rate on draught products
+adjustmentTaxType.error.invalid = Enter a valid tax type code
+adjustmentTaxType.error.required = Enter the tax type code
+adjustmentTaxType.error.notDraught = Tax type code needs to be for draught products
 adjustmentTaxType.change.hidden = what is the tax type for this adjustment
 adjustmentTaxType.repackaged.checkYourAnswersLabel = Original tax
 
 adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
-adjustmentVolume.hint = Give your answers in litres, to 2 decimal places. For example, 500.50
+adjustmentVolume.hint = Give your answers as volumes in litres, to 2 decimal places. For example, 500.50
 adjustmentVolume.checkYourAnswersLabel = Volume
 adjustmentVolume.error.totalLitersVolume.nonNumeric = Litres of {0} must be a number
 adjustmentVolume.error.totalLitersVolume.required = Enter the total litres of {0}
@@ -833,12 +823,17 @@ adjustmentVolume.error.totalLitersVolume.minimumRequired = Litres of {0} must be
 adjustmentVolume.error.totalLitersVolume.maximumRequired = Litres of {0} must be 99.99 million or less
 adjustmentVolume.error.totalLitersVolume.twoDecimalPlaces = Litres of {0} must be a number to 2 decimal places
 adjustmentVolume.error.totalLitersVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
-adjustmentVolume.error.pureAlcoholVolume.nonNumeric = Litres of {0} must be a number
-adjustmentVolume.error.pureAlcoholVolume.required = Enter the total litres of {0}
-adjustmentVolume.error.pureAlcoholVolume.minimumRequired = Litres of {0} must be 0.01 or more
-adjustmentVolume.error.pureAlcoholVolume.maximumRequired = Litres of {0} must be 99.99 million or less
-adjustmentVolume.error.pureAlcoholVolume.twoDecimalPlaces = Litres of {0} must be a number to 2 decimal places
+adjustmentVolume.error.pureAlcoholVolume.nonNumeric = Litres of pure alcohol in {0} must be a number
+adjustmentVolume.error.pureAlcoholVolume.required = Enter the litres of pure alcohol in {0}
+adjustmentVolume.error.pureAlcoholVolume.minimumRequired = Litres of pure alcohol must be 0.01 or more
+adjustmentVolume.error.pureAlcoholVolume.maximumRequired = Litres of pure alcohol must be 99.99 million or less
+adjustmentVolume.error.pureAlcoholVolume.twoDecimalPlaces = Litres of pure alcohol must be a number to 2 decimal places
 adjustmentVolume.error.pureAlcoholVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
+adjustmentVolume.smallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
+adjustmentVolume.smallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
+adjustmentVolume.smallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be £99.99 million or less
+adjustmentVolume.smallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be £0.00 or more
+adjustmentVolume.smallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be to 2 decimal places
 adjustmentVolume.change.hidden = Adjustment Volume
 adjustmentVolume.subHeading = {0} between {1}% and {2}% ABV (tax type code {3})
 adjustmentVolume.totalLitersVolume.heading = Total litres of beer
@@ -846,6 +841,17 @@ adjustmentVolume.pureAlcoholVolume.heading = Litres of pure alcohol
 adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief duty rate
 adjustmentVolume.pureAlcohol = litres of pure alcohol (Lpa)
 adjustmentVolume.totalLitres = litres of {0}
+
+adjustmentRepackagedTaxType.title = What is the tax type code for the newly repackaged products?
+adjustmentRepackagedTaxType.heading = What is the tax type code for the newly repackaged products?
+adjustmentRepackagedTaxType.checkYourAnswersLabel = New tax type
+adjustmentRepackagedTaxType.error.invalid = Enter a valid tax type code
+adjustmentRepackagedTaxType.error.required = Enter the new tax type code
+adjustmentRepackagedTaxType.error.wholeNumber = Enter your adjustmentRepackagedTaxType using whole numbers
+adjustmentRepackagedTaxType.error.outOfRange = AdjustmentRepackagedTaxType must be between {0} and {1}
+adjustmentRepackagedTaxType.error.nonDraught = Enter a valid non-draught {0} tax type code
+adjustmentRepackagedTaxType.change.hidden = AdjustmentRepackagedTaxType
+adjustmentRepackagedTaxType.hint = A non-draught 3 digit tax type code
 
 adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief Duty rate for the newly repackaged products?
 adjustmentSmallProducerReliefDutyRate.heading = What is your Small Producer Relief Duty rate for the newly repackaged products?
@@ -874,23 +880,9 @@ adjustmentDutyDue.repackaged.bulletList.2 = you originally paid {0}
 adjustmentDutyDue.repackaged.bulletList.3 = repackaged draught products are not eligible for reduced rates
 adjustmentDutyDue.repackaged.bulletList.4 = the standard duty rate is {0} per litre of pure alcohol
 adjustmentDutyDue.repackaged.bulletList.5 = the new duty value {0} is {1}
-adjustmentDutyDue.repackaged.bulletList.6 = the duty to pay is £[new duty value]: the new duty value minus the old duty value
+adjustmentDutyDue.repackaged.bulletList.6 = the duty to pay is {0}: the new duty value minus the old duty value
 
 checkYourAnswers.subHeading = Adjustment details
-
-# End of adjustments sub-journey
-
-
-adjustmentRepackagedTaxType.title = What is the tax type code for the newly repackaged products?
-adjustmentRepackagedTaxType.heading = What is the tax type code for the newly repackaged products?
-adjustmentRepackagedTaxType.checkYourAnswersLabel = New tax type
-adjustmentRepackagedTaxType.error.nonNumeric = Enter your adjustmentRepackagedTaxType using numbers
-adjustmentRepackagedTaxType.error.required = Enter your adjustmentRepackagedTaxType
-adjustmentRepackagedTaxType.error.wholeNumber = Enter your adjustmentRepackagedTaxType using whole numbers
-adjustmentRepackagedTaxType.error.outOfRange = AdjustmentRepackagedTaxType must be between {0} and {1}
-adjustmentRepackagedTaxType.error.nonDraught = Enter a valid non-draught {0} tax type code
-adjustmentRepackagedTaxType.change.hidden = AdjustmentRepackagedTaxType
-adjustmentRepackagedTaxType.hint = A non-draught 3 digit tax type code
 
 adjustmentRepackagedTaxTypeWithSPR.title = adjustmentRepackagedTaxTypeWithSPR
 adjustmentRepackagedTaxTypeWithSPR.heading = adjustmentRepackagedTaxTypeWithSPR
@@ -903,3 +895,5 @@ adjustmentRepackagedTaxTypeWithSPR.error.tax-type-code.length = tax-type-code mu
 adjustmentRepackagedTaxTypeWithSPR.error.new-spr-duty-rate.length = new-spr-duty-rate must be 999 characters or less
 adjustmentRepackagedTaxTypeWithSPR.tax-type-code.change.hidden = tax-type-code
 adjustmentRepackagedTaxTypeWithSPR.new-spr-duty-rate.change.hidden = new-spr-duty-rate
+
+# End of adjustments sub-journey

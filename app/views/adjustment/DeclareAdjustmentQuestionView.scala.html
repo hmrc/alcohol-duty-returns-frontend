@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
 
 @this(
     layout: templates.Layout,
@@ -23,7 +23,9 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    bulletList: BulletList,
+    paragraph: Paragraph
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -40,14 +42,15 @@
 
         @pageHeading(messages("declareAdjustmentQuestion.heading"))
 
-        <p class="govuk-body">@messages("declareAdjustmentQuestion.p1")</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>@messages("declareAdjustmentQuestion.para1.list1")</li>
-                    <li>@messages("declareAdjustmentQuestion.para1.list2")</li>
-                    <li>@messages("declareAdjustmentQuestion.para1.list3")</li>
-                    <li>@messages("declareAdjustmentQuestion.para1.list4")</li>
-                    <li>@messages("declareAdjustmentQuestion.para1.list5")</li>
-                </ul>
+        @paragraph(messages("declareAdjustmentQuestion.p1"))
+
+        @bulletList(Seq(
+        messages("declareAdjustmentQuestion.para1.list1"),
+        messages("declareAdjustmentQuestion.para1.list2"),
+        messages("declareAdjustmentQuestion.para1.list3"),
+        messages("declareAdjustmentQuestion.para1.list4"),
+        messages("declareAdjustmentQuestion.para1.list5"),
+        ))
 
         @formHelper(action = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

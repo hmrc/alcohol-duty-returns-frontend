@@ -43,7 +43,9 @@ class ProductEntryServiceImpl @Inject() (
     val rate         = productEntry.rate.getOrElse(throw getError(productEntry))
 
     for {
-      taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(volume, rate) // removing abv for code to compile
+      taxDuty <-
+        alcoholDutyCalculatorConnector
+          .calculateTaxDuty(volume, rate, "testValue") // removing abv and adding adjustment for code to compile
     } yield productEntry.copy(
       duty = Some(taxDuty.duty)
     )

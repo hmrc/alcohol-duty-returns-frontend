@@ -190,42 +190,42 @@ GET        /spirits-check-your-answers                 controllers.spiritsQuesti
 
 
 # Beginning of adjustments sub-journey
-GET        /do-you-need-to-make-any-adjustments-from-a-previous-return                        controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /do-you-need-to-make-any-adjustments-from-a-previous-return                       controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /adjust-a-previous-return                       controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjust-a-previous-return                      controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjust-a-previous-return                controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjust-a-previous-return                controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
 POST       /type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /when-did-you-pay-duty                        controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = NormalMode)
-POST       /when-did-you-pay-duty                        controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = NormalMode)
-GET        /change-when-did-you-pay-duty                  controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-when-did-you-pay-duty                  controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-return-date                        controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-return-date                        controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-return-date                  controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-return-date                  controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /what-is-the-adjustment-tax-type                  controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-the-adjustment-tax-type                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-tax-type-code                 controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-tax-type-code                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-tax-type-code                       controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-tax-type-code                        controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
 
 GET        /new-spr-duty-rate                controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
 POST       /new-spr-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
 GET        /change-new-spr-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-new-spr-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 
-GET        /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-volume                 controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-volume                controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-volume                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-volume                       controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /adjustment-volume                        controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = NormalMode)
-POST       /adjustment-volume                        controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = NormalMode)
-GET        /change-adjustment-volume                  controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-adjustment-volume                  controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-volume-with-spr                        controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-volume-with-spr                        controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-volume-with-spr                 controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-volume-with-spr                 controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = CheckMode)
 
-GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
+GET        /adjustment-duty-value                      controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 
 GET        /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
 POST       /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onSubmit()

@@ -98,7 +98,8 @@ class WhenDidYouPayDutyController @Inject() (
             rateBand = None,
             totalLitresVolume = None,
             pureAlcoholVolume = None,
-            duty = None
+            duty = None,
+            newDuty = None
           ),
           true
         )

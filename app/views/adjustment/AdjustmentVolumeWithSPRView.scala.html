@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, Paragraph}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -25,10 +25,11 @@
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    subHeading: SubHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: String, regime: String, minABV: BigDecimal, maxABV: BigDecimal, taxCode:String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("howMuchDoYouNeedToAdjust.title"))) {
 
@@ -44,6 +45,8 @@
         )
 
         @pageHeading(messages("adjustmentVolume.heading"))
+
+        @subHeading(messages("adjustmentVolume.subHeading", regime , minABV , maxABV, taxCode), "govuk-heading-s")
 
         @paragraph(messages("adjustmentVolume.hint"), classes = "govuk-hint")
 
@@ -75,7 +78,7 @@
             )
             .asNumeric()
             .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withPoundPrefix
         )
 
         @govukButton(

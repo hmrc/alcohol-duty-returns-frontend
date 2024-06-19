@@ -131,7 +131,9 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
         (
           adjustmentEntry.copy(
             duty = None,
-            repackagedDuty = None
+            repackagedDuty = None,
+            repackagedSprDutyRate = None,
+            newDuty = None
           ),
           true
         )

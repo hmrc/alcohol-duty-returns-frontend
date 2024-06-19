@@ -119,22 +119,41 @@ class AdjustmentVolumeController @Inject() (
                 )
             },
           value => {
-            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val (updatedAdjustment, hasChanged) = updateVolume(adjustment, value)
             for {
               updatedAnswers <-
                 Future.fromTry(
                   request.userAnswers.set(
                     CurrentAdjustmentEntryPage,
-                    adjustment.copy(
+                    updatedAdjustment.copy(
                       totalLitresVolume = Some(value.totalLitersVolume),
                       pureAlcoholVolume = Some(value.pureAlcoholVolume)
                     )
                   )
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+
+  def updateVolume(adjustmentEntry: AdjustmentEntry, currentValue: AdjustmentVolume): (AdjustmentEntry, Boolean) =
+    (adjustmentEntry.totalLitresVolume, adjustmentEntry.pureAlcoholVolume) match {
+      case (Some(existingTotalLitres), Some(existingPureAlcohol))
+          if currentValue.totalLitersVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol =>
+        (adjustmentEntry, false)
+      case _ =>
+        (
+          adjustmentEntry.copy(
+            duty = None,
+            repackagedRateBand = None,
+            repackagedDuty = None,
+            repackagedSprDutyRate = None,
+            newDuty = None
+          ),
+          true
+        )
+    }
 
 }

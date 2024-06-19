@@ -159,7 +159,8 @@ class AdjustmentTaxTypeController @Inject() (
             duty = None,
             repackagedRateBand = None,
             repackagedDuty = None,
-            repackagedSprDutyRate = None
+            repackagedSprDutyRate = None,
+            newDuty = None
           ),
           true
         )

@@ -20,9 +20,18 @@ import play.api.libs.json.{Json, OFormat}
 
 case class DutyCalculationRequest(
   pureAlcoholVolume: BigDecimal,
-  rate: BigDecimal
+  rate: BigDecimal,
+  adjustmentType: String
 )
 
 object DutyCalculationRequest {
   implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
+}
+
+case class AdjustmentDutyCalculationRequest(
+  newDuty: BigDecimal,
+  oldDuty: BigDecimal
+)
+object AdjustmentDutyCalculationRequest {
+  implicit val formats: OFormat[AdjustmentDutyCalculationRequest] = Json.format[AdjustmentDutyCalculationRequest]
 }

@@ -23,7 +23,6 @@ import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Underdeclaration}
 import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HeaderCarrier
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,26 +44,29 @@ class AdjustmentEntryServiceImpl @Inject() (
         throw new RuntimeException("Can't fetch pure alcohol volume from cache")
       )
     val rate              = adjustmentEntry.rate.getOrElse(throw getError(adjustmentEntry))
-    val adjustmentType    = AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry)
+    val adjustmentType    =
+      adjustmentEntry.adjustmentType.getOrElse(throw new RuntimeException("Couldn't fetch adjustmentType from cache"))
 
-    val taxDutyFuture           = for {
-      taxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, rate)
-    } yield {
-      val dutyValue = checkDutyValue(taxDuty.duty, adjustmentType)
-      adjustmentEntry.copy(
-        duty = Some(dutyValue)
-      )
-    }
-    val updatedAdjustmentFuture = if (adjustmentType.equals(RepackagedDraughtProducts.toString)) {
-      val repackagedRate = adjustmentEntry.repackagedRate.getOrElse(throw getRepackagedError(adjustmentEntry))
-      for {
-        updatedAdjustment <- taxDutyFuture
-        repackagedtaxDuty <- alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, repackagedRate)
-      } yield updatedAdjustment.copy(
-        repackagedDuty = Some(repackagedtaxDuty.duty)
-      )
-    } else {
-      taxDutyFuture
+    val taxDutyFuture           =
+      alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, rate, adjustmentType.toString).map { taxDuty =>
+        adjustmentEntry.copy(duty = Some(taxDuty.duty))
+      }
+    val updatedAdjustmentFuture = adjustmentType match {
+      case RepackagedDraughtProducts =>
+        val repackagedRate = adjustmentEntry.repackagedRate.getOrElse(throw getRepackagedError(adjustmentEntry))
+        for {
+          updatedAdjustment <- taxDutyFuture
+          repackagedTaxDuty <-
+            alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, repackagedRate, adjustmentType.toString)
+          newDuty           <- alcoholDutyCalculatorConnector.calculateAdjustmentTaxDuty(
+                                 repackagedTaxDuty.duty,
+                                 updatedAdjustment.duty.getOrElse(BigDecimal(0))
+                               )
+        } yield updatedAdjustment.copy(
+          repackagedDuty = Some(repackagedTaxDuty.duty),
+          newDuty = Some(newDuty.duty)
+        )
+      case _                         => taxDutyFuture
     }
     updatedAdjustmentFuture
   }
