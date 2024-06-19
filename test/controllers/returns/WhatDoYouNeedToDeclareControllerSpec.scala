@@ -21,8 +21,6 @@ import forms.returns.WhatDoYouNeedToDeclareFormProvider
 import models.NormalMode
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -34,7 +32,7 @@ import views.html.returns.WhatDoYouNeedToDeclareView
 
 import scala.concurrent.Future
 
-class WhatDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
+class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

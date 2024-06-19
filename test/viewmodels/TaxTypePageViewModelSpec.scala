@@ -19,7 +19,7 @@ package viewmodels
 import base.SpecBase
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegimeName, RateBand, RateType}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RateType}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
 import play.api.i18n.Messages
@@ -39,12 +39,16 @@ class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks wi
               "310",
               "some band",
               RateType.DraughtRelief,
-              Set(AlcoholRegimeName.Beer),
-              intervals = NonEmptySeq.one(
-                ABVRange(
-                  ABVRangeName.Beer,
-                  AlcoholByVolume(0.1),
-                  AlcoholByVolume(5.8)
+              Set(
+                AlcoholRegime(
+                  AlcoholRegimeName.Beer,
+                  NonEmptySeq.one(
+                    ABVRange(
+                      ABVRangeName.Beer,
+                      AlcoholByVolume(0.1),
+                      AlcoholByVolume(5.8)
+                    )
+                  )
                 )
               ),
               Some(BigDecimal(10.99))

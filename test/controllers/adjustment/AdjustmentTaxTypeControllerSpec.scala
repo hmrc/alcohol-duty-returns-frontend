@@ -19,7 +19,7 @@ package controllers.adjustment
 import base.SpecBase
 import cats.data.NonEmptySeq
 import forms.adjustment.AdjustmentTaxTypeFormProvider
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegimeName, NormalMode, RateBand, RateType}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, NormalMode, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
@@ -55,12 +55,16 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
     taxCode,
     "some band",
     RateType.DraughtRelief,
-    Set(alcoholRegime),
-    intervals = NonEmptySeq.one(
-      ABVRange(
-        ABVRangeName.Beer,
-        AlcoholByVolume(0.1),
-        AlcoholByVolume(5.8)
+    Set(
+      AlcoholRegime(
+        AlcoholRegimeName.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            ABVRangeName.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
       )
     ),
     rate

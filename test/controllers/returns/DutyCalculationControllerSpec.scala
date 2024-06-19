@@ -20,8 +20,6 @@ import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.returns.{AlcoholDuty, DutyByTaxType}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
 import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.test.Helpers._

@@ -101,19 +101,21 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
     "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in {
       val expectedSectionsWithQS = Seq(
-        ReturnTaskListHelper.returnSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, emptyUserAnswers),
         ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
         ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
       )
 
       val expectedSectionsWithoutQS = Seq(
-        ReturnTaskListHelper.returnSection(emptyUserAnswers),
+        ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, emptyUserAnswers),
         ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
       )
 
       forAll(periodKeyGen) { case periodKey =>
         val result =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
+          AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, emptyUserAnswers, validUntil, periodKey)(
+            messages(application)
+          )
 
         val periodQuarters = "CFIL"
         val lastChar       = periodKey.last

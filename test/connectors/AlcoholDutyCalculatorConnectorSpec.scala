@@ -22,7 +22,7 @@ import config.FrontendAppConfig
 import models.AlcoholRegimeName.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.productEntry.TaxDuty
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.{NOT_FOUND, OK}
@@ -41,12 +41,16 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     "310",
     "some band",
     RateType.DraughtRelief,
-    Set(AlcoholRegimeName.Beer),
-    intervals = NonEmptySeq.one(
-      ABVRange(
-        ABVRangeName.Beer,
-        AlcoholByVolume(0.1),
-        AlcoholByVolume(5.8)
+    Set(
+      AlcoholRegime(
+        AlcoholRegimeName.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            ABVRangeName.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
       )
     ),
     Some(BigDecimal(10.99))

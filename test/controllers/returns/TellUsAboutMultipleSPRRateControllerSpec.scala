@@ -21,8 +21,6 @@ import forms.returns.TellUsAboutMultipleSPRRateFormProvider
 import models.NormalMode
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.TellUsAboutMultipleSPRRatePage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -34,7 +32,7 @@ import views.html.returns.TellUsAboutMultipleSPRRateView
 
 import scala.concurrent.Future
 
-class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSugar {
+class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
   val regime = regimeGen.sample.value
 
@@ -62,7 +60,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands)(messages(application))
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
 
         val form = formProvider(regime)(messages(application))
 
@@ -85,7 +83,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands)(messages(application))
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
 
         val form = formProvider(regime)(messages(application))
 
@@ -140,7 +138,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(regime, rateBands)(messages(application))
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, regime, rateBandRadioButton, None)(

@@ -21,8 +21,6 @@ import forms.returns.HowMuchDoYouNeedToDeclareFormProvider
 import models.{AlcoholRegimeName, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -35,7 +33,7 @@ import views.html.returns.HowMuchDoYouNeedToDeclareView
 
 import scala.concurrent.Future
 
-class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar {
+class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -72,7 +70,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        val expectedReturnSummaryList = CategoriesByRateTypeHelper(regime, rateBands)(messages(application))
+        val expectedReturnSummaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands)(messages(application))
         val form                      = formProvider(regime)(messages(application))
 
         status(result) mustEqual OK
@@ -94,7 +92,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        val expectedReturnSummaryList = CategoriesByRateTypeHelper(regime, rateBands)(messages(application))
+        val expectedReturnSummaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands)(messages(application))
         val form                      = formProvider(regime)(messages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -161,7 +159,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        val summaryList = CategoriesByRateTypeHelper(regime, rateBands)(messages(application))
+        val summaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands)(messages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, summaryList, NormalMode)(

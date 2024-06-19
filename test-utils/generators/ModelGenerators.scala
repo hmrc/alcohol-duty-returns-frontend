@@ -157,7 +157,7 @@ trait ModelGenerators {
     Gen.oneOf(RateType.Core, RateType.DraughtRelief)
   }
 
-  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegimeName]   = Arbitrary {
+  implicit val arbitraryAlcoholRegimeName: Arbitrary[AlcoholRegimeName] = Arbitrary {
     Gen.oneOf(
       AlcoholRegimeName.Beer,
       AlcoholRegimeName.Cider,
@@ -165,6 +165,7 @@ trait ModelGenerators {
       AlcoholRegimeName.Spirits
     )
   }
+
   implicit val arbitraryRateTypeResponse: Arbitrary[RateTypeResponse] = Arbitrary {
     Gen.oneOf(
       RateTypeResponse(RateType.DraughtRelief),
@@ -172,10 +173,6 @@ trait ModelGenerators {
       RateTypeResponse(RateType.DraughtAndSmallProducerRelief),
       RateTypeResponse(RateType.Core)
     )
-  }
-
-  implicit val arbitrarySetOfAlcoholRegimes: Arbitrary[Set[AlcoholRegimeName]] = Arbitrary {
-    Gen.containerOf[Set, AlcoholRegimeName](arbitraryAlcoholRegime.arbitrary)
   }
 
   val genAlcoholByVolumeValue: Gen[BigDecimal] =
@@ -226,15 +223,25 @@ trait ModelGenerators {
     Gen.listOfN(2, abvIntervalGen.arbitrary)
   }
 
+  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime] = Arbitrary {
+    for {
+      name      <- arbitraryAlcoholRegimeName.arbitrary
+      abvRanges <- arbitraryABVIntervals.arbitrary
+    } yield AlcoholRegime(name, NonEmptySeq.fromSeqUnsafe(abvRanges))
+  }
+
+  implicit val arbitrarySetOfAlcoholRegimes: Arbitrary[Set[AlcoholRegime]] = Arbitrary {
+    Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
+  }
+
   implicit val arbitraryRateBand: Arbitrary[RateBand] = Arbitrary {
     for {
-      taxType       <- Gen.alphaStr
-      description   <- Gen.alphaStr
-      rateType      <- arbitraryRateType.arbitrary
-      alcoholRegime <- arbitrarySetOfAlcoholRegimes.arbitrary
-      intervals     <- arbitraryABVIntervals.arbitrary.suchThat(_.nonEmpty)
-      rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
-    } yield RateBand(taxType, description, rateType, alcoholRegime, NonEmptySeq.fromSeqUnsafe(intervals), rate)
+      taxType        <- Gen.alphaStr
+      description    <- Gen.alphaStr
+      rateType       <- arbitraryRateType.arbitrary
+      alcoholRegimes <- arbitrarySetOfAlcoholRegimes.arbitrary
+      rate           <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
+    } yield RateBand(taxType, description, rateType, alcoholRegimes, rate)
   }
 
   implicit val arbitraryRatePeriod: Arbitrary[RatePeriod] = Arbitrary {
@@ -307,7 +314,7 @@ trait ModelGenerators {
   def regimeGen: Gen[AlcoholRegimeName] = Gen.oneOf(AlcoholRegimeName.values)
 
   def arbitraryRateBandList(regime: AlcoholRegimeName): Arbitrary[List[RateBand]] = Arbitrary {
-    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.alcoholRegimes.contains(regime)))
+    Gen.listOfN(3, arbitrary[RateBand].suchThat(_.alcoholRegimes.exists(_.name == regime)))
   }
 
   def genVolumeAndRateByTaxTypeRateBand(rateBand: RateBand): Arbitrary[VolumeAndRateByTaxType] = Arbitrary {

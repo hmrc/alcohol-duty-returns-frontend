@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.returns
 import base.SpecBase
 import cats.data.NonEmptySeq
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, RateBand}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen
 
@@ -50,12 +50,16 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           rateTypeStandard,
-          Set(regime),
-          NonEmptySeq.one(
-            ABVRange(
-              label,
-              AlcoholByVolume(lowerLimit),
-              AlcoholByVolume(upperLimit)
+          Set(
+            AlcoholRegime(
+              regime,
+              NonEmptySeq.one(
+                ABVRange(
+                  label,
+                  AlcoholByVolume(lowerLimit),
+                  AlcoholByVolume(upperLimit)
+                )
+              )
             )
           ),
           None
@@ -78,17 +82,23 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           rateTypeStandard,
-          Set(regime),
-          NonEmptySeq.of(
-            ABVRange(
-              label,
-              AlcoholByVolume(lowerLimit1),
-              AlcoholByVolume(upperLimit1)
-            ),
-            ABVRange(
-              secondaryLabel,
-              AlcoholByVolume(lowerLimit2),
-              AlcoholByVolume(upperLimit2)
+          Set(
+            AlcoholRegime(
+              regime,
+              NonEmptySeq.fromSeqUnsafe(
+                Seq(
+                  ABVRange(
+                    label,
+                    AlcoholByVolume(lowerLimit1),
+                    AlcoholByVolume(upperLimit1)
+                  ),
+                  ABVRange(
+                    label,
+                    AlcoholByVolume(lowerLimit2),
+                    AlcoholByVolume(upperLimit2)
+                  )
+                )
+              )
             )
           ),
           None
@@ -107,12 +117,16 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           rateTypeStandard,
-          Set(regime),
-          NonEmptySeq.one(
-            ABVRange(
-              label,
-              AlcoholByVolume(lowerLimit),
-              AlcoholByVolume.MAX
+          Set(
+            AlcoholRegime(
+              regime,
+              NonEmptySeq.one(
+                ABVRange(
+                  label,
+                  AlcoholByVolume(lowerLimit),
+                  AlcoholByVolume.MAX
+                )
+              )
             )
           ),
           None
@@ -134,12 +148,16 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           Core,
-          Set(regime),
-          NonEmptySeq.one(
-            ABVRange(
-              label,
-              AlcoholByVolume(lowerLimit),
-              AlcoholByVolume(upperLimit)
+          Set(
+            AlcoholRegime(
+              regime,
+              NonEmptySeq.one(
+                ABVRange(
+                  label,
+                  AlcoholByVolume(lowerLimit),
+                  AlcoholByVolume(upperLimit)
+                )
+              )
             )
           ),
           None
@@ -160,17 +178,23 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           Core,
-          Set(regime),
-          NonEmptySeq.of(
-            ABVRange(
-              label,
-              AlcoholByVolume(lowerLimit1),
-              AlcoholByVolume(upperLimit1)
-            ),
-            ABVRange(
-              secondaryLabel,
-              AlcoholByVolume(lowerLimit2),
-              AlcoholByVolume(upperLimit2)
+          Set(
+            AlcoholRegime(
+              regime,
+              NonEmptySeq.fromSeqUnsafe(
+                Seq(
+                  ABVRange(
+                    label,
+                    AlcoholByVolume(lowerLimit1),
+                    AlcoholByVolume(upperLimit1)
+                  ),
+                  ABVRange(
+                    label,
+                    AlcoholByVolume(lowerLimit2),
+                    AlcoholByVolume(upperLimit2)
+                  )
+                )
+              )
             )
           ),
           None
@@ -188,12 +212,16 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           Core,
-          Set(regime),
-          NonEmptySeq.one(
-            ABVRange(
-              label,
-              AlcoholByVolume(lowerLimit),
-              AlcoholByVolume.MAX
+          Set(
+            AlcoholRegime(
+              regime,
+              NonEmptySeq.one(
+                ABVRange(
+                  label,
+                  AlcoholByVolume(lowerLimit),
+                  AlcoholByVolume.MAX
+                )
+              )
             )
           ),
           None

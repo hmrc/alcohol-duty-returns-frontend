@@ -20,8 +20,6 @@ import base.SpecBase
 import forms.returns.MultipleSPRListFormProvider
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.DoYouWantToAddMultipleSPRToListPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.returns.MultipleSPRListView
 
 import scala.concurrent.Future
 
-class MultipleSPRListControllerSpec extends SpecBase with MockitoSugar {
+class MultipleSPRListControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

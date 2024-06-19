@@ -19,8 +19,6 @@ package controllers.returns
 import base.SpecBase
 import forms.returns.DeleteMultipleSPREntryFormProvider
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
 import play.api.inject.bind
 import play.api.test.Helpers._
@@ -31,7 +29,7 @@ import views.html.returns.DeleteMultipleSPREntryView
 
 import scala.concurrent.Future
 
-class DeleteMultipleSPREntryControllerSpec extends SpecBase with MockitoSugar {
+class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
   val regime = regimeGen.sample.value
 

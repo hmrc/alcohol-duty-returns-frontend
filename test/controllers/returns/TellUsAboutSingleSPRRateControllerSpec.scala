@@ -21,8 +21,6 @@ import forms.returns.TellUsAboutSingleSPRRateFormProvider
 import models.{AlcoholRegimeName, NormalMode, RateBand}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.TellUsAboutSingleSPRRatePage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -36,7 +34,7 @@ import views.html.returns.TellUsAboutSingleSPRRateView
 
 import scala.concurrent.Future
 
-class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar {
+class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -46,10 +44,10 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
   lazy val tellUsAboutSingleSPRRateRoute = routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime).url
 
-  val rateBand: RateBand                      = arbitrary[RateBand].sample.value
-  val dutiesByTaxType: VolumeAndRateByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBand).arbitrary.sample.value
+  val rateBands: Seq[RateBand]                     = arbitraryRateBandList(regime).arbitrary.sample.value
+  val dutiesByTaxType: Seq[VolumeAndRateByTaxType] = arbitraryVolumeAndRateByTaxType(rateBands).arbitrary.sample.value
 
-  val userAnswers = emptyUserAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, Seq(dutiesByTaxType)).success.value
+  val userAnswers = emptyUserAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, dutiesByTaxType).success.value
 
   "TellUsAboutSingleSPRRate Controller" - {
 
@@ -64,7 +62,8 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
         val result = route(application, request).value
 
-        val categoriesByRateTypeViewModel = CategoriesByRateTypeHelper(regime, Set(rateBand))(messages(application))
+        val categoriesByRateTypeViewModel =
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(messages(application))
 
         val form = formProvider(regime)(messages(application))
 
@@ -86,13 +85,14 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
         val view = application.injector.instanceOf[TellUsAboutSingleSPRRateView]
 
         val result                        = route(application, request).value
-        val categoriesByRateTypeViewModel = CategoriesByRateTypeHelper(regime, Set(rateBand))(messages(application))
+        val categoriesByRateTypeViewModel =
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(messages(application))
 
         val form = formProvider(regime)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(Seq(dutiesByTaxType)),
+          form.fill(dutiesByTaxType),
           regime,
           categoriesByRateTypeViewModel,
           NormalMode
@@ -146,7 +146,8 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase with MockitoSugar 
 
         val result = route(application, request).value
 
-        val categoriesByRateTypeViewModel = CategoriesByRateTypeHelper(regime, Set(rateBand))(messages(application))
+        val categoriesByRateTypeViewModel =
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(messages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, categoriesByRateTypeViewModel, NormalMode)(

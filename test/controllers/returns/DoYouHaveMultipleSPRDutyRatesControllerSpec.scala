@@ -21,8 +21,6 @@ import forms.returns.DoYouHaveMultipleSPRDutyRatesFormProvider
 import models.NormalMode
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.DoYouHaveMultipleSPRDutyRatesPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -33,7 +31,7 @@ import views.html.returns.DoYouHaveMultipleSPRDutyRatesView
 
 import scala.concurrent.Future
 
-class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase with MockitoSugar {
+class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 

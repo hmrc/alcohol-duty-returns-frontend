@@ -25,6 +25,7 @@ import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuest
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.AlcoholUsedPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
