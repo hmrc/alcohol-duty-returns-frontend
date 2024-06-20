@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherMaltedGrainsFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{AlcoholRegimeName, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
@@ -28,6 +28,7 @@ import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.spiritsQuestions.OtherMaltedGrains
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import pages.AlcoholRegimePage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.OtherMaltedGrainsView
 
@@ -53,7 +54,8 @@ class OtherMaltedGrainsControllerSpec extends SpecBase {
       OtherMaltedGrainsPage.toString -> Json.obj(
         "otherMaltedGrainsTypes"    -> otherMaltedGrainsTypes,
         "otherMaltedGrainsQuantity" -> otherMaltedGrainsQuantity
-      )
+      ),
+      AlcoholRegimePage.toString     -> Json.toJson(AlcoholRegimeName.values)
     )
   )
 

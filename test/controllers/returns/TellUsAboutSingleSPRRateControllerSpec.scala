@@ -21,7 +21,7 @@ import forms.returns.TellUsAboutSingleSPRRateFormProvider
 import models.{AlcoholRegimeName, NormalMode, RateBand}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.returns.TellUsAboutSingleSPRRatePage
+import pages.returns.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -44,16 +44,20 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
   lazy val tellUsAboutSingleSPRRateRoute = routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime).url
 
-  val rateBands: Seq[RateBand]                     = arbitraryRateBandList(regime).arbitrary.sample.value
-  val dutiesByTaxType: Seq[VolumeAndRateByTaxType] = arbitraryVolumeAndRateByTaxType(rateBands).arbitrary.sample.value
+  val rateBands: Seq[RateBand]                            = genListOfRateBandForRegime(regime).sample.value
+  val volumeAndRateByTaxType: Seq[VolumeAndRateByTaxType] = arbitraryVolumeAndRateByTaxType(
+    rateBands
+  ).arbitrary.sample.value
 
-  val userAnswers = emptyUserAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, dutiesByTaxType).success.value
+  val userAnswers       = emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet).success.value
+  val filledUserAnswers =
+    userAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, volumeAndRateByTaxType).success.value
 
   "TellUsAboutSingleSPRRate Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, tellUsAboutSingleSPRRateRoute)
@@ -77,7 +81,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(filledUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, tellUsAboutSingleSPRRateRoute)
@@ -92,7 +96,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(dutiesByTaxType),
+          form.fill(volumeAndRateByTaxType),
           regime,
           categoriesByRateTypeViewModel,
           NormalMode
@@ -110,7 +114,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
@@ -120,7 +124,12 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
-            .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
+            .withFormUrlEncodedBody(
+              "volumesWithRate[0].totalLitres" -> "1000",
+              "volumesWithRate[0].pureAlcohol" -> "500",
+              "volumesWithRate[0].dutyRate"    -> "10",
+              "volumesWithRate[0].taxType"     -> "371"
+            )
 
         val result = route(application, request).value
 
@@ -131,7 +140,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =
@@ -178,7 +187,12 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
-            .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
+            .withFormUrlEncodedBody(
+              "volumesWithRate[0].totalLitres" -> "1000",
+              "volumesWithRate[0].pureAlcohol" -> "500",
+              "volumesWithRate[0].dutyRate"    -> "10",
+              "volumesWithRate[0].taxType"     -> "371"
+            )
 
         val result = route(application, request).value
 

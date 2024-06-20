@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.returns.MultipleSPRListFormProvider
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.returns.DoYouWantToAddMultipleSPRToListPage
+import pages.returns.{DoYouWantToAddMultipleSPRToListPage, MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -40,13 +40,24 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
   val regime = regimeGen.sample.value
 
+  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
+
+  val userAnswers = emptyUserAnswers
+    .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+    .success
+    .value
+    .setByKey(MultipleSPRListPage, regime, volumeAndRateByTaxTypes)
+    .success
+    .value
+
   lazy val multipleSPRListRoute = controllers.returns.routes.MultipleSPRListController.onPageLoad(regime).url
 
   "MultipleSPRList Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, multipleSPRListRoute)
@@ -56,7 +67,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[MultipleSPRListView]
 
         val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(emptyUserAnswers, regime)(messages(application))
+          .sprTableViewModel(userAnswers, regime)(messages(application))
           .getOrElse(fail())
 
         status(result) mustEqual OK
@@ -66,9 +77,9 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, true).success.value
+      val filledUserAnswers = userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, true).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(filledUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, multipleSPRListRoute)
@@ -78,7 +89,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(emptyUserAnswers, regime)(messages(application))
+          .sprTableViewModel(userAnswers, regime)(messages(application))
           .getOrElse(fail())
 
         status(result) mustEqual OK
@@ -96,7 +107,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
@@ -117,7 +128,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =
@@ -131,7 +142,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(emptyUserAnswers, regime)(messages(application))
+          .sprTableViewModel(userAnswers, regime)(messages(application))
           .getOrElse(fail())
 
         status(result) mustEqual BAD_REQUEST

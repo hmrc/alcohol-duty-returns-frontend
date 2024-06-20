@@ -93,7 +93,7 @@ class RateBandHelperSpec extends SpecBase {
                     AlcoholByVolume(upperLimit1)
                   ),
                   ABVRange(
-                    label,
+                    secondaryLabel,
                     AlcoholByVolume(lowerLimit2),
                     AlcoholByVolume(upperLimit2)
                   )
@@ -189,7 +189,7 @@ class RateBandHelperSpec extends SpecBase {
                     AlcoholByVolume(upperLimit1)
                   ),
                   ABVRange(
-                    label,
+                    secondaryLabel,
                     AlcoholByVolume(lowerLimit2),
                     AlcoholByVolume(upperLimit2)
                   )

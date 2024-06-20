@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedBeerFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{AlcoholRegimeName, NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedBeer
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -27,6 +27,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import pages.AlcoholRegimePage
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedBeerView
@@ -53,7 +54,8 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
       DutySuspendedBeerPage.toString -> Json.obj(
         "totalBeer"         -> validTotalBeer,
         "pureAlcoholInBeer" -> validPureAlcoholInBeer
-      )
+      ),
+      AlcoholRegimePage.toString     -> Json.toJson(AlcoholRegimeName.values)
     )
   )
 

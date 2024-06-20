@@ -23,6 +23,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 import enumeratum.scalacheck._
+import models.AlcoholRegimeName.Beer
 import models.returns.{DutyByTaxType, VolumeAndRateByTaxType}
 
 import java.time.YearMonth
@@ -314,8 +315,25 @@ trait ModelGenerators {
   def regimeGen: Gen[AlcoholRegimeName] = Gen.oneOf(AlcoholRegimeName.values)
 
   def arbitraryRateBandList(regime: AlcoholRegimeName): Arbitrary[List[RateBand]] = Arbitrary {
-    Gen.listOfN(3, arbitrary[RateBand].suchThat(_.alcoholRegimes.exists(_.name == regime)))
+    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.alcoholRegimes.exists(_.name == regime)))
   }
+
+  def genAlcoholRegime(alcoholRegimeName: AlcoholRegimeName): Gen[AlcoholRegime] =
+    arbitraryABVIntervals.arbitrary.map(abvRanges =>
+      AlcoholRegime(alcoholRegimeName, NonEmptySeq.fromSeqUnsafe(abvRanges))
+    )
+
+  def genRateBandForRegime(alcoholRegimeName: AlcoholRegimeName): Gen[RateBand] =
+    for {
+      taxType        <- Gen.alphaStr
+      description    <- Gen.alphaStr
+      rateType       <- arbitraryRateType.arbitrary
+      alcoholRegimes <- genAlcoholRegime(alcoholRegimeName)
+      rate           <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
+    } yield RateBand(taxType, description, rateType, Set(alcoholRegimes), rate)
+
+  def genListOfRateBandForRegime(alcoholRegimeName: AlcoholRegimeName): Gen[List[RateBand]] =
+    Gen.listOfN(3, genRateBandForRegime(alcoholRegimeName))
 
   def genVolumeAndRateByTaxTypeRateBand(rateBand: RateBand): Arbitrary[VolumeAndRateByTaxType] = Arbitrary {
     for {

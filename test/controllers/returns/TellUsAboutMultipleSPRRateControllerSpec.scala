@@ -21,7 +21,7 @@ import forms.returns.TellUsAboutMultipleSPRRateFormProvider
 import models.NormalMode
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.returns.TellUsAboutMultipleSPRRatePage
+import pages.returns.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -43,15 +43,18 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
   lazy val tellUsAboutMultipleSPRRateRoute =
     routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime).url
 
-  val rateBands     = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
+  val rateBands     = genListOfRateBandForRegime(regime).sample.value.toSet
   val dutyByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
-  val userAnswers   = emptyUserAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, dutyByTaxType).success.value
+
+  val userAnswers       = emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands).success.value
+  val filledUserAnswers =
+    userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, dutyByTaxType).success.value
 
   "TellUsAboutMultipleSPRRate Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, tellUsAboutMultipleSPRRateRoute)
@@ -74,7 +77,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(filledUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, tellUsAboutMultipleSPRRateRoute)
@@ -102,7 +105,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
@@ -112,7 +115,12 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
-            .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
+            .withFormUrlEncodedBody(
+              "volumesWithRate.totalLitres" -> "1000",
+              "volumesWithRate.pureAlcohol" -> "500",
+              "volumesWithRate.dutyRate"    -> "10",
+              "volumesWithRate.taxType"     -> "371"
+            )
 
         val result = route(application, request).value
 
@@ -123,7 +131,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =
@@ -169,7 +177,12 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
-            .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
+            .withFormUrlEncodedBody(
+              "volumesWithRate[0].totalLitres" -> "1000",
+              "volumesWithRate[0].pureAlcohol" -> "500",
+              "volumesWithRate[0].dutyRate"    -> "10",
+              "volumesWithRate[0].taxType"     -> "371"
+            )
 
         val result = route(application, request).value
 

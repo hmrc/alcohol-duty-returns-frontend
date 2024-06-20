@@ -17,19 +17,30 @@
 package controllers.returns
 
 import base.SpecBase
+import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.test.Helpers._
 import viewmodels.checkAnswers.returns.CheckYourAnswersSPRSummaryListHelper
 import views.html.returns.CheckYourAnswersSPRView
 
 class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
+  val regime                  = regimeGen.sample.value
+  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val volumeAndRateByTaxTypes = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
+
+  val userAnswers = emptyUserAnswers
+    .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+    .success
+    .value
+    .setByKey(TellUsAboutMultipleSPRRatePage, regime, volumeAndRateByTaxTypes)
+    .success
+    .value
+
   "CheckYourAnswerSPR Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val regime = regimeGen.sample.value
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime).url)
@@ -39,7 +50,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[CheckYourAnswersSPRView]
 
         val summaryList =
-          CheckYourAnswersSPRSummaryListHelper.summaryList(regime, emptyUserAnswers, None)(messages(application)).get
+          CheckYourAnswersSPRSummaryListHelper.summaryList(regime, userAnswers, None)(messages(application)).get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(regime, summaryList, None)(request, messages(application)).toString

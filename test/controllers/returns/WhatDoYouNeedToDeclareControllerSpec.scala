@@ -43,7 +43,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
   val form                               = formProvider(regime)
   val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
 
-  val rateBandList = arbitraryRateBandList(regime).arbitrary.sample.value
+  val rateBandList = genListOfRateBandForRegime(regime).sample.value
 
   when(mockAlcoholDutyCalculatorConnector.rateBandByRegime(any(), any())(any())) thenReturn Future.successful(
     rateBandList
@@ -129,7 +129,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val request =
           FakeRequest(POST, whatDoYouNeedToDeclareRoute)
-            .withFormUrlEncodedBody((s"rateBand[${selectedRateBand.taxType}]", selectedRateBand.taxType))
+            .withFormUrlEncodedBody(("rateBand[0]", selectedRateBand.taxType))
 
         val result = route(application, request).value
 

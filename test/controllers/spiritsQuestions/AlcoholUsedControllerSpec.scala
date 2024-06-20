@@ -19,10 +19,11 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.CacheConnector
 import forms.spiritsQuestions.AlcoholUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{AlcoholRegimeName, NormalMode, UserAnswers}
 import models.spiritsQuestions.AlcoholUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
+import pages.AlcoholRegimePage
 import pages.spiritsQuestions.AlcoholUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -52,12 +53,13 @@ class AlcoholUsedControllerSpec extends SpecBase {
     groupId,
     internalId,
     Json.obj(
-      AlcoholUsedPage.toString -> Json.obj(
+      AlcoholUsedPage.toString   -> Json.obj(
         "beer"         -> validBeer,
         "wine"         -> validWine,
         "madeWine"     -> validMadeWine,
         "ciderOrPerry" -> validCiderOrPerry
-      )
+      ),
+      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegimeName.values)
     )
   )
 

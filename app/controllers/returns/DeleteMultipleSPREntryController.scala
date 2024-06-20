@@ -47,12 +47,7 @@ class DeleteMultipleSPREntryController @Inject() (
 
   def onPageLoad(regime: AlcoholRegimeName, index: Int): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(DeleteMultipleSPREntryPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, regime, index))
+      Ok(view(form, regime, index))
     }
 
   def onSubmit(regime: AlcoholRegimeName, index: Int): Action[AnyContent] =

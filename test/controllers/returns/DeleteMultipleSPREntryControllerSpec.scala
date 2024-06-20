@@ -19,7 +19,7 @@ package controllers.returns
 import base.SpecBase
 import forms.returns.DeleteMultipleSPREntryFormProvider
 import org.mockito.ArgumentMatchers.any
-import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
+import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -35,6 +35,17 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
   val index = 0
 
+  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
+
+  val userAnswers = emptyUserAnswers
+    .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+    .success
+    .value
+    .setByKey(MultipleSPRListPage, regime, volumeAndRateByTaxTypes)
+    .success
+    .value
+
   val formProvider = new DeleteMultipleSPREntryFormProvider()
   val form         = formProvider()
 
@@ -45,7 +56,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, deleteMultipleSPREntryRoute)
@@ -59,38 +70,11 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(DeleteMultipleSPREntryPage, true).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, deleteMultipleSPREntryRoute)
-
-        val view = application.injector.instanceOf[DeleteMultipleSPREntryView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), regime, index)(request, messages(application)).toString
-      }
-    }
-
     "must redirect to the Multiple SPR list page when valid data is submitted and the list is not empty" in {
 
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val rateBandList    = arbitraryRateBandList(regime).arbitrary.suchThat(_.nonEmpty).sample.value
-      val dutiesByTaxType =
-        rateBandList.map(rateBand => genVolumeAndRateByTaxTypeRateBand(rateBand).arbitrary.sample.value)
-
-      val userAnswers = emptyUserAnswers
-        .setByKey(MultipleSPRListPage, regime, dutiesByTaxType)
-        .success
-        .value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -120,7 +104,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
@@ -142,7 +126,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =

@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{AlcoholRegimeName, NormalMode, UserAnswers}
 import models.dutySuspended.DutySuspendedOtherFermented
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -27,6 +27,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import pages.AlcoholRegimePage
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedOtherFermentedView
@@ -52,7 +53,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
         "totalOtherFermented"         -> validTotalOtherFermented,
         "pureAlcoholInOtherFermented" -> validPureAlcoholInOtherFermented
-      )
+      ),
+      AlcoholRegimePage.toString               -> Json.toJson(AlcoholRegimeName.values)
     )
   )
 

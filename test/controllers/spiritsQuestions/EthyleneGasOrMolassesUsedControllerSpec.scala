@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.EthyleneGasOrMolassesUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{AlcoholRegimeName, NormalMode, UserAnswers}
 import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -28,6 +28,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import pages.AlcoholRegimePage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.EthyleneGasOrMolassesUsedView
 
@@ -55,7 +56,8 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase {
         "ethyleneGas"      -> validEthyleneGas,
         "molasses"         -> validMolasses,
         "otherIngredients" -> otherIngredients
-      )
+      ),
+      AlcoholRegimePage.toString             -> Json.toJson(AlcoholRegimeName.values)
     )
   )
 

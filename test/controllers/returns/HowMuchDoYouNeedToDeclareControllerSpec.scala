@@ -44,16 +44,16 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
   lazy val howMuchDoYouNeedToDeclareRoute =
     routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
 
-  val rateBands      = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
-  val dutyByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
+  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
 
   val userAnswers = emptyUserAnswers
     .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
     .success
     .value
 
-  val filledUserAnsers = userAnswers
-    .setByKey(HowMuchDoYouNeedToDeclarePage, regime, dutyByTaxTypes)
+  val filledUserAnswers = userAnswers
+    .setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumeAndRateByTaxTypes)
     .success
     .value
 
@@ -83,7 +83,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val application = applicationBuilder(userAnswers = Some(filledUserAnsers)).build()
+      val application = applicationBuilder(userAnswers = Some(filledUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, howMuchDoYouNeedToDeclareRoute)
@@ -96,7 +96,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
         val form                      = formProvider(regime)(messages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(dutyByTaxTypes.map(_.toVolumes)),
+          form.fill(volumeAndRateByTaxTypes.map(_.toVolumes)),
           regime,
           expectedReturnSummaryList,
           NormalMode
@@ -123,11 +123,11 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
       running(application) {
 
-        val validValues = dutyByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
+        val validValues = volumeAndRateByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
           Seq(
-            s"volumes[${value.taxType}].taxType"     -> value.taxType,
-            s"volumes[${value.taxType}].totalLitres" -> value.totalLitres.toString,
-            s"volumes[${value.taxType}].pureAlcohol" -> value.pureAlcohol.toString
+            "volumes[0].taxType"     -> value.taxType,
+            "volumes[0].totalLitres" -> value.totalLitres.toString,
+            "volumes[0].pureAlcohol" -> value.pureAlcohol.toString
           )
         }
 

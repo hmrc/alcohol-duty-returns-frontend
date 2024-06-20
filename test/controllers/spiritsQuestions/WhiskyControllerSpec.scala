@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.WhiskyFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{AlcoholRegimeName, NormalMode, UserAnswers}
 import models.spiritsQuestions.Whisky
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -28,6 +28,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import pages.AlcoholRegimePage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.WhiskyView
 
@@ -48,10 +49,11 @@ class WhiskyControllerSpec extends SpecBase {
     groupId,
     internalId,
     Json.obj(
-      WhiskyPage.toString -> Json.obj(
+      WhiskyPage.toString        -> Json.obj(
         "scotchWhisky" -> validScotchWhisky,
         "irishWhiskey" -> validIrishWhisky
-      )
+      ),
+      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegimeName.values)
     )
   )
 

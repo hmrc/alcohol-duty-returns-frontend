@@ -110,7 +110,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .value
 
         val filledUserAnswers = AlcoholRegimeName.values.foldRight(userAnswers) { (regime, ua) =>
-          val rateBands = arbitraryRateBandList(regime).arbitrary.sample.value
+          val rateBands = genListOfRateBandForRegime(regime).sample.value
           ua
             .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
             .success
@@ -149,7 +149,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .value
 
         val filledUserAnswers = AlcoholRegimeName.values.foldRight(userAnswers) { (regime, ua) =>
-          val rateBands = arbitraryRateBandList(regime).arbitrary.sample.value
+          val rateBands = genListOfRateBandForRegime(regime).sample.value
 
           val dutiesByTaxType = arbitraryDutyByTaxType(rateBands).arbitrary.sample.value
 
@@ -183,9 +183,9 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           result.taskList.items
             .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
             case Some(task) =>
-              task.status shouldBe AlcholDutyTaskListItemStatus.inProgress
+              task.status shouldBe AlcholDutyTaskListItemStatus.completed
               task.href   shouldBe Some(
-                controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+                controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url
               )
             case None       => fail(s"Task for regime $regime not found")
           }
