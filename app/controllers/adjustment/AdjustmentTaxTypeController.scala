@@ -153,9 +153,9 @@ class AdjustmentTaxTypeController @Inject() (
       case _                                                             =>
         (
           adjustmentEntry.copy(
-            sprDutyRate = None,
             totalLitresVolume = None,
             pureAlcoholVolume = None,
+            sprDutyRate = None,
             duty = None,
             repackagedRateBand = None,
             repackagedDuty = None,

@@ -17,6 +17,7 @@
 package forms.adjustment
 
 import forms.mappings.Mappings
+import models.AlcoholRegime
 import models.adjustment.AdjustmentVolume
 import play.api.data.Forms._
 
@@ -26,7 +27,7 @@ import play.api.i18n.Messages
 
 class AdjustmentVolumeFormProvider @Inject() extends Mappings {
 
-  def apply(regime: String)(implicit messages: Messages): Form[AdjustmentVolume] =
+  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[AdjustmentVolume] =
     Form(
       mapping(
         "adjustment-total-liters-input" -> bigDecimal(

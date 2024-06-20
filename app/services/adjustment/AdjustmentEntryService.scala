@@ -20,7 +20,7 @@ import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Underdeclaration}
+import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -92,12 +92,6 @@ class AdjustmentEntryServiceImpl @Inject() (
       case (_, _)             => new RuntimeException("Failed to get rate for repackaged draught products.")
     }
 
-  private def checkDutyValue(duty: BigDecimal, adjustmentType: String): BigDecimal =
-    if (adjustmentType.equals(Underdeclaration.toString) || adjustmentType.equals(RepackagedDraughtProducts.toString)) {
-      duty
-    } else {
-      duty * -1
-    }
 }
 
 @ImplementedBy(classOf[AdjustmentEntryServiceImpl])

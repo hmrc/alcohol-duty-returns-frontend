@@ -21,13 +21,14 @@ import controllers.actions._
 import forms.adjustment.AdjustmentVolumeFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{AlcoholRegime, Mode}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
 import models.requests.DataRequest
+import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentVolumeView
@@ -48,12 +49,11 @@ class AdjustmentVolumeController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private def getRegime(implicit request: DataRequest[_]): String = {
+  private def getRegime(implicit request: DataRequest[_]): AlcoholRegime = {
     val rateBand = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.rateBand)
     rateBand
       .map(_.alcoholRegime.head)
       .getOrElse(throw new RuntimeException("Couldn't fetch regime value from cache"))
-      .toString
   }
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
@@ -74,7 +74,7 @@ class AdjustmentVolumeController @Inject() (
         preparedForm,
         mode,
         AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry),
-        getRegime, // change this
+        getRegime,
         adjustmentEntry.rateBand
           .map(_.minABV.value)
           .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
@@ -94,49 +94,71 @@ class AdjustmentVolumeController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
-            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-              case Some(value) =>
-                Future.successful(
-                  BadRequest(
-                    view(
-                      formWithErrors,
-                      mode,
-                      AdjustmentTypeHelper.getAdjustmentTypeValue(value),
-                      getRegime, // change this
-                      value.rateBand
-                        .map(_.minABV.value)
-                        .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
-                      value.rateBand
-                        .map(_.maxABV.value)
-                        .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
-                      value.rateBand
-                        .map(_.taxType)
-                        .getOrElse(throw new RuntimeException("Couldn't fetch taxType value from cache"))
-                    )
-                  )
-                )
-            },
+          formWithErrors => handleFormErrors(mode, formWithErrors),
           value => {
-            val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-            val (updatedAdjustment, hasChanged) = updateVolume(adjustment, value)
-            for {
-              updatedAnswers <-
-                Future.fromTry(
-                  request.userAnswers.set(
-                    CurrentAdjustmentEntryPage,
-                    updatedAdjustment.copy(
-                      totalLitresVolume = Some(value.totalLitersVolume),
-                      pureAlcoholVolume = Some(value.pureAlcoholVolume)
+            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            if (value.totalLitersVolume < value.pureAlcoholVolume) {
+              checkAdjustmentVolumes(
+                value,
+                mode,
+                AdjustmentTypeHelper.getAdjustmentTypeValue(adjustment),
+                getRegime,
+                adjustment.rateBand
+                  .map(_.minABV.value)
+                  .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
+                adjustment.rateBand
+                  .map(_.maxABV.value)
+                  .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
+                adjustment.rateBand
+                  .map(_.taxType)
+                  .getOrElse(throw new RuntimeException("Couldn't fetch taxType value from cache"))
+              )
+            } else {
+              val (updatedAdjustment, hasChanged) = updateVolume(adjustment, value)
+              for {
+                updatedAnswers <-
+                  Future.fromTry(
+                    request.userAnswers.set(
+                      CurrentAdjustmentEntryPage,
+                      updatedAdjustment.copy(
+                        totalLitresVolume = Some(value.totalLitersVolume),
+                        pureAlcoholVolume = Some(value.pureAlcoholVolume)
+                      )
                     )
                   )
-                )
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers, hasChanged))
+                _              <- cacheConnector.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers, hasChanged))
+            }
           }
         )
   }
+
+  private def handleFormErrors(mode: Mode, formWithErrors: Form[AdjustmentVolume])(implicit
+    request: DataRequest[_]
+  ): Future[Result] =
+    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+      case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case Some(value) =>
+        Future.successful(
+          BadRequest(
+            view(
+              formWithErrors,
+              mode,
+              AdjustmentTypeHelper.getAdjustmentTypeValue(value),
+              getRegime,
+              value.rateBand
+                .map(_.minABV.value)
+                .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
+              value.rateBand
+                .map(_.maxABV.value)
+                .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
+              value.rateBand
+                .map(_.taxType)
+                .getOrElse(throw new RuntimeException("Couldn't fetch taxType value from cache"))
+            )
+          )
+        )
+    }
 
   def updateVolume(adjustmentEntry: AdjustmentEntry, currentValue: AdjustmentVolume): (AdjustmentEntry, Boolean) =
     (adjustmentEntry.totalLitresVolume, adjustmentEntry.pureAlcoholVolume) match {
@@ -155,5 +177,32 @@ class AdjustmentVolumeController @Inject() (
           true
         )
     }
+
+  private def checkAdjustmentVolumes(
+    adjustmentVolume: AdjustmentVolume,
+    mode: Mode,
+    adjustmentType: String,
+    regime: AlcoholRegime,
+    minABV: BigDecimal,
+    maxABV: BigDecimal,
+    taxType: String
+  )(implicit
+    request: Request[_]
+  ): Future[Result] =
+    Future.successful(
+      BadRequest(
+        view(
+          formProvider(regime)
+            .withError("adjustment-pure-alcohol-input", "adjustmentVolume.error.pureAlcoholVolume.lessThanExpected")
+            .fill(adjustmentVolume),
+          mode,
+          adjustmentType,
+          regime,
+          minABV,
+          maxABV,
+          taxType
+        )
+      )
+    )
 
 }
