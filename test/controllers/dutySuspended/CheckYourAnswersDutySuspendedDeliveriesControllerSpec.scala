@@ -28,10 +28,7 @@ import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase with SummaryListFluency {
   val validTotal                                              = 42.34
   val validPureAlcohol                                        = 34.23
-  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedBeerPage.toString           -> Json.obj(
         "totalBeer"         -> validTotal,
@@ -83,10 +80,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
 
     "must return OK and the correct view for a GET if all relevant regime questions are answered" in {
 
-      val beerScreenAnswer: UserAnswers = UserAnswers(
-        returnId,
-        groupId,
-        internalId,
+      val beerScreenAnswer: UserAnswers = emptyUserAnswers.copy(data =
         Json.obj(
           DutySuspendedBeerPage.toString -> Json.obj(
             "totalBeer"         -> validTotal,

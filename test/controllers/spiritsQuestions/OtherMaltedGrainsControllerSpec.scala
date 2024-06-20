@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherMaltedGrainsFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
@@ -45,10 +45,7 @@ class OtherMaltedGrainsControllerSpec extends SpecBase {
   val otherMaltedGrainsTypes    = "Coco Pops"
   val otherMaltedGrainsQuantity = BigDecimal(100000)
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       OtherMaltedGrainsPage.toString -> Json.obj(
         "otherMaltedGrainsTypes"    -> otherMaltedGrainsTypes,
