@@ -21,7 +21,6 @@ import controllers.routes
 import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
 import play.api.http.Status.SEE_OTHER
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.FakeRequest
 import play.api.test.Helpers.LOCATION
 
 import scala.concurrent.Future
@@ -32,12 +31,8 @@ class DataRequiredActionSpec extends SpecBase {
     def actionRefine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = refine(request)
   }
 
-  val fakeRequest: FakeRequest[AnyContentAsEmpty.type]             = FakeRequest()
   val identifierRequest: IdentifierRequest[AnyContentAsEmpty.type] =
-    IdentifierRequest(fakeRequest, appaId, groupId, internalId)
-
-  val returnPeriod = returnPeriodGen.sample.get
-  val userAnswers  = emptyUserAnswers
+    IdentifierRequest(FakeRequest(), appaId, groupId, internalId)
 
   "Data Required Action" - {
     "should redirect to the Journey Recovery when User Answers or Return Period are None" in {
@@ -84,7 +79,9 @@ class DataRequiredActionSpec extends SpecBase {
 
       val result =
         harness
-          .actionRefine(OptionalDataRequest(identifierRequest, appaId, groupId, internalId, None, Some(userAnswers)))
+          .actionRefine(
+            OptionalDataRequest(identifierRequest, appaId, groupId, internalId, None, Some(emptyUserAnswers))
+          )
           .futureValue
           .left
           .getOrElse(
@@ -101,7 +98,7 @@ class DataRequiredActionSpec extends SpecBase {
       val harness = new Harness
 
       val optionalDataRequest =
-        OptionalDataRequest(identifierRequest, appaId, groupId, internalId, Some(returnPeriod), Some(userAnswers))
+        OptionalDataRequest(identifierRequest, appaId, groupId, internalId, Some(returnPeriod), Some(emptyUserAnswers))
 
       val result =
         harness
@@ -111,7 +108,7 @@ class DataRequiredActionSpec extends SpecBase {
       result.isRight mustBe true
       result.map { dataRequest =>
         dataRequest.request mustEqual identifierRequest
-        dataRequest.userAnswers mustEqual userAnswers
+        dataRequest.userAnswers mustEqual emptyUserAnswers
         dataRequest.appaId mustEqual appaId
         dataRequest.groupId mustEqual groupId
         dataRequest.userId mustEqual internalId

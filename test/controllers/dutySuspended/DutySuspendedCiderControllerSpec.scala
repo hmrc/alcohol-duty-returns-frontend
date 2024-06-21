@@ -34,7 +34,6 @@ import views.html.dutySuspended.DutySuspendedCiderView
 import scala.concurrent.Future
 
 class DutySuspendedCiderControllerSpec extends SpecBase {
-
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider            = new DutySuspendedCiderFormProvider()
@@ -44,7 +43,7 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
 
   lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
 
-  val userAnswers = emptyUserAnswers.copy(data =
+  val userAnswers = userAnswersWithCider.copy(data =
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(
         "totalCider"         -> validTotalCider,
@@ -54,10 +53,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
   )
 
   "DutySuspendedCider Controller" - {
-
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithCider)).build()
 
       running(application) {
         val request = FakeRequest(GET, dutySuspendedCiderRoute)
@@ -72,7 +69,6 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -91,13 +87,12 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithCider))
           .overrides(
             bind[DeclareDutySuspendedDeliveriesNavigator]
               .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
@@ -121,8 +116,7 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithCider)).build()
 
       running(application) {
         val request =
@@ -141,7 +135,6 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -154,8 +147,20 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to unauthorised if regime is missing for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutCider)).build()
 
+      running(application) {
+        val request = FakeRequest(GET, dutySuspendedCiderRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -170,6 +175,24 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to unauthorised if regime is missing for a POST" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutCider)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, dutySuspendedCiderRoute)
+            .withFormUrlEncodedBody(
+              ("totalCider", validTotalCider.toString),
+              ("pureAlcoholInCider", validPureAlcoholInCider.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
       }
     }
   }

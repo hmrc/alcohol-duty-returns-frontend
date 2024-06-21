@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package pages.dutySuspended
 
-import models.TaskListStatus
-import models.TaskListStatus.{Completed, Incomplete}
+import pages.Page
 
-case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
-
-  def completedTasks: Int = sections.count(_.completedTask)
-  def totalTasks: Int     = sections.size
-
-  def status: TaskListStatus = if (completedTasks == totalTasks) {
-    Completed
-  } else {
-    Incomplete
-  }
-}
+case object DutySuspendedGuidancePage extends Page

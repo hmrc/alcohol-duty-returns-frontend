@@ -21,16 +21,17 @@ import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
 
 import java.time.Instant
+import javax.inject.Inject
 
-object AlcoholDutyTaskListHelper {
+class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator) {
   def getTaskList(userAnswers: UserAnswers, validUntil: Instant, periodKey: String)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
       Seq(
-        Some(ReturnTaskListHelper.returnSection(userAnswers)),
-        Some(ReturnTaskListHelper.returnDSDSection(userAnswers)),
-        if (shouldIncludeQSSection(periodKey)) Some(ReturnTaskListHelper.returnQSSection(userAnswers)) else None
+        Some(returnTaskListCreator.returnSection(userAnswers)),
+        Some(returnTaskListCreator.returnDSDSection(userAnswers)),
+        if (shouldIncludeQSSection(periodKey)) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
       ).flatten,
       validUntil.toLocalDateString()
     )

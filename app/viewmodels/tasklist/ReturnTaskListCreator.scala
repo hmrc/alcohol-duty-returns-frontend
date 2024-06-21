@@ -26,7 +26,9 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
 import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 
-object ReturnTaskListHelper {
+import javax.inject.Inject
+
+class ReturnTaskListCreator @Inject() () {
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
     createTaskListSection: () => TaskListItem,
@@ -120,13 +122,17 @@ object ReturnTaskListHelper {
 
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
-      val beer           = userAnswers.get(DutySuspendedBeerPage).isDefined
-      val cider          = userAnswers.get(DutySuspendedCiderPage).isDefined
-      val wine           = userAnswers.get(DutySuspendedWinePage).isDefined
-      val spirits        = userAnswers.get(DutySuspendedSpiritsPage).isDefined
-      val otherFermented = userAnswers.get(DutySuspendedOtherFermentedPage).isDefined
+      val regimes             = userAnswers.regimes
+      val maybeBeer           = if (regimes.hasBeer()) Some(userAnswers.get(DutySuspendedBeerPage).isDefined) else None
+      val maybeCider          = if (regimes.hasCider()) Some(userAnswers.get(DutySuspendedCiderPage).isDefined) else None
+      val maybeWine           = if (regimes.hasWine()) Some(userAnswers.get(DutySuspendedWinePage).isDefined) else None
+      val maybeSpirits        =
+        if (regimes.hasSpirits()) Some(userAnswers.get(DutySuspendedSpiritsPage).isDefined) else None
+      val maybeOtherFermented =
+        if (regimes.hasOtherFermentedProduct()) Some(userAnswers.get(DutySuspendedOtherFermentedPage).isDefined)
+        else None
 
-      val pagesCompleted = Seq(beer, cider, wine, spirits, otherFermented)
+      val pagesCompleted = Seq(maybeBeer, maybeCider, maybeWine, maybeSpirits, maybeOtherFermented).flatten
 
       if (pagesCompleted.forall(_ == false)) {
         NotStarted
