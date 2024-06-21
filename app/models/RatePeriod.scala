@@ -54,6 +54,7 @@ object RateType {
     override def writes(o: RateType): JsValue = JsString(o.toString)
   }
 }
+
 case class RateTypeResponse(rateType: RateType)
 
 object RateTypeResponse {

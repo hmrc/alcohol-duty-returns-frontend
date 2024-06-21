@@ -30,6 +30,8 @@ trait TestData extends ModelGenerators {
 
   val returnAndUserDetails = ReturnAndUserDetails(returnId, groupId, internalId)
 
+  val returnPeriod = returnPeriodGen.sample.get
+
   val periodKeyJan = "24AA"
   val periodKeyFeb = "24AB"
   val periodKeyMar = "24AC"

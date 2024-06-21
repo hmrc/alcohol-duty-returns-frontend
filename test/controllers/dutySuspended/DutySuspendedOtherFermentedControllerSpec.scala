@@ -34,7 +34,6 @@ import views.html.dutySuspended.DutySuspendedOtherFermentedView
 import scala.concurrent.Future
 
 class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
-
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider                     = new DutySuspendedOtherFermentedFormProvider()
@@ -44,7 +43,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
   lazy val dutySuspendedOtherFermentedRoute = routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode).url
 
-  val userAnswers = emptyUserAnswers.copy(data =
+  val userAnswers = userAnswersWithOtherFermentedProduct.copy(data =
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
         "totalOtherFermented"         -> validTotalOtherFermented,
@@ -54,10 +53,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
   )
 
   "DutySuspendedOtherFermented Controller" - {
-
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithOtherFermentedProduct)).build()
 
       running(application) {
         val request = FakeRequest(GET, dutySuspendedOtherFermentedRoute)
@@ -72,7 +69,6 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -91,13 +87,12 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithOtherFermentedProduct))
           .overrides(
             bind[DeclareDutySuspendedDeliveriesNavigator]
               .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
@@ -121,8 +116,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithOtherFermentedProduct)).build()
 
       running(application) {
         val request =
@@ -141,7 +135,6 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -154,8 +147,20 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to unauthorised if regime is missing for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutOtherFermentedProduct)).build()
 
+      running(application) {
+        val request = FakeRequest(GET, dutySuspendedOtherFermentedRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -167,6 +172,24 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to unauthorised if regime is missing for a POST" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutOtherFermentedProduct)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, dutySuspendedOtherFermentedRoute)
+            .withFormUrlEncodedBody(
+              ("totalOtherFermented", validTotalOtherFermented.toString),
+              ("pureAlcoholInOtherFermented", validPureAlcoholInOtherFermented.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
       }
     }
   }
