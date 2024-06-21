@@ -38,11 +38,18 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
   val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
   val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
 
-  val userAnswers = emptyUserAnswers
+  val userAnswersWithRegime = emptyUserAnswers
     .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
     .success
     .value
+
+  val userAnswers = userAnswersWithRegime
     .setByKey(MultipleSPRListPage, regime, volumeAndRateByTaxTypes)
+    .success
+    .value
+
+  val userAnswersWithSingleSPREntry = userAnswersWithRegime
+    .setByKey(MultipleSPRListPage, regime, Seq(volumeAndRateByTaxTypes.head))
     .success
     .value
 
@@ -84,6 +91,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
           .build()
 
       running(application) {
+
         val request =
           FakeRequest(POST, deleteMultipleSPREntryRoute)
             .withFormUrlEncodedBody(("deleteMultipleSPREntry-yesNoValue", "true"))
@@ -104,7 +112,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithSingleSPREntry))
           .overrides(
             bind[CacheConnector].toInstance(mockCacheConnector)
           )

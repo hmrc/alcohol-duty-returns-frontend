@@ -219,7 +219,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     "serialize RateBand object into Json" in {
       val rateBand = RateBand(
         taxType = "311",
-        description = "Beer from 1.3% to 3.4%",
+        description = "Description",
         rateType = Core,
         alcoholRegimes = Set(
           AlcoholRegime(
@@ -233,7 +233,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       val expectedResult = """
                              |      {
                              |        "taxType": "311",
-                             |        "description": "Beer from 1.3% to 3.4%",
+                             |        "description": "Description",
                              |        "rateType": "Core",
                              |        "alcoholRegimes": [
                              |          {

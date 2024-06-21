@@ -125,9 +125,9 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val validValues = volumeAndRateByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
           Seq(
-            "volumes[0].taxType"     -> value.taxType,
-            "volumes[0].totalLitres" -> value.totalLitres.toString,
-            "volumes[0].pureAlcohol" -> value.pureAlcohol.toString
+            s"volumes[$index].taxType"     -> value.taxType,
+            s"volumes[$index].totalLitres" -> value.totalLitres.toString,
+            s"volumes[$index].pureAlcohol" -> value.pureAlcohol.toString
           )
         }
 

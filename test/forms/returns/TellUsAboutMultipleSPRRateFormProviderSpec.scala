@@ -16,70 +16,76 @@
 
 package forms.returns
 
+import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
-import org.mockito.MockitoSugar.mock
+import generators.ModelGenerators
+import models.returns.VolumeAndRateByTaxType
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours {
+class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours with ModelGenerators with SpecBase {
 
   val regime = regimeGen.sample.value
 
   val messages = mock[Messages]
 
+  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
+
   val form = new TellUsAboutMultipleSPRRateFormProvider()(regime)(messages)
 
-  ".field1" - {
+  "volumesWithRate" - {
+    "must bind valid data" in {
+      volumeAndRateByTaxTypes.foreach { volumeAndRateByTaxType: VolumeAndRateByTaxType =>
+        val result = form.bind(
+          Map(
+            "volumesWithRate.totalLitres" -> volumeAndRateByTaxType.totalLitres.toString,
+            "volumesWithRate.pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString,
+            "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType,
+            "volumesWithRate.dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString
+          )
+        )
+        result.value.value mustEqual volumeAndRateByTaxType
+      }
+    }
 
-    val fieldName   = "field1"
-    val requiredKey = "tellUsAboutMultipleSPRRate.error.field1.required"
-    val lengthKey   = "tellUsAboutMultipleSPRRate.error.field1.length"
-    val maxLength   = 100
+    "must unbind a valid data" in {
+      volumeAndRateByTaxTypes.foreach { volumeAndRateByTaxType: VolumeAndRateByTaxType =>
+        val result = form.fill(volumeAndRateByTaxType).data
+        result("volumesWithRate.totalLitres") mustBe volumeAndRateByTaxType.totalLitres.toString
+        result("volumesWithRate.pureAlcohol") mustBe volumeAndRateByTaxType.pureAlcohol.toString
+        result("volumesWithRate.taxType") mustBe volumeAndRateByTaxType.taxType
+        result("volumesWithRate.dutyRate") mustBe volumeAndRateByTaxType.dutyRate.toString
+      }
+    }
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
-    )
+    "must fail to bind when no data is provided" in {
+      val result = form.bind(Map.empty[String, String])
+      result.errors must contain allElementsOf List(
+        "volumesWithRate_totalLitres" -> "return.journey.error.noValue.totalLitres",
+        "volumesWithRate_pureAlcohol" -> "return.journey.error.noValue.pureAlcohol",
+        "volumesWithRate_taxType"     -> "return.journey.error.noValue.taxType",
+        "volumesWithRate_dutyRate"    -> "return.journey.error.noValue.dutyRate"
+      ).map { case (k, v) => FormError(k, v, List("")) }
+    }
 
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
+    "must fail to bind when invalid data is provided" in {
+      val result = form.bind(
+        Map(
+          "volumesWithRate.taxType"     -> "aTaxType",
+          "volumesWithRate.totalLitres" -> "invalid",
+          "volumesWithRate.pureAlcohol" -> "invalid",
+          "volumesWithRate.dutyRate"    -> "invalid"
+        )
+      )
+      result.errors must contain allElementsOf List(
+        "volumesWithRate_totalLitres" -> "return.journey.error.invalid.totalLitres",
+        "volumesWithRate_pureAlcohol" -> "return.journey.error.invalid.pureAlcohol",
+        "volumesWithRate_dutyRate"    -> "return.journey.error.invalid.dutyRate"
+      ).map { case (k, v) => FormError(k, v, List("")) }
+    }
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+
   }
 
-  ".field2" - {
-
-    val fieldName   = "field2"
-    val requiredKey = "tellUsAboutMultipleSPRRate.error.field2.required"
-    val lengthKey   = "tellUsAboutMultipleSPRRate.error.field2.length"
-    val maxLength   = 100
-
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-  }
 }
