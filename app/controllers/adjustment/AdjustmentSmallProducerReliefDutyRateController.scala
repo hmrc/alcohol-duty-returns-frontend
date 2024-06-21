@@ -58,7 +58,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
     }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode): Action[AnyContent]                                                              = (identify andThen getData andThen requireData).async {
     implicit request =>
       form
         .bindFromRequest()
@@ -72,16 +72,31 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
                 )
             },
           value => {
-            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val (updatedAdjustment, hasChanged) = updateSPRRate(adjustment, value)
             for {
               updatedAnswers <-
                 Future.fromTry(
                   request.userAnswers
-                    .set(CurrentAdjustmentEntryPage, adjustment.copy(repackagedSprDutyRate = Some(value)))
+                    .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(repackagedSprDutyRate = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AdjustmentSmallProducerReliefDutyRatePage, mode, updatedAnswers))
+            } yield Redirect(
+              navigator.nextPage(AdjustmentSmallProducerReliefDutyRatePage, mode, updatedAnswers, hasChanged)
+            )
           }
         )
   }
+  def updateSPRRate(adjustmentEntry: AdjustmentEntry, currentValue: BigDecimal): (AdjustmentEntry, Boolean) =
+    adjustmentEntry.repackagedSprDutyRate match {
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case _                                                    =>
+        (
+          adjustmentEntry.copy(
+            duty = None,
+            newDuty = None
+          ),
+          true
+        )
+    }
 }

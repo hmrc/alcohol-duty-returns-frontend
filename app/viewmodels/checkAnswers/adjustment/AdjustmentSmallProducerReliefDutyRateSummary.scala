@@ -17,27 +17,60 @@
 package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
+import models.adjustment.AdjustmentEntry
 import models.{CheckMode, UserAnswers}
 import pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.ViewUtils.valueFormatter
 
 object AdjustmentSmallProducerReliefDutyRateSummary {
-
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdjustmentSmallProducerReliefDutyRatePage).map { answer =>
-      SummaryListRowViewModel(
-        key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    (adjustmentEntry.sprDutyRate, adjustmentEntry.repackagedSprDutyRate) match {
+      case (Some(_), Some(repackagedSprDutyRate)) if repackagedSprDutyRate.isValidLong =>
+        Some(
+          SummaryListRowViewModel(
+            key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
+            value = ValueViewModel(valueFormatter(repackagedSprDutyRate)),
+            actions = Seq(
+              ActionItemViewModel(
+                "site.change",
+                routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
+              ).withVisuallyHiddenText(messages("adjustmentSmallProducerReliefDutyRate.change.hidden"))
+            )
           )
-            .withVisuallyHiddenText(messages("adjustmentSmallProducerReliefDutyRate.change.hidden"))
         )
-      )
+      case (Some(sprDutyRate), _)                                                      =>
+        Some(
+          SummaryListRowViewModel(
+            key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
+            value = ValueViewModel(valueFormatter(sprDutyRate)),
+            actions = Seq(
+              ActionItemViewModel(
+                "site.change",
+                routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url
+              ).withVisuallyHiddenText(messages("adjustmentSmallProducerReliefDutyRate.change.hidden"))
+            )
+          )
+        )
+      case (_, Some(repackagedSprDutyRate)) if repackagedSprDutyRate.isValidLong       =>
+        Some(
+          SummaryListRowViewModel(
+            key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
+            value = ValueViewModel(valueFormatter(repackagedSprDutyRate)),
+            actions = Seq(
+              ActionItemViewModel(
+                "site.change",
+                routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
+              ).withVisuallyHiddenText(messages("adjustmentRepackagedSprDutyRate.change.hidden"))
+            )
+          )
+        )
+      case _                                                                           =>
+        None
     }
 }

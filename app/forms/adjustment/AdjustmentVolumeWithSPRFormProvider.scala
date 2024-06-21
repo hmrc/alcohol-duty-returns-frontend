@@ -34,10 +34,19 @@ class AdjustmentVolumeWithSPRFormProvider @Inject() extends Mappings {
         "adjustmentVolume.error.totalLitersVolume.nonNumeric",
         "adjustmentVolume.error.totalLitersVolume.twoDecimalPlaces",
         Seq(messages(s"regime.$regime"))
-      ).verifying(minimumValue(BigDecimal(0.01), "adjustmentVolume.error.totalLitersVolume.minimumRequired"))
-        .verifying(
-          maximumValue(BigDecimal(999999999.99), "adjustmentVolume.error.totalLitersVolume.maximumRequired")
-        ),
+      ).verifying(
+        minimumValueWithArgs(
+          BigDecimal(0.01),
+          "adjustmentVolume.error.totalLitersVolume.minimumRequired",
+          messages(s"regime.$regime")
+        )
+      ).verifying(
+        maximumValueWithArgs(
+          BigDecimal(999999999.99),
+          "adjustmentVolume.error.totalLitersVolume.maximumRequired",
+          messages(s"regime.$regime")
+        )
+      ),
       "adjustment-pure-alcohol-input"              -> bigDecimal(
         2,
         "adjustmentVolume.error.pureAlcoholVolume.required",

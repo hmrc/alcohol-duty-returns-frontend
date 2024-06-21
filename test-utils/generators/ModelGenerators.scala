@@ -27,22 +27,21 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryAdjustmentRepackagedTaxTypeWithSPR
-    : Arbitrary[adjustment.AdjustmentRepackagedTaxTypeWithSPR] =
-    Arbitrary {
-      for {
-        newTaxTypeCode <- arbitrary[String]
-        newSprDutyRate <- arbitrary[String]
-      } yield adjustment.AdjustmentRepackagedTaxTypeWithSPR(newTaxTypeCode, newSprDutyRate)
-    }
-
-  implicit lazy val arbitraryHowMuchDoYouNeedToAdjust: Arbitrary[adjustment.HowMuchDoYouNeedToAdjust] =
+  implicit lazy val arbitraryAdjustmentVolumeWithSpr: Arbitrary[adjustment.AdjustmentVolumeWithSPR] =
     Arbitrary {
       for {
         totalLitersVolume <- arbitrary[BigDecimal]
         pureAlcoholVolume <- arbitrary[BigDecimal]
-        sprDutyRate       <- arbitrary[Option[BigDecimal]]
-      } yield adjustment.HowMuchDoYouNeedToAdjust(totalLitersVolume, pureAlcoholVolume, sprDutyRate)
+        sprDutyRate       <- arbitrary[BigDecimal]
+      } yield adjustment.AdjustmentVolumeWithSPR(totalLitersVolume, pureAlcoholVolume, sprDutyRate)
+    }
+
+  implicit lazy val arbitraryAdjustmentVolume: Arbitrary[adjustment.AdjustmentVolume] =
+    Arbitrary {
+      for {
+        totalLitersVolume <- arbitrary[BigDecimal]
+        pureAlcoholVolume <- arbitrary[BigDecimal]
+      } yield adjustment.AdjustmentVolume(totalLitersVolume, pureAlcoholVolume)
     }
 
   implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =

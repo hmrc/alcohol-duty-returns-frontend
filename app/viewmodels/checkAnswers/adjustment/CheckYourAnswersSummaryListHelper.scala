@@ -26,7 +26,8 @@ object CheckYourAnswersSummaryListHelper {
   def currentAdjustmentEntrySummaryList(
     adjustmentEntry: AdjustmentEntry
   )(implicit messages: Messages): Option[SummaryList] = {
-    val newTaxType = getOptionalRow(AdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry))
+    val newTaxType  = getOptionalRow(AdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry))
+    val sprDutyRate = getOptionalRow(AdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry))
     for {
       adjustmentType <- AdjustmentTypeSummary.row(adjustmentEntry)
       returnPeriod   <- WhenDidYouPayDutySummary.row(adjustmentEntry)
@@ -38,6 +39,7 @@ object CheckYourAnswersSummaryListHelper {
         Seq(returnPeriod) ++
         Seq(taxType) ++
         newTaxType ++
+        sprDutyRate ++
         Seq(volume) ++
         Seq(duty)
     )

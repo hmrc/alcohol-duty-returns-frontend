@@ -31,7 +31,7 @@
 
 @(form: Form[_], mode: Mode, adjustmentType: String, regime: AlcoholRegime, minABV: BigDecimal, maxABV: BigDecimal, taxCode:String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("howMuchDoYouNeedToAdjust.title"))) {
+@layout(pageTitle = title(form, messages("adjustmentVolume.title"))) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

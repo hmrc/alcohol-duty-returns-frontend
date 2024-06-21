@@ -25,6 +25,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper.getAdjustmentTypeValue
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 
 object AdjustmentTaxTypeSummary {
 
@@ -36,7 +37,7 @@ object AdjustmentTaxTypeSummary {
     adjustmentEntry.rateBand.map { rateBand =>
       SummaryListRowViewModel(
         key = label,
-        value = ValueViewModel(rateBand.taxType),
+        value = ValueViewModel(rateBandContent(rateBand, "adjustmentTaxType.checkYourAnswersLabel")),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("adjustmentTaxType.change.hidden"))

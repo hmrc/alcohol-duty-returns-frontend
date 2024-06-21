@@ -118,6 +118,7 @@ object AlcoholByVolume {
 
     override def writes(o: AlcoholByVolume): JsValue = JsNumber(o.value)
   }
+  val MAX: AlcoholByVolume                     = AlcoholByVolume(100)
 }
 
 case class RateBand(

@@ -24,7 +24,7 @@ import javax.inject.Inject
 import models.{AlcoholRegime, Mode}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
 import models.requests.DataRequest
@@ -172,7 +172,8 @@ class AdjustmentVolumeController @Inject() (
             repackagedRateBand = None,
             repackagedDuty = None,
             repackagedSprDutyRate = None,
-            newDuty = None
+            newDuty = None,
+            sprDutyRate = None
           ),
           true
         )
@@ -187,13 +188,18 @@ class AdjustmentVolumeController @Inject() (
     maxABV: BigDecimal,
     taxType: String
   )(implicit
-    request: Request[_]
+    request: Request[_],
+    messages: Messages
   ): Future[Result] =
     Future.successful(
       BadRequest(
         view(
-          formProvider(regime)
-            .withError("adjustment-pure-alcohol-input", "adjustmentVolume.error.pureAlcoholVolume.lessThanExpected")
+          formProvider(regime)(messages)
+            .withError(
+              "adjustment-pure-alcohol-input",
+              "adjustmentVolume.error.pureAlcoholVolume.lessThanExpected",
+              messages(s"regime.$regime")
+            )
             .fill(adjustmentVolume),
           mode,
           adjustmentType,
@@ -201,7 +207,7 @@ class AdjustmentVolumeController @Inject() (
           minABV,
           maxABV,
           taxType
-        )
+        )(request, messages)
       )
     )
 

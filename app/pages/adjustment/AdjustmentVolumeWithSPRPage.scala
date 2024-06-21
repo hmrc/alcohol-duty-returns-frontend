@@ -24,5 +24,5 @@ case object AdjustmentVolumeWithSPRPage extends QuestionPage[AdjustmentVolumeWit
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "howMuchDoYouNeedToAdjust"
+  override def toString: String = "adjustmentVolumeWithSPR"
 }

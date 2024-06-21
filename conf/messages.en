@@ -812,6 +812,15 @@ adjustmentTaxType.error.required = Enter the tax type code
 adjustmentTaxType.error.notDraught = Tax type code needs to be for draught products
 adjustmentTaxType.change.hidden = what is the tax type for this adjustment
 adjustmentTaxType.repackaged.checkYourAnswersLabel = Original tax
+adjustmentTaxType.checkYourAnswersLabel.abv.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
+adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.Core = Non-draught {0} exceeding {1}% ABV ({2})
+adjustmentTaxType.checkYourAnswersLabel.abv.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})
+adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.DraughtRelief = Draught {0} exceeding {1}% ABV ({2})
+adjustmentTaxType.checkYourAnswersLabel.abv.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)
+adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.SmallProducerRelief = Non-draught {0} exceeding {1}% ABV eligible for SPR (tax type code {2} SPR)
+adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} exceeding {1}% ABV eligible for SPR (tax type code {2} SPR)
+adjustmentTaxType.checkYourAnswersLabel.abv.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
+
 
 adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
@@ -828,7 +837,7 @@ adjustmentVolume.error.pureAlcoholVolume.required = Enter the litres of pure alc
 adjustmentVolume.error.pureAlcoholVolume.minimumRequired = Litres of pure alcohol must be 0.01 or more
 adjustmentVolume.error.pureAlcoholVolume.maximumRequired = Litres of pure alcohol must be 99.99 million or less
 adjustmentVolume.error.pureAlcoholVolume.twoDecimalPlaces = Litres of pure alcohol must be a number to 2 decimal places
-adjustmentVolume.error.pureAlcoholVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
+adjustmentVolume.error.pureAlcoholVolume.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
 adjustmentVolume.smallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
 adjustmentVolume.smallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
 adjustmentVolume.smallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be £99.99 million or less
@@ -855,7 +864,7 @@ adjustmentRepackagedTaxType.hint = A non-draught 3 digit tax type code
 
 adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief Duty rate for the newly repackaged products?
 adjustmentSmallProducerReliefDutyRate.heading = What is your Small Producer Relief Duty rate for the newly repackaged products?
-adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel = AdjustmentSmallProducerReliefDutyRate
+adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel = SPR duty rate
 adjustmentSmallProducerReliefDutyRate.hint = Include pounds and pence
 adjustmentSmallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
 adjustmentSmallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
