@@ -40,13 +40,13 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
     "must return an incomplete task list" in {
 
       val expectedSections = Seq(
-        ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, emptyUserAnswers),
+        ReturnTaskListHelper.returnSection(emptyUserAnswers),
         ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
         ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
       )
 
       val result           =
-        AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, emptyUserAnswers, validUntil, periodKeyMar)(
+        AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)(
           messages(application)
         )
       val validUntilString = validUntil.toLocalDateString()
@@ -76,13 +76,13 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
       val expectedSections =
         Seq(
-          ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, userAnswers),
+          ReturnTaskListHelper.returnSection(userAnswers),
           ReturnTaskListHelper.returnDSDSection(userAnswers),
           ReturnTaskListHelper.returnQSSection(userAnswers)
         )
 
       val result           =
-        AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, userAnswers, validUntil, periodKeyMar)(
+        AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil, periodKeyMar)(
           messages(application)
         )
       val validUntilString = validUntil.toLocalDateString()
@@ -99,19 +99,19 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
     "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in {
       val expectedSectionsWithQS = Seq(
-        ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, emptyUserAnswers),
+        ReturnTaskListHelper.returnSection(emptyUserAnswers),
         ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
         ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
       )
 
       val expectedSectionsWithoutQS = Seq(
-        ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, emptyUserAnswers),
+        ReturnTaskListHelper.returnSection(emptyUserAnswers),
         ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
       )
 
       forAll(periodKeyGen) { case periodKey =>
         val result =
-          AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, emptyUserAnswers, validUntil, periodKey)(
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(
             messages(application)
           )
 

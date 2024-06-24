@@ -25,7 +25,7 @@ import views.html.returns.CheckYourAnswersSPRView
 class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
   val regime                  = regimeGen.sample.value
-  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
   val volumeAndRateByTaxTypes = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
 
   val userAnswers = emptyUserAnswers

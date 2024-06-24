@@ -45,7 +45,7 @@ class TaskListControllerSpec extends SpecBase {
 
         val view             = application.injector.instanceOf[TaskListView]
         val expectedTaskList =
-          AlcoholDutyTaskListHelper.getTaskList(AlcoholRegimeName.values, emptyUserAnswers, validUntil, periodKey)(
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(
             messages(application)
           )
 

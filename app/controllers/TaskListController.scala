@@ -43,7 +43,7 @@ class TaskListController @Inject() (
         Ok(
           view(
             AlcoholDutyTaskListHelper
-              .getTaskList(request.userAnswers.regimes.regimes.toSeq, request.userAnswers, validUntil, periodKey)
+              .getTaskList(request.userAnswers, validUntil, periodKey)
           )
         )
       case (None, Some(_))                     =>

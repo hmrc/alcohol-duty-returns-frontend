@@ -29,8 +29,10 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
 
   val messages = mock[Messages]
 
-  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
-  val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
+  val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
+  val volumeAndRateByTaxTypes = arbitraryVolumeAndRateByTaxType(
+    rateBands.toSeq
+  ).arbitrary.sample.value
 
   val form = new TellUsAboutMultipleSPRRateFormProvider()(regime)(messages)
 

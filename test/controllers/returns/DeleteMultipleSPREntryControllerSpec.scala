@@ -35,7 +35,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
   val index = 0
 
-  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
   val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
 
   val userAnswersWithRegime = emptyUserAnswers

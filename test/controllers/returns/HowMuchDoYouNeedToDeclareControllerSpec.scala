@@ -45,7 +45,9 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
     routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
 
   val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
-  val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
+  val volumeAndRateByTaxTypes = arbitraryVolumeAndRateByTaxType(
+    rateBands.toSeq
+  ).arbitrary.sample.value
 
   val userAnswers = emptyUserAnswers
     .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)

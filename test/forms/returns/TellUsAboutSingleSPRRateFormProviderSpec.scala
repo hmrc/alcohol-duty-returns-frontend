@@ -30,7 +30,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
 
   val form = new TellUsAboutSingleSPRRateFormProvider()(regime)(messages)
 
-  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
   val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
 
   "volumesWithRate array" - {

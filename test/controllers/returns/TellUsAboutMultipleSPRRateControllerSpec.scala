@@ -43,7 +43,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
   lazy val tellUsAboutMultipleSPRRateRoute =
     routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime).url
 
-  val rateBands     = genListOfRateBandForRegime(regime).sample.value.toSet
+  val rateBands     = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
   val dutyByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
 
   val userAnswers       = emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands).success.value

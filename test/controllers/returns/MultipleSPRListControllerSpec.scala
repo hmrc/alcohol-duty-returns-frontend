@@ -40,7 +40,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
   val regime = regimeGen.sample.value
 
-  val rateBands               = genListOfRateBandForRegime(regime).sample.value.toSet
+  val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
   val volumeAndRateByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
 
   val userAnswers = emptyUserAnswers

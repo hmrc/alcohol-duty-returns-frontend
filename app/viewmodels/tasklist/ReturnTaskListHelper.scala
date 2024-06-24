@@ -103,10 +103,10 @@ object ReturnTaskListHelper {
 
   private val alcoholRegimeViewOrder: Seq[AlcoholRegimeName] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
 
-  private def returnJourneyTaskListItem(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit
+  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Seq[TaskListItem] =
-    for (regime <- regimes.sortBy(alcoholRegimeViewOrder.indexOf))
+    for (regime <- userAnswers.regimes.regimes.toSeq.sortBy(alcoholRegimeViewOrder.indexOf))
       yield (
         userAnswers.getByKey(AlcoholDutyPage, regime),
         userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
@@ -201,10 +201,10 @@ object ReturnTaskListHelper {
     )
   }
 
-  def returnSection(regimes: Seq[AlcoholRegimeName], userAnswers: UserAnswers)(implicit messages: Messages): Section =
+  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareAlcoholDutyQuestionPage),
-      () => returnJourneyTaskListItem(regimes, userAnswers),
+      () => returnJourneyTaskListItem(userAnswers),
       controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(_).url,
       sectionName = "returns"
     )

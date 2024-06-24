@@ -44,7 +44,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
   lazy val tellUsAboutSingleSPRRateRoute = routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime).url
 
-  val rateBands: Seq[RateBand]                            = genListOfRateBandForRegime(regime).sample.value
+  val rateBands: Seq[RateBand]                            = genListOfRateBandForRegimeWithSPR(regime).sample.value
   val volumeAndRateByTaxType: Seq[VolumeAndRateByTaxType] = arbitraryVolumeAndRateByTaxType(
     rateBands
   ).arbitrary.sample.value

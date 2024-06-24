@@ -37,7 +37,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
   "returnSection" - {
 
     "when the user answers object is empty, must return the not started section" in {
-      val result = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, emptyUserAnswers)
+      val result = ReturnTaskListHelper.returnSection(emptyUserAnswers)
 
       result.completedTask                     shouldBe false
       result.taskList.items.size               shouldBe 1
@@ -56,7 +56,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
         .value
-      val result      = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, userAnswers)
+      val result      = ReturnTaskListHelper.returnSection(userAnswers)
 
       result.completedTask                     shouldBe true
       result.taskList.items.size               shouldBe 1
@@ -77,7 +77,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .value
 
       "must have a link to the 'What do you need to declare?' screen if the user has not answered any other question" in {
-        val result = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, declaredAlcoholDutyUserAnswer)
+        val result = ReturnTaskListHelper.returnSection(declaredAlcoholDutyUserAnswer)
 
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe AlcoholRegimeName.values.size + 1
@@ -117,7 +117,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
             .value
         }
 
-        val result = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, filledUserAnswers)
+        val result = ReturnTaskListHelper.returnSection(filledUserAnswers)
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe AlcoholRegimeName.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
@@ -167,7 +167,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
             .value
         }
 
-        val result = ReturnTaskListHelper.returnSection(AlcoholRegimeName.values, filledUserAnswers)
+        val result = ReturnTaskListHelper.returnSection(filledUserAnswers)
         result.completedTask                     shouldBe true
         result.taskList.items.size               shouldBe AlcoholRegimeName.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")

@@ -53,21 +53,20 @@ class WhatDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(regime)
 
-      getRateBands(request.userAnswers, request.returnPeriod, request.userAnswers.regimes.regimes.toSeq, regime).map {
-        rateBands: Seq[RateBand] =>
-          val taxBandsViewModel = TaxBandsViewModel(rateBands)
-          val preparedForm      = request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-            case None        => form
-            case Some(value) => form.fill(value.map(_.taxType))
-          }
+      getRateBands(request.userAnswers, request.returnPeriod, regime).map { rateBands: Seq[RateBand] =>
+        val taxBandsViewModel = TaxBandsViewModel(rateBands)
+        val preparedForm      = request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+          case None        => form
+          case Some(value) => form.fill(value.map(_.taxType))
+        }
 
-          Ok(view(preparedForm, regime, taxBandsViewModel, mode))
+        Ok(view(preparedForm, regime, taxBandsViewModel, mode))
       }
     }
 
   def onSubmit(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
-      getRateBands(request.userAnswers, request.returnPeriod, request.userAnswers.regimes.regimes.toSeq, regime)
+      getRateBands(request.userAnswers, request.returnPeriod, regime)
         .flatMap { rateBands: Seq[RateBand] =>
           formProvider(regime)
             .bindFromRequest()
@@ -88,14 +87,13 @@ class WhatDoYouNeedToDeclareController @Inject() (
   private def getRateBands(
     userAnswers: UserAnswers,
     returnPeriod: ReturnPeriod,
-    approvedAlcoholRegimes: Seq[AlcoholRegimeName],
     selectedRegime: AlcoholRegimeName
   )(implicit hc: HeaderCarrier): Future[Seq[RateBand]] =
     userAnswers.get(RateBandsPage) match {
       case Some(rateBands) => Future.successful(rateBands.filter(_.alcoholRegimes.map(_.name).contains(selectedRegime)))
       case None            =>
         for {
-          rateBands      <- calculatorConnector.rateBandByRegime(returnPeriod.period, approvedAlcoholRegimes)
+          rateBands      <- calculatorConnector.rateBandByRegime(returnPeriod.period, userAnswers.regimes.regimes.toSeq)
           updatedAnswers <- Future.fromTry(userAnswers.set(RateBandsPage, rateBands))
           _              <- cacheConnector.set(updatedAnswers)
         } yield rateBands.filter(_.alcoholRegimes.map(_.name).contains(selectedRegime))
