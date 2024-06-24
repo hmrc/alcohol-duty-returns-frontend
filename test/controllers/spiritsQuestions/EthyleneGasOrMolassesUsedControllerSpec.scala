@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.EthyleneGasOrMolassesUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -46,10 +46,7 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase {
   val validMolasses    = 47.5
   val otherIngredients = true
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       EthyleneGasOrMolassesUsedPage.toString -> Json.obj(
         "ethyleneGas"      -> validEthyleneGas,

@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import models.{ReturnId, UserAnswers}
 import play.api.test.Helpers._
 import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView
@@ -30,13 +29,7 @@ class TaskListControllerSpec extends SpecBase {
   private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
   private val A_DAY_IN_SEC = 86400
   private val validUntil   = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
-  private val userAnswers  = UserAnswers(
-    ReturnId(appaId, periodKey),
-    groupId = groupId,
-    internalId = internalId,
-    lastUpdated = Instant.now(clock),
-    validUntil = Some(validUntil)
-  )
+  private val userAnswers  = emptyUserAnswers.copy(validUntil = Some(validUntil))
 
   "TaskList Controller" - {
 

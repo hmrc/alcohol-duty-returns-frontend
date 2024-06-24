@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
@@ -47,10 +47,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
   val otherIngredientsUnit     = Tonnes
   val otherIngredientsQuantity = BigDecimal(100000)
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       OtherIngredientsUsedPage.toString -> Json.obj(
         "otherIngredientsUsedTypes"    -> otherIngredientsTypes,

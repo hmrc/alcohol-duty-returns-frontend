@@ -19,6 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import models.UserAnswers
 import play.api.libs.json.Writes
+import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpReadsInstances, HttpResponse}
 
 import javax.inject.Inject
@@ -41,9 +42,9 @@ class CacheConnector @Inject() (
       implicitly
     )
 
-  def add(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.POST(config.adrCacheAddUrl(), userAnswers)(
-      implicitly[Writes[UserAnswers]],
+  def createUserAnswers(returnAndUserDetails: ReturnAndUserDetails)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    httpClient.POST(config.adrCacheCreateUserAnswersUrl(), returnAndUserDetails)(
+      implicitly[Writes[ReturnAndUserDetails]],
       implicitly[HttpReads[HttpResponse]],
       hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
       implicitly

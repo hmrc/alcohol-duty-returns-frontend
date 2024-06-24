@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,33 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.auth
 
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import config.FrontendAppConfig
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.auth.NoAppaIdView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
 
-class KeepAliveController @Inject() (
+class NoAppaIdController @Inject() (
+  appConfig: FrontendAppConfig,
+  override val messagesApi: MessagesApi,
   val controllerComponents: MessagesControllerComponents,
-  identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  sessionRepository: SessionRepository
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController {
+  view: NoAppaIdView
+) extends FrontendBaseController
+    with I18nSupport {
 
-  def keepAlive: Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    request.userAnswers
-      .map { answers =>
-        sessionRepository.keepAlive(answers.returnId).map(_ => Ok)
-      }
-      .getOrElse(Future.successful(Ok))
+  def onPageLoad(wasReferredFromBTA: Boolean): Action[AnyContent] = Action { implicit request =>
+    Ok(view(appConfig, wasReferredFromBTA))
+  }
+
+  def onSubmit(wasReferredFromBTA: Boolean): Action[AnyContent] = Action { _ =>
+    if (wasReferredFromBTA) {
+      Redirect(appConfig.businessTaxAccountUrl)
+    } else {
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 }

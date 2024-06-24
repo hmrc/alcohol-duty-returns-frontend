@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import models.{ReturnId, ReturnPeriod, UserAnswers}
+import models.ReturnPeriod
 import org.mockito.ArgumentMatchers.any
 import play.api.test.Helpers._
 import play.api.inject.bind
@@ -26,26 +26,11 @@ import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
-import java.time.temporal.ChronoUnit
-import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
 
-  private val instant        = Instant.now.truncatedTo(ChronoUnit.MILLIS)
-  private val clock: Clock   = Clock.fixed(instant, ZoneId.systemDefault)
-  private val A_DAY_IN_SEC   = 86400
-  private val validUntil     = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
-  private val validPeriodKey = "24AC"
-  private val badPeriodKey   = "24A"
-
-  private val userAnswers = UserAnswers(
-    ReturnId(appaId, validPeriodKey),
-    groupId = groupId,
-    internalId = internalId,
-    lastUpdated = Instant.now(clock),
-    validUntil = Some(validUntil)
-  )
+  private val badPeriodKey = "24A"
 
   "BeforeStartReturn Controller" - {
 
@@ -53,7 +38,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
     "must redirect to the TaskList Page if UserAnswers already exist for a GET" in {
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Some(emptyUserAnswers))
 
       val application = applicationBuilder()
         .overrides(
@@ -62,7 +47,10 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(validPeriodKey).url)
+        val request = FakeRequest(
+          GET,
+          controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+        )
 
         val result = route(application, request).value
 
@@ -81,13 +69,17 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(validPeriodKey).url)
+        val request = FakeRequest(
+          GET,
+          controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+        )
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[BeforeStartReturnView]
 
-        val returnPeriodViewModel = ReturnPeriodViewModel(ReturnPeriod.fromPeriodKey(validPeriodKey).get)
+        val returnPeriodViewModel =
+          ReturnPeriodViewModel(ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(returnPeriodViewModel)(request, messages(application)).toString
@@ -113,7 +105,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the TaskList Page when a user is successfully added for a POST" in {
-      when(mockCacheConnector.add(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder()
         .overrides(
@@ -132,7 +124,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the journey recovery controller if the period key is not in the session for a POST" in {
-      when(mockCacheConnector.add(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder()
         .overrides(
