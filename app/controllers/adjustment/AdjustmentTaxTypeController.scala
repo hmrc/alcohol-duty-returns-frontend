@@ -26,7 +26,7 @@ import pages.adjustment.{AdjustmentTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
-import models.RateType.{Core, SmallProducerRelief}
+import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import play.api.data.Form
@@ -95,7 +95,7 @@ class AdjustmentTaxTypeController @Inject() (
                 if (
                   adjustmentType.equals(
                     RepackagedDraughtProducts.toString
-                  ) && (rateBand.rateType == Core || rateBand.rateType == SmallProducerRelief) // change to !draught
+                  ) && (rateBand.rateType != DraughtRelief || rateBand.rateType != DraughtAndSmallProducerRelief)
                 ) {
                   rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.notDraught")
                 } else {
