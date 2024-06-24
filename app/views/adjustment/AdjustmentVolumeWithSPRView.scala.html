@@ -29,7 +29,7 @@
     subHeading: SubHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String, regime: AlcoholRegime, minABV: BigDecimal, maxABV: BigDecimal, taxCode:String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: String, regime: AlcoholRegime, minABV: AlcoholByVolume, maxABV: AlcoholByVolume, taxCode:String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentVolume.title"))) {
 
@@ -46,7 +46,7 @@
 
         @pageHeading(messages("adjustmentVolume.heading"))
 
-        @subHeading(messages("adjustmentVolume.subHeading", messages(s"regime.capital.$regime") , minABV , maxABV, taxCode), "govuk-heading-s")
+        @subHeading(messages("adjustmentVolume.subHeading", messages(s"regime.capital.$regime") , minABV.value , maxABV.value, taxCode), "govuk-heading-s")
 
         @paragraph(messages("adjustmentVolume.hint"), classes = "govuk-hint")
 

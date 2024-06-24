@@ -22,7 +22,7 @@ object AdjustmentTypeHelper {
 
   def getAdjustmentTypeValue(adjustmentEntry: AdjustmentEntry): String =
     adjustmentEntry.adjustmentType match {
-      case Some(adjustmentType) => adjustmentType.toString
+      case Some(adjustmentType) => adjustmentType.toString // change to enums
       case _                    => "default"
     }
 

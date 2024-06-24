@@ -66,7 +66,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
               ActionItemViewModel(
                 "site.change",
                 routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
-              ).withVisuallyHiddenText(messages("adjustmentRepackagedSprDutyRate.change.hidden"))
+              ).withVisuallyHiddenText(messages("adjustmentSmallProducerReliefDutyRate.change.hidden"))
             )
           )
         )

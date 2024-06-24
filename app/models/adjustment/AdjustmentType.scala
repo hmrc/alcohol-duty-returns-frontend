@@ -35,8 +35,8 @@ object AdjustmentType extends Enumerable.Implicits {
   val values: Seq[AdjustmentType] = Seq(
     Underdeclaration,
     Overdeclaration,
-    Spoilt,
     RepackagedDraughtProducts,
+    Spoilt,
     Drawback
   )
 

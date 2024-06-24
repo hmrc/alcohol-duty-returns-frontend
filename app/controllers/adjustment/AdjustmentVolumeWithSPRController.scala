@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.adjustment.AdjustmentVolumeWithSPRFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode}
+import models.{AlcoholByVolume, AlcoholRegime, Mode}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumeWithSPRPage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -77,10 +77,10 @@ class AdjustmentVolumeWithSPRController @Inject() (
         AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry),
         getRegime,
         adjustmentEntry.rateBand
-          .map(_.minABV.value)
+          .map(_.minABV)
           .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
         adjustmentEntry.rateBand
-          .map(_.maxABV.value)
+          .map(_.maxABV)
           .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
         adjustmentEntry.rateBand
           .map(_.taxType)
@@ -105,10 +105,10 @@ class AdjustmentVolumeWithSPRController @Inject() (
                 AdjustmentTypeHelper.getAdjustmentTypeValue(adjustment),
                 getRegime,
                 adjustment.rateBand
-                  .map(_.minABV.value)
+                  .map(_.minABV)
                   .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
                 adjustment.rateBand
-                  .map(_.maxABV.value)
+                  .map(_.maxABV)
                   .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
                 adjustment.rateBand
                   .map(_.taxType)
@@ -148,10 +148,10 @@ class AdjustmentVolumeWithSPRController @Inject() (
               AdjustmentTypeHelper.getAdjustmentTypeValue(AdjustmentEntry()),
               getRegime,
               value.rateBand
-                .map(_.minABV.value)
+                .map(_.minABV)
                 .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
               value.rateBand
-                .map(_.maxABV.value)
+                .map(_.maxABV)
                 .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
               value.rateBand
                 .map(_.taxType)
@@ -187,8 +187,8 @@ class AdjustmentVolumeWithSPRController @Inject() (
     mode: Mode,
     adjustmentType: String,
     regime: AlcoholRegime,
-    minABV: BigDecimal,
-    maxABV: BigDecimal,
+    minABV: AlcoholByVolume,
+    maxABV: AlcoholByVolume,
     taxType: String
   )(implicit
     request: Request[_],

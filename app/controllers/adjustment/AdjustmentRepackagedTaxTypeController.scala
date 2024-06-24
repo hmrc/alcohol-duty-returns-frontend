@@ -20,10 +20,10 @@ import controllers.actions._
 import forms.adjustment.AdjustmentRepackagedTaxTypeFormProvider
 
 import javax.inject.Inject
-import models.{Mode, RateBand, UserAnswers}
+import models.{AlcoholRegime, Mode, RateBand, UserAnswers}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentRepackagedTaxTypePage, CurrentAdjustmentEntryPage}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
@@ -90,7 +90,13 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
             ).flatMap {
               case Some(rateBand) =>
                 if (rateBand.rateType == DraughtAndSmallProducerRelief || rateBand.rateType == DraughtRelief) {
-                  rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.nonDraught")
+                  rateBandResponseError(
+                    mode,
+                    value,
+                    adjustmentType,
+                    "adjustmentRepackagedTaxType.error.nonDraught",
+                    rateBand.alcoholRegime.head
+                  )
                 } else {
                   for {
                     updatedAnswers <-
@@ -139,18 +145,25 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
         )
     }
 
-  private def rateBandResponseError(mode: Mode, value: Int, adjustmentType: String, errorMessage: String)(implicit
-    request: Request[_]
+  private def rateBandResponseError(
+    mode: Mode,
+    value: Int,
+    adjustmentType: String,
+    errorMessage: String,
+    regime: AlcoholRegime*
+  )(implicit
+    request: Request[_],
+    messages: Messages
   ): Future[Result] =
     Future.successful(
       BadRequest(
         view(
           formProvider()
-            .withError("new-tax-type-code", errorMessage)
+            .withError("new-tax-type-code", errorMessage, messages(s"regime.${regime.head}"))
             .fill(value),
           mode,
           adjustmentType
-        )
+        )(request, messages)
       )
     )
 

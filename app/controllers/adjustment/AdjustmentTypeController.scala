@@ -85,12 +85,15 @@ class AdjustmentTypeController @Inject() (
       case _                                                    =>
         (
           adjustmentEntry.copy(
-            sprDutyRate = None,
             period = None,
             rateBand = None,
             totalLitresVolume = None,
             pureAlcoholVolume = None,
+            sprDutyRate = None,
             duty = None,
+            repackagedRateBand = None,
+            repackagedDuty = None,
+            repackagedSprDutyRate = None,
             newDuty = None
           ),
           true

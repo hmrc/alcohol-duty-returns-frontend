@@ -85,7 +85,8 @@ class AdjustmentTaxTypeController @Inject() (
           value => {
             val currentAdjustmentEntry          = request.userAnswers.get(CurrentAdjustmentEntryPage).get
             val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
-            val adjustmentType                  = AdjustmentTypeHelper.getAdjustmentTypeValue(updatedAdjustment)
+            val adjustmentType                  =
+              AdjustmentTypeHelper.getAdjustmentTypeValue(updatedAdjustment) // don't use helper for this
             fetchAdjustmentRateBand(
               value.toString,
               updatedAdjustment.period.getOrElse(throw new RuntimeException("Couldn't fetch period value from cache"))
@@ -94,7 +95,7 @@ class AdjustmentTaxTypeController @Inject() (
                 if (
                   adjustmentType.equals(
                     RepackagedDraughtProducts.toString
-                  ) && (rateBand.rateType == Core || rateBand.rateType == SmallProducerRelief)
+                  ) && (rateBand.rateType == Core || rateBand.rateType == SmallProducerRelief) // change to !draught
                 ) {
                   rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.notDraught")
                 } else {

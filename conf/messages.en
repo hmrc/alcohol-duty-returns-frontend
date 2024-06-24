@@ -784,7 +784,7 @@ adjustmentType.repackaged-draught-products = Repackaged draught products
 adjustmentType.repackaged-draught-products.hint = You have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate.
 adjustmentType.checkYourAnswersLabel = Adjustment
 adjustmentType.error.required = Select the type of adjustment you need to make
-adjustmentType.change.hidden = which type of adjustment do you need to make
+adjustmentType.change.hidden = what type of adjustment do you need to make
 
 whenDidYouPayDuty.default.title = When did you pay duty on this?
 whenDidYouPayDuty.default.heading = When did you pay duty on this?
@@ -797,10 +797,11 @@ whenDidYouPayDuty.hint = For example, 3 2007
 whenDidYouPayDuty.date.error.required.all = Enter the date you paid duty
 whenDidYouPayDuty.date.error.required = The date you paid duty must include a {0}
 whenDidYouPayDuty.date.error.invalid.future = The date you paid duty must be in the past
-whenDidYouPayDuty.date.error.invalid.month = The date you paid duty must be a real date
-whenDidYouPayDuty.date.error.invalid.year = Year must include 4 numbers
+whenDidYouPayDuty.date.error.invalid.month = The date you paid duty must be a real date using numbers
+whenDidYouPayDuty.date.error.invalid.year = The date you paid duty must be a real date using numbers
 whenDidYouPayDuty.date.error.invalid.past = The date must be after 31st August 2023
 whenDidYouPayDuty.checkYourAnswersLabel = Original return period
+whenDidYouPayDuty.change.hidden = when did you pay duty on this
 
 adjustmentTaxType.title = What is the tax type code for the alcohol you are adjusting?
 adjustmentTaxType.heading = What is the tax type code for the alcohol you are adjusting?
@@ -810,7 +811,7 @@ adjustmentTaxType.checkYourAnswersLabel = Tax
 adjustmentTaxType.error.invalid = Enter a valid tax type code
 adjustmentTaxType.error.required = Enter the tax type code
 adjustmentTaxType.error.notDraught = Tax type code needs to be for draught products
-adjustmentTaxType.change.hidden = what is the tax type for this adjustment
+adjustmentTaxType.change.hidden = what is the tax type code for the alcohol you are adjusting
 adjustmentTaxType.repackaged.checkYourAnswersLabel = Original tax
 adjustmentTaxType.checkYourAnswersLabel.abv.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
 adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.Core = Non-draught {0} exceeding {1}% ABV ({2})
@@ -820,7 +821,6 @@ adjustmentTaxType.checkYourAnswersLabel.abv.interval.SmallProducerRelief = Non-d
 adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.SmallProducerRelief = Non-draught {0} exceeding {1}% ABV eligible for SPR (tax type code {2} SPR)
 adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} exceeding {1}% ABV eligible for SPR (tax type code {2} SPR)
 adjustmentTaxType.checkYourAnswersLabel.abv.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
-
 
 adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
@@ -859,7 +859,7 @@ adjustmentRepackagedTaxType.error.required = Enter the new tax type code
 adjustmentRepackagedTaxType.error.wholeNumber = Enter your adjustmentRepackagedTaxType using whole numbers
 adjustmentRepackagedTaxType.error.outOfRange = AdjustmentRepackagedTaxType must be between {0} and {1}
 adjustmentRepackagedTaxType.error.nonDraught = Enter a valid non-draught {0} tax type code
-adjustmentRepackagedTaxType.change.hidden = AdjustmentRepackagedTaxType
+adjustmentRepackagedTaxType.change.hidden = what is the tax type code for the newly repackaged products
 adjustmentRepackagedTaxType.hint = A non-draught 3 digit tax type code
 
 adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief Duty rate for the newly repackaged products?
@@ -871,7 +871,7 @@ adjustmentSmallProducerReliefDutyRate.error.required = Enter your Small Producer
 adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be £0.00 or more
 adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be £99.99 million or less
 adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be to 2 decimal places
-adjustmentSmallProducerReliefDutyRate.change.hidden = what is your Small Producer Relief duty rate
+adjustmentSmallProducerReliefDutyRate.change.hidden = what is your Small Producer Relief duty rate for the newly repackaged products
 
 adjustmentDutyDue.title = The duty value for this adjustment is {0}
 adjustmentDutyDue.heading = The duty value for this adjustment is {0}
@@ -893,16 +893,6 @@ adjustmentDutyDue.repackaged.bulletList.6 = the duty to pay is {0}: the new duty
 
 checkYourAnswers.subHeading = Adjustment details
 
-adjustmentRepackagedTaxTypeWithSPR.title = adjustmentRepackagedTaxTypeWithSPR
-adjustmentRepackagedTaxTypeWithSPR.heading = adjustmentRepackagedTaxTypeWithSPR
-adjustmentRepackagedTaxTypeWithSPR.tax-type-code = tax-type-code
-adjustmentRepackagedTaxTypeWithSPR.new-spr-duty-rate = new-spr-duty-rate
-adjustmentRepackagedTaxTypeWithSPR.checkYourAnswersLabel = AdjustmentRepackagedTaxTypeWithSPR
-adjustmentRepackagedTaxTypeWithSPR.error.tax-type-code.required = Enter tax-type-code
-adjustmentRepackagedTaxTypeWithSPR.error.new-spr-duty-rate.required = Enter new-spr-duty-rate
-adjustmentRepackagedTaxTypeWithSPR.error.tax-type-code.length = tax-type-code must be 999 characters or less
-adjustmentRepackagedTaxTypeWithSPR.error.new-spr-duty-rate.length = new-spr-duty-rate must be 999 characters or less
-adjustmentRepackagedTaxTypeWithSPR.tax-type-code.change.hidden = tax-type-code
-adjustmentRepackagedTaxTypeWithSPR.new-spr-duty-rate.change.hidden = new-spr-duty-rate
+
 
 # End of adjustments sub-journey

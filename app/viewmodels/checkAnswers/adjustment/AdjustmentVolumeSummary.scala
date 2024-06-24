@@ -34,9 +34,13 @@ object AdjustmentVolumeSummary {
       pureAlcohol <- adjustmentEntry.pureAlcoholVolume
       regime      <- adjustmentEntry.rateBand.map(_.alcoholRegime)
     } yield {
+      val route =
+        if (adjustmentEntry.sprDutyRate.isDefined) {
+          routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url
+        } else { routes.AdjustmentVolumeController.onPageLoad(CheckMode).url }
       val value = HtmlFormat.escape(totalLitres.toString()).toString + " " + messages(
         "adjustmentVolume.totalLitres",
-        regime.head
+        messages(s"regime.${regime.head}")
       ) + "<br/>" + HtmlFormat.escape(pureAlcohol.toString()).toString + " " + messages(
         "adjustmentVolume.pureAlcohol"
       )
@@ -45,7 +49,7 @@ object AdjustmentVolumeSummary {
         key = "adjustmentVolume.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.AdjustmentVolumeController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", route)
             .withVisuallyHiddenText(messages("adjustmentVolume.change.hidden"))
         )
       )

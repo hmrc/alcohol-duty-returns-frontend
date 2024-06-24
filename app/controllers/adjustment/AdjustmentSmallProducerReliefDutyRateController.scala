@@ -94,7 +94,8 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
         (
           adjustmentEntry.copy(
             duty = None,
-            newDuty = None
+            newDuty = None,
+            repackagedDuty = None
           ),
           true
         )
