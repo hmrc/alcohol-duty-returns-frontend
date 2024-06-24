@@ -68,32 +68,6 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     }
   }
 
-  "AlcoholRegime" - {
-    "when writing to json" - {
-      "should return the correct string representation" in {
-        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Beer) mustEqual JsString("Beer")
-        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Cider) mustEqual JsString("Cider")
-        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Wine) mustEqual JsString("Wine")
-        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Spirits) mustEqual JsString("Spirits")
-      }
-    }
-    "when reading from json" - {
-      "should translate from the string rep, to the correct case object" in {
-        JsString("Beer").as[AlcoholRegimeName] mustEqual AlcoholRegimeName.Beer
-        JsString("Cider").as[AlcoholRegimeName] mustEqual AlcoholRegimeName.Cider
-        JsString("Wine").as[AlcoholRegimeName] mustEqual AlcoholRegimeName.Wine
-        JsString("Spirits").as[AlcoholRegimeName] mustEqual AlcoholRegimeName.Spirits
-      }
-      "should return an exception in response to an unrecognised string" in {
-        JsString("some-other").validate[AlcoholRegimeName] mustEqual JsError("some-other is not a valid AlcoholRegime")
-      }
-      "should return a JsError when passed a type that is not a string" in {
-        val result = Json.fromJson[AlcoholRegimeName](JsBoolean(true))
-        result mustBe a[JsError]
-      }
-    }
-  }
-
   "AlcoholRate" - {
     "when creating an instance" - {
       "should successfully save the BigDecimal value when the value is in range" in {

@@ -63,43 +63,43 @@ object RateTypeResponse {
   implicit val format: Format[RateTypeResponse] = Json.format[RateTypeResponse]
 }
 
-sealed trait AlcoholRegimeName extends EnumEntry
-object AlcoholRegimeName extends Enum[AlcoholRegimeName] with PlayEnum[AlcoholRegimeName] {
-  val values = findValues
-
-  case object Beer extends AlcoholRegimeName
-  case object Cider extends AlcoholRegimeName
-  case object Wine extends AlcoholRegimeName
-  case object Spirits extends AlcoholRegimeName
-  case object OtherFermentedProduct extends AlcoholRegimeName
-
-  implicit val format: Format[AlcoholRegimeName] = new Format[AlcoholRegimeName] {
-    override def reads(json: JsValue): JsResult[AlcoholRegimeName] = json.validate[String] match {
-      case JsSuccess(value, _) =>
-        value match {
-          case "Beer"                  => JsSuccess(Beer)
-          case "Cider"                 => JsSuccess(Cider)
-          case "Wine"                  => JsSuccess(Wine)
-          case "Spirits"               => JsSuccess(Spirits)
-          case "OtherFermentedProduct" => JsSuccess(OtherFermentedProduct)
-          case s                       => JsError(s"$s is not a valid AlcoholRegime")
-        }
-      case e: JsError          => e
-    }
-
-    override def writes(o: AlcoholRegimeName): JsValue = JsString(o.toString)
-  }
-
-  def fromString(str: String): Option[AlcoholRegimeName] =
-    str match {
-      case "Beer"                  => Some(Beer)
-      case "Cider"                 => Some(Cider)
-      case "Wine"                  => Some(Wine)
-      case "Spirits"               => Some(Spirits)
-      case "OtherFermentedProduct" => Some(OtherFermentedProduct)
-      case _                       => None
-    }
-}
+//sealed trait AlcoholRegimeName extends EnumEntry
+//object AlcoholRegimeName extends Enum[AlcoholRegimeName] with PlayEnum[AlcoholRegimeName] {
+//  val values = findValues
+//
+//  case object Beer extends AlcoholRegimeName
+//  case object Cider extends AlcoholRegimeName
+//  case object Wine extends AlcoholRegimeName
+//  case object Spirits extends AlcoholRegimeName
+//  case object OtherFermentedProduct extends AlcoholRegimeName
+//
+//  implicit val format: Format[AlcoholRegimeName] = new Format[AlcoholRegimeName] {
+//    override def reads(json: JsValue): JsResult[AlcoholRegimeName] = json.validate[String] match {
+//      case JsSuccess(value, _) =>
+//        value match {
+//          case "Beer"                  => JsSuccess(Beer)
+//          case "Cider"                 => JsSuccess(Cider)
+//          case "Wine"                  => JsSuccess(Wine)
+//          case "Spirits"               => JsSuccess(Spirits)
+//          case "OtherFermentedProduct" => JsSuccess(OtherFermentedProduct)
+//          case s                       => JsError(s"$s is not a valid AlcoholRegime")
+//        }
+//      case e: JsError          => e
+//    }
+//
+//    override def writes(o: AlcoholRegimeName): JsValue = JsString(o.toString)
+//  }
+//
+//  def fromString(str: String): Option[AlcoholRegimeName] =
+//    str match {
+//      case "Beer"                  => Some(Beer)
+//      case "Cider"                 => Some(Cider)
+//      case "Wine"                  => Some(Wine)
+//      case "Spirits"               => Some(Spirits)
+//      case "OtherFermentedProduct" => Some(OtherFermentedProduct)
+//      case _                       => None
+//    }
+//}
 
 case class AlcoholByVolume private (value: BigDecimal) {
   require(value >= 0 && value <= 100, "Percentage must be between 0 and 100")

@@ -34,6 +34,5 @@ case class DataRequest[A](
   groupId: String,
   userId: String,
   returnPeriod: ReturnPeriod,
-  regimes: Seq[AlcoholRegimeName],
   userAnswers: UserAnswers
 ) extends WrappedRequest[A](request)

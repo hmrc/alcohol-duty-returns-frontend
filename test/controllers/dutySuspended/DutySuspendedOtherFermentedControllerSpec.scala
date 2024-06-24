@@ -18,17 +18,16 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
-import models.{AlcoholRegimeName, NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedOtherFermented
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.dutySuspended.DutySuspendedOtherFermentedPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import pages.AlcoholRegimePage
-import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedOtherFermentedView
 
@@ -45,16 +44,12 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
   lazy val dutySuspendedOtherFermentedRoute = routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
         "totalOtherFermented"         -> validTotalOtherFermented,
         "pureAlcoholInOtherFermented" -> validPureAlcoholInOtherFermented
-      ),
-      AlcoholRegimePage.toString               -> Json.toJson(AlcoholRegimeName.values)
+      )
     )
   )
 

@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.GrainsUsedFormProvider
-import models.{AlcoholRegimeName, NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.GrainsUsedPage
@@ -28,7 +28,6 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.spiritsQuestions.GrainsUsed
-import pages.AlcoholRegimePage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.GrainsUsedView
 
@@ -50,20 +49,16 @@ class GrainsUsedControllerSpec extends SpecBase {
   val unmaltedGrainQuantity    = BigDecimal(500000)
   val usedMaltedGrainNotBarley = true
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
-      GrainsUsedPage.toString    -> Json.obj(
+      GrainsUsedPage.toString -> Json.obj(
         "maltedBarleyQuantity"     -> maltedBarleyQuantity,
         "wheatQuantity"            -> wheatQuantity,
         "maizeQuantity"            -> maizeQuantity,
         "ryeQuantity"              -> ryeQuantity,
         "unmaltedGrainQuantity"    -> unmaltedGrainQuantity,
         "usedMaltedGrainNotBarley" -> usedMaltedGrainNotBarley
-      ),
-      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegimeName.values)
+      )
     )
   )
 

@@ -58,6 +58,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val signOutUrl: String            = configuration.get[String]("urls.signOut")
   val appaIdRegisterUrl: String     = configuration.get[String]("urls.appaIdRegister")
   val businessTaxAccountUrl: String = configuration.get[String]("urls.businessTaxAccount")
+  val requestAccessUrl: String      = configuration.get[String]("urls.requestAccess")
+
+  val fromBusinessAccountPath: String = configuration.get[String]("fromBusinessAccountPath")
 
   private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/alcohol-duty-returns-frontend"
@@ -84,8 +87,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCacheSetUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/cache/set"
 
-  def adrCacheAddUrl(): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/add"
+  def adrCacheCreateUserAnswersUrl(): String =
+    s"$adrReturnsHost/alcohol-duty-returns/cache/user-answers"
 
   def adrCacheClearAllUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-all"

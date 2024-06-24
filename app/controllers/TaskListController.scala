@@ -40,7 +40,12 @@ class TaskListController @Inject() (
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     (request.userAnswers.validUntil, request.session.get(periodKeySessionKey)) match {
       case (Some(validUntil), Some(periodKey)) =>
-        Ok(view(AlcoholDutyTaskListHelper.getTaskList(request.regimes, request.userAnswers, validUntil, periodKey)))
+        Ok(
+          view(
+            AlcoholDutyTaskListHelper
+              .getTaskList(request.userAnswers.regimes.regimes.toSeq, request.userAnswers, validUntil, periodKey)
+          )
+        )
       case (None, Some(_))                     =>
         logger.warn("'Valid until' property not defined in User Answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())

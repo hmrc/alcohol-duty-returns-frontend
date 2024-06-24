@@ -18,17 +18,16 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedCiderFormProvider
-import models.{AlcoholRegimeName, NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedCider
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import pages.AlcoholRegimePage
-import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedCiderView
 
@@ -45,16 +44,12 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
 
   lazy val dutySuspendedCiderRoute = routes.DutySuspendedCiderController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(
         "totalCider"         -> validTotalCider,
         "pureAlcoholInCider" -> validPureAlcoholInCider
-      ),
-      AlcoholRegimePage.toString      -> Json.toJson(AlcoholRegimeName.values)
+      )
     )
   )
 

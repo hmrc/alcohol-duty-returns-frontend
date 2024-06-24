@@ -25,37 +25,47 @@ class NoAppaIdControllerSpec extends SpecBase {
 
   "NoAppaId Controller" - {
 
-    lazy val noAppaIdRoute = routes.NoAppaIdController.onPageLoad().url
+    def noAppaIdRouteUrl(fromBTA: Boolean): String = routes.NoAppaIdController.onPageLoad(fromBTA).url
 
-    "must return OK and the correct view for a GET" in {
+    Seq(true, false).foreach { fromBTA =>
+      s"must return OK and the correct view for a GET when${if (fromBTA) " not" else ""} from BTA" in {
+        val application = applicationBuilder().build()
 
-      val application = applicationBuilder().build()
+        running(application) {
+          val request = FakeRequest(GET, noAppaIdRouteUrl(fromBTA))
 
-      running(application) {
-        val request = FakeRequest(GET, noAppaIdRoute)
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val view      = application.injector.instanceOf[NoAppaIdView]
+          val result    = route(application, request).value
 
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-        val view      = application.injector.instanceOf[NoAppaIdView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(appConfig)(request, messages(application)).toString
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(appConfig, fromBTA)(request, messages(application)).toString
+        }
       }
     }
 
-    "must redirect to the business tax account when the button is clicked" in {
-      val application = applicationBuilder().build()
+    Seq(true, false).foreach { fromBTA =>
+      val redirect = if (fromBTA) "business tax account" else "journey recovery page"
+      s"must redirect to the $redirect when the button is clicked" in {
+        val application = applicationBuilder().build()
 
-      running(application) {
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        running(application) {
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
-        val request = FakeRequest(POST, noAppaIdRoute)
+          val request = FakeRequest(POST, noAppaIdRouteUrl(fromBTA))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual appConfig.businessTaxAccountUrl
+          status(result) mustEqual SEE_OTHER
+
+          if (fromBTA) {
+            redirectLocation(result).value mustEqual appConfig.businessTaxAccountUrl
+          } else {
+            redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController
+              .onPageLoad()
+              .url
+          }
+        }
       }
     }
   }

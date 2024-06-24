@@ -16,22 +16,21 @@
 
 package base
 
+import common.TestData
 import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
-import models.{AlcoholRegimeName, ReturnId, UserAnswers}
+import models.UserAnswers
 import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import pages.AlcoholRegimePage
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
 import play.api.mvc.Results
 
 import scala.concurrent.ExecutionContext
@@ -46,23 +45,8 @@ trait SpecBase
     with GuiceOneAppPerSuite
     with MockitoSugar
     with IntegrationPatience
-    with ModelGenerators {
-
-  val appaId: String     = appaIdGen.sample.get
-  val periodKey: String  = periodKeyGen.sample.get
-  val groupId: String    = "groupid"
-  val internalId: String = "id"
-  val returnId: ReturnId = ReturnId(appaId, periodKey)
-
-  def emptyUserAnswers: UserAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
-    Json.obj(
-      AlcoholRegimePage.toString -> Json.toJson(AlcoholRegimeName.values)
-    )
-  )
-
+    with ModelGenerators
+    with TestData {
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =

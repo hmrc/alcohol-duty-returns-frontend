@@ -53,21 +53,22 @@ class WhatDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(regime)
 
-      getRateBands(request.userAnswers, request.returnPeriod, request.regimes, regime).map { rateBands: Seq[RateBand] =>
-        val taxBandsViewModel = TaxBandsViewModel(rateBands)
-        val preparedForm      = request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-          case None        => form
-          case Some(value) => form.fill(value.map(_.taxType))
-        }
+      getRateBands(request.userAnswers, request.returnPeriod, request.userAnswers.regimes.regimes.toSeq, regime).map {
+        rateBands: Seq[RateBand] =>
+          val taxBandsViewModel = TaxBandsViewModel(rateBands)
+          val preparedForm      = request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+            case None        => form
+            case Some(value) => form.fill(value.map(_.taxType))
+          }
 
-        Ok(view(preparedForm, regime, taxBandsViewModel, mode))
+          Ok(view(preparedForm, regime, taxBandsViewModel, mode))
       }
     }
 
   def onSubmit(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
-      getRateBands(request.userAnswers, request.returnPeriod, request.regimes, regime).flatMap {
-        rateBands: Seq[RateBand] =>
+      getRateBands(request.userAnswers, request.returnPeriod, request.userAnswers.regimes.regimes.toSeq, regime)
+        .flatMap { rateBands: Seq[RateBand] =>
           formProvider(regime)
             .bindFromRequest()
             .fold(
@@ -81,7 +82,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
                   _              <- cacheConnector.set(updatedAnswers)
                 } yield Redirect(navigator.nextPageWithRegime(WhatDoYouNeedToDeclarePage, mode, updatedAnswers, regime))
             )
-      }
+        }
     }
 
   private def getRateBands(

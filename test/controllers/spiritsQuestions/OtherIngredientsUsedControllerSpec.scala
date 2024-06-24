@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
-import models.{AlcoholRegimeName, NormalMode, UserAnswers}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
@@ -29,7 +29,6 @@ import connectors.CacheConnector
 import models.UnitsOfMeasure.Tonnes
 import models.spiritsQuestions.OtherIngredientsUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
-import pages.AlcoholRegimePage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.OtherIngredientsUsedView
 
@@ -48,17 +47,13 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
   val otherIngredientsUnit     = Tonnes
   val otherIngredientsQuantity = BigDecimal(100000)
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       OtherIngredientsUsedPage.toString -> Json.obj(
         "otherIngredientsUsedTypes"    -> otherIngredientsTypes,
         "otherIngredientsUsedUnit"     -> otherIngredientsUnit,
         "otherIngredientsUsedQuantity" -> otherIngredientsQuantity
-      ),
-      AlcoholRegimePage.toString        -> Json.toJson(AlcoholRegimeName.values)
+      )
     )
   )
 

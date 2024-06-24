@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedSpiritsFormProvider
-import models.{AlcoholRegimeName, NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedSpirits
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -28,7 +28,6 @@ import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import pages.AlcoholRegimePage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedSpiritsView
 
@@ -45,16 +44,12 @@ class DutySuspendedSpiritsControllerSpec extends SpecBase {
 
   lazy val dutySuspendedSpiritsRoute = routes.DutySuspendedSpiritsController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedSpiritsPage.toString -> Json.obj(
         "totalSpirits"         -> validTotalSpirits,
         "pureAlcoholInSpirits" -> validPureAlcoholInSpirits
-      ),
-      AlcoholRegimePage.toString        -> Json.toJson(AlcoholRegimeName.values)
+      )
     )
   )
 

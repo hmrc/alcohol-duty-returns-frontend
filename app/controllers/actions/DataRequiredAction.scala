@@ -39,23 +39,18 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
     returnPeriod: ReturnPeriod,
     request: OptionalDataRequest[A]
   ): Future[Either[Result, DataRequest[A]]] =
-    userAnswers.get(AlcoholRegimePage) match {
-      case Some(regimes) =>
-        Future.successful(
-          Right(
-            DataRequest(
-              request.request,
-              request.appaId,
-              request.groupId,
-              request.userId,
-              returnPeriod,
-              regimes,
-              userAnswers
-            )
-          )
+    Future.successful(
+      Right(
+        DataRequest(
+          request.request,
+          request.appaId,
+          request.groupId,
+          request.userId,
+          returnPeriod,
+          userAnswers
         )
-      case None          => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
-    }
+      )
+    )
 
 }
 
