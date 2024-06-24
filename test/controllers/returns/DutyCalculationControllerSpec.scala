@@ -33,7 +33,7 @@ class DutyCalculationControllerSpec extends SpecBase {
 
   val calculatorMock  = mock[AlcoholDutyCalculatorConnector]
   val regime          = regimeGen.sample.value
-  val rateBandList    = arbitraryRateBandList(regime).arbitrary.sample.value
+  val rateBandList    = genListOfRateBandForRegime(regime).sample.value
   val volumesAndRates = rateBandList.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value)
 
   val userAnswers = emptyUserAnswers

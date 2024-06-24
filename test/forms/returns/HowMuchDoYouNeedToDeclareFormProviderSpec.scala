@@ -19,8 +19,11 @@ package forms.returns
 import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
 import generators.ModelGenerators
+import models.returns.VolumesByTaxType
 import play.api.data.FormError
 import play.api.i18n.Messages
+
+import scala.collection.immutable.List
 
 class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours with ModelGenerators with SpecBase {
 
@@ -31,108 +34,103 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
 
   ".volumes" - {
 
-    val fieldName            = "volumes"
-    val requiredKey          = s"howMuchDoYouNeedToDeclare.error.required.${regime.toString}"
-    val allRequired          = s"howMuchDoYouNeedToDeclare.error.allRequired.${regime.toString}"
-    val lengthKeyTotalLitres = s"howMuchDoYouNeedToDeclare.error.decimalPlacesKey.${regime.toString}.totalLitres"
-    val lengthKeyPureAlcohol = s"howMuchDoYouNeedToDeclare.error.decimalPlacesKey.${regime.toString}.pureAlcohol"
+    "must bind valid data" in {
+      val data = Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "1",
+        "volumes[0].pureAlcohol" -> "1"
+      )
+      form.bind(data).value.value must contain theSameElementsAs List(
+        VolumesByTaxType("taxType", 1, 1)
+      )
+    }
 
-    val invalidKey = s"howMuchDoYouNeedToDeclare.error.invalid.${regime.toString}"
+    "must unbind valid data" in {
+      val data = List(
+        VolumesByTaxType("taxType", 1, 1)
+      )
+      form.fill(data).data must contain theSameElementsAs Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "1",
+        "volumes[0].pureAlcohol" -> "1"
+      )
+    }
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
-      form.bind(data).errors must contain(FormError(fieldName, allRequired))
+      form.bind(data).errors must contain(FormError("volumes", "return.journey.error.allRequired", Seq(List(""))))
     }
 
     "fail to bind when blank answer provided" in {
       val data = Map(
-        s"$fieldName[0].taxType"     -> "",
-        s"$fieldName[0].totalLitres" -> "",
-        s"$fieldName[0].pureAlcohol" -> ""
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "",
+        "volumes[0].pureAlcohol" -> ""
       )
-      form.bind(data).errors must contain(FormError(s"$fieldName[0]", allRequired))
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_0_totalLitres", "return.journey.error.noValue.totalLitres", Seq("")),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.noValue.pureAlcohol", Seq(""))
+      )
     }
 
-    "required fields" - {
-
-      "fail to bind when blank answer provided as tax type" in {
-        val data = Map(
-          s"$fieldName[0].taxType"     -> "",
-          s"$fieldName[0].totalLitres" -> "1.1",
-          s"$fieldName[0].pureAlcohol" -> "1.1"
-        )
-        form.bind(data).errors must contain(
-          FormError(s"${fieldName}_0.taxType", s"$requiredKey.taxType", Seq("taxType"))
-        )
-      }
-
-      "fail to bind when blank answer provided as total litres" in {
-        val data = Map(
-          s"$fieldName[0].taxType"     -> "1",
-          s"$fieldName[0].totalLitres" -> "",
-          s"$fieldName[0].pureAlcohol" -> "1.1"
-        )
-        form.bind(data).errors must contain(
-          FormError(s"${fieldName}_0.totalLitres", s"$requiredKey.totalLitres", Seq("totalLitres"))
-        )
-      }
-
-      "fail to bind when blank answer provided as pure alcohol" in {
-        val data = Map(
-          s"$fieldName[0].taxType"     -> "1",
-          s"$fieldName[0].totalLitres" -> "1.1",
-          s"$fieldName[0].pureAlcohol" -> ""
-        )
-        form.bind(data).errors must contain(
-          FormError(s"${fieldName}_0.pureAlcohol", s"$requiredKey.pureAlcohol", Seq("pureAlcohol"))
-        )
-      }
-
+    "fail to bind when values with too many decimal places are provided" in {
+      val data = Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "1.1123",
+        "volumes[0].pureAlcohol" -> "1.1123"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_0_totalLitres", s"return.journey.error.tooManyDecimalPlaces.totalLitres", Seq("")),
+        FormError("volumes_0_pureAlcohol", s"return.journey.error.tooManyDecimalPlaces.pureAlcohol", Seq(""))
+      )
     }
 
-    "decimal places" - {
-      "fail to bind when the value for total litres is not valid" in {
-        val data = Map(
-          s"$fieldName[0].taxType"     -> "1",
-          s"$fieldName[0].totalLitres" -> "1.1123",
-          s"$fieldName[0].pureAlcohol" -> "1.1"
-        )
-        form.bind(data).errors must contain(FormError(s"$fieldName[0]", lengthKeyTotalLitres))
-      }
-
-      "fail to bind when the value for pure alcohol is not valid" in {
-        val data = Map(
-          s"$fieldName[0].taxType"     -> "1",
-          s"$fieldName[0].totalLitres" -> "1.1",
-          s"$fieldName[0].pureAlcohol" -> "1.11234"
-        )
-        form.bind(data).errors must contain(FormError(s"$fieldName[0]", lengthKeyPureAlcohol))
-      }
+    "fail to bind when invalid values are provided" in {
+      val data = Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "invalid",
+        "volumes[0].pureAlcohol" -> "invalid"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_0_totalLitres", "return.journey.error.invalid.totalLitres", List("")),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.invalid.pureAlcohol", List(""))
+      )
     }
 
-    "non numeric values" - {
-      "fail to bind when the answer is invalid for total litres" in {
-        val data = Map(
-          s"$fieldName[0].taxType"     -> "1",
-          s"$fieldName[0].totalLitres" -> "invalid",
-          s"$fieldName[0].pureAlcohol" -> "1.1"
-        )
-        form.bind(data).errors must contain(
-          FormError(s"$fieldName[0]", s"$invalidKey.totalLitres")
-        )
-      }
+    "fail to bind when values below minimum are provided" in {
+      val data = Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "0",
+        "volumes[0].pureAlcohol" -> "0"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_0_totalLitres", "return.journey.error.minimumValue.totalLitres", List("")),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.minimumValue.pureAlcohol", List(""))
+      )
+    }
 
-      "fail to bind when the answer is invalid for pure alcohol" in {
-        val data = Map(
-          s"$fieldName[0].taxType"     -> "1",
-          s"$fieldName[0].totalLitres" -> "1.1",
-          s"$fieldName[0].pureAlcohol" -> "invalid"
-        )
-        form.bind(data).errors must contain(
-          FormError(s"$fieldName[0]", s"$invalidKey.pureAlcohol")
-        )
-      }
+    "fail to bind when values exceed maximum are provided" in {
+      val data = Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "100000000000",
+        "volumes[0].pureAlcohol" -> "100000000000"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_0_totalLitres", "return.journey.error.maximumValue.totalLitres", List("")),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.maximumValue.pureAlcohol", List(""))
+      )
+    }
 
+    "fail to bind when pure alcohol volume is higher than total litres value" in {
+      val data = Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "1",
+        "volumes[0].pureAlcohol" -> "2"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_0_totalLitres", "return.journey.error.moreThanExpected", List("")),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.lessThanExpected", List(""))
+      )
     }
   }
 }

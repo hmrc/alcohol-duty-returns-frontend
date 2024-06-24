@@ -85,7 +85,71 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
 
+    "must fail when data with too many decimal places is provided" in {
+      val result = form.bind(
+        Map(
+          "volumesWithRate.taxType"     -> "aTaxType",
+          "volumesWithRate.totalLitres" -> "1.123",
+          "volumesWithRate.pureAlcohol" -> "1.123",
+          "volumesWithRate.dutyRate"    -> "1.123"
+        )
+      )
+      result.errors must contain allElementsOf List(
+        "volumesWithRate_totalLitres" -> "return.journey.error.tooManyDecimalPlaces.totalLitres",
+        "volumesWithRate_pureAlcohol" -> "return.journey.error.tooManyDecimalPlaces.pureAlcohol",
+        "volumesWithRate_dutyRate"    -> "return.journey.error.tooManyDecimalPlaces.dutyRate"
+      ).map { case (k, v) => FormError(k, v, List("")) }
+    }
 
+    "must fail when data exceeding maximum value is provided" in {
+      val result = form.bind(
+        Map(
+          "volumesWithRate.taxType"     -> "aTaxType",
+          "volumesWithRate.totalLitres" -> "100000000000",
+          "volumesWithRate.pureAlcohol" -> "100000000000",
+          "volumesWithRate.dutyRate"    -> "100000000000"
+        )
+      )
+
+      result.errors must contain allElementsOf List(
+        "volumesWithRate_totalLitres" -> "return.journey.error.maximumValue.totalLitres",
+        "volumesWithRate_pureAlcohol" -> "return.journey.error.maximumValue.pureAlcohol",
+        "volumesWithRate_dutyRate"    -> "return.journey.error.maximumValue.dutyRate"
+      ).map { case (k, v) => FormError(k, v, List("")) }
+    }
+
+    "must fail when data below minimum value is provided" in {
+      val result = form.bind(
+        Map(
+          "volumesWithRate.taxType"     -> "aTaxType",
+          "volumesWithRate.totalLitres" -> "0",
+          "volumesWithRate.pureAlcohol" -> "0",
+          "volumesWithRate.dutyRate"    -> "-1"
+        )
+      )
+
+      result.errors must contain allElementsOf List(
+        "volumesWithRate_totalLitres" -> "return.journey.error.minimumValue.totalLitres",
+        "volumesWithRate_pureAlcohol" -> "return.journey.error.minimumValue.pureAlcohol",
+        "volumesWithRate_dutyRate"    -> "return.journey.error.minimumValue.dutyRate"
+      ).map { case (k, v) => FormError(k, v, List("")) }
+    }
+
+    "must fail when pure alcohol is more than total litres" in {
+      val result = form.bind(
+        Map(
+          "volumesWithRate.taxType"     -> "aTaxType",
+          "volumesWithRate.totalLitres" -> "1.1",
+          "volumesWithRate.pureAlcohol" -> "100.1",
+          "volumesWithRate.dutyRate"    -> "1.1",
+          "volumesWithRate.extra"       -> "extra"
+        )
+      )
+
+      result.errors must contain allElementsOf List(
+        "volumesWithRate_totalLitres" -> "return.journey.error.moreThanExpected",
+        "volumesWithRate_pureAlcohol" -> "return.journey.error.lessThanExpected"
+      ).map { case (k, v) => FormError(k, v, List("")) }
+    }
   }
-
 }
