@@ -16,10 +16,13 @@ site.unit.litres = litres
 site.unit.tonnes = tonnes
 site.unit.litres.upper = Litres
 site.unit.tonnes.upper = Tonnes
+site.unit.per.litre = per litre
+site.unit.litre.unit = l
 site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
 site.currency.2DP = £{0,number,#,##0.00}
+site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
 
 date.day = Day
@@ -70,10 +73,15 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
+doYouHaveAnAppaId.title = Do you have an Alcoholic Products Producer approval ID?
+doYouHaveAnAppaId.heading = Do you have an Alcoholic Products Producer approval ID?
+doYouHaveAnAppaId.hint = This is 15-digits, for example XMADP0123456789
+doYouHaveAnAppaId.error.required = Select yes if you have an Alcoholic Products Producer approval ID
+
 noAppaId.title = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
 noAppaId.heading = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
 noAppaId.text = Register with HMRC to receive an Alcoholic Products Producer approval ID and manage your alcohol duty online.
-noAppaId.link.text = Read guidance on paying Alcohol Duty (opens in a new tab)
+noAppaId.link.text = Read guidance on getting approval to produce alcoholic products (opens in a new tab)
 
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty return
@@ -101,6 +109,29 @@ viewPastReturns.viewReturn.hidden = view return
 viewPastReturns.status.due = DUE
 viewPastReturns.status.overdue = OVERDUE
 viewPastReturns.status.completed = COMPLETED
+
+viewReturn.heading = Your Alcohol Duty return
+viewReturn.title = Your Alcohol Duty return
+viewReturn.submitted = Submitted on {0} at {1}
+viewReturn.alcoholDuty.caption = Alcohol declared
+viewReturn.alcoholDuty.total.legend = Total declared duty value
+viewReturn.alcoholDuty.noneDeclared = No alcohol declared
+viewReturn.adjustments.caption = Adjustments
+viewReturn.adjustments.total.legend = Total adjustments duty value
+viewReturn.adjustments.noneDeclared = No adjustments declared
+viewReturn.adjustments.type.underdeclaration = Under-declared
+viewReturn.adjustments.type.overdeclaration = Over-declared
+viewReturn.adjustments.type.repackagedDraught = Repackaged
+viewReturn.adjustments.type.spoilt = Spoilt
+viewReturn.adjustments.type.drawback = Drawback
+viewReturn.totalDutyDue.caption = Total duty due
+viewReturn.totalDutyDue.total.legend = Total due
+viewReturn.table.adjustmentType.legend = Adjustment type
+viewReturn.table.description.legend = Description
+viewReturn.table.lpa.legend = Litres of pure alcohol (Lpa)
+viewReturn.table.dutyRate.legend = Duty rate (per litre)
+viewReturn.table.dutyValue.legend = Duty value
+viewReturn.table.dutyDue.legend = Duty due
 
 taskList.title = Alcohol Duty return
 taskList.status.completed = Return ready to submit

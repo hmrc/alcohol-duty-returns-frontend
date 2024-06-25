@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedWineFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedWine
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -44,10 +44,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
   val validTotalWine              = 23.45
   val validPureAlcoholInWine      = 16.46
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedWinePage.toString -> Json.obj(
         "totalWine"         -> validTotalWine,
@@ -70,7 +67,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -89,7 +86,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(
           form.fill(DutySuspendedWine(validTotalWine, validPureAlcoholInWine)),
           NormalMode
-        )(request, messages(application)).toString
+        )(request, getMessages(application)).toString
       }
     }
 
@@ -139,7 +136,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 

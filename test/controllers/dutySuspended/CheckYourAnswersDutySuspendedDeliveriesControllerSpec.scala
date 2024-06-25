@@ -28,10 +28,7 @@ import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase with SummaryListFluency {
   val validTotal                                              = 42.34
   val validPureAlcohol                                        = 34.23
-  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedBeerPage.toString           -> Json.obj(
         "totalBeer"         -> validTotal,
@@ -73,20 +70,17 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
 
         val view                   = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
         val checkYourAnswersHelper =
-          new CheckYourAnswersSummaryListHelper(completeDutySuspendedDeliveriesUserAnswers)(messages(application))
+          new CheckYourAnswersSummaryListHelper(completeDutySuspendedDeliveriesUserAnswers)(getMessages(application))
         val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList.get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
       }
     }
 
     "must return OK and the correct view for a GET if all relevant regime questions are answered" in {
 
-      val beerScreenAnswer: UserAnswers = UserAnswers(
-        returnId,
-        groupId,
-        internalId,
+      val beerScreenAnswer: UserAnswers = emptyUserAnswers.copy(data =
         Json.obj(
           DutySuspendedBeerPage.toString -> Json.obj(
             "totalBeer"         -> validTotal,
@@ -108,11 +102,11 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
 
         val view                   = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
         val checkYourAnswersHelper =
-          new CheckYourAnswersSummaryListHelper(beerScreenAnswer)(messages(application))
+          new CheckYourAnswersSummaryListHelper(beerScreenAnswer)(getMessages(application))
         val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList.get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
       }
     }
 

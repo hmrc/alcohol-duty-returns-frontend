@@ -30,7 +30,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
   val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
+  implicit val messages: Messages = getMessages(application)
 
   "returnSection" - {
 
@@ -259,29 +259,27 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       "must have a link to DeclareDutySuspendedDeliveriesQuestionController if the user answers yes to DSD question and not all regime questions are answered" in {
         val validTotal                                                = 42.34
         val validPureAlcohol                                          = 34.23
-        val incompleteDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
-          returnId,
-          groupId,
-          internalId,
-          Json.obj(
-            DutySuspendedBeerPage.toString    -> Json.obj(
-              "totalBeer"         -> validTotal,
-              "pureAlcoholInBeer" -> validPureAlcohol
-            ),
-            DutySuspendedCiderPage.toString   -> Json.obj(
-              "totalCider"         -> validTotal,
-              "pureAlcoholInCider" -> validPureAlcohol
-            ),
-            DutySuspendedSpiritsPage.toString -> Json.obj(
-              "totalSpirits"         -> validTotal,
-              "pureAlcoholInSpirits" -> validPureAlcohol
-            ),
-            DutySuspendedWinePage.toString    -> Json.obj(
-              "totalWine"         -> validTotal,
-              "pureAlcoholInWine" -> validPureAlcohol
+        val incompleteDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers
+          .copy(data =
+            Json.obj(
+              DutySuspendedBeerPage.toString    -> Json.obj(
+                "totalBeer"         -> validTotal,
+                "pureAlcoholInBeer" -> validPureAlcohol
+              ),
+              DutySuspendedCiderPage.toString   -> Json.obj(
+                "totalCider"         -> validTotal,
+                "pureAlcoholInCider" -> validPureAlcohol
+              ),
+              DutySuspendedSpiritsPage.toString -> Json.obj(
+                "totalSpirits"         -> validTotal,
+                "pureAlcoholInSpirits" -> validPureAlcohol
+              ),
+              DutySuspendedWinePage.toString    -> Json.obj(
+                "totalWine"         -> validTotal,
+                "pureAlcoholInWine" -> validPureAlcohol
+              )
             )
           )
-        )
           .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
           .success
           .value
@@ -311,33 +309,31 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions are answered" in {
         val validTotal                                              = 42.34
         val validPureAlcohol                                        = 34.23
-        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = UserAnswers(
-          returnId,
-          groupId,
-          internalId,
-          Json.obj(
-            DutySuspendedBeerPage.toString           -> Json.obj(
-              "totalBeer"         -> validTotal,
-              "pureAlcoholInBeer" -> validPureAlcohol
-            ),
-            DutySuspendedCiderPage.toString          -> Json.obj(
-              "totalCider"         -> validTotal,
-              "pureAlcoholInCider" -> validPureAlcohol
-            ),
-            DutySuspendedSpiritsPage.toString        -> Json.obj(
-              "totalSpirits"         -> validTotal,
-              "pureAlcoholInSpirits" -> validPureAlcohol
-            ),
-            DutySuspendedWinePage.toString           -> Json.obj(
-              "totalWine"         -> validTotal,
-              "pureAlcoholInWine" -> validPureAlcohol
-            ),
-            DutySuspendedOtherFermentedPage.toString -> Json.obj(
-              "totalOtherFermented"         -> validTotal,
-              "pureAlcoholInOtherFermented" -> validPureAlcohol
+        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers
+          .copy(data =
+            Json.obj(
+              DutySuspendedBeerPage.toString           -> Json.obj(
+                "totalBeer"         -> validTotal,
+                "pureAlcoholInBeer" -> validPureAlcohol
+              ),
+              DutySuspendedCiderPage.toString          -> Json.obj(
+                "totalCider"         -> validTotal,
+                "pureAlcoholInCider" -> validPureAlcohol
+              ),
+              DutySuspendedSpiritsPage.toString        -> Json.obj(
+                "totalSpirits"         -> validTotal,
+                "pureAlcoholInSpirits" -> validPureAlcohol
+              ),
+              DutySuspendedWinePage.toString           -> Json.obj(
+                "totalWine"         -> validTotal,
+                "pureAlcoholInWine" -> validPureAlcohol
+              ),
+              DutySuspendedOtherFermentedPage.toString -> Json.obj(
+                "totalOtherFermented"         -> validTotal,
+                "pureAlcoholInOtherFermented" -> validPureAlcohol
+              )
             )
           )
-        )
           .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
           .success
           .value
@@ -456,12 +452,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           )
         )
 
-        def setUserAnswers(pages: Seq[JsObject]): UserAnswers = UserAnswers(
-          returnId,
-          groupId,
-          internalId,
-          pages.reduce(_ ++ _)
-        )
+        def setUserAnswers(pages: Seq[JsObject]): UserAnswers = emptyUserAnswers.copy(data = pages.reduce(_ ++ _))
 
         "not be started when no other questions are answered" in {
           val userAnswers = setUserAnswers(Seq(declareQuarterleySpiritsPage))

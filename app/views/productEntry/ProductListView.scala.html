@@ -67,12 +67,11 @@
           ))
         )
 
-      @govukTable(Table(
-        head = Some(Seq(
-            HeadCell(content = Text(messages("productList.total")), classes = "govuk-!-width-one-half"),
-            HeadCell(content = Text(messages("site.currency.2DP", productTable.total)), classes = "govuk-!-width-one-half"))
-        )),
-      )
+        @{productTable.total.map { total =>
+            govukTable(Table(
+              head = Some(total.toHeadCells())
+            ))
+        }}
 
         @govukRadios(
             RadiosViewModel.yesNo(

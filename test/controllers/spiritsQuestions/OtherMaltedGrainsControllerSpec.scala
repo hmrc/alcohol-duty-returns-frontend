@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherMaltedGrainsFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
@@ -45,10 +45,7 @@ class OtherMaltedGrainsControllerSpec extends SpecBase {
   val otherMaltedGrainsTypes    = "Coco Pops"
   val otherMaltedGrainsQuantity = BigDecimal(100000)
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       OtherMaltedGrainsPage.toString -> Json.obj(
         "otherMaltedGrainsTypes"    -> otherMaltedGrainsTypes,
@@ -71,7 +68,7 @@ class OtherMaltedGrainsControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -90,7 +87,7 @@ class OtherMaltedGrainsControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(
           form.fill(OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)),
           NormalMode
-        )(request, messages(application)).toString
+        )(request, getMessages(application)).toString
       }
     }
 
@@ -140,7 +137,7 @@ class OtherMaltedGrainsControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 

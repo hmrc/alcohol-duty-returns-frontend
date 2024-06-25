@@ -18,7 +18,7 @@ package controllers.dutySuspended
 
 import base.SpecBase
 import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.dutySuspended.DutySuspendedOtherFermented
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -44,10 +44,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
   lazy val dutySuspendedOtherFermentedRoute = routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
         "totalOtherFermented"         -> validTotalOtherFermented,
@@ -70,7 +67,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -89,7 +86,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(
           form.fill(DutySuspendedOtherFermented(validTotalOtherFermented, validPureAlcoholInOtherFermented)),
           NormalMode
-        )(request, messages(application)).toString
+        )(request, getMessages(application)).toString
       }
     }
 
@@ -139,7 +136,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 

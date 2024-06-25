@@ -16,10 +16,11 @@
 
 package base
 
+import common.TestData
 import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
-import models.{ReturnId, UserAnswers}
+import models.UserAnswers
 import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -31,6 +32,8 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results
+import uk.gov.hmrc.http.HeaderCarrier
+import viewmodels.DateTimeHelper
 
 import scala.concurrent.ExecutionContext
 
@@ -44,22 +47,17 @@ trait SpecBase
     with GuiceOneAppPerSuite
     with MockitoSugar
     with IntegrationPatience
-    with ModelGenerators {
+    with ModelGenerators
+    with TestData {
+  def getMessages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
-  val appaId: String     = appaIdGen.sample.get
-  val periodKey: String  = periodKeyGen.sample.get
-  val groupId: String    = "groupid"
-  val internalId: String = "id"
-  val returnId: ReturnId = ReturnId(appaId, periodKey)
-
-  def emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, internalId)
-
-  def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+  val fakeIdentifierUserDetails = FakeIdentifierUserDetails(appaId, groupId, internalId)
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[FakeIdentifierUserDetails].toInstance(fakeIdentifierUserDetails),
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[IdentifierWithoutEnrolmentAction].to[FakeIdentifierWithoutEnrolmentAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
@@ -70,5 +68,8 @@ trait SpecBase
   def FakeRequestWithoutSession()                                                                    = play.api.test.FakeRequest()
   def FakeRequestWithoutSession(verb: String, route: String)                                         = play.api.test.FakeRequest(verb, route)
 
+  val dateTimeHelper = new DateTimeHelper()
+
+  implicit val hc: HeaderCarrier    = HeaderCarrier()
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }

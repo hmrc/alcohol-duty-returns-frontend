@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.WhiskyFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import models.spiritsQuestions.Whisky
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -43,10 +43,7 @@ class WhiskyControllerSpec extends SpecBase {
   lazy val whiskyRoute  = routes.WhiskyController.onPageLoad(NormalMode).url
   val validScotchWhisky = 55.6
   val validIrishWhisky  = 47.5
-  val userAnswers       = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers       = emptyUserAnswers.copy(data =
     Json.obj(
       WhiskyPage.toString -> Json.obj(
         "scotchWhisky" -> validScotchWhisky,
@@ -69,7 +66,7 @@ class WhiskyControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -87,7 +84,7 @@ class WhiskyControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(Whisky(validScotchWhisky, validIrishWhisky)), NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -138,7 +135,7 @@ class WhiskyControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 

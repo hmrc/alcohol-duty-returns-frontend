@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
@@ -47,10 +47,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
   val otherIngredientsUnit     = Tonnes
   val otherIngredientsQuantity = BigDecimal(100000)
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       OtherIngredientsUsedPage.toString -> Json.obj(
         "otherIngredientsUsedTypes"    -> otherIngredientsTypes,
@@ -74,7 +71,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -93,7 +90,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(
           form.fill(OtherIngredientsUsed(otherIngredientsTypes, otherIngredientsUnit, otherIngredientsQuantity)),
           NormalMode
-        )(request, messages(application)).toString
+        )(request, getMessages(application)).toString
       }
     }
 
@@ -144,7 +141,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 

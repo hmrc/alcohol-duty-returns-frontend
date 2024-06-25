@@ -74,7 +74,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentTaxTypeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, spoilt)(request, getMessages(application)).toString
       }
     }
 
@@ -96,7 +96,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, spoilt)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -164,7 +164,10 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, spoilt)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
@@ -203,7 +206,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
             .fill(validAnswer),
           NormalMode,
           spoilt
-        )(request, messages(application)).toString
+        )(request, getMessages(application)).toString
       }
     }
 

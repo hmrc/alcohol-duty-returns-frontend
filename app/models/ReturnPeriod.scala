@@ -42,10 +42,7 @@ object ReturnPeriod {
       json
         .validate[String]
         .map(pk =>
-          ReturnPeriod.fromPeriodKey(pk) match {
-            case Some(rp) => rp
-            case None     => throw new IllegalArgumentException(s"$pk is not a valid period key")
-          }
+          ReturnPeriod.fromPeriodKey(pk).getOrElse(throw new IllegalArgumentException(s"$pk is not a valid period key"))
         )
 
     override def writes(returnPeriod: ReturnPeriod): JsValue =
