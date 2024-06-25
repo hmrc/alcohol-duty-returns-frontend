@@ -25,8 +25,7 @@ import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import java.time.{Clock, Instant, LocalDate, ZoneId}
 
 trait TestData extends ModelGenerators {
-  val clock = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))
-
+  val clock              = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))
   val appaId: String     = appaIdGen.sample.get
   val periodKey: String  = periodKeyGen.sample.get
   val groupId: String    = "groupid"
