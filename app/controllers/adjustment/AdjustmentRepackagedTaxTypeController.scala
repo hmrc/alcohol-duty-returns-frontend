@@ -27,11 +27,10 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import play.api.data.Form
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentRepackagedTaxTypeView
 
 import java.time.YearMonth
@@ -67,10 +66,21 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                 .toInt
             ),
             mode,
-            AdjustmentTypeHelper.getAdjustmentTypeValue(value)
+            value.adjustmentType.getOrElse(
+              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+            )
           )
         )
-      case Some(value)                                       => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                                       =>
+        Ok(
+          view(
+            form,
+            mode,
+            value.adjustmentType.getOrElse(
+              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+            )
+          )
+        )
     }
   }
 
@@ -83,7 +93,9 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
           value => {
             val currentAdjustmentEntry          = request.userAnswers.get(CurrentAdjustmentEntryPage).get
             val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
-            val adjustmentType                  = AdjustmentTypeHelper.getAdjustmentTypeValue(updatedAdjustment)
+            val adjustmentType                  = updatedAdjustment.adjustmentType.getOrElse(
+              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+            )
             fetchAdjustmentRateBand(
               value.toString,
               updatedAdjustment.period.getOrElse(throw new RuntimeException("Couldn't fetch period value from cache"))
@@ -126,7 +138,15 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
       case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(value) =>
         Future.successful(
-          BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+          BadRequest(
+            view(
+              formWithErrors,
+              mode,
+              value.adjustmentType.getOrElse(
+                throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+              )
+            )
+          )
         )
     }
 
@@ -148,7 +168,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
   private def rateBandResponseError(
     mode: Mode,
     value: Int,
-    adjustmentType: String,
+    adjustmentType: AdjustmentType,
     errorMessage: String,
     regime: AlcoholRegime*
   )(implicit

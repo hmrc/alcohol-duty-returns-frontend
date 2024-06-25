@@ -16,6 +16,7 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, Link, Paragraph}
+@import models.adjustment.AdjustmentType
 
 @this(
     layout: templates.Layout,
@@ -29,7 +30,7 @@
     pageHeading: PageHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentSmallProducerReliefDutyRate.title"))) {
 

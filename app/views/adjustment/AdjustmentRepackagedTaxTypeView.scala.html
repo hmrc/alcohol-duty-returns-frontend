@@ -16,6 +16,7 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading}
+@import models.adjustment.AdjustmentType
 
 @this(
     layout: templates.Layout,
@@ -26,7 +27,7 @@
     sectionHeading: SectionHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentRepackagedTaxType.title"))) {
 

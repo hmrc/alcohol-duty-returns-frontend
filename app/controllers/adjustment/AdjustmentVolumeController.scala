@@ -26,11 +26,10 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
-import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
+import models.adjustment.{AdjustmentEntry, AdjustmentType, AdjustmentVolume}
 import models.requests.DataRequest
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -73,7 +72,9 @@ class AdjustmentVolumeController @Inject() (
       view(
         preparedForm,
         mode,
-        AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry),
+        adjustmentEntry.adjustmentType.getOrElse(
+          throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+        ),
         getRegime,
         adjustmentEntry.rateBand
           .map(_.minABV)
@@ -101,7 +102,9 @@ class AdjustmentVolumeController @Inject() (
               checkAdjustmentVolumes(
                 value,
                 mode,
-                AdjustmentTypeHelper.getAdjustmentTypeValue(adjustment),
+                adjustment.adjustmentType.getOrElse(
+                  throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+                ),
                 getRegime,
                 adjustment.rateBand
                   .map(_.minABV)
@@ -144,7 +147,9 @@ class AdjustmentVolumeController @Inject() (
             view(
               formWithErrors,
               mode,
-              AdjustmentTypeHelper.getAdjustmentTypeValue(value),
+              value.adjustmentType.getOrElse(
+                throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+              ),
               getRegime,
               value.rateBand
                 .map(_.minABV)
@@ -182,7 +187,7 @@ class AdjustmentVolumeController @Inject() (
   private def checkAdjustmentVolumes(
     adjustmentVolume: AdjustmentVolume,
     mode: Mode,
-    adjustmentType: String,
+    adjustmentType: AdjustmentType,
     regime: AlcoholRegime,
     minABV: AlcoholByVolume,
     maxABV: AlcoholByVolume,

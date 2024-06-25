@@ -23,7 +23,6 @@ import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import pages._
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.mvc.Call
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 
 import javax.inject.{Inject, Singleton}
 
@@ -104,13 +103,18 @@ class AdjustmentNavigator @Inject() () {
   }
 
   private def adjustmentVolumePageRoute(userAnswers: UserAnswers): Call = {
-    val adjustmentType = AdjustmentTypeHelper.getAdjustmentTypeValue(
-      userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-    )
+    val adjustmentType = userAnswers
+      .get(CurrentAdjustmentEntryPage)
+      .getOrElse(AdjustmentEntry())
+      .adjustmentType
+      .getOrElse(
+        throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+      )
+
     adjustmentType match {
-      case RepackagedDraughtProducts.toString =>
+      case RepackagedDraughtProducts =>
         controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode)
-      case _                                  => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+      case _                         => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
   }
 

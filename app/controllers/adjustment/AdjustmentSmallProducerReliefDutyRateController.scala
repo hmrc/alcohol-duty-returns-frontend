@@ -28,7 +28,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentSmallProducerReliefDutyRateView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -53,8 +52,25 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case None                                                 => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       case Some(value) if value.repackagedSprDutyRate.isDefined =>
-        Ok(view(form.fill(value.repackagedSprDutyRate.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      case Some(value)                                          => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+        Ok(
+          view(
+            form.fill(value.repackagedSprDutyRate.get),
+            mode,
+            value.adjustmentType.getOrElse(
+              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+            )
+          )
+        )
+      case Some(value)                                          =>
+        Ok(
+          view(
+            form,
+            mode,
+            value.adjustmentType.getOrElse(
+              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+            )
+          )
+        )
     }
   }
 
@@ -68,7 +84,15 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
               case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
               case Some(value) =>
                 Future.successful(
-                  BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+                  BadRequest(
+                    view(
+                      formWithErrors,
+                      mode,
+                      value.adjustmentType.getOrElse(
+                        throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+                      )
+                    )
+                  )
                 )
             },
           value => {

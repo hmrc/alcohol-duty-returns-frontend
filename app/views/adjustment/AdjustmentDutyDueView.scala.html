@@ -16,6 +16,8 @@
 
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
 @import views.ViewUtils.valueFormatter
+@import models.adjustment.AdjustmentType
+@import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 
 @this(
         layout: templates.Layout,
@@ -27,7 +29,7 @@
         subHeading: SubHeading
 )
 
-@(adjustmentType: String, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal, repackagedRate:BigDecimal, repackagedDuty:BigDecimal, newDuty:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentType: AdjustmentType, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal, repackagedRate:BigDecimal, repackagedDuty:BigDecimal, newDuty:BigDecimal)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", valueFormatter(duty)))) {
 
@@ -39,7 +41,7 @@
 
     @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
-    @if(adjustmentType != "repackaged-draught-products") {
+    @if(adjustmentType != RepackagedDraughtProducts) {
         @bulletList(Seq(
         messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
         messages("adjustmentDutyDue.bulletList.2", valueFormatter(rate)),
@@ -47,7 +49,7 @@
         ))
     }
 
-    @if(adjustmentType == "repackaged-draught-products") {
+    @if(adjustmentType == RepackagedDraughtProducts) {
         @bulletList(Seq(
         messages("adjustmentDutyDue.repackaged.bulletList.1", valueFormatter(rate)),
         messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),

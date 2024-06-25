@@ -16,6 +16,7 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import models.adjustment.AdjustmentType
 
 @this(
     layout: templates.Layout,
@@ -29,7 +30,7 @@
     subHeading: SubHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String, regime: AlcoholRegime, minABV: AlcoholByVolume, maxABV: AlcoholByVolume, taxCode:String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, regime: AlcoholRegime, minABV: AlcoholByVolume, maxABV: AlcoholByVolume, taxCode:String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentVolume.title"))) {
 

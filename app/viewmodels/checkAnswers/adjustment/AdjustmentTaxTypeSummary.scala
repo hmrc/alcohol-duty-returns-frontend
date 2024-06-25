@@ -22,7 +22,6 @@ import models.CheckMode
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper.getAdjustmentTypeValue
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
@@ -30,8 +29,10 @@ import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 object AdjustmentTaxTypeSummary {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
-    val adjustmentType = getAdjustmentTypeValue(adjustmentEntry)
-    val label          = if (adjustmentType.equals(RepackagedDraughtProducts.toString)) {
+    val adjustmentType = adjustmentEntry.adjustmentType.getOrElse(
+      throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+    )
+    val label          = if (adjustmentType.equals(RepackagedDraughtProducts)) {
       "adjustmentTaxType.repackaged.checkYourAnswersLabel"
     } else { "adjustmentTaxType.checkYourAnswersLabel" }
     adjustmentEntry.rateBand.map { rateBand =>

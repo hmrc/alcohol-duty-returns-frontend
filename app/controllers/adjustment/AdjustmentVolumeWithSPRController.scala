@@ -26,11 +26,10 @@ import pages.adjustment.{AdjustmentVolumeWithSPRPage, CurrentAdjustmentEntryPage
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import connectors.CacheConnector
-import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
+import models.adjustment.{AdjustmentEntry, AdjustmentType, AdjustmentVolumeWithSPR}
 import models.requests.DataRequest
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentVolumeWithSPRView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -74,7 +73,9 @@ class AdjustmentVolumeWithSPRController @Inject() (
       view(
         preparedForm,
         mode,
-        AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry),
+        adjustmentEntry.adjustmentType.getOrElse(
+          throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+        ),
         getRegime,
         adjustmentEntry.rateBand
           .map(_.minABV)
@@ -102,7 +103,9 @@ class AdjustmentVolumeWithSPRController @Inject() (
               checkAdjustmentVolumes(
                 value,
                 mode,
-                AdjustmentTypeHelper.getAdjustmentTypeValue(adjustment),
+                adjustment.adjustmentType.getOrElse(
+                  throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+                ),
                 getRegime,
                 adjustment.rateBand
                   .map(_.minABV)
@@ -145,7 +148,9 @@ class AdjustmentVolumeWithSPRController @Inject() (
             view(
               formWithErrors,
               mode,
-              AdjustmentTypeHelper.getAdjustmentTypeValue(AdjustmentEntry()),
+              value.adjustmentType.getOrElse(
+                throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+              ),
               getRegime,
               value.rateBand
                 .map(_.minABV)
@@ -185,7 +190,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
   private def checkAdjustmentVolumes(
     adjustmentVolume: AdjustmentVolumeWithSPR,
     mode: Mode,
-    adjustmentType: String,
+    adjustmentType: AdjustmentType,
     regime: AlcoholRegime,
     minABV: AlcoholByVolume,
     maxABV: AlcoholByVolume,

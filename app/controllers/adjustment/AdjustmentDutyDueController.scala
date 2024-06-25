@@ -26,7 +26,6 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import services.adjustment.AdjustmentEntryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentDutyDueView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -60,7 +59,7 @@ class AdjustmentDutyDueController @Inject() (
       taxCode           <- adjustmentEntry.rateBand.map(_.taxType)
       duty              <- adjustmentEntry.duty
       rate              <- adjustmentEntry.rate
-      adjustmentType    <- Some(AdjustmentTypeHelper.getAdjustmentTypeValue(adjustmentEntry))
+      adjustmentType    <- adjustmentEntry.adjustmentType
       repackagedRate     = adjustmentEntry.repackagedRate.getOrElse(BigDecimal(0))
       repackagedDuty     = adjustmentEntry.repackagedDuty.getOrElse(BigDecimal(0))
       newDuty            = adjustmentEntry.newDuty.getOrElse(BigDecimal(0))

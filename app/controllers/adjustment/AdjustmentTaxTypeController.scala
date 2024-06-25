@@ -27,12 +27,11 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import play.api.data.Form
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentTaxTypeView
 
 import java.time.YearMonth
@@ -68,10 +67,21 @@ class AdjustmentTaxTypeController @Inject() (
                 .toInt
             ),
             mode,
-            AdjustmentTypeHelper.getAdjustmentTypeValue(value)
+            value.adjustmentType.getOrElse(
+              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+            )
           )
         )
-      case Some(value)                             => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(value)                             =>
+        Ok(
+          view(
+            form,
+            mode,
+            value.adjustmentType.getOrElse(
+              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+            )
+          )
+        )
     }
 
   }
@@ -86,17 +96,15 @@ class AdjustmentTaxTypeController @Inject() (
             val currentAdjustmentEntry          = request.userAnswers.get(CurrentAdjustmentEntryPage).get
             val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
             val adjustmentType                  =
-              AdjustmentTypeHelper.getAdjustmentTypeValue(updatedAdjustment) // don't use helper for this
+              updatedAdjustment.adjustmentType.getOrElse(
+                throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+              )
             fetchAdjustmentRateBand(
               value.toString,
               updatedAdjustment.period.getOrElse(throw new RuntimeException("Couldn't fetch period value from cache"))
             ).flatMap {
               case Some(rateBand) =>
-                if (
-                  adjustmentType.equals(
-                    RepackagedDraughtProducts.toString
-                  ) && (rateBand.rateType != DraughtRelief || rateBand.rateType != DraughtAndSmallProducerRelief)
-                ) {
+                if (checkRepackagedDraughtReliefEligibility(adjustmentType, rateBand)) {
                   rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.notDraught")
                 } else {
                   for {
@@ -117,6 +125,11 @@ class AdjustmentTaxTypeController @Inject() (
         )
   }
 
+  private def checkRepackagedDraughtReliefEligibility(adjustmentType: AdjustmentType, rateBand: RateBand): Boolean =
+    adjustmentType.equals(
+      RepackagedDraughtProducts
+    ) && (rateBand.rateType != DraughtRelief) && (rateBand.rateType != DraughtAndSmallProducerRelief)
+
   private def handleFormWithErrors(mode: Mode, userAnswers: UserAnswers, formWithErrors: Form[Int])(implicit
     request: Request[_]
   ): Future[Result] =
@@ -124,12 +137,20 @@ class AdjustmentTaxTypeController @Inject() (
       case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(value) =>
         Future.successful(
-          BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+          BadRequest(
+            view(
+              formWithErrors,
+              mode,
+              value.adjustmentType.getOrElse(
+                throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+              )
+            )
+          )
         )
     }
 
-  private def rateBandResponseError(mode: Mode, value: Int, adjustmentType: String, errorMessage: String)(implicit
-    request: Request[_]
+  private def rateBandResponseError(mode: Mode, value: Int, adjustmentType: AdjustmentType, errorMessage: String)(
+    implicit request: Request[_]
   ): Future[Result] =
     Future.successful(
       BadRequest(

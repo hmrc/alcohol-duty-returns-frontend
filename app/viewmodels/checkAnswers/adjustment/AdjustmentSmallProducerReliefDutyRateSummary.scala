@@ -18,11 +18,8 @@ package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
 import models.adjustment.AdjustmentEntry
-import models.{CheckMode, UserAnswers}
-import pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage
+import models.CheckMode
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._

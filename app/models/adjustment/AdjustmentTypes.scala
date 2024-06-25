@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.adjustment
+package models.adjustment
 
-import models.adjustment.AdjustmentEntry
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 
-object AdjustmentTypeHelper {
+sealed trait AdjustmentTypes extends EnumEntry
 
-  def getAdjustmentTypeValue(adjustmentEntry: AdjustmentEntry): String =
-    adjustmentEntry.adjustmentType match {
-      case Some(adjustmentType) => adjustmentType.toString
-      case _                    => "default"
-    }
+object AdjustmentTypes extends Enum[AdjustmentTypes] with PlayJsonEnum[AdjustmentTypes] {
+  val values = findValues
 
+  case object Underdeclaration extends AdjustmentTypes
+  case object Overdeclaration extends AdjustmentTypes
+  case object Spoilt extends AdjustmentTypes
+  case object RepackagedDraughtProducts extends AdjustmentTypes
+  case object Drawback extends AdjustmentTypes
+
+  override def toString: String = "adjustmentType"
 }

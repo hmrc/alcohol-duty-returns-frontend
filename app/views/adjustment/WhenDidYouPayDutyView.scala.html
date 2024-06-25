@@ -15,7 +15,8 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph}
-
+@import models.adjustment.AdjustmentType
+@import models.adjustment.AdjustmentType.{Underdeclaration,Spoilt}
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -27,11 +28,11 @@
     pageHeading: PageHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, if(adjustmentType == "under-declaration"){
+@layout(pageTitle = title(form, if(adjustmentType == Underdeclaration){
                                     messages("whenDidYouPayDuty.under-declaration.title")
-                                    } else if(adjustmentType == "spoilt"){
+                                    } else if(adjustmentType == Spoilt){
                                     messages("whenDidYouPayDuty.spoilt.title")
                                     } else {
                                     messages("whenDidYouPayDuty.default.title")
@@ -50,12 +51,12 @@
         )
 
         @pageHeading(
-                    if(adjustmentType == "under-declaration"){
-                    messages("whenDidYouPayDuty.under-declaration.heading")
-                    } else if(adjustmentType == "spoilt"){
-                    messages("whenDidYouPayDuty.spoilt.heading")
+                    if(adjustmentType == Underdeclaration){
+                        messages("whenDidYouPayDuty.under-declaration.heading")
+                    } else if(adjustmentType == Spoilt){
+                        messages("whenDidYouPayDuty.spoilt.heading")
                     } else {
-                    messages("whenDidYouPayDuty.default.heading")
+                        messages("whenDidYouPayDuty.default.heading")
                     }
                     )
 

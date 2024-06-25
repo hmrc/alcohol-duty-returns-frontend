@@ -16,6 +16,8 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading}
+@import models.adjustment.AdjustmentType
+@import models.adjustment.AdjustmentType.Underdeclaration
 
 @this(
     layout: templates.Layout,
@@ -26,7 +28,7 @@
     sectionHeading: SectionHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentTaxType.title"))) {
 
@@ -49,7 +51,7 @@
             .asNumeric()
             .withWidth(Fixed10)
             .withHint(HintViewModel(
-            if(adjustmentType == "under-declaration"){
+            if(adjustmentType == Underdeclaration){
             messages("adjustmentTaxType.underDeclaration.hint")
             } else {
             messages("adjustmentTaxType.default.hint")
