@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels
+package viewmodels.checkAnswers.returns
 
 import base.SpecBase
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
@@ -24,6 +24,8 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 
+import java.time.LocalDate
+
 class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = getMessages(application)
@@ -31,23 +33,23 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   val invalidPeriodKeyData = obligationDataSingleFulfilled.copy(periodKey = invalidPeriodKeyGen.sample.get)
 
   "ViewPastReturnsHelper" - {
-
-    "must return a table with the correct head" in {
-      val table = ViewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleOpen))
+    "must return a table with the correct head" in new SetUp {
+      val table = viewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleOpen))
       table.head.size shouldBe 3
     }
 
-    "must return a table with the correct rows" in {
+    "must return a table with the correct rows" in new SetUp {
       val obligationData = Seq(obligationDataSingleOpen)
-      val table          = ViewPastReturnsHelper.getReturnsTable(obligationData)
+      val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>
         row.actions.head.href shouldBe controllers.routes.BeforeStartReturnController.onPageLoad(periodKeyAug)
       }
     }
-    "must return the COMPLETED status for a fulfilled obligation" in {
+
+    "must return the COMPLETED status for a fulfilled obligation" in new SetUp {
       val obligationData = Seq(obligationDataSingleFulfilled)
-      val table          = ViewPastReturnsHelper.getReturnsTable(obligationData)
+      val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>
         row.cells(1).asHtml shouldBe new GovukTag()(
@@ -55,9 +57,19 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
         )
       }
     }
-    "must return the DUE status an open obligation" in {
+
+    "must have the correct view return action link fulfilled obligation" in new SetUp {
+      val obligationData = Seq(obligationDataSingleFulfilled).sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+      val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
+      table.rows.size shouldBe obligationData.size
+      obligationData.map(_.periodKey).zip(table.rows).map { case (periodKey, row) =>
+        row.actions.head.href shouldBe controllers.returns.routes.ViewReturnController.onPageLoad(periodKey)
+      }
+    }
+
+    "must return the DUE status an open obligation" in new SetUp {
       val obligationData = Seq(obligationDataSingleOpen)
-      val table          = ViewPastReturnsHelper.getReturnsTable(obligationData)
+      val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>
         row.cells(1).asHtml shouldBe new GovukTag()(
@@ -65,16 +77,17 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
         )
       }
     }
-    "must throw an exception for an invalid period" in {
+
+    "must throw an exception for an invalid period" in new SetUp {
       val obligationData = Seq(invalidPeriodKeyData)
       val exception      = intercept[RuntimeException] {
-        ViewPastReturnsHelper.getReturnsTable(obligationData)
+        viewPastReturnsHelper.getReturnsTable(obligationData)
       }
       exception.getMessage shouldBe "Couldn't fetch period from periodKey"
     }
 
-    "must return a sorted table by due date in descending order for Open obligations" in {
-      val table = ViewPastReturnsHelper.getReturnsTable(multipleOpenObligations)
+    "must return a sorted table by due date in descending order for Open obligations" in new SetUp {
+      val table = viewPastReturnsHelper.getReturnsTable(multipleOpenObligations)
       table.rows.size                                         shouldBe multipleOpenObligations.size
       table.rows.map(row => row.cells.head.asHtml.toString()) shouldBe Seq(
         Text("December 2024").asHtml.toString(),
@@ -85,8 +98,8 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       )
     }
 
-    "must return a sorted table by due date in descending order for fulfilled obligations" in {
-      val table = ViewPastReturnsHelper.getReturnsTable(multipleFulfilledObligations)
+    "must return a sorted table by due date in descending order for fulfilled obligations" in new SetUp {
+      val table = viewPastReturnsHelper.getReturnsTable(multipleFulfilledObligations)
       table.rows.size                                         shouldBe multipleFulfilledObligations.size
       table.rows.map(row => row.cells.head.asHtml.toString()) shouldBe Seq(
         Text("July 2024").asHtml.toString(),
@@ -95,7 +108,9 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
         Text("April 2024").asHtml.toString()
       )
     }
-
   }
 
+  class SetUp {
+    val viewPastReturnsHelper = new ViewPastReturnsHelper()
+  }
 }

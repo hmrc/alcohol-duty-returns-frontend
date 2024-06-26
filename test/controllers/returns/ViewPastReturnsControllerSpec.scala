@@ -22,7 +22,7 @@ import controllers.returns
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import play.api.test.Helpers._
-import viewmodels.ViewPastReturnsHelper
+import viewmodels.checkAnswers.returns.ViewPastReturnsHelper
 import views.html.returns.ViewPastReturnsView
 
 import scala.concurrent.Future
@@ -30,6 +30,7 @@ import scala.concurrent.Future
 class ViewPastReturnsControllerSpec extends SpecBase {
   "ViewPastReturns Controller" - {
     "must return OK and the correct view for a GET" in {
+      val viewModelHelper                 = new ViewPastReturnsHelper()
       val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
       when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
         Seq(obligationDataSingleOpen, obligationDataSingleFulfilled)
@@ -44,9 +45,9 @@ class ViewPastReturnsControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[ViewPastReturnsView]
 
         val outstandingReturnsTable =
-          ViewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleOpen))(getMessages(application))
+          viewModelHelper.getReturnsTable(Seq(obligationDataSingleOpen))(getMessages(application))
         val completedReturnsTable   =
-          ViewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleFulfilled))(getMessages(application))
+          viewModelHelper.getReturnsTable(Seq(obligationDataSingleFulfilled))(getMessages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable)(
           request,

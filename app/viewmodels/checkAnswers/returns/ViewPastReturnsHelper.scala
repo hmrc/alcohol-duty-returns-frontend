@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package viewmodels
+package viewmodels.checkAnswers.returns
+
 import models.ObligationStatus.Open
 import models.{ObligationData, ObligationStatusToDisplay, ReturnPeriod}
 import play.api.Logging
@@ -22,11 +23,13 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
+import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, YearMonth}
+import javax.inject.Inject
 
-object ViewPastReturnsHelper extends Logging {
+class ViewPastReturnsHelper @Inject() () extends Logging {
 
   def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
     val sortedObligationData = obligationData.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
@@ -48,14 +51,15 @@ object ViewPastReturnsHelper extends Logging {
     messages: Messages
   ): Seq[TableRowViewModel] =
     obligationData.map { obligationData =>
+      val periodKey = obligationData.periodKey
       val status    = getObligationStatus(obligationData, LocalDate.now())
       val statusTag = createStatusTag(status)
       TableRowViewModel(
         cells = Seq(
-          Text(formatYearMonth(getPeriod(obligationData.periodKey))),
+          Text(formatYearMonth(getPeriod(periodKey))),
           HtmlContent(statusTag)
         ),
-        actions = getAction(messages, obligationData, status)
+        actions = getAction(messages, obligationData, status, periodKey)
       )
 
     }
@@ -63,13 +67,14 @@ object ViewPastReturnsHelper extends Logging {
   private def getAction(
     messages: Messages,
     obligationData: ObligationData,
-    status: ObligationStatusToDisplay
+    status: ObligationStatusToDisplay,
+    periodKey: String
   ): Seq[TableRowActionViewModel] =
     if (status.equals(ObligationStatusToDisplay.Completed)) {
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastReturns.viewReturn"),
-          href = controllers.routes.TaskListController.onPageLoad,
+          href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey),
           visuallyHiddenText = Some(messages("viewPastReturns.viewReturn.hidden"))
         )
       )
