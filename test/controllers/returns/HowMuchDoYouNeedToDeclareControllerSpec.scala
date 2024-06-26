@@ -185,6 +185,20 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
+    "must redirect to Journey Recovery for a GET if empty user data is provided" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, howMuchDoYouNeedToDeclareRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
@@ -200,5 +214,57 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must redirect to Journey Recovery for a POST if empty user data is provided" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, howMuchDoYouNeedToDeclareRoute)
+            .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if incoherent data is found" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+
+        val validValues = volumeAndRateByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
+          Seq(
+            s"volumes[$index].taxType"     -> "taxTypeNotInList",
+            s"volumes[$index].totalLitres" -> value.totalLitres.toString,
+            s"volumes[$index].pureAlcohol" -> value.pureAlcohol.toString
+          )
+        }
+
+        val request =
+          FakeRequest(POST, howMuchDoYouNeedToDeclareRoute)
+            .withFormUrlEncodedBody(validValues: _*)
+
+        route(application, request).value
+        the[Exception] thrownBy status(
+          route(application, request).value
+        ) must have message "Failed to find rate band for tax type"
+      }
+    }
+
   }
 }

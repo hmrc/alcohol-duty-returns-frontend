@@ -24,7 +24,6 @@ import play.api.libs.json.{JsPath, Json}
 import queries.{Gettable, Settable}
 
 import java.time.Instant
-import java.time.Instant
 import scala.util.Success
 
 class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {

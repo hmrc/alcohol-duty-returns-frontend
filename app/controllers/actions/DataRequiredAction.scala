@@ -20,7 +20,6 @@ import javax.inject.Inject
 import controllers.routes
 import models.{ReturnPeriod, UserAnswers}
 import models.requests.{DataRequest, OptionalDataRequest}
-import pages.AlcoholRegimePage
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
 

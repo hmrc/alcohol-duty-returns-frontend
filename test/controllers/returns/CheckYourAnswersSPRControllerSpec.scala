@@ -17,12 +17,22 @@
 package controllers.returns
 
 import base.SpecBase
-import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import connectors.CacheConnector
+import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import org.mockito.ArgumentMatchers.any
+import pages.returns.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import play.api.inject.bind
+import play.api.mvc.Call
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.returns.CheckYourAnswersSPRSummaryListHelper
 import views.html.returns.CheckYourAnswersSPRView
 
+import scala.concurrent.Future
+
 class CheckYourAnswersSPRControllerSpec extends SpecBase {
+
+  def onwardRoute = Call("GET", "/foo")
 
   val regime                  = regimeGen.sample.value
   val rateBands               = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
@@ -54,6 +64,87 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(regime, summaryList, None)(request, messages(application)).toString
+      }
+    }
+
+    "must redirect to the Journey Recovery page if there is no data for a GET" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the Journey Recovery page if there is no data for a POST" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, controllers.returns.routes.CheckYourAnswersSPRController.onSubmit(regime).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the MultipleSPRList page if there is data for a POST" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, controllers.returns.routes.CheckYourAnswersSPRController.onSubmit(regime).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.returns.routes.MultipleSPRListController
+          .onPageLoad(regime)
+          .url
+      }
+    }
+
+    "must redirect to the MultipleSPRList page if there is data for a POST with an index" in {
+
+      val index = Some(0)
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, controllers.returns.routes.CheckYourAnswersSPRController.onSubmit(regime, index).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.returns.routes.MultipleSPRListController
+          .onPageLoad(regime)
+          .url
       }
     }
   }

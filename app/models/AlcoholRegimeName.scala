@@ -19,20 +19,6 @@ package models
 import enumeratum.{Enum, EnumEntry, PlayEnum}
 import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
 
-//sealed trait AlcoholRegimeName extends EnumEntry
-//
-//object AlcoholRegimeName extends Enum[AlcoholRegimeName] with PlayJsonEnum[AlcoholRegimeName] {
-//  val values = findValues
-//
-//  case object Beer extends AlcoholRegimeName
-//  case object Cider extends AlcoholRegimeName
-//  case object Wine extends AlcoholRegimeName
-//  case object Spirits extends AlcoholRegimeName
-//  case object OtherFermentedProduct extends AlcoholRegimeName
-//
-//  override def toString: String = "alcoholRegime"
-//}
-
 sealed trait AlcoholRegimeName extends EnumEntry
 object AlcoholRegimeName extends Enum[AlcoholRegimeName] with PlayEnum[AlcoholRegimeName] {
   val values = findValues

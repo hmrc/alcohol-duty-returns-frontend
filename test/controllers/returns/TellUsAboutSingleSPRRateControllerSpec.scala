@@ -27,7 +27,6 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.returns.VolumeAndRateByTaxType
-import org.scalacheck.Arbitrary._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
 import views.html.returns.TellUsAboutSingleSPRRateView
@@ -168,7 +167,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, tellUsAboutSingleSPRRateRoute)
@@ -182,7 +181,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =

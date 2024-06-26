@@ -62,5 +62,33 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         ).toString
       }
     }
+
+    "must redirect to the Journey Recovery page when there is no data" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the Journey Recovery page when there is an empty user-answer" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
   }
 }

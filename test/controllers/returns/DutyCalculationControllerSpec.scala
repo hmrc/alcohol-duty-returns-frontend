@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.returns.{AlcoholDuty, DutyByTaxType}
 import org.mockito.ArgumentMatchers.any
-import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{DoYouWantToAddMultipleSPRToListPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
@@ -40,6 +40,9 @@ class DutyCalculationControllerSpec extends SpecBase {
 
   val userAnswers = emptyUserAnswers
     .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+    .success
+    .value
+    .setByKey(DoYouWantToAddMultipleSPRToListPage, regime, false)
     .success
     .value
     .setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumesAndRates)
@@ -66,7 +69,7 @@ class DutyCalculationControllerSpec extends SpecBase {
 
   "DutyCalculation Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET if No is selected for add Multiple SPR option" in {
 
       val mockCacheConnector = mock[CacheConnector]
 
@@ -97,6 +100,39 @@ class DutyCalculationControllerSpec extends SpecBase {
       }
     }
 
+    "must return OK and the correct view for a GET if Yes is selected for add Multiple SPR option" in {
+
+      val updatedUserAnswer = userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, true).success.value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(updatedUserAnswer))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.returns.routes.DutyCalculationController.onPageLoad(regime).url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[DutyCalculationView]
+
+        val tableViewModel =
+          DutyCalculationHelper
+            .dutyDueTableViewModel(alcoholDuty, updatedUserAnswer, regime)(messages(application))
+            .toOption
+            .get
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(regime, tableViewModel)(request, messages(application)).toString
+      }
+    }
+
     "must redirect in the Journey Recovery screen if the user answers are empty" in {
 
       val mockCacheConnector = mock[CacheConnector]
@@ -112,6 +148,54 @@ class DutyCalculationControllerSpec extends SpecBase {
 
       running(application) {
         val request = FakeRequest(GET, controllers.returns.routes.DutyCalculationController.onPageLoad(regime).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the MultipleSPRList page if there is data for a POST" in {
+
+      val updatedUserAnswers = userAnswers.setByKey(DutyCalculationPage, regime, alcoholDuty).success.value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(updatedUserAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, controllers.returns.routes.DutyCalculationController.onSubmit(regime).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+      }
+    }
+
+    "must redirect to the Journey Recover page if there is no data for a POST" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, controllers.returns.routes.DutyCalculationController.onSubmit(regime).url)
 
         val result = route(application, request).value
 

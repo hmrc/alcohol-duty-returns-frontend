@@ -16,7 +16,7 @@
 
 package viewmodels.tasklist
 
-import models.{AlcoholRegimeName, UserAnswers}
+import models.UserAnswers
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
 

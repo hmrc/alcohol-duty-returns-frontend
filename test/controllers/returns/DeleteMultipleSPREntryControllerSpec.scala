@@ -19,7 +19,7 @@ package controllers.returns
 import base.SpecBase
 import forms.returns.DeleteMultipleSPREntryFormProvider
 import org.mockito.ArgumentMatchers.any
-import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.test.Helpers._
 import connectors.CacheConnector
@@ -105,7 +105,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the DoYouHaveMultipleSPRDutyRates page when valid data is submitted and the list is empty" in {
+    "must redirect to the DoYouHaveMultipleSPRDutyRates page when 'yes' is submitted and the list is empty" in {
 
       val mockCacheConnector = mock[CacheConnector]
 
@@ -128,6 +128,25 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController
           .onPageLoad(NormalMode, regime)
+          .url
+      }
+    }
+
+    "must redirect to the Multiple SPR List page when 'No' is submitted" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersWithSingleSPREntry)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, deleteMultipleSPREntryRoute)
+            .withFormUrlEncodedBody(("deleteMultipleSPREntry-yesNoValue", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.returns.routes.MultipleSPRListController
+          .onPageLoad(regime)
           .url
       }
     }

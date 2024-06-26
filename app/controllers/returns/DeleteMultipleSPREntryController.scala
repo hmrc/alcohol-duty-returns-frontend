@@ -21,7 +21,7 @@ import forms.returns.DeleteMultipleSPREntryFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegimeName, NormalMode}
-import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
+import pages.returns.MultipleSPRListPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector

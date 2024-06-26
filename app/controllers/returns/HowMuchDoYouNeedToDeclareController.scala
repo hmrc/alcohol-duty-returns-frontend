@@ -27,12 +27,13 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import models.returns.{VolumeAndRateByTaxType, VolumesByTaxType}
+import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
 import views.html.returns.HowMuchDoYouNeedToDeclareView
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 class HowMuchDoYouNeedToDeclareController @Inject() (
   override val messagesApi: MessagesApi,
@@ -46,7 +47,8 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
   view: HowMuchDoYouNeedToDeclareView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
@@ -92,19 +94,23 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
   private def rateBandFromTaxType(
     volumeByTaxType: Seq[VolumesByTaxType],
     rateBands: Set[RateBand]
-  ): Try[Seq[VolumeAndRateByTaxType]] = Try {
-    volumeByTaxType.map { volumes =>
-      val rateBand = rateBands
-        .find(_.taxType == volumes.taxType)
-        .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: ${volumes.taxType}"))
-      VolumeAndRateByTaxType(
-        taxType = volumes.taxType,
-        totalLitres = volumes.totalLitres,
-        pureAlcohol = volumes.pureAlcohol,
-        dutyRate = rateBand.rate.getOrElse(
-          throw new IllegalArgumentException(s"Rate not found for tax type: ${volumes.taxType}")
+  ): Try[Seq[VolumeAndRateByTaxType]] =
+    volumeByTaxType
+      .map { volumes =>
+        for {
+          rateBand <- rateBands.find(_.taxType == volumes.taxType)
+          dutyRate <- rateBand.rate
+        } yield VolumeAndRateByTaxType(
+          taxType = volumes.taxType,
+          totalLitres = volumes.totalLitres,
+          pureAlcohol = volumes.pureAlcohol,
+          dutyRate = dutyRate
         )
-      )
-    }
-  }
+      }
+      .foldLeft(Success(Seq.empty): Try[Seq[VolumeAndRateByTaxType]]) {
+        case (acc, Some(value)) => acc.map(_ :+ value)
+        case (_, None)          =>
+          logger.warn(s"Failed to find rate band for tax type")
+          Failure(new Exception("Failed to find rate band for tax type"))
+      }
 }

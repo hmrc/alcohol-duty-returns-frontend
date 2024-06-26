@@ -21,7 +21,7 @@ import forms.returns.WhatDoYouNeedToDeclareFormProvider
 import models.NormalMode
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.returns.WhatDoYouNeedToDeclarePage
+import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -112,6 +112,29 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
+    "must populate the view correctly on a GET when the rate band has already been populated" in {
+
+      val userAnswers =
+        emptyUserAnswers.set(RateBandsPage, rateBandList).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, whatDoYouNeedToDeclareRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
+
+        status(result) mustEqual OK
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
+        contentAsString(result) mustEqual view(form, regime, taxBandsViewModel, NormalMode)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
     "must redirect to the next page when valid data is submitted" in {
 
       val application =
@@ -164,6 +187,30 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           request,
           messages(application)
         ).toString
+      }
+    }
+
+    "must throw an exception if an invalid tax type is submitted" in {
+
+      val invalidTaxType = "invalidValue"
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whatDoYouNeedToDeclareRoute)
+            .withFormUrlEncodedBody((s"rateBand[0]", invalidTaxType))
+
+        route(application, request).value
+
+        the[Exception] thrownBy status(
+          route(application, request).value
+        ) must have message s"Invalid tax type: $invalidTaxType"
       }
     }
 

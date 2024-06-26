@@ -17,7 +17,7 @@
 package models.requests
 
 import play.api.mvc.{Request, WrappedRequest}
-import models.{AlcoholRegimeName, ReturnPeriod, UserAnswers}
+import models.{ReturnPeriod, UserAnswers}
 
 case class OptionalDataRequest[A](
   request: Request[A],

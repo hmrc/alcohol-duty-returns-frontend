@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import models.AlcoholRegimeName
 import play.api.test.Helpers._
 import viewmodels.tasklist.AlcoholDutyTaskListHelper
 import views.html.TaskListView

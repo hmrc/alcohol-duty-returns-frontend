@@ -59,7 +59,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
         JsString("DraughtAndSmallProducerRelief").as[RateType] mustEqual RateType.DraughtAndSmallProducerRelief
       }
       "should return an exception in response to an unrecognised string" in {
-        JsString("some-other").validate[RateType] mustEqual JsError("some-other is not a valid RateType")
+        JsString("some-other").validate[RateType] mustEqual JsError("error.expected.validenumvalue")
       }
       "should return a JsError when passed a type that is not a string" in {
         val result = Json.fromJson[RateType](JsBoolean(true))
