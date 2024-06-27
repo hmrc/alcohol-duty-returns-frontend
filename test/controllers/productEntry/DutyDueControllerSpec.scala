@@ -81,7 +81,7 @@ class DutyDueControllerSpec extends SpecBase with ModelGenerators {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(abv.value, volume, dutyDue, pureAlcoholVolume, taxCode, rate)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

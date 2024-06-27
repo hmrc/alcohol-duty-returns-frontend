@@ -53,7 +53,7 @@ class AuthControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockSessionRepository, times(1)).clear(eqTo(ReturnId("appaId", periodKey)))
+        verify(mockSessionRepository, times(1)).clear(eqTo(ReturnId(appaId, periodKey)))
       }
     }
   }
@@ -82,7 +82,7 @@ class AuthControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockSessionRepository, times(1)).clear(eqTo(ReturnId("appaId", periodKey)))
+        verify(mockSessionRepository, times(1)).clear(eqTo(ReturnId(appaId, periodKey)))
       }
     }
   }

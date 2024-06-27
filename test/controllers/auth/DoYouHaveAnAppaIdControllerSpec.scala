@@ -42,7 +42,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DoYouHaveAnAppaIdView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, false)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, false)(request, getMessages(application)).toString
       }
     }
 
@@ -59,7 +59,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DoYouHaveAnAppaIdView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, true)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, true)(request, getMessages(application)).toString
       }
     }
 
@@ -111,7 +111,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, false)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, false)(request, getMessages(application)).toString
       }
     }
   }

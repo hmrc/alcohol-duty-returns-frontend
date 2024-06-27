@@ -18,32 +18,20 @@ package connectors
 
 import base.SpecBase
 import config.FrontendAppConfig
-import models.{ObligationData, ObligationStatus}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
 import play.api.http.Status.{BAD_REQUEST, OK}
 import org.scalatest.RecoverMethods.recoverToExceptionIf
 
-import java.time.LocalDate
 import scala.concurrent.Future
 
 class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
-
-  protected implicit val hc: HeaderCarrier = HeaderCarrier()
-  val mockConfig: FrontendAppConfig        = mock[FrontendAppConfig]
-  val connector                            = new AlcoholDutyReturnsConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val obligationDataSingleOpen             = ObligationData(
-    ObligationStatus.Open,
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    periodKey
-  )
-  val appaIdentifier                       = appaIdGen.sample.get
-  val mockUrl                              = s"http://alcohol-duty-returns/obligationDetails/$appaIdentifier"
+  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  val connector                     = new AlcoholDutyReturnsConnector(config = mockConfig, httpClient = mock[HttpClient])
+  val mockUrl                       = s"http://alcohol-duty-returns/obligationDetails/$appaId"
 
   "obligationDetails" - {
     "successfully retrieve obligation details" in {
@@ -51,13 +39,13 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       val jsonResponse           = Json.toJson(obligationDataResponse).toString()
       val httpResponse           = Future.successful(Right(HttpResponse(OK, jsonResponse)))
 
-      when(mockConfig.adrGetObligationDetailsUrl(eqTo(appaIdentifier))).thenReturn(mockUrl)
+      when(mockConfig.adrGetObligationDetailsUrl(eqTo(appaId))).thenReturn(mockUrl)
 
       when {
         connector.httpClient
           .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
       } thenReturn httpResponse
-      whenReady(connector.obligationDetails(appaIdentifier)) { result =>
+      whenReady(connector.obligationDetails(appaId)) { result =>
         result mustBe obligationDataResponse
         verify(connector.httpClient, atLeastOnce)
           .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
@@ -66,14 +54,14 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
     }
     "fail when invalid JSON is returned" in {
       val invalidJsonResponse = Future.successful(Right(HttpResponse(OK, """{ "invalid": "json" }""")))
-      when(mockConfig.adrGetObligationDetailsUrl(appaIdentifier)).thenReturn(mockUrl)
+      when(mockConfig.adrGetObligationDetailsUrl(appaId)).thenReturn(mockUrl)
       when(
         connector.httpClient
           .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
       )
         .thenReturn(invalidJsonResponse)
       recoverToExceptionIf[Exception] {
-        connector.obligationDetails(appaIdentifier)
+        connector.obligationDetails(appaId)
       } map { ex =>
         ex.getMessage must include("Invalid JSON format")
         verify(connector.httpClient, atLeastOnce)
@@ -83,14 +71,14 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
 
     "fail when unexpected status code returned" in {
       val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
-      when(mockConfig.adrGetObligationDetailsUrl(appaIdentifier)).thenReturn(mockUrl)
+      when(mockConfig.adrGetObligationDetailsUrl(appaId)).thenReturn(mockUrl)
       when(
         connector.httpClient
           .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
       )
         .thenReturn(invalidStatusCodeResponse)
       recoverToExceptionIf[Exception] {
-        connector.obligationDetails(appaIdentifier)
+        connector.obligationDetails(appaId)
       } map { ex =>
         ex.getMessage must include("Unexpected status code: 400")
         verify(connector.httpClient, atLeastOnce)

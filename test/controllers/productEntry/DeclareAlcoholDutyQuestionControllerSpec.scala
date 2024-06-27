@@ -54,7 +54,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -72,7 +72,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -144,7 +144,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 

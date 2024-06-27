@@ -21,7 +21,7 @@ import models.productEntry.ProductEntry
 import pages.productEntry.ProductEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
-import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
+import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableTotalViewModel, TableViewModel}
 
 object ProductListSummaryHelper {
 
@@ -35,7 +35,15 @@ object ProductListSummaryHelper {
         HeadCell(content = Text(messages("productEntryList.action")), classes = "govuk-!-width-one-quarter")
       ),
       rows = getProductEntryRows(productEntries),
-      total = productEntries.map(_.duty.getOrElse(BigDecimal(0))).sum
+      total = Some(
+        TableTotalViewModel(
+          HeadCell(content = Text(messages("productList.total")), classes = "govuk-!-width-one-half"),
+          HeadCell(
+            content = Text(messages("site.currency.2DP", productEntries.map(_.duty.getOrElse(BigDecimal(0))).sum)),
+            classes = "govuk-!-width-one-half"
+          )
+        )
+      )
     )
   }
 

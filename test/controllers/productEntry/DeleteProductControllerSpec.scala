@@ -54,7 +54,7 @@ class DeleteProductControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DeleteProductView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, index)(request, getMessages(application)).toString
       }
     }
 
@@ -72,7 +72,7 @@ class DeleteProductControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), index)(request, getMessages(application)).toString
       }
     }
 
@@ -142,7 +142,7 @@ class DeleteProductControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, index)(request, getMessages(application)).toString
       }
     }
 

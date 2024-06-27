@@ -23,10 +23,11 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.productEntry.ProductEntryListPage
 import play.api.Application
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 
 class ProductListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
   val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
+  implicit val messages: Messages = getMessages(application)
   "ProductListSummaryHelper" - {
 
     "must return a table with the correct head" in {
@@ -58,7 +59,7 @@ class ProductListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCheck
         val productList = productEntryList.arbitrary.sample.value
         val userAnswers = emptyUserAnswers.set(ProductEntryListPage, productList).success.value
         val table       = ProductListSummaryHelper.productEntryTable(userAnswers)
-        table.total shouldBe productList.map(_.duty.get).sum
+        table.total.get.total.content shouldBe Text(messages("site.currency.2DP", productList.map(_.duty.get).sum))
       }
     }
 
@@ -72,16 +73,14 @@ class ProductListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCheck
           emptyUserAnswers.set(ProductEntryListPage, productList :+ undefinedDutyProductEntry).success.value
         val table       = ProductListSummaryHelper.productEntryTable(userAnswers)
 
-        table.total shouldBe expectedSum
+        table.total.get.total.content shouldBe Text(messages("site.currency.2DP", expectedSum))
       }
     }
 
     "must return the correct total if the list is empty" in {
       val userAnswers = emptyUserAnswers.set(ProductEntryListPage, Seq.empty).success.value
       val table       = ProductListSummaryHelper.productEntryTable(userAnswers)
-      table.total shouldBe BigDecimal(0)
+      table.total.get.total.content shouldBe Text(messages("site.currency.2DP", BigDecimal(0)))
     }
-
   }
-
 }
