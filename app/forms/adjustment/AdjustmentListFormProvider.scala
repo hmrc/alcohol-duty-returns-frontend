@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package models.adjustment
+package forms.adjustment
 
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import forms.mappings.Mappings
+import play.api.data.Form
 
-sealed trait AdjustmentTypes extends EnumEntry
+import javax.inject.Inject
 
-object AdjustmentTypes extends Enum[AdjustmentTypes] with PlayJsonEnum[AdjustmentTypes] {
-  val values = findValues
+class AdjustmentListFormProvider @Inject() extends Mappings {
 
-  case object Underdeclaration extends AdjustmentTypes
-  case object Overdeclaration extends AdjustmentTypes
-  case object Spoilt extends AdjustmentTypes
-  case object RepackagedDraughtProducts extends AdjustmentTypes
-  case object Drawback extends AdjustmentTypes
-
-  override def toString: String = "adjustmentType"
+  def apply(): Form[Boolean] =
+    Form(
+      "adjustment-list-yes-no-value" -> boolean("adjustmentList.error.required")
+    )
 }

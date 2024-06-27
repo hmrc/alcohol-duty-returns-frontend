@@ -1,0 +1,86 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{SectionHeading, PageHeading}
+@import viewmodels.TableViewModel
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading,
+    govukTable: GovukTable,
+    tableRowActionList: components.TableRowActionList,
+    tableRowAction: components.TableRowAction
+)
+
+
+@(form: Form[_], adjustmentTable:TableViewModel)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("adjustmentList.title")), showBackLink = false) {
+
+    @formHelper(action = controllers.adjustment.routes.AdjustmentListController.onSubmit(), Symbol("autoComplete") -> "off") {
+
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+    @sectionHeading(
+        id = "adjustment-list-section",
+        text = messages("section.adjustment"),
+    )
+
+    @pageHeading(messages("adjustmentList.heading"))
+
+    @govukTable(Table(
+        head = Some(adjustmentTable.head),
+        rows = adjustmentTable.rows.map(row => {
+            val labelRows = row.cells.map(cell => TableRow(cell))
+            val actions = TableRow(content = HtmlContent(tableRowActionList(
+            id = "adjustmentList",
+            actions = row.actions.map(action => tableRowAction(
+            id = "",
+            text = action.label,
+            href = action.href,
+            visuallyHiddenContent = action.visuallyHiddenText
+            )
+            ))))
+            labelRows :+ actions
+        }
+        ))
+    )
+
+    @govukTable(Table(
+        head = Some(Seq(
+        HeadCell(content = Text(messages("adjustmentList.total")), classes = "govuk-!-width-one-half"),
+        HeadCell(content = Text(messages("site.currency.2DP", adjustmentTable.total)), classes = "govuk-!-width-one-half"))
+        )),
+    )
+
+    @govukRadios(
+        RadiosViewModel.yesNo(
+        field = form("adjustment-list-yes-no-value"),
+        legend = LegendViewModel(messages("adjustmentList.question")).withCssClass("govuk-fieldset__legend--l")
+        )
+    )
+
+    @govukButton(
+    ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+    )
+    }
+}

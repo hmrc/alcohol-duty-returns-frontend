@@ -64,8 +64,8 @@ class CheckYourAnswersController @Inject() (
           cleanedAnswers <- Future.fromTry(updatedAnswers.remove(CurrentAdjustmentEntryPage))
           _              <- cacheConnector.set(cleanedAnswers)
         } yield Redirect(
-          controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
-        ) //chnage tgus ti adjustment list page
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad()
+        )
       case Some(adjustmentEntry) if !adjustmentEntry.isComplete =>
         logger.logger.error("Adjustment Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))

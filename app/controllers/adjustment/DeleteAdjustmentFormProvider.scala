@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package pages.adjustment
+package controllers.adjustment
 
-import models.adjustment.AdjustmentEntry
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case object AdjustmentEntryListPage extends QuestionPage[Seq[AdjustmentEntry]] {
-  override def path: JsPath     = JsPath \ toString
-  override def toString: String = "adjustmentEntryList"
+import javax.inject.Inject
+
+class DeleteAdjustmentFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "delete-adjustment-yes-no-value" -> boolean("deleteAdjustment.error.required")
+    )
 }

@@ -241,4 +241,12 @@ GET        /new-tax-type-code                  controllers.adjustment.Adjustment
 POST       /new-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /adjustments-to-previous-returns                        controllers.adjustment.AdjustmentListController.onPageLoad()
+POST       /adjustments-to-previous-returns                        controllers.adjustment.AdjustmentListController.onSubmit()
+GET        /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onPageLoad()
+POST       /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onSubmit()
+
+GET        /delete-adjustment                       controllers.adjustment.DeleteAdjustmentController.onPageLoad(index: Int)
+POST       /delete-adjustment                       controllers.adjustment.DeleteAdjustmentController.onSubmit(index: Int)
 # End of adjustments sub-journey

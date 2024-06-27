@@ -53,8 +53,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("adjustment-total-liters-input"),
-                label = LabelViewModel(messages("adjustmentVolume.totalLitersVolume.heading", "draught", "beer", "abv range"))
+                field = form("volumes"),
+                key="totalLitersVolume",
+                label = LabelViewModel(messages("adjustmentVolume.totalLitersVolume.heading", messages(s"regime.$regime"))),
+                errorMessageField = form(s"volumes_totalLitersVolume"),
+                value = form(s"volumes.totalLitersVolume").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -63,8 +66,11 @@
 
         @govukInput(
         InputViewModel(
-            field = form("adjustment-pure-alcohol-input"),
-            label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading"))
+            field = form("volumes"),
+            key="pureAlcoholVolume",
+            label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading")),
+            errorMessageField = form(s"volumes_pureAlcoholVolume"),
+            value = form(s"volumes.pureAlcoholVolume").value
         )
         .asNumeric()
         .withWidth(Fixed10)

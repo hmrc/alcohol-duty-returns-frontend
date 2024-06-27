@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.adjustment
+package pages.adjustment
 
-class AdjustmentList {}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+
+object DeleteAdjustmentPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "deleteAdjustment"
+}

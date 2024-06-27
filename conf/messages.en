@@ -853,26 +853,26 @@ adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
 adjustmentVolume.hint = Give your answers as volumes in litres, to 2 decimal places. For example, 500.50
 adjustmentVolume.checkYourAnswersLabel = Volume
-adjustmentVolume.error.totalLitersVolume.nonNumeric = Litres of {0} must be a number
-adjustmentVolume.error.totalLitersVolume.required = Enter the total litres of {0}
-adjustmentVolume.error.totalLitersVolume.minimumRequired = Litres of {0} must be 0.01 or more
-adjustmentVolume.error.totalLitersVolume.maximumRequired = Litres of {0} must be 99.99 million or less
-adjustmentVolume.error.totalLitersVolume.twoDecimalPlaces = Litres of {0} must be a number to 2 decimal places
+adjustmentVolume.error.invalid.totalLitersVolume = Litres of {0} must be a number
+adjustmentVolume.error.noValue.totalLitersVolume = Enter the total litres of {0}
+adjustmentVolume.error.minimumValue.totalLitersVolume = Litres of {0} must be 0.01 or more
+adjustmentVolume.error.maximumValue.totalLitersVolume = Litres of {0} must be 99.99 million or less
+adjustmentVolume.error.twoDecimalPlaces.totalLitersVolume = Litres of {0} must be a number to 2 decimal places
 adjustmentVolume.error.totalLitersVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
-adjustmentVolume.error.pureAlcoholVolume.nonNumeric = Litres of pure alcohol in {0} must be a number
-adjustmentVolume.error.pureAlcoholVolume.required = Enter the litres of pure alcohol in {0}
-adjustmentVolume.error.pureAlcoholVolume.minimumRequired = Litres of pure alcohol must be 0.01 or more
-adjustmentVolume.error.pureAlcoholVolume.maximumRequired = Litres of pure alcohol must be 99.99 million or less
-adjustmentVolume.error.pureAlcoholVolume.twoDecimalPlaces = Litres of pure alcohol must be a number to 2 decimal places
-adjustmentVolume.error.pureAlcoholVolume.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
-adjustmentVolume.smallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
-adjustmentVolume.smallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
-adjustmentVolume.smallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be £99.99 million or less
-adjustmentVolume.smallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be £0.00 or more
-adjustmentVolume.smallProducerReliefDutyRate.error.twoDecimalPlaces = Your Small Producer Relief duty rate must be to 2 decimal places
+adjustmentVolume.error.invalid.pureAlcoholVolume = Litres of pure alcohol in {0} must be a number
+adjustmentVolume.error.noValue.pureAlcoholVolume = Enter the litres of pure alcohol in {0}
+adjustmentVolume.error.minimumValue.pureAlcoholVolume = Litres of pure alcohol must be 0.01 or more
+adjustmentVolume.error.maximumValue.pureAlcoholVolume = Litres of pure alcohol must be 99.99 million or less
+adjustmentVolume.error.twoDecimalPlaces.pureAlcoholVolume = Litres of pure alcohol must be a number to 2 decimal places
+adjustmentVolume.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
+adjustmentVolume.error.invalid.sprDutyRate = Your Small Producer Relief duty rate must be a number
+adjustmentVolume.error.noValue.sprDutyRate = Enter your Small Producer Relief duty rate
+adjustmentVolume.error.minimumValue.sprDutyRate = Your Small Producer Relief duty rate must be £0.00 or more
+adjustmentVolume.error.maximumValue.sprDutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
+adjustmentVolume.error.twoDecimalPlaces.sprDutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 adjustmentVolume.change.hidden = Adjustment Volume
 adjustmentVolume.subHeading = {0} between {1}% and {2}% ABV (tax type code {3})
-adjustmentVolume.totalLitersVolume.heading = Total litres of beer
+adjustmentVolume.totalLitersVolume.heading = Total litres of {0}
 adjustmentVolume.pureAlcoholVolume.heading = Litres of pure alcohol
 adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief duty rate
 adjustmentVolume.pureAlcohol = litres of pure alcohol (Lpa)
@@ -920,6 +920,11 @@ adjustmentDutyDue.repackaged.bulletList.6 = the duty to pay is {0}: the new duty
 
 checkYourAnswers.subHeading = Adjustment details
 
-
+adjustmentList.heading = Adjustments to previous returns
+adjustmentList.title = Adjustments to previous returns
+adjustmentEntryList.type = Adjustment type
+adjustmentEntryList.description = Description
+adjustmentEntryList.duty = Duty value
+adjustmentEntryList.action = Action
 
 # End of adjustments sub-journey

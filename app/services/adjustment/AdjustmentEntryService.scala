@@ -48,7 +48,7 @@ class AdjustmentEntryServiceImpl @Inject() (
       adjustmentEntry.adjustmentType.getOrElse(throw new RuntimeException("Couldn't fetch adjustmentType from cache"))
 
     val taxDutyFuture           =
-      alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, rate, adjustmentType.toString).map { taxDuty =>
+      alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, rate, adjustmentType).map { taxDuty =>
         adjustmentEntry.copy(duty = Some(taxDuty.duty))
       }
     val updatedAdjustmentFuture = adjustmentType match {
@@ -57,7 +57,7 @@ class AdjustmentEntryServiceImpl @Inject() (
         for {
           updatedAdjustment <- taxDutyFuture
           repackagedTaxDuty <-
-            alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, repackagedRate, adjustmentType.toString)
+            alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, repackagedRate, adjustmentType)
           newDuty           <- alcoholDutyCalculatorConnector.calculateAdjustmentTaxDuty(
                                  repackagedTaxDuty.duty,
                                  updatedAdjustment.duty.getOrElse(BigDecimal(0))

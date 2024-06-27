@@ -26,53 +26,17 @@ import play.api.i18n.Messages
 
 class AdjustmentVolumeWithSPRFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[AdjustmentVolumeWithSPR] = Form(
-    mapping(
-      "adjustment-total-liters-input"              -> bigDecimal(
-        2,
-        "adjustmentVolume.error.totalLitersVolume.required",
-        "adjustmentVolume.error.totalLitersVolume.nonNumeric",
-        "adjustmentVolume.error.totalLitersVolume.twoDecimalPlaces",
-        Seq(messages(s"regime.$regime"))
-      ).verifying(
-        minimumValueWithArgs(
-          BigDecimal(0.01),
-          "adjustmentVolume.error.totalLitersVolume.minimumRequired",
-          messages(s"regime.$regime")
-        )
-      ).verifying(
-        maximumValueWithArgs(
-          BigDecimal(999999999.99),
-          "adjustmentVolume.error.totalLitersVolume.maximumRequired",
-          messages(s"regime.$regime")
-        )
-      ),
-      "adjustment-pure-alcohol-input"              -> bigDecimal(
-        2,
-        "adjustmentVolume.error.pureAlcoholVolume.required",
-        "adjustmentVolume.error.pureAlcoholVolume.nonNumeric",
-        "adjustmentVolume.error.pureAlcoholVolume.twoDecimalPlaces",
-        Seq(messages(s"regime.$regime"))
-      ).verifying(minimumValue(BigDecimal(0.01), "adjustmentVolume.error.pureAlcoholVolume.minimumRequired"))
-        .verifying(
-          maximumValue(BigDecimal(999999999.99), "adjustmentVolume.error.pureAlcoholVolume.maximumRequired")
-        ),
-      "adjustment-small-producer-relief-duty-rate" -> bigDecimal(
-        2,
-        "adjustmentVolume.smallProducerReliefDutyRate.error.required",
-        "adjustmentVolume.smallProducerReliefDutyRate.error.nonNumeric",
-        "adjustmentVolume.smallProducerReliefDutyRate.error.twoDecimalPlaces",
+  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[AdjustmentVolumeWithSPR] =
+    Form(
+      "volumes" -> adjustmentVolumesWithRate(
+        "adjustmentVolume.error.invalid",
+        "adjustmentVolume.error.allRequired",
+        "adjustmentVolume.error.noValue",
+        "adjustmentVolume.error.twoDecimalPlaces",
+        "adjustmentVolume.error.minimumValue",
+        "adjustmentVolume.error.maximumValue",
+        "adjustmentVolume.error.lessThanExpected",
         Seq(messages(s"regime.$regime"))
       )
-        .verifying(
-          minimumValue(BigDecimal(0.00), "adjustmentVolume.smallProducerReliefDutyRate.error.minimumRequired")
-        )
-        .verifying(
-          maximumValue(
-            BigDecimal(999999999.99),
-            "adjustmentVolume.smallProducerReliefDutyRate.error.maximumRequired"
-          )
-        )
-    )(AdjustmentVolumeWithSPR.apply)(AdjustmentVolumeWithSPR.unapply)
-  )
+    )
 }

@@ -39,7 +39,7 @@ case class AdjustmentEntry(
     adjustmentType.isDefined &&
       period.isDefined &&
       rateBand.isDefined &&
-      repackagedRateBand.isDefined &&
+      //repackagedRateBand.isDefined &&
       totalLitresVolume.isDefined &&
       pureAlcoholVolume.isDefined &&
       (rateBand.flatMap(_.rate).isDefined || sprDutyRate.isDefined) &&

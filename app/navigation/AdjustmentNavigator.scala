@@ -42,6 +42,7 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           => repackagedTaxTypeRoute
+    case pages.adjustment.AdjustmentListPage                        => adjustmentListPageRoute
     case _                                                          =>
       _ => routes.IndexController.onPageLoad
   }
@@ -138,4 +139,11 @@ class AdjustmentNavigator @Inject() () {
     case CheckMode  =>
       checkRouteMap(page)(userAnswers)(hasAnswerChanged)
   }
+
+  private def adjustmentListPageRoute(answers: UserAnswers): Call =
+    answers.get(pages.adjustment.AdjustmentListPage) match {
+      case Some(true)  => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+      case Some(false) => routes.TaskListController.onPageLoad
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
 }
