@@ -25,11 +25,19 @@ class DateTimeHelper @Inject() () {
   private val ukTimeZone: ZoneId = TimeZone.getTimeZone("Europe/London").toZoneId
 
   private val monthYearFormatter                      = DateTimeFormatter.ofPattern("LLLL yyyy")
-  private val dateMonthYearAtHourMinuteMerediemFormat = DateTimeFormatter.ofPattern("dd LLLL yyyy 'at' K:mma")
+  private val dateMonthYearAtHourMinuteMerediemFormat = DateTimeFormatter.ofPattern("dd LLLL yyyy 'at' K:mm")
+  private val merediemFormat                          = DateTimeFormatter.ofPattern("a")
 
   def instantToDateTime(instant: Instant): LocalDateTime = LocalDateTime.ofInstant(instant, ukTimeZone)
 
-  def formatDateMonthYearAtHourMinuteMerediem(localDateTime: LocalDateTime): String =
-    dateMonthYearAtHourMinuteMerediemFormat.format(localDateTime)
-  def formatMonthYear(yearMonth: YearMonth): String                                 = monthYearFormatter.format(yearMonth)
+  /** *
+    * ante/post merediem (am/pm) is locale specific, thus convert to lowercase
+    */
+  def formatDateMonthYearAtHourMinuteMerediem(localDateTime: LocalDateTime): String = {
+    val formattedDate = dateMonthYearAtHourMinuteMerediemFormat.format(localDateTime)
+    val merediem      = merediemFormat.format(localDateTime).toLowerCase()
+    s"$formattedDate$merediem"
+  }
+
+  def formatMonthYear(yearMonth: YearMonth): String = monthYearFormatter.format(yearMonth)
 }
