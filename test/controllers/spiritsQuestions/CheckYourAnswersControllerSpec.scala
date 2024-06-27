@@ -85,19 +85,19 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val spiritsList          =
-          CheckYourAnswersSummaryListHelper.spiritsSummaryList(completedUserAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.spiritsSummaryList(completedUserAnswers)(getMessages(application)).get
         val alcoholList          =
-          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(completedUserAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(completedUserAnswers)(getMessages(application)).get
         val grainsList           =
-          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(completedUserAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(completedUserAnswers)(getMessages(application)).get
         val otherIngredientsList = CheckYourAnswersSummaryListHelper
-          .otherIngredientsUsedSummaryList(completedUserAnswers)(messages(application))
+          .otherIngredientsUsedSummaryList(completedUserAnswers)(getMessages(application))
           .get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(spiritsList, alcoholList, grainsList, otherIngredientsList)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -132,19 +132,19 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val spiritsList          =
-          CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(application)).get
         val alcoholList          =
-          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(userAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(userAnswers)(getMessages(application)).get
         val grainsList           =
-          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(userAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(userAnswers)(getMessages(application)).get
         val otherIngredientsList = CheckYourAnswersSummaryListHelper
-          .otherIngredientsUsedSummaryList(userAnswers)(messages(application))
+          .otherIngredientsUsedSummaryList(userAnswers)(getMessages(application))
           .get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(spiritsList, alcoholList, grainsList, otherIngredientsList)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
 
@@ -179,19 +179,19 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val spiritsList          =
-          CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(application)).get
         val alcoholList          =
-          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(userAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(userAnswers)(getMessages(application)).get
         val grainsList           =
-          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(userAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(userAnswers)(getMessages(application)).get
         val otherIngredientsList = CheckYourAnswersSummaryListHelper
-          .otherIngredientsUsedSummaryList(userAnswers)(messages(application))
+          .otherIngredientsUsedSummaryList(userAnswers)(getMessages(application))
           .get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(spiritsList, alcoholList, grainsList, otherIngredientsList)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
 

@@ -18,6 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import models.ObligationData
+import models.returns.ReturnDetails
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
 
 import javax.inject.Inject
@@ -37,6 +38,19 @@ class AlcoholDutyReturnsConnector @Inject() (
       .flatMap {
         case Right(response) if response.status == OK =>
           Try(response.json.as[Seq[ObligationData]]) match {
+            case Success(data)      => Future.successful(data)
+            case Failure(exception) => Future.failed(new Exception(s"Invalid JSON format $exception"))
+          }
+        case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
+        case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
+      }
+
+  def getReturn(appaId: String, periodKey: String)(implicit hc: HeaderCarrier): Future[ReturnDetails] =
+    httpClient
+      .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetReturnsUrl(appaId, periodKey))
+      .flatMap {
+        case Right(response) if response.status == OK =>
+          Try(response.json.as[ReturnDetails]) match {
             case Success(data)      => Future.successful(data)
             case Failure(exception) => Future.failed(new Exception(s"Invalid JSON format $exception"))
           }

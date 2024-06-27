@@ -78,7 +78,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(spoilt, abv.value, volume, dutyDue, pureAlcoholVolume, taxCode, rate)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

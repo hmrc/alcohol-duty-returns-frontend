@@ -77,7 +77,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, adjustmentType.toString)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -96,7 +96,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(period), NormalMode, adjustmentType.toString)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -177,7 +177,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, adjustmentType.toString)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

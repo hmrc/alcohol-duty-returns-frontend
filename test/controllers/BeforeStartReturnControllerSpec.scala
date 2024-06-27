@@ -29,11 +29,7 @@ import views.html.BeforeStartReturnView
 import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
-
-  private val badPeriodKey = "24A"
-
   "BeforeStartReturn Controller" - {
-
     val mockCacheConnector = mock[CacheConnector]
     when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
@@ -82,7 +78,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           ReturnPeriodViewModel(ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(returnPeriodViewModel)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(returnPeriodViewModel)(request, getMessages(application)).toString
       }
     }
 

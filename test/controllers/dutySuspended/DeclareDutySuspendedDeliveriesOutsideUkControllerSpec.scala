@@ -57,7 +57,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesOutsideUkView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -78,7 +78,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -127,7 +127,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 

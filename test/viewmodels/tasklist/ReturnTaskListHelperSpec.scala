@@ -30,7 +30,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
   val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
+  implicit val messages: Messages = getMessages(application)
 
   "returnSection" - {
 

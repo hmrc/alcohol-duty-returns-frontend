@@ -25,15 +25,12 @@ import play.api.Application
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
 
-import java.time.{Clock, Instant, ZoneId}
-import java.time.temporal.ChronoUnit
+import java.time.Instant
 
 class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   val application: Application    = applicationBuilder().build()
-  private val instant             = Instant.now.truncatedTo(ChronoUnit.MILLIS)
-  private val clock: Clock        = Clock.fixed(instant, ZoneId.systemDefault)
   private val validUntil          = Instant.now(clock)
-  implicit val messages: Messages = messages(application)
+  implicit val messages: Messages = getMessages(application)
 
   "AlcoholDutyTaskListHelper" - {
     "must return an incomplete task list" in {
@@ -45,7 +42,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       )
 
       val result           =
-        AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)(messages(application))
+        AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)(getMessages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -78,7 +75,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
           ReturnTaskListHelper.returnQSSection(userAnswers)
         )
 
-      val result           = AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil, periodKeyMar)(messages(application))
+      val result           =
+        AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil, periodKeyMar)(getMessages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -105,7 +103,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
       forAll(periodKeyGen) { case periodKey =>
         val result =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(messages(application))
+          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(getMessages(application))
 
         val periodQuarters = "CFIL"
         val lastChar       = periodKey.last
