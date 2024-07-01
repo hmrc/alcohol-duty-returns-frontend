@@ -17,10 +17,10 @@
 package service.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import connectors.AlcoholDutyCalculatorConnector
-import models.AlcoholRegime.Beer
 import pages.adjustment._
-import models.{AlcoholByVolume, RateBand, RateType}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RateType}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Underdeclaration
 import models.productEntry.TaxDuty
@@ -41,9 +41,18 @@ class AdjustmentEntryServiceSpec extends SpecBase {
       "310",
       "some band",
       RateType.DraughtRelief,
-      Set(Beer),
-      AlcoholByVolume(0.1),
-      AlcoholByVolume(5.8),
+      Set(
+        AlcoholRegime(
+          AlcoholRegimeName.Beer,
+          NonEmptySeq.one(
+            ABVRange(
+              ABVRangeName.Beer,
+              AlcoholByVolume(0.1),
+              AlcoholByVolume(5.8)
+            )
+          )
+        )
+      ),
       Some(BigDecimal(10.99))
     )
 
@@ -62,7 +71,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any())(any()))
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
         .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -90,7 +99,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any())(any()))
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
         .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -119,7 +128,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -139,7 +148,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -161,7 +170,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -170,7 +179,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           service.createAdjustment(userAnswers).futureValue
         }
 
-        exception.getLocalizedMessage must include(s"Can't fetch volume from cache") //check this
+        exception.getLocalizedMessage must include(s"Can't fetch volume from cache")
       }
 
       "if Product Entry doesn't contain pure alcohol volume value" in {
@@ -181,7 +190,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)

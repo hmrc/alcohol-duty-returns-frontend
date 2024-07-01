@@ -247,6 +247,6 @@ POST       /adjustments-to-previous-returns                        controllers.a
 GET        /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onPageLoad()
 POST       /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onSubmit()
 
-GET        /delete-adjustment                       controllers.adjustment.DeleteAdjustmentController.onPageLoad(index: Int)
-POST       /delete-adjustment                       controllers.adjustment.DeleteAdjustmentController.onSubmit(index: Int)
+GET        /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onPageLoad(index: Int)
+POST       /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onSubmit(index: Int)
 # End of adjustments sub-journey

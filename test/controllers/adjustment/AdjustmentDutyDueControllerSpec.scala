@@ -17,11 +17,12 @@
 package controllers.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import connectors.CacheConnector
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentDutyDueView
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RateType}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RateType}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import org.mockito.ArgumentMatchers.any
@@ -41,14 +42,21 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     val pureAlcoholVolume = BigDecimal(3.69)
     val taxCode           = "311"
     val volume            = BigDecimal(10)
-    val spoilt            = Spoilt.toString
+    val repackagedRate    = BigDecimal(10)
+    val repackagedDuty    = BigDecimal(33.2)
+    val newDuty           = BigDecimal(1)
     val rateBand          = RateBand(
       taxCode,
       "some band",
       RateType.DraughtRelief,
-      Set(AlcoholRegime.Beer),
-      AlcoholByVolume(0.1),
-      AlcoholByVolume(5.8),
+      Set(
+        AlcoholRegime(
+          AlcoholRegimeName.Beer,
+          NonEmptySeq.one(
+            ABVRange(ABVRangeName.Beer, AlcoholByVolume(0.1), AlcoholByVolume(5.8))
+          )
+        )
+      ),
       Some(rate)
     )
 
@@ -84,7 +92,17 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentDutyDueView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(spoilt, volume, dutyDue, pureAlcoholVolume, taxCode, rate)(
+        contentAsString(result) mustEqual view(
+          Spoilt,
+          volume,
+          dutyDue,
+          pureAlcoholVolume,
+          taxCode,
+          rate,
+          repackagedRate,
+          repackagedDuty,
+          newDuty
+        )(
           request,
           messages(application)
         ).toString

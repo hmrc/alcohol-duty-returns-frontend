@@ -21,7 +21,7 @@ import connectors.CacheConnector
 import generators.ModelGenerators
 import models.RateType.Core
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, AlcoholRegime, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry._
 import play.api.inject.bind
@@ -50,7 +50,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     volume = Some(volume),
     draughtRelief = Some(false),
     smallProducerRelief = Some(true),
-    regime = Some(AlcoholRegime.Beer),
+    regime = Some(AlcoholRegimeName.Beer),
     sprDutyRate = Some(rate),
     pureAlcoholVolume = Some(pureAlcoholVolume),
     taxCode = Some(taxCode),

@@ -17,8 +17,9 @@
 package controllers.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import forms.adjustment.AdjustmentTaxTypeFormProvider
-import models.{AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, NormalMode, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
@@ -31,32 +32,42 @@ import models.adjustment.AdjustmentEntry
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentTaxTypeView
 
+import java.time.YearMonth
 import scala.concurrent.Future
 
 class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
   val formProvider = new AdjustmentTaxTypeFormProvider()
   val form         = formProvider()
-
-  def onwardRoute = Call("GET", "/foo")
+  val period       = YearMonth.of(2024, 1)
+  def onwardRoute  = Call("GET", "/foo")
 
   val validAnswer = 310
 
   lazy val adjustmentTaxTypeRoute = controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode).url
   val spoilt                      = Spoilt.toString
-  val adjustmentEntry             = AdjustmentEntry(adjustmentType = Some(Spoilt))
+  val adjustmentEntry             = AdjustmentEntry(adjustmentType = Some(Spoilt), period = Some(period))
   val userAnswers                 = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
   val taxCode                     = "310"
-  val alcoholRegime               = AlcoholRegime.Beer
+  val alcoholRegime               = AlcoholRegimeName.Beer
   val rate                        = Some(BigDecimal(10.99))
 
   val rateBand = RateBand(
     taxCode,
     "some band",
     RateType.DraughtRelief,
-    Set(alcoholRegime),
-    AlcoholByVolume(0.1),
-    AlcoholByVolume(5.8),
+    Set(
+      AlcoholRegime(
+        AlcoholRegimeName.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            ABVRangeName.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    ),
     rate
   )
 
@@ -74,7 +85,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentTaxTypeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, messages(application)).toString
       }
     }
 
@@ -94,7 +105,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, spoilt)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, Spoilt)(
           request,
           messages(application)
         ).toString
@@ -164,7 +175,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, messages(application)).toString
       }
     }
 
@@ -202,7 +213,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
             .withError("adjustment-tax-type-input", "adjustmentTaxType.error.invalid")
             .fill(validAnswer),
           NormalMode,
-          spoilt
+          Spoilt
         )(request, messages(application)).toString
       }
     }

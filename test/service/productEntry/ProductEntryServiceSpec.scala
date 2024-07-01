@@ -19,7 +19,7 @@ package service.productEntry
 import base.SpecBase
 import connectors.AlcoholDutyCalculatorConnector
 import pages.productEntry._
-import models.{AlcoholByVolume, AlcoholRegime}
+import models.{AlcoholByVolume, AlcoholRegimeName}
 import models.productEntry.{ProductEntry, TaxDuty}
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
@@ -45,7 +45,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
       val updatedProductEntry = productEntry.copy(
         taxCode = Some("ALC"),
-        regime = Some(AlcoholRegime.Beer),
+        regime = Some(AlcoholRegimeName.Beer),
         taxRate = Some(BigDecimal(1))
       )
 
@@ -55,7 +55,7 @@ class ProductEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any())(any()))
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
         .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new ProductEntryServiceImpl(mockConnector)
@@ -77,7 +77,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
       val updatedProductEntry = productEntry.copy(
         taxCode = Some("ALC"),
-        regime = Some(AlcoholRegime.Beer),
+        regime = Some(AlcoholRegimeName.Beer),
         smallProducerRelief = Some(true),
         sprDutyRate = Some(BigDecimal(2))
       )
@@ -88,7 +88,7 @@ class ProductEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any())(any()))
+      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
         .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new ProductEntryServiceImpl(mockConnector)
@@ -126,7 +126,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
         val updatedProductEntry = productEntry.copy(
           taxCode = Some("ALC"),
-          regime = Some(AlcoholRegime.Beer),
+          regime = Some(AlcoholRegimeName.Beer),
           taxRate = Some(BigDecimal(1)),
           smallProducerRelief = Some(true),
           sprDutyRate = Some(BigDecimal(2))
@@ -138,7 +138,7 @@ class ProductEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new ProductEntryServiceImpl(mockConnector)
@@ -154,7 +154,7 @@ class ProductEntryServiceSpec extends SpecBase {
 
         val updatedProductEntry = productEntry.copy(
           taxCode = Some("ALC"),
-          regime = Some(AlcoholRegime.Beer),
+          regime = Some(AlcoholRegimeName.Beer),
           smallProducerRelief = Some(true)
         )
 
@@ -164,7 +164,7 @@ class ProductEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new ProductEntryServiceImpl(mockConnector)
@@ -186,7 +186,7 @@ class ProductEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new ProductEntryServiceImpl(mockConnector)
@@ -206,7 +206,7 @@ class ProductEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any())(any()))
+        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new ProductEntryServiceImpl(mockConnector)

@@ -25,10 +25,10 @@ class AdjustmentRepackagedTaxTypeFormProviderSpec extends IntFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "adjustmentRepackagedTaxType-input"
+    val fieldName = "new-tax-type-code"
 
-    val minimum = 0
-    val maximum = 100
+    val minimum = 100
+    val maximum = 999
 
     val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
 
@@ -41,8 +41,8 @@ class AdjustmentRepackagedTaxTypeFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "adjustmentRepackagedTaxType.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "adjustmentRepackagedTaxType.error.wholeNumber")
+      nonNumericError = FormError(fieldName, "adjustmentRepackagedTaxType.error.invalid"),
+      wholeNumberError = FormError(fieldName, "adjustmentRepackagedTaxType.error.invalid")
     )
 
     behave like intFieldWithRange(
@@ -50,7 +50,7 @@ class AdjustmentRepackagedTaxTypeFormProviderSpec extends IntFieldBehaviours {
       fieldName,
       minimum = minimum,
       maximum = maximum,
-      expectedError = FormError(fieldName, "adjustmentRepackagedTaxType.error.outOfRange", Seq(minimum, maximum))
+      expectedError = FormError(fieldName, "adjustmentRepackagedTaxType.error.invalid", Seq(minimum, maximum))
     )
 
     behave like mandatoryField(

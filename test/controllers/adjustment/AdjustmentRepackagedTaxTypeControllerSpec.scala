@@ -17,30 +17,56 @@
 package controllers.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import forms.adjustment.AdjustmentRepackagedTaxTypeFormProvider
-import models.NormalMode
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, NormalMode, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.adjustment.AdjustmentRepackagedTaxTypePage
+import pages.adjustment.{AdjustmentRepackagedTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentRepackagedTaxTypeView
 
+import java.time.YearMonth
 import scala.concurrent.Future
 
-class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase with MockitoSugar {
+class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
-  val formProvider = new AdjustmentRepackagedTaxTypeFormProvider()
-  val form         = formProvider()
+  val formProvider    = new AdjustmentRepackagedTaxTypeFormProvider()
+  val form            = formProvider()
+  val period          = YearMonth.of(2024, 1)
+  val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), period = Some(period))
+  val userAnswers     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val taxCode         = "310"
+  val rate            = Some(BigDecimal(10.99))
+  val rateBand        = RateBand(
+    taxCode,
+    "some band",
+    RateType.DraughtRelief,
+    Set(
+      AlcoholRegime(
+        AlcoholRegimeName.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            ABVRangeName.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    ),
+    rate
+  )
+  def onwardRoute     = Call("GET", "/foo")
 
-  def onwardRoute = Call("GET", "/foo")
-
-  val validAnswer = 0
+  val validAnswer = 310
 
   lazy val adjustmentRepackagedTaxTypeRoute =
     controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode).url
@@ -49,35 +75,36 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase with MockitoSug
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, adjustmentRepackagedTaxTypeRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[AdjustmentRepackagedTaxTypeView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(AdjustmentRepackagedTaxTypePage, validAnswer).success.value
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentRepackagedTaxTypeRoute)
 
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[AdjustmentRepackagedTaxTypeView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, messages(application)).toString
+      }
+    }
+
+    "must populate the view correctly on a GET when the question has previously been answered" in {
+      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), repackagedRateBand = Some(rateBand))
+
+      val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+
+      val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentRepackagedTaxTypeRoute)
+
         val view = application.injector.instanceOf[AdjustmentRepackagedTaxTypeView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, Spoilt)(
           request,
           messages(application)
         ).toString
@@ -86,14 +113,20 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase with MockitoSug
 
     "must redirect to the next page when valid data is submitted" in {
 
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
+        Some(rateBand)
+      )
+
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -101,7 +134,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
-            .withFormUrlEncodedBody(("adjustmentRepackagedTaxType-input", validAnswer.toString))
+            .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
 
         val result = route(application, request).value
 
@@ -112,7 +145,21 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase with MockitoSug
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
+        None
+      )
+      val mockCacheConnector                 = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
       running(application) {
         val request =
@@ -126,7 +173,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, messages(application)).toString
       }
     }
 

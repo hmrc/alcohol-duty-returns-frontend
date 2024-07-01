@@ -902,7 +902,6 @@ adjustmentRepackagedTaxType.heading = What is the tax type code for the newly re
 adjustmentRepackagedTaxType.checkYourAnswersLabel = New tax type
 adjustmentRepackagedTaxType.error.invalid = Enter a valid tax type code
 adjustmentRepackagedTaxType.error.required = Enter the new tax type code
-adjustmentRepackagedTaxType.error.wholeNumber = Enter your adjustmentRepackagedTaxType using whole numbers
 adjustmentRepackagedTaxType.error.outOfRange = AdjustmentRepackagedTaxType must be between {0} and {1}
 adjustmentRepackagedTaxType.error.nonDraught = Enter a valid non-draught {0} tax type code
 adjustmentRepackagedTaxType.change.hidden = what is the tax type code for the newly repackaged products
@@ -948,5 +947,11 @@ adjustmentEntryList.action = Action
 adjustmentList.total = Total due
 adjustmentList.question = Do you need to tell us about any other adjustments?
 adjustmentList.error.required = Select yes if you have another adjustment to declare
+
+deleteAdjustment.title = Remove this adjustment?
+deleteAdjustment.heading = Remove this adjustment?
+deleteAdjustment.hint = This will remove the adjustment and its information from the list of adjustments in this return.
+deleteAdjustment.error.required = Select yes to remove this adjustment
+
 
 # End of adjustments sub-journey

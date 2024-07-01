@@ -17,8 +17,8 @@
 package navigation
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import controllers._
-import models.AlcoholRegime.Beer
 import models.RateType.{Core, DraughtAndSmallProducerRelief, SmallProducerRelief}
 import pages._
 import models._
@@ -31,9 +31,18 @@ class AdjustmentNavigatorSpec extends SpecBase {
     "310",
     "some band",
     RateType.DraughtRelief,
-    Set(Beer),
-    AlcoholByVolume(0.1),
-    AlcoholByVolume(5.8),
+    Set(
+      AlcoholRegime(
+        AlcoholRegimeName.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            ABVRangeName.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    ),
     Some(BigDecimal(10.99))
   )
 

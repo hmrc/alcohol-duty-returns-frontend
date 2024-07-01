@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AdjustmentVolumeFormProvider
-import models.NormalMode
+import models.{AlcoholRegimeName, NormalMode}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
@@ -26,26 +26,31 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import models.adjustment.AdjustmentEntry
+import models.AlcoholRegimeName.Beer
+import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
 import models.adjustment.AdjustmentType.Spoilt
+import play.api.i18n.Messages
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.Future
 
 class AdjustmentVolumeControllerSpec extends SpecBase {
-
   val formProvider = new AdjustmentVolumeFormProvider()
-  val form         = formProvider()
+  val regime       = regimeGen.sample.value
+  val messages     = mock[Messages]
+  val form         = formProvider(regime)(messages)
+  def onwardRoute  = Call("GET", "/foo")
 
-  def onwardRoute = Call("GET", "/foo")
-
-  val validAnswer = BigDecimal(10.23)
+  val validTotalLitres = BigDecimal(10.23)
+  val validPureAlcohol = BigDecimal(9.23)
 
   lazy val adjustmentVolumeRoute = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode).url
 
   val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
   val userAnswers     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+
+  val rateBandContent = "Beer between 3.4% and 8.4% ABV (tax type code 321)"
 
   "AdjustmentVolume Controller" - {
 
@@ -61,12 +66,19 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentVolumeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, "spoilt")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, Spoilt, regime, rateBandContent)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), totalLitresVolume = Some(validAnswer))
+      val adjustmentEntry = AdjustmentEntry(
+        adjustmentType = Some(Spoilt),
+        totalLitresVolume = Some(validTotalLitres),
+        pureAlcoholVolume = Some(validPureAlcohol)
+      )
 
       val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
@@ -80,7 +92,13 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, "spoilt")(
+        contentAsString(result) mustEqual view(
+          form.fill(AdjustmentVolume(validTotalLitres, validPureAlcohol)),
+          NormalMode,
+          Spoilt,
+          regime,
+          rateBandContent
+        )(
           request,
           messages(application)
         ).toString
@@ -104,7 +122,10 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
-            .withFormUrlEncodedBody(("adjustment-volume-input", validAnswer.toString))
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", validTotalLitres.toString()),
+              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+            )
 
         val result = route(application, request).value
 
@@ -129,7 +150,10 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, "spoilt")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt, regime, rateBandContent)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -154,7 +178,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+            .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
 
         val result = route(application, request).value
 

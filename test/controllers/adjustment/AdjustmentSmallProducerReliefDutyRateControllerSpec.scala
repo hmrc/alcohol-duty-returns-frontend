@@ -41,7 +41,6 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer                                     = BigDecimal(0.00)
-  val spoilt                                          = Spoilt.toString
   val adjustmentEntry                                 = AdjustmentEntry(adjustmentType = Some(Spoilt))
   val userAnswers                                     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
   lazy val adjustmentSmallProducerReliefDutyRateRoute =
@@ -61,7 +60,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentSmallProducerReliefDutyRateView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, messages(application)).toString
       }
     }
 
@@ -81,7 +80,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, spoilt)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, Spoilt)(
           request,
           messages(application)
         ).toString
@@ -130,7 +129,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, messages(application)).toString
       }
     }
 

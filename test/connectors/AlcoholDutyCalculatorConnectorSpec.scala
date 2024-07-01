@@ -17,11 +17,13 @@
 package connectors
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import config.FrontendAppConfig
-import models.AlcoholRegime.{Beer, Wine}
+import models.AlcoholRegimeName.{Beer, Wine}
 import models.RateType.DraughtRelief
+import models.adjustment.AdjustmentType.Spoilt
 import models.productEntry.TaxDuty
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.{NOT_FOUND, OK}
@@ -40,9 +42,18 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     "310",
     "some band",
     RateType.DraughtRelief,
-    Set(AlcoholRegime.Beer),
-    AlcoholByVolume(0.1),
-    AlcoholByVolume(5.8),
+    Set(
+      AlcoholRegime(
+        AlcoholRegimeName.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            ABVRangeName.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    ),
     Some(BigDecimal(10.99))
   )
   val rateBandList: Seq[RateBand]          = Seq(rateBand)
@@ -80,12 +91,12 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         connector.httpClient.POST[DutyCalculationRequest, TaxDuty](any(), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(TaxDuty(BigDecimal(1)))
 
-      whenReady(connector.calculateTaxDuty(BigDecimal(1), BigDecimal(1))) { result =>
+      whenReady(connector.calculateTaxDuty(BigDecimal(1), BigDecimal(1), Spoilt)) { result =>
         result mustBe TaxDuty(BigDecimal(1))
         verify(connector.httpClient, atLeastOnce)
           .POST[DutyCalculationRequest, TaxDuty](
             any(),
-            ArgumentMatchers.eq(DutyCalculationRequest(BigDecimal(1), BigDecimal(1))),
+            ArgumentMatchers.eq(DutyCalculationRequest(BigDecimal(1), BigDecimal(1), Spoilt)),
             any()
           )(any(), any(), any(), any())
       }

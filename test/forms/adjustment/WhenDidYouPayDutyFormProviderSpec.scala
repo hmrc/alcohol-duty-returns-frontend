@@ -99,7 +99,7 @@ class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBeha
       form,
       inputKey,
       validData,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.year")
+      FormError(inputKey, "whenDidYouPayDuty.date.error.invalidYear.year")
     )
 
     behave like yearMonthWithYearOutOfMaxRange(
