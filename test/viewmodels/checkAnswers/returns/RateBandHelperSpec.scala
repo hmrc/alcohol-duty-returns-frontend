@@ -18,29 +18,23 @@ package viewmodels.checkAnswers.returns
 
 import base.SpecBase
 import cats.data.NonEmptySeq
+import generators.ModelGenerators
 import models.RateType.{Core, DraughtRelief}
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RateType}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, RateBand, RateType}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen
+import play.api.i18n.Messages
 
 class RateBandHelperSpec extends SpecBase {
 
+  val application                 = applicationBuilder().build()
+  implicit val messages: Messages = messages(application)
+
   "RateBandHelper" - {
-    val application = applicationBuilder().build()
-
-    val regime                = regimeGen.sample.value
-    val taxType               = "001"
-    val description           = "test"
-    val label                 = arbitrary[ABVRangeName].sample.value
-    val alcoholLabel          = messages(application).messages(s"return.journey.abv.interval.label.$label")
-    val secondaryLabel        = arbitrary[ABVRangeName].suchThat(_ != label).sample.value
-    val secondaryAlcoholLabel = messages(application).messages(s"return.journey.abv.interval.label.$secondaryLabel")
-
-    val rateTypeStandard = Gen.oneOf(Core, DraughtRelief).sample.value
 
     "should return the correct message when choosing bands to report" - {
 
-      "for a single interval" in {
+      "for a single interval" in new SetUp {
 
         val lowerLimit = 1
         val upperLimit = 10
@@ -76,7 +70,7 @@ class RateBandHelperSpec extends SpecBase {
 
       }
 
-      "for multiple intervals" in {
+      "for multiple intervals" in new SetUp {
 
         val lowerLimit1 = 1
         val upperLimit1 = 10
@@ -123,7 +117,7 @@ class RateBandHelperSpec extends SpecBase {
         )
       }
 
-      "for interval with MAX value" in {
+      "for interval with MAX value" in new SetUp {
 
         val lowerLimit = 1
 
@@ -160,7 +154,7 @@ class RateBandHelperSpec extends SpecBase {
     "should return the correct message when creating labels for confirmation lists and tables to report" - {
 
       RateType.values.foreach { rateType =>
-        s"for a single interval for rate type: $rateType" in {
+        s"for a single interval for rate type: $rateType" in new SetUp {
           val lowerLimit = 1
           val upperLimit = 10
 
@@ -196,7 +190,7 @@ class RateBandHelperSpec extends SpecBase {
             .capitalize
         }
 
-        s"for multiple intervals for rate type: $rateType" in {
+        s"for multiple intervals for rate type: $rateType" in new SetUp {
           val lowerLimit1 = 1
           val upperLimit1 = 10
           val lowerLimit2 = 11
@@ -244,7 +238,7 @@ class RateBandHelperSpec extends SpecBase {
             .capitalize
         }
 
-        s"for interval with MAX value for rate type: $rateType" in {
+        s"for interval with MAX value for rate type: $rateType" in new SetUp {
           val lowerLimit = 1
 
           val rateBand = RateBand(
@@ -279,5 +273,18 @@ class RateBandHelperSpec extends SpecBase {
         }
       }
     }
+  }
+
+  class SetUp(implicit messages: Messages) extends ModelGenerators {
+
+    val regime                = regimeGen.sample.value
+    val taxType               = "001"
+    val description           = "test"
+    val label                 = ABVRangeName.Cider
+    val alcoholLabel          = messages(s"return.journey.abv.interval.label.$label")
+    val secondaryLabel        = ABVRangeName.SparklingCider
+    val secondaryAlcoholLabel = messages(s"return.journey.abv.interval.label.$secondaryLabel")
+
+    val rateTypeStandard = Gen.oneOf(Core, DraughtRelief).sample.value
   }
 }
