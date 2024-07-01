@@ -22,16 +22,16 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 
 class AdjustmentVolumesAndRateFormatter(
-                               invalidKey: String,
-                               allRequiredKey: String,
-                               requiredKey: String,
-                               decimalPlacesKey: String,
-                               minimumValueKey: String,
-                               maximumValueKey: String,
-                               inconsistentKey: String,
-                               args: Seq[String]
-                             ) extends Formatter[AdjustmentVolumeWithSPR]
-  with Formatters {
+  invalidKey: String,
+  allRequiredKey: String,
+  requiredKey: String,
+  decimalPlacesKey: String,
+  minimumValueKey: String,
+  maximumValueKey: String,
+  inconsistentKey: String,
+  args: Seq[String]
+) extends Formatter[AdjustmentVolumeWithSPR]
+    with Formatters {
 
   def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
@@ -40,7 +40,7 @@ class AdjustmentVolumesAndRateFormatter(
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    minimumValue = BigDecimal(0.00),//what's this for
+    minimumValue = BigDecimal(0.00),
     args = args
   )
 
@@ -56,7 +56,7 @@ class AdjustmentVolumesAndRateFormatter(
   )
 
   val NUMBER_OF_FIELDS        = 3
-  val fieldKeys: List[String] = List("totalLitersVolume", "pureAlcoholVolume", "sprDutyRate")
+  val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume", "sprDutyRate")
 
   def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
@@ -65,14 +65,14 @@ class AdjustmentVolumesAndRateFormatter(
     FormError(nameToId(key), allRequiredKey, args)
 
   def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
-    val totalLitres = volumeFormatter("totalLitersVolume").bind(s"$key.totalLitersVolume", data)
+    val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
     val pureAlcohol = volumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
-    val sprDutyRate    = dutyRateFormatter("sprDutyRate").bind(s"$key.sprDutyRate", data)
+    val sprDutyRate = dutyRateFormatter("sprDutyRate").bind(s"$key.sprDutyRate", data)
 
     (totalLitres, pureAlcohol, sprDutyRate) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue), Right(sprDutyRate)) =>
         Right(AdjustmentVolumeWithSPR(totalLitresValue, pureAlcoholValue, sprDutyRate))
-      case (totalLitresError, pureAlcoholError, sprDutyRateError)                        =>
+      case (totalLitresError, pureAlcoholError, sprDutyRateError)                 =>
         Left(
           totalLitresError.left.getOrElse(Seq.empty)
             ++ pureAlcoholError.left.getOrElse(Seq.empty)
@@ -85,7 +85,7 @@ class AdjustmentVolumesAndRateFormatter(
     formatVolume(key, data).fold(
       errors => Left(errors),
       volumes =>
-        if (volumes.totalLitersVolume < volumes.pureAlcoholVolume) {
+        if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
           Left(Seq(FormError(nameToId(s"$key.pureAlcoholVolume"), inconsistentKey)))
         } else {
           Right(volumes)
@@ -116,9 +116,9 @@ class AdjustmentVolumesAndRateFormatter(
 
   override def unbind(key: String, value: AdjustmentVolumeWithSPR): Map[String, String] =
     Map(
-      s"$key.totalLitersVolume" -> value.totalLitersVolume.toString,
+      s"$key.totalLitresVolume" -> value.totalLitresVolume.toString,
       s"$key.pureAlcoholVolume" -> value.pureAlcoholVolume.toString,
-      s"$key.sprDutyRate"    -> value.sprDutyRate.toString
+      s"$key.sprDutyRate"       -> value.sprDutyRate.toString
     )
 
 }

@@ -16,26 +16,103 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholByVolume, RateBand}
+import models.{ABVRange, AlcoholByVolume, RateBand, RateType}
 import play.api.i18n.Messages
 
 object RateBandHelper {
-  def rateBandContent(rateBand: RateBand, key: String)(implicit messages: Messages): String =
-    rateBand.maxABV match {
+
+  def rateBandContent(rateBand: RateBand)(implicit messages: Messages): String                         =
+    rateBand.alcoholRegimes.flatMap(_.abvRanges.toSeq) match {
+      case abvRanges if abvRanges.size == 1 =>
+        singleInterval(abvRanges.head, rateBand.taxType)
+      case abvRanges                        =>
+        multipleIntervals(abvRanges, rateBand.taxType)
+    }
+  private def singleInterval(interval: ABVRange, taxType: String)(implicit messages: Messages): String =
+    interval.maxABV match {
       case AlcoholByVolume.MAX =>
         messages(
-          s"$key.abv.exceeding.max.${rateBand.rateType}",
-          messages(s"regime.${rateBand.alcoholRegime.head}"),
-          rateBand.minABV.value,
-          rateBand.taxType
-        )
+          "return.journey.abv.interval.exceeding.max",
+          messages(s"return.journey.abv.interval.label.${interval.name}"),
+          interval.minABV.value,
+          taxType
+        ).capitalize
       case _                   =>
         messages(
-          s"$key.abv.interval.${rateBand.rateType}",
-          messages(s"regime.${rateBand.alcoholRegime.head}"),
-          rateBand.minABV.value,
-          rateBand.maxABV.value,
-          rateBand.taxType
-        )
+          "return.journey.abv.single.interval",
+          messages(s"return.journey.abv.interval.label.${interval.name}"),
+          interval.minABV.value,
+          interval.maxABV.value,
+          taxType
+        ).capitalize
     }
+
+  private def multipleIntervals(intervals: Set[ABVRange], taxType: String)(implicit
+    messages: Messages
+  ): String = {
+    val firstInterval = intervals.head
+    val lastInterval  = intervals.last
+
+    messages(
+      "return.journey.abv.multi.interval",
+      messages(s"return.journey.abv.interval.label.${firstInterval.name}"),
+      firstInterval.minABV.value,
+      firstInterval.maxABV.value,
+      messages(s"return.journey.abv.interval.label.${lastInterval.name}"),
+      lastInterval.minABV.value,
+      lastInterval.maxABV.value,
+      taxType
+    ).capitalize
+  }
+
+  def rateBandRecap(rateBand: RateBand)(implicit messages: Messages): String =
+    rateBand.alcoholRegimes.flatMap(_.abvRanges.toSeq) match {
+      case abvRanges if abvRanges.size == 1 =>
+        singleIntervalRecap(
+          abvRanges.head,
+          rateBand.taxType,
+          rateBand.rateType
+        )
+      case abvRanges                        =>
+        multipleIntervalsRecap(abvRanges, rateBand.taxType, rateBand.rateType)
+    }
+
+  private def singleIntervalRecap(interval: ABVRange, taxType: String, rateType: RateType)(implicit
+    messages: Messages
+  ): String =
+    interval.maxABV match {
+      case AlcoholByVolume.MAX =>
+        messages(
+          s"return.journey.abv.recap.interval.exceeding.max.$rateType",
+          messages(s"return.journey.abv.interval.label.${interval.name}"),
+          interval.minABV.value,
+          taxType
+        ).capitalize
+      case _                   =>
+        messages(
+          s"return.journey.abv.recap.single.interval.$rateType",
+          messages(s"return.journey.abv.interval.label.${interval.name}"),
+          interval.minABV.value,
+          interval.maxABV.value,
+          taxType
+        ).capitalize
+    }
+
+  private def multipleIntervalsRecap(intervals: Set[ABVRange], taxType: String, rateType: RateType)(implicit
+    messages: Messages
+  ): String = {
+    val firstInterval = intervals.head
+    val lastInterval  = intervals.last
+
+    messages(
+      s"return.journey.abv.recap.multi.interval.$rateType",
+      messages(s"return.journey.abv.interval.label.${firstInterval.name}"),
+      firstInterval.minABV.value,
+      firstInterval.maxABV.value,
+      messages(s"return.journey.abv.interval.label.${lastInterval.name}"),
+      lastInterval.minABV.value,
+      lastInterval.maxABV.value,
+      taxType
+    ).capitalize
+  }
 }

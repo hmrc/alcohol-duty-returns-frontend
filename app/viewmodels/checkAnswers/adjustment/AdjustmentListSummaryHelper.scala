@@ -38,7 +38,9 @@ object AdjustmentListSummaryHelper {
         HeadCell(content = Text(messages("adjustmentEntryList.action")), classes = "govuk-!-width-one-quarter")
       ),
       rows = getAdjustmentEntryRows(adjustmentEntries),
-      total = adjustmentEntries.map(_.duty.getOrElse(BigDecimal(0))).sum//how to sum with newDuty
+      total = adjustmentEntries.map { adjustmentEntry =>
+        adjustmentEntry.newDuty.orElse(adjustmentEntry.duty).getOrElse(BigDecimal(0))
+      }.sum
     )
   }
 
@@ -46,11 +48,13 @@ object AdjustmentListSummaryHelper {
     userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
 
   private def getAdjustmentEntryRows(adjustmentEntries: Seq[AdjustmentEntry])(implicit
-                                                                     messages: Messages
+    messages: Messages
   ): Seq[TableRowViewModel] =
     adjustmentEntries.zipWithIndex.map { case (adjustmentEntry, index) =>
-      val adjustmentType = adjustmentEntry.adjustmentType.getOrElse(throw new RuntimeException("Couldn't fetch adjustment type value from cache"))
-      val dutyValue = if (adjustmentEntry.newDuty.isDefined) {
+      val adjustmentType = adjustmentEntry.adjustmentType.getOrElse(
+        throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+      )
+      val dutyValue      = if (adjustmentEntry.newDuty.isDefined) {
         adjustmentEntry.newDuty
       } else {
         adjustmentEntry.duty
@@ -58,7 +62,11 @@ object AdjustmentListSummaryHelper {
       TableRowViewModel(
         cells = Seq(
           Text(messages(s"adjustmentType.$adjustmentType")),
-          Text(rateBandContent(adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBandfrom cache")), "adjustmentTaxType.checkYourAnswersLabel")),
+          Text(
+            rateBandContent(
+              adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBandfrom cache"))
+            )
+          ),
           Text(valueFormatter(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache"))))
         ),
         actions = Seq(

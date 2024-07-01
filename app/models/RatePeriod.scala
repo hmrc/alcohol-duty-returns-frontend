@@ -16,14 +16,17 @@
 
 package models
 
+import cats.data._
+import cats.implicits._
+import enumeratum.{Enum, EnumEntry, PlayEnum, PlayJsonEnum}
 import play.api.libs.json._
 
 import java.time.YearMonth
 import scala.util.{Failure, Success, Try}
 
-sealed trait RateType
-
-object RateType {
+sealed trait RateType extends EnumEntry
+object RateType extends Enum[RateType] with PlayJsonEnum[RateType] {
+  val values = findValues
 
   case object Core extends RateType
   case object DraughtRelief extends RateType
@@ -37,23 +40,8 @@ object RateType {
       case (false, true) => RateType.SmallProducerRelief
       case _             => RateType.Core
     }
-
-  implicit val format: Format[RateType] = new Format[RateType] {
-    override def reads(json: JsValue): JsResult[RateType] = json.validate[String] match {
-      case JsSuccess(value, _) =>
-        value match {
-          case "Core"                          => JsSuccess(Core)
-          case "DraughtRelief"                 => JsSuccess(DraughtRelief)
-          case "SmallProducerRelief"           => JsSuccess(SmallProducerRelief)
-          case "DraughtAndSmallProducerRelief" => JsSuccess(DraughtAndSmallProducerRelief)
-          case s                               => JsError(s"$s is not a valid RateType")
-        }
-      case e: JsError          => e
-    }
-
-    override def writes(o: RateType): JsValue = JsString(o.toString)
-  }
 }
+
 case class RateTypeResponse(rateType: RateType)
 
 object RateTypeResponse {
@@ -82,21 +70,54 @@ object AlcoholByVolume {
 
     override def writes(o: AlcoholByVolume): JsValue = JsNumber(o.value)
   }
-  val MAX: AlcoholByVolume                     = AlcoholByVolume(100)
+
+  val MAX: AlcoholByVolume = AlcoholByVolume(100)
+}
+
+sealed trait ABVRangeName extends EnumEntry
+object ABVRangeName extends Enum[ABVRangeName] with PlayEnum[ABVRangeName] {
+  val values = findValues
+
+  case object Beer extends ABVRangeName
+  case object Cider extends ABVRangeName
+  case object SparklingCider extends ABVRangeName
+  case object Wine extends ABVRangeName
+  case object Spirits extends ABVRangeName
+  case object OtherFermentedProduct extends ABVRangeName
+}
+
+case class ABVRange(name: ABVRangeName, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
+
+object ABVRange {
+  implicit val format: Format[ABVRange] = Json.format[ABVRange]
+}
+
+case class AlcoholRegime(name: AlcoholRegimeName, abvRanges: NonEmptySeq[ABVRange])
+
+object AlcoholRegime {
+  implicit val nonEmptySeqFormat: Format[NonEmptySeq[ABVRange]] = new Format[NonEmptySeq[ABVRange]] {
+    override def reads(json: JsValue): JsResult[NonEmptySeq[ABVRange]] =
+      json.validate[Seq[ABVRange]].flatMap {
+        case head +: tail => JsSuccess(NonEmptySeq.fromSeqUnsafe(Seq(head) ++ tail))
+        case _            => JsError("Empty sequence")
+      }
+
+    override def writes(o: NonEmptySeq[ABVRange]): JsValue = Writes.seq(ABVRange.format).writes(o.toList)
+  }
+
+  implicit val format: Format[AlcoholRegime] = Json.format[AlcoholRegime]
 }
 
 case class RateBand(
   taxType: String,
   description: String,
   rateType: RateType,
-  alcoholRegime: Set[AlcoholRegime],
-  minABV: AlcoholByVolume,
-  maxABV: AlcoholByVolume,
+  alcoholRegimes: Set[AlcoholRegime],
   rate: Option[BigDecimal]
 )
 
 object RateBand {
-  implicit val formats: OFormat[RateBand] = Json.format[RateBand]
+  implicit val formats: Format[RateBand] = Json.format[RateBand]
 }
 
 case class RatePeriod(

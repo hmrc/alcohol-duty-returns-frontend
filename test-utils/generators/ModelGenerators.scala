@@ -30,18 +30,18 @@ trait ModelGenerators {
   implicit lazy val arbitraryAdjustmentVolumeWithSpr: Arbitrary[adjustment.AdjustmentVolumeWithSPR] =
     Arbitrary {
       for {
-        totalLitersVolume <- arbitrary[BigDecimal]
+        totalLitresVolume <- arbitrary[BigDecimal]
         pureAlcoholVolume <- arbitrary[BigDecimal]
         sprDutyRate       <- arbitrary[BigDecimal]
-      } yield adjustment.AdjustmentVolumeWithSPR(totalLitersVolume, pureAlcoholVolume, sprDutyRate)
+      } yield adjustment.AdjustmentVolumeWithSPR(totalLitresVolume, pureAlcoholVolume, sprDutyRate)
     }
 
   implicit lazy val arbitraryAdjustmentVolume: Arbitrary[adjustment.AdjustmentVolume] =
     Arbitrary {
       for {
-        totalLitersVolume <- arbitrary[BigDecimal]
+        totalLitresVolume <- arbitrary[BigDecimal]
         pureAlcoholVolume <- arbitrary[BigDecimal]
-      } yield adjustment.AdjustmentVolume(totalLitersVolume, pureAlcoholVolume)
+      } yield adjustment.AdjustmentVolume(totalLitresVolume, pureAlcoholVolume)
     }
 
   implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =

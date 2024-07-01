@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import connectors.CacheConnector
 import controllers.actions._
-import models.{NormalMode, UserAnswers}
+import models.UserAnswers
 import models.adjustment.AdjustmentEntry
 import pages.adjustment.{AdjustmentEntryListPage, CurrentAdjustmentEntryPage}
 import play.api.Logging

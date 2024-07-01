@@ -22,16 +22,16 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 
 class AdjustmentVolumesFormatter(
-                        invalidKey: String,
-                        allRequiredKey: String,
-                        requiredKey: String,
-                        decimalPlacesKey: String,
-                        minimumValueKey: String,
-                        maximumValueKey: String,
-                        inconsistentKey: String,
-                        args: Seq[String]
-                      ) extends Formatter[AdjustmentVolume]
-  with Formatters {
+  invalidKey: String,
+  allRequiredKey: String,
+  requiredKey: String,
+  decimalPlacesKey: String,
+  minimumValueKey: String,
+  maximumValueKey: String,
+  inconsistentKey: String,
+  args: Seq[String]
+) extends Formatter[AdjustmentVolume]
+    with Formatters {
 
   def bigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
@@ -45,7 +45,7 @@ class AdjustmentVolumesFormatter(
 
   val NUMBER_OF_FIELDS = 2
 
-  val fieldKeys: List[String] = List("totalLitersVolume", "pureAlcoholVolume")
+  val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume")
 
   def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
@@ -55,15 +55,15 @@ class AdjustmentVolumesFormatter(
 
   def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolume] = {
 
-    val totalLitres = bigDecimalFormatter("totalLitersVolume").bind(s"$key.totalLitersVolume", data)
+    val totalLitres = bigDecimalFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
     val pureAlcohol = bigDecimalFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
 
     (totalLitres, pureAlcohol) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue)) =>
         Right(AdjustmentVolume(totalLitresValue, pureAlcoholValue))
-      case (totalLitresError, pureAlcoholError)                      =>
+      case (totalLitresError, pureAlcoholError)               =>
         Left(
-             totalLitresError.left.getOrElse(Seq.empty)
+          totalLitresError.left.getOrElse(Seq.empty)
             ++ pureAlcoholError.left.getOrElse(Seq.empty)
         )
     }
@@ -73,7 +73,7 @@ class AdjustmentVolumesFormatter(
     formatVolume(key, data).fold(
       errors => Left(errors),
       volumes =>
-        if (volumes.totalLitersVolume < volumes.pureAlcoholVolume) {
+        if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
           Left(Seq(FormError(nameToId(s"$key.pureAlcoholVolume"), inconsistentKey, args)))
         } else {
           Right(volumes)
@@ -91,7 +91,7 @@ class AdjustmentVolumesFormatter(
       .toList
 
     fields.count(_._2.isDefined) match {
-      case NUMBER_OF_FIELDS                            =>
+      case NUMBER_OF_FIELDS                             =>
         checkValues(key, data)
       case size if size < NUMBER_OF_FIELDS && size >= 0 =>
         Left(
@@ -99,14 +99,14 @@ class AdjustmentVolumesFormatter(
             requiredFieldFormError(key, field)
           }
         )
-      case _                                           =>
+      case _                                            =>
         Left(List(requiredAllFieldsFormError(key)))
     }
   }
 
   override def unbind(key: String, value: AdjustmentVolume): Map[String, String] =
     Map(
-      s"$key.totalLitresVolume" -> value.totalLitersVolume.toString,
+      s"$key.totalLitresVolume" -> value.totalLitresVolume.toString,
       s"$key.pureAlcoholVolume" -> value.pureAlcoholVolume.toString
     )
 }

@@ -18,15 +18,14 @@ package forms.adjustment
 
 import javax.inject.Inject
 import forms.mappings.Mappings
-import models.AlcoholRegime
+import models.AlcoholRegimeName
 import play.api.data.Form
-import play.api.data.Forms._
 import models.adjustment.AdjustmentVolumeWithSPR
 import play.api.i18n.Messages
 
 class AdjustmentVolumeWithSPRFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[AdjustmentVolumeWithSPR] =
+  def apply(regime: AlcoholRegimeName)(implicit messages: Messages): Form[AdjustmentVolumeWithSPR] =
     Form(
       "volumes" -> adjustmentVolumesWithRate(
         "adjustmentVolume.error.invalid",
@@ -36,7 +35,7 @@ class AdjustmentVolumeWithSPRFormProvider @Inject() extends Mappings {
         "adjustmentVolume.error.minimumValue",
         "adjustmentVolume.error.maximumValue",
         "adjustmentVolume.error.lessThanExpected",
-        Seq(messages(s"regime.$regime"))
+        Seq(messages(s"return.regime.$regime"))
       )
     )
 }

@@ -19,10 +19,10 @@ package controllers.productEntry
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.productEntry.TaxTypeFormProvider
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.AlcoholRegimeName.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.productEntry.{ProductEntry, TaxType}
 import models.requests.DataRequest
-import models.{AlcoholByVolume, AlcoholRegime, Mode, RateBand, RateType}
+import models.{AlcoholByVolume, AlcoholRegimeName, Mode, RateBand, RateType}
 import navigation.ProductEntryNavigator
 import pages.productEntry.{CurrentProductEntryPage, TaxTypePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -73,7 +73,7 @@ class TaxTypeController @Inject() (
         eligibleForSmallProducerRelief: Boolean,
         rateType: RateType,
         ratePeriod: YearMonth,
-        approvedAlcoholRegimes: Set[AlcoholRegime]
+        approvedAlcoholRegimes: Set[AlcoholRegimeName]
       ) = rateParameters(request)
 
       alcoholDutyCalculatorConnector.rates(rateType, abv, ratePeriod, approvedAlcoholRegimes).map {
@@ -96,7 +96,7 @@ class TaxTypeController @Inject() (
         eligibleForSmallProducerRelief: Boolean,
         rateType: RateType,
         ratePeriod: YearMonth,
-        approvedAlcoholRegimes: Set[AlcoholRegime]
+        approvedAlcoholRegimes: Set[AlcoholRegimeName]
       ) = rateParameters(request)
 
       val rates = alcoholDutyCalculatorConnector.rates(rateType, abv, ratePeriod, approvedAlcoholRegimes)
@@ -149,7 +149,7 @@ class TaxTypeController @Inject() (
 
   private def rateParameters(
     request: DataRequest[AnyContent]
-  ): (AlcoholByVolume, Boolean, Boolean, RateType, YearMonth, Set[AlcoholRegime]) = {
+  ): (AlcoholByVolume, Boolean, Boolean, RateType, YearMonth, Set[AlcoholRegimeName]) = {
     val productEntry: ProductEntry     = request.userAnswers
       .get(CurrentProductEntryPage)
       .getOrElse(throw new RuntimeException("Couldn't fetch currentProductEntry value from cache"))
@@ -163,27 +163,31 @@ class TaxTypeController @Inject() (
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
 
     //hardcoded for now, will need to get this from subscription data
-    val approvedAlcoholRegimes: Set[AlcoholRegime] = Set(Beer, Wine, Cider, Spirits, OtherFermentedProduct)
+    val approvedAlcoholRegimes: Set[AlcoholRegimeName] = Set(Beer, Wine, Cider, Spirits, OtherFermentedProduct)
     (abv, eligibleForDraughtRelief, eligibleForSmallProducerRelief, rateType, ratePeriod, approvedAlcoholRegimes)
   }
 
   private def taxTypeFromValue(value: String, rates: Future[Seq[RateBand]]): Future[TaxType] =
     for {
-      Array(code, regimeStr) <- value.split("_") match {
-                                  case Array(code: String, regime: String) => Future.successful(Array(code, regime))
-                                  case _                                   => Future.failed(new RuntimeException("Couldn't parse tax type code"))
-                                }
-      regime: AlcoholRegime  <- AlcoholRegime.withNameOption(regimeStr) match {
-                                  case Some(regime) => Future.successful(regime)
-                                  case _            => Future.failed(new RuntimeException("Couldn't parse alcohol regime"))
-                                }
-      rate                   <- getRate(code, regime, rates)
+      Array(code, regimeStr)    <- value.split("_") match {
+                                     case Array(code: String, regime: String) => Future.successful(Array(code, regime))
+                                     case _                                   => Future.failed(new RuntimeException("Couldn't parse tax type code"))
+                                   }
+      regime: AlcoholRegimeName <- AlcoholRegimeName.withNameOption(regimeStr) match {
+                                     case Some(regime) => Future.successful(regime)
+                                     case _            => Future.failed(new RuntimeException("Couldn't parse alcohol regime"))
+                                   }
+      rate                      <- getRate(code, regime, rates)
     } yield TaxType(code, regime, rate)
 
-  private def getRate(code: String, regime: AlcoholRegime, future: Future[Seq[RateBand]]): Future[Option[BigDecimal]] =
+  private def getRate(
+    code: String,
+    regime: AlcoholRegimeName,
+    future: Future[Seq[RateBand]]
+  ): Future[Option[BigDecimal]] =
     future.map { rates: Seq[RateBand] =>
       rates
-        .find(rateBand => code == rateBand.taxType && rateBand.alcoholRegime.contains(regime))
+        .find(rateBand => code == rateBand.taxType && rateBand.alcoholRegimes.map(_.name).contains(regime))
         .flatMap(rateBand => rateBand.rate)
     }
 

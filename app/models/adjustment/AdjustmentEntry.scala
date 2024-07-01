@@ -16,6 +16,7 @@
 
 package models.adjustment
 
+import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import models.{RateBand, YearMonthModelFormatter}
 import play.api.libs.json.{Json, OFormat}
 
@@ -35,16 +36,18 @@ case class AdjustmentEntry(
   repackagedDuty: Option[BigDecimal] = None,
   newDuty: Option[BigDecimal] = None
 ) {
-  def isComplete: Boolean =
-    adjustmentType.isDefined &&
-      period.isDefined &&
-      rateBand.isDefined &&
-      //repackagedRateBand.isDefined &&
-      totalLitresVolume.isDefined &&
-      pureAlcoholVolume.isDefined &&
-      (rateBand.flatMap(_.rate).isDefined || sprDutyRate.isDefined) &&
-      //  (repackagedRateBand.flatMap(_.rate).isDefined || repackagedSprDutyRate.isDefined) && how to check
-      duty.isDefined
+  def isComplete: Boolean = {
+    val isRepackagedAdjustment =
+      adjustmentType.isDefined && adjustmentType
+        .getOrElse(throw new RuntimeException("Couldn't fetch adjustment type"))
+        .equals(RepackagedDraughtProducts)
+
+    adjustmentType.isDefined && period.isDefined && rateBand.isDefined &&
+    totalLitresVolume.isDefined && pureAlcoholVolume.isDefined && duty.isDefined && (rateBand
+      .flatMap(_.rate)
+      .isDefined || sprDutyRate.isDefined) && (!isRepackagedAdjustment || (repackagedRateBand.isDefined &&
+      (repackagedRateBand.flatMap(_.rate).isDefined || repackagedSprDutyRate.isDefined) && repackagedDuty.isDefined))
+  }
 
   def rate: Option[BigDecimal] =
     (rateBand.flatMap(_.rate), sprDutyRate) match {

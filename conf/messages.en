@@ -152,17 +152,35 @@ beforeStartReturn.text.guidance3.usecase4 = products you need to claim drawback 
 beforeStartReturn.text.guidance3.usecase5 = repackaged draught products
 beforeStartReturn.text.guidance4 = After you tell us this information, we will calculate how much you owe for this period.
 
-regime.Beer = beer
-regime.OtherFermentedProduct = other fermented products
-regime.Wine = wine
-regime.Cider = cider
-regime.Spirits = spirits
+return.regime.Beer = beer
+return.regime.Cider = cider
+return.regime.Wine = wine
+return.regime.Spirits = spirits
+return.regime.OtherFermentedProduct = other fermented products
 
-regime.capital.Beer = Beer
-regime.capital.OtherFermentedProduct = Other fermented products
-regime.capital.Wine = Wine
-regime.capital.Cider = Cider
-regime.capital.Spirits = Spirits
+return.journey.abv.interval.label.Beer = beer
+return.journey.abv.interval.label.Cider = cider
+return.journey.abv.interval.label.SparklingCider = sparkling cider
+return.journey.abv.interval.label.Wine = wine
+return.journey.abv.interval.label.Spirits = spirits
+return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
+
+return.journey.abv.interval.exceeding.max = {0} exceeding {1}% ABV (tax type code {2})
+return.journey.abv.single.interval = {0} between {1}% and {2}% ABV (tax type code {3})
+return.journey.abv.multi.interval = {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV (tax type code {6})
+
+return.journey.abv.recap.interval.exceeding.max.Core = Non-draught {0} exceeding {1}% ABV ({2})
+return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
+return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.interval.exceeding.max.DraughtRelief = Draught {0} exceeding {1}% ABV ({2})
+return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})
+return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = Non-draught {0} exceeding {1}% ABV ({2} SPR)
+return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)
+return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} exceeding {1}% ABV ({2} SPR)
+return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
+return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
 
 
 # Beginning of product entry sub-journey
@@ -829,6 +847,7 @@ whenDidYouPayDuty.date.error.invalid.year = The date you paid duty must be a rea
 whenDidYouPayDuty.date.error.invalid.past = The date must be after 31st August 2023
 whenDidYouPayDuty.checkYourAnswersLabel = Original return period
 whenDidYouPayDuty.change.hidden = when did you pay duty on this
+whenDidYouPayDuty.date.error.invalidYear.year = Year must include 4 numbers
 
 adjustmentTaxType.title = What is the tax type code for the alcohol you are adjusting?
 adjustmentTaxType.heading = What is the tax type code for the alcohol you are adjusting?
@@ -853,12 +872,12 @@ adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
 adjustmentVolume.hint = Give your answers as volumes in litres, to 2 decimal places. For example, 500.50
 adjustmentVolume.checkYourAnswersLabel = Volume
-adjustmentVolume.error.invalid.totalLitersVolume = Litres of {0} must be a number
-adjustmentVolume.error.noValue.totalLitersVolume = Enter the total litres of {0}
-adjustmentVolume.error.minimumValue.totalLitersVolume = Litres of {0} must be 0.01 or more
-adjustmentVolume.error.maximumValue.totalLitersVolume = Litres of {0} must be 99.99 million or less
-adjustmentVolume.error.twoDecimalPlaces.totalLitersVolume = Litres of {0} must be a number to 2 decimal places
-adjustmentVolume.error.totalLitersVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
+adjustmentVolume.error.invalid.totalLitresVolume = Litres of {0} must be a number
+adjustmentVolume.error.noValue.totalLitresVolume = Enter the total litres of {0}
+adjustmentVolume.error.minimumValue.totalLitresVolume = Litres of {0} must be 0.01 or more
+adjustmentVolume.error.maximumValue.totalLitresVolume = Litres of {0} must be 99.99 million or less
+adjustmentVolume.error.twoDecimalPlaces.totalLitresVolume = Litres of {0} must be a number to 2 decimal places
+adjustmentVolume.error.totalLitresVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
 adjustmentVolume.error.invalid.pureAlcoholVolume = Litres of pure alcohol in {0} must be a number
 adjustmentVolume.error.noValue.pureAlcoholVolume = Enter the litres of pure alcohol in {0}
 adjustmentVolume.error.minimumValue.pureAlcoholVolume = Litres of pure alcohol must be 0.01 or more
@@ -872,7 +891,7 @@ adjustmentVolume.error.maximumValue.sprDutyRate = Your Small Producer Relief dut
 adjustmentVolume.error.twoDecimalPlaces.sprDutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 adjustmentVolume.change.hidden = Adjustment Volume
 adjustmentVolume.subHeading = {0} between {1}% and {2}% ABV (tax type code {3})
-adjustmentVolume.totalLitersVolume.heading = Total litres of {0}
+adjustmentVolume.totalLitresVolume.heading = Total litres of {0}
 adjustmentVolume.pureAlcoholVolume.heading = Litres of pure alcohol
 adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief duty rate
 adjustmentVolume.pureAlcohol = litres of pure alcohol (Lpa)
@@ -926,5 +945,8 @@ adjustmentEntryList.type = Adjustment type
 adjustmentEntryList.description = Description
 adjustmentEntryList.duty = Duty value
 adjustmentEntryList.action = Action
+adjustmentList.total = Total due
+adjustmentList.question = Do you need to tell us about any other adjustments?
+adjustmentList.error.required = Select yes if you have another adjustment to declare
 
 # End of adjustments sub-journey

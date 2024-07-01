@@ -19,7 +19,7 @@ package models.adjustment
 import play.api.libs.json._
 
 case class AdjustmentVolume(
-  totalLitersVolume: BigDecimal,
+  totalLitresVolume: BigDecimal,
   pureAlcoholVolume: BigDecimal
 )
 

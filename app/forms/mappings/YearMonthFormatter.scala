@@ -21,8 +21,13 @@ import play.api.data.format.Formatter
 
 import java.time.YearMonth
 
-class YearMonthFormatter(invalidKey: String, allRequiredKey: String, requiredKey: String, args: Seq[String])
-    extends Formatter[YearMonth]
+class YearMonthFormatter(
+  invalidKey: String,
+  allRequiredKey: String,
+  requiredKey: String,
+  invalidYear: String,
+  args: Seq[String]
+) extends Formatter[YearMonth]
     with Formatters {
 
   val fieldKeys: List[String] = List("month", "year")
@@ -31,7 +36,9 @@ class YearMonthFormatter(invalidKey: String, allRequiredKey: String, requiredKey
     if (month >= 1 && month <= 12) Right(month) else Left(Seq(FormError(key, s"$invalidKey.month", args)))
 
   def verifyYear(key: String, year: Int): Either[Seq[FormError], Int] =
-    if (year >= 1000 && year <= 9999) Right(year) else Left(Seq(FormError(key, s"$invalidKey.year", args)))
+    if (year >= 1000 && year <= 9999) Right(year)
+    else if (year < 1000 && year >= 0) Left(Seq(FormError(key, s"$invalidYear.year", args)))
+    else Left(Seq(FormError(key, s"$invalidKey.year", args)))
 
   val monthIntFormatter = intFormatter(
     requiredKey = s"$requiredKey.month",

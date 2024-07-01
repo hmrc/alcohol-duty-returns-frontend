@@ -71,9 +71,10 @@ trait Mappings extends Formatters with Constraints {
     invalidKey: String,
     allRequiredKey: String,
     requiredKey: String,
+    invalidYear: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[YearMonth] =
-    of(new YearMonthFormatter(invalidKey, allRequiredKey, requiredKey, args))
+    of(new YearMonthFormatter(invalidKey, allRequiredKey, requiredKey, invalidYear, args))
 
   protected def adjustmentVolumes(
     invalidKey: String,

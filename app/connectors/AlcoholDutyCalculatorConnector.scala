@@ -19,7 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import models.adjustment.AdjustmentType
 import models.productEntry.TaxDuty
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.{AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
@@ -54,13 +54,13 @@ class AlcoholDutyCalculatorConnector @Inject() (
     rateType: RateType,
     abv: AlcoholByVolume,
     ratePeriod: YearMonth,
-    approvedAlcoholRegimes: Set[AlcoholRegime]
+    approvedAlcoholRegimes: Set[AlcoholRegimeName]
   )(implicit hc: HeaderCarrier): Future[Seq[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(
       "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
       "alcoholRegimes" -> Json
         .toJson(
-          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegime](_))
+          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegimeName](_))
         )
         .toString,
       "rateType"       -> Json.toJson(rateType).toString,
@@ -89,13 +89,13 @@ class AlcoholDutyCalculatorConnector @Inject() (
   def rateType(
     abv: AlcoholByVolume,
     ratePeriod: YearMonth,
-    approvedAlcoholRegimes: Set[AlcoholRegime]
+    approvedAlcoholRegimes: Set[AlcoholRegimeName]
   )(implicit hc: HeaderCarrier): Future[RateTypeResponse] = {
     val queryParams: Seq[(String, String)] = Seq(
       "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
       "alcoholRegimes" -> Json
         .toJson(
-          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegime](_))
+          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegimeName](_))
         )
         .toString,
       "abv"            -> Json.toJson(abv).toString

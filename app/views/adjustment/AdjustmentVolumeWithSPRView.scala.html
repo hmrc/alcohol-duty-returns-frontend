@@ -30,7 +30,7 @@
     subHeading: SubHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, regime: AlcoholRegime, minABV: AlcoholByVolume, maxABV: AlcoholByVolume, taxCode:String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, regime: AlcoholRegimeName, rateBandContent: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentVolume.title"))) {
 
@@ -47,17 +47,17 @@
 
         @pageHeading(messages("adjustmentVolume.heading"))
 
-        @subHeading(messages("adjustmentVolume.subHeading", messages(s"regime.capital.$regime") , minABV.value , maxABV.value, taxCode), "govuk-heading-s")
+        @subHeading(rateBandContent, "govuk-heading-s")
 
         @paragraph(messages("adjustmentVolume.hint"), classes = "govuk-hint")
 
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key="totalLitersVolume",
-                label = LabelViewModel(messages("adjustmentVolume.totalLitersVolume.heading", messages(s"regime.$regime"))),
-                errorMessageField = form(s"volumes_totalLitersVolume"),
-                value = form(s"volumes.totalLitersVolume").value
+                key="totalLitresVolume",
+                label = LabelViewModel(messages("adjustmentVolume.totalLitresVolume.heading", messages(s"return.regime.$regime"))),
+                errorMessageField = form(s"volumes_totalLitresVolume"),
+                value = form(s"volumes.totalLitresVolume").value
             )
             .asNumeric()
             .withWidth(Fixed10)

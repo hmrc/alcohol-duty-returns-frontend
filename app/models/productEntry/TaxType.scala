@@ -16,10 +16,10 @@
 
 package models.productEntry
 
-import models.AlcoholRegime
+import models.AlcoholRegimeName
 import play.api.libs.json.{Json, OFormat}
 
-case class TaxType(code: String, regime: AlcoholRegime, taxRate: Option[BigDecimal]) {
+case class TaxType(code: String, regime: AlcoholRegimeName, taxRate: Option[BigDecimal]) {
   def taxCode = s"${code}_${regime.toString}"
 }
 

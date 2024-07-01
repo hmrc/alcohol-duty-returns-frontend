@@ -16,7 +16,6 @@
 
 package forms.mappings
 
-
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
@@ -27,18 +26,18 @@ object BigDecimalFieldFormatter {
 }
 
 class BigDecimalFieldFormatter(
-                                requiredKey: String,
-                                invalidKey: String,
-                                decimalPlacesKey: String,
-                                minimumValueKey: String,
-                                maximumValueKey: String,
-                                fieldKey: String,
-                                args: Seq[String] = Seq.empty,
-                                decimalPlaces: Int = 2,
-                                maximumValue: BigDecimal = BigDecimal(999999999.99),
-                                minimumValue: BigDecimal = BigDecimal(0.01)
-                              ) extends Formatter[BigDecimal]
-  with Formatters {
+  requiredKey: String,
+  invalidKey: String,
+  decimalPlacesKey: String,
+  minimumValueKey: String,
+  maximumValueKey: String,
+  fieldKey: String,
+  args: Seq[String] = Seq.empty,
+  decimalPlaces: Int = 2,
+  maximumValue: BigDecimal = BigDecimal(999999999.99),
+  minimumValue: BigDecimal = BigDecimal(0.01)
+) extends Formatter[BigDecimal]
+    with Formatters {
 
   import BigDecimalFieldFormatter._
 

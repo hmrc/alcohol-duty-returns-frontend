@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.adjustment.AdjustmentRepackagedTaxTypeFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegime, Mode, RateBand, UserAnswers}
+import models.{AlcoholRegimeName, Mode, RateBand, UserAnswers}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentRepackagedTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -107,7 +107,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                     value,
                     adjustmentType,
                     "adjustmentRepackagedTaxType.error.nonDraught",
-                    rateBand.alcoholRegime.head
+                    rateBand.alcoholRegimes.map(_.name).head
                   )
                 } else {
                   for {
@@ -170,7 +170,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
     value: Int,
     adjustmentType: AdjustmentType,
     errorMessage: String,
-    regime: AlcoholRegime*
+    regime: AlcoholRegimeName*
   )(implicit
     request: Request[_],
     messages: Messages
@@ -179,7 +179,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
       BadRequest(
         view(
           formProvider()
-            .withError("new-tax-type-code", errorMessage, messages(s"regime.${regime.head}"))
+            .withError("new-tax-type-code", errorMessage, messages(s"return.regime.${regime.head}"))
             .fill(value),
           mode,
           adjustmentType

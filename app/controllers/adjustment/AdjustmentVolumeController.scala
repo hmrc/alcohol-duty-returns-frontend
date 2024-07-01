@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.adjustment.AdjustmentVolumeFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholByVolume, AlcoholRegime, Mode}
+import models.{AlcoholRegimeName, Mode}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -30,6 +30,7 @@ import models.adjustment.{AdjustmentEntry, AdjustmentType, AdjustmentVolume}
 import models.requests.DataRequest
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
 import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,10 +49,10 @@ class AdjustmentVolumeController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private def getRegime(implicit request: DataRequest[_]): AlcoholRegime = {
+  private def getRegime(implicit request: DataRequest[_]): AlcoholRegimeName = {
     val rateBand = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.rateBand)
     rateBand
-      .map(_.alcoholRegime.head)
+      .map(_.alcoholRegimes.map(_.name).head)
       .getOrElse(throw new RuntimeException("Couldn't fetch regime value from cache"))
   }
 
@@ -76,15 +77,9 @@ class AdjustmentVolumeController @Inject() (
           throw new RuntimeException("Couldn't fetch adjustment type value from cache")
         ),
         getRegime,
-        adjustmentEntry.rateBand
-          .map(_.minABV)
-          .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
-        adjustmentEntry.rateBand
-          .map(_.maxABV)
-          .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
-        adjustmentEntry.rateBand
-          .map(_.taxType)
-          .getOrElse(throw new RuntimeException("Couldn't fetch taxType value from cache"))
+        rateBandContent(
+          adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
+        )
       )
     )
   }
@@ -98,7 +93,7 @@ class AdjustmentVolumeController @Inject() (
           formWithErrors => handleFormErrors(mode, formWithErrors),
           value => {
             val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-            if (value.totalLitersVolume < value.pureAlcoholVolume) {
+            if (value.totalLitresVolume < value.pureAlcoholVolume) {
               checkAdjustmentVolumes(
                 value,
                 mode,
@@ -106,15 +101,9 @@ class AdjustmentVolumeController @Inject() (
                   throw new RuntimeException("Couldn't fetch adjustment type value from cache")
                 ),
                 getRegime,
-                adjustment.rateBand
-                  .map(_.minABV)
-                  .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
-                adjustment.rateBand
-                  .map(_.maxABV)
-                  .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
-                adjustment.rateBand
-                  .map(_.taxType)
-                  .getOrElse(throw new RuntimeException("Couldn't fetch taxType value from cache"))
+                rateBandContent(
+                  adjustment.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
+                )
               )
             } else {
               val (updatedAdjustment, hasChanged) = updateVolume(adjustment, value)
@@ -124,7 +113,7 @@ class AdjustmentVolumeController @Inject() (
                     request.userAnswers.set(
                       CurrentAdjustmentEntryPage,
                       updatedAdjustment.copy(
-                        totalLitresVolume = Some(value.totalLitersVolume),
+                        totalLitresVolume = Some(value.totalLitresVolume),
                         pureAlcoholVolume = Some(value.pureAlcoholVolume)
                       )
                     )
@@ -151,15 +140,9 @@ class AdjustmentVolumeController @Inject() (
                 throw new RuntimeException("Couldn't fetch adjustment type value from cache")
               ),
               getRegime,
-              value.rateBand
-                .map(_.minABV)
-                .getOrElse(throw new RuntimeException("Couldn't fetch minABV value from cache")),
-              value.rateBand
-                .map(_.maxABV)
-                .getOrElse(throw new RuntimeException("Couldn't fetch maxABV value from cache")),
-              value.rateBand
-                .map(_.taxType)
-                .getOrElse(throw new RuntimeException("Couldn't fetch taxType value from cache"))
+              rateBandContent(
+                value.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
+              )
             )
           )
         )
@@ -168,7 +151,7 @@ class AdjustmentVolumeController @Inject() (
   def updateVolume(adjustmentEntry: AdjustmentEntry, currentValue: AdjustmentVolume): (AdjustmentEntry, Boolean) =
     (adjustmentEntry.totalLitresVolume, adjustmentEntry.pureAlcoholVolume) match {
       case (Some(existingTotalLitres), Some(existingPureAlcohol))
-          if currentValue.totalLitersVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol =>
+          if currentValue.totalLitresVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol =>
         (adjustmentEntry, false)
       case _ =>
         (
@@ -188,10 +171,8 @@ class AdjustmentVolumeController @Inject() (
     adjustmentVolume: AdjustmentVolume,
     mode: Mode,
     adjustmentType: AdjustmentType,
-    regime: AlcoholRegime,
-    minABV: AlcoholByVolume,
-    maxABV: AlcoholByVolume,
-    taxType: String
+    regime: AlcoholRegimeName,
+    rateBandContent: String
   )(implicit
     request: Request[_],
     messages: Messages
@@ -203,15 +184,13 @@ class AdjustmentVolumeController @Inject() (
             .withError(
               "adjustment-pure-alcohol-input",
               "adjustmentVolume.error.pureAlcoholVolume.lessThanExpected",
-              messages(s"regime.$regime")
+              messages(s"return.regime.$regime")
             )
             .fill(adjustmentVolume),
           mode,
           adjustmentType,
           regime,
-          minABV,
-          maxABV,
-          taxType
+          rateBandContent
         )(request, messages)
       )
     )

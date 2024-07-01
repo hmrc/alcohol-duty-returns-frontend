@@ -19,7 +19,7 @@ package models.adjustment
 import play.api.libs.json._
 
 case class AdjustmentVolumeWithSPR(
-  totalLitersVolume: BigDecimal,
+  totalLitresVolume: BigDecimal,
   pureAlcoholVolume: BigDecimal,
   sprDutyRate: BigDecimal
 )
