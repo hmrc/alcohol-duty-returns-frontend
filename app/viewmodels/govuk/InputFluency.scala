@@ -41,6 +41,21 @@ trait InputFluency {
         label = label,
         errorMessage = errorMessage(field)
       )
+
+    def apply(
+      field: Field,
+      key: String,
+      label: Label,
+      errorMessageField: Field,
+      value: Option[String]
+    )(implicit messages: Messages): Input =
+      Input(
+        id = s"${field.id}_$key",
+        name = s"${field.name}.$key",
+        value = value,
+        label = label,
+        errorMessage = errorMessage(errorMessageField)
+      )
   }
 
   implicit class FluentInput(input: Input) {
@@ -100,5 +115,8 @@ trait InputFluency {
 
     def withPoundPrefix: Input =
       input.copy(prefix = Some(PrefixOrSuffix(content = HtmlContent("&pound;"))))
+
+    def hidden: Input =
+      input.copy(inputType = "hidden")
   }
 }

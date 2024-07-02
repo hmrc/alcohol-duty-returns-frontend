@@ -16,6 +16,8 @@
 
 package forms.mappings
 
+import models.returns.{VolumeAndRateByTaxType, VolumesByTaxType}
+
 import java.time.{LocalDate, YearMonth}
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
@@ -74,4 +76,53 @@ trait Mappings extends Formatters with Constraints {
   ): FieldMapping[YearMonth] =
     of(new YearMonthFormatter(invalidKey, allRequiredKey, requiredKey, args))
 
+  protected def volumes(
+    invalidKey: String,
+    allRequiredKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    moreOrEqualKey: String,
+    lessOrEqualKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[VolumesByTaxType] =
+    of(
+      new VolumesFormatter(
+        invalidKey,
+        allRequiredKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        moreOrEqualKey,
+        lessOrEqualKey,
+        args
+      )
+    )
+
+  protected def volumesWithRate(
+    invalidKey: String,
+    allRequiredKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    moreOrEqualKey: String,
+    lessOrEqualKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[VolumeAndRateByTaxType] =
+    of(
+      new VolumesAndRateFormatter(
+        invalidKey,
+        allRequiredKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        moreOrEqualKey,
+        lessOrEqualKey,
+        args
+      )
+    )
 }

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package pages.productEntry
+package viewmodels.checkAnswers.returns
 
-import play.api.libs.json.JsPath
-import pages.QuestionPage
-case object DeclareAlcoholDutyQuestionPage extends QuestionPage[Boolean] {
+import models.{AlcoholRegimeName, UserAnswers}
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
-  override def path: JsPath = JsPath \ toString
+object CheckYourAnswersSPRSummaryListHelper {
 
-  override def toString: String = "declareAlcoholDutyQuestion"
+  def summaryList(regime: AlcoholRegimeName, userAnswers: UserAnswers, index: Option[Int])(implicit
+    messages: Messages
+  ): Option[SummaryList] = {
+    val rows = TellUsAboutMultipleSPRRateSummary.rows(regime, userAnswers, index)
+    if (rows.isEmpty) None else Some(SummaryList(rows = rows))
+  }
+
 }

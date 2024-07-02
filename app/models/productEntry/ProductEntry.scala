@@ -16,7 +16,7 @@
 
 package models.productEntry
 
-import models.{AlcoholByVolume, AlcoholRegime, RateType}
+import models.{AlcoholByVolume, AlcoholRegimeName, RateType}
 import play.api.libs.json.{Json, OFormat}
 
 case class ProductEntry(
@@ -28,7 +28,7 @@ case class ProductEntry(
   draughtRelief: Option[Boolean] = None,
   smallProducerRelief: Option[Boolean] = None,
   taxCode: Option[String] = None,
-  regime: Option[AlcoholRegime] = None,
+  regime: Option[AlcoholRegimeName] = None,
   taxRate: Option[BigDecimal] = None,
   sprDutyRate: Option[BigDecimal] = None,
   duty: Option[BigDecimal] = None,

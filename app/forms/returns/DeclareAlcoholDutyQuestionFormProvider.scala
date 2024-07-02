@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package forms.productEntry
-
-import javax.inject.Inject
+package forms.returns
 
 import forms.mappings.Mappings
 import play.api.data.Form
+
+import javax.inject.Inject
 
 class DeclareAlcoholDutyQuestionFormProvider @Inject() extends Mappings {
 

@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package pages.returns
 
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import models.AlcoholRegimeName
+import models.returns.AlcoholDuty
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-sealed trait AlcoholRegime extends EnumEntry
+object DutyCalculationPage extends QuestionPage[Map[AlcoholRegimeName, AlcoholDuty]] {
 
-object AlcoholRegime extends Enum[AlcoholRegime] with PlayJsonEnum[AlcoholRegime] {
-  val values = findValues
+  override def path: JsPath = JsPath \ toString
 
-  case object Beer extends AlcoholRegime
-  case object Cider extends AlcoholRegime
-  case object Wine extends AlcoholRegime
-  case object Spirits extends AlcoholRegime
-  case object OtherFermentedProduct extends AlcoholRegime
-
-  override def toString: String = "alcoholRegime"
+  override def toString: String = "dutyCalculation"
 }

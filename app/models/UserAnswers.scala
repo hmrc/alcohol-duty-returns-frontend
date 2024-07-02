@@ -111,6 +111,21 @@ final case class UserAnswers(
     }
   }
 
+  def addToSeqByKey[A, B](page: Settable[Map[A, Seq[B]]], key: A, value: B)(implicit
+    writes: Writes[B],
+    rds: Reads[B]
+  ): Try[UserAnswers] = {
+    val path        = page.path \ key.toString
+    val data        = get[Seq[B]](path)
+    val updatedData = data match {
+      case Some(valueSeq: Seq[B]) => set(path, valueSeq :+ value)
+      case _                      => set(path, Seq(value))
+    }
+    updatedData.flatMap { d =>
+      Try(copy(data = d))
+    }
+  }
+
   def getByIndex[A](page: Gettable[Seq[A]], index: Int)(implicit rds: Reads[A]): Option[A] = {
     val path = page.path \ index
     get(path)
@@ -119,7 +134,7 @@ final case class UserAnswers(
   def get[A](path: JsPath)(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(path)).reads(data).getOrElse(None)
 
-  def set[A](path: JsPath, value: A)(implicit writes: Writes[A]): Try[JsObject]    =
+  def set[A](path: JsPath, value: A)(implicit writes: Writes[A]): Try[JsObject] =
     data.setObject(path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
@@ -141,13 +156,51 @@ final case class UserAnswers(
     val updatedData = remove(path)
     cleanupPage(page, updatedData)
   }
-  def remove[A](path: JsPath): Try[JsObject]                                       =
+
+  def getByKey[A, B](page: Gettable[Map[A, B]], key: A)(implicit rds: Reads[B]): Option[B] = {
+    val path = page.path \ key.toString
+    get(path)
+  }
+
+  def getByKeyAndIndex[A, B](page: Gettable[Map[A, Seq[B]]], key: A, index: Int)(implicit rds: Reads[B]): Option[B] = {
+    val path = page.path \ key.toString \ index
+    get(path)
+  }
+
+  def setByKey[A, B](page: Settable[Map[A, B]], key: A, value: B)(implicit writes: Writes[B]): Try[UserAnswers] = {
+    val path        = page.path \ key.toString
+    val updatedData = set(path, value)
+    cleanupPage(page, updatedData)
+  }
+
+  def setByKeyAndIndex[A, B](page: Settable[Map[A, Seq[B]]], key: A, value: B, index: Int)(implicit
+    writes: Writes[B]
+  ): Try[UserAnswers] = {
+    val path        = page.path \ key.toString \ index
+    val updatedData = set(path, value)
+    cleanupPage(page, updatedData)
+  }
+
+  def removeByKey[A, B](page: Settable[Map[A, B]], key: A): Try[UserAnswers] = {
+    val path        = page.path \ key.toString
+    val updatedData = remove(path)
+    cleanupPage(page, updatedData)
+  }
+
+  def removeByKeyAndIndex[A, B](page: Settable[B], key: A, index: Int): Try[UserAnswers] = {
+    val path        = page.path \ key.toString \ index
+    val updatedData = remove(path)
+    cleanupPage(page, updatedData)
+  }
+
+  def remove[A](path: JsPath): Try[JsObject] =
     data.removeObject(path) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
       case JsError(_)            =>
         Success(data)
     }
+
   def cleanupPage(page: Settable[_], updatedData: Try[JsObject]): Try[UserAnswers] =
     updatedData.flatMap { d =>
       val updatedAnswers = copy(data = d)

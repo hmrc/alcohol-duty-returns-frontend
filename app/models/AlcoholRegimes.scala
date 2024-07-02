@@ -16,23 +16,23 @@
 
 package models
 
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.AlcoholRegimeName.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import play.api.libs.json._
 
-case class AlcoholRegimes(regimes: Set[AlcoholRegime]) {
+case class AlcoholRegimes(regimes: Set[AlcoholRegimeName]) {
   def hasBeer()                  = regimes.contains(Beer)
   def hasCider()                 = regimes.contains(Cider)
   def hasWine()                  = regimes.contains(Wine)
   def hasSpirits()               = regimes.contains(Spirits)
   def hasOtherFermentedProduct() = regimes.contains(OtherFermentedProduct)
 
-  def hasRegime(regime: AlcoholRegime) = regimes.contains(regime)
+  def hasRegime(regime: AlcoholRegimeName) = regimes.contains(regime)
 }
 
 object AlcoholRegimes {
   private[models] val reads: Reads[AlcoholRegimes] =
     (JsPath \ "regimes")
-      .read[Set[AlcoholRegime]]
+      .read[Set[AlcoholRegimeName]]
       .map(regimes =>
         if (regimes.nonEmpty) {
           AlcoholRegimes(regimes)
