@@ -35,11 +35,11 @@ object DutyCalculationHelper {
     createRows(totalDutyCalculationResponse.dutiesByTaxType, userAnswers, regime).map { rows =>
       TableViewModel(
         head = Seq(
-          HeadCell(Text("Description")),
-          HeadCell(Text("Litres of pure alcohol")),
-          HeadCell(Text("Duty rate")),
-          HeadCell(Text("Duty due")),
-          HeadCell(Text("Action"))
+          HeadCell(Text(messages("dutyCalculation.table.description"))),
+          HeadCell(Text(messages("dutyCalculation.table.litresOfPureAlcohol"))),
+          HeadCell(Text(messages("dutyCalculation.table.dutyRate"))),
+          HeadCell(Text(messages("dutyCalculation.table.dutyDue"))),
+          HeadCell(Text(messages("dutyCalculation.table.action")))
         ),
         rows = rows,
         total = totalDutyCalculationResponse.totalDuty

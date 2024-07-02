@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package models
+package pages.returns
 
-final case class Error(message: String, throwable: Option[Throwable]) {
-  def toException: Exception = throwable match {
-    case Some(t) => new Exception(message, t)
-    case None    => new Exception(message)
-  }
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-}
+case object DeleteMultipleSPREntryPage extends QuestionPage[Boolean] {
 
-object Error {
-  def apply(message: String): Error  = new Error(message, None)
-  def apply(error: Throwable): Error = Error(error.getMessage, Some(error))
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "deleteMultipleSPREntry"
 }

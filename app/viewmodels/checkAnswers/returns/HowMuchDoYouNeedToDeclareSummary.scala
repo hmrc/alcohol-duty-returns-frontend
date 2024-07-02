@@ -108,7 +108,7 @@ object HowMuchDoYouNeedToDeclareSummary {
             SummaryListRowViewModel(
               key = KeyViewModel(rateBandRecap(rateBand)),
               value = Value()
-            ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
+            ).withCssClass("govuk-summary-list__row--no-border"),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres"),
               value = ValueViewModel(s"${dutyByTaxType.totalLitres.toString} ${messages("site.unit.litres")}")

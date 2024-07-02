@@ -412,6 +412,12 @@ dutyCalculation.paragraph = We worked this out by:
 dutyCalculation.list = multiplying the volume of pure alcohol you entered by its duty rate
 dutyCalculation.h2 = Duty due
 
+dutyCalculation.table.description = Description
+dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol
+dutyCalculation.table.dutyRate = Duty rate
+dutyCalculation.table.dutyDue = Duty due
+dutyCalculation.table.action = Action
+
 dutyCalculation.pureAlcohol.value = {0} Lpa
 dutyCalculation.dutyRate.value = £{0,number,#,##0.00} per litre
 

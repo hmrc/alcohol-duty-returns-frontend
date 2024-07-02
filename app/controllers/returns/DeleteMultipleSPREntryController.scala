@@ -21,10 +21,11 @@ import forms.returns.DeleteMultipleSPREntryFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegimeName, NormalMode}
-import pages.returns.MultipleSPRListPage
+import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import navigation.ReturnsNavigator
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.returns.DeleteMultipleSPREntryView
 
@@ -35,6 +36,7 @@ class DeleteMultipleSPREntryController @Inject() (
   cacheConnector: CacheConnector,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  navigator: ReturnsNavigator,
   requireData: DataRequiredAction,
   formProvider: DeleteMultipleSPREntryFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -62,14 +64,9 @@ class DeleteMultipleSPREntryController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.removeByKeyAndIndex(MultipleSPRListPage, regime, index))
                 _              <- cacheConnector.set(updatedAnswers)
-              } yield updatedAnswers.getByKey(MultipleSPRListPage, regime) match {
-                case Some(list) if list.nonEmpty =>
-                  Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(regime))
-                case _                           =>
-                  Redirect(
-                    controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
-                  )
-              }
+              } yield Redirect(
+                navigator.nextPageWithRegime(DeleteMultipleSPREntryPage, NormalMode, updatedAnswers, regime)
+              )
             } else {
               Future.successful(Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)))
             }

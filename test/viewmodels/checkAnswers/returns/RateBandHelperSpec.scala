@@ -21,7 +21,6 @@ import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.RateType.{Core, DraughtRelief}
 import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, RateBand, RateType}
-import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen
 import play.api.i18n.Messages
 

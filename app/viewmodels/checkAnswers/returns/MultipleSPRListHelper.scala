@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegimeName, Error, NormalMode, RateBand, UserAnswers}
+import models.{AlcoholRegimeName, NormalMode, RateBand, UserAnswers}
 import models.returns.VolumeAndRateByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
@@ -28,7 +28,7 @@ object MultipleSPRListHelper {
 
   def sprTableViewModel(userAnswers: UserAnswers, regime: AlcoholRegimeName)(implicit
     messages: Messages
-  ): Either[Error, TableViewModel] =
+  ): Either[String, TableViewModel] =
     getSprListEntries(userAnswers, regime) match {
       case Right(sprList) =>
         Right(
@@ -56,12 +56,12 @@ object MultipleSPRListHelper {
             total = BigDecimal(0)
           )
         )
-      case Left(e: Error) => Left(e)
+      case Left(e)        => Left(e)
     }
 
   case class SprDutyRateEntry(dutyByTaxType: VolumeAndRateByTaxType, rateBand: RateBand)
 
-  def getSprListEntries(userAnswers: UserAnswers, regime: AlcoholRegimeName): Either[Error, Seq[SprDutyRateEntry]] =
+  def getSprListEntries(userAnswers: UserAnswers, regime: AlcoholRegimeName): Either[String, Seq[SprDutyRateEntry]] =
     (
       userAnswers.getByKey(MultipleSPRListPage, regime),
       userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
@@ -76,9 +76,9 @@ object MultipleSPRListHelper {
 
         sprEntries.partitionMap(identity) match {
           case (Nil, sprDutyRateEntries) => Right(sprDutyRateEntries)
-          case (taxTypes, _)             => Left(Error(s"Tax types not found: ${taxTypes.mkString(", ")}"))
+          case (taxTypes, _)             => Left(s"Tax types not found: ${taxTypes.mkString(", ")}")
         }
-      case _                                       => Left(Error("error"))
+      case _                                       => Left("Error retrieving SPR entries and rate bands")
     }
 
   def getSPREntryRows(sprList: Seq[SprDutyRateEntry], regime: AlcoholRegimeName)(implicit

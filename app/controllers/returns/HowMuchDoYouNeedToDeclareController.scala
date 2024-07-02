@@ -92,10 +92,10 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
     }
 
   private def rateBandFromTaxType(
-    volumeByTaxType: Seq[VolumesByTaxType],
+    volumesByTaxType: Seq[VolumesByTaxType],
     rateBands: Set[RateBand]
   ): Try[Seq[VolumeAndRateByTaxType]] =
-    volumeByTaxType
+    volumesByTaxType
       .map { volumes =>
         for {
           rateBand <- rateBands.find(_.taxType == volumes.taxType)

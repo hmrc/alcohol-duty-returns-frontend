@@ -44,7 +44,7 @@ object MultipleSPRListSummary {
           SummaryListRowViewModel(
             key = KeyViewModel(rateBandRecap(rateBand)),
             value = Value()
-          ).withCssClass("govuk-summary-list__row--no-border govuk-summary-list__only_key"),
+          ).withCssClass("govuk-summary-list__row--no-border"),
           SummaryListRowViewModel(
             key = messages("checkYourAnswersLabel.row.totalLitres"),
             value = ValueViewModel(s"${totalLitres.toString} ${messages("site.unit.litres")}")

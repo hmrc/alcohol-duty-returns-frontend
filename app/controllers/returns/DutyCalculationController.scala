@@ -21,7 +21,7 @@ import controllers.actions._
 import models.returns.VolumeAndRateByTaxType
 import models.{AlcoholRegimeName, UserAnswers}
 import pages.QuestionPage
-import pages.returns.{AlcoholDutyPage, DoYouWantToAddMultipleSPRToListPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
+import pages.returns.{AlcoholDutyPage, DoYouHaveMultipleSPRDutyRatesPage, DoYouWantToAddMultipleSPRToListPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
 import play.api.Logging
 
 import javax.inject.Inject
@@ -79,7 +79,7 @@ class DutyCalculationController @Inject() (
     userAnswers: UserAnswers
   ): TotalDutyCalculationRequest = {
     val sprPage: QuestionPage[Map[AlcoholRegimeName, Seq[VolumeAndRateByTaxType]]] =
-      userAnswers.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
+      userAnswers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime) match {
         case Some(true) => MultipleSPRListPage
         case _          => TellUsAboutSingleSPRRatePage
       }
