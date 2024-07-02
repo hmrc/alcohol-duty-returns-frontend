@@ -139,7 +139,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

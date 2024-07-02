@@ -46,7 +46,8 @@ class ProductEntryServiceSpec extends SpecBase {
       val updatedProductEntry = productEntry.copy(
         taxCode = Some("ALC"),
         regime = Some(AlcoholRegimeName.Beer),
-        taxRate = Some(BigDecimal(1))
+        taxRate = Some(BigDecimal(1)),
+        pureAlcoholVolume = Some(BigDecimal(1))
       )
 
       val userAnswerWithRate = emptyUserAnswers
@@ -79,7 +80,8 @@ class ProductEntryServiceSpec extends SpecBase {
         taxCode = Some("ALC"),
         regime = Some(AlcoholRegimeName.Beer),
         smallProducerRelief = Some(true),
-        sprDutyRate = Some(BigDecimal(2))
+        sprDutyRate = Some(BigDecimal(2)),
+        pureAlcoholVolume = Some(BigDecimal(1))
       )
 
       val userAnswerWithRate = emptyUserAnswers

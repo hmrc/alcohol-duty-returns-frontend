@@ -37,8 +37,14 @@
         id = "adjustment-duty-due-section",
         text = messages(s"section.adjustment.$adjustmentType"),
     )
-    @pageHeading(messages("adjustmentDutyDue.heading", valueFormatter(duty)))
 
+    @if(adjustmentType != RepackagedDraughtProducts) {
+        @pageHeading(messages("adjustmentDutyDue.heading", valueFormatter(duty)))
+    }
+
+    @if(adjustmentType == RepackagedDraughtProducts) {
+        @pageHeading(messages("adjustmentDutyDue.heading", valueFormatter(newDuty)))
+    }
     @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
     @if(adjustmentType != RepackagedDraughtProducts) {
@@ -56,7 +62,7 @@
         messages("adjustmentDutyDue.repackaged.bulletList.2", valueFormatter(duty)),
         messages("adjustmentDutyDue.repackaged.bulletList.3", valueFormatter(duty)),
         messages("adjustmentDutyDue.repackaged.bulletList.4", valueFormatter(repackagedRate)),
-        messages("adjustmentDutyDue.repackaged.bulletList.5", valueFormatter(repackagedRate), valueFormatter(repackagedDuty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.5", valueFormatter(repackagedDuty)),
         messages("adjustmentDutyDue.repackaged.bulletList.6", valueFormatter(newDuty))
 ))
     }

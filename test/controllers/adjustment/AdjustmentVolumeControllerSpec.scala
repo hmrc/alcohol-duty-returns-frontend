@@ -17,8 +17,9 @@
 package controllers.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import forms.adjustment.AdjustmentVolumeFormProvider
-import models.{AlcoholRegimeName, NormalMode}
+import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
@@ -37,7 +38,7 @@ import scala.concurrent.Future
 
 class AdjustmentVolumeControllerSpec extends SpecBase {
   val formProvider = new AdjustmentVolumeFormProvider()
-  val regime       = regimeGen.sample.value
+  val regime       = Beer
   val messages     = mock[Messages]
   val form         = formProvider(regime)(messages)
   def onwardRoute  = Call("GET", "/foo")
@@ -46,11 +47,31 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
   val validPureAlcohol = BigDecimal(9.23)
 
   lazy val adjustmentVolumeRoute = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode).url
+  val rateBand                   = RateBand(
+    "351",
+    "some band",
+    RateType.DraughtRelief,
+    Set(
+      AlcoholRegime(
+        regime,
+        NonEmptySeq.one(
+          ABVRange(
+            ABVRangeName.Beer,
+            AlcoholByVolume(1.3),
+            AlcoholByVolume(3.4)
+          )
+        )
+      )
+    ),
+    Some(BigDecimal(10.99))
+  )
+  val adjustmentEntry            = AdjustmentEntry(
+    adjustmentType = Some(Spoilt),
+    rateBand = Some(rateBand)
+  )
+  val userAnswers                = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
-  val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
-  val userAnswers     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-
-  val rateBandContent = "Beer between 3.4% and 8.4% ABV (tax type code 321)"
+  val rateBandContent = "Beer between 1.3% and 3.4% ABV (tax type code 351)"
 
   "AdjustmentVolume Controller" - {
 
@@ -74,13 +95,11 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val adjustmentEntry = AdjustmentEntry(
-        adjustmentType = Some(Spoilt),
-        totalLitresVolume = Some(validTotalLitres),
-        pureAlcoholVolume = Some(validPureAlcohol)
-      )
 
-      val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+      val updatedAdjustmentEntry =
+        adjustmentEntry.copy(totalLitresVolume = Some(validTotalLitres), pureAlcoholVolume = Some(validPureAlcohol))
+
+      val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry).success.value
 
       val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
 
@@ -112,7 +131,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
@@ -159,7 +178,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentVolumeRoute)
@@ -173,7 +192,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =

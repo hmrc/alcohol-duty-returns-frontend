@@ -933,7 +933,7 @@ adjustmentDutyDue.repackaged.bulletList.1 = the reduced duty rate was {0} per li
 adjustmentDutyDue.repackaged.bulletList.2 = you originally paid {0}
 adjustmentDutyDue.repackaged.bulletList.3 = repackaged draught products are not eligible for reduced rates
 adjustmentDutyDue.repackaged.bulletList.4 = the standard duty rate is {0} per litre of pure alcohol
-adjustmentDutyDue.repackaged.bulletList.5 = the new duty value {0} is {1}
+adjustmentDutyDue.repackaged.bulletList.5 = the new duty value [at the standard duty rate] is {0}
 adjustmentDutyDue.repackaged.bulletList.6 = the duty to pay is {0}: the new duty value minus the old duty value
 
 checkYourAnswers.subHeading = Adjustment details

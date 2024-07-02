@@ -141,9 +141,12 @@ class AdjustmentEntryServiceSpec extends SpecBase {
       }
 
       "if neither TaxType or SmallProducerReliefDutyRate contain rate" in {
-
-        val userAnswerWithRate = emptyUserAnswers
-          .set(CurrentAdjustmentEntryPage, adjustmentEntry)
+        val updatedAdjustmentEntry = adjustmentEntry.copy(
+          rateBand = Some(rateBand.copy(rate = None)),
+          sprDutyRate = None
+        )
+        val userAnswerWithRate     = emptyUserAnswers
+          .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
           .success
           .value
 
@@ -162,27 +165,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         )
       }
 
-      "if Product Entry doesn't contain total litres volume value" in {
-
-        val userAnswers = emptyUserAnswers
-          .set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(totalLitresVolume = None))
-          .success
-          .value
-
-        val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
-
-        val service = new AdjustmentEntryServiceImpl(mockConnector)
-
-        val exception = intercept[RuntimeException] {
-          service.createAdjustment(userAnswers).futureValue
-        }
-
-        exception.getLocalizedMessage must include(s"Can't fetch volume from cache")
-      }
-
-      "if Product Entry doesn't contain pure alcohol volume value" in {
+      "if Adjustment Entry doesn't contain pure alcohol volume value" in {
 
         val userAnswers = emptyUserAnswers
           .set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(pureAlcoholVolume = None))
@@ -199,7 +182,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           service.createAdjustment(userAnswers).futureValue
         }
 
-        exception.getLocalizedMessage must include(s"Can't fetch volume from cache") //check this
+        exception.getLocalizedMessage must include(s"Can't fetch pure alcohol volume from cache")
       }
     }
 

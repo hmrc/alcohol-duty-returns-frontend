@@ -17,7 +17,10 @@
 package models
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import generators.ModelGenerators
+import models.AlcoholRegimeName.Beer
+import models.RateType.Core
 import org.scalacheck.Gen
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -56,7 +59,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
         JsString("DraughtAndSmallProducerRelief").as[RateType] mustEqual RateType.DraughtAndSmallProducerRelief
       }
       "should return an exception in response to an unrecognised string" in {
-        JsString("some-other").validate[RateType] mustEqual JsError("some-other is not a valid RateType")
+        JsString("some-other").validate[RateType] mustEqual JsError("error.expected.validenumvalue")
       }
       "should return a JsError when passed a type that is not a string" in {
         val result = Json.fromJson[RateType](JsBoolean(true))
@@ -147,4 +150,84 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     }
   }
 
+  "Rate Band" - {
+    "should deserialise a json into a RateBand object" in {
+      val json =
+        """
+          |      {
+          |        "taxType": "311",
+          |        "description": "Beer from 1.3% to 3.4%",
+          |        "rateType": "Core",
+          |        "alcoholRegimes": [
+          |          {
+          |            "name":"Beer",
+          |            "abvRanges": [
+          |              {
+          |                "name": "Beer",
+          |                "minABV": 1.3,
+          |                "maxABV": 3.4
+          |              }
+          |            ]
+          |          }
+          |        ],
+          |        "rate": 9.27
+          |      }
+          |""".stripMargin
+
+      val result = Json.parse(json).validate[RateBand].get
+
+      result mustBe a[RateBand]
+      result.taxType mustBe "311"
+      result.rateType mustBe Core
+      result.alcoholRegimes.size mustBe 1
+      result.alcoholRegimes.head.name mustBe Beer
+      result.alcoholRegimes.head.abvRanges.length mustBe 1
+      result.alcoholRegimes.head.abvRanges.head mustBe ABVRange(
+        ABVRangeName.Beer,
+        AlcoholByVolume(1.3),
+        AlcoholByVolume(3.4)
+      )
+      result.rate mustBe Some(BigDecimal(9.27))
+    }
+
+    "serialize RateBand object into Json" in {
+      val rateBand = RateBand(
+        taxType = "311",
+        description = "Description",
+        rateType = Core,
+        alcoholRegimes = Set(
+          AlcoholRegime(
+            AlcoholRegimeName.Beer,
+            NonEmptySeq.one(ABVRange(ABVRangeName.Beer, AlcoholByVolume(1.3), AlcoholByVolume(3.4)))
+          )
+        ),
+        rate = Some(BigDecimal(9.27))
+      )
+
+      val expectedResult = """
+                             |      {
+                             |        "taxType": "311",
+                             |        "description": "Description",
+                             |        "rateType": "Core",
+                             |        "alcoholRegimes": [
+                             |          {
+                             |            "name":"Beer",
+                             |            "abvRanges": [
+                             |              {
+                             |                "name": "Beer",
+                             |                "minABV": 1.3,
+                             |                "maxABV": 3.4
+                             |              }
+                             |            ]
+                             |          }
+                             |        ],
+                             |        "rate": 9.27
+                             |      }
+                             |""".stripMargin.replace(" ", "").replace("\n", "")
+
+      val result = Json.toJson(rateBand)
+
+      result.toString() mustBe expectedResult
+    }
+  }
 }

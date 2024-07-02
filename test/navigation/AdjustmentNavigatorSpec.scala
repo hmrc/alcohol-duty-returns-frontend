@@ -23,6 +23,7 @@ import models.RateType.{Core, DraughtAndSmallProducerRelief, SmallProducerRelief
 import pages._
 import models._
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 
 class AdjustmentNavigatorSpec extends SpecBase {
 
@@ -74,15 +75,6 @@ class AdjustmentNavigatorSpec extends SpecBase {
           controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
       }
 
-      "must go from the Alcohol By Volume Page to Adjustment Tax Type page" in {
-
-        navigator.nextPage(
-          pages.adjustment.AlcoholByVolumePage,
-          NormalMode,
-          emptyUserAnswers
-        ) mustBe controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
-      }
-
       "must go from the Adjustment Tax Type page to Adjustment Volume Page if RateType is Core" in {
 
         navigator.nextPage(
@@ -113,7 +105,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
       }
 
-      "must go from the Adjustment Tax Type page to Small Producer Relief Duty Rate Page if RateType is SmallProducerRelief" in {
+      "must go from the Adjustment Tax Type page to Adjustment Volume with Small Producer Relief Duty Rate Page if RateType is SmallProducerRelief" in {
 
         navigator.nextPage(
           pages.adjustment.AdjustmentTaxTypePage,
@@ -125,10 +117,10 @@ class AdjustmentNavigatorSpec extends SpecBase {
             )
             .success
             .value
-        ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
       }
 
-      "must go from the Adjustment Tax Type page to Small Producer Relief Duty Rate Page if RateType is DraughtAndSmallProducerRelief" in {
+      "must go from the Adjustment Tax Type page to Adjustment Volume Rate Page if RateType is DraughtAndSmallProducerRelief" in {
 
         navigator.nextPage(
           pages.adjustment.AdjustmentTaxTypePage,
@@ -140,16 +132,16 @@ class AdjustmentNavigatorSpec extends SpecBase {
             )
             .success
             .value
-        ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+        ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
       }
 
-      "must go from the Small Producer Relief Duty Rate Page to Adjustment Volume page" in {
+      "must go from the Small Producer Relief Duty Rate Page to Duty Due page" in {
 
         navigator.nextPage(
           pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage,
           NormalMode,
           emptyUserAnswers
-        ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+        ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
 
       "must go from the Adjustment Volume page to Adjustment Duty Due Page" in {
@@ -158,6 +150,12 @@ class AdjustmentNavigatorSpec extends SpecBase {
           pages.adjustment.AdjustmentVolumePage,
           NormalMode,
           emptyUserAnswers
+            .set(
+              pages.adjustment.CurrentAdjustmentEntryPage,
+              AdjustmentEntry(adjustmentType = Some(Spoilt))
+            )
+            .success
+            .value
         ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
     }
@@ -171,7 +169,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           emptyUserAnswers
-        ) mustBe routes.CheckYourAnswersController.onPageLoad()
+        ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }

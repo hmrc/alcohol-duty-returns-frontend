@@ -23,6 +23,8 @@ import models.adjustment.AdjustmentVolume
 import play.api.data.FormError
 import play.api.i18n.Messages
 
+import scala.collection.immutable.List
+
 class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with ModelGenerators with SpecBase {
 
   val regime   = regimeGen.sample.value
@@ -30,7 +32,7 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
   val form     = new AdjustmentVolumeFormProvider()(regime)(messages)
 
   ".volumes" - {
-    /*
+    /*fix this one
     "must bind valid data" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "1",
@@ -39,6 +41,7 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
       form.bind(data).value.value must contain theSameElementsAs AdjustmentVolume(1, 1)
     }
      */
+
     "must unbind valid data" in {
       val data = AdjustmentVolume(1, 1)
       form.fill(data).data must contain theSameElementsAs Map(
@@ -49,17 +52,20 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
-      form.bind(data).errors must contain(FormError("volumes", "adjustmentVolume.error.allRequired", Seq(List(""))))
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq(""))
+      )
     }
 
     "fail to bind when blank answer provided" in {
       val data = Map(
-        "volumes.totalLitresVolumeVolume" -> "",
-        "volumes.pureAlcohol"             -> ""
+        "volumes.totalLitresVolume" -> "",
+        "volumes.pureAlcoholVolume" -> ""
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcohol", "adjustmentVolume.error.noValue.pureAlcohol", Seq(""))
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq(""))
       )
     }
 
