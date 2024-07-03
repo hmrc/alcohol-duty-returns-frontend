@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.returns.{AlcoholDuty, DutyByTaxType}
 import org.mockito.ArgumentMatchers.any
-import pages.returns.{DoYouWantToAddMultipleSPRToListPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
@@ -42,7 +42,7 @@ class DutyCalculationControllerSpec extends SpecBase {
     .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
     .success
     .value
-    .setByKey(DoYouWantToAddMultipleSPRToListPage, regime, false)
+    .setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, false)
     .success
     .value
     .setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumesAndRates)
@@ -102,7 +102,7 @@ class DutyCalculationControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET if Yes is selected for add Multiple SPR option" in {
 
-      val updatedUserAnswer = userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, true).success.value
+      val updatedUserAnswer = userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
 
       val mockCacheConnector = mock[CacheConnector]
 

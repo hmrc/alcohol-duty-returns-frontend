@@ -18,7 +18,7 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.TellUsAboutMultipleSPRRateFormProvider
-import models.NormalMode
+import models.{CheckMode, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
@@ -142,6 +142,40 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
       }
     }
 
+    "must populate the view correctly on a GET when an index is provided in Check mode" in {
+
+      val index = 0
+
+      val tellUsAboutMultipleSPRRateRoute =
+        routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime, Some(index)).url
+
+      val application = applicationBuilder(userAnswers = Some(filledUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, tellUsAboutMultipleSPRRateRoute)
+
+        val view = application.injector.instanceOf[TellUsAboutMultipleSPRRateView]
+
+        val result = route(application, request).value
+
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
+
+        val form = formProvider(regime)(messages(application))
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          form.fill(volumeAndRateByTaxType),
+          CheckMode,
+          regime,
+          rateBandRadioButton,
+          Some(index)
+        )(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
     "must redirect to the next page when valid data is submitted" in {
 
       val mockCacheConnector = mock[CacheConnector]
@@ -173,7 +207,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted and and index is provided" in {
+    "must redirect to the next page when valid data is submitted and index is provided" in {
 
       val index = 0
 
@@ -219,7 +253,53 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted and and index is provided and no value has changed" in {
+    "must redirect to the next page when valid data is submitted, index is provided and the mode is CheckMode" in {
+
+      val index = 0
+
+      val tellUsAboutMultipleSPRRateRoute =
+        routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime, Some(index)).url
+
+      val volumeAndRateByTaxType = VolumeAndRateByTaxType(
+        totalLitres = 1000,
+        pureAlcohol = 500,
+        dutyRate = 10,
+        taxType = rateBands.head.taxType
+      )
+
+      val filledUserAnswers =
+        userAnswers.setByKey(MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType)).success.value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(filledUserAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
+            .withFormUrlEncodedBody(
+              "volumesWithRate.totalLitres" -> "10000",
+              "volumesWithRate.pureAlcohol" -> "5000",
+              "volumesWithRate.dutyRate"    -> "100",
+              "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted, index is provided and no value has changed" in {
 
       val index = 0
 
@@ -235,6 +315,49 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
       val filledUserAnswers =
         userAnswers.setByKey(MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType)).success.value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(filledUserAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
+            .withFormUrlEncodedBody(
+              "volumesWithRate.totalLitres" -> volumeAndRateByTaxType.totalLitres.toString(),
+              "volumesWithRate.pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString(),
+              "volumesWithRate.dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString(),
+              "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted, index is provided and no value is found the Multiple SPR list" in {
+
+      val index = 0
+
+      val tellUsAboutMultipleSPRRateRoute =
+        routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime, Some(index)).url
+
+      val volumeAndRateByTaxType = VolumeAndRateByTaxType(
+        totalLitres = 1000,
+        pureAlcohol = 500,
+        dutyRate = 10,
+        taxType = rateBands.head.taxType
+      )
 
       val mockCacheConnector = mock[CacheConnector]
 
