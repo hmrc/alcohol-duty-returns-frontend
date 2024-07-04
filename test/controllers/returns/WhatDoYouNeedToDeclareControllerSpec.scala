@@ -101,7 +101,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
         status(result) mustEqual OK
         val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
         contentAsString(result) mustEqual view(
-          form.fill(rateBandList.map(_.taxType).toSet),
+          form.fill(rateBandList.map(_.taxTypeCode).toSet),
           regime,
           taxBandsViewModel,
           NormalMode
@@ -152,7 +152,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val request =
           FakeRequest(POST, whatDoYouNeedToDeclareRoute)
-            .withFormUrlEncodedBody(("rateBand[0]", selectedRateBand.taxType))
+            .withFormUrlEncodedBody(("rateBand[0]", selectedRateBand.taxTypeCode))
 
         val result = route(application, request).value
 
@@ -236,7 +236,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
         val selectedRateBand = rateBandList.head
         val request          =
           FakeRequest(POST, whatDoYouNeedToDeclareRoute)
-            .withFormUrlEncodedBody((s"value[${selectedRateBand.taxType}]", selectedRateBand.toString))
+            .withFormUrlEncodedBody((s"value[${selectedRateBand.taxTypeCode}]", selectedRateBand.toString))
 
         val result = route(application, request).value
 

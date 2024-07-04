@@ -39,11 +39,11 @@ object CategoriesByRateTypeHelper {
       .groupBy(_.rateType)
       .view
       .mapValues { rateBands =>
-        rateBands.sortBy(_.taxType).map { rateBand =>
+        rateBands.sortBy(_.taxTypeCode).map { rateBand =>
           CategoryViewModel(
             category =
               if (isRecap) RateBandHelper.rateBandRecap(rateBand) else RateBandHelper.rateBandContent(rateBand),
-            id = rateBand.taxType
+            id = rateBand.taxTypeCode
           )
         }
       }

@@ -32,7 +32,7 @@ class ReturnsNavigator @Inject() () {
     case _                              => _ => routes.IndexController.onPageLoad
   }
 
-  private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegimeName => Boolean => Option[Int] => Call = {
+  private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegime => Boolean => Option[Int] => Call = {
     case WhatDoYouNeedToDeclarePage =>
       ua =>
         regime =>
@@ -126,7 +126,7 @@ class ReturnsNavigator @Inject() () {
     case _ => _ => _ => _ => _ => routes.IndexController.onPageLoad
   }
 
-  private val checkRouteMapReturnJourney: Page => UserAnswers => AlcoholRegimeName => Boolean => Option[Int] => Call = {
+  private val checkRouteMapReturnJourney: Page => UserAnswers => AlcoholRegime => Boolean => Option[Int] => Call = {
     case TellUsAboutMultipleSPRRatePage =>
       _ =>
         regime =>
@@ -149,7 +149,7 @@ class ReturnsNavigator @Inject() () {
     page: Page,
     mode: Mode,
     userAnswers: UserAnswers,
-    regime: AlcoholRegimeName,
+    regime: AlcoholRegime,
     hasAnswerChanged: Boolean = false,
     index: Option[Int] = None
   ): Call = mode match {

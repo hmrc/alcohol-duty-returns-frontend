@@ -17,7 +17,7 @@
 package controllers.returns
 
 import base.SpecBase
-import models.AlcoholRegimeName
+import models.AlcoholRegime
 import org.scalacheck.Arbitrary._
 import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.test.Helpers._
@@ -28,7 +28,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
   "CheckYourAnswers Controller" - {
 
-    val regime = arbitrary[AlcoholRegimeName].sample.value
+    val regime = arbitrary[AlcoholRegime].sample.value
 
     val rateBands      = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
     val dutyByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq

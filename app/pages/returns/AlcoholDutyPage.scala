@@ -16,12 +16,12 @@
 
 package pages.returns
 
-import models.AlcoholRegimeName
+import models.AlcoholRegime
 import models.returns.AlcoholDuty
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-object AlcoholDutyPage extends QuestionPage[Map[AlcoholRegimeName, AlcoholDuty]] {
+object AlcoholDutyPage extends QuestionPage[Map[AlcoholRegime, AlcoholDuty]] {
 
   override def path: JsPath = JsPath \ toString
 

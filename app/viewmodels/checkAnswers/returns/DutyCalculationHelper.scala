@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.returns
 
 import models.returns.{AlcoholDuty, DutyByTaxType}
-import models.{AlcoholRegimeName, RateBand, UserAnswers}
+import models.{AlcoholRegime, RateBand, UserAnswers}
 import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -30,7 +30,7 @@ object DutyCalculationHelper {
   def dutyDueTableViewModel(
     totalDutyCalculationResponse: AlcoholDuty,
     userAnswers: UserAnswers,
-    regime: AlcoholRegimeName
+    regime: AlcoholRegime
   )(implicit messages: Messages): Either[String, TableViewModel] =
     createRows(totalDutyCalculationResponse.dutiesByTaxType, userAnswers, regime).map { rows =>
       TableViewModel(
@@ -46,8 +46,8 @@ object DutyCalculationHelper {
       )
     }
 
-  private def createRows(totalsByTaxType: Seq[DutyByTaxType], userAnswers: UserAnswers, regime: AlcoholRegimeName)(
-    implicit messages: Messages
+  private def createRows(totalsByTaxType: Seq[DutyByTaxType], userAnswers: UserAnswers, regime: AlcoholRegime)(implicit
+    messages: Messages
   ): Either[String, Seq[TableRowViewModel]] =
     userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
       case Some(rateBands) => extractRateBandsAndCreteRows(regime, rateBands, totalsByTaxType)
@@ -55,13 +55,13 @@ object DutyCalculationHelper {
     }
 
   private def extractRateBandsAndCreteRows(
-    regime: AlcoholRegimeName,
+    regime: AlcoholRegime,
     rateBands: Set[RateBand],
     totalsByTaxType: Seq[DutyByTaxType]
   )(implicit messages: Messages): Either[String, Seq[TableRowViewModel]] =
     totalsByTaxType
       .map { totalByTaxType =>
-        rateBands.find(_.taxType == totalByTaxType.taxType) match {
+        rateBands.find(_.taxTypeCode == totalByTaxType.taxType) match {
           case Some(rateBand) =>
             Right(createTableRowViewModel(regime, totalByTaxType, rateBand))
           case None           => Left(s"No rate band found for taxType: ${totalByTaxType.taxType}")
@@ -74,8 +74,8 @@ object DutyCalculationHelper {
         } yield row +: rows
       }
 
-  private def createTableRowViewModel(regime: AlcoholRegimeName, totalByTaxType: DutyByTaxType, rateBand: RateBand)(
-    implicit messages: Messages
+  private def createTableRowViewModel(regime: AlcoholRegime, totalByTaxType: DutyByTaxType, rateBand: RateBand)(implicit
+    messages: Messages
   ) =
     TableRowViewModel(
       cells = Seq(

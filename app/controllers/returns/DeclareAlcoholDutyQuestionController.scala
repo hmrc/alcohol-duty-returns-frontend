@@ -19,8 +19,8 @@ package controllers.returns
 import connectors.CacheConnector
 import controllers.actions._
 import forms.returns.DeclareAlcoholDutyQuestionFormProvider
-import models.AlcoholRegimeName.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegimeName, Mode, UserAnswers}
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.{AlcoholRegime, Mode, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -49,7 +49,7 @@ class DeclareAlcoholDutyQuestionController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val regimes: Seq[AlcoholRegimeName] = Seq(Beer, Cider, Spirits, Wine, OtherFermentedProduct)
+    val regimes: Seq[AlcoholRegime] = Seq(Beer, Cider, Spirits, Wine, OtherFermentedProduct)
 
     val preparedForm = request.userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
       case None        => form
@@ -62,7 +62,7 @@ class DeclareAlcoholDutyQuestionController @Inject() (
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val regimes: Seq[AlcoholRegimeName] = Seq(Beer, Cider, Spirits, Wine, OtherFermentedProduct)
+      val regimes: Seq[AlcoholRegime] = Seq(Beer, Cider, Spirits, Wine, OtherFermentedProduct)
       form
         .bindFromRequest()
         .fold(

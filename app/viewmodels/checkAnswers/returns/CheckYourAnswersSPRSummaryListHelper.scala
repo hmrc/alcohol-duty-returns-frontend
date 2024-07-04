@@ -16,13 +16,13 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegimeName, UserAnswers}
+import models.{AlcoholRegime, UserAnswers}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
 object CheckYourAnswersSPRSummaryListHelper {
 
-  def summaryList(regime: AlcoholRegimeName, userAnswers: UserAnswers, index: Option[Int])(implicit
+  def summaryList(regime: AlcoholRegime, userAnswers: UserAnswers, index: Option[Int])(implicit
     messages: Messages
   ): Option[SummaryList] = {
     val rows = TellUsAboutMultipleSPRRateSummary.rows(regime, userAnswers, index)

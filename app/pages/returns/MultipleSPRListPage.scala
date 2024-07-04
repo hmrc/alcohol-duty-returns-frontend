@@ -16,12 +16,12 @@
 
 package pages.returns
 
-import models.AlcoholRegimeName
+import models.AlcoholRegime
 import models.returns.VolumeAndRateByTaxType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object MultipleSPRListPage extends QuestionPage[Map[AlcoholRegimeName, Seq[VolumeAndRateByTaxType]]] {
+case object MultipleSPRListPage extends QuestionPage[Map[AlcoholRegime, Seq[VolumeAndRateByTaxType]]] {
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "multipleSPRList"

@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.TellUsAboutMultipleSPRRateFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegimeName, CheckMode, Mode, NormalMode, UserAnswers}
+import models.{AlcoholRegime, CheckMode, Mode, NormalMode, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -50,7 +50,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegimeName, index: Option[Int]): Action[AnyContent] =
+  def onPageLoad(mode: Mode, regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       val result = for {
         rateBands <- request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
@@ -60,7 +60,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegimeName, index: Option[Int]): Action[AnyContent] =
+  def onSubmit(mode: Mode, regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
@@ -97,7 +97,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     }
 
   private def hasValueChanged(
-    regime: AlcoholRegimeName,
+    regime: AlcoholRegime,
     index: Option[Int],
     userAnswers: UserAnswers,
     mode: Mode,
@@ -111,7 +111,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
 
   private def hasValueChangedAtIndex(
     userAnswers: UserAnswers,
-    regime: AlcoholRegimeName,
+    regime: AlcoholRegime,
     i: Int,
     value: VolumeAndRateByTaxType
   ) =
@@ -122,7 +122,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
 
   private def prepareForm(
     userAnswers: UserAnswers,
-    regime: AlcoholRegimeName,
+    regime: AlcoholRegime,
     mode: Mode,
     index: Option[Int]
   )(implicit messages: Messages): Option[Form[_]] =
@@ -131,7 +131,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       case _                     => fillPreviousAnswers(userAnswers, regime)
     }
 
-  private def fillPreviousAnswersWithIndex(answers: UserAnswers, regime: AlcoholRegimeName, i: Int)(implicit
+  private def fillPreviousAnswersWithIndex(answers: UserAnswers, regime: AlcoholRegime, i: Int)(implicit
     messages: Messages
   ): Option[Form[_]] =
     answers.getByKeyAndIndex(MultipleSPRListPage, regime, i) match {
@@ -141,7 +141,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
         None
     }
 
-  private def fillPreviousAnswers(answers: UserAnswers, regime: AlcoholRegimeName)(implicit
+  private def fillPreviousAnswers(answers: UserAnswers, regime: AlcoholRegime)(implicit
     messages: Messages
   ): Option[Form[_]] = {
     val form = formProvider(regime)

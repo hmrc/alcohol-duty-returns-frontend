@@ -49,7 +49,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
     "should add a value to a set for a given page and get the same value" in {
 
       val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegimeName.values.toSet))
+        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
       val expectedValue = "value"
 
@@ -68,7 +68,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
 
     "should remove a value for a given Page" in {
       val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegimeName.values.toSet))
+        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
           .set(TestSeqPage, Seq("123"))
           .success
           .value
@@ -83,7 +83,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
 
     "should serialise to json" in {
       val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegimeName.values.toSet))
+        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
       Json
         .toJson(userAnswers.copy(lastUpdated = Instant.ofEpochMilli(1718118467838L)))
@@ -92,7 +92,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
 
     "should deserialise from json" in {
       val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegimeName.values.toSet))
+        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
       Json.parse(json).as[UserAnswers] mustBe userAnswers.copy(lastUpdated = Instant.ofEpochMilli(1718118467838L))
     }
@@ -109,7 +109,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
 
       "should get the value of an answer for a given page and index" in {
         val userAnswers =
-          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegimeName.values.toSet))
+          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
             .set(TestMapPage, Map("1" -> "123", "2" -> "456", "3" -> "789"))
             .success
             .value
@@ -121,7 +121,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
 
       "should set the value of an answer for a given page and index and get the same value" in {
         val userAnswers =
-          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegimeName.values.toSet))
+          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
         val expectedValue = "value"
 

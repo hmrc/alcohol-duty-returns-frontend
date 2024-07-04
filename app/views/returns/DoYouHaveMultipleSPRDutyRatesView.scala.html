@@ -29,7 +29,7 @@
     paragraph: Paragraph
 )
 
-@(form: Form[_], regime: AlcoholRegimeName, mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime: AlcoholRegime, mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("doYouHaveMultipleSPRDutyRates.title", messages(s"return.regime.$regime")))) {
 

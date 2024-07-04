@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.WhatDoYouNeedToDeclareFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegimeName, Mode, RateBand, ReturnPeriod, UserAnswers}
+import models.{AlcoholRegime, Mode, RateBand, ReturnPeriod, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -49,7 +49,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
+  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(regime)
 
@@ -57,14 +57,14 @@ class WhatDoYouNeedToDeclareController @Inject() (
         val taxBandsViewModel = TaxBandsViewModel(rateBands)
         val preparedForm      = request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
           case None        => form
-          case Some(value) => form.fill(value.map(_.taxType))
+          case Some(value) => form.fill(value.map(_.taxTypeCode))
         }
 
         Ok(view(preparedForm, regime, taxBandsViewModel, mode))
       }
     }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
+  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       getRateBands(request.userAnswers, request.returnPeriod, regime)
         .flatMap { rateBands: Seq[RateBand] =>
@@ -87,21 +87,24 @@ class WhatDoYouNeedToDeclareController @Inject() (
   private def getRateBands(
     userAnswers: UserAnswers,
     returnPeriod: ReturnPeriod,
-    selectedRegime: AlcoholRegimeName
+    selectedRegime: AlcoholRegime
   )(implicit hc: HeaderCarrier): Future[Seq[RateBand]] =
     userAnswers.get(RateBandsPage) match {
-      case Some(rateBands) => Future.successful(rateBands.filter(_.alcoholRegimes.map(_.name).contains(selectedRegime)))
+      case Some(rateBands) =>
+        Future.successful(rateBands.filter(_.rangeDetails.map(_.alcoholRegime).contains(selectedRegime)))
       case None            =>
         for {
           rateBands      <- calculatorConnector.rateBandByRegime(returnPeriod.period, userAnswers.regimes.regimes.toSeq)
           updatedAnswers <- Future.fromTry(userAnswers.set(RateBandsPage, rateBands))
           _              <- cacheConnector.set(updatedAnswers)
-        } yield rateBands.filter(_.alcoholRegimes.map(_.name).contains(selectedRegime))
+        } yield rateBands.filter(_.rangeDetails.map(_.alcoholRegime).contains(selectedRegime))
     }
 
   private def rateBandFromTaxType(rateBandTaxTypes: Set[String], rateBands: Seq[RateBand]): Try[Set[RateBand]] = Try {
     rateBandTaxTypes.map { taxType =>
-      rateBands.find(_.taxType == taxType).getOrElse(throw new IllegalArgumentException(s"Invalid tax type: $taxType"))
+      rateBands
+        .find(_.taxTypeCode == taxType)
+        .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: $taxType"))
     }
   }
 }

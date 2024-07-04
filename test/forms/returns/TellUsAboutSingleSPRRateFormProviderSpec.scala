@@ -17,7 +17,6 @@
 package forms.returns
 
 import forms.behaviours.StringFieldBehaviours
-import models.returns.VolumeAndRateByTaxType
 import org.mockito.MockitoSugar.mock
 import play.api.data.FormError
 import play.api.i18n.Messages

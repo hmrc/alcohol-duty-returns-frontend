@@ -40,7 +40,7 @@ object TaxBandsViewModel {
           CheckboxGroupedItemViewModel(
             content = Text(rateBandContent(rateBand)),
             fieldId = "rateBand",
-            value = rateBand.taxType
+            value = rateBand.taxTypeCode
           )
         )
       )

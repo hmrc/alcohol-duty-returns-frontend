@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegimeName, CheckMode, UserAnswers}
+import models.{AlcoholRegime, CheckMode, UserAnswers}
 import pages.returns.DoYouHaveMultipleSPRDutyRatesPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -25,7 +25,7 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object SmallProducerReliefSummary {
-  def summaryList(regime: AlcoholRegimeName, userAnswers: UserAnswers)(implicit
+  def summaryList(regime: AlcoholRegime, userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[SummaryList] =
     userAnswers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime) map { hasMultipleSPREntries =>
@@ -47,7 +47,7 @@ object SmallProducerReliefSummary {
       }
     }
 
-  def createSummaryList(regime: AlcoholRegimeName, titleKey: String, rows: Seq[SummaryListRow], call: String)(implicit
+  def createSummaryList(regime: AlcoholRegime, titleKey: String, rows: Seq[SummaryListRow], call: String)(implicit
     messages: Messages
   ): SummaryList =
     SummaryList(

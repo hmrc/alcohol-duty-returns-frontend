@@ -17,7 +17,7 @@
 package controllers.dutySuspended
 
 import base.SpecBase
-import models.{AlcoholRegimeName, UserAnswers}
+import models.{AlcoholRegime, UserAnswers}
 import pages.AlcoholRegimePage
 import pages.dutySuspended.{DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import play.api.libs.json.Json
@@ -31,7 +31,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
   val validPureAlcohol                                        = 34.23
   val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers.copy(data =
     Json.obj(
-      AlcoholRegimePage.toString               -> Json.toJson(AlcoholRegimeName.values),
+      AlcoholRegimePage.toString               -> Json.toJson(AlcoholRegime.values),
       DutySuspendedBeerPage.toString           -> Json.obj(
         "totalBeer"         -> validTotal,
         "pureAlcoholInBeer" -> validPureAlcohol
@@ -84,7 +84,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
 
       val beerScreenAnswer: UserAnswers = emptyUserAnswers.copy(data =
         Json.obj(
-          AlcoholRegimePage.toString     -> Json.toJson(AlcoholRegimeName.values),
+          AlcoholRegimePage.toString     -> Json.toJson(AlcoholRegime.values),
           DutySuspendedBeerPage.toString -> Json.obj(
             "totalBeer"         -> validTotal,
             "pureAlcoholInBeer" -> validPureAlcohol

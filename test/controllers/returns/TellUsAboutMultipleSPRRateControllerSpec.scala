@@ -218,7 +218,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         totalLitres = 1000,
         pureAlcohol = 500,
         dutyRate = 10,
-        taxType = rateBands.head.taxType
+        taxType = rateBands.head.taxTypeCode
       )
 
       val filledUserAnswers =
@@ -264,7 +264,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         totalLitres = 1000,
         pureAlcohol = 500,
         dutyRate = 10,
-        taxType = rateBands.head.taxType
+        taxType = rateBands.head.taxTypeCode
       )
 
       val filledUserAnswers =
@@ -310,7 +310,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         totalLitres = 1000,
         pureAlcohol = 500,
         dutyRate = 10,
-        taxType = rateBands.head.taxType
+        taxType = rateBands.head.taxTypeCode
       )
 
       val filledUserAnswers =
@@ -356,7 +356,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         totalLitres = 1000,
         pureAlcohol = 500,
         dutyRate = 10,
-        taxType = rateBands.head.taxType
+        taxType = rateBands.head.taxTypeCode
       )
 
       val mockCacheConnector = mock[CacheConnector]

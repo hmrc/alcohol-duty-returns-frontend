@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.HowMuchDoYouNeedToDeclareFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegimeName, Mode, RateBand}
+import models.{AlcoholRegime, Mode, RateBand}
 import navigation.ReturnsNavigator
 import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -50,7 +50,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
+  def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
@@ -67,7 +67,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
 
     }
 
-  def onSubmit(mode: Mode, regime: AlcoholRegimeName): Action[AnyContent] =
+  def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
@@ -98,7 +98,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
     volumesByTaxType
       .map { volumes =>
         for {
-          rateBand <- rateBands.find(_.taxType == volumes.taxType)
+          rateBand <- rateBands.find(_.taxTypeCode == volumes.taxType)
           dutyRate <- rateBand.rate
         } yield VolumeAndRateByTaxType(
           taxType = volumes.taxType,

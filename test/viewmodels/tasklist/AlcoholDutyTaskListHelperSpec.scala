@@ -17,7 +17,6 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import models.AlcoholRegimeName
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.returns.DeclareAlcoholDutyQuestionPage

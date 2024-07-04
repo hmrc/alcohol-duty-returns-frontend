@@ -25,7 +25,7 @@
     sectionHeading: SectionHeading,
 )
 
-@(form: Form[_], regime:AlcoholRegimeName, index:Int)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime:AlcoholRegime, index:Int)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("deleteMultipleSPREntry.title"))) {
 

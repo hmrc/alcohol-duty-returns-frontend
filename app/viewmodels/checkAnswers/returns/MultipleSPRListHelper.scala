@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegimeName, NormalMode, RateBand, UserAnswers}
+import models.{AlcoholRegime, NormalMode, RateBand, UserAnswers}
 import models.returns.VolumeAndRateByTaxType
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
@@ -26,7 +26,7 @@ import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object MultipleSPRListHelper {
 
-  def sprTableViewModel(userAnswers: UserAnswers, regime: AlcoholRegimeName)(implicit
+  def sprTableViewModel(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit
     messages: Messages
   ): Either[String, TableViewModel] =
     getSprListEntries(userAnswers, regime) match {
@@ -61,14 +61,14 @@ object MultipleSPRListHelper {
 
   case class SprDutyRateEntry(dutyByTaxType: VolumeAndRateByTaxType, rateBand: RateBand)
 
-  def getSprListEntries(userAnswers: UserAnswers, regime: AlcoholRegimeName): Either[String, Seq[SprDutyRateEntry]] =
+  def getSprListEntries(userAnswers: UserAnswers, regime: AlcoholRegime): Either[String, Seq[SprDutyRateEntry]] =
     (
       userAnswers.getByKey(MultipleSPRListPage, regime),
       userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
     ) match {
       case (Some(dutyByTaxTypes), Some(rateBands)) =>
         val sprEntries = dutyByTaxTypes.map { dutyByTaxType =>
-          rateBands.find(_.taxType == dutyByTaxType.taxType) match {
+          rateBands.find(_.taxTypeCode == dutyByTaxType.taxType) match {
             case Some(rateBand) => Right(SprDutyRateEntry(dutyByTaxType, rateBand))
             case None           => Left(dutyByTaxType.taxType)
           }
@@ -81,7 +81,7 @@ object MultipleSPRListHelper {
       case _                                       => Left("Error retrieving SPR entries and rate bands")
     }
 
-  def getSPREntryRows(sprList: Seq[SprDutyRateEntry], regime: AlcoholRegimeName)(implicit
+  def getSPREntryRows(sprList: Seq[SprDutyRateEntry], regime: AlcoholRegime)(implicit
     messages: Messages
   ): Seq[TableRowViewModel] =
     sprList.zipWithIndex.map { case (sprEntry, index) =>

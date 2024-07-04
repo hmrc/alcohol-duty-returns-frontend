@@ -17,7 +17,7 @@
 package controllers.returns
 
 import controllers.actions._
-import models.AlcoholRegimeName
+import models.AlcoholRegime
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -36,7 +36,7 @@ class CheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(regime: AlcoholRegimeName): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       CheckYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
         case Some(summaryList) => Ok(view(regime, summaryList))

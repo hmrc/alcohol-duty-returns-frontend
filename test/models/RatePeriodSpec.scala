@@ -19,7 +19,7 @@ package models
 import base.SpecBase
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
-import models.AlcoholRegimeName.Beer
+import models.AlcoholRegime.Beer
 import models.RateType.Core
 import org.scalacheck.Gen
 import org.scalatestplus.mockito.MockitoSugar
@@ -155,35 +155,35 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       val json =
         """
           |      {
-          |        "taxType": "311",
+          |        "taxTypeCode": "311",
           |        "description": "Beer from 1.3% to 3.4%",
           |        "rateType": "Core",
-          |        "alcoholRegimes": [
+          |        "rate": 9.27,
+          |        "rangeDetails": [
           |          {
-          |            "name":"Beer",
+          |            "alcoholRegime":"Beer",
           |            "abvRanges": [
           |              {
-          |                "name": "Beer",
+          |                "alcoholType": "Beer",
           |                "minABV": 1.3,
           |                "maxABV": 3.4
           |              }
           |            ]
           |          }
-          |        ],
-          |        "rate": 9.27
+          |        ]
           |      }
           |""".stripMargin
 
       val result = Json.parse(json).validate[RateBand].get
 
       result mustBe a[RateBand]
-      result.taxType mustBe "311"
+      result.taxTypeCode mustBe "311"
       result.rateType mustBe Core
-      result.alcoholRegimes.size mustBe 1
-      result.alcoholRegimes.head.name mustBe Beer
-      result.alcoholRegimes.head.abvRanges.length mustBe 1
-      result.alcoholRegimes.head.abvRanges.head mustBe ABVRange(
-        ABVRangeName.Beer,
+      result.rangeDetails.size mustBe 1
+      result.rangeDetails.head.alcoholRegime mustBe Beer
+      result.rangeDetails.head.abvRanges.length mustBe 1
+      result.rangeDetails.head.abvRanges.head mustBe ABVRange(
+        AlcoholType.Beer,
         AlcoholByVolume(1.3),
         AlcoholByVolume(3.4)
       )
@@ -192,13 +192,13 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
 
     "serialize RateBand object into Json" in {
       val rateBand = RateBand(
-        taxType = "311",
+        taxTypeCode = "311",
         description = "Description",
         rateType = Core,
-        alcoholRegimes = Set(
-          AlcoholRegime(
-            AlcoholRegimeName.Beer,
-            NonEmptySeq.one(ABVRange(ABVRangeName.Beer, AlcoholByVolume(1.3), AlcoholByVolume(3.4)))
+        rangeDetails = Set(
+          RangeDetailsByRegime(
+            AlcoholRegime.Beer,
+            NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(1.3), AlcoholByVolume(3.4)))
           )
         ),
         rate = Some(BigDecimal(9.27))
@@ -206,22 +206,22 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
 
       val expectedResult = """
                              |      {
-                             |        "taxType": "311",
+                             |        "taxTypeCode": "311",
                              |        "description": "Description",
                              |        "rateType": "Core",
-                             |        "alcoholRegimes": [
+                             |        "rate": 9.27,
+                             |        "rangeDetails": [
                              |          {
-                             |            "name":"Beer",
+                             |            "alcoholRegime":"Beer",
                              |            "abvRanges": [
                              |              {
-                             |                "name": "Beer",
+                             |                "alcoholType": "Beer",
                              |                "minABV": 1.3,
                              |                "maxABV": 3.4
                              |              }
                              |            ]
                              |          }
-                             |        ],
-                             |        "rate": 9.27
+                             |        ]
                              |      }
                              |""".stripMargin.replace(" ", "").replace("\n", "")
 

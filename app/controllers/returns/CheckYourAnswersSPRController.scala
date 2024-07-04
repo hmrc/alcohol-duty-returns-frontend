@@ -19,7 +19,7 @@ package controllers.returns
 import connectors.CacheConnector
 import controllers.actions._
 import models.returns.VolumeAndRateByTaxType
-import models.{AlcoholRegimeName, UserAnswers}
+import models.{AlcoholRegime, UserAnswers}
 import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage}
 
 import javax.inject.Inject
@@ -44,7 +44,7 @@ class CheckYourAnswersSPRController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(regime: AlcoholRegimeName, index: Option[Int]): Action[AnyContent] =
+  def onPageLoad(regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       CheckYourAnswersSPRSummaryListHelper.summaryList(regime, request.userAnswers, index) match {
         case None              =>
@@ -54,7 +54,7 @@ class CheckYourAnswersSPRController @Inject() (
       }
     }
 
-  def onSubmit(regime: AlcoholRegimeName, index: Option[Int]): Action[AnyContent] =
+  def onSubmit(regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
         case None               =>
@@ -70,7 +70,7 @@ class CheckYourAnswersSPRController @Inject() (
 
   def updateUserAnswer(
     userAnswers: UserAnswers,
-    regime: AlcoholRegimeName,
+    regime: AlcoholRegime,
     sprRateEntry: VolumeAndRateByTaxType,
     index: Option[Int]
   ): Try[UserAnswers] =

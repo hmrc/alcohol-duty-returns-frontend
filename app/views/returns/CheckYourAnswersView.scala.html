@@ -26,7 +26,7 @@
         govukSummaryList : GovukSummaryList
 )
 
-@(regime: AlcoholRegimeName, summaryList:ReturnSummaryList)(implicit request: Request[_], messages: Messages)
+@(regime: AlcoholRegime, summaryList:ReturnSummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 

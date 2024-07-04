@@ -19,7 +19,7 @@ package controllers.returns
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector, TotalDutyCalculationRequest}
 import controllers.actions._
 import models.returns.VolumeAndRateByTaxType
-import models.{AlcoholRegimeName, UserAnswers}
+import models.{AlcoholRegime, UserAnswers}
 import pages.QuestionPage
 import pages.returns.{AlcoholDutyPage, DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
 import play.api.Logging
@@ -47,7 +47,7 @@ class DutyCalculationController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(regime: AlcoholRegimeName): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val totalDutyCalculatorRequest = createTotalDutyRequest(regime, request.userAnswers)
       for {
@@ -62,7 +62,7 @@ class DutyCalculationController @Inject() (
       }
   }
 
-  def onSubmit(regime: AlcoholRegimeName): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       request.userAnswers.getByKey(DutyCalculationPage, regime) match {
         case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
@@ -75,10 +75,10 @@ class DutyCalculationController @Inject() (
   }
 
   private def createTotalDutyRequest(
-    regime: AlcoholRegimeName,
+    regime: AlcoholRegime,
     userAnswers: UserAnswers
   ): TotalDutyCalculationRequest = {
-    val sprPage: QuestionPage[Map[AlcoholRegimeName, Seq[VolumeAndRateByTaxType]]] =
+    val sprPage: QuestionPage[Map[AlcoholRegime, Seq[VolumeAndRateByTaxType]]] =
       userAnswers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime) match {
         case Some(true) => MultipleSPRListPage
         case _          => TellUsAboutSingleSPRRatePage

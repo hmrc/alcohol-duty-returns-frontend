@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.returns
 
 import controllers.returns.routes
-import models.{AlcoholRegimeName, CheckMode, UserAnswers}
+import models.{AlcoholRegime, CheckMode, UserAnswers}
 import pages.returns.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object TellUsAboutMultipleSPRRateSummary {
 
-  def rows(regime: AlcoholRegimeName, answers: UserAnswers, index: Option[Int])(implicit
+  def rows(regime: AlcoholRegime, answers: UserAnswers, index: Option[Int])(implicit
     messages: Messages
   ): Seq[SummaryListRow] =
     (
@@ -37,7 +37,7 @@ object TellUsAboutMultipleSPRRateSummary {
     ) match {
       case (Some(rateBands), Some(answer)) =>
         rateBands
-          .find(_.taxType == answer.taxType)
+          .find(_.taxTypeCode == answer.taxType)
           .map { rateBand =>
             val taxTypeRowViewModel =
               SummaryListRowViewModel(
@@ -90,7 +90,7 @@ object TellUsAboutMultipleSPRRateSummary {
       case _                               => Seq.empty
     }
 
-  def actions(elementId: String, regime: AlcoholRegimeName, index: Option[Int])(implicit
+  def actions(elementId: String, regime: AlcoholRegime, index: Option[Int])(implicit
     messages: Messages
   ): Seq[ActionItem] = Seq(
     ActionItemViewModel(

@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.returns
 
 import controllers.returns.routes
-import models.{AlcoholRegimeName, CheckMode, UserAnswers}
+import models.{AlcoholRegime, CheckMode, UserAnswers}
 import pages.returns.DoYouHaveMultipleSPRDutyRatesPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,7 +26,7 @@ import viewmodels.implicits._
 
 object DoYouHaveMultipleSPRDutyRatesSummary {
 
-  def row(regime: AlcoholRegimeName, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 

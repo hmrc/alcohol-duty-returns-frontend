@@ -16,8 +16,8 @@
 
 package viewmodels.tasklist
 
-import models.AlcoholRegimeName.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegimeName, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.{AlcoholRegime, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
@@ -101,7 +101,7 @@ object ReturnTaskListHelper {
         )
     }
 
-  private val alcoholRegimeViewOrder: Seq[AlcoholRegimeName] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
+  private val alcoholRegimeViewOrder: Seq[AlcoholRegime] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
 
   private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit
     messages: Messages

@@ -157,12 +157,12 @@ trait ModelGenerators {
     Gen.oneOf(RateType.Core, RateType.DraughtRelief)
   }
 
-  implicit val arbitraryAlcoholRegimeName: Arbitrary[AlcoholRegimeName] = Arbitrary {
+  implicit val arbitraryAlcoholRegimeName: Arbitrary[AlcoholRegime] = Arbitrary {
     Gen.oneOf(
-      AlcoholRegimeName.Beer,
-      AlcoholRegimeName.Cider,
-      AlcoholRegimeName.Wine,
-      AlcoholRegimeName.Spirits
+      AlcoholRegime.Beer,
+      AlcoholRegime.Cider,
+      AlcoholRegime.Wine,
+      AlcoholRegime.Spirits
     )
   }
 
@@ -207,13 +207,13 @@ trait ModelGenerators {
   implicit val chooseBigDecimal: Choose[BigDecimal] =
     Choose.xmap[Double, BigDecimal](d => BigDecimal(d), bd => bd.toDouble)(implicitly[Choose[Double]])
 
-  implicit val arbitraryABVIntervalLabel: Arbitrary[ABVRangeName] = Arbitrary {
-    Gen.oneOf(ABVRangeName.values)
+  implicit val arbitraryABVIntervalLabel: Arbitrary[AlcoholType] = Arbitrary {
+    Gen.oneOf(AlcoholType.values)
   }
 
   implicit val abvIntervalGen: Arbitrary[ABVRange] = Arbitrary {
     (for {
-      label  <- arbitrary[ABVRangeName]
+      label  <- arbitrary[AlcoholType]
       minABV <- arbitrary[AlcoholByVolume]
       maxABV <- arbitrary[AlcoholByVolume]
     } yield ABVRange(label, minABV, maxABV)).suchThat(interval => interval.minABV.value < interval.maxABV.value)
@@ -223,15 +223,15 @@ trait ModelGenerators {
     Gen.listOfN(2, abvIntervalGen.arbitrary)
   }
 
-  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime] = Arbitrary {
+  implicit val arbitraryAlcoholRegime: Arbitrary[RangeDetailsByRegime] = Arbitrary {
     for {
       name      <- arbitraryAlcoholRegimeName.arbitrary
       abvRanges <- arbitraryABVIntervals.arbitrary
-    } yield AlcoholRegime(name, NonEmptySeq.fromSeqUnsafe(abvRanges))
+    } yield RangeDetailsByRegime(name, NonEmptySeq.fromSeqUnsafe(abvRanges))
   }
 
-  implicit val arbitrarySetOfAlcoholRegimes: Arbitrary[Set[AlcoholRegime]] = Arbitrary {
-    Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
+  implicit val arbitrarySetOfAlcoholRegimes: Arbitrary[Set[RangeDetailsByRegime]] = Arbitrary {
+    Gen.containerOf[Set, RangeDetailsByRegime](arbitraryAlcoholRegime.arbitrary)
   }
 
   implicit val arbitraryRateBand: Arbitrary[RateBand] = Arbitrary {
@@ -241,7 +241,7 @@ trait ModelGenerators {
       rateType       <- arbitraryRateType.arbitrary
       alcoholRegimes <- arbitrarySetOfAlcoholRegimes.arbitrary
       rate           <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
-    } yield RateBand(taxType, description, rateType, alcoholRegimes, rate)
+    } yield RateBand(taxType, description, rateType, rate, alcoholRegimes)
   }
 
   implicit val arbitraryRatePeriod: Arbitrary[RatePeriod] = Arbitrary {
@@ -274,7 +274,7 @@ trait ModelGenerators {
     draughtRelief       <- Gen.oneOf(true, false)
     smallProducerRelief <- Gen.oneOf(true, false)
     taxCode             <- Gen.alphaStr
-    regime              <- arbitrary[AlcoholRegimeName]
+    regime              <- arbitrary[AlcoholRegime]
     taxRate             <- Gen.posNum[BigDecimal]
     sprDutyRate         <- Gen.posNum[BigDecimal]
     duty                <- Gen.posNum[BigDecimal]
@@ -311,46 +311,46 @@ trait ModelGenerators {
 
   def appaIdGen: Gen[String] = Gen.listOfN(10, Gen.numChar).map(id => s"XMADP${id.mkString}")
 
-  def regimeGen: Gen[AlcoholRegimeName] = Gen.oneOf(AlcoholRegimeName.values)
+  def regimeGen: Gen[AlcoholRegime] = Gen.oneOf(AlcoholRegime.values)
 
-  def arbitraryRateBandList(regime: AlcoholRegimeName): Arbitrary[List[RateBand]] = Arbitrary {
-    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.alcoholRegimes.exists(_.name == regime)))
+  def arbitraryRateBandList(regime: AlcoholRegime): Arbitrary[List[RateBand]] = Arbitrary {
+    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.rangeDetails.exists(_.alcoholRegime == regime)))
   }
 
-  def genAlcoholRegime(alcoholRegimeName: AlcoholRegimeName): Gen[AlcoholRegime] =
+  def genAlcoholRegime(alcoholRegime: AlcoholRegime): Gen[RangeDetailsByRegime] =
     arbitraryABVIntervals.arbitrary.map(abvRanges =>
-      AlcoholRegime(alcoholRegimeName, NonEmptySeq.fromSeqUnsafe(abvRanges))
+      RangeDetailsByRegime(alcoholRegime, NonEmptySeq.fromSeqUnsafe(abvRanges))
     )
 
-  def genRateBandForRegime(alcoholRegimeName: AlcoholRegimeName): Gen[RateBand] =
+  def genRateBandForRegime(alcoholRegime: AlcoholRegime): Gen[RateBand] =
     for {
       taxType        <- Gen.alphaStr
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
-      alcoholRegimes <- genAlcoholRegime(alcoholRegimeName)
+      alcoholRegimes <- genAlcoholRegime(alcoholRegime)
       rate           <- Gen.chooseNum(0, 99999.99).map(BigDecimal(_).setScale(1, BigDecimal.RoundingMode.UP))
-    } yield RateBand(taxType, description, rateType, Set(alcoholRegimes), Some(rate))
+    } yield RateBand(taxType, description, rateType, Some(rate), Set(alcoholRegimes))
 
-  def genRateBandForRegimeWithSPR(alcoholRegimeName: AlcoholRegimeName): Gen[RateBand] =
+  def genRateBandForRegimeWithSPR(alcoholRegime: AlcoholRegime): Gen[RateBand] =
     for {
       taxType        <- Gen.alphaStr
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
-      alcoholRegimes <- genAlcoholRegime(alcoholRegimeName)
-    } yield RateBand(taxType, description, rateType, Set(alcoholRegimes), None)
+      alcoholRegimes <- genAlcoholRegime(alcoholRegime)
+    } yield RateBand(taxType, description, rateType, None, Set(alcoholRegimes))
 
-  def genListOfRateBandForRegime(alcoholRegimeName: AlcoholRegimeName): Gen[List[RateBand]] =
-    Gen.listOfN(3, genRateBandForRegime(alcoholRegimeName))
+  def genListOfRateBandForRegime(alcoholRegime: AlcoholRegime): Gen[List[RateBand]] =
+    Gen.listOfN(3, genRateBandForRegime(alcoholRegime))
 
-  def genListOfRateBandForRegimeWithSPR(alcoholRegimeName: AlcoholRegimeName): Gen[List[RateBand]] =
-    Gen.listOfN(3, genRateBandForRegimeWithSPR(alcoholRegimeName))
+  def genListOfRateBandForRegimeWithSPR(alcoholRegime: AlcoholRegime): Gen[List[RateBand]] =
+    Gen.listOfN(3, genRateBandForRegimeWithSPR(alcoholRegime))
 
   def genVolumeAndRateByTaxTypeRateBand(rateBand: RateBand): Arbitrary[VolumeAndRateByTaxType] = Arbitrary {
     for {
       totalLitres <- genAlcoholByVolumeValue
       sprDutyRate <- Gen.chooseNum(0, 99999.99).map(BigDecimal(_).setScale(1, BigDecimal.RoundingMode.UP))
     } yield VolumeAndRateByTaxType(
-      rateBand.taxType,
+      rateBand.taxTypeCode,
       totalLitres,
       totalLitres * BigDecimal(0.1).setScale(1, BigDecimal.RoundingMode.UP),
       rateBand.rate.getOrElse(sprDutyRate)

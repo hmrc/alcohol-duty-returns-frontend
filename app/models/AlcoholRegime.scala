@@ -19,18 +19,18 @@ package models
 import enumeratum.{Enum, EnumEntry, PlayEnum}
 import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
 
-sealed trait AlcoholRegimeName extends EnumEntry
-object AlcoholRegimeName extends Enum[AlcoholRegimeName] with PlayEnum[AlcoholRegimeName] {
+sealed trait AlcoholRegime extends EnumEntry
+object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {
   val values = findValues
 
-  case object Beer extends AlcoholRegimeName
-  case object Cider extends AlcoholRegimeName
-  case object Wine extends AlcoholRegimeName
-  case object Spirits extends AlcoholRegimeName
-  case object OtherFermentedProduct extends AlcoholRegimeName
+  case object Beer extends AlcoholRegime
+  case object Cider extends AlcoholRegime
+  case object Wine extends AlcoholRegime
+  case object Spirits extends AlcoholRegime
+  case object OtherFermentedProduct extends AlcoholRegime
 
-  implicit val format: Format[AlcoholRegimeName] = new Format[AlcoholRegimeName] {
-    override def reads(json: JsValue): JsResult[AlcoholRegimeName] = json.validate[String] match {
+  implicit val format: Format[AlcoholRegime] = new Format[AlcoholRegime] {
+    override def reads(json: JsValue): JsResult[AlcoholRegime] = json.validate[String] match {
       case JsSuccess(value, _) =>
         value match {
           case "Beer"                  => JsSuccess(Beer)
@@ -43,10 +43,10 @@ object AlcoholRegimeName extends Enum[AlcoholRegimeName] with PlayEnum[AlcoholRe
       case e: JsError          => e
     }
 
-    override def writes(o: AlcoholRegimeName): JsValue = JsString(o.toString)
+    override def writes(o: AlcoholRegime): JsValue = JsString(o.toString)
   }
 
-  def fromString(str: String): Option[AlcoholRegimeName] =
+  def fromString(str: String): Option[AlcoholRegime] =
     str match {
       case "Beer"                  => Some(Beer)
       case "Cider"                 => Some(Cider)

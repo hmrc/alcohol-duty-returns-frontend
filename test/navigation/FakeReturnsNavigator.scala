@@ -29,7 +29,7 @@ class FakeReturnsNavigator(desiredRoute: Call) extends ReturnsNavigator {
     page: Page,
     mode: Mode,
     userAnswers: UserAnswers,
-    regime: models.AlcoholRegimeName,
+    regime: models.AlcoholRegime,
     hasAnswerChanged: Boolean,
     index: Option[Int]
   ): Call =

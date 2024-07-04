@@ -18,7 +18,7 @@ package forms.returns
 
 import javax.inject.Inject
 import forms.mappings.Mappings
-import models.AlcoholRegimeName
+import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms._
 import models.returns.VolumeAndRateByTaxType
@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 
 class TellUsAboutSingleSPRRateFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegimeName)(implicit messages: Messages): Form[Seq[VolumeAndRateByTaxType]] = Form(
+  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[Seq[VolumeAndRateByTaxType]] = Form(
     "volumesWithRate" -> seq(
       volumesWithRate(
         "return.journey.error.invalid",

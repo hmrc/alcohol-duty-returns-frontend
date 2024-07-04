@@ -19,10 +19,10 @@ package controllers.productEntry
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.productEntry.AlcoholByVolumeQuestionFormProvider
-import models.AlcoholRegimeName.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 
 import javax.inject.Inject
-import models.{AlcoholByVolume, AlcoholRegimeName, Mode, RateType}
+import models.{AlcoholByVolume, AlcoholRegime, Mode, RateType}
 import models.productEntry.ProductEntry
 import navigation.ProductEntryNavigator
 import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage}
@@ -95,7 +95,7 @@ class AlcoholByVolumeQuestionController @Inject() (
     val ratePeriod: YearMonth = YearMonth.of(2024, 1)
 
     //hardcoded for now, will need to get this from subscription data
-    val approvedAlcoholRegimes: Set[AlcoholRegimeName] = Set(Beer, Wine, Cider, Spirits, OtherFermentedProduct)
+    val approvedAlcoholRegimes: Set[AlcoholRegime] = Set(Beer, Wine, Cider, Spirits, OtherFermentedProduct)
     for {
       response <- alcoholDutyCalculatorConnector.rateType(abv, ratePeriod, approvedAlcoholRegimes)
     } yield response.rateType

@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegimeName, CheckMode, RateBand}
+import models.{AlcoholRegime, CheckMode, RateBand}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow}
@@ -26,7 +26,7 @@ import viewmodels.implicits._
 
 object WhatDoYouNeedToDeclareSummary {
 
-  def summaryList(regime: AlcoholRegimeName, rateBands: Set[RateBand])(implicit messages: Messages): SummaryList =
+  def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryList =
     SummaryList(
       rows = Seq(row(regime, rateBands)),
       card = Some(
@@ -56,7 +56,7 @@ object WhatDoYouNeedToDeclareSummary {
       )
     )
 
-  def row(regime: AlcoholRegimeName, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
+  def row(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = messages(
         s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row",

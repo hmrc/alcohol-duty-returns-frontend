@@ -17,7 +17,7 @@
 package common
 
 import generators.ModelGenerators
-import models.AlcoholRegimeName.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegimes, ReturnId, UserAnswers}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 

@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.returns
 
 import models.RateType.{Core, DraughtRelief}
 import models.returns.VolumeAndRateByTaxType
-import models.{AlcoholRegimeName, CheckMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
 import pages.returns.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -29,7 +29,7 @@ import viewmodels.implicits._
 
 object HowMuchDoYouNeedToDeclareSummary {
 
-  def summaryList(regime: AlcoholRegimeName, rateBands: Set[RateBand], userAnswers: UserAnswers)(implicit
+  def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand], userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[SummaryList] =
     userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
@@ -67,7 +67,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       case _                    => None
     }
 
-  def rows(regime: AlcoholRegimeName, rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
+  def rows(regime: AlcoholRegime, rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
     val rateBandsByRateType = rateBands
@@ -91,7 +91,7 @@ object HowMuchDoYouNeedToDeclareSummary {
   }
 
   def createRowValues(
-    regime: AlcoholRegimeName,
+    regime: AlcoholRegime,
     rateType: RateType,
     rateBands: Set[RateBand],
     dutyByTaxTypes: Seq[VolumeAndRateByTaxType]
@@ -102,7 +102,7 @@ object HowMuchDoYouNeedToDeclareSummary {
     ).withCssClass("govuk-summary-list__row--no-border")
 
     val dutyRows = rateBands.toSeq.map { rateBand =>
-      dutyByTaxTypes.find(_.taxType == rateBand.taxType) match {
+      dutyByTaxTypes.find(_.taxType == rateBand.taxTypeCode) match {
         case Some(dutyByTaxType) =>
           Seq(
             SummaryListRowViewModel(
@@ -118,7 +118,7 @@ object HowMuchDoYouNeedToDeclareSummary {
               value = ValueViewModel(s"${dutyByTaxType.pureAlcohol.toString} ${messages("site.unit.litres")}")
             )
           )
-        case _                   => throw new IllegalArgumentException(s"Invalid tax type: ${rateBand.taxType}")
+        case _                   => throw new IllegalArgumentException(s"Invalid tax type: ${rateBand.taxTypeCode}")
       }
     }
     Seq(headRow) ++ dutyRows.flatten

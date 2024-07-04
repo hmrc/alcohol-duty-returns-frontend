@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegimeName, UserAnswers}
+import models.{AlcoholRegime, UserAnswers}
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
@@ -26,7 +26,7 @@ import viewmodels.implicits._
 
 object MultipleSPRListSummary {
 
-  def rows(regime: AlcoholRegimeName, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] = {
+  def rows(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] = {
     val rows = for {
       rateBands         <- answers.getByKey(WhatDoYouNeedToDeclarePage, regime)
       dutyByTaxTypeList <- answers.getByKey(MultipleSPRListPage, regime)
@@ -34,7 +34,7 @@ object MultipleSPRListSummary {
       .groupBy(_.taxType)
       .flatMap { case (taxType, dutiesByTaxType) =>
         val rateBand = rateBands
-          .find(_.taxType == taxType)
+          .find(_.taxTypeCode == taxType)
           .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: $taxType"))
 
         val totalLitres = dutiesByTaxType.map(_.totalLitres).sum

@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.DeleteMultipleSPREntryFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegimeName, NormalMode}
+import models.{AlcoholRegime, NormalMode}
 import pages.returns.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -47,12 +47,12 @@ class DeleteMultipleSPREntryController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(regime: AlcoholRegimeName, index: Int): Action[AnyContent] =
+  def onPageLoad(regime: AlcoholRegime, index: Int): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       Ok(view(form, regime, index))
     }
 
-  def onSubmit(regime: AlcoholRegimeName, index: Int): Action[AnyContent] =
+  def onSubmit(regime: AlcoholRegime, index: Int): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()

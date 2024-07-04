@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.returns.MultipleSPRListFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegimeName, NormalMode}
+import models.{AlcoholRegime, NormalMode}
 import navigation.ReturnsNavigator
 import pages.returns.DoYouWantToAddMultipleSPRToListPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -50,7 +50,7 @@ class MultipleSPRListController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(regime: AlcoholRegimeName): Action[AnyContent] =
+  def onPageLoad(regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.getByKey(DoYouWantToAddMultipleSPRToListPage, regime) match {
         case None        => form
@@ -68,7 +68,7 @@ class MultipleSPRListController @Inject() (
         )
     }
 
-  def onSubmit(regime: AlcoholRegimeName): Action[AnyContent] =
+  def onSubmit(regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()

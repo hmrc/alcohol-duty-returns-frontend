@@ -20,7 +20,7 @@ import base.SpecBase
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.RateType.{Core, DraughtRelief}
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, RateBand, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.scalacheck.Gen
 import play.api.i18n.Messages
 
@@ -42,8 +42,9 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           rateTypeStandard,
+          None,
           Set(
-            AlcoholRegime(
+            RangeDetailsByRegime(
               regime,
               NonEmptySeq.one(
                 ABVRange(
@@ -53,8 +54,7 @@ class RateBandHelperSpec extends SpecBase {
                 )
               )
             )
-          ),
-          None
+          )
         )
 
         val result = RateBandHelper.rateBandContent(rateBand)(messages(application))
@@ -80,8 +80,9 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           rateTypeStandard,
+          None,
           Set(
-            AlcoholRegime(
+            RangeDetailsByRegime(
               regime,
               NonEmptySeq.fromSeqUnsafe(
                 Seq(
@@ -98,8 +99,7 @@ class RateBandHelperSpec extends SpecBase {
                 )
               )
             )
-          ),
-          None
+          )
         )
 
         val result = RateBandHelper.rateBandContent(rateBand)(messages(application))
@@ -124,8 +124,9 @@ class RateBandHelperSpec extends SpecBase {
           taxType,
           description,
           rateTypeStandard,
+          None,
           Set(
-            AlcoholRegime(
+            RangeDetailsByRegime(
               regime,
               NonEmptySeq.one(
                 ABVRange(
@@ -135,8 +136,7 @@ class RateBandHelperSpec extends SpecBase {
                 )
               )
             )
-          ),
-          None
+          )
         )
 
         val result = RateBandHelper.rateBandContent(rateBand)(messages(application))
@@ -161,8 +161,9 @@ class RateBandHelperSpec extends SpecBase {
             taxType,
             description,
             rateType,
+            None,
             Set(
-              AlcoholRegime(
+              RangeDetailsByRegime(
                 regime,
                 NonEmptySeq.one(
                   ABVRange(
@@ -172,8 +173,7 @@ class RateBandHelperSpec extends SpecBase {
                   )
                 )
               )
-            ),
-            None
+            )
           )
 
           val result = RateBandHelper.rateBandRecap(rateBand)(messages(application))
@@ -199,8 +199,9 @@ class RateBandHelperSpec extends SpecBase {
             taxType,
             description,
             rateType,
+            None,
             Set(
-              AlcoholRegime(
+              RangeDetailsByRegime(
                 regime,
                 NonEmptySeq.fromSeqUnsafe(
                   Seq(
@@ -217,8 +218,7 @@ class RateBandHelperSpec extends SpecBase {
                   )
                 )
               )
-            ),
-            None
+            )
           )
 
           val result = RateBandHelper.rateBandRecap(rateBand)(messages(application))
@@ -244,8 +244,9 @@ class RateBandHelperSpec extends SpecBase {
             taxType,
             description,
             rateType,
+            None,
             Set(
-              AlcoholRegime(
+              RangeDetailsByRegime(
                 regime,
                 NonEmptySeq.one(
                   ABVRange(
@@ -255,8 +256,7 @@ class RateBandHelperSpec extends SpecBase {
                   )
                 )
               )
-            ),
-            None
+            )
           )
 
           val result = RateBandHelper.rateBandRecap(rateBand)(messages(application))
@@ -279,9 +279,9 @@ class RateBandHelperSpec extends SpecBase {
     val regime                = regimeGen.sample.value
     val taxType               = "001"
     val description           = "test"
-    val label                 = ABVRangeName.Cider
+    val label                 = AlcoholType.Cider
     val alcoholLabel          = messages(s"return.journey.abv.interval.label.$label")
-    val secondaryLabel        = ABVRangeName.SparklingCider
+    val secondaryLabel        = AlcoholType.SparklingCider
     val secondaryAlcoholLabel = messages(s"return.journey.abv.interval.label.$secondaryLabel")
 
     val rateTypeStandard = Gen.oneOf(Core, DraughtRelief).sample.value

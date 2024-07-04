@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegimeName, UserAnswers}
+import models.{AlcoholRegime, UserAnswers}
 import pages.returns.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
@@ -26,13 +26,13 @@ import viewmodels.implicits._
 
 object TellUsAboutSingleSPRRateSummary {
 
-  def rows(regime: AlcoholRegimeName, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] = {
+  def rows(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Seq[SummaryListRow] = {
     val rows = for {
       rateBands         <- answers.getByKey(WhatDoYouNeedToDeclarePage, regime)
       dutyByTaxTypeList <- answers.getByKey(TellUsAboutSingleSPRRatePage, regime)
     } yield dutyByTaxTypeList.flatMap { dutyByTaxType =>
       val rateBand = rateBands
-        .find(_.taxType == dutyByTaxType.taxType)
+        .find(_.taxTypeCode == dutyByTaxType.taxType)
         .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: ${dutyByTaxType.taxType}"))
       Seq(
         SummaryListRowViewModel(
