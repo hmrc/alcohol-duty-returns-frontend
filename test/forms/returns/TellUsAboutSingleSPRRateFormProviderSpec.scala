@@ -116,7 +116,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
         (volumeAndRateByTaxType, acc: Map[String, String]) =>
           acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> volumeAndRateByTaxType.taxType,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
+              .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "invalid",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "invalid",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "invalid"
@@ -152,7 +153,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
         (volumeAndRateByTaxType, acc: Map[String, String]) =>
           acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> volumeAndRateByTaxType.taxType,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
+              .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "1.123",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "1.123",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.123"
@@ -188,7 +190,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
         (volumeAndRateByTaxType, acc: Map[String, String]) =>
           acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> volumeAndRateByTaxType.taxType,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
+              .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "100000000000",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100000000000",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "100000000000"
@@ -224,7 +227,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
         (volumeAndRateByTaxType, acc: Map[String, String]) =>
           acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> volumeAndRateByTaxType.taxType,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
+              .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "0",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "0",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "-1"
@@ -260,7 +264,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
         (volumeAndRateByTaxType, acc: Map[String, String]) =>
           acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> volumeAndRateByTaxType.taxType,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
+              .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "1.1",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100.1",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.1"
