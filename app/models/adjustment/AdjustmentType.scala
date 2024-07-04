@@ -40,7 +40,7 @@ object AdjustmentType extends Enumerable.Implicits {
     Drawback
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
+  def options(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
     RadioItem(
       content = Text(messages(s"adjustmentType.${value.toString}")),
       value = Some(value.toString),

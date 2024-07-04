@@ -25,11 +25,11 @@ import java.time.YearMonth
 case class AdjustmentEntry(
   index: Option[Int] = None,
   adjustmentType: Option[AdjustmentType] = None,
+  period: Option[YearMonth] = None,
   rateBand: Option[RateBand] = None,
   repackagedRateBand: Option[RateBand] = None,
   totalLitresVolume: Option[BigDecimal] = None,
   pureAlcoholVolume: Option[BigDecimal] = None,
-  period: Option[YearMonth] = None,
   sprDutyRate: Option[BigDecimal] = None,
   repackagedSprDutyRate: Option[BigDecimal] = None,
   duty: Option[BigDecimal] = None,

@@ -19,7 +19,7 @@ package services.productEntry
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
-import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.AdjustmentTypes
 import models.productEntry.ProductEntry
 import pages.productEntry.CurrentProductEntryPage
 import uk.gov.hmrc.http.HeaderCarrier
@@ -46,7 +46,11 @@ class ProductEntryServiceImpl @Inject() (
     for {
       taxDuty <-
         alcoholDutyCalculatorConnector
-          .calculateTaxDuty(volume, rate, Spoilt) // removing abv and adding adjustment for code to compile
+          .calculateTaxDuty(
+            volume,
+            rate,
+            AdjustmentTypes.Spoilt
+          ) // removing abv and adding adjustment for code to compile
     } yield productEntry.copy(
       duty = Some(taxDuty.duty)
     )

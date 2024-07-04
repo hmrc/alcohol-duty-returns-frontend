@@ -23,8 +23,6 @@ import models.adjustment.AdjustmentVolume
 import play.api.data.FormError
 import play.api.i18n.Messages
 
-import scala.collection.immutable.List
-
 class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with ModelGenerators with SpecBase {
 
   val regime   = regimeGen.sample.value

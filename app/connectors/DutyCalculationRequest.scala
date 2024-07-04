@@ -16,13 +16,13 @@
 
 package connectors
 
-import models.adjustment.AdjustmentType
+import models.adjustment.AdjustmentTypes
 import play.api.libs.json.{Json, OFormat}
 
 case class DutyCalculationRequest(
+  adjustmentType: AdjustmentTypes,
   pureAlcoholVolume: BigDecimal,
-  rate: BigDecimal,
-  adjustmentType: AdjustmentType
+  rate: BigDecimal
 )
 
 object DutyCalculationRequest {

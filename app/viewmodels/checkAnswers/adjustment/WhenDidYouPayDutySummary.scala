@@ -30,7 +30,7 @@ object WhenDidYouPayDutySummary extends YearMonthModelFormatter {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     adjustmentEntry.period.map { period =>
       val month            = period.getMonth.toString
-      val capitalizedMonth = month.charAt(0).toUpper + month.substring(1).toLowerCase
+      val capitalizedMonth = s"${month.charAt(0).toUpper}${month.substring(1).toLowerCase}"
       val value            =
         HtmlFormat.escape(capitalizedMonth).toString + " " + HtmlFormat
           .escape(period.getYear.toString)

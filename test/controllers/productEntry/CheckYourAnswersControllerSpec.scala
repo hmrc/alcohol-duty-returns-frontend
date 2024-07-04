@@ -21,7 +21,7 @@ import connectors.CacheConnector
 import generators.ModelGenerators
 import models.RateType.Core
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, UserAnswers}
+import models.{AlcoholByVolume, AlcoholRegimeName, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry._
 import play.api.inject.bind

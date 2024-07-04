@@ -21,6 +21,7 @@ import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
+import models.adjustment.AdjustmentTypes.fromAdjustmentType
 import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -48,8 +49,9 @@ class AdjustmentEntryServiceImpl @Inject() (
       adjustmentEntry.adjustmentType.getOrElse(throw new RuntimeException("Couldn't fetch adjustmentType from cache"))
 
     val taxDutyFuture           =
-      alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, rate, adjustmentType).map { taxDuty =>
-        adjustmentEntry.copy(duty = Some(taxDuty.duty))
+      alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, rate, fromAdjustmentType(adjustmentType)).map {
+        taxDuty =>
+          adjustmentEntry.copy(duty = Some(taxDuty.duty))
       }
     val updatedAdjustmentFuture = adjustmentType match {
       case RepackagedDraughtProducts =>
@@ -57,7 +59,11 @@ class AdjustmentEntryServiceImpl @Inject() (
         for {
           updatedAdjustment <- taxDutyFuture
           repackagedTaxDuty <-
-            alcoholDutyCalculatorConnector.calculateTaxDuty(pureAlcoholVolume, repackagedRate, adjustmentType)
+            alcoholDutyCalculatorConnector.calculateTaxDuty(
+              pureAlcoholVolume,
+              repackagedRate,
+              fromAdjustmentType(adjustmentType)
+            )
           newDuty           <- alcoholDutyCalculatorConnector.calculateAdjustmentTaxDuty(
                                  repackagedTaxDuty.duty,
                                  updatedAdjustment.duty.getOrElse(BigDecimal(0))

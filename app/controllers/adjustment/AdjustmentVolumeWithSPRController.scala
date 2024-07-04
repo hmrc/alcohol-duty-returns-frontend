@@ -23,10 +23,10 @@ import javax.inject.Inject
 import models.{AlcoholRegimeName, Mode}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumeWithSPRPage, CurrentAdjustmentEntryPage}
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import connectors.CacheConnector
-import models.adjustment.{AdjustmentEntry, AdjustmentType, AdjustmentVolumeWithSPR}
+import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
 import models.requests.DataRequest
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -92,35 +92,21 @@ class AdjustmentVolumeWithSPRController @Inject() (
         .fold(
           formWithErrors => handleFormErrors(mode, formWithErrors),
           value => {
-            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-            if (value.totalLitresVolume < value.pureAlcoholVolume) {
-              checkAdjustmentVolumes(
-                value,
-                mode,
-                adjustment.adjustmentType.getOrElse(
-                  throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-                ),
-                getRegime,
-                rateBandContent(
-                  adjustment.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
-                )
-              )
-            } else {
-              val (updatedAdjustment, hasChanged) = updateVolume(adjustment, value)
-              for {
-                updatedAnswers <- Future.fromTry(
-                                    request.userAnswers.set(
-                                      CurrentAdjustmentEntryPage,
-                                      updatedAdjustment.copy(
-                                        totalLitresVolume = Some(value.totalLitresVolume),
-                                        pureAlcoholVolume = Some(value.pureAlcoholVolume),
-                                        sprDutyRate = Some(value.sprDutyRate)
-                                      )
+            val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val (updatedAdjustment, hasChanged) = updateVolume(adjustment, value)
+            for {
+              updatedAnswers <- Future.fromTry(
+                                  request.userAnswers.set(
+                                    CurrentAdjustmentEntryPage,
+                                    updatedAdjustment.copy(
+                                      totalLitresVolume = Some(value.totalLitresVolume),
+                                      pureAlcoholVolume = Some(value.pureAlcoholVolume),
+                                      sprDutyRate = Some(value.sprDutyRate)
                                     )
                                   )
-                _              <- cacheConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(AdjustmentVolumeWithSPRPage, mode, updatedAnswers, hasChanged))
-            }
+                                )
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(AdjustmentVolumeWithSPRPage, mode, updatedAnswers, hasChanged))
           }
         )
   }
@@ -169,31 +155,4 @@ class AdjustmentVolumeWithSPRController @Inject() (
         )
     }
 
-  private def checkAdjustmentVolumes(
-    adjustmentVolume: AdjustmentVolumeWithSPR,
-    mode: Mode,
-    adjustmentType: AdjustmentType,
-    regime: AlcoholRegimeName,
-    rateBandContent: String
-  )(implicit
-    request: Request[_],
-    messages: Messages
-  ): Future[Result] =
-    Future.successful(
-      BadRequest(
-        view(
-          formProvider(regime)(messages)
-            .withError(
-              "adjustment-pure-alcohol-input",
-              "adjustmentVolume.error.pureAlcoholVolume.lessThanExpected",
-              messages(s"return.regime.$regime")
-            )
-            .fill(adjustmentVolume),
-          mode,
-          adjustmentType,
-          regime,
-          rateBandContent
-        )(request, messages)
-      )
-    )
 }

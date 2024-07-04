@@ -86,7 +86,7 @@ class AdjustmentVolumesAndRateFormatter(
       errors => Left(errors),
       volumes =>
         if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
-          Left(Seq(FormError(nameToId(s"$key.pureAlcoholVolume"), inconsistentKey)))
+          Left(Seq(FormError(nameToId(s"$key.pureAlcoholVolume"), inconsistentKey, args)))
         } else {
           Right(volumes)
         }
