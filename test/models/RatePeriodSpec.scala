@@ -17,7 +17,10 @@
 package models
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import generators.ModelGenerators
+import models.AlcoholRegime.Beer
+import models.RateType.Core
 import org.scalacheck.Gen
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -56,7 +59,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
         JsString("DraughtAndSmallProducerRelief").as[RateType] mustEqual RateType.DraughtAndSmallProducerRelief
       }
       "should return an exception in response to an unrecognised string" in {
-        JsString("some-other").validate[RateType] mustEqual JsError("some-other is not a valid RateType")
+        JsString("some-other").validate[RateType] mustEqual JsError("error.expected.validenumvalue")
       }
       "should return a JsError when passed a type that is not a string" in {
         val result = Json.fromJson[RateType](JsBoolean(true))
@@ -144,6 +147,87 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
         result mustBe a[JsSuccess[_]]
         result.get mustEqual optionYearMonth
       }
+    }
+  }
+
+  "Rate Band" - {
+    "should deserialise a json into a RateBand object" in {
+      val json =
+        """
+          |      {
+          |        "taxTypeCode": "311",
+          |        "description": "Beer from 1.3% to 3.4%",
+          |        "rateType": "Core",
+          |        "rate": 9.27,
+          |        "rangeDetails": [
+          |          {
+          |            "alcoholRegime":"Beer",
+          |            "abvRanges": [
+          |              {
+          |                "alcoholType": "Beer",
+          |                "minABV": 1.3,
+          |                "maxABV": 3.4
+          |              }
+          |            ]
+          |          }
+          |        ]
+          |      }
+          |""".stripMargin
+
+      val result = Json.parse(json).validate[RateBand].get
+
+      result mustBe a[RateBand]
+      result.taxTypeCode mustBe "311"
+      result.rateType mustBe Core
+      result.rangeDetails.size mustBe 1
+      result.rangeDetails.head.alcoholRegime mustBe Beer
+      result.rangeDetails.head.abvRanges.length mustBe 1
+      result.rangeDetails.head.abvRanges.head mustBe ABVRange(
+        AlcoholType.Beer,
+        AlcoholByVolume(1.3),
+        AlcoholByVolume(3.4)
+      )
+      result.rate mustBe Some(BigDecimal(9.27))
+    }
+
+    "serialize RateBand object into Json" in {
+      val rateBand = RateBand(
+        taxTypeCode = "311",
+        description = "Description",
+        rateType = Core,
+        rangeDetails = Set(
+          RangeDetailsByRegime(
+            AlcoholRegime.Beer,
+            NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(1.3), AlcoholByVolume(3.4)))
+          )
+        ),
+        rate = Some(BigDecimal(9.27))
+      )
+
+      val expectedResult = """
+                             |      {
+                             |        "taxTypeCode": "311",
+                             |        "description": "Description",
+                             |        "rateType": "Core",
+                             |        "rate": 9.27,
+                             |        "rangeDetails": [
+                             |          {
+                             |            "alcoholRegime":"Beer",
+                             |            "abvRanges": [
+                             |              {
+                             |                "alcoholType": "Beer",
+                             |                "minABV": 1.3,
+                             |                "maxABV": 3.4
+                             |              }
+                             |            ]
+                             |          }
+                             |        ]
+                             |      }
+                             |""".stripMargin.replace(" ", "").replace("\n", "")
+
+      val result = Json.toJson(rateBand)
+
+      result.toString() mustBe expectedResult
     }
   }
 

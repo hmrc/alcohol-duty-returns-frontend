@@ -16,11 +16,11 @@
 
 package models
 
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import enumeratum.{Enum, EnumEntry, PlayEnum}
+import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
 
 sealed trait AlcoholRegime extends EnumEntry
-
-object AlcoholRegime extends Enum[AlcoholRegime] with PlayJsonEnum[AlcoholRegime] {
+object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {
   val values = findValues
 
   case object Beer extends AlcoholRegime
@@ -29,5 +29,30 @@ object AlcoholRegime extends Enum[AlcoholRegime] with PlayJsonEnum[AlcoholRegime
   case object Spirits extends AlcoholRegime
   case object OtherFermentedProduct extends AlcoholRegime
 
-  override def toString: String = "alcoholRegime"
+  implicit val format: Format[AlcoholRegime] = new Format[AlcoholRegime] {
+    override def reads(json: JsValue): JsResult[AlcoholRegime] = json.validate[String] match {
+      case JsSuccess(value, _) =>
+        value match {
+          case "Beer"                  => JsSuccess(Beer)
+          case "Cider"                 => JsSuccess(Cider)
+          case "Wine"                  => JsSuccess(Wine)
+          case "Spirits"               => JsSuccess(Spirits)
+          case "OtherFermentedProduct" => JsSuccess(OtherFermentedProduct)
+          case s                       => JsError(s"$s is not a valid AlcoholRegime")
+        }
+      case e: JsError          => e
+    }
+
+    override def writes(o: AlcoholRegime): JsValue = JsString(o.toString)
+  }
+
+  def fromString(str: String): Option[AlcoholRegime] =
+    str match {
+      case "Beer"                  => Some(Beer)
+      case "Cider"                 => Some(Cider)
+      case "Wine"                  => Some(Wine)
+      case "Spirits"               => Some(Spirits)
+      case "OtherFermentedProduct" => Some(OtherFermentedProduct)
+      case _                       => None
+    }
 }

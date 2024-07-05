@@ -17,10 +17,11 @@
 package controllers.productEntry
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
 import models.productEntry.ProductEntry
-import models.{AlcoholByVolume, AlcoholRegime, CheckMode, NormalMode, RateBand, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, CheckMode, NormalMode, RangeDetailsByRegime, RateBand, RateType}
 import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry.CurrentProductEntryPage
@@ -62,10 +63,19 @@ class TaxTypeControllerSpec extends SpecBase {
     taxCode,
     "some band",
     RateType.DraughtRelief,
-    Set(alcoholRegime),
-    AlcoholByVolume(0.1),
-    AlcoholByVolume(5.8),
-    rate
+    rate,
+    Set(
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            AlcoholType.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    )
   )
   val rateBandList = Seq(rateBand)
 

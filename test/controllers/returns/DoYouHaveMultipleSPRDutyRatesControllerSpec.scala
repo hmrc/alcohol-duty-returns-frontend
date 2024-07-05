@@ -14,65 +14,70 @@
  * limitations under the License.
  */
 
-package controllers.productEntry
+package controllers.returns
 
 import base.SpecBase
-import forms.productEntry.DeclareAlcoholDutyQuestionFormProvider
+import forms.returns.DoYouHaveMultipleSPRDutyRatesFormProvider
 import models.NormalMode
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import pages.returns.DoYouHaveMultipleSPRDutyRatesPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
 import connectors.CacheConnector
-import views.html.productEntry.DeclareAlcoholDutyQuestionView
+import uk.gov.hmrc.http.HttpResponse
+import views.html.returns.DoYouHaveMultipleSPRDutyRatesView
 
 import scala.concurrent.Future
 
-class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
+class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DeclareAlcoholDutyQuestionFormProvider()
+  val formProvider = new DoYouHaveMultipleSPRDutyRatesFormProvider()
   val form         = formProvider()
+  val regime       = regimeGen.sample.value
 
-  lazy val declareAlcoholDutyQuestionRoute = routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
+  lazy val doYouHaveMultipleSPRDutyRatesRoute =
+    controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime).url
 
-  "DeclareAlcoholDutyQuestion Controller" - {
+  "DoYouHaveMultipleSPRDutyRates Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
+        val request = FakeRequest(GET, doYouHaveMultipleSPRDutyRatesRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
+        val view = application.injector.instanceOf[DoYouHaveMultipleSPRDutyRatesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, regime, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(DeclareAlcoholDutyQuestionPage, true).success.value
+      val userAnswers = emptyUserAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
+        val request = FakeRequest(GET, doYouHaveMultipleSPRDutyRatesRoute)
 
-        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
+        val view = application.injector.instanceOf[DoYouHaveMultipleSPRDutyRatesView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), regime, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -85,41 +90,15 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
-            .withFormUrlEncodedBody(("declareAlcoholDutyQuestion-yesNoValue", "true"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
-    }
-
-    "must redirect to the index page when valid question is answered as No" in {
-
-      val mockCacheConnector = mock[CacheConnector]
-
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[ProductEntryNavigator].toInstance(new FakeProductEntryNavigator(onwardRoute, hasValueChanged = true)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
-            .withFormUrlEncodedBody(("declareAlcoholDutyQuestion-yesNoValue", "false"))
+          FakeRequest(POST, doYouHaveMultipleSPRDutyRatesRoute)
+            .withFormUrlEncodedBody(("doYouHaveMultipleSPRDutyRates-yesNoValue", "true"))
 
         val result = route(application, request).value
 
@@ -134,17 +113,17 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
+          FakeRequest(POST, doYouHaveMultipleSPRDutyRatesRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
+        val view = application.injector.instanceOf[DoYouHaveMultipleSPRDutyRatesView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, regime, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -153,7 +132,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, declareAlcoholDutyQuestionRoute)
+        val request = FakeRequest(GET, doYouHaveMultipleSPRDutyRatesRoute)
 
         val result = route(application, request).value
 
@@ -168,7 +147,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
+          FakeRequest(POST, doYouHaveMultipleSPRDutyRatesRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
