@@ -23,8 +23,8 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.ViewReturnViewModel
 import viewmodels.DateTimeHelper
+import viewmodels.returns.ViewReturnViewModel
 import views.html.returns.ViewReturnView
 
 import javax.inject.Inject
@@ -62,11 +62,20 @@ class ViewReturnController @Inject() (
               val adjustmentsViewModel   = viewModel.createAdjustmentsViewModel(returnDetails)
               val totalDueViewModel      = viewModel.createTotalDueViewModel(returnDetails)
               val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriod.period)
-              val submittedTimeStr       = dateTimeHelper.formatDateMonthYearAtHourMinuteMerediem(
-                dateTimeHelper.instantToDateTime(returnDetails.identification.submittedTime)
-              )
+              val submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
+              val submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
+              val submittedTime          = dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
+              val submittedTimeStr       = dateTimeHelper.formatHourMinuteMerediem(submittedTime)
+
               Ok(
-                view(returnPeriodStr, submittedTimeStr, dutyToDeclareViewModel, adjustmentsViewModel, totalDueViewModel)
+                view(
+                  returnPeriodStr,
+                  submittedDateStr,
+                  submittedTimeStr,
+                  dutyToDeclareViewModel,
+                  adjustmentsViewModel,
+                  totalDueViewModel
+                )
               )
             }
         }

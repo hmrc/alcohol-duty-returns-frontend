@@ -21,6 +21,7 @@ import models.productEntry.ProductEntry
 import pages.productEntry.ProductEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableTotalViewModel, TableViewModel}
 
 object ProductListSummaryHelper {
@@ -56,8 +57,8 @@ object ProductListSummaryHelper {
     productEntries.zipWithIndex.map { case (productEntry, index) =>
       TableRowViewModel(
         cells = Seq(
-          Text(productEntry.name.getOrElse("")),
-          Text(messages("site.currency.2DP", productEntry.duty.getOrElse(BigDecimal(0))))
+          TableRow(content = Text(productEntry.name.getOrElse(""))),
+          TableRow(content = Text(messages("site.currency.2DP", productEntry.duty.getOrElse(BigDecimal(0)))))
         ),
         actions = Seq(
           TableRowActionViewModel(

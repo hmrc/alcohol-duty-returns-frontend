@@ -27,21 +27,23 @@
     govukTable: GovukTable
 )
 
-@(period: String, submittedAt: String, dutyToDeclare: TableViewModel, adjustments: TableViewModel, totalDue: TableTotalViewModel)(implicit request: Request[_], messages: Messages)
+@(period: String, submittedAtDate: String, submittedAtTime: String, dutyToDeclare: TableViewModel, adjustments: TableViewModel, totalDue: TableTotalViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("viewReturn.title"))) {
+@layout(pageTitle = titleNoForm(messages("viewReturn.title")), fullWidth = true) {
 
     @pageHeading(messages("viewReturn.heading"))
 
-    @sectionHeading("returnPeriodId", period)
+    <h2 class="govuk-heading-m">@period</h2>
 
-    @paragraph(s"Submitted at $submittedAt")
+    @paragraph(messages("viewReturn.submittedAt", submittedAtDate, submittedAtTime))
+
+    <br>
 
     @govukTable(Table(
         caption = Some(messages("viewReturn.alcoholDuty.caption")),
         captionClasses = "govuk-table__caption--m",
         head = Some(dutyToDeclare.head),
-        rows = dutyToDeclare.rows.map(_.cells.map(TableRow(_)))
+        rows = dutyToDeclare.rows.map(_.cells)
     ))
 
     @{dutyToDeclare.total.map { total =>
@@ -50,11 +52,13 @@
         ))
     }}
 
+    <br>
+
     @govukTable(Table(
         caption = Some(messages("viewReturn.adjustments.caption")),
         captionClasses = "govuk-table__caption--m",
         head = Some(adjustments.head),
-        rows = adjustments.rows.map(_.cells.map(TableRow(_)))
+        rows = adjustments.rows.map(_.cells)
     ))
 
     @{adjustments.total.map { total =>
@@ -63,7 +67,11 @@
         ))
     }}
 
+    <br>
+
     @govukTable(Table(
+        caption = Some(messages("viewReturn.dutyDue.caption")),
+        captionClasses = "govuk-table__caption--m",
         head = Some(totalDue.toHeadCells())
     ))
 }

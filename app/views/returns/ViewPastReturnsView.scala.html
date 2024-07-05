@@ -42,7 +42,6 @@
             captionClasses = "govuk-table__caption--m",
             head = Some(outstandingReturns.head),
             rows = outstandingReturns.rows.map(row => {
-                val labelRows = row.cells.map(cell => TableRow(cell))
                 val actions = TableRow(content = HtmlContent(tableRowActionList(
                 id = "outstandingReturnsId",
                 actions = row.actions.map(action => tableRowAction(
@@ -52,7 +51,7 @@
                     visuallyHiddenContent = action.visuallyHiddenText
                     )
                 ))))
-                labelRows :+ actions
+                row.cells :+ actions
             }
             ))
         )
@@ -62,7 +61,6 @@
             captionClasses = "govuk-table__caption--m",
             head = Some(completedReturns.head),
             rows = completedReturns.rows.map(row => {
-                val labelRows = row.cells.map(cell => TableRow(cell))
                 val actions = TableRow(content = HtmlContent(tableRowActionList(
                 id = "completedReturnsId",
                 actions = row.actions.map(action => tableRowAction(
@@ -72,7 +70,7 @@
                     visuallyHiddenContent = action.visuallyHiddenText
                     )
                 ))))
-                labelRows :+ actions
+                row.cells :+ actions
             }
             ))
         )

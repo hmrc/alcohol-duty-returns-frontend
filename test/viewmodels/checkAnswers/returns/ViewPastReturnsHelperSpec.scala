@@ -23,6 +23,7 @@ import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
+import viewmodels.returns.ViewPastReturnsHelper
 
 import java.time.LocalDate
 
@@ -47,13 +48,13 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
     }
 
-    "must return the COMPLETED status for a fulfilled obligation" in new SetUp {
+    "must return the Completed status for a fulfilled obligation" in new SetUp {
       val obligationData = Seq(obligationDataSingleFulfilled)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>
-        row.cells(1).asHtml shouldBe new GovukTag()(
-          Tag(content = Text(messages("COMPLETED")), classes = "govuk-tag--green")
+        row.cells(1).content.asHtml shouldBe new GovukTag()(
+          Tag(content = Text(messages("Completed")), classes = "govuk-tag--green")
         )
       }
     }
@@ -67,13 +68,13 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
     }
 
-    "must return the DUE status an open obligation" in new SetUp {
+    "must return the Due status an open obligation" in new SetUp {
       val obligationData = Seq(obligationDataSingleOpen)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>
-        row.cells(1).asHtml shouldBe new GovukTag()(
-          Tag(content = Text(messages("DUE")), classes = "govuk-tag--blue")
+        row.cells(1).content.asHtml shouldBe new GovukTag()(
+          Tag(content = Text(messages("Due")), classes = "govuk-tag--blue")
         )
       }
     }
@@ -88,8 +89,8 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
 
     "must return a sorted table by due date in descending order for Open obligations" in new SetUp {
       val table = viewPastReturnsHelper.getReturnsTable(multipleOpenObligations)
-      table.rows.size                                         shouldBe multipleOpenObligations.size
-      table.rows.map(row => row.cells.head.asHtml.toString()) shouldBe Seq(
+      table.rows.size                                                 shouldBe multipleOpenObligations.size
+      table.rows.map(row => row.cells.head.content.asHtml.toString()) shouldBe Seq(
         Text("December 2024").asHtml.toString(),
         Text("November 2024").asHtml.toString(),
         Text("October 2024").asHtml.toString(),
@@ -100,8 +101,8 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
 
     "must return a sorted table by due date in descending order for fulfilled obligations" in new SetUp {
       val table = viewPastReturnsHelper.getReturnsTable(multipleFulfilledObligations)
-      table.rows.size                                         shouldBe multipleFulfilledObligations.size
-      table.rows.map(row => row.cells.head.asHtml.toString()) shouldBe Seq(
+      table.rows.size                                                 shouldBe multipleFulfilledObligations.size
+      table.rows.map(row => row.cells.head.content.asHtml.toString()) shouldBe Seq(
         Text("July 2024").asHtml.toString(),
         Text("June 2024").asHtml.toString(),
         Text("May 2024").asHtml.toString(),

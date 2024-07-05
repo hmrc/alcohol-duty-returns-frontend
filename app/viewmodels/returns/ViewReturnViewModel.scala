@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
-import viewmodels.{TableRowViewModel, TableTotalViewModel, TableViewModel}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
+import viewmodels.{Money, TableRowViewModel, TableTotalViewModel, TableViewModel}
 
 import javax.inject.Inject
 
@@ -43,7 +44,10 @@ class ViewReturnViewModel @Inject() () {
       HeadCell(content = Text(messages("viewReturn.table.description.legend")), classes = "govuk-!-width-one-quarter"),
       HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = "govuk-!-width-one-quarter"),
       HeadCell(content = Text(messages("viewReturn.table.dutyRate.legend")), classes = "govuk-!-width-one-quarter"),
-      HeadCell(content = Text(messages("viewReturn.table.dutyValue.legend")), classes = "govuk-!-width-one-quarter")
+      HeadCell(
+        content = Text(messages("viewReturn.table.dutyDue.legend")),
+        classes = "govuk-!-width-one-quarter text-align-right"
+      )
     )
 
   private def noAlcoholDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] =
@@ -52,7 +56,10 @@ class ViewReturnViewModel @Inject() () {
         content = Text(messages("viewReturn.table.description.legend")),
         classes = "govuk-!-width-three-quarters"
       ),
-      HeadCell(content = Text(messages("viewReturn.table.dutyDue.legend")), classes = "govuk-!-width-one-quarter")
+      HeadCell(
+        content = Text(messages("viewReturn.table.dutyDue.legend")),
+        classes = "govuk-!-width-one-quarter text-align-right"
+      )
     )
 
   private def alcoholDeclaredRows(
@@ -61,21 +68,30 @@ class ViewReturnViewModel @Inject() () {
     alcoholDeclaredDetails.map { alcoholDeclaredDetailsRow =>
       TableRowViewModel(
         cells = Seq(
-          Text(alcoholDeclaredDetailsRow.taxType),
-          Text(
-            s"${messages("site.2DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
+          TableRow(content = Text(alcoholDeclaredDetailsRow.taxType)),
+          TableRow(content =
+            Text(
+              s"${messages("site.2DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
+            )
           ),
-          Text(
-            s"${messages("site.currency.2DP", alcoholDeclaredDetailsRow.dutyRate)} ${messages("site.unit.per.litre")}"
+          TableRow(content =
+            Text(
+              s"${Money.format(alcoholDeclaredDetailsRow.dutyRate)} ${messages("site.unit.per.litre")}"
+            )
           ),
-          Text(messages("site.currency.2DP", alcoholDeclaredDetailsRow.dutyValue))
+          TableRow(content = Text(Money.format(alcoholDeclaredDetailsRow.dutyValue)), classes = "text-align-right")
         )
       )
     }
 
   private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel] =
     Seq(
-      TableRowViewModel(cells = Seq(Text(messages("viewReturn.alcoholDuty.noneDeclared")), Text(messages("site.nil"))))
+      TableRowViewModel(cells =
+        Seq(
+          TableRow(content = Text(messages("viewReturn.alcoholDuty.noneDeclared"))),
+          TableRow(content = Text(messages("site.nil")), classes = "text-align-right")
+        )
+      )
     )
 
   private def dutyToDeclareTotal(alcoholDeclared: ReturnAlcoholDeclared)(implicit
@@ -87,8 +103,8 @@ class ViewReturnViewModel @Inject() () {
         classes = "govuk-!-width-three-quarters"
       ),
       HeadCell(
-        content = Text(messages("site.currency.2DP", alcoholDeclared.total)),
-        classes = "govuk-!-width-one-quarter"
+        content = Text(Money.format(alcoholDeclared.total)),
+        classes = "govuk-!-width-one-quarter text-align-right"
       )
     )
 
@@ -115,7 +131,7 @@ class ViewReturnViewModel @Inject() () {
       HeadCell(content = Text(messages("viewReturn.table.description.legend"))),
       HeadCell(content = Text(messages("viewReturn.table.lpa.legend"))),
       HeadCell(content = Text(messages("viewReturn.table.dutyRate.legend"))),
-      HeadCell(content = Text(messages("viewReturn.table.dutyValue.legend")))
+      HeadCell(content = Text(messages("viewReturn.table.dutyValue.legend")), classes = "text-align-right")
     )
 
   private def noAdjustmentsTableHeader()(implicit messages: Messages): Seq[HeadCell] =
@@ -124,7 +140,10 @@ class ViewReturnViewModel @Inject() () {
         content = Text(messages("viewReturn.table.description.legend")),
         classes = "govuk-!-width-three-quarters"
       ),
-      HeadCell(content = Text(messages("viewReturn.table.dutyValue.legend")), classes = "govuk-!-width-one-quarter")
+      HeadCell(
+        content = Text(messages("viewReturn.table.dutyValue.legend")),
+        classes = "govuk-!-width-one-quarter text-align-right"
+      )
     )
 
   private def adjustmentRows(
@@ -133,20 +152,29 @@ class ViewReturnViewModel @Inject() () {
     returnAdjustments.map { returnAdjustmentsRow =>
       TableRowViewModel(
         cells = Seq(
-          Text(messages(s"viewReturn.adjustments.type.${returnAdjustmentsRow.adjustmentTypeKey}")),
-          Text(returnAdjustmentsRow.taxType),
-          Text(
-            s"${messages("site.2DP", returnAdjustmentsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
+          TableRow(content = Text(messages(s"viewReturn.adjustments.type.${returnAdjustmentsRow.adjustmentTypeKey}"))),
+          TableRow(content = Text(returnAdjustmentsRow.taxType)),
+          TableRow(content =
+            Text(
+              s"${messages("site.2DP", returnAdjustmentsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
+            )
           ),
-          Text(s"${messages("site.currency.2DP", returnAdjustmentsRow.dutyRate)} ${messages("site.unit.per.litre")}"),
-          Text(messages("site.currency.2DP", returnAdjustmentsRow.dutyValue))
+          TableRow(content =
+            Text(s"${Money.format(returnAdjustmentsRow.dutyRate)} ${messages("site.unit.per.litre")}")
+          ),
+          TableRow(content = Text(Money.format(returnAdjustmentsRow.dutyValue)), classes = "text-align-right")
         )
       )
     }
 
   private def nilAdjustmentsRow()(implicit messages: Messages): Seq[TableRowViewModel] =
     Seq(
-      TableRowViewModel(cells = Seq(Text(messages("viewReturn.adjustments.noneDeclared")), Text(messages("site.nil"))))
+      TableRowViewModel(cells =
+        Seq(
+          TableRow(content = Text(messages("viewReturn.adjustments.noneDeclared"))),
+          TableRow(content = Text(messages("site.nil")), classes = "text-align-right")
+        )
+      )
     )
 
   private def adjustmentsTotal(adjustments: ReturnAdjustments)(implicit messages: Messages): TableTotalViewModel =
@@ -155,7 +183,7 @@ class ViewReturnViewModel @Inject() () {
         content = Text(messages("viewReturn.adjustments.total.legend")),
         classes = "govuk-!-width-three-quarters"
       ),
-      HeadCell(content = Text(messages("site.currency.2DP", adjustments.total)), classes = "govuk-!-width-one-quarter")
+      HeadCell(content = Text(Money.format(adjustments.total)), classes = "govuk-!-width-one-quarter text-align-right")
     )
 
   def createTotalDueViewModel(returnDetails: ReturnDetails)(implicit messages: Messages): TableTotalViewModel = {
@@ -167,15 +195,15 @@ class ViewReturnViewModel @Inject() () {
       ) {
         Text(messages("site.nil"))
       } else {
-        Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
+        Text(Money.format(returnDetails.totalDutyDue.totalDue))
       }
 
     TableTotalViewModel(
       HeadCell(
-        content = Text(messages("viewReturn.totalDutyDue.total.legend")),
+        content = Text(messages("viewReturn.dutyDue.total.legend")),
         classes = "govuk-!-width-three-quarters"
       ),
-      HeadCell(content = content, classes = "govuk-!-width-one-quarter")
+      HeadCell(content = content, classes = "govuk-!-width-one-quarter text-align-right")
     )
   }
 }

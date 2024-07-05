@@ -16,20 +16,19 @@
 
 package viewmodels
 
-import play.api.mvc.Call
-import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
+import play.api.i18n.Messages
 
-case class TableViewModel(
-  head: Seq[HeadCell],
-  rows: Seq[TableRowViewModel],
-  total: Option[TableTotalViewModel] = None
-)
+object Money {
+  private val minus: Char = 0x2212
 
-case class TableRowViewModel(cells: Seq[TableRow], actions: Seq[TableRowActionViewModel] = Seq.empty)
-
-case class TableTotalViewModel(legend: HeadCell, total: HeadCell) {
-  def toHeadCells(): Seq[HeadCell] =
-    Seq(legend, total)
+  /**
+    * Note: This is intended to work with values that are already to 2dp. The rounding rules for
+    * tax may be up or down depending on the context and this code will round to nearest.
+    */
+  def format(amount: BigDecimal)(implicit messages: Messages): String =
+    if (amount < 0) {
+      s"$minus${messages("site.currency.2DP", amount.abs)}"
+    } else {
+      messages("site.currency.2DP", amount)
+    }
 }
-
-case class TableRowActionViewModel(label: String, href: Call, visuallyHiddenText: Option[String] = None)

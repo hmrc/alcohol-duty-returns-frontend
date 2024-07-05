@@ -16,20 +16,23 @@
 
 package viewmodels
 
-import play.api.mvc.Call
-import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
+import base.SpecBase
 
-case class TableViewModel(
-  head: Seq[HeadCell],
-  rows: Seq[TableRowViewModel],
-  total: Option[TableTotalViewModel] = None
-)
+class MoneySpec extends SpecBase {
+  "Money" - {
+    implicit val messages = getMessages(app)
 
-case class TableRowViewModel(cells: Seq[TableRow], actions: Seq[TableRowActionViewModel] = Seq.empty)
+    "should format a positive amount to 2dp" in {
+      val amount = BigDecimal("12345.6789")
 
-case class TableTotalViewModel(legend: HeadCell, total: HeadCell) {
-  def toHeadCells(): Seq[HeadCell] =
-    Seq(legend, total)
+      Money.format(amount) mustBe "£12,345.68"
+    }
+
+    "should format a negative amount to 2dp" in {
+      val amount      = BigDecimal("-12345.6789")
+      val minus: Char = 0x2212
+
+      Money.format(amount) mustBe s"$minus£12,345.68"
+    }
+  }
 }
-
-case class TableRowActionViewModel(label: String, href: Call, visuallyHiddenText: Option[String] = None)

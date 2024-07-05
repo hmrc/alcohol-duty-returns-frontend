@@ -22,6 +22,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import viewmodels.returns.ViewReturnViewModel
 
 import java.time.Instant
 
@@ -41,15 +42,15 @@ class ViewReturnViewModelSpec extends SpecBase {
       "should return a model with no entries when a nil return" in new SetUp {
         val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(nilReturn)
 
-        alcoholDeclaredViewModel.rows.size          shouldBe 1
-        alcoholDeclaredViewModel.rows.head.cells(1) shouldBe Text(messages("site.nil"))
+        alcoholDeclaredViewModel.rows.size                  shouldBe 1
+        alcoholDeclaredViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
 
       "should return a model with no entries when a nil return with empty sections" in new SetUp {
         val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(emptyReturnDetails)
 
-        alcoholDeclaredViewModel.rows.size          shouldBe 1
-        alcoholDeclaredViewModel.rows.head.cells(1) shouldBe Text(messages("site.nil"))
+        alcoholDeclaredViewModel.rows.size                  shouldBe 1
+        alcoholDeclaredViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
     }
 
@@ -57,24 +58,26 @@ class ViewReturnViewModelSpec extends SpecBase {
       "should return a model with data when adjustments declared" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails)
 
-        adjustmentsViewModel.rows.size               shouldBe returnDetails.adjustments.adjustmentDetails.get.size
+        adjustmentsViewModel.rows.size shouldBe returnDetails.adjustments.adjustmentDetails.get.size
+
+        val minus: Char = 0x2212
         adjustmentsViewModel.total.get.total.content shouldBe Text(
-          messages("site.currency.2DP", returnDetails.adjustments.total)
+          s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
         )
       }
 
       "should return a model with no entries when a nil return" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn)
 
-        adjustmentsViewModel.rows.size          shouldBe 1
-        adjustmentsViewModel.rows.head.cells(1) shouldBe Text(messages("site.nil"))
+        adjustmentsViewModel.rows.size                  shouldBe 1
+        adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
 
       "should return a model with no entries when a nil return with empty sections" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails)
 
-        adjustmentsViewModel.rows.size          shouldBe 1
-        adjustmentsViewModel.rows.head.cells(1) shouldBe Text(messages("site.nil"))
+        adjustmentsViewModel.rows.size                  shouldBe 1
+        adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
     }
 
@@ -116,15 +119,15 @@ class ViewReturnViewModelSpec extends SpecBase {
       "should return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn)
 
-        adjustmentsViewModel.rows.size          shouldBe 1
-        adjustmentsViewModel.rows.head.cells(1) shouldBe Text(messages("site.nil"))
+        adjustmentsViewModel.rows.size                  shouldBe 1
+        adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
 
       "should return a model with no entries when a nil return with empty sections (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails)
 
-        adjustmentsViewModel.rows.size          shouldBe 1
-        adjustmentsViewModel.rows.head.cells(1) shouldBe Text(messages("site.nil"))
+        adjustmentsViewModel.rows.size                  shouldBe 1
+        adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
     }
   }

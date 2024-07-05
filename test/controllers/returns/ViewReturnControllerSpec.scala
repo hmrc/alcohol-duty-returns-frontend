@@ -24,8 +24,8 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
+import viewmodels.returns.ViewReturnViewModel
 import viewmodels.{TableTotalViewModel, TableViewModel}
-import viewmodels.checkAnswers.returns.ViewReturnViewModel
 import views.html.returns.ViewReturnView
 
 import java.time.Instant
@@ -56,7 +56,8 @@ class ViewReturnControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           returnPeriodStr,
-          submittedTimeStr,
+          submittedAtDateStr,
+          submittedAtTimeStr,
           tableModel,
           tableModel,
           totalTableModel
@@ -105,8 +106,11 @@ class ViewReturnControllerSpec extends SpecBase {
     val returnDetails                 = exampleReturnDetails(periodKey, Instant.now(clock))
     val returnDetailsWithBadPeriodKey = exampleReturnDetails(badPeriodKey, Instant.now(clock))
     val returnPeriodStr               = dateTimeHelper.formatMonthYear(returnPeriod.period)
-    val submittedTimeStr              = dateTimeHelper.formatDateMonthYearAtHourMinuteMerediem(
-      dateTimeHelper.instantToDateTime(returnDetails.identification.submittedTime)
+    val submittedAtDateStr            = dateTimeHelper.formatDateMonthYear(
+      dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
+    )
+    val submittedAtTimeStr            = dateTimeHelper.formatHourMinuteMerediem(
+      dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
     )
 
     val tableModel           = TableViewModel(Seq.empty, Seq.empty)

@@ -18,21 +18,33 @@ package viewmodels
 
 import base.SpecBase
 
-import java.time.{Instant, LocalDateTime, YearMonth}
+import java.time.{Instant, LocalDate, LocalTime, YearMonth}
 import java.time.format.DateTimeFormatter
 
 class DateTimeHelperSpec extends SpecBase {
   "DateTimeHelper" - {
-    "should convert an Instant to a LocalDateTime" in {
-      DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(
-        new DateTimeHelper().instantToDateTime(Instant.now(clock))
-      ) mustBe "2024-06-11T16:07:47.838"
+    "should convert an Instant to a LocalDate" in {
+      DateTimeFormatter.ISO_LOCAL_DATE.format(
+        new DateTimeHelper().instantToLocalDate(Instant.now(clock))
+      ) mustBe "2024-06-11"
     }
 
-    "format a LocalDateTime to the format 'day month year at hour:minuteam/pm'" in {
-      new DateTimeHelper().formatDateMonthYearAtHourMinuteMerediem(
-        LocalDateTime.now(clock)
-      ) mustBe "11 June 2024 at 3:07pm"
+    "should convert an Instant to a LocalTime" in {
+      DateTimeFormatter.ISO_LOCAL_TIME.format(
+        new DateTimeHelper().instantToLocalTime(Instant.now(clock))
+      ) mustBe "16:07:47.838"
+    }
+
+    "format a LocalDate to the format 'day month year'" in {
+      new DateTimeHelper().formatDateMonthYear(
+        LocalDate.now(clock)
+      ) mustBe "11 June 2024"
+    }
+
+    "format a LocalTime to the format 'hour:minuteam/pm'" in {
+      new DateTimeHelper().formatHourMinuteMerediem(
+        LocalTime.now(clock)
+      ) mustBe "3:07pm"
     }
 
     "format a YearMonth to the format 'month year'" in {

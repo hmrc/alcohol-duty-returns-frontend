@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import models.ObligationStatus.Open
 import models.{ObligationData, ObligationStatusToDisplay, ReturnPeriod}
@@ -23,6 +23,7 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 import java.time.format.DateTimeFormatter
@@ -56,8 +57,8 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
       val statusTag = createStatusTag(status)
       TableRowViewModel(
         cells = Seq(
-          Text(formatYearMonth(getPeriod(periodKey))),
-          HtmlContent(statusTag)
+          TableRow(content = Text(formatYearMonth(getPeriod(periodKey)))),
+          TableRow(content = HtmlContent(statusTag))
         ),
         actions = getAction(messages, obligationData, status, periodKey)
       )
