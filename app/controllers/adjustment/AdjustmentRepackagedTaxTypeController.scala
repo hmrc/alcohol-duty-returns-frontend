@@ -107,7 +107,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                     value,
                     adjustmentType,
                     "adjustmentRepackagedTaxType.error.nonDraught",
-                    rateBand.alcoholRegimes.map(_.name).head
+                    Some(s"return.regime.${rateBand.alcoholRegimes.map(_.name).head}")
                   )
                 } else {
                   for {
@@ -125,7 +125,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                   )
                 }
               case None           =>
-                rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
+                rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid", None)
             }
           }
         )
@@ -170,7 +170,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
     value: Int,
     adjustmentType: AdjustmentType,
     errorMessage: String,
-    regime: AlcoholRegimeName*
+    args: Option[String]
   )(implicit
     request: Request[_],
     messages: Messages
@@ -179,7 +179,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
       BadRequest(
         view(
           formProvider()
-            .withError("new-tax-type-code", errorMessage, messages(s"return.regime.${regime.head}"))
+            .withError("new-tax-type-code", errorMessage, messages(args.getOrElse(None).toString))
             .fill(value),
           mode,
           adjustmentType

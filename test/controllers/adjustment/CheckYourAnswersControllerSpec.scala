@@ -16,7 +16,6 @@
 
 package controllers.adjustment
 
-
 import base.SpecBase
 import cats.data.NonEmptySeq
 import connectors.CacheConnector
@@ -38,14 +37,14 @@ import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
-  val rate = BigDecimal(9.27)
+  val rate              = BigDecimal(9.27)
   val pureAlcoholVolume = BigDecimal(3.69)
   val totalLitresVolume = BigDecimal(3.69)
-  val taxCode = "311"
-  val repackagedRate = BigDecimal(10)
-  val repackagedDuty = BigDecimal(33.2)
-  val newDuty = BigDecimal(1)
-  val rateBand = RateBand(
+  val taxCode           = "311"
+  val repackagedRate    = BigDecimal(10)
+  val repackagedDuty    = BigDecimal(33.2)
+  val newDuty           = BigDecimal(1)
+  val rateBand          = RateBand(
     taxCode,
     "some band",
     RateType.DraughtRelief,
@@ -60,7 +59,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     Some(rate)
   )
 
-  val duty              = BigDecimal(100)
+  val duty = BigDecimal(100)
 
   val currentAdjustmentEntry = AdjustmentEntry(
     adjustmentType = Some(Spoilt),
@@ -74,7 +73,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     duty = Some(duty)
   )
 
-  val savedAdjustmentEntry = currentAdjustmentEntry.copy(pureAlcoholVolume = Some(BigDecimal(10)), totalLitresVolume=Some(BigDecimal(11)))
+  val savedAdjustmentEntry =
+    currentAdjustmentEntry.copy(pureAlcoholVolume = Some(BigDecimal(10)), totalLitresVolume = Some(BigDecimal(11)))
 
   val completeAdjustmentEntryUserAnswers: UserAnswers = emptyUserAnswers
     .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry)
@@ -243,7 +243,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val list =
-          CheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)(messages(application)).get
+          CheckYourAnswersSummaryListHelper
+            .currentAdjustmentEntrySummaryList(adjustmentEntry)(messages(application))
+            .get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list)(request, messages(application)).toString

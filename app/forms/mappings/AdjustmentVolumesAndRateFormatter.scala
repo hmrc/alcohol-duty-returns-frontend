@@ -40,7 +40,7 @@ class AdjustmentVolumesAndRateFormatter(
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    minimumValue = BigDecimal(0.00),
+    minimumValue = BigDecimal(0.01),
     args = args
   )
 
@@ -51,7 +51,7 @@ class AdjustmentVolumesAndRateFormatter(
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    minimumValue = BigDecimal(0.0),
+    minimumValue = BigDecimal(0.00),
     args = args
   )
 

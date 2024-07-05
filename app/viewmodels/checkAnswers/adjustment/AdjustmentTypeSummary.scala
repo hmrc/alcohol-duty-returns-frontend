@@ -32,7 +32,7 @@ object AdjustmentTypeSummary {
     adjustmentEntry.adjustmentType.map { adjustmentType =>
       val value = ValueViewModel(
         HtmlContent(
-          HtmlFormat.escape(messages(s"adjustmentType.$adjustmentType"))
+          HtmlFormat.escape(messages(s"adjustmentType.checkYourAnswersLabel.$adjustmentType"))
         )
       )
 
