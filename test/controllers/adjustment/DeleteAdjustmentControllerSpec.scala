@@ -17,74 +17,65 @@
 package controllers.adjustment
 
 import base.SpecBase
-import forms.adjustment.AdjustmentTypeFormProvider
-import models.NormalMode
-import models.adjustment.{AdjustmentEntry, AdjustmentType}
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
+import forms.adjustment.DeleteAdjustmentFormProvider
+import navigation.{FakeAdjustmentNavigator, AdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.CurrentAdjustmentEntryPage
+import pages.adjustment.DeleteAdjustmentPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
-import views.html.adjustment.AdjustmentTypeView
+import views.html.adjustment.DeleteAdjustmentView
 
 import scala.concurrent.Future
 
-class AdjustmentTypeControllerSpec extends SpecBase {
+class DeleteAdjustmentControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val adjustmentTypeRoute = routes.AdjustmentTypeController.onPageLoad(NormalMode).url
-
-  val formProvider = new AdjustmentTypeFormProvider()
+  val formProvider = new DeleteAdjustmentFormProvider()
   val form         = formProvider()
+  val index        = 0
 
-  "AdjustmentType Controller" - {
+  lazy val deleteAdjustmentRoute = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(index).url
+
+  "DeleteAdjustment Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, adjustmentTypeRoute)
+        val request = FakeRequest(GET, deleteAdjustmentRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[AdjustmentTypeView]
+        val view = application.injector.instanceOf[DeleteAdjustmentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, index)(request, messages(application)).toString
       }
     }
-
+/*
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val spoilt      = AdjustmentType.values.head
-      val userAnswers =
-        emptyUserAnswers
-          .set(CurrentAdjustmentEntryPage, AdjustmentEntry(adjustmentType = Some(spoilt)))
-          .success
-          .value
+      val userAnswers = emptyUserAnswers.set(DeleteAdjustmentPage, true).success.value
+
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, adjustmentTypeRoute)
+        val request = FakeRequest(GET, deleteAdjustmentRoute)
 
-        val view = application.injector.instanceOf[AdjustmentTypeView]
+        val view = application.injector.instanceOf[DeleteAdjustmentView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(AdjustmentType.values.head), NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(form.fill(true), index)(request, messages(application)).toString
       }
     }
-
+*/
     "must redirect to the next page when valid data is submitted" in {
 
       val mockCacheConnector = mock[CacheConnector]
@@ -101,49 +92,37 @@ class AdjustmentTypeControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, adjustmentTypeRoute)
-            .withFormUrlEncodedBody(("adjustment-type-value", AdjustmentType.values.head.toString))
+          FakeRequest(POST, deleteAdjustmentRoute)
+            .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+
+        verify(mockCacheConnector, times(1)).set(any())(any())
       }
     }
 
-    "must redirect to the next page when the same data is submitted" in {
-      val userAnswers =
-        emptyUserAnswers
-          .set(
-            CurrentAdjustmentEntryPage,
-            AdjustmentEntry(
-              adjustmentType = Some(Spoilt)
-            )
-          )
-          .success
-          .value
-
-      val mockCacheConnector = mock[CacheConnector]
-
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+    "must redirect to the next page when No is selected on remove radio button" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false))
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, adjustmentTypeRoute)
-            .withFormUrlEncodedBody(("adjustment-type-value", Spoilt.toString))
+          FakeRequest(POST, deleteAdjustmentRoute)
+            .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "false"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+
       }
     }
 
@@ -153,17 +132,17 @@ class AdjustmentTypeControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, adjustmentTypeRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+          FakeRequest(POST, deleteAdjustmentRoute)
+            .withFormUrlEncodedBody(("value", ""))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[AdjustmentTypeView]
+        val view = application.injector.instanceOf[DeleteAdjustmentView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, index)(request, messages(application)).toString
       }
     }
 
@@ -172,7 +151,7 @@ class AdjustmentTypeControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, adjustmentTypeRoute)
+        val request = FakeRequest(GET, deleteAdjustmentRoute)
 
         val result = route(application, request).value
 
@@ -181,21 +160,21 @@ class AdjustmentTypeControllerSpec extends SpecBase {
       }
     }
 
-    "redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, adjustmentTypeRoute)
-            .withFormUrlEncodedBody(("value", AdjustmentType.values.head.toString))
+          FakeRequest(POST, deleteAdjustmentRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
 }
+

@@ -37,11 +37,11 @@ object AdjustmentTypes extends Enum[AdjustmentTypes] with PlayEnum[AdjustmentTyp
 
   def fromAdjustmentType(adjustmentType: AdjustmentType): AdjustmentTypes =
     adjustmentType match {
-      case AdjustmentType.Underdeclaration => Underdeclaration
-      case AdjustmentType.Overdeclaration => Overdeclaration
-      case AdjustmentType.Spoilt => Spoilt
+      case AdjustmentType.Underdeclaration          => Underdeclaration
+      case AdjustmentType.Overdeclaration           => Overdeclaration
+      case AdjustmentType.Spoilt                    => Spoilt
       case AdjustmentType.RepackagedDraughtProducts => RepackagedDraughtProducts
-      case AdjustmentType.Drawback => Drawback
+      case AdjustmentType.Drawback                  => Drawback
     }
 
 }

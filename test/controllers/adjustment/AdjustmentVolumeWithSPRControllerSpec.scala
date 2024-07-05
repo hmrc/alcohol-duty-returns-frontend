@@ -47,10 +47,11 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
   val validTotalLitres = BigDecimal(10.23)
   val validPureAlcohol = BigDecimal(9.23)
   val validSPRDutyRate = BigDecimal(2)
-  val period         = YearMonth.of(2024, 1)
+  val period           = YearMonth.of(2024, 1)
 
-  lazy val adjustmentVolumeWithSPRRoute = controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode).url
-  val rateBand                   = RateBand(
+  lazy val adjustmentVolumeWithSPRRoute =
+    controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode).url
+  val rateBand                          = RateBand(
     "351",
     "some band",
     RateType.DraughtRelief,
@@ -68,12 +69,12 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
     ),
     Some(BigDecimal(10.99))
   )
-  val adjustmentEntry            = AdjustmentEntry(
+  val adjustmentEntry                   = AdjustmentEntry(
     adjustmentType = Some(Spoilt),
     period = Some(period),
     rateBand = Some(rateBand)
   )
-  val userAnswers                = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswers                       = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
   val rateBandContent = "Beer between 1.3% and 3.4% ABV (tax type code 351)"
 
@@ -101,7 +102,11 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val updatedAdjustmentEntry =
-        adjustmentEntry.copy(totalLitresVolume = Some(validTotalLitres), pureAlcoholVolume = Some(validPureAlcohol), sprDutyRate = Some(validSPRDutyRate))
+        adjustmentEntry.copy(
+          totalLitresVolume = Some(validTotalLitres),
+          pureAlcoholVolume = Some(validPureAlcohol),
+          sprDutyRate = Some(validSPRDutyRate)
+        )
 
       val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry).success.value
 
@@ -148,7 +153,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               ("volumes.totalLitresVolume", validTotalLitres.toString()),
               ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
-              ("volumes.sprDutyRate", validSPRDutyRate.toString()),
+              ("volumes.sprDutyRate", validSPRDutyRate.toString())
             )
 
         val result = route(application, request).value
@@ -161,7 +166,17 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
     "must redirect to the next page when the same data is submitted" in {
       val userAnswers =
         emptyUserAnswers
-          .set(CurrentAdjustmentEntryPage, AdjustmentEntry(totalLitresVolume = Some(validTotalLitres), pureAlcoholVolume = Some(validPureAlcohol), sprDutyRate = Some(validSPRDutyRate)))
+          .set(
+            CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              totalLitresVolume = Some(validTotalLitres),
+              pureAlcoholVolume = Some(validPureAlcohol),
+              sprDutyRate = Some(validSPRDutyRate),
+              adjustmentType = Some(Spoilt),
+              period = Some(period),
+              rateBand = Some(rateBand)
+            )
+          )
           .success
           .value
 
@@ -183,7 +198,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               ("volumes.totalLitresVolume", validTotalLitres.toString()),
               ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
-              ("volumes.sprDutyRate", validSPRDutyRate.toString()),
+              ("volumes.sprDutyRate", validSPRDutyRate.toString())
             )
 
         val result = route(application, request).value

@@ -45,15 +45,15 @@ class AdjustmentListControllerSpec extends SpecBase {
   val form         = formProvider()
 
   lazy val adjustmentListRoute = controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
-  val dutyDue = BigDecimal(34.2)
-  val rate = BigDecimal(9.27)
-  val pureAlcoholVolume = BigDecimal(3.69)
-  val taxCode = "311"
-  val volume = BigDecimal(10)
-  val repackagedRate = BigDecimal(10)
-  val repackagedDuty = BigDecimal(33.2)
-  val newDuty = BigDecimal(1)
-  val rateBand = RateBand(
+  val dutyDue                  = BigDecimal(34.2)
+  val rate                     = BigDecimal(9.27)
+  val pureAlcoholVolume        = BigDecimal(3.69)
+  val taxCode                  = "311"
+  val volume                   = BigDecimal(10)
+  val repackagedRate           = BigDecimal(10)
+  val repackagedDuty           = BigDecimal(33.2)
+  val newDuty                  = BigDecimal(1)
+  val rateBand                 = RateBand(
     taxCode,
     "some band",
     RateType.DraughtRelief,
@@ -68,7 +68,7 @@ class AdjustmentListControllerSpec extends SpecBase {
     Some(rate)
   )
 
-  val adjustmentEntry = AdjustmentEntry(
+  val adjustmentEntry     = AdjustmentEntry(
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(volume),
     rateBand = Some(rateBand),
@@ -77,7 +77,7 @@ class AdjustmentListControllerSpec extends SpecBase {
     period = Some(YearMonth.of(24, 1))
   )
   val adjustmentEntryList = List(adjustmentEntry)
-  val userAnswsers     = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
+  val userAnswsers        = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
 
   "AdjustmentList Controller" - {
 
@@ -117,7 +117,10 @@ class AdjustmentListControllerSpec extends SpecBase {
           AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers)(messages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
