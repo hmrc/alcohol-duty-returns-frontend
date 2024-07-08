@@ -39,9 +39,8 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
     sprDutyRate = Some(validSPRDutyRate)
   )
 
-  val adjustmentVolumeWithSPR = AdjustmentVolumeWithSPR(validTotalLitres,validPureAlcohol,validSPRDutyRate)
-  val form = new AdjustmentVolumeWithSPRFormProvider()(regime)(messages)
-
+  val adjustmentVolumeWithSPR = AdjustmentVolumeWithSPR(validTotalLitres, validPureAlcohol, validSPRDutyRate)
+  val form                    = new AdjustmentVolumeWithSPRFormProvider()(regime)(messages)
 
   ".volumes" - {
     /*"must bind valid data" in {
@@ -52,14 +51,14 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       )
       form.bind(data).data mustBe AdjustmentVolumeWithSPR(validTotalLitres,validPureAlcohol,validSPRDutyRate)
     }
-*/
+     */
 
     "must unbind valid data" in {
-      val data = AdjustmentVolumeWithSPR(validTotalLitres,validPureAlcohol,validSPRDutyRate)
+      val data = AdjustmentVolumeWithSPR(validTotalLitres, validPureAlcohol, validSPRDutyRate)
       form.fill(data).data must contain theSameElementsAs Map(
         "volumes.totalLitresVolume" -> validTotalLitres.toString(),
         "volumes.pureAlcoholVolume" -> validPureAlcohol.toString(),
-        "volumes.sprDutyRate" -> validSPRDutyRate.toString()
+        "volumes.sprDutyRate"       -> validSPRDutyRate.toString()
       )
     }
 
@@ -68,7 +67,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
         FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq("")),
-          FormError("volumes_sprDutyRate", "adjustmentVolume.error.noValue.sprDutyRate", Seq(""))
+        FormError("volumes_sprDutyRate", "adjustmentVolume.error.noValue.sprDutyRate", Seq(""))
       )
     }
 
@@ -76,7 +75,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       val data = Map(
         "volumes.totalLitresVolume" -> "",
         "volumes.pureAlcoholVolume" -> "",
-        "volumes.sprDutyRate" -> ""
+        "volumes.sprDutyRate"       -> ""
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
@@ -89,7 +88,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       val data = Map(
         "volumes.totalLitresVolume" -> "1.1123",
         "volumes.pureAlcoholVolume" -> "1.1123",
-        "volumes.sprDutyRate" -> "1.1123"
+        "volumes.sprDutyRate"       -> "1.1123"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.twoDecimalPlaces.totalLitresVolume", Seq("")),
@@ -102,7 +101,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       val data = Map(
         "volumes.totalLitresVolume" -> "invalid",
         "volumes.pureAlcoholVolume" -> "invalid",
-        "volumes.sprDutyRate" -> "invalid"
+        "volumes.sprDutyRate"       -> "invalid"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "adjustmentVolume.error.invalid.totalLitresVolume", List("")),
@@ -115,7 +114,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       val data = Map(
         "volumes.totalLitresVolume" -> "0",
         "volumes.pureAlcoholVolume" -> "0",
-        "volumes.sprDutyRate" -> "-21"
+        "volumes.sprDutyRate"       -> "-21"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "adjustmentVolume.error.minimumValue.totalLitresVolume", List("")),
@@ -128,7 +127,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       val data = Map(
         "volumes.totalLitresVolume" -> "100000000000",
         "volumes.pureAlcoholVolume" -> "100000000000",
-        "volumes.sprDutyRate" -> "100000000000"
+        "volumes.sprDutyRate"       -> "100000000000"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "adjustmentVolume.error.maximumValue.totalLitresVolume", List("")),
@@ -141,7 +140,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       val data = Map(
         "volumes.totalLitresVolume" -> "1",
         "volumes.pureAlcoholVolume" -> "2",
-      "volumes.sprDutyRate" -> "0"
+        "volumes.sprDutyRate"       -> "0"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", List(""))

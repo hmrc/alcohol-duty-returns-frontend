@@ -32,15 +32,13 @@ class YearMonthFormatter(
 
   val fieldKeys: List[String] = List("month", "year")
 
-  def verifyMonth(key: String, month: Int): Either[Seq[FormError], Int] = {
-    println(s"invalid month $key")
+  def verifyMonth(key: String, month: Int): Either[Seq[FormError], Int] =
     if (month >= 1 && month <= 12) Right(month) else Left(Seq(FormError(key, s"$invalidKey.month", args)))
-  }
 
   def verifyYear(key: String, year: Int): Either[Seq[FormError], Int] =
     if (year >= 1000 && year <= 9999) Right(year)
-    else if ((year < 1000 && year >= 0) || year > 9999) Left(Seq(FormError(s"$key.year", s"$invalidYear.year", args)))
-    else Left(Seq(FormError(s"$key.year", s"$invalidKey.year", args)))
+    else if ((year < 1000 && year >= 0) || year > 9999) Left(Seq(FormError(key, s"$invalidYear.year", args)))
+    else Left(Seq(FormError(key, s"$invalidKey.year", args)))
 
   val monthIntFormatter = intFormatter(
     requiredKey = s"$requiredKey.month",
