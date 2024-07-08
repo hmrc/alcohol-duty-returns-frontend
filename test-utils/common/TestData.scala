@@ -56,7 +56,9 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
   )
 
-  val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers
+  val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer))
+  )
   val userAnswersWithoutBeer: UserAnswers                  = emptyUserAnswers.copy(
     regimes = AlcoholRegimes(Set(Cider, Wine, Spirits, OtherFermentedProduct))
   )
@@ -82,7 +84,7 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(OtherFermentedProduct))
   )
   val userAnswersWithoutOtherFermentedProduct: UserAnswers = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits))
+    regimes = AlcoholRegimes(Set(Beer, Spirits))
   )
 
   val userAnswersWithAllRegimes: UserAnswers = emptyUserAnswers.copy(
