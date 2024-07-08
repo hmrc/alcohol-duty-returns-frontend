@@ -21,6 +21,7 @@ import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
 import models.UserAnswers
+import models.requests.IdentifierRequest
 import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -31,7 +32,7 @@ import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.Results
+import play.api.mvc.{AnyContentAsEmpty, Results}
 
 import scala.concurrent.ExecutionContext
 
@@ -47,7 +48,6 @@ trait SpecBase
     with IntegrationPatience
     with ModelGenerators
     with TestData {
-
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
@@ -55,6 +55,7 @@ trait SpecBase
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifierWithoutEnrolmentAction].to[FakeIdentifierWithoutEnrolmentAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
 
@@ -63,6 +64,9 @@ trait SpecBase
     play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
   def FakeRequestWithoutSession()                            = play.api.test.FakeRequest()
   def FakeRequestWithoutSession(verb: String, route: String) = play.api.test.FakeRequest(verb, route)
+
+  val identifierRequest: IdentifierRequest[AnyContentAsEmpty.type] =
+    IdentifierRequest(FakeRequest(), appaId, groupId, internalId)
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }

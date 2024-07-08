@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.GrainsUsedFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.GrainsUsedPage
@@ -49,10 +49,7 @@ class GrainsUsedControllerSpec extends SpecBase {
   val unmaltedGrainQuantity    = BigDecimal(500000)
   val usedMaltedGrainNotBarley = true
 
-  val userAnswers = UserAnswers(
-    returnId,
-    groupId,
-    internalId,
+  val userAnswers = emptyUserAnswers.copy(data =
     Json.obj(
       GrainsUsedPage.toString -> Json.obj(
         "maltedBarleyQuantity"     -> maltedBarleyQuantity,

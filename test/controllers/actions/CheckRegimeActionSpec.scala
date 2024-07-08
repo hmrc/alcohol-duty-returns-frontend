@@ -18,12 +18,9 @@ package controllers.actions
 
 import base.SpecBase
 import controllers.routes
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.requests.{DataRequest, IdentifierRequest}
+import models.requests.DataRequest
 import play.api.http.Status.SEE_OTHER
-import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.FakeRequest
+import play.api.mvc.Result
 import play.api.test.Helpers.LOCATION
 
 import scala.concurrent.Future
@@ -53,61 +50,31 @@ class CheckRegimeActionSpec extends SpecBase {
     def actionRefine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = refine(request)
   }
 
-  val fakeRequest: FakeRequest[AnyContentAsEmpty.type]             = FakeRequest()
-  val identifierRequest: IdentifierRequest[AnyContentAsEmpty.type] =
-    IdentifierRequest(fakeRequest, appaId, groupId, internalId)
-
-  val returnPeriod                        = returnPeriodGen.sample.get
-  val userAnswers                         = emptyUserAnswers
-  val userAnswersWithBeerRegime           = emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Beer)))))
-  val userAnswersWithCiderRegime          =
-    emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Cider)))))
-  val userAnswersWithWineRegime           = emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Wine)))))
-  val userAnswersWithSpiritsRegime        =
-    emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Spirits)))))
-  val userAnswersWithOtherFermentedRegime =
-    emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(OtherFermentedProduct)))))
-
   Seq(
-    ("CheckBeerRegime", new BeerHarness, userAnswersWithBeerRegime, userAnswersWithSpiritsRegime),
-    ("CheckCiderRegime", new CiderHarness, userAnswersWithCiderRegime, userAnswersWithSpiritsRegime),
-    ("CheckWineRegime", new WineHarness, userAnswersWithWineRegime, userAnswersWithSpiritsRegime),
-    ("CheckSpiritsRegime", new SpiritsHarness, userAnswersWithSpiritsRegime, userAnswersWithBeerRegime),
+    ("CheckBeerRegime", new BeerHarness, userAnswersWithBeer, userAnswersWithoutBeer),
+    ("CheckCiderRegime", new CiderHarness, userAnswersWithCider, userAnswersWithoutCider),
+    ("CheckWineRegime", new WineHarness, userAnswersWithWine, userAnswersWithoutWine),
+    ("CheckSpiritsRegime", new SpiritsHarness, userAnswersWithSpirits, userAnswersWithoutSpirits),
     (
       "CheckOtherFermentedRegime (when Cider)",
       new OtherFermentedHarness,
-      userAnswersWithCiderRegime,
-      userAnswersWithSpiritsRegime
+      userAnswersWithCider,
+      userAnswersWithSpirits
     ),
     (
       "CheckOtherFermentedRegime (when Wine)",
       new OtherFermentedHarness,
-      userAnswersWithWineRegime,
-      userAnswersWithSpiritsRegime
+      userAnswersWithWine,
+      userAnswersWithSpirits
     ),
     (
       "CheckOtherFermentedRegime",
       new OtherFermentedHarness,
-      userAnswersWithOtherFermentedRegime,
-      userAnswersWithSpiritsRegime
+      userAnswersWithOtherFermentedProduct,
+      userAnswersWithSpirits
     )
   ).foreach { case (description, harness, userAnswersWithRegime, userAnswersWithoutRegime) =>
     description - {
-      "should redirect to Journey Recovery when no regimes could be obtained from User Answers" in {
-        val result =
-          harness
-            .actionRefine(DataRequest(identifierRequest, appaId, groupId, internalId, returnPeriod, emptyUserAnswers))
-            .futureValue
-            .left
-            .getOrElse(
-              fail()
-            )
-            .header
-
-        result.status mustEqual SEE_OTHER
-        result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
-      }
-
       "should redirect to Unauthorised when the required regime is not in userAnswers" in {
         val result =
           harness

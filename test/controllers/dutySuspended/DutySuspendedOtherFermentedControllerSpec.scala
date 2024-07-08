@@ -146,7 +146,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if not authorised for Cider, Wine or OtherFermentedProduct" in {
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutOtherFermentedProduct)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersWithoutCiderWineAndOtherFermentedProduct)).build()
 
       running(application) {
         val request = FakeRequest(GET, dutySuspendedOtherFermentedRoute)
@@ -174,7 +175,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a POST if not authorised for Cider, Wine or OtherFermentedProduct" in {
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutOtherFermentedProduct)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersWithoutCiderWineAndOtherFermentedProduct)).build()
 
       running(application) {
         val request =

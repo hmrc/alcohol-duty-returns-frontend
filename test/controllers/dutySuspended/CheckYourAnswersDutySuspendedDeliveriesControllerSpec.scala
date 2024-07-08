@@ -26,8 +26,9 @@ import viewmodels.govuk.SummaryListFluency
 import views.html.dutySuspended.CheckYourAnswersDutySuspendedDeliveriesView
 
 class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase with SummaryListFluency {
-  val validTotal                                              = 42.34
-  val validPureAlcohol                                        = 34.23
+  val validTotal       = 42.34
+  val validPureAlcohol = 34.23
+
   val completeDutySuspendedDeliveriesUserAnswers: UserAnswers =
     Seq(
       (
@@ -87,10 +88,10 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
         val view                   = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
         val checkYourAnswersHelper =
           new CheckYourAnswersSummaryListHelper(completeDutySuspendedDeliveriesUserAnswers)(messages(application))
-        val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList.get
+        val summaryList            = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(summaryList)(request, messages(application)).toString
       }
     }
 
@@ -122,31 +123,10 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
         val view                   = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
         val checkYourAnswersHelper =
           new CheckYourAnswersSummaryListHelper(beerScreenAnswer)(messages(application))
-        val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList.get
+        val summaryList            = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET" - {
-
-      "if no existing data is found" in {
-
-        val application = applicationBuilder(Some(emptyUserAnswers)).build()
-
-        running(application) {
-          val request =
-            FakeRequest(
-              GET,
-              controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-            )
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
+        contentAsString(result) mustEqual view(summaryList)(request, messages(application)).toString
       }
     }
   }

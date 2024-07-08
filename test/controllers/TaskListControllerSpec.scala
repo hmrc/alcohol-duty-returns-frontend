@@ -39,7 +39,7 @@ class TaskListControllerSpec extends SpecBase {
         )
         .build()
 
-      when(mockTaskListService.getTaskList(any, eqTo(validUntil), eqTo(periodKey))(any)).thenReturn(Right(taskList))
+      when(mockTaskListService.getTaskList(any, eqTo(validUntil), eqTo(periodKey))(any)).thenReturn(taskList)
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
@@ -50,26 +50,6 @@ class TaskListControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(taskList)(request, messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET when the taskListService returns an error" in new SetUp {
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[TaskListService].toInstance(mockTaskListService)
-        )
-        .build()
-
-      when(mockTaskListService.getTaskList(any, eqTo(validUntil), eqTo(periodKey))(any))
-        .thenReturn(Left(new IllegalArgumentException("error")))
-
-      running(application) {
-        val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

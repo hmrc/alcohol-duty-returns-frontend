@@ -33,17 +33,16 @@ class CacheConnectorSpec extends SpecBase {
   val mockConfig: FrontendAppConfig        = mock[FrontendAppConfig]
   val connector                            = new CacheConnector(config = mockConfig, httpClient = mock[HttpClient])
   val dateVal: LocalDateTime               = LocalDateTime.now
-  val answers: UserAnswers                 = emptyUserAnswers
 
   "GET" - {
     "successfully fetch cache" in {
 
       when {
         connector.httpClient.GET[Option[UserAnswers]](any(), any(), any())(any(), any(), any())
-      } thenReturn Future.successful(Some(answers))
+      } thenReturn Future.successful(Some(emptyUserAnswers))
 
       whenReady(connector.get("someref", "somePeriodKey")) {
-        _ mustBe Some(answers)
+        _ mustBe Some(emptyUserAnswers)
       }
     }
   }
@@ -52,12 +51,13 @@ class CacheConnectorSpec extends SpecBase {
     "successfully write cache" in {
       Mockito.reset(connector.httpClient)
 
-      val postUrl = s"/cache/add"
+      val postUrl = "/cache/user-answers"
 
-      when(mockConfig.adrCacheAddUrl()).thenReturn("/cache/add")
+      when(mockConfig.adrCacheCreateUserAnswersUrl()).thenReturn(postUrl)
 
-      connector.add(answers)
-      verify(connector.httpClient, atLeastOnce).POST(eqTo(postUrl), eqTo(answers), any())(any(), any(), any(), any())
+      connector.createUserAnswers(returnAndUserDetails)
+      verify(connector.httpClient, atLeastOnce)
+        .POST(eqTo(postUrl), eqTo(returnAndUserDetails), any())(any(), any(), any(), any())
     }
   }
 
@@ -65,12 +65,13 @@ class CacheConnectorSpec extends SpecBase {
     "successfully write cache" in {
       Mockito.reset(connector.httpClient)
 
-      val putUrl = s"/cache/set"
+      val putUrl = "/cache/set"
 
-      when(mockConfig.adrCacheSetUrl()).thenReturn("/cache/set")
+      when(mockConfig.adrCacheSetUrl()).thenReturn(putUrl)
 
-      connector.set(answers)
-      verify(connector.httpClient, atLeastOnce).PUT(eqTo(putUrl), eqTo(answers), any())(any(), any(), any(), any())
+      connector.set(emptyUserAnswers)
+      verify(connector.httpClient, atLeastOnce)
+        .PUT(eqTo(putUrl), eqTo(emptyUserAnswers), any())(any(), any(), any(), any())
     }
   }
 }

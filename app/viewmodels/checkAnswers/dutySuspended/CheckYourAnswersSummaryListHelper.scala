@@ -16,64 +16,64 @@
 
 package viewmodels.checkAnswers.dutySuspended
 
-import models.{AlcoholRegimes, UserAnswers}
+import models.UserAnswers
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.govuk.summarylist.SummaryListViewModel
 
 class CheckYourAnswersSummaryListHelper(userAnswers: UserAnswers)(implicit messages: Messages) {
 
-  def dutySuspendedDeliveriesSummaryList: Option[SummaryList] =
-    AlcoholRegimes.fromUserAnswers(userAnswers).map { regimes =>
-      val hasBeer              = regimes.hasBeer()
-      val hasCider             = regimes.hasCider()
-      val hasWine              = regimes.hasWine()
-      val hasSpirits           = regimes.hasSpirits()
-      val hasFermentedProducts = regimes.hasOtherFermentedProduct()
+  def dutySuspendedDeliveriesSummaryList: SummaryList = {
+    val regimes              = userAnswers.regimes
+    val hasBeer              = regimes.hasBeer()
+    val hasCider             = regimes.hasCider()
+    val hasWine              = regimes.hasWine()
+    val hasSpirits           = regimes.hasSpirits()
+    val hasFermentedProducts = regimes.hasOtherFermentedProduct()
 
-      val maybeTotalBeer                          =
-        if (hasBeer) Some(getOptionalRow(DutySuspendedBeerSummary.totalVolumeRow(userAnswers))) else None
-      val maybePureAlcoholInBeer                  =
-        if (hasBeer) Some(getOptionalRow(DutySuspendedBeerSummary.pureAlcoholRow(userAnswers))) else None
-      val maybeTotalCider                         =
-        if (hasCider) Some(getOptionalRow(DutySuspendedCiderSummary.totalVolumeRow(userAnswers))) else None
-      val maybePureAlcoholInCider                 =
-        if (hasCider) Some(getOptionalRow(DutySuspendedCiderSummary.pureAlcoholRow(userAnswers))) else None
-      val maybeTotalWine                          =
-        if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))) else None
-      val maybePureAlcoholInWine                  =
-        if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers))) else None
-      val maybeTotalSpirts                        =
-        if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))) else None
-      val maybePureAlcoholInSpirits               =
-        if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers))) else None
-      val maybeTotalOtherFermentedSummary         =
-        if (hasFermentedProducts) Some(getOptionalRow(DutySuspendedOtherFermentedSummary.totalVolumeRow(userAnswers)))
-        else None
-      val maybePureAlcoholInOtherFermentedSummary =
-        if (hasFermentedProducts)
-          Some(
-            getOptionalRow(
-              DutySuspendedOtherFermentedSummary.pureAlcoholRow(userAnswers)
-            )
+    val maybeTotalBeer                          =
+      if (hasBeer) Some(getOptionalRow(DutySuspendedBeerSummary.totalVolumeRow(userAnswers))) else None
+    val maybePureAlcoholInBeer                  =
+      if (hasBeer) Some(getOptionalRow(DutySuspendedBeerSummary.pureAlcoholRow(userAnswers))) else None
+    val maybeTotalCider                         =
+      if (hasCider) Some(getOptionalRow(DutySuspendedCiderSummary.totalVolumeRow(userAnswers))) else None
+    val maybePureAlcoholInCider                 =
+      if (hasCider) Some(getOptionalRow(DutySuspendedCiderSummary.pureAlcoholRow(userAnswers))) else None
+    val maybeTotalWine                          =
+      if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))) else None
+    val maybePureAlcoholInWine                  =
+      if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers))) else None
+    val maybeTotalSpirts                        =
+      if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))) else None
+    val maybePureAlcoholInSpirits               =
+      if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers))) else None
+    val maybeTotalOtherFermentedSummary         =
+      if (hasFermentedProducts) Some(getOptionalRow(DutySuspendedOtherFermentedSummary.totalVolumeRow(userAnswers)))
+      else None
+    val maybePureAlcoholInOtherFermentedSummary =
+      if (hasFermentedProducts)
+        Some(
+          getOptionalRow(
+            DutySuspendedOtherFermentedSummary.pureAlcoholRow(userAnswers)
           )
-        else None
+        )
+      else None
 
-      val rows = Seq(
-        maybeTotalBeer,
-        maybePureAlcoholInBeer,
-        maybeTotalCider,
-        maybePureAlcoholInCider,
-        maybeTotalWine,
-        maybePureAlcoholInWine,
-        maybeTotalSpirts,
-        maybePureAlcoholInSpirits,
-        maybeTotalOtherFermentedSummary,
-        maybePureAlcoholInOtherFermentedSummary
-      ).flatten.fold(Seq.empty)(_ ++ _)
+    val rows = Seq(
+      maybeTotalBeer,
+      maybePureAlcoholInBeer,
+      maybeTotalCider,
+      maybePureAlcoholInCider,
+      maybeTotalWine,
+      maybePureAlcoholInWine,
+      maybeTotalSpirts,
+      maybePureAlcoholInSpirits,
+      maybeTotalOtherFermentedSummary,
+      maybePureAlcoholInOtherFermentedSummary
+    ).flatten.fold(Seq.empty)(_ ++ _)
 
-      SummaryListViewModel(rows = rows)
-    }
+    SummaryListViewModel(rows = rows)
+  }
 
   private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
     row match {

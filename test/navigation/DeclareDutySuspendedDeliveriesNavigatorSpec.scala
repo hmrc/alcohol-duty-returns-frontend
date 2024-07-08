@@ -25,7 +25,6 @@ import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import play.api.libs.json.{JsObject, Json}
 
 class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
-
   val navigator = new DeclareDutySuspendedDeliveriesNavigator
 
   "DeclareDutySuspendedDeliveriesNavigator" - {
@@ -50,47 +49,35 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
       }
 
       Seq(
-        (Beer, controllers.dutySuspended.routes.DutySuspendedBeerController.onPageLoad(NormalMode)),
-        (Cider, controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)),
-        (Wine, controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)),
-        (Spirits, controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)),
+        (Beer, () => controllers.dutySuspended.routes.DutySuspendedBeerController.onPageLoad(NormalMode)),
+        (Cider, () => controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)),
+        (Wine, () => controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)),
+        (Spirits, () => controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)),
         (
           OtherFermentedProduct,
-          controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
+          () => controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
         )
       ).foreach { case (regime, expectedPage) =>
         s"must go from the Duty suspended guidance page to the correct page when the next regime is ${regime.entryName}" in {
           navigator.nextPage(
             pages.dutySuspended.DutySuspendedGuidancePage,
             NormalMode,
-            emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(regime)))))
-          ) mustBe expectedPage
+            emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(regime)))
+          ) mustBe expectedPage()
         }
       }
 
-      "must go from the Duty suspended guidance page to the journey recovery page if no regime was found" in {
-        navigator.nextPage(
-          pages.dutySuspended.DutySuspendedGuidancePage,
-          NormalMode,
-          emptyUserAnswers
-        ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
-      }
-
       Seq(
-        (Cider, controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)),
-        (Wine, controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)),
-        (Spirits, controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)),
-        (
-          OtherFermentedProduct,
-          controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
-        )
+        (Cider, () => controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)),
+        (Wine, () => controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)),
+        (Spirits, () => controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode))
       ).foreach { case (regime, expectedPage) =>
         s"must go from the Duty suspended beer page to the correct page when the next regime is ${regime.entryName}" in {
           navigator.nextPage(
             pages.dutySuspended.DutySuspendedBeerPage,
             NormalMode,
-            emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(regime)))))
-          ) mustBe expectedPage
+            emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, regime)))
+          ) mustBe expectedPage()
         }
       }
 
@@ -98,24 +85,24 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedBeerPage,
           NormalMode,
-          emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Beer)))))
+          userAnswersWithBeer
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
 
       Seq(
-        (Wine, controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)),
-        (Spirits, controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)),
+        (Wine, () => controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)),
+        (Spirits, () => controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)),
         (
           OtherFermentedProduct,
-          controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
+          () => controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
         )
       ).foreach { case (regime, expectedPage) =>
         s"must go from the Duty suspended cider page to the correct page when the next regime is ${regime.entryName}" in {
           navigator.nextPage(
             pages.dutySuspended.DutySuspendedCiderPage,
             NormalMode,
-            emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(regime)))))
-          ) mustBe expectedPage
+            emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, regime)))
+          ) mustBe expectedPage()
         }
       }
 
@@ -123,23 +110,23 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedCiderPage,
           NormalMode,
-          emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Cider)))))
+          userAnswersWithCider
         ) mustBe controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
       }
 
       Seq(
-        (Spirits, controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)),
+        (Spirits, () => controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)),
         (
           OtherFermentedProduct,
-          controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
+          () => controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
         )
       ).foreach { case (regime, expectedPage) =>
         s"must go from the Duty suspended wine page to the correct page when the next regime is ${regime.entryName}" in {
           navigator.nextPage(
-            pages.dutySuspended.DutySuspendedCiderPage,
+            pages.dutySuspended.DutySuspendedWinePage,
             NormalMode,
-            emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(regime)))))
-          ) mustBe expectedPage
+            emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, regime)))
+          ) mustBe expectedPage()
         }
       }
 
@@ -147,15 +134,15 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedWinePage,
           NormalMode,
-          emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Wine)))))
+          userAnswersWithWine
         ) mustBe controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
       }
 
       "must go from the Duty suspended spirits page to the correct page when the next regime is OtherFermentedProduct" in {
         navigator.nextPage(
-          pages.dutySuspended.DutySuspendedCiderPage,
+          pages.dutySuspended.DutySuspendedSpiritsPage,
           NormalMode,
-          emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(OtherFermentedProduct)))))
+          userAnswersWithAllRegimes
         ) mustBe controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
       }
 
@@ -163,19 +150,16 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.dutySuspended.DutySuspendedSpiritsPage,
           NormalMode,
-          emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Spirits)))))
+          userAnswersWithSpirits
         ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
 
-      Seq(Cider, Wine, OtherFermentedProduct).foreach { regime =>
-        s"must go from the Duty suspended deliveries other fermented products page to CYA page when regime is ${regime.entryName}" in {
-
-          navigator.nextPage(
-            pages.dutySuspended.DutySuspendedOtherFermentedPage,
-            NormalMode,
-            emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(regime)))))
-          ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
-        }
+      "must go from the Duty suspended deliveries other fermented products page to CYA page" in {
+        navigator.nextPage(
+          pages.dutySuspended.DutySuspendedOtherFermentedPage,
+          NormalMode,
+          userAnswersWithAllRegimes
+        ) mustBe controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
       }
 
       "must go from the Declare duty suspended deliveries question page to journey recovery page if the answer there is not an answer" in {

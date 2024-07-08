@@ -18,8 +18,8 @@ package common
 
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{ReturnId, UserAnswers}
-import play.api.libs.json.{JsObject, Json}
+import models.{AlcoholRegimes, ReturnId, ReturnPeriod, UserAnswers}
+import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 trait TestData extends ModelGenerators {
   val appaId: String     = appaIdGen.sample.get
@@ -27,6 +27,8 @@ trait TestData extends ModelGenerators {
   val groupId: String    = "groupid"
   val internalId: String = "id"
   val returnId: ReturnId = ReturnId(appaId, periodKey)
+
+  val returnAndUserDetails = ReturnAndUserDetails(returnId, groupId, internalId)
 
   val periodKeyJan = "24AA"
   val periodKeyFeb = "24AB"
@@ -45,36 +47,47 @@ trait TestData extends ModelGenerators {
   val nonQuarterPeriodKeys =
     Seq(periodKeyJan, periodKeyFeb, periodKeyApr, periodKeyMay, periodKeyJul, periodKeyAug, periodKeyOct, periodKeyNov)
 
-  val emptyUserAnswers: UserAnswers = UserAnswers(returnId, groupId, internalId)
+  val returnPeriod = ReturnPeriod.fromPeriodKey(periodKeyMar).get
 
-  val userAnswersWithBeer: UserAnswers                     =
-    emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Beer)))))
-  val userAnswersWithoutBeer: UserAnswers                  = UserAnswers(returnId, groupId, internalId).copy(data =
-    JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Cider, Wine, Spirits, OtherFermentedProduct))))
-  )
-  val userAnswersWithCider: UserAnswers                    =
-    emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Cider)))))
-  val userAnswersWithoutCider: UserAnswers                 = UserAnswers(returnId, groupId, internalId).copy(data =
-    JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Beer, Wine, Spirits, OtherFermentedProduct))))
-  )
-  val userAnswersWithWine: UserAnswers                     =
-    emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Wine)))))
-  val userAnswersWithoutWine: UserAnswers                  = UserAnswers(returnId, groupId, internalId).copy(data =
-    JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Beer, Cider, Spirits, OtherFermentedProduct))))
-  )
-  val userAnswersWithSpirits: UserAnswers                  =
-    emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Spirits)))))
-  val userAnswersWithoutSpirits: UserAnswers               = UserAnswers(returnId, groupId, internalId).copy(data =
-    JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Beer, Cider, Wine, OtherFermentedProduct))))
-  )
-  val userAnswersWithOtherFermentedProduct: UserAnswers    =
-    emptyUserAnswers.copy(data = JsObject(Seq("alcoholRegime" -> Json.toJson(Set(OtherFermentedProduct)))))
-  val userAnswersWithoutOtherFermentedProduct: UserAnswers = UserAnswers(returnId, groupId, internalId).copy(data =
-    JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Beer, Spirits))))
+  val emptyUserAnswers: UserAnswers = UserAnswers(
+    returnId,
+    groupId,
+    internalId,
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
   )
 
-  val userAnswersWithAllRegimes: UserAnswers =
-    emptyUserAnswers.copy(data =
-      JsObject(Seq("alcoholRegime" -> Json.toJson(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))))
-    )
+  val userAnswersWithBeer: UserAnswers                                 = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer))
+  )
+  val userAnswersWithoutBeer: UserAnswers                              = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Cider, Wine, Spirits, OtherFermentedProduct))
+  )
+  val userAnswersWithCider: UserAnswers                                = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Cider, OtherFermentedProduct))
+  )
+  val userAnswersWithoutCider: UserAnswers                             = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer, Wine, Spirits, OtherFermentedProduct))
+  )
+  val userAnswersWithWine: UserAnswers                                 = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Wine, OtherFermentedProduct))
+  )
+  val userAnswersWithoutWine: UserAnswers                              = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer, Cider, Spirits, OtherFermentedProduct))
+  )
+  val userAnswersWithSpirits: UserAnswers                              = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Spirits))
+  )
+  val userAnswersWithoutSpirits: UserAnswers                           = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct))
+  )
+  val userAnswersWithOtherFermentedProduct: UserAnswers                = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Wine, OtherFermentedProduct))
+  )
+  val userAnswersWithoutCiderWineAndOtherFermentedProduct: UserAnswers = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer, Spirits))
+  )
+
+  val userAnswersWithAllRegimes: UserAnswers = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
+  )
 }

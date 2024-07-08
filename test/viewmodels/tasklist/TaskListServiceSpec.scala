@@ -30,11 +30,11 @@ import java.time.temporal.ChronoUnit
 class TaskListServiceSpec extends SpecBase {
   "TaskListService" - {
     "must return an incomplete task list if not all the sections are complete" in new SetUp {
-      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(Right(notStartedSection))
-      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(Right(inProgressSection))
-      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(Right(completeSection))
+      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
+      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
 
-      val result = taskListService.getTaskList(emptyUserAnswers, validUntil, periodKeyMar).toOption.get
+      val result = taskListService.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
 
       result mustBe AlcoholDutyTaskList(
         Seq(notStartedSection, inProgressSection, completeSection),
@@ -47,11 +47,11 @@ class TaskListServiceSpec extends SpecBase {
     }
 
     "must return an complete task list if all the sections are complete" in new SetUp {
-      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(Right(completeSection))
-      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(Right(completeSection))
-      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(Right(completeSection))
+      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
 
-      val result = taskListService.getTaskList(emptyUserAnswers, validUntil, periodKeyMar).toOption.get
+      val result = taskListService.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
 
       result mustBe AlcoholDutyTaskList(
         Seq(completeSection, completeSection, completeSection),
@@ -63,61 +63,13 @@ class TaskListServiceSpec extends SpecBase {
       result.completedTasks mustBe 3
     }
 
-    "must return an error task list if the return section errors" in new SetUp {
-      val errorMsg = "error"
-
-      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers))
-        .thenReturn(Left(new RuntimeException(errorMsg)))
-      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(Right(completeSection))
-      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(Right(completeSection))
-
-      taskListService
-        .getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
-        .swap
-        .toOption
-        .get
-        .getMessage mustBe errorMsg
-    }
-
-    "must return an error task list if the DSD section errors" in new SetUp {
-      val errorMsg = "error"
-
-      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(Right(completeSection))
-      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers))
-        .thenReturn(Left(new RuntimeException(errorMsg)))
-      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(Right(completeSection))
-
-      taskListService
-        .getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
-        .swap
-        .toOption
-        .get
-        .getMessage mustBe errorMsg
-    }
-
-    "must return an error task list if the QS section errors" in new SetUp {
-      val errorMsg = "error"
-
-      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(Right(completeSection))
-      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(Right(completeSection))
-      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers))
-        .thenReturn(Left(new RuntimeException(errorMsg)))
-
-      taskListService
-        .getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
-        .swap
-        .toOption
-        .get
-        .getMessage mustBe errorMsg
-    }
-
     quarterPeriodKeys.foreach { periodKey =>
       s"must return the QS section as the period key $periodKey falls on a quarter" in new SetUp {
-        when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(Right(notStartedSection))
-        when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(Right(inProgressSection))
-        when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(Right(completeSection))
+        when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
+        when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
 
-        val result = taskListService.getTaskList(emptyUserAnswers, validUntil, periodKey).toOption.get
+        val result = taskListService.getTaskList(emptyUserAnswers, validUntil, periodKey)
 
         result mustBe AlcoholDutyTaskList(
           Seq(notStartedSection, inProgressSection, completeSection),
@@ -130,11 +82,11 @@ class TaskListServiceSpec extends SpecBase {
 
     nonQuarterPeriodKeys.foreach { periodKey =>
       s"must not return the QS section as the period key $periodKey doesn't fall on a quarter" in new SetUp {
-        when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(Right(notStartedSection))
-        when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(Right(inProgressSection))
-        when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(Right(completeSection))
+        when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
+        when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
 
-        val result = taskListService.getTaskList(emptyUserAnswers, validUntil, periodKey).toOption.get
+        val result = taskListService.getTaskList(emptyUserAnswers, validUntil, periodKey)
 
         result mustBe AlcoholDutyTaskList(
           Seq(notStartedSection, inProgressSection),

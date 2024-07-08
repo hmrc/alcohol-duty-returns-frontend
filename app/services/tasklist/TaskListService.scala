@@ -16,7 +16,7 @@
 
 package services.tasklist
 
-import models.{Result, UserAnswers}
+import models.UserAnswers
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
 import viewmodels.tasklist.{AlcoholDutyTaskList, ReturnTaskListCreator}
@@ -27,17 +27,13 @@ import javax.inject.Inject
 class TaskListService @Inject() (returnTaskListCreator: ReturnTaskListCreator) {
   def getTaskList(userAnswers: UserAnswers, validUntil: Instant, periodKey: String)(implicit
     messages: Messages
-  ): Result[AlcoholDutyTaskList] =
-    for {
-      returnSection  <- returnTaskListCreator.returnSection(userAnswers)
-      dsdSection     <- returnTaskListCreator.returnDSDSection(userAnswers)
-      maybeQSSection <- if (shouldIncludeQSSection(periodKey)) {
-                          returnTaskListCreator.returnQSSection(userAnswers).map(Some.apply)
-                        } else {
-                          Right(None)
-                        }
-    } yield AlcoholDutyTaskList(
-      Seq(Some(returnSection), Some(dsdSection), maybeQSSection).flatten,
+  ): AlcoholDutyTaskList =
+    AlcoholDutyTaskList(
+      Seq(
+        Some(returnTaskListCreator.returnSection(userAnswers)),
+        Some(returnTaskListCreator.returnDSDSection(userAnswers)),
+        if (shouldIncludeQSSection(periodKey)) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
+      ).flatten,
       validUntil.toLocalDateString()
     )
 

@@ -16,13 +16,13 @@
 
 package models
 
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import enumeratum.{Enum, EnumEntry, PlayEnum}
 
 sealed trait AlcoholRegime extends EnumEntry
-
-object AlcoholRegime extends Enum[AlcoholRegime] with PlayJsonEnum[AlcoholRegime] {
+object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {
   val values = findValues
 
+  // Keep these in view order
   case object Beer extends AlcoholRegime
   case object Cider extends AlcoholRegime
   case object Wine extends AlcoholRegime

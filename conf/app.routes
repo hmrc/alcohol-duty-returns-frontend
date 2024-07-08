@@ -20,6 +20,13 @@ GET         /account/signed-out                          controllers.auth.Signed
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
+GET         /enrol/approval-id                           controllers.auth.DoYouHaveAnAppaIdController.onPageLoad()
+POST        /enrol/approval-id                           controllers.auth.DoYouHaveAnAppaIdController.onSubmit(wasReferredFromBTA: Boolean ?= false)
+GET         /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onPageLoad(wasReferredFromBTA: Boolean ?= false)
+POST        /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onSubmit(wasReferredFromBTA: Boolean ?= false)
+
+GET         /check-your-returns                          controllers.ViewPastReturnsController.onPageLoad
+
 GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
 
 GET         /before-you-start-your-return/:periodKey     controllers.BeforeStartReturnController.onPageLoad(periodKey: String)
@@ -28,10 +35,53 @@ POST        /before-you-start-your-return                controllers.BeforeStart
 # Beginning of product entry sub-journey
 GET        /tell-us-about-your-alcohol                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
 
-GET        /do-you-need-to-declare-duty                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /do-you-need-to-declare-duty                        controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-do-you-need-to-declare-duty                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-do-you-need-to-declare-duty                  controllers.productEntry.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+
+
+GET        /what-do-you-need-to-declare/:regime                controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /what-do-you-need-to-declare/:regime                controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /change-what-do-you-need-to-declare/:regime         controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /change-what-do-you-need-to-declare/:regime         controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+
+GET        /how-much-do-you-need-to-declare/:regime                       controllers.returns.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /how-much-do-you-need-to-declare/:regime                           controllers.returns.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /change-how-much-do-you-need-to-declare/:regime                     controllers.returns.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /change-how-much-do-you-need-to-declare/:regime                     controllers.returns.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+
+GET        /do-you-have-multiple-small-producer-relief-duty-rates/:regime                        controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /do-you-have-multiple-small-producer-relief-duty-rates/:regime                        controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /change-do-you-have-multiple-small-producer-relief-duty-rates/:regime                  controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /change-do-you-have-multiple-small-producer-relief-duty-rates/:regime                  controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+
+
+GET        /tell-us-about-single-spr-rate/:regime                        controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /tell-us-about-single-spr-rate/:regime                        controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /change-tell-us-about-single-spr-rate/:regime                 controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /change-tell-us-about-single-spr-rate/:regime                  controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+
+GET        /multiple-spr-rates/:regime                         controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+POST       /multiple-spr-rates/:regime                         controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+GET        /change-multiple-spr-rates/:regime                   controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+POST       /change-multiple-spr-rates/:regime                   controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+
+GET        /check-your-answers-spr/:regime                       controllers.returns.CheckYourAnswersSPRController.onPageLoad(regime:AlcoholRegime, index:Option[Int] ?= None)
+POST       /check-your-answers-spr/:regime                       controllers.returns.CheckYourAnswersSPRController.onSubmit(regime:AlcoholRegime, index:Option[Int] ?= None)
+
+GET        /return-check-your-answers/:regime                      controllers.returns.CheckYourAnswersController.onPageLoad(regime:AlcoholRegime)
+
+GET        /multiple-spr-list/:regime                        controllers.returns.MultipleSPRListController.onPageLoad(regime:AlcoholRegime)
+POST       /multiple-spr-list/:regime                        controllers.returns.MultipleSPRListController.onSubmit(regime:AlcoholRegime)
+
+GET        /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onPageLoad(regime:AlcoholRegime, index: Int)
+POST       /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onSubmit(regime:AlcoholRegime, index: Int)
+
+GET        /duty-due/:regime                                  controllers.returns.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
+POST       /duty-due/:regime                                  controllers.returns.DutyCalculationController.onSubmit(regime:AlcoholRegime)
+
+# old journey
 
 GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
 POST       /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)

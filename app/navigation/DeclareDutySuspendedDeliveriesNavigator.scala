@@ -73,17 +73,9 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
     OtherFermentedProduct -> controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad
   )
 
-  private def nextRegime(regimes: AlcoholRegimes, current: Option[AlcoholRegime]): Option[AlcoholRegime] = current match {
-    case None                                        => Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct).find(regimes.hasRegime)
-    case Some(Beer)                                  => Seq(Cider, Wine, Spirits, OtherFermentedProduct).find(regimes.hasRegime)
-    case Some(Cider)                                 => Seq(Wine, Spirits).find(regimes.hasRegime).orElse(Some(OtherFermentedProduct))
-    case Some(Wine)                                  => Seq(Spirits).find(regimes.hasRegime).orElse(Some(OtherFermentedProduct))
-    case Some(Spirits) if regimes.hasOtherFermentedProduct() => Some(OtherFermentedProduct)
-    case _                                           => None
-  }
-
   private def nextRegimePage(userAnswers: UserAnswers, lastPageRegime: Option[AlcoholRegime], mode: Mode): Call =
-    nextRegime(userAnswers.regimes, lastPageRegime)
-          .flatMap(pageMapping.get(_).map(_(mode)))
-          .getOrElse(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad())
+    userAnswers.regimes
+      .nextViewRegime(lastPageRegime)
+      .flatMap(pageMapping.get(_).map(_(mode)))
+      .getOrElse(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad())
 }

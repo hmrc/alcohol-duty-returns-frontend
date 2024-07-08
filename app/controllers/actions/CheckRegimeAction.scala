@@ -18,7 +18,7 @@ package controllers.actions
 
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.requests.DataRequest
-import models.{AlcoholRegime, AlcoholRegimes}
+import models.AlcoholRegime
 import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
@@ -30,7 +30,7 @@ trait CheckRegimeAction extends ActionRefiner[DataRequest, DataRequest] with Log
   val regime: AlcoholRegime
 
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] =
-    if (request.userAnswers.regimes.authorisedForRegime(regime)) {
+    if (request.userAnswers.regimes.hasRegime(regime)) {
       Future.successful(Right(request))
     } else {
       Future.successful(Left(Redirect(controllers.routes.UnauthorisedController.onPageLoad)))

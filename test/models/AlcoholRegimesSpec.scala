@@ -18,7 +18,6 @@ package models
 
 import base.SpecBase
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import play.api.libs.json.JsPath
 
 class AlcoholRegimesSpec extends SpecBase {
   "AlcoholRegimes" - {
@@ -47,24 +46,54 @@ class AlcoholRegimesSpec extends SpecBase {
         allRegimes.hasOtherFermentedProduct() mustBe true
         allRegimesExceptCiderWineOtherFermented.hasOtherFermentedProduct() mustBe false
       }
+    }
 
-      "if the regimes contains Cider but not Wine or OtherFermentedProduct when hasOtherFermentedProduct is called" in new SetUp {
-        allRegimesExceptWineOtherFermented.hasOtherFermentedProduct() mustBe true
+    "return the regimes in view order" - {
+      "when all regimes are present" in new SetUp {
+        allRegimes.regimesInViewOrder() mustBe Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
       }
 
-      "if the regimes contains Wine but not Cider or OtherFermentedProduct when hasOtherFermentedProduct is called" in new SetUp {
-        allRegimesExceptCiderOtherFermented.hasOtherFermentedProduct() mustBe true
+      "when all regimes are present except Beer" in new SetUp {
+        allRegimesExceptBeer.regimesInViewOrder() mustBe Seq(Cider, Wine, Spirits, OtherFermentedProduct)
+      }
+
+      "when all regimes are present except Cider and Wine" in new SetUp {
+        allRegimesExceptCiderWineOtherFermented.regimesInViewOrder() mustBe Seq(Beer, Spirits)
       }
     }
 
-    "when fromUserAnswers is called" - {
-      "create userAnswers if alcoholRegime is found" in new SetUp {
-        AlcoholRegimes.fromUserAnswers(userAnswersWithBeerSpirits) mustBe Some(AlcoholRegimes(Set(Beer, Spirits)))
+    Seq(
+      (None, Some(Beer)),
+      (Some(Beer), Some(Cider)),
+      (Some(Cider), Some(Wine)),
+      (Some(Wine), Some(Spirits)),
+      (Some(Spirits), Some(OtherFermentedProduct)),
+      (Some(OtherFermentedProduct), None)
+    ).foreach { case (current, expectedNext) =>
+      s"find the next view regime when all regimes are present and the current regime is ${current.map(_.entryName).getOrElse("None")}" in new SetUp {
+        allRegimes.nextViewRegime(current) mustBe expectedNext
       }
+    }
 
-      "return None if alcoholRegime is not found" in new SetUp {
-        AlcoholRegimes.fromUserAnswers(emptyUserAnswers) mustBe None
+    Seq(
+      (None, Some(Cider)),
+      (Some(Cider), Some(Wine)),
+      (Some(Wine), Some(Spirits)),
+      (Some(Spirits), Some(OtherFermentedProduct)),
+      (Some(OtherFermentedProduct), None)
+    ).foreach { case (current, expectedNext) =>
+      s"find the next view regime when all regimes are present except Beer and the current regime is ${current.map(_.entryName).getOrElse("None")}" in new SetUp {
+        allRegimesExceptBeer.nextViewRegime(current) mustBe expectedNext
       }
+    }
+
+    Seq((None, Some(Beer)), (Some(Beer), Some(Spirits)), (Some(Spirits), None)).foreach {
+      case (current, expectedNext) =>
+        s"find the next view regime when all regimes are present except Cider and Wine and the current regime is ${current
+          .map(_.entryName)
+          .getOrElse("None")}" in new SetUp {
+          allRegimesExceptCiderWineOtherFermented.nextViewRegime(current) mustBe expectedNext
+        }
     }
   }
 
@@ -75,12 +104,5 @@ class AlcoholRegimesSpec extends SpecBase {
     val allRegimesExceptWine                    = AlcoholRegimes(Set(Beer, Cider, Spirits, OtherFermentedProduct))
     val allRegimesExceptSpirits                 = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct))
     val allRegimesExceptCiderWineOtherFermented = AlcoholRegimes(Set(Beer, Spirits))
-    val allRegimesExceptCiderWine               = AlcoholRegimes(Set(Beer, Spirits, OtherFermentedProduct))
-    val allRegimesExceptCiderOtherFermented     = AlcoholRegimes(Set(Beer, Wine, Spirits))
-    val allRegimesExceptWineOtherFermented      = AlcoholRegimes(Set(Beer, Cider, Spirits))
-
-    val emptyUserAnswers           = UserAnswers(returnId, groupId, internalId)
-    val userAnswersWithBeerSpirits =
-      emptyUserAnswers.copy(data = emptyUserAnswers.set(JsPath \ "alcoholRegime", Seq(Beer, Spirits)).get)
   }
 }
