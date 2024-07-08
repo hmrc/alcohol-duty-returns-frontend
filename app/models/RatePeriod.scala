@@ -74,27 +74,27 @@ object AlcoholByVolume {
   val MAX: AlcoholByVolume = AlcoholByVolume(100)
 }
 
-sealed trait ABVRangeName extends EnumEntry
-object ABVRangeName extends Enum[ABVRangeName] with PlayEnum[ABVRangeName] {
+sealed trait AlcoholType extends EnumEntry
+object AlcoholType extends Enum[AlcoholType] with PlayEnum[AlcoholType] {
   val values = findValues
 
-  case object Beer extends ABVRangeName
-  case object Cider extends ABVRangeName
-  case object SparklingCider extends ABVRangeName
-  case object Wine extends ABVRangeName
-  case object Spirits extends ABVRangeName
-  case object OtherFermentedProduct extends ABVRangeName
+  case object Beer extends AlcoholType
+  case object Cider extends AlcoholType
+  case object SparklingCider extends AlcoholType
+  case object Wine extends AlcoholType
+  case object Spirits extends AlcoholType
+  case object OtherFermentedProduct extends AlcoholType
 }
 
-case class ABVRange(name: ABVRangeName, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
+case class ABVRange(alcoholType: AlcoholType, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
 
 object ABVRange {
   implicit val format: Format[ABVRange] = Json.format[ABVRange]
 }
 
-case class AlcoholRegime(name: AlcoholRegimeName, abvRanges: NonEmptySeq[ABVRange])
+case class RangeDetailsByRegime(alcoholRegime: AlcoholRegime, abvRanges: NonEmptySeq[ABVRange])
 
-object AlcoholRegime {
+object RangeDetailsByRegime {
   implicit val nonEmptySeqFormat: Format[NonEmptySeq[ABVRange]] = new Format[NonEmptySeq[ABVRange]] {
     override def reads(json: JsValue): JsResult[NonEmptySeq[ABVRange]] =
       json.validate[Seq[ABVRange]].flatMap {
@@ -105,15 +105,15 @@ object AlcoholRegime {
     override def writes(o: NonEmptySeq[ABVRange]): JsValue = Writes.seq(ABVRange.format).writes(o.toList)
   }
 
-  implicit val format: Format[AlcoholRegime] = Json.format[AlcoholRegime]
+  implicit val format: Format[RangeDetailsByRegime] = Json.format[RangeDetailsByRegime]
 }
 
 case class RateBand(
-  taxType: String,
+  taxTypeCode: String,
   description: String,
   rateType: RateType,
-  alcoholRegimes: Set[AlcoholRegime],
-  rate: Option[BigDecimal]
+  rate: Option[BigDecimal],
+  rangeDetails: Set[RangeDetailsByRegime]
 )
 
 object RateBand {

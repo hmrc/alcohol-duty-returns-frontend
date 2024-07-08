@@ -44,6 +44,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   private val adrCalculatorCalculateDutyUrlPart: String           =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateDutyUrl")
+  private val adrCalculatorCalculateTotalDutyUrlPart: String      =
+    configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateTotalDutyUrl")
   private val adrCalculatorCalculateAdjustmentDutyUrlPart: String =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateAdjustmentDutyUrl")
   private val adrCalculatorRateBandUrlPart: String                =
@@ -101,6 +103,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrCalculatorCalculateDutyUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateDutyUrlPart
+
+  def adrCalculatorCalculateTotalDutyUrl(): String =
+    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateTotalDutyUrlPart
 
   def adrCalculatorCalculateAdjustmentDutyUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateAdjustmentDutyUrlPart

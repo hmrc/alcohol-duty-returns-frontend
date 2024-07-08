@@ -22,7 +22,7 @@ import connectors.CacheConnector
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentDutyDueView
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import org.mockito.ArgumentMatchers.any
@@ -46,18 +46,22 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     val repackagedDuty    = BigDecimal(33.2)
     val newDuty           = BigDecimal(1)
     val rateBand          = RateBand(
-      taxCode,
+      "310",
       "some band",
       RateType.DraughtRelief,
+      Some(rate),
       Set(
-        AlcoholRegime(
-          AlcoholRegimeName.Beer,
+        RangeDetailsByRegime(
+          AlcoholRegime.Beer,
           NonEmptySeq.one(
-            ABVRange(ABVRangeName.Beer, AlcoholByVolume(0.1), AlcoholByVolume(5.8))
+            ABVRange(
+              AlcoholType.Beer,
+              AlcoholByVolume(0.1),
+              AlcoholByVolume(5.8)
+            )
           )
         )
-      ),
-      Some(rate)
+      )
     )
 
     val adjustmentEntry = AdjustmentEntry(

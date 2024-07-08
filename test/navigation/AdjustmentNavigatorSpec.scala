@@ -32,19 +32,19 @@ class AdjustmentNavigatorSpec extends SpecBase {
     "310",
     "some band",
     RateType.DraughtRelief,
+    Some(BigDecimal(10.99)),
     Set(
-      AlcoholRegime(
-        AlcoholRegimeName.Beer,
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
         NonEmptySeq.one(
           ABVRange(
-            ABVRangeName.Beer,
+            AlcoholType.Beer,
             AlcoholByVolume(0.1),
             AlcoholByVolume(5.8)
           )
         )
       )
-    ),
-    Some(BigDecimal(10.99))
+    )
   )
 
   "AdjustmentNavigator" - {

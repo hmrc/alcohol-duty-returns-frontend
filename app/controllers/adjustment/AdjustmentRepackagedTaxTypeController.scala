@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.adjustment.AdjustmentRepackagedTaxTypeFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegimeName, Mode, RateBand, UserAnswers}
+import models.{Mode, RateBand, UserAnswers}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentRepackagedTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -61,7 +61,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
           view(
             form.fill(
               value.repackagedRateBand
-                .map(_.taxType)
+                .map(_.taxTypeCode)
                 .getOrElse(throw new RuntimeException("Couldn't fetch taxCode value from cache"))
                 .toInt
             ),
@@ -107,7 +107,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                     value,
                     adjustmentType,
                     "adjustmentRepackagedTaxType.error.nonDraught",
-                    Some(s"return.regime.${rateBand.alcoholRegimes.map(_.name).head}")
+                    Some(s"return.regime.${rateBand.rangeDetails.map(_.alcoholRegime)}")
                   )
                 } else {
                   for {
@@ -151,7 +151,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
     }
 
   def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
-    adjustmentEntry.repackagedRateBand.map(_.taxType) match {
+    adjustmentEntry.repackagedRateBand.map(_.taxTypeCode) match {
       case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, false)
       case _                                                             =>
         (

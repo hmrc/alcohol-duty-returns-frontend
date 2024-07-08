@@ -19,7 +19,8 @@ package connectors
 import config.FrontendAppConfig
 import models.adjustment.AdjustmentTypes
 import models.productEntry.TaxDuty
-import models.{AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.returns.AlcoholDuty
+import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
@@ -40,6 +41,14 @@ class AlcoholDutyCalculatorConnector @Inject() (
     httpClient.POST[DutyCalculationRequest, TaxDuty](url = config.adrCalculatorCalculateDutyUrl(), body = body)
   }
 
+  def calculateTotalDuty(requestBody: TotalDutyCalculationRequest)(implicit
+    hc: HeaderCarrier
+  ): Future[AlcoholDuty] =
+    httpClient.POST[TotalDutyCalculationRequest, AlcoholDuty](
+      url = config.adrCalculatorCalculateTotalDutyUrl(),
+      body = requestBody
+    )
+
   def calculateAdjustmentTaxDuty(newDuty: BigDecimal, oldDuty: BigDecimal)(implicit
     hc: HeaderCarrier
   ): Future[TaxDuty] = {
@@ -54,17 +63,31 @@ class AlcoholDutyCalculatorConnector @Inject() (
     rateType: RateType,
     abv: AlcoholByVolume,
     ratePeriod: YearMonth,
-    approvedAlcoholRegimes: Set[AlcoholRegimeName]
+    approvedAlcoholRegimes: Set[AlcoholRegime]
   )(implicit hc: HeaderCarrier): Future[Seq[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(
       "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
       "alcoholRegimes" -> Json
         .toJson(
-          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegimeName](_))
+          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegime](_))
         )
         .toString,
       "rateType"       -> Json.toJson(rateType).toString,
       "abv"            -> Json.toJson(abv).toString
+    )
+    httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
+  }
+
+  def rateBandByRegime(ratePeriod: YearMonth, approvedAlcoholRegimes: Seq[AlcoholRegime])(implicit
+    hc: HeaderCarrier
+  ): Future[Seq[RateBand]] = {
+    val queryParams: Seq[(String, String)] = Seq(
+      "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
+      "alcoholRegimes" -> Json
+        .toJson(
+          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegime](_))
+        )
+        .toString
     )
     httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
   }
@@ -89,13 +112,13 @@ class AlcoholDutyCalculatorConnector @Inject() (
   def rateType(
     abv: AlcoholByVolume,
     ratePeriod: YearMonth,
-    approvedAlcoholRegimes: Set[AlcoholRegimeName]
+    approvedAlcoholRegimes: Set[AlcoholRegime]
   )(implicit hc: HeaderCarrier): Future[RateTypeResponse] = {
     val queryParams: Seq[(String, String)] = Seq(
       "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
       "alcoholRegimes" -> Json
         .toJson(
-          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegimeName](_))
+          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegime](_))
         )
         .toString,
       "abv"            -> Json.toJson(abv).toString

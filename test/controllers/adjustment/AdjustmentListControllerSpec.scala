@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.TableViewModel
 import viewmodels.checkAnswers.adjustment.AdjustmentListSummaryHelper
@@ -54,21 +54,24 @@ class AdjustmentListControllerSpec extends SpecBase {
   val repackagedDuty           = BigDecimal(33.2)
   val newDuty                  = BigDecimal(1)
   val rateBand                 = RateBand(
-    taxCode,
+    "310",
     "some band",
     RateType.DraughtRelief,
+    Some(BigDecimal(10.99)),
     Set(
-      AlcoholRegime(
-        AlcoholRegimeName.Beer,
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
         NonEmptySeq.one(
-          ABVRange(ABVRangeName.Beer, AlcoholByVolume(0.1), AlcoholByVolume(5.8))
+          ABVRange(
+            AlcoholType.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
         )
       )
-    ),
-    Some(rate)
+    )
   )
-
-  val adjustmentEntry     = AdjustmentEntry(
+  val adjustmentEntry          = AdjustmentEntry(
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(volume),
     rateBand = Some(rateBand),
@@ -76,8 +79,8 @@ class AdjustmentListControllerSpec extends SpecBase {
     adjustmentType = Some(Spoilt),
     period = Some(YearMonth.of(24, 1))
   )
-  val adjustmentEntryList = List(adjustmentEntry)
-  val userAnswsers        = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
+  val adjustmentEntryList      = List(adjustmentEntry)
+  val userAnswsers             = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
 
   "AdjustmentList Controller" - {
 

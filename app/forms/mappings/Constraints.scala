@@ -103,29 +103,11 @@ trait Constraints {
         Invalid(errorKey)
     }
 
-  protected def minimumValueWithArgs[A](minimum: A, errorKey: String, args: Any*)(implicit
-    ev: Ordering[A]
-  ): Constraint[A] =
-    Constraint { input =>
-      import ev._
-
-      if (input >= minimum) {
+  protected def nonEmptySeq(errorKey: String, args: Any*): Constraint[Seq[_]] =
+    Constraint {
+      case seq if seq.nonEmpty =>
         Valid
-      } else {
+      case _                   =>
         Invalid(errorKey, args: _*)
-      }
-    }
-
-  protected def maximumValueWithArgs[A](maximum: A, errorKey: String, args: Any*)(implicit
-    ev: Ordering[A]
-  ): Constraint[A] =
-    Constraint { input =>
-      import ev._
-
-      if (input <= maximum) {
-        Valid
-      } else {
-        Invalid(errorKey, args: _*)
-      }
     }
 }

@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package pages.productEntry
+package forms.returns
 
-import play.api.libs.json.JsPath
-import pages.QuestionPage
-case object DeclareAlcoholDutyQuestionPage extends QuestionPage[Boolean] {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  override def path: JsPath = JsPath \ toString
+import javax.inject.Inject
 
-  override def toString: String = "declareAlcoholDutyQuestion"
+class DeclareAlcoholDutyQuestionFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "declareAlcoholDutyQuestion-yesNoValue" -> boolean("declareAlcoholDutyQuestion.error.required")
+    )
 }

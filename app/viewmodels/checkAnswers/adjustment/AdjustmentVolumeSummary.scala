@@ -32,7 +32,7 @@ object AdjustmentVolumeSummary {
     for {
       totalLitres <- adjustmentEntry.totalLitresVolume
       pureAlcohol <- adjustmentEntry.pureAlcoholVolume
-      regime      <- adjustmentEntry.rateBand.map(_.alcoholRegimes.map(_.name).head)
+      regime      <- adjustmentEntry.rateBand.map(_.rangeDetails.map(_.alcoholRegime).head)
     } yield {
       val route =
         if (adjustmentEntry.sprDutyRate.isDefined) {

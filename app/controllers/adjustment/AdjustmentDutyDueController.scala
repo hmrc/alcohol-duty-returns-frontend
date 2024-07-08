@@ -56,7 +56,7 @@ class AdjustmentDutyDueController @Inject() (
     val result = for {
       volume            <- adjustmentEntry.totalLitresVolume
       pureAlcoholVolume <- adjustmentEntry.pureAlcoholVolume
-      taxCode           <- adjustmentEntry.rateBand.map(_.taxType)
+      taxCode           <- adjustmentEntry.rateBand.map(_.taxTypeCode)
       duty              <- adjustmentEntry.duty
       rate              <- adjustmentEntry.rate
       adjustmentType    <- adjustmentEntry.adjustmentType

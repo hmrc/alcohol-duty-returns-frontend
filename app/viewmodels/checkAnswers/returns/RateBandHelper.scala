@@ -22,25 +22,25 @@ import play.api.i18n.Messages
 object RateBandHelper {
 
   def rateBandContent(rateBand: RateBand)(implicit messages: Messages): String                         =
-    rateBand.alcoholRegimes.flatMap(_.abvRanges.toSeq) match {
+    rateBand.rangeDetails.flatMap(_.abvRanges.toSeq) match {
       case abvRanges if abvRanges.size == 1 =>
-        singleInterval(abvRanges.head, rateBand.taxType)
+        singleInterval(abvRanges.head, rateBand.taxTypeCode)
       case abvRanges                        =>
-        multipleIntervals(abvRanges, rateBand.taxType)
+        multipleIntervals(abvRanges, rateBand.taxTypeCode)
     }
   private def singleInterval(interval: ABVRange, taxType: String)(implicit messages: Messages): String =
     interval.maxABV match {
       case AlcoholByVolume.MAX =>
         messages(
           "return.journey.abv.interval.exceeding.max",
-          messages(s"return.journey.abv.interval.label.${interval.name}"),
+          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
           interval.minABV.value,
           taxType
         ).capitalize
       case _                   =>
         messages(
           "return.journey.abv.single.interval",
-          messages(s"return.journey.abv.interval.label.${interval.name}"),
+          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
           interval.minABV.value,
           interval.maxABV.value,
           taxType
@@ -55,10 +55,10 @@ object RateBandHelper {
 
     messages(
       "return.journey.abv.multi.interval",
-      messages(s"return.journey.abv.interval.label.${firstInterval.name}"),
+      messages(s"return.journey.abv.interval.label.${firstInterval.alcoholType}"),
       firstInterval.minABV.value,
       firstInterval.maxABV.value,
-      messages(s"return.journey.abv.interval.label.${lastInterval.name}"),
+      messages(s"return.journey.abv.interval.label.${lastInterval.alcoholType}"),
       lastInterval.minABV.value,
       lastInterval.maxABV.value,
       taxType
@@ -66,15 +66,15 @@ object RateBandHelper {
   }
 
   def rateBandRecap(rateBand: RateBand)(implicit messages: Messages): String =
-    rateBand.alcoholRegimes.flatMap(_.abvRanges.toSeq) match {
+    rateBand.rangeDetails.flatMap(_.abvRanges.toSeq) match {
       case abvRanges if abvRanges.size == 1 =>
         singleIntervalRecap(
           abvRanges.head,
-          rateBand.taxType,
+          rateBand.taxTypeCode,
           rateBand.rateType
         )
       case abvRanges                        =>
-        multipleIntervalsRecap(abvRanges, rateBand.taxType, rateBand.rateType)
+        multipleIntervalsRecap(abvRanges, rateBand.taxTypeCode, rateBand.rateType)
     }
 
   private def singleIntervalRecap(interval: ABVRange, taxType: String, rateType: RateType)(implicit
@@ -84,14 +84,14 @@ object RateBandHelper {
       case AlcoholByVolume.MAX =>
         messages(
           s"return.journey.abv.recap.interval.exceeding.max.$rateType",
-          messages(s"return.journey.abv.interval.label.${interval.name}"),
+          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
           interval.minABV.value,
           taxType
         ).capitalize
       case _                   =>
         messages(
           s"return.journey.abv.recap.single.interval.$rateType",
-          messages(s"return.journey.abv.interval.label.${interval.name}"),
+          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
           interval.minABV.value,
           interval.maxABV.value,
           taxType
@@ -106,10 +106,10 @@ object RateBandHelper {
 
     messages(
       s"return.journey.abv.recap.multi.interval.$rateType",
-      messages(s"return.journey.abv.interval.label.${firstInterval.name}"),
+      messages(s"return.journey.abv.interval.label.${firstInterval.alcoholType}"),
       firstInterval.minABV.value,
       firstInterval.maxABV.value,
-      messages(s"return.journey.abv.interval.label.${lastInterval.name}"),
+      messages(s"return.journey.abv.interval.label.${lastInterval.alcoholType}"),
       lastInterval.minABV.value,
       lastInterval.maxABV.value,
       taxType

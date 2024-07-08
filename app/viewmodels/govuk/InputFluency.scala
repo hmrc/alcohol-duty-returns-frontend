@@ -115,5 +115,8 @@ trait InputFluency {
 
     def withPoundPrefix: Input =
       input.copy(prefix = Some(PrefixOrSuffix(content = HtmlContent("&pound;"))))
+
+    def hidden: Input =
+      input.copy(inputType = "hidden")
   }
 }

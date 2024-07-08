@@ -19,7 +19,7 @@ package controllers.adjustment
 import base.SpecBase
 import cats.data.NonEmptySeq
 import forms.adjustment.AdjustmentSmallProducerReliefDutyRateFormProvider
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, NormalMode, RateBand, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
@@ -27,7 +27,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import models.AlcoholRegimeName.Beer
+import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
@@ -49,22 +49,22 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
     controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode).url
   val regime                                          = Beer
   val rateBand                                        = RateBand(
-    "351",
+    "310",
     "some band",
     RateType.DraughtRelief,
+    Some(BigDecimal(10.99)),
     Set(
-      AlcoholRegime(
-        regime,
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
         NonEmptySeq.one(
           ABVRange(
-            ABVRangeName.Beer,
-            AlcoholByVolume(1.3),
-            AlcoholByVolume(3.4)
+            AlcoholType.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
           )
         )
       )
-    ),
-    Some(BigDecimal(10.99))
+    )
   )
 
   "AdjustmentSmallProducerReliefDutyRate Controller" - {

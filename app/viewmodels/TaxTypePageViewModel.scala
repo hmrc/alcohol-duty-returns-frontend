@@ -40,13 +40,13 @@ object TaxTypePageViewModel {
 
     val radioItems: Seq[RadioItem] = for {
       rateBand <- rateBands
-      regime   <- rateBand.alcoholRegimes.map(_.name)
+      regime   <- rateBand.rangeDetails.map(_.alcoholRegime)
     } yield RadioItem(
       content = Text(
-        s"${messages("taxType.taxTypeRadio.regime." + regime)}, ${messages("taxType.taxTypeRadio.taxType")} ${rateBand.taxType}"
+        s"${messages("taxType.taxTypeRadio.regime." + regime)}, ${messages("taxType.taxTypeRadio.taxType")} ${rateBand.taxTypeCode}"
       ),
-      value = Some(s"${rateBand.taxType}_$regime"),
-      id = Some(s"${rateBand.taxType}_$regime")
+      value = Some(s"${rateBand.taxTypeCode}_$regime"),
+      id = Some(s"${rateBand.taxTypeCode}_$regime")
     )
 
     TaxTypePageViewModel(

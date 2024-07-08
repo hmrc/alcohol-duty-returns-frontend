@@ -20,10 +20,9 @@ import base.SpecBase
 import cats.data.NonEmptySeq
 import connectors.CacheConnector
 import generators.ModelGenerators
-import models.RateType.Core
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RateType, UserAnswers}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment._
 import play.api.inject.bind
@@ -45,18 +44,22 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   val repackagedDuty    = BigDecimal(33.2)
   val newDuty           = BigDecimal(1)
   val rateBand          = RateBand(
-    taxCode,
+    "310",
     "some band",
     RateType.DraughtRelief,
+    Some(BigDecimal(10.99)),
     Set(
-      AlcoholRegime(
-        AlcoholRegimeName.Beer,
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
         NonEmptySeq.one(
-          ABVRange(ABVRangeName.Beer, AlcoholByVolume(0.1), AlcoholByVolume(5.8))
+          ABVRange(
+            AlcoholType.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
         )
       )
-    ),
-    Some(rate)
+    )
   )
 
   val duty = BigDecimal(100)

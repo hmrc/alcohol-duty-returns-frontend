@@ -62,7 +62,7 @@ class AdjustmentTaxTypeController @Inject() (
           view(
             form.fill(
               value.rateBand
-                .map(_.taxType)
+                .map(_.taxTypeCode)
                 .getOrElse(throw new RuntimeException("Couldn't fetch taxCode value from cache"))
                 .toInt
             ),
@@ -170,7 +170,7 @@ class AdjustmentTaxTypeController @Inject() (
     alcoholDutyCalculatorConnector.rateBand(taxCode, period)
 
   def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
-    adjustmentEntry.rateBand.map(_.taxType) match {
+    adjustmentEntry.rateBand.map(_.taxTypeCode) match {
       case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, false)
       case _                                                             =>
         (

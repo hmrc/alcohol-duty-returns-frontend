@@ -19,11 +19,11 @@ package connectors
 import base.SpecBase
 import cats.data.NonEmptySeq
 import config.FrontendAppConfig
-import models.AlcoholRegimeName.{Beer, Wine}
+import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.adjustment.AdjustmentTypes
 import models.productEntry.TaxDuty
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.{NOT_FOUND, OK}
@@ -42,22 +42,23 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     "310",
     "some band",
     RateType.DraughtRelief,
+    Some(BigDecimal(10.99)),
     Set(
-      AlcoholRegime(
-        AlcoholRegimeName.Beer,
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
         NonEmptySeq.one(
           ABVRange(
-            ABVRangeName.Beer,
+            AlcoholType.Beer,
             AlcoholByVolume(0.1),
             AlcoholByVolume(5.8)
           )
         )
       )
-    ),
-    Some(BigDecimal(10.99))
+    )
   )
   val rateBandList: Seq[RateBand]          = Seq(rateBand)
   val rateType                             = RateTypeResponse(DraughtRelief)
+  val ratePeriod                           = returnPeriodGen.sample.get
 
   "rates" - {
     "successfully retrieve rates" in {
@@ -178,6 +179,30 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
             any()
           )(any(), any(), any())
       }
+    }
+
+    "rateBandByRegime" - {
+      "successfully retrieve rate band list given a regime" in {
+        when {
+          connector.httpClient.GET[Seq[RateBand]](any(), any(), any())(any(), any(), any())
+        } thenReturn Future.successful(rateBandList)
+
+        whenReady(connector.rateBandByRegime(ratePeriod = ratePeriod.period, AlcoholRegime.values)) { result =>
+          result mustBe rateBandList
+          verify(connector.httpClient, atLeastOnce)
+            .GET[Seq[RateBand]](
+              any(),
+              ArgumentMatchers.eq(
+                Seq(
+                  ("ratePeriod", Json.toJson(ratePeriod.period)(RatePeriod.yearMonthFormat).toString),
+                  ("alcoholRegimes", Json.toJson(AlcoholRegime.values).toString())
+                )
+              ),
+              any()
+            )(any(), any(), any())
+        }
+      }
+
     }
   }
 }

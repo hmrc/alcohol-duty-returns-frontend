@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.adjustment.AdjustmentVolumeWithSPRFormProvider
 
 import javax.inject.Inject
-import models.{AlcoholRegimeName, Mode}
+import models.{AlcoholRegime, Mode}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumeWithSPRPage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -49,10 +49,10 @@ class AdjustmentVolumeWithSPRController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private def getRegime(implicit request: DataRequest[_]): AlcoholRegimeName = {
+  private def getRegime(implicit request: DataRequest[_]): AlcoholRegime = {
     val rateBand = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.rateBand)
     rateBand
-      .map(_.alcoholRegimes.map(_.name).head)
+      .map(_.rangeDetails.map(_.alcoholRegime).head)
       .getOrElse(throw new RuntimeException("Couldn't fetch regime value from cache"))
   }
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>

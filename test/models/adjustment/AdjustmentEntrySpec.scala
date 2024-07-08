@@ -19,7 +19,7 @@ package models.adjustment
 import base.SpecBase
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
-import models.{ABVRange, ABVRangeName, AlcoholByVolume, AlcoholRegime, AlcoholRegimeName, RateBand, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -29,19 +29,19 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
     "310",
     "some band",
     RateType.DraughtRelief,
+    Some(BigDecimal(10.99)),
     Set(
-      AlcoholRegime(
-        AlcoholRegimeName.Beer,
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
         NonEmptySeq.one(
           ABVRange(
-            ABVRangeName.Beer,
+            AlcoholType.Beer,
             AlcoholByVolume(0.1),
             AlcoholByVolume(5.8)
           )
         )
       )
-    ),
-    Some(BigDecimal(10.99))
+    )
   )
 
   "AdjustmentEntry" - {
