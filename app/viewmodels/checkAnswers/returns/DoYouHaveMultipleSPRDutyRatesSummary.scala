@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.productEntry
+package viewmodels.checkAnswers.returns
 
-import controllers.productEntry.routes
-import models.{CheckMode, UserAnswers}
-import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import controllers.returns.routes
+import models.{AlcoholRegime, CheckMode, UserAnswers}
+import pages.returns.DoYouHaveMultipleSPRDutyRatesPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object DeclareAlcoholDutyQuestionSummary {
+object DoYouHaveMultipleSPRDutyRatesSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DeclareAlcoholDutyQuestionPage).map { answer =>
+  def row(regime: AlcoholRegime, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "declareAlcoholDutyQuestion.checkYourAnswersLabel",
+        key = "doYouHaveMultipleSPRDutyRates.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("declareAlcoholDutyQuestion.change.hidden"))
+          ActionItemViewModel(
+            "site.change",
+            routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(CheckMode, regime).url
+          )
+            .withVisuallyHiddenText(messages("doYouHaveMultipleSPRDutyRates.change.hidden"))
         )
       )
     }

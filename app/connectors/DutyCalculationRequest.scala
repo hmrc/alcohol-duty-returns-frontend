@@ -17,6 +17,7 @@
 package connectors
 
 import models.AlcoholByVolume
+import models.returns.VolumeAndRateByTaxType
 import play.api.libs.json.{Json, OFormat}
 
 case class DutyCalculationRequest(
@@ -27,4 +28,12 @@ case class DutyCalculationRequest(
 
 object DutyCalculationRequest {
   implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
+}
+
+case class TotalDutyCalculationRequest(
+  dutiesByTaxType: Seq[VolumeAndRateByTaxType]
+)
+
+object TotalDutyCalculationRequest {
+  implicit val formats: OFormat[TotalDutyCalculationRequest] = Json.format[TotalDutyCalculationRequest]
 }

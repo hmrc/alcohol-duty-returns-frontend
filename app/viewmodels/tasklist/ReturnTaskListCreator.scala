@@ -16,9 +16,10 @@
 
 package viewmodels.tasklist
 
-import models.{CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.{AlcoholRegime, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.productEntry.{DeclareAlcoholDutyQuestionPage, ProductEntryListPage, ProductListPage}
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
@@ -31,7 +32,7 @@ import javax.inject.Inject
 class ReturnTaskListCreator @Inject() () {
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
-    createTaskListSection: () => TaskListItem,
+    createTaskListSection: () => Seq[TaskListItem],
     declarationController: Mode => String,
     sectionName: String
   )(implicit
@@ -44,9 +45,8 @@ class ReturnTaskListCreator @Inject() () {
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.yes"))),
             status = AlcholDutyTaskListItemStatus.completed,
             href = Some(declarationController(CheckMode))
-          ),
-          createTaskListSection()
-        )
+          )
+        ) ++ createTaskListSection()
 
       case Some(false) =>
         Seq(
@@ -103,22 +103,36 @@ class ReturnTaskListCreator @Inject() () {
         )
     }
 
-  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
-    val getDeclarationState = () =>
-      (userAnswers.get(ProductListPage), userAnswers.get(ProductEntryListPage)) match {
-        case (Some(false), Some(list)) if list.nonEmpty => Completed
-        case (_, Some(list)) if list.nonEmpty           => InProgress
-        case _                                          => NotStarted
-      }
+  private val alcoholRegimeViewOrder: Seq[AlcoholRegime] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
 
-    createDeclarationTask(
-      getDeclarationState,
-      "returns.products",
-      controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url,
-      controllers.productEntry.routes.ProductListController.onPageLoad().url,
-      controllers.productEntry.routes.ProductListController.onPageLoad().url
-    )
-  }
+  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Seq[TaskListItem] =
+    for (regime <- userAnswers.regimes.regimes.toSeq.sortBy(alcoholRegimeViewOrder.indexOf))
+      yield (
+        userAnswers.getByKey(AlcoholDutyPage, regime),
+        userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
+      ) match {
+        case (Some(_), _)    =>
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url)
+          )
+        case (None, Some(_)) =>
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+            status = AlcholDutyTaskListItemStatus.inProgress,
+            href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+          )
+        case _               =>
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+            status = AlcholDutyTaskListItemStatus.notStarted,
+            href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+          )
+
+      }
 
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
@@ -197,14 +211,14 @@ class ReturnTaskListCreator @Inject() () {
     createSection(
       userAnswers.get(DeclareAlcoholDutyQuestionPage),
       () => returnJourneyTaskListItem(userAnswers),
-      controllers.productEntry.routes.DeclareAlcoholDutyQuestionController.onPageLoad(_).url,
+      controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(_).url,
       sectionName = "returns"
     )
 
   def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
-      () => returnDSDJourneyTaskListItem(userAnswers),
+      () => Seq(returnDSDJourneyTaskListItem(userAnswers)),
       controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(_).url,
       sectionName = "dutySuspended"
     )
@@ -212,7 +226,7 @@ class ReturnTaskListCreator @Inject() () {
   def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareQuarterlySpiritsPage),
-      () => returnQSJourneyTaskListItem(userAnswers),
+      () => Seq(returnQSJourneyTaskListItem(userAnswers)),
       controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(_).url,
       sectionName = "spirits"
     )

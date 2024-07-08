@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package forms.productEntry
+package navigation
 
-import javax.inject.Inject
+import play.api.mvc.Call
+import pages._
+import models.{Mode, UserAnswers}
 
-import forms.mappings.Mappings
-import play.api.data.Form
+class FakeReturnsNavigator(desiredRoute: Call) extends ReturnsNavigator {
 
-class DeclareAlcoholDutyQuestionFormProvider @Inject() extends Mappings {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, boolean: Boolean): Call =
+    desiredRoute
 
-  def apply(): Form[Boolean] =
-    Form(
-      "declareAlcoholDutyQuestion-yesNoValue" -> boolean("declareAlcoholDutyQuestion.error.required")
-    )
+  override def nextPageWithRegime(
+    page: Page,
+    mode: Mode,
+    userAnswers: UserAnswers,
+    regime: models.AlcoholRegime,
+    hasAnswerChanged: Boolean,
+    index: Option[Int]
+  ): Call =
+    desiredRoute
 }

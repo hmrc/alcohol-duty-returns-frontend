@@ -13,7 +13,8 @@ object AppDependencies {
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"             % hmrcMongoVersion,
     "org.typelevel"     %% "cats-core"                      % "2.10.0",
     "com.beachape"      %% "enumeratum"                     % "1.7.3",
-    "com.beachape"      %% "enumeratum-play"                % "1.8.0"
+    "com.beachape"      %% "enumeratum-play"                % "1.8.0",
+    "com.beachape"      %% "enumeratum-cats"                % "1.7.3"
 
   )
 

@@ -17,5 +17,10 @@
 package config
 
 object Constants {
-  val periodKeySessionKey: String = "period-key"
+  val periodKeySessionKey: String    = "period-key"
+  val maximumDecimalPlaces: Int      = 2
+  val volumeMinimumValue: BigDecimal = BigDecimal(0.01)
+  val volumeMaximumValue: BigDecimal = BigDecimal(999999999.99)
+  val dutyMinimumValue: BigDecimal   = BigDecimal(0.00)
+  val dutyMaximumValue: BigDecimal   = BigDecimal(999999999.99)
 }

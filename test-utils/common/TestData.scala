@@ -53,7 +53,7 @@ trait TestData extends ModelGenerators {
     returnId,
     groupId,
     internalId,
-    regimes = AlcoholRegimes(Set(Beer))
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
   )
 
   val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers

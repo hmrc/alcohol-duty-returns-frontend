@@ -17,6 +17,7 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
+import connectors.CacheConnector
 import forms.spiritsQuestions.AlcoholUsedFormProvider
 import models.NormalMode
 import models.spiritsQuestions.AlcoholUsed
@@ -27,7 +28,6 @@ import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.AlcoholUsedView
 
