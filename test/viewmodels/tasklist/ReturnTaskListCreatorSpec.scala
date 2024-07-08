@@ -17,11 +17,12 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import models.{CheckMode, NormalMode, UserAnswers}
+import models.returns.AlcoholDuty
+import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.productEntry.{ProductEntryListPage, ProductListPage}
-import pages.returns.DeclareAlcoholDutyQuestionPage
+import pages.productEntry.ProductEntryListPage
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.Application
 import play.api.i18n.Messages
@@ -69,17 +70,17 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
       }
 
-      "when the user answers yes to DeclareAlcoholDuty question, must return a complete section and the Product List task" - {
+      "when the user answers yes to DeclareAlcoholDuty question, must return a complete section and the regime tasks" - {
         val declaredAlcoholDutyUserAnswer = emptyUserAnswers
           .set(DeclareAlcoholDutyQuestionPage, true)
           .success
           .value
 
-        "must have a link to ProductEntryGuidanceController if the user has not answered any other question" in {
+        "must have a link to the 'What do you need to declare?' screen if the user has not answered any other question" in {
           val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
 
           result.completedTask                     shouldBe false
-          result.taskList.items.size               shouldBe 1 + declaredAlcoholDutyUserAnswer.regimes.regimes.size
+          result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
           result.title                             shouldBe messages("taskList.section.returns.heading")
           result.taskList.items.head.title.content shouldBe Text(
             messages("taskList.section.returns.needToDeclare.yes")
@@ -89,27 +90,36 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
           )
 
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.returns.products.notStarted")
-          )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
-          result.taskList.items(1).href          shouldBe Some(
-            controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
+          AlcoholRegime.values.foreach(regime =>
+            result.taskList.items
+              .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
+              case Some(task) =>
+                task.status shouldBe AlcholDutyTaskListItemStatus.notStarted
+                task.href   shouldBe Some(
+                  controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+                )
+              case None       => fail(s"Task for regime $regime not found")
+            }
           )
         }
 
-        "must have a link to ProductEntryGuidanceController if the user answered yes to ProductListPage question and the list is empty" in {
+        "must have a link to 'What do you need to declare?' screen and status set as 'In Progress' if the user has answered some questions" in {
           val userAnswers = declaredAlcoholDutyUserAnswer
             .set(ProductEntryListPage, Seq.empty)
             .success
             .value
-            .set(ProductListPage, true)
-            .success
-            .value
-          val result      = returnTaskListCreator.returnSection(userAnswers)
 
+          val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
+            val rateBands = genListOfRateBandForRegime(regime).sample.value
+            ua
+              .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
+              .success
+              .value
+          }
+
+          val result = returnTaskListCreator.returnSection(filledUserAnswers)
           result.completedTask                     shouldBe false
-          result.taskList.items.size               shouldBe 2
+          result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
           result.title                             shouldBe messages("taskList.section.returns.heading")
           result.taskList.items.head.title.content shouldBe Text(
             messages("taskList.section.returns.needToDeclare.yes")
@@ -119,59 +129,47 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
           )
 
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.returns.products.notStarted")
-          )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
-          result.taskList.items(1).href          shouldBe Some(
-            controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad().url
-          )
-        }
-
-        "must have a link to ProductListController if the user answered yes to ProductListPage question and the list is not empty" in {
-          val productEntry = productEntryGen.sample.get
-          val userAnswers  = declaredAlcoholDutyUserAnswer
-            .set(ProductEntryListPage, Seq(productEntry))
-            .success
-            .value
-            .set(ProductListPage, true)
-            .success
-            .value
-          val result       = returnTaskListCreator.returnSection(userAnswers)
-
-          result.completedTask                     shouldBe false
-          result.taskList.items.size               shouldBe 2
-          result.title                             shouldBe messages("taskList.section.returns.heading")
-          result.taskList.items.head.title.content shouldBe Text(
-            messages("taskList.section.returns.needToDeclare.yes")
-          )
-          result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
-          result.taskList.items.head.href          shouldBe Some(
-            controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-          )
-
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.returns.products.inProgress")
-          )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
-          result.taskList.items(1).href          shouldBe Some(
-            controllers.productEntry.routes.ProductListController.onPageLoad().url
+          AlcoholRegime.values.foreach(regime =>
+            result.taskList.items
+              .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
+              case Some(task) =>
+                task.status shouldBe AlcholDutyTaskListItemStatus.inProgress
+                task.href   shouldBe Some(
+                  controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+                )
+              case None       => fail(s"Task for regime $regime not found")
+            }
           )
         }
 
-        "must have a link to ProductListController if the user answered no to ProductListPage question and the list is not empty" in {
-          val productEntry = productEntryGen.sample.get
-          val userAnswers  = declaredAlcoholDutyUserAnswer
-            .set(ProductEntryListPage, Seq(productEntry))
+        "must have a link to 'CheckYourAnswers' screen and status set as 'Completed' if the user has answered all the questions" in {
+          val userAnswers = declaredAlcoholDutyUserAnswer
+            .set(ProductEntryListPage, Seq.empty)
             .success
             .value
-            .set(ProductListPage, false)
-            .success
-            .value
-          val result       = returnTaskListCreator.returnSection(userAnswers)
 
+          val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
+            val rateBands = genListOfRateBandForRegime(regime).sample.value
+
+            val dutiesByTaxType = arbitraryDutyByTaxType(rateBands).arbitrary.sample.value
+
+            val alcoholDutyMock = AlcoholDuty(
+              dutiesByTaxType = dutiesByTaxType,
+              totalDuty = dutiesByTaxType.map(_.dutyRate).sum
+            )
+
+            ua
+              .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
+              .success
+              .value
+              .setByKey(AlcoholDutyPage, regime, alcoholDutyMock)
+              .success
+              .value
+          }
+
+          val result = returnTaskListCreator.returnSection(filledUserAnswers)
           result.completedTask                     shouldBe true
-          result.taskList.items.size               shouldBe 2
+          result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
           result.title                             shouldBe messages("taskList.section.returns.heading")
           result.taskList.items.head.title.content shouldBe Text(
             messages("taskList.section.returns.needToDeclare.yes")
@@ -181,20 +179,24 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
           )
 
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.returns.products.completed")
-          )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
-          result.taskList.items(1).href          shouldBe Some(
-            controllers.productEntry.routes.ProductListController.onPageLoad().url
+          AlcoholRegime.values.foreach(regime =>
+            result.taskList.items
+              .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
+              case Some(task) =>
+                task.status shouldBe AlcholDutyTaskListItemStatus.completed
+                task.href   shouldBe Some(
+                  controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url
+                )
+              case None       => fail(s"Task for regime $regime not found")
+            }
           )
         }
       }
     }
 
-    "on calling returnDSDSection" - {
+    "returnDSDSection" - {
 
-      "when the UserAnswers object is empty, must return a not started section" in {
+      "when the user answers object is empty, must return a not started section" in {
         val result = returnTaskListCreator.returnDSDSection(emptyUserAnswers)
 
         result.completedTask                     shouldBe false
@@ -229,17 +231,13 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       }
 
       "when the user answers yes to Declare DSD question, must return a complete section and the DSD task" - {
-        def declaredDSDUserAnswers(userAnswersWithRegimes: UserAnswers) = userAnswersWithRegimes
+        val declaredDSDUserAnswer = emptyUserAnswers
           .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
           .success
           .value
 
-        val validTotal       = 42.34
-        val validPureAlcohol = 34.23
-
         "must have a link to DeclareDutySuspendedDeliveriesQuestionController if the user has not answered any other question" in {
-          val result =
-            returnTaskListCreator.returnDSDSection(declaredDSDUserAnswers(userAnswersWithAllRegimes))
+          val result = returnTaskListCreator.returnDSDSection(declaredDSDUserAnswer)
 
           result.completedTask                     shouldBe false
           result.taskList.items.size               shouldBe 2
@@ -262,39 +260,32 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         }
 
         "must have a link to DeclareDutySuspendedDeliveriesQuestionController if the user answers yes to DSD question and not all regime questions are answered" in {
-          val incompleteDutySuspendedDeliveriesUserAnswers =
-            Seq(
-              (
-                DutySuspendedBeerPage.path,
-                Json.obj(
+          val validTotal                                                = 42.34
+          val validPureAlcohol                                          = 34.23
+          val incompleteDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers
+            .copy(data =
+              Json.obj(
+                DutySuspendedBeerPage.toString    -> Json.obj(
                   "totalBeer"         -> validTotal,
                   "pureAlcoholInBeer" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedCiderPage.path,
-                Json.obj(
+                ),
+                DutySuspendedCiderPage.toString   -> Json.obj(
                   "totalCider"         -> validTotal,
                   "pureAlcoholInCider" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedWinePage.path,
-                Json.obj(
+                ),
+                DutySuspendedSpiritsPage.toString -> Json.obj(
+                  "totalSpirits"         -> validTotal,
+                  "pureAlcoholInSpirits" -> validPureAlcohol
+                ),
+                DutySuspendedWinePage.toString    -> Json.obj(
                   "totalWine"         -> validTotal,
                   "pureAlcoholInWine" -> validPureAlcohol
                 )
-              ),
-              (
-                DutySuspendedSpiritsPage.path,
-                Json.obj(
-                  "totalSpirits"         -> validTotal,
-                  "pureAlcoholInSpirits" -> validPureAlcohol
-                )
               )
-            ).foldLeft(declaredDSDUserAnswers(userAnswersWithAllRegimes)) { case (userAnswers, (path, obj)) =>
-              userAnswers.copy(data = userAnswers.set(path, obj).get)
-            }
+            )
+            .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+            .success
+            .value
 
           val result = returnTaskListCreator.returnDSDSection(incompleteDutySuspendedDeliveriesUserAnswers)
 
@@ -319,46 +310,36 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         }
 
         "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions are answered" in {
-          val completeDutySuspendedDeliveriesUserAnswers =
-            Seq(
-              (
-                DutySuspendedBeerPage.path,
-                Json.obj(
+          val validTotal                                              = 42.34
+          val validPureAlcohol                                        = 34.23
+          val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers
+            .copy(data =
+              Json.obj(
+                DutySuspendedBeerPage.toString           -> Json.obj(
                   "totalBeer"         -> validTotal,
                   "pureAlcoholInBeer" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedCiderPage.path,
-                Json.obj(
+                ),
+                DutySuspendedCiderPage.toString          -> Json.obj(
                   "totalCider"         -> validTotal,
                   "pureAlcoholInCider" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedWinePage.path,
-                Json.obj(
-                  "totalWine"         -> validTotal,
-                  "pureAlcoholInWine" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedSpiritsPage.path,
-                Json.obj(
+                ),
+                DutySuspendedSpiritsPage.toString        -> Json.obj(
                   "totalSpirits"         -> validTotal,
                   "pureAlcoholInSpirits" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedOtherFermentedPage.path,
-                Json.obj(
+                ),
+                DutySuspendedWinePage.toString           -> Json.obj(
+                  "totalWine"         -> validTotal,
+                  "pureAlcoholInWine" -> validPureAlcohol
+                ),
+                DutySuspendedOtherFermentedPage.toString -> Json.obj(
                   "totalOtherFermented"         -> validTotal,
                   "pureAlcoholInOtherFermented" -> validPureAlcohol
                 )
               )
-            ).foldLeft(declaredDSDUserAnswers(userAnswersWithAllRegimes)) { case (userAnswers, (path, obj)) =>
-              userAnswers.copy(data = userAnswers.set(path, obj).get)
-            }
+            )
+            .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+            .success
+            .value
 
           val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
 
@@ -381,197 +362,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
           )
         }
-
-        "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions except Beer (as Beer is not included) are answered" in {
-          val completeDutySuspendedDeliveriesUserAnswers =
-            Seq(
-              (
-                DutySuspendedCiderPage.path,
-                Json.obj(
-                  "totalCider"         -> validTotal,
-                  "pureAlcoholInCider" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedWinePage.path,
-                Json.obj(
-                  "totalWine"         -> validTotal,
-                  "pureAlcoholInWine" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedSpiritsPage.path,
-                Json.obj(
-                  "totalSpirits"         -> validTotal,
-                  "pureAlcoholInSpirits" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedOtherFermentedPage.path,
-                Json.obj(
-                  "totalOtherFermented"         -> validTotal,
-                  "pureAlcoholInOtherFermented" -> validPureAlcohol
-                )
-              )
-            ).foldLeft(declaredDSDUserAnswers(userAnswersWithoutBeer)) { case (userAnswers, (path, obj)) =>
-              userAnswers.copy(data = userAnswers.set(path, obj).get)
-            }
-
-          val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
-
-          result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
-        }
-
-        "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions except Cider (as Cider is not included) are answered" in {
-          val completeDutySuspendedDeliveriesUserAnswers =
-            Seq(
-              (
-                DutySuspendedBeerPage.path,
-                Json.obj(
-                  "totalBeer"         -> validTotal,
-                  "pureAlcoholInBeer" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedWinePage.path,
-                Json.obj(
-                  "totalWine"         -> validTotal,
-                  "pureAlcoholInWine" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedSpiritsPage.path,
-                Json.obj(
-                  "totalSpirits"         -> validTotal,
-                  "pureAlcoholInSpirits" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedOtherFermentedPage.path,
-                Json.obj(
-                  "totalOtherFermented"         -> validTotal,
-                  "pureAlcoholInOtherFermented" -> validPureAlcohol
-                )
-              )
-            ).foldLeft(declaredDSDUserAnswers(userAnswersWithoutCider)) { case (userAnswers, (path, obj)) =>
-              userAnswers.copy(data = userAnswers.set(path, obj).get)
-            }
-
-          val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
-
-          result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
-        }
-
-        "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions except Wine (as Wine is not included) are answered" in {
-          val completeDutySuspendedDeliveriesUserAnswers =
-            Seq(
-              (
-                DutySuspendedBeerPage.path,
-                Json.obj(
-                  "totalBeer"         -> validTotal,
-                  "pureAlcoholInBeer" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedCiderPage.path,
-                Json.obj(
-                  "totalCider"         -> validTotal,
-                  "pureAlcoholInCider" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedSpiritsPage.path,
-                Json.obj(
-                  "totalSpirits"         -> validTotal,
-                  "pureAlcoholInSpirits" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedOtherFermentedPage.path,
-                Json.obj(
-                  "totalOtherFermented"         -> validTotal,
-                  "pureAlcoholInOtherFermented" -> validPureAlcohol
-                )
-              )
-            ).foldLeft(declaredDSDUserAnswers(userAnswersWithoutWine)) { case (userAnswers, (path, obj)) =>
-              userAnswers.copy(data = userAnswers.set(path, obj).get)
-            }
-
-          val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
-
-          result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
-        }
-
-        "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions except Spirits (as Spirits is not included) are answered" in {
-          val completeDutySuspendedDeliveriesUserAnswers =
-            Seq(
-              (
-                DutySuspendedBeerPage.path,
-                Json.obj(
-                  "totalBeer"         -> validTotal,
-                  "pureAlcoholInBeer" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedCiderPage.path,
-                Json.obj(
-                  "totalCider"         -> validTotal,
-                  "pureAlcoholInCider" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedWinePage.path,
-                Json.obj(
-                  "totalWine"         -> validTotal,
-                  "pureAlcoholInWine" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedOtherFermentedPage.path,
-                Json.obj(
-                  "totalOtherFermented"         -> validTotal,
-                  "pureAlcoholInOtherFermented" -> validPureAlcohol
-                )
-              )
-            ).foldLeft(declaredDSDUserAnswers(userAnswersWithoutSpirits)) { case (userAnswers, (path, obj)) =>
-              userAnswers.copy(data = userAnswers.set(path, obj).get)
-            }
-
-          val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
-
-          result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
-        }
-
-        "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions except Cider, Wine and OtherFermentedProducts (as Cider, Wine and OtherFermented products are not included) are answered" in {
-          val completeDutySuspendedDeliveriesUserAnswers =
-            Seq(
-              (
-                DutySuspendedBeerPage.path,
-                Json.obj(
-                  "totalBeer"         -> validTotal,
-                  "pureAlcoholInBeer" -> validPureAlcohol
-                )
-              ),
-              (
-                DutySuspendedSpiritsPage.path,
-                Json.obj(
-                  "totalSpirits"         -> validTotal,
-                  "pureAlcoholInSpirits" -> validPureAlcohol
-                )
-              )
-            ).foldLeft(declaredDSDUserAnswers(userAnswersWithoutCiderWineAndOtherFermentedProduct)) {
-              case (userAnswers, (path, obj)) =>
-                userAnswers.copy(data = userAnswers.set(path, obj).get)
-            }
-
-          val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
-
-          result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
-        }
       }
     }
 
-    "on calling returnQSSection" - {
+    "returnQSSection" - {
 
       "when the user answers object is empty, must return a not started section" in {
         val result = returnTaskListCreator.returnQSSection(emptyUserAnswers)
@@ -661,8 +455,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             )
           )
 
-          def setUserAnswers(pages: Seq[JsObject]): UserAnswers =
-            userAnswersWithSpirits.copy(data = pages.reduce(_ ++ _))
+          def setUserAnswers(pages: Seq[JsObject]): UserAnswers = emptyUserAnswers.copy(data = pages.reduce(_ ++ _))
 
           "not be started when no other questions are answered" in {
             val userAnswers = setUserAnswers(Seq(declareQuarterleySpiritsPage))

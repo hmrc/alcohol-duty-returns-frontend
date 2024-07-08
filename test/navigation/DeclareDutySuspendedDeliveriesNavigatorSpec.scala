@@ -22,7 +22,6 @@ import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models._
 import pages._
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
-import play.api.libs.json.{JsObject, Json}
 
 class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
   val navigator = new DeclareDutySuspendedDeliveriesNavigator

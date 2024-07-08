@@ -18,10 +18,9 @@ package controllers.actions
 
 import base.SpecBase
 import controllers.routes
-import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
+import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.http.Status.SEE_OTHER
-import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.FakeRequest
+import play.api.mvc.Result
 import play.api.test.Helpers.LOCATION
 
 import scala.concurrent.Future
