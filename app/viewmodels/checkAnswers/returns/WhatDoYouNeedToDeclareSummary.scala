@@ -48,7 +48,6 @@ object WhatDoYouNeedToDeclareSummary {
                   "site.change",
                   controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
                 )
-                  .withVisuallyHiddenText(messages("whatDoYouNeedToDeclare.change.hidden"))
               )
             )
           )

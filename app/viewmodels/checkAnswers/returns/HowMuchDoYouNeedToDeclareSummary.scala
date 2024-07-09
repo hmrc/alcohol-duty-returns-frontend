@@ -56,7 +56,6 @@ object HowMuchDoYouNeedToDeclareSummary {
                         "site.change",
                         controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
                       )
-                        .withVisuallyHiddenText(messages("howMuchDoYouNeedToDeclare.change.hidden"))
                     )
                   )
                 )
