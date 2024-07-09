@@ -18,7 +18,6 @@ package models
 
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import play.api.libs.json._
-import utils.ListHelpers._
 
 case class AlcoholRegimes(regimes: Set[AlcoholRegime]) {
   def hasBeer()                  = regimes.contains(Beer)
@@ -28,11 +27,6 @@ case class AlcoholRegimes(regimes: Set[AlcoholRegime]) {
   def hasOtherFermentedProduct() = regimes.contains(OtherFermentedProduct)
 
   def hasRegime(regime: AlcoholRegime) = regimes.contains(regime)
-
-  def regimesInViewOrder(): Seq[AlcoholRegime] = AlcoholRegime.values.filter(regimes.contains)
-
-  def nextViewRegime(current: Option[AlcoholRegime]): Option[AlcoholRegime] =
-    current.fold(regimesInViewOrder().headOption)(regimesInViewOrder().toList.nextItem(_))
 }
 
 object AlcoholRegimes {

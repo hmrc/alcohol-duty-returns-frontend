@@ -24,6 +24,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
+import viewmodels.AlcoholRegimesViewOrder
 import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 
 import javax.inject.Inject
@@ -105,7 +106,7 @@ class ReturnTaskListCreator @Inject() () {
   private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Seq[TaskListItem] =
-    for (regime <- userAnswers.regimes.regimesInViewOrder())
+    for (regime <- AlcoholRegimesViewOrder.regimesInViewOrder(userAnswers.regimes))
       yield (
         userAnswers.getByKey(AlcoholDutyPage, regime),
         userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)

@@ -47,54 +47,6 @@ class AlcoholRegimesSpec extends SpecBase {
         allRegimesExceptCiderWineOtherFermented.hasOtherFermentedProduct() mustBe false
       }
     }
-
-    "return the regimes in view order" - {
-      "when all regimes are present" in new SetUp {
-        allRegimes.regimesInViewOrder() mustBe Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
-      }
-
-      "when all regimes are present except Beer" in new SetUp {
-        allRegimesExceptBeer.regimesInViewOrder() mustBe Seq(Cider, Wine, Spirits, OtherFermentedProduct)
-      }
-
-      "when all regimes are present except Cider and Wine" in new SetUp {
-        allRegimesExceptCiderWineOtherFermented.regimesInViewOrder() mustBe Seq(Beer, Spirits)
-      }
-    }
-
-    Seq(
-      (None, Some(Beer)),
-      (Some(Beer), Some(Cider)),
-      (Some(Cider), Some(Wine)),
-      (Some(Wine), Some(Spirits)),
-      (Some(Spirits), Some(OtherFermentedProduct)),
-      (Some(OtherFermentedProduct), None)
-    ).foreach { case (current, expectedNext) =>
-      s"find the next view regime when all regimes are present and the current regime is ${current.map(_.entryName).getOrElse("None")}" in new SetUp {
-        allRegimes.nextViewRegime(current) mustBe expectedNext
-      }
-    }
-
-    Seq(
-      (None, Some(Cider)),
-      (Some(Cider), Some(Wine)),
-      (Some(Wine), Some(Spirits)),
-      (Some(Spirits), Some(OtherFermentedProduct)),
-      (Some(OtherFermentedProduct), None)
-    ).foreach { case (current, expectedNext) =>
-      s"find the next view regime when all regimes are present except Beer and the current regime is ${current.map(_.entryName).getOrElse("None")}" in new SetUp {
-        allRegimesExceptBeer.nextViewRegime(current) mustBe expectedNext
-      }
-    }
-
-    Seq((None, Some(Beer)), (Some(Beer), Some(Spirits)), (Some(Spirits), None)).foreach {
-      case (current, expectedNext) =>
-        s"find the next view regime when all regimes are present except Cider and Wine and the current regime is ${current
-          .map(_.entryName)
-          .getOrElse("None")}" in new SetUp {
-          allRegimesExceptCiderWineOtherFermented.nextViewRegime(current) mustBe expectedNext
-        }
-    }
   }
 
   class SetUp {

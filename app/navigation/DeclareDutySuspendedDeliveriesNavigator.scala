@@ -21,6 +21,7 @@ import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models._
 import pages._
 import play.api.mvc.Call
+import viewmodels.AlcoholRegimesViewOrder
 
 import javax.inject.{Inject, Singleton}
 
@@ -73,8 +74,8 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
   )
 
   private def nextRegimePage(userAnswers: UserAnswers, lastPageRegime: Option[AlcoholRegime], mode: Mode): Call =
-    userAnswers.regimes
-      .nextViewRegime(lastPageRegime)
+    AlcoholRegimesViewOrder
+      .nextViewRegime(userAnswers.regimes, lastPageRegime)
       .flatMap(pageMapping.get(_).map(_(mode)))
       .getOrElse(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad())
 }

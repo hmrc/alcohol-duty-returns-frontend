@@ -147,7 +147,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to unauthorised if regime is missing for a GET" in {
+    "must redirect to Journey Recovery if regime is missing for a GET" in {
       val application = applicationBuilder(userAnswers = Some(userAnswersWithoutWine)).build()
 
       running(application) {
@@ -156,7 +156,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -178,7 +178,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to unauthorised if regime is missing for a POST" in {
+    "must redirect to Journey Recovery if regime is missing for a POST" in {
       val application = applicationBuilder(userAnswers = Some(userAnswersWithoutWine)).build()
 
       running(application) {
@@ -192,7 +192,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

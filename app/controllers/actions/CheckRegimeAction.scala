@@ -33,7 +33,7 @@ trait CheckRegimeAction extends ActionRefiner[DataRequest, DataRequest] with Log
     if (request.userAnswers.regimes.hasRegime(regime)) {
       Future.successful(Right(request))
     } else {
-      Future.successful(Left(Redirect(controllers.routes.UnauthorisedController.onPageLoad)))
+      Future.successful(Left(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
     }
 }
 

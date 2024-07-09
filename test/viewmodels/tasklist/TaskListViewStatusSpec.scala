@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package models
+package viewmodels.tasklist
 
-import enumeratum.{Enum, EnumEntry}
+import base.SpecBase
+import models.TaskListStatus
 
-sealed trait TaskListStatus extends EnumEntry
+class TaskListViewStatusSpec extends SpecBase {
+  "taskListStatus" - {
+    "should return the correct status key" in {
+      TaskListViewStatus.toStatusMessageKey(TaskListStatus.Incomplete) mustBe "incomplete"
+      TaskListViewStatus.toStatusMessageKey(TaskListStatus.Completed) mustBe "completed"
+    }
+  }
 
-object TaskListStatus extends Enum[TaskListStatus] {
-  val values = findValues
-
-  case object Completed extends TaskListStatus
-  case object Incomplete extends TaskListStatus
 }

@@ -66,7 +66,7 @@ class CheckRegimeActionSpec extends SpecBase {
     )
   ).foreach { case (description, harness, userAnswersWithRegime, userAnswersWithoutRegime) =>
     description - {
-      "should redirect to Unauthorised when the required regime is not in userAnswers" in {
+      "should redirect to Journey Recovery when the required regime is not in userAnswers" in {
         val result =
           harness
             .actionRefine(
@@ -80,7 +80,7 @@ class CheckRegimeActionSpec extends SpecBase {
             .header
 
         result.status mustEqual SEE_OTHER
-        result.headers.get(LOCATION) mustEqual Some(routes.UnauthorisedController.onPageLoad.url)
+        result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
       }
 
       "should return a DataRequest if the required regime is in UserAnswers" in {

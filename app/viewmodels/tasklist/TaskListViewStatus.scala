@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package models
+package viewmodels.tasklist
 
-import enumeratum.{Enum, EnumEntry}
+import models.TaskListStatus
 
-sealed trait TaskListStatus extends EnumEntry
-
-object TaskListStatus extends Enum[TaskListStatus] {
-  val values = findValues
-
-  case object Completed extends TaskListStatus
-  case object Incomplete extends TaskListStatus
+object TaskListViewStatus {
+  def toStatusMessageKey(taskListStatus: TaskListStatus): String = taskListStatus.entryName.toLowerCase
 }
