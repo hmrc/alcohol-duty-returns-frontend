@@ -16,7 +16,6 @@
 
 package viewmodels.checkAnswers.checkAndSubmit
 
-
 import models.{AlcoholRegime, UserAnswers}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text

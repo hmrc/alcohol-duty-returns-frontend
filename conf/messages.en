@@ -8,7 +8,7 @@ site.yes = Yes
 site.dot = .
 site.continue = Continue
 site.saveAndContinue = Save and continue
-site.agreeAndSubmit = Agree and submit return
+site.agreeAndSubmit = Agree and send return
 site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
@@ -1138,7 +1138,9 @@ adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 # Beginning of Check and submit sub-journey
 
 dutyDueForThisReturn.title = The duty due for this return is {0}
+dutyDueForThisReturn.nil.title = No Duty due
 dutyDueForThisReturn.heading = The duty due for this return is {0}
+dutyDueForThisReturn.nil.heading = No duty due (nil return)
 dutyDueForThisReturn.positive.p1 = You will be liable for this amount once you submit your return.
 dutyDueForThisReturn.negative.p1 = Your return has a negative value. You will be able to claim this back. If you do not claim it back we will automatically deduct it from your next return.
 dutyDueForThisReturn.nil.p1 = Your return has a nil value and no duty is due.

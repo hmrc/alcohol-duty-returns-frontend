@@ -26,18 +26,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
-class DutyDueForThisReturnController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: DutyDueForThisReturnView
-                                     ) extends FrontendBaseController with I18nSupport {
+class DutyDueForThisReturnController @Inject() (
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  view: DutyDueForThisReturnView
+) extends FrontendBaseController
+    with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val table = DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers, Beer)
-      Ok(view(table))
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val table = DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers, Beer)
+    Ok(view(table))
   }
 }

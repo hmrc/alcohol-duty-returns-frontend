@@ -15,13 +15,15 @@
  *@
 
 @import viewmodels.TableViewModel
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
-        pageHeading: PageHeading
+        pageHeading: PageHeading,
+        paragraph: Paragraph,
+        subHeading: SubHeading,
 )
 
 @(table: TableViewModel)(implicit request: Request[_], messages: Messages)
@@ -34,6 +36,15 @@
     )
 
     @pageHeading(messages("dutyDueForThisReturn.heading"))
+
+    @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
+    @paragraph(messages("dutyDueForThisReturn.p2"))
+
+    @subHeading(messages("dutyDueForThisReturn.h4"), classes = "govuk-heading-m")
+    @paragraph(messages("dutyDueForThisReturn.p3"))
+
+    @subHeading(messages("dutyDueForThisReturn.h3"), classes = "govuk-heading-m")
+
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.agreeAndSubmit"))
