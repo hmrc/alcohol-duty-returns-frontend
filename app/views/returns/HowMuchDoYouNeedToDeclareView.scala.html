@@ -35,7 +35,7 @@
 
 @(form: Form[_], regime: AlcoholRegime, howMuchDoYouNeedToDeclareHelper: CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("howMuchDoYouNeedToDeclare.title", messages(s"return.regime.$regime")))) {
+@layout(pageTitle = title(form, messages(s"howMuchDoYouNeedToDeclare.title.$regime"))) {
 
     @formHelper(action = controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onSubmit(mode, regime), Symbol("autoComplete") -> "off") {
 
@@ -48,7 +48,7 @@
             text = messages(s"section.return.$regime")
         )
 
-        @pageHeading(messages(s"howMuchDoYouNeedToDeclare.heading", messages(s"return.regime.$regime")))
+        @pageHeading(messages(s"howMuchDoYouNeedToDeclare.heading.$regime"))
 
         @paragraph(messages(s"howMuchDoYouNeedToDeclare.p1.$regime"))
 

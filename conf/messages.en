@@ -278,8 +278,18 @@ whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.SmallProdu
 whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtAndSmallProducerRelief = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
 whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught, exceeding {0}% ABV eligible for SPR (tax type code {1})
 
-howMuchDoYouNeedToDeclare.title = Tell us about the {0} you need to declare
-howMuchDoYouNeedToDeclare.heading = Tell us about the {0} you need to declare
+howMuchDoYouNeedToDeclare.title.Beer = Tell us about the beer you need to declare
+howMuchDoYouNeedToDeclare.title.Cider = Tell us about the cider you need to declare
+howMuchDoYouNeedToDeclare.title.Wine = Tell us about the wine you need to declare
+howMuchDoYouNeedToDeclare.title.Spirits = Tell us about the spirits you need to declare
+howMuchDoYouNeedToDeclare.title.OtherFermentedProduct = Tell us about other fermented products you need to declare
+
+howMuchDoYouNeedToDeclare.heading.Beer = Tell us about the beer you need to declare
+howMuchDoYouNeedToDeclare.heading.Cider = Tell us about the cider you need to declare
+howMuchDoYouNeedToDeclare.heading.Wine = Tell us about the wine you need to declare
+howMuchDoYouNeedToDeclare.heading.Spirits = Tell us about the spirits you need to declare
+howMuchDoYouNeedToDeclare.heading.OtherFermentedProduct = Tell us about other fermented products you need to declare
+
 howMuchDoYouNeedToDeclare.p1.Beer = Tell us about the beer you need to declare and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.p1.Cider = Tell us about the cider you need to declare and the pure alcohol in that cider at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.p1.Wine = Tell us about the wine you need to declare and the pure alcohol in that wine at the following Alcohol by Volume (ABV) strengths.
