@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package utils
 
-import models.TaskListStatus
-import models.TaskListStatus.{Completed, Incomplete}
+import scala.annotation.tailrec
 
-case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
+object ListHelpers {
+  implicit class ListWithHelpers[+A](l: List[A]) {
+    @tailrec
+    private def nextItem[B >: A](items: List[B], current: B): Option[B] =
+      items match {
+        case h :: t if h == current => t.headOption
+        case _ :: t                 => nextItem(t, current)
+        case _                      => None
+      }
 
-  def completedTasks: Int = sections.count(_.completedTask)
-  def totalTasks: Int     = sections.size
-
-  def status: TaskListStatus = if (completedTasks == totalTasks) {
-    Completed
-  } else {
-    Incomplete
+    def nextItem[B >: A](current: B): Option[B] = nextItem(l, current)
   }
 }

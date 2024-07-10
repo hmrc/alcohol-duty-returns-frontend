@@ -16,8 +16,7 @@
 
 package viewmodels.tasklist
 
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegime, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
@@ -25,9 +24,12 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
+import viewmodels.AlcoholRegimesViewOrder
 import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 
-object ReturnTaskListHelper {
+import javax.inject.Inject
+
+class ReturnTaskListCreator @Inject() () {
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
     createTaskListSection: () => Seq[TaskListItem],
@@ -101,12 +103,10 @@ object ReturnTaskListHelper {
         )
     }
 
-  private val alcoholRegimeViewOrder: Seq[AlcoholRegime] = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
-
   private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Seq[TaskListItem] =
-    for (regime <- userAnswers.regimes.regimes.toSeq.sortBy(alcoholRegimeViewOrder.indexOf))
+    for (regime <- AlcoholRegimesViewOrder.regimesInViewOrder(userAnswers.regimes))
       yield (
         userAnswers.getByKey(AlcoholDutyPage, regime),
         userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
@@ -134,13 +134,17 @@ object ReturnTaskListHelper {
 
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
-      val beer           = userAnswers.get(DutySuspendedBeerPage).isDefined
-      val cider          = userAnswers.get(DutySuspendedCiderPage).isDefined
-      val wine           = userAnswers.get(DutySuspendedWinePage).isDefined
-      val spirits        = userAnswers.get(DutySuspendedSpiritsPage).isDefined
-      val otherFermented = userAnswers.get(DutySuspendedOtherFermentedPage).isDefined
+      val regimes             = userAnswers.regimes
+      val maybeBeer           = if (regimes.hasBeer()) Some(userAnswers.get(DutySuspendedBeerPage).isDefined) else None
+      val maybeCider          = if (regimes.hasCider()) Some(userAnswers.get(DutySuspendedCiderPage).isDefined) else None
+      val maybeWine           = if (regimes.hasWine()) Some(userAnswers.get(DutySuspendedWinePage).isDefined) else None
+      val maybeSpirits        =
+        if (regimes.hasSpirits()) Some(userAnswers.get(DutySuspendedSpiritsPage).isDefined) else None
+      val maybeOtherFermented =
+        if (regimes.hasOtherFermentedProduct()) Some(userAnswers.get(DutySuspendedOtherFermentedPage).isDefined)
+        else None
 
-      val pagesCompleted = Seq(beer, cider, wine, spirits, otherFermented)
+      val pagesCompleted = Seq(maybeBeer, maybeCider, maybeWine, maybeSpirits, maybeOtherFermented).flatten
 
       if (pagesCompleted.forall(_ == false)) {
         NotStarted
