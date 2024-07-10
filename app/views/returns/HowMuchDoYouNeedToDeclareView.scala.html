@@ -52,10 +52,12 @@
 
         @paragraph(messages(s"howMuchDoYouNeedToDeclare.p1.$regime"))
 
-        @govukWarningText(WarningText(
-            iconFallbackText = Some("Warning"),
-            content = Text(messages(s"howMuchDoYouNeedToDeclare.warning", messages(s"return.regime.$regime")))
-        ))
+        @if(howMuchDoYouNeedToDeclareHelper.draughtAndSmallProducer.nonEmpty || howMuchDoYouNeedToDeclareHelper.smallProducer.nonEmpty) {
+          @govukWarningText(WarningText(
+              iconFallbackText = Some("Warning"),
+              content = Text(messages(s"howMuchDoYouNeedToDeclare.warning", messages(s"return.regime.$regime")))
+          ))
+        }
 
         @paragraph(messages("howMuchDoYouNeedToDeclare.hint"), classes = "govuk-hint")
 
