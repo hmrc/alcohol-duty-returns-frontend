@@ -19,7 +19,7 @@ package controllers.productEntry
 import base.SpecBase
 import forms.productEntry.SmallProducerReliefQuestionFormProvider
 import models.NormalMode
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.FakeProductEntryNavigator
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind

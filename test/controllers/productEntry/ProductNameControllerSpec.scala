@@ -21,7 +21,7 @@ import connectors.CacheConnector
 import forms.productEntry.ProductNameFormProvider
 import models.productEntry.ProductEntry
 import models.NormalMode
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.FakeProductEntryNavigator
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind

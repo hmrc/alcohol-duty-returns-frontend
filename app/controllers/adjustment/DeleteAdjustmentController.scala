@@ -21,7 +21,7 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierA
 import forms.adjustment.DeleteAdjustmentFormProvider
 import navigation.AdjustmentNavigator
 import pages.adjustment.AdjustmentEntryListPage
-import pages.productEntry.DeleteProductPage
+import pages.adjustment.DeleteAdjustmentPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -47,7 +47,7 @@ class DeleteAdjustmentController @Inject() (
   val form = formProvider()
 
   def onPageLoad(index: Int): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeleteProductPage) match {
+    val preparedForm = request.userAnswers.get(DeleteAdjustmentPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }

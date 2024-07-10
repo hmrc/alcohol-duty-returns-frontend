@@ -141,7 +141,6 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       }
     }
 
-
     "must redirect to the next page when the same data is submitted" in {
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
@@ -153,6 +152,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
             CurrentAdjustmentEntryPage,
             AdjustmentEntry(
               adjustmentType = Some(Spoilt),
+              rateBand = Some(rateBand),
               repackagedRateBand = Some(rateBand),
               period = Some(period)
             )
@@ -185,7 +185,6 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       }
     }
      */
-
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]

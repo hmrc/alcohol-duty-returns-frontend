@@ -33,7 +33,6 @@ GET         /before-you-start-your-return/:periodKey     controllers.BeforeStart
 POST        /before-you-start-your-return                controllers.BeforeStartReturnController.onSubmit()
 
 # Beginning of product entry sub-journey
-GET        /tell-us-about-your-alcohol                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
 
 GET        /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
@@ -80,57 +79,6 @@ POST       /delete-multiple-spr-entry/:regime/:index                        cont
 
 GET        /duty-due/:regime                                  controllers.returns.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
 POST       /duty-due/:regime                                  controllers.returns.DutyCalculationController.onSubmit(regime:AlcoholRegime)
-
-# old journey
-
-GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-name-do-you-want-to-give-this-product                  controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-name-do-you-want-to-give-this-product                  controllers.productEntry.ProductNameController.onSubmit(mode: Mode = CheckMode)
-
-GET        /what-is-this-products-alcohol-by-volume-strength                  controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-this-products-alcohol-by-volume-strength                  controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-is-this-products-alcohol-by-volume-strength                        controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-is-this-products-alcohol-by-volume-strength                        controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
-
-GET        /is-this-product-eligible-for-draught-relief                        controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /is-this-product-eligible-for-draught-relief                        controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-is-this-product-eligible-for-draught-relief                  controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-is-this-product-eligible-for-draught-relief                  controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
-
-GET        /what-is-this-products-tax-type                        controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-this-products-tax-type                        controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-is-this-products-tax-type                  controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-is-this-products-tax-type                  controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = CheckMode)
-
-GET        /is-this-product-eligible-for-small-producer-relief                        controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /is-this-product-eligible-for-small-producer-relief                        controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-is-this-product-eligible-for-small-producer-relief                  controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-is-this-product-eligible-for-small-producer-relief                  controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
-
-GET        /how-much-of-this-product-do-you-need-to-declare                  controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-of-this-product-do-you-need-to-declare                  controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-of-this-product-do-you-need-to-declare                        controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-of-this-product-do-you-need-to-declare                        controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
-
-GET        /what-is-your-small-producer-duty-rate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-your-small-producer-duty-rate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-is-your-small-producer-duty-rate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-is-your-small-producer-duty-rate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
-
-GET        /the-duty-due-on-this-product                       controllers.productEntry.DutyDueController.onPageLoad()
-
-GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
-POST       /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onSubmit()
-
-GET        /return-products                        controllers.productEntry.ProductListController.onPageLoad()
-POST       /return-products                        controllers.productEntry.ProductListController.onSubmit()
-GET        /change-return-products                  controllers.productEntry.ProductListController.onPageLoad()
-POST       /change-return-products                  controllers.productEntry.ProductListController.onSubmit()
-
-GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(index: Int)
-POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(index: Int)
-# End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
 GET        /do-you-need-to-declare-delivered-received-duty-suspended                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)

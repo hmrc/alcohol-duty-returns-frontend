@@ -22,7 +22,7 @@ import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import forms.productEntry.TaxTypeFormProvider
 import models.productEntry.ProductEntry
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, CheckMode, NormalMode, RangeDetailsByRegime, RateBand, RateType}
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.FakeProductEntryNavigator
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind

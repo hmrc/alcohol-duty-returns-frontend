@@ -18,7 +18,7 @@ package controllers.productEntry
 
 import base.SpecBase
 import forms.productEntry.DeleteProductFormProvider
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.FakeProductEntryNavigator
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry.DeleteProductPage
 import play.api.inject.bind

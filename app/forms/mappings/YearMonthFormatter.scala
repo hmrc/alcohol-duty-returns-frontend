@@ -33,12 +33,12 @@ class YearMonthFormatter(
   val fieldKeys: List[String] = List("month", "year")
 
   def verifyMonth(key: String, month: Int): Either[Seq[FormError], Int] =
-    if (month >= 1 && month <= 12) Right(month) else Left(Seq(FormError(key, s"$invalidKey.month", args)))
+    if (month >= 1 && month <= 12) Right(month) else Left(Seq(FormError(s"$key.month", s"$invalidKey.month", args)))
 
   def verifyYear(key: String, year: Int): Either[Seq[FormError], Int] =
     if (year >= 1000 && year <= 9999) Right(year)
-    else if ((year < 1000 && year >= 0) || year > 9999) Left(Seq(FormError(key, s"$invalidYear.year", args)))
-    else Left(Seq(FormError(key, s"$invalidKey.year", args)))
+    else if ((year < 1000 && year >= 0) || year > 9999) Left(Seq(FormError(s"$key.year", s"$invalidYear.year", args)))
+    else Left(Seq(FormError(s"$key.year", s"$invalidKey.year", args)))
 
   val monthIntFormatter = intFormatter(
     requiredKey = s"$requiredKey.month",
@@ -57,12 +57,12 @@ class YearMonthFormatter(
   private def formatDate(key: String, data: Map[String, String]): Either[Seq[FormError], YearMonth] = {
     val month: Either[Seq[FormError], Int] = monthIntFormatter.bind(s"$key.month", data) match {
       case Right(value)   => verifyMonth(key, value)
-      case Left(errorSeq) => Left(setErrorKey(key, errorSeq))
+      case Left(errorSeq) => Left(setErrorKey(s"$key.month", errorSeq))
     }
 
     val year = yearIntFormatter.bind(s"$key.year", data) match {
       case Right(value)   => verifyYear(key, value)
-      case Left(errorSeq) => Left(setErrorKey(key, errorSeq))
+      case Left(errorSeq) => Left(setErrorKey(s"$key.year", errorSeq))
     }
 
     (month, year) match {
@@ -86,9 +86,7 @@ class YearMonthFormatter(
 
     fields.count(_._2.isDefined) match {
       case 2 =>
-        formatDate(key, data).left.map {
-          _.map(_.copy(key = key, args = args))
-        }
+        formatDate(key, data)
       case 1 =>
         Left(missingFields.map(field => FormError(s"$key.$field", requiredKey, missingFields ++ args)))
       case _ =>

@@ -18,7 +18,7 @@ package controllers.productEntry
 
 import base.SpecBase
 import forms.productEntry.ProductListFormProvider
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.FakeProductEntryNavigator
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry.{ProductEntryListPage, ProductListPage}
 import play.api.inject.bind

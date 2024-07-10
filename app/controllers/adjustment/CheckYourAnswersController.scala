@@ -102,6 +102,13 @@ class CheckYourAnswersController @Inject() (
     for {
       updateUserAnswers <- Future.fromTry(userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry))
       _                 <- cacheConnector.set(updateUserAnswers)
-    } yield Ok(view(summaryList))
+    } yield Ok(
+      view(
+        summaryList,
+        adjustmentEntry.adjustmentType.getOrElse(
+          throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+        )
+      )
+    )
 
 }

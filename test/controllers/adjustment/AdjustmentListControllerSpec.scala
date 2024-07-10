@@ -25,9 +25,10 @@ import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
+import models.productEntry.TaxDuty
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.TableViewModel
@@ -81,12 +82,18 @@ class AdjustmentListControllerSpec extends SpecBase {
   )
   val adjustmentEntryList      = List(adjustmentEntry)
   val userAnswsers             = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
+  val total                    = BigDecimal(0)
 
   "AdjustmentList Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswsers)).build()
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.adjustmentTotal(any())(any())) thenReturn Future.successful(
+        TaxDuty(total)
+      )
+      val application                        = applicationBuilder(userAnswers = Some(userAnswsers))
+        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentListRoute)
@@ -96,7 +103,7 @@ class AdjustmentListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentListView]
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers)(messages(application))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, adjustmentTable)(request, messages(application)).toString
@@ -105,9 +112,14 @@ class AdjustmentListControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = userAnswsers.set(AdjustmentListPage, true).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val updatedUserAnswers                 = userAnswsers.set(AdjustmentListPage, true).success.value
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.adjustmentTotal(any())(any())) thenReturn Future.successful(
+        TaxDuty(total)
+      )
+      val application                        = applicationBuilder(userAnswers = Some(updatedUserAnswers))
+        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentListRoute)
@@ -117,7 +129,7 @@ class AdjustmentListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers)(messages(application))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), adjustmentTable)(
@@ -169,7 +181,7 @@ class AdjustmentListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers)(messages(application))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(messages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, adjustmentTable)(request, messages(application)).toString

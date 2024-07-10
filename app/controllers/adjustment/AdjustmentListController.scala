@@ -16,17 +16,18 @@
 
 package controllers.adjustment
 
-import connectors.CacheConnector
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.AdjustmentNavigator
 import models.NormalMode
-import pages.adjustment.AdjustmentListPage
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage}
 import views.html.adjustment.AdjustmentListView
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentListSummaryHelper
+import play.api.Logging
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,25 +41,39 @@ class AdjustmentListController @Inject() (
   requireData: DataRequiredAction,
   formProvider: AdjustmentListFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: AdjustmentListView
+  view: AdjustmentListView,
+  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val table        = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers)
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val duties       = request.userAnswers
+      .get(AdjustmentEntryListPage)
+      .getOrElse(Seq.empty)
+      .flatMap(duty => duty.newDuty.orElse(duty.duty))
+    val totalFuture  = alcoholDutyCalculatorConnector.calculateTotalAdjustment(duties)
     val preparedForm = request.userAnswers.get(AdjustmentListPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
+    totalFuture
+      .map { total =>
+        val table = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers, total.duty)
+        Ok(view(preparedForm, table))
+      }
+      .recover { case _ =>
+        logger.warn("Unable to fetch adjustment total")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
 
-    Ok(view(preparedForm, table))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val table = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers)
+    val table = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers, 0)
     form
       .bindFromRequest()
       .fold(

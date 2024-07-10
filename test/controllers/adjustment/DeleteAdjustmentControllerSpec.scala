@@ -57,7 +57,6 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(form, index)(request, messages(application)).toString
       }
     }
-    /*
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers.set(DeleteAdjustmentPage, true).success.value
@@ -75,7 +74,6 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(form.fill(true), index)(request, messages(application)).toString
       }
     }
-     */
     "must redirect to the next page when valid data is submitted" in {
 
       val mockCacheConnector = mock[CacheConnector]

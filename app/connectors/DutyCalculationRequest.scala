@@ -45,3 +45,7 @@ case class AdjustmentDutyCalculationRequest(
 object AdjustmentDutyCalculationRequest {
   implicit val formats: OFormat[AdjustmentDutyCalculationRequest] = Json.format[AdjustmentDutyCalculationRequest]
 }
+case class AdjustmentTotalCalculationRequest(dutyList: Seq[BigDecimal])
+object AdjustmentTotalCalculationRequest {
+  implicit val formats: OFormat[AdjustmentTotalCalculationRequest] = Json.format[AdjustmentTotalCalculationRequest]
+}

@@ -23,7 +23,7 @@ import forms.adjustment.AdjustmentVolumeWithSPRFormProvider
 import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentType.Spoilt
 import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
@@ -58,7 +58,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
     Some(BigDecimal(10.99)),
     Set(
       RangeDetailsByRegime(
-        AlcoholRegime.Beer,
+        regime,
         NonEmptySeq.one(
           ABVRange(
             AlcoholType.Beer,
@@ -213,21 +213,32 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
+        val form    = formProvider(regime)(messages(application))
         val request =
           FakeRequest(POST, adjustmentVolumeWithSPRRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", "invalid value"),
+              ("volumes.pureAlcoholVolume", "invalid value"),
+              ("volumes.sprDutyRate", "invalid value")
+            )
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(
+          Map(
+            "volumes.totalLitresVolume" -> "invalid value",
+            "volumes.pureAlcoholVolume" -> "invalid value",
+            "volumes.sprDutyRate"       -> "invalid value"
+          )
+        )
 
         val view = application.injector.instanceOf[AdjustmentVolumeWithSPRView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        /*contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt, regime, rateBandContent)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt, regime, rateBandContent)(
           request,
           messages(application)
-        ).toString*/
+        ).toString
       }
     }
 

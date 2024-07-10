@@ -30,13 +30,13 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
   val form     = new AdjustmentVolumeFormProvider()(regime)(messages)
 
   ".volumes" - {
-    /*  "must bind valid data" in {
+    "must bind valid data" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "1",
         "volumes.pureAlcoholVolume" -> "1"
       )
-      form.bind(data).data mustBe AdjustmentVolume(1, 1)
-    }*/
+      form.bind(data).value.value mustBe AdjustmentVolume(1, 1)
+    }
 
     "must unbind valid data" in {
       val data = AdjustmentVolume(1, 1)

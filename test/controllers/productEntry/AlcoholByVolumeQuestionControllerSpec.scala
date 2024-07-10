@@ -22,7 +22,7 @@ import forms.productEntry.AlcoholByVolumeQuestionFormProvider
 import models.RateType.Core
 import models.productEntry.ProductEntry
 import models.{AlcoholByVolume, NormalMode, RateTypeResponse}
-import navigation.{FakeProductEntryNavigator, ProductEntryNavigator}
+import navigation.FakeProductEntryNavigator
 import org.mockito.ArgumentMatchers.any
 import pages.productEntry.CurrentProductEntryPage
 import play.api.inject.bind

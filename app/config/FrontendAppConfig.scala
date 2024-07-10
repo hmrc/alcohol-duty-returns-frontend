@@ -37,22 +37,22 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private lazy val adrCalculatorHost: String =
     servicesConfig.baseUrl("alcohol-duty-calculator")
 
-  private val adrCalculatorRootUrl: String      =
+  private val adrCalculatorRootUrl: String                              =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.rootUrl")
-  private val adrCalculatorRatesUrlPart: String =
+  private val adrCalculatorRatesUrlPart: String                         =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.ratesUrl")
-
-  private val adrCalculatorCalculateDutyUrlPart: String           =
-    configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateDutyUrl")
-  private val adrCalculatorCalculateTotalDutyUrlPart: String      =
+  private val adrCalculatorCalculateTotalDutyUrlPart: String            =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateTotalDutyUrl")
-  private val adrCalculatorCalculateAdjustmentDutyUrlPart: String =
-    configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateAdjustmentDutyUrl")
-  private val adrCalculatorRateBandUrlPart: String                =
+  private val adrCalculatorRateBandUrlPart: String                      =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.rateBandUrl")
-  private val adrCalculatorRateTypeUrlPart: String                =
-    configuration.get[String]("microservice.services.alcohol-duty-calculator.rateTypeUrl")
-  def feedbackUrl(implicit request: RequestHeader): java.net.URL  =
+  private val adrCalculatorCalculateAdjustmentDutyUrlPart: String       =
+    configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateAdjustmentDutyUrl")
+  private val adrCalculatorCalculateRepackagedDutyChangeUrlPart: String =
+    configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateRepackagedDutyChangeUrl")
+  private val adrCalculatorCalculateTotalAdjustmentUrlPart: String      =
+    configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateTotalAdjustmentUrl")
+
+  def feedbackUrl(implicit request: RequestHeader): java.net.URL =
     url"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
   val loginUrl: String              = configuration.get[String]("urls.login")
@@ -101,17 +101,17 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart
 
-  def adrCalculatorCalculateDutyUrl(): String =
-    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateDutyUrlPart
-
   def adrCalculatorCalculateTotalDutyUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateTotalDutyUrlPart
 
+  def adrCalculatorRateBandUrl(): String                =
+    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRateBandUrlPart
   def adrCalculatorCalculateAdjustmentDutyUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateAdjustmentDutyUrlPart
 
-  def adrCalculatorRateBandUrl(): String =
-    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRateBandUrlPart
-  def adrCalculatorRateTypeUrl(): String =
-    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRateTypeUrlPart
+  def adrCalculatorCalculateRepackagedDutyChangeUrl(): String =
+    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateRepackagedDutyChangeUrlPart
+
+  def adrCalculatorCalculateTotalAdjustmentUrl(): String =
+    adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateTotalAdjustmentUrlPart
 }

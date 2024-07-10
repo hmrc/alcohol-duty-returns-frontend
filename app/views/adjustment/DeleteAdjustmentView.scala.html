@@ -14,16 +14,17 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph}
 
 @this(
-layout: templates.Layout,
-formHelper: FormWithCSRF,
-govukErrorSummary: GovukErrorSummary,
-govukRadios: GovukRadios,
-govukButton: GovukButton,
-sectionHeading: SectionHeading,
-pageHeading: PageHeading
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading,
+    paragraph: Paragraph,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], index: Int)(implicit request: Request[_], messages: Messages)
@@ -36,12 +37,15 @@ pageHeading: PageHeading
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
+    @pageHeading(messages("dutySuspendedBeer.heading"))
+
+    @paragraph(messages("deleteAdjustment.paragraph"))
+
     @govukRadios(
         RadiosViewModel.yesNo(
         field = form("delete-adjustment-yes-no-value"),
         legend = LegendViewModel(messages("deleteAdjustment.heading")).asPageHeading()
         )
-        .withHint(Hint(content = HtmlContent(messages("deleteAdjustment.hint"))))
     )
 
     @govukButton(

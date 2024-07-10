@@ -27,7 +27,7 @@ import views.ViewUtils.valueFormatter
 
 object AdjustmentListSummaryHelper {
 
-  def adjustmentEntryTable(userAnswers: UserAnswers)(implicit messages: Messages): TableViewModel = {
+  def adjustmentEntryTable(userAnswers: UserAnswers, total: BigDecimal)(implicit messages: Messages): TableViewModel = {
 
     val adjustmentEntries: Seq[AdjustmentEntry] = getAdjustmentEntries(userAnswers)
     TableViewModel(
@@ -38,9 +38,7 @@ object AdjustmentListSummaryHelper {
         HeadCell(content = Text(messages("adjustmentEntryList.action")), classes = "govuk-!-width-one-quarter")
       ),
       rows = getAdjustmentEntryRows(adjustmentEntries),
-      total = adjustmentEntries.map { adjustmentEntry =>
-        adjustmentEntry.newDuty.orElse(adjustmentEntry.duty).getOrElse(BigDecimal(0))
-      }.sum
+      total = total
     )
   }
 
@@ -61,7 +59,7 @@ object AdjustmentListSummaryHelper {
       }
       TableRowViewModel(
         cells = Seq(
-          Text(messages(s"adjustmentType.$adjustmentType")),
+          Text(messages(s"adjustmentType.checkYourAnswersLabel.$adjustmentType")),
           Text(
             rateBandContent(
               adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBandfrom cache"))

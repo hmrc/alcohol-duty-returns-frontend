@@ -71,42 +71,42 @@ class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBeha
       form,
       inputKey,
       validData,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.invalid.month")
     )
 
     behave like yearMonthWithMonthOutOfMinRange(
       form,
       inputKey,
       validData,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.invalid.month")
     )
 
     behave like yearMonthWithMonthOutOfMaxRange(
       form,
       inputKey,
       validData,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.month")
+      FormError(s"$inputKey.month", "whenDidYouPayDuty.date.error.invalid.month")
     )
 
     behave like yearMonthInvalidYear(
       form,
       inputKey,
       validData,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.year")
+      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.invalid.year")
     )
 
     behave like yearMonthWithYearOutOfMinRange(
       form,
       inputKey,
       validData,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalidYear.year")
+      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.invalidYear.year")
     )
 
     behave like yearMonthWithYearOutOfMaxRange(
       form,
       inputKey,
       validData,
-      FormError(inputKey, "whenDidYouPayDuty.date.error.invalidYear.year")
+      FormError(s"$inputKey.year", "whenDidYouPayDuty.date.error.invalidYear.year")
     )
 
   }

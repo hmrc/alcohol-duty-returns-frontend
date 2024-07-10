@@ -42,7 +42,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer                                     = BigDecimal(0.00)
+  val validAnswer                                     = BigDecimal(2.00)
   val adjustmentEntry                                 = AdjustmentEntry(adjustmentType = Some(Spoilt))
   val userAnswers                                     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
   lazy val adjustmentSmallProducerReliefDutyRateRoute =
@@ -84,10 +84,10 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, messages(application)).toString
       }
     }
-    /*
+
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), sprDutyRate = Some(validAnswer))
+      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), repackagedSprDutyRate = Some(validAnswer))
 
       val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
@@ -107,7 +107,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         ).toString
       }
     }
-     */
+
     "must redirect to the next page when valid data is submitted" in {
 
       val mockCacheConnector = mock[CacheConnector]

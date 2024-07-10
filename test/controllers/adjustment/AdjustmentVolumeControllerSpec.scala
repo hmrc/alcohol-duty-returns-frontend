@@ -203,21 +203,26 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
+        val form    = formProvider(regime)(messages(application))
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", "invalid value"),
+              ("volumes.pureAlcoholVolume", "invalid value")
+            )
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm =
+          form.bind(Map("volumes.totalLitresVolume" -> "invalid value", "volumes.pureAlcoholVolume" -> "invalid value"))
 
-        val view = application.injector.instanceOf[AdjustmentVolumeView]
+        val view      = application.injector.instanceOf[AdjustmentVolumeView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        /*contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt, regime, rateBandContent)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt, regime, rateBandContent)(
           request,
           messages(application)
-        ).toString*/
+        ).toString
       }
     }
     "must redirect to Journey Recovery for a GET if no existing data is found" in {

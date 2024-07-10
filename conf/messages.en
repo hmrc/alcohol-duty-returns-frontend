@@ -1172,7 +1172,7 @@ adjustmentRepackagedTaxType.checkYourAnswersLabel = New tax type
 adjustmentRepackagedTaxType.error.invalid = Enter a valid tax type code
 adjustmentRepackagedTaxType.error.required = Enter the new tax type code
 adjustmentRepackagedTaxType.error.outOfRange = AdjustmentRepackagedTaxType must be between {0} and {1}
-adjustmentRepackagedTaxType.error.nonDraught = Enter a valid non-draught {0} tax type code
+adjustmentRepackagedTaxType.error.nonDraught = Enter a valid non-draught tax type code
 adjustmentRepackagedTaxType.change.hidden = what is the tax type code for the newly repackaged products
 adjustmentRepackagedTaxType.hint = A non-draught 3 digit tax type code
 
@@ -1219,7 +1219,7 @@ adjustmentList.error.required = Select yes if you have another adjustment to dec
 
 deleteAdjustment.title = Remove this adjustment?
 deleteAdjustment.heading = Remove this adjustment?
-deleteAdjustment.hint = This will remove the adjustment and its information from the list of adjustments in this return.
+deleteAdjustment.paragraph = The adjustment and its information will be removed from your return.
 deleteAdjustment.error.required = Select yes to remove this adjustment
 
 
