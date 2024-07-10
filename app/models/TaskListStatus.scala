@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package models
 
-import models.TaskListStatus
-import models.TaskListStatus.{Completed, Incomplete}
+import enumeratum.{Enum, EnumEntry}
 
-case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
+sealed trait TaskListStatus extends EnumEntry
 
-  def completedTasks: Int = sections.count(_.completedTask)
-  def totalTasks: Int     = sections.size
+object TaskListStatus extends Enum[TaskListStatus] {
+  val values = findValues
 
-  def status: TaskListStatus = if (completedTasks == totalTasks) {
-    Completed
-  } else {
-    Incomplete
-  }
+  case object Completed extends TaskListStatus
+  case object Incomplete extends TaskListStatus
 }

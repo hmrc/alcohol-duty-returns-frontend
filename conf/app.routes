@@ -139,6 +139,7 @@ GET        /change-do-you-need-to-declare-delivered-received-duty-suspended     
 POST       /change-do-you-need-to-declare-delivered-received-duty-suspended                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /tell-us-about-your-duty-suspended-deliveries                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+POST       /tell-us-about-your-duty-suspended-deliveries                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onSubmit()
 
 GET        /tell-us-about-your-beer-in-duty-suspense                        controllers.dutySuspended.DutySuspendedBeerController.onPageLoad(mode: Mode = NormalMode)
 POST       /tell-us-about-your-beer-in-duty-suspense                        controllers.dutySuspended.DutySuspendedBeerController.onSubmit(mode: Mode = NormalMode)

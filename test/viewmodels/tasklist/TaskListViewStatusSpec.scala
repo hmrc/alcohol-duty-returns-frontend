@@ -16,17 +16,15 @@
 
 package viewmodels.tasklist
 
+import base.SpecBase
 import models.TaskListStatus
-import models.TaskListStatus.{Completed, Incomplete}
 
-case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
-
-  def completedTasks: Int = sections.count(_.completedTask)
-  def totalTasks: Int     = sections.size
-
-  def status: TaskListStatus = if (completedTasks == totalTasks) {
-    Completed
-  } else {
-    Incomplete
+class TaskListViewStatusSpec extends SpecBase {
+  "taskListStatus" - {
+    "should return the correct status key" in {
+      TaskListViewStatus.toStatusMessageKey(TaskListStatus.Incomplete) mustBe "incomplete"
+      TaskListViewStatus.toStatusMessageKey(TaskListStatus.Completed) mustBe "completed"
+    }
   }
+
 }

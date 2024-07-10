@@ -30,15 +30,15 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
+  checkYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper,
   view: CheckYourAnswersDutySuspendedDeliveriesView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper(request.userAnswers)
-    checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList match {
-      case Some(summaryList) if summaryList.rows.nonEmpty => Ok(view(summaryList))
-      case _                                              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    checkYourAnswersSummaryListHelper.dutySuspendedDeliveriesSummaryList(request.userAnswers) match {
+      case summaryList if summaryList.rows.nonEmpty => Ok(view(summaryList))
+      case _                                        => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

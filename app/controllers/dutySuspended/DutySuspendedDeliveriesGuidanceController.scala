@@ -17,6 +17,10 @@
 package controllers.dutySuspended
 
 import controllers.actions._
+import models.NormalMode
+import navigation.DeclareDutySuspendedDeliveriesNavigator
+import pages.dutySuspended.DutySuspendedGuidancePage
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -25,6 +29,7 @@ import views.html.dutySuspended.DutySuspendedDeliveriesGuidanceView
 
 class DutySuspendedDeliveriesGuidanceController @Inject() (
   override val messagesApi: MessagesApi,
+  navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -33,7 +38,11 @@ class DutySuspendedDeliveriesGuidanceController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     Ok(view())
+  }
+
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData) { request =>
+    Redirect(navigator.nextPage(DutySuspendedGuidancePage, NormalMode, request.userAnswers))
   }
 }
