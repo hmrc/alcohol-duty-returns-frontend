@@ -17,20 +17,41 @@
 package viewmodels.checkAnswers.checkAndSubmit
 
 import models.{AlcoholRegime, UserAnswers}
+import pages.returns.{AlcoholDutyPage, DutyCalculationPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
-import viewmodels.{TableRowViewModel, TableViewModel}
+import viewmodels.checkAnswers.returns.DutyCalculationHelper.createRows
+import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object DutyDueForThisReturnHelper {
 
-  def dutyDueByRegime(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit messages: Messages): TableViewModel =
+  def dutyDueByRegime(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit
+    messages: Messages
+  ): TableViewModel =
     TableViewModel(
-      head = Seq(
-        HeadCell(Text(messages("dutyCalculation.table.dutyDue"))),
-        HeadCell(Text(messages("dutyCalculation.table.action")))
-      ),
-      rows = Seq.empty[TableRowViewModel],
+      head = Seq(),
+      rows = createRows(userAnswers), //Seq.empty[TableRowViewModel],
       total = 0
     )
+
+  private def createRows(userAnswers: UserAnswers)(implicit messages: Messages): Seq[TableRowViewModel] =
+    userAnswers.get(AlcoholDutyPage) match {
+      case Some(alcoholDuties) =>
+        alcoholDuties.map { case (alcoholRegime, alcoholDuty) =>
+          TableRowViewModel(
+            cells = Seq(
+              Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
+              Text(messages("site.currency.2DP", alcoholDuty.totalDuty))
+            ),
+            actions = Seq(
+              TableRowActionViewModel(
+                label = "Change",
+                href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
+              )
+            )
+          )
+        }.toSeq
+      case None                => Seq.empty
+    }
 }

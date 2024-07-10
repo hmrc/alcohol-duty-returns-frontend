@@ -24,6 +24,9 @@
         pageHeading: PageHeading,
         paragraph: Paragraph,
         subHeading: SubHeading,
+        govukTable: GovukTable,
+        tableRowActionList: components.TableRowActionList,
+        tableRowAction: components.TableRowAction
 )
 
 @(table: TableViewModel)(implicit request: Request[_], messages: Messages)
@@ -40,10 +43,31 @@
     @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
     @paragraph(messages("dutyDueForThisReturn.p2"))
 
+    @govukTable(Table(
+        caption = Some(messages("dutyDueForThisReturn.h3")),
+        captionClasses = "govuk-table__caption--m",
+        head = Some(table.head),
+        rows = table.rows.map(row => {
+            val firstLabel = TableRow(content = row.cells.head, classes = "govuk-body govuk-!-font-weight-bold")
+            val labelRows = row.cells.tail.map(cell => TableRow(cell))
+            val actions = TableRow(content = HtmlContent(tableRowActionList(
+                id = "productList",
+                actions = row.actions.map(action => tableRowAction(
+                    id = "",
+                    text = action.label,
+                    href = action.href,
+                    visuallyHiddenContent = action.visuallyHiddenText
+                )
+                ))))
+            Seq(firstLabel) ++ labelRows :+ actions
+        }
+        ))
+    )
+
     @subHeading(messages("dutyDueForThisReturn.h4"), classes = "govuk-heading-m")
     @paragraph(messages("dutyDueForThisReturn.p3"))
 
-    @subHeading(messages("dutyDueForThisReturn.h3"), classes = "govuk-heading-m")
+
 
 
     @govukButton(
