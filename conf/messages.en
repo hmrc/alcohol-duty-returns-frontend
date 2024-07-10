@@ -304,7 +304,7 @@ howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced rate
-howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total litres
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total volume
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 
 doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?
