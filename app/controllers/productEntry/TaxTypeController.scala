@@ -180,10 +180,14 @@ class TaxTypeController @Inject() (
       rate                   <- getRate(code, regime, rates)
     } yield TaxType(code, regime, rate)
 
-  private def getRate(code: String, regime: AlcoholRegime, future: Future[Seq[RateBand]]): Future[Option[BigDecimal]] =
+  private def getRate(
+    code: String,
+    regime: AlcoholRegime,
+    future: Future[Seq[RateBand]]
+  ): Future[Option[BigDecimal]] =
     future.map { rates: Seq[RateBand] =>
       rates
-        .find(rateBand => code == rateBand.taxType && rateBand.alcoholRegime.contains(regime))
+        .find(rateBand => code == rateBand.taxTypeCode && rateBand.rangeDetails.map(_.alcoholRegime).contains(regime))
         .flatMap(rateBand => rateBand.rate)
     }
 

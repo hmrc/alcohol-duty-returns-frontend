@@ -105,7 +105,7 @@ class ViewReturnControllerSpec extends SpecBase {
     val periodKey                     = periodKeyMar
     val returnDetails                 = exampleReturnDetails(periodKey, Instant.now(clock))
     val returnDetailsWithBadPeriodKey = exampleReturnDetails(badPeriodKey, Instant.now(clock))
-    val returnPeriodStr               = dateTimeHelper.formatMonthYear(returnPeriod.period)
+    val returnPeriodStr               = dateTimeHelper.formatMonthYear(returnPeriodMar.period)
     val submittedAtDateStr            = dateTimeHelper.formatDateMonthYear(
       dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
     )

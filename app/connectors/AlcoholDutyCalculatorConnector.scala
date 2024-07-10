@@ -18,6 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import models.productEntry.TaxDuty
+import models.returns.AlcoholDuty
 import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
@@ -39,6 +40,14 @@ class AlcoholDutyCalculatorConnector @Inject() (
     httpClient.POST[DutyCalculationRequest, TaxDuty](url = config.adrCalculatorCalculateDutyUrl(), body = body)
   }
 
+  def calculateTotalDuty(requestBody: TotalDutyCalculationRequest)(implicit
+    hc: HeaderCarrier
+  ): Future[AlcoholDuty] =
+    httpClient.POST[TotalDutyCalculationRequest, AlcoholDuty](
+      url = config.adrCalculatorCalculateTotalDutyUrl(),
+      body = requestBody
+    )
+
   def rates(
     rateType: RateType,
     abv: AlcoholByVolume,
@@ -54,6 +63,20 @@ class AlcoholDutyCalculatorConnector @Inject() (
         .toString,
       "rateType"       -> Json.toJson(rateType).toString,
       "abv"            -> Json.toJson(abv).toString
+    )
+    httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
+  }
+
+  def rateBandByRegime(ratePeriod: YearMonth, approvedAlcoholRegimes: Seq[AlcoholRegime])(implicit
+    hc: HeaderCarrier
+  ): Future[Seq[RateBand]] = {
+    val queryParams: Seq[(String, String)] = Seq(
+      "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
+      "alcoholRegimes" -> Json
+        .toJson(
+          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegime](_))
+        )
+        .toString
     )
     httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
   }

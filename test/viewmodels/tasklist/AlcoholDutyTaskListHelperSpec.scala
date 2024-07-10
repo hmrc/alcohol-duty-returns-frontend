@@ -17,9 +17,10 @@
 package viewmodels.tasklist
 
 import base.SpecBase
+import TaskListStatus.{Completed, Incomplete}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
-import pages.productEntry.DeclareAlcoholDutyQuestionPage
+import pages.returns.DeclareAlcoholDutyQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import play.api.i18n.Messages
@@ -31,18 +32,20 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
   val application: Application    = applicationBuilder().build()
   private val validUntil          = Instant.now(clock)
   implicit val messages: Messages = getMessages(application)
+  val returnTaskListCreator       = new ReturnTaskListCreator()
+  val taskListViewModel           = new TaskListViewModel(returnTaskListCreator)
 
   "AlcoholDutyTaskListHelper" - {
     "must return an incomplete task list" in {
 
       val expectedSections = Seq(
-        ReturnTaskListHelper.returnSection(emptyUserAnswers),
-        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
-        ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
+        returnTaskListCreator.returnSection(emptyUserAnswers),
+        returnTaskListCreator.returnDSDSection(emptyUserAnswers),
+        returnTaskListCreator.returnQSSection(emptyUserAnswers)
       )
 
       val result           =
-        AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)(getMessages(application))
+        taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)(getMessages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -50,9 +53,9 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         validUntilString
       )
 
-      result.status mustBe "incomplete"
-      result.totalTask mustBe expectedSections.size
-      result.completedTask mustBe 0
+      result.status mustBe Incomplete
+      result.totalTasks mustBe expectedSections.size
+      result.completedTasks mustBe 0
     }
 
     "must return a completed task list" in {
@@ -70,13 +73,13 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
       val expectedSections =
         Seq(
-          ReturnTaskListHelper.returnSection(userAnswers),
-          ReturnTaskListHelper.returnDSDSection(userAnswers),
-          ReturnTaskListHelper.returnQSSection(userAnswers)
+          returnTaskListCreator.returnSection(userAnswers),
+          returnTaskListCreator.returnDSDSection(userAnswers),
+          returnTaskListCreator.returnQSSection(userAnswers)
         )
 
       val result           =
-        AlcoholDutyTaskListHelper.getTaskList(userAnswers, validUntil, periodKeyMar)(getMessages(application))
+        taskListViewModel.getTaskList(userAnswers, validUntil, periodKeyMar)(getMessages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -84,26 +87,26 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         validUntilString
       )
 
-      result.status mustBe "completed"
-      result.totalTask mustBe expectedSections.size
-      result.completedTask mustBe 3
+      result.status mustBe Completed
+      result.totalTasks mustBe expectedSections.size
+      result.completedTasks mustBe 3
     }
 
     "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in {
       val expectedSectionsWithQS = Seq(
-        ReturnTaskListHelper.returnSection(emptyUserAnswers),
-        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers),
-        ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
+        returnTaskListCreator.returnSection(emptyUserAnswers),
+        returnTaskListCreator.returnDSDSection(emptyUserAnswers),
+        returnTaskListCreator.returnQSSection(emptyUserAnswers)
       )
 
       val expectedSectionsWithoutQS = Seq(
-        ReturnTaskListHelper.returnSection(emptyUserAnswers),
-        ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
+        returnTaskListCreator.returnSection(emptyUserAnswers),
+        returnTaskListCreator.returnDSDSection(emptyUserAnswers)
       )
 
       forAll(periodKeyGen) { case periodKey =>
         val result =
-          AlcoholDutyTaskListHelper.getTaskList(emptyUserAnswers, validUntil, periodKey)(getMessages(application))
+          taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKey)(getMessages(application))
 
         val periodQuarters = "CFIL"
         val lastChar       = periodKey.last

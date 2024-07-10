@@ -22,7 +22,8 @@ import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, Smal
 import pages._
 import models._
 import models.productEntry.ProductEntry
-import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage, DeclareAlcoholDutyQuestionPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductNamePage, ProductVolumePage, SmallProducerReliefQuestionPage, TaxTypePage}
+import pages.productEntry.{AlcoholByVolumeQuestionPage, CurrentProductEntryPage, DeclareSmallProducerReliefDutyRatePage, DraughtReliefQuestionPage, ProductNamePage, ProductVolumePage, SmallProducerReliefQuestionPage, TaxTypePage}
+import pages.returns.DeclareAlcoholDutyQuestionPage
 
 class ProductEntryNavigatorSpec extends SpecBase {
 
@@ -36,33 +37,6 @@ class ProductEntryNavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.IndexController.onPageLoad
-      }
-
-      "must go from the Alcohol to declare to Product Entry Guidance page if the answer is Yes" in {
-
-        navigator.nextPage(
-          pages.productEntry.DeclareAlcoholDutyQuestionPage,
-          NormalMode,
-          emptyUserAnswers.set(pages.productEntry.DeclareAlcoholDutyQuestionPage, true).success.value
-        ) mustBe controllers.productEntry.routes.ProductEntryGuidanceController.onPageLoad()
-      }
-
-      "must go from the Alcohol to declare to task list page if the answer is No" in {
-
-        navigator.nextPage(
-          pages.productEntry.DeclareAlcoholDutyQuestionPage,
-          NormalMode,
-          emptyUserAnswers.set(pages.productEntry.DeclareAlcoholDutyQuestionPage, false).success.value
-        ) mustBe routes.TaskListController.onPageLoad
-      }
-
-      "must go from the Alcohol to declare to Journey Recovery page if there is no answer" in {
-
-        navigator.nextPage(
-          pages.productEntry.DeclareAlcoholDutyQuestionPage,
-          NormalMode,
-          emptyUserAnswers
-        ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
       "must go from Product name page to Alcohol by volume page" in {

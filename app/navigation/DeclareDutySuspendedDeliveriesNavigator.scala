@@ -17,9 +17,11 @@
 package navigation
 
 import controllers._
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models._
 import pages._
 import play.api.mvc.Call
+import viewmodels.AlcoholRegimesViewOrder
 
 import javax.inject.{Inject, Singleton}
 
@@ -29,14 +31,16 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
   override val normalRoutes: Page => UserAnswers => Call = {
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage  =>
       declareDutySuspendedDeliveriesQuestionPageRoute
+    case pages.dutySuspended.DutySuspendedGuidancePage                   =>
+      userAnswers => nextRegimePage(userAnswers, None, NormalMode)
     case pages.dutySuspended.DutySuspendedBeerPage                       =>
-      _ => controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad(NormalMode)
+      userAnswers => nextRegimePage(userAnswers, Some(Beer), NormalMode)
     case pages.dutySuspended.DutySuspendedCiderPage                      =>
-      _ => controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad(NormalMode)
+      userAnswers => nextRegimePage(userAnswers, Some(Cider), NormalMode)
     case pages.dutySuspended.DutySuspendedWinePage                       =>
-      _ => controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad(NormalMode)
+      userAnswers => nextRegimePage(userAnswers, Some(Wine), NormalMode)
     case pages.dutySuspended.DutySuspendedSpiritsPage                    =>
-      _ => controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad(NormalMode)
+      userAnswers => nextRegimePage(userAnswers, Some(Spirits), NormalMode)
     case pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage =>
       _ => controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
     case pages.dutySuspended.DutySuspendedDeliveriesPage                 =>
@@ -61,4 +65,17 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
 
+  private val pageMapping: Map[AlcoholRegime, Mode => Call] = Map(
+    Beer                  -> controllers.dutySuspended.routes.DutySuspendedBeerController.onPageLoad,
+    Cider                 -> controllers.dutySuspended.routes.DutySuspendedCiderController.onPageLoad,
+    Wine                  -> controllers.dutySuspended.routes.DutySuspendedWineController.onPageLoad,
+    Spirits               -> controllers.dutySuspended.routes.DutySuspendedSpiritsController.onPageLoad,
+    OtherFermentedProduct -> controllers.dutySuspended.routes.DutySuspendedOtherFermentedController.onPageLoad
+  )
+
+  private def nextRegimePage(userAnswers: UserAnswers, lastPageRegime: Option[AlcoholRegime], mode: Mode): Call =
+    AlcoholRegimesViewOrder
+      .nextViewRegime(userAnswers.regimes, lastPageRegime)
+      .flatMap(pageMapping.get(_).map(_(mode)))
+      .getOrElse(controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad())
 }

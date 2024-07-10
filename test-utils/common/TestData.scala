@@ -34,6 +34,8 @@ trait TestData extends ModelGenerators {
 
   val returnAndUserDetails = ReturnAndUserDetails(returnId, groupId, internalId)
 
+  val returnPeriod = returnPeriodGen.sample.get
+
   val badPeriodKey = "24A"
 
   val periodKeyJan = "24AA"
@@ -53,16 +55,18 @@ trait TestData extends ModelGenerators {
   val nonQuarterPeriodKeys =
     Seq(periodKeyJan, periodKeyFeb, periodKeyApr, periodKeyMay, periodKeyJul, periodKeyAug, periodKeyOct, periodKeyNov)
 
-  val returnPeriod = ReturnPeriod.fromPeriodKey(periodKeyMar).get
+  val returnPeriodMar = ReturnPeriod.fromPeriodKey(periodKeyMar).get
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     returnId,
     groupId,
     internalId,
-    regimes = AlcoholRegimes(Set(Beer))
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
   )
 
-  val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers
+  val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer))
+  )
   val userAnswersWithoutBeer: UserAnswers                  = emptyUserAnswers.copy(
     regimes = AlcoholRegimes(Set(Cider, Wine, Spirits, OtherFermentedProduct))
   )
@@ -88,7 +92,7 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(OtherFermentedProduct))
   )
   val userAnswersWithoutOtherFermentedProduct: UserAnswers = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits))
+    regimes = AlcoholRegimes(Set(Beer, Spirits))
   )
 
   val userAnswersWithAllRegimes: UserAnswers = emptyUserAnswers.copy(
