@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.TableViewModel
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
 
 @this(
         layout: templates.Layout,
@@ -24,12 +24,13 @@
         pageHeading: PageHeading,
         paragraph: Paragraph,
         subHeading: SubHeading,
+        bulletList: BulletList,
         govukTable: GovukTable,
         tableRowActionList: components.TableRowActionList,
         tableRowAction: components.TableRowAction
 )
 
-@(table: TableViewModel)(implicit request: Request[_], messages: Messages)
+@(table: TableViewModel, totalValue: BigDecimal)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("dutyDueForThisReturn.title"))) {
 
@@ -38,9 +39,41 @@
         text = messages("section.checkAndSubmit"),
     )
 
-    @pageHeading(messages("dutyDueForThisReturn.heading"))
 
-    @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
+@if(totalValue == 0) {
+@pageHeading(messages("dutyDueForThisReturn.nil.heading"))
+
+@paragraph(messages("dutyDueForThisReturn.nil.p1"))
+
+@bulletList(Seq(
+messages("dutyDueForThisReturn.bulletList.3"),
+))
+}
+
+@if(totalValue > 0) {
+@pageHeading(messages("dutyDueForThisReturn.heading"))
+
+@paragraph(messages("dutyDueForThisReturn.positive.p1"))
+
+@bulletList(Seq(
+messages("dutyDueForThisReturn.bulletList.1"),
+messages("dutyDueForThisReturn.bulletList.2")
+))
+}
+
+@if(totalValue < 0) {
+@pageHeading(messages("dutyDueForThisReturn.heading"))
+
+@paragraph(messages("dutyDueForThisReturn.negative.p1"))
+
+@bulletList(Seq(
+messages("dutyDueForThisReturn.bulletList.1"),
+messages("dutyDueForThisReturn.bulletList.2")
+))
+}
+
+
+@subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
     @paragraph(messages("dutyDueForThisReturn.p2"))
 
     @govukTable(Table(

@@ -1137,9 +1137,9 @@ adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # Beginning of Check and submit sub-journey
 
-dutyDueForThisReturn.title = The duty due for this return is
+dutyDueForThisReturn.title = The duty due for this return is {0}
 dutyDueForThisReturn.nil.title = No Duty due
-dutyDueForThisReturn.heading = The duty due for this return is
+dutyDueForThisReturn.heading = The duty due for this return is {0}
 dutyDueForThisReturn.nil.heading = No duty due (nil return)
 dutyDueForThisReturn.positive.p1 = You will be liable for this amount once you submit your return.
 dutyDueForThisReturn.negative.p1 = Your return has a negative value. You will be able to claim this back. If you do not claim it back we will automatically deduct it from your next return.
@@ -1152,6 +1152,8 @@ dutyDueForThisReturn.p2 = Check the values of declared alcoholic products and ad
 dutyDueForThisReturn.h3 = Final duty summary
 dutyDueForThisReturn.table.dutyDue = Declared {0} duty
 dutyDueForThisReturn.table.action = Action
+dutyDueForThisReturn.table.nil.label = Declared duty
+dutyDueForThisReturn.table.nil.value = Nil
 dutyDueForThisReturn.h4 = Declaration
 dutyDueForThisReturn.p3 = By submitting this return, I agree that the information I have given is complete and correct.
 

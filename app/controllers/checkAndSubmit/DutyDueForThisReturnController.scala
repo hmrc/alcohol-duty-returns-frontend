@@ -18,6 +18,8 @@ package controllers.checkAndSubmit
 
 import controllers.actions._
 import models.AlcoholRegime.Beer
+import models.UserAnswers
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -37,7 +39,18 @@ class DutyDueForThisReturnController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val table = DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers, Beer)
-    Ok(view(table))
+    val table = DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers)
+    calculationTotal(request.userAnswers) match {
+      case Some(totalValue) => Ok(view(table, totalValue))
+      case None             => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
+
+  private def calculationTotal(userAnswers: UserAnswers): Option[BigDecimal] =
+    (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
+      case (Some(false), _)                  => Some(0.00)
+      case (Some(true), Some(alcoholDuties)) => Some(alcoholDuties.map(_._2.totalDuty).sum)
+      case (_, _)                            => None
+
+    }
 }

@@ -16,28 +16,42 @@
 
 package viewmodels.checkAnswers.checkAndSubmit
 
-import models.{AlcoholRegime, UserAnswers}
-import pages.returns.{AlcoholDutyPage, DutyCalculationPage}
+import models.{NormalMode, UserAnswers}
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
-import viewmodels.checkAnswers.returns.DutyCalculationHelper.createRows
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object DutyDueForThisReturnHelper {
 
-  def dutyDueByRegime(userAnswers: UserAnswers, regime: AlcoholRegime)(implicit
+  def dutyDueByRegime(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): TableViewModel =
     TableViewModel(
       head = Seq(),
-      rows = createRows(userAnswers), //Seq.empty[TableRowViewModel],
+      rows = createRows(userAnswers),
       total = 0
     )
 
   private def createRows(userAnswers: UserAnswers)(implicit messages: Messages): Seq[TableRowViewModel] =
-    userAnswers.get(AlcoholDutyPage) match {
-      case Some(alcoholDuties) =>
+    (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
+      case (Some(false), _)                  =>
+        Seq(
+          TableRowViewModel(
+            cells = Seq(
+              Text(messages("dutyDueForThisReturn.table.nil.label")),
+              Text(messages("dutyDueForThisReturn.table.nil.value"))
+            ),
+            actions = Seq(
+              TableRowActionViewModel(
+                label = "Change",
+                href = controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
+              )
+            )
+          )
+        )
+      case (Some(true), Some(alcoholDuties)) =>
         alcoholDuties.map { case (alcoholRegime, alcoholDuty) =>
           TableRowViewModel(
             cells = Seq(
@@ -52,6 +66,6 @@ object DutyDueForThisReturnHelper {
             )
           )
         }.toSeq
-      case None                => Seq.empty
+      case (None, None)                      => Seq.empty
     }
 }
