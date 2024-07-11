@@ -65,10 +65,11 @@ class AdjustmentEntryServiceImpl @Inject() (
               repackagedRate,
               fromAdjustmentType(adjustmentType)
             )
-          newDuty           <- alcoholDutyCalculatorConnector.calculateRepackagedDutyChange(
-                                 repackagedTaxDuty.duty,
-                                 updatedAdjustment.duty.getOrElse(BigDecimal(0))
-                               )
+          newDuty           <-
+            alcoholDutyCalculatorConnector.calculateRepackagedDutyChange(
+              repackagedTaxDuty.duty,
+              updatedAdjustment.duty.getOrElse(throw new RuntimeException("Couldn't fetch adjustment duty from cache"))
+            )
         } yield updatedAdjustment.copy(
           repackagedDuty = Some(repackagedTaxDuty.duty),
           newDuty = Some(newDuty.duty)

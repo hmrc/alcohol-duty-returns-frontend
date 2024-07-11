@@ -20,16 +20,6 @@ import models.returns.VolumeAndRateByTaxType
 import models.adjustment.AdjustmentTypes
 import play.api.libs.json.{Json, OFormat}
 
-case class DutyCalculationRequest(
-  adjustmentType: AdjustmentTypes,
-  pureAlcoholVolume: BigDecimal,
-  rate: BigDecimal
-)
-
-object DutyCalculationRequest {
-  implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
-}
-
 case class TotalDutyCalculationRequest(
   dutiesByTaxType: Seq[VolumeAndRateByTaxType]
 )
@@ -39,11 +29,21 @@ object TotalDutyCalculationRequest {
 }
 
 case class AdjustmentDutyCalculationRequest(
+  adjustmentType: AdjustmentTypes,
+  pureAlcoholVolume: BigDecimal,
+  rate: BigDecimal
+)
+
+object AdjustmentDutyCalculationRequest {
+  implicit val formats: OFormat[AdjustmentDutyCalculationRequest] = Json.format[AdjustmentDutyCalculationRequest]
+}
+
+case class RepackagedDutyChangeRequest(
   newDuty: BigDecimal,
   oldDuty: BigDecimal
 )
-object AdjustmentDutyCalculationRequest {
-  implicit val formats: OFormat[AdjustmentDutyCalculationRequest] = Json.format[AdjustmentDutyCalculationRequest]
+object RepackagedDutyChangeRequest {
+  implicit val formats: OFormat[RepackagedDutyChangeRequest] = Json.format[RepackagedDutyChangeRequest]
 }
 case class AdjustmentTotalCalculationRequest(dutyList: Seq[BigDecimal])
 object AdjustmentTotalCalculationRequest {

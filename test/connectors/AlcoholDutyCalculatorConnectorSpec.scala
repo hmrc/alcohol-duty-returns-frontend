@@ -21,7 +21,7 @@ import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
-import models.adjustment.{AdjustmentTypes, TaxDuty}
+import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -87,15 +87,16 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
   "calculateTaxDuty" - {
     "successfully retrieve tax duty" in {
       when {
-        connector.httpClient.POST[DutyCalculationRequest, TaxDuty](any(), any(), any())(any(), any(), any(), any())
-      } thenReturn Future.successful(TaxDuty(BigDecimal(1)))
+        connector.httpClient
+          .POST[AdjustmentDutyCalculationRequest, AdjustmentDuty](any(), any(), any())(any(), any(), any(), any())
+      } thenReturn Future.successful(AdjustmentDuty(BigDecimal(1)))
 
       whenReady(connector.calculateAdjustmentDuty(BigDecimal(1), BigDecimal(1), AdjustmentTypes.Spoilt)) { result =>
-        result mustBe TaxDuty(BigDecimal(1))
+        result mustBe AdjustmentDuty(BigDecimal(1))
         verify(connector.httpClient, atLeastOnce)
-          .POST[DutyCalculationRequest, TaxDuty](
+          .POST[AdjustmentDutyCalculationRequest, AdjustmentDuty](
             any(),
-            ArgumentMatchers.eq(DutyCalculationRequest(AdjustmentTypes.Spoilt, BigDecimal(1), BigDecimal(1))),
+            ArgumentMatchers.eq(AdjustmentDutyCalculationRequest(AdjustmentTypes.Spoilt, BigDecimal(1), BigDecimal(1))),
             any()
           )(any(), any(), any(), any())
       }

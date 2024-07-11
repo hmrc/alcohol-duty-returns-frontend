@@ -26,7 +26,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
-import models.adjustment.{AdjustmentEntry, TaxDuty}
+import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
 import models.adjustment.AdjustmentType.Spoilt
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import uk.gov.hmrc.http.HttpResponse
@@ -88,7 +88,7 @@ class AdjustmentListControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET" in {
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
-        TaxDuty(total)
+        AdjustmentDuty(total)
       )
       val application                        = applicationBuilder(userAnswers = Some(userAnswsers))
         .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))
@@ -114,7 +114,7 @@ class AdjustmentListControllerSpec extends SpecBase {
       val updatedUserAnswers                 = userAnswsers.set(AdjustmentListPage, true).success.value
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
-        TaxDuty(total)
+        AdjustmentDuty(total)
       )
       val application                        = applicationBuilder(userAnswers = Some(updatedUserAnswers))
         .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))

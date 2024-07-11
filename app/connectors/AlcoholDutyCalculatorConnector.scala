@@ -17,7 +17,7 @@
 package connectors
 
 import config.FrontendAppConfig
-import models.adjustment.{AdjustmentTypes, TaxDuty}
+import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.returns.AlcoholDuty
 import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
 import play.api.http.Status.OK
@@ -94,16 +94,20 @@ class AlcoholDutyCalculatorConnector @Inject() (
   }
   def calculateAdjustmentDuty(pureAlcoholVolume: BigDecimal, rate: BigDecimal, adjustmentType: AdjustmentTypes)(implicit
     hc: HeaderCarrier
-  ): Future[TaxDuty] = {
-    val body: DutyCalculationRequest = DutyCalculationRequest(adjustmentType, pureAlcoholVolume, rate)
+  ): Future[AdjustmentDuty] = {
+    val body: AdjustmentDutyCalculationRequest =
+      AdjustmentDutyCalculationRequest(adjustmentType, pureAlcoholVolume, rate)
     httpClient
-      .POST[DutyCalculationRequest, TaxDuty](url = config.adrCalculatorCalculateAdjustmentDutyUrl(), body = body)
+      .POST[AdjustmentDutyCalculationRequest, AdjustmentDuty](
+        url = config.adrCalculatorCalculateAdjustmentDutyUrl(),
+        body = body
+      )
   }
   def calculateRepackagedDutyChange(newDuty: BigDecimal, oldDuty: BigDecimal)(implicit
     hc: HeaderCarrier
-  ): Future[TaxDuty] = {
-    val body: AdjustmentDutyCalculationRequest = AdjustmentDutyCalculationRequest(newDuty, oldDuty)
-    httpClient.POST[AdjustmentDutyCalculationRequest, TaxDuty](
+  ): Future[AdjustmentDuty] = {
+    val body: RepackagedDutyChangeRequest = RepackagedDutyChangeRequest(newDuty, oldDuty)
+    httpClient.POST[RepackagedDutyChangeRequest, AdjustmentDuty](
       url = config.adrCalculatorCalculateRepackagedDutyChangeUrl(),
       body = body
     )
@@ -111,9 +115,9 @@ class AlcoholDutyCalculatorConnector @Inject() (
 
   def calculateTotalAdjustment(
     duties: Seq[BigDecimal]
-  )(implicit hc: HeaderCarrier): Future[TaxDuty] = {
+  )(implicit hc: HeaderCarrier): Future[AdjustmentDuty] = {
     val body: AdjustmentTotalCalculationRequest = AdjustmentTotalCalculationRequest(duties)
-    httpClient.POST[AdjustmentTotalCalculationRequest, TaxDuty](
+    httpClient.POST[AdjustmentTotalCalculationRequest, AdjustmentDuty](
       url = config.adrCalculatorCalculateTotalAdjustmentUrl(),
       body = body
     )

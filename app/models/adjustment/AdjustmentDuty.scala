@@ -18,8 +18,8 @@ package models.adjustment
 
 import play.api.libs.json.{Json, OFormat}
 
-case class TaxDuty(duty: BigDecimal)
+case class AdjustmentDuty(duty: BigDecimal)
 
-object TaxDuty {
-  implicit val formats: OFormat[TaxDuty] = Json.format[TaxDuty]
+object AdjustmentDuty {
+  implicit val formats: OFormat[AdjustmentDuty] = Json.format[AdjustmentDuty]
 }
