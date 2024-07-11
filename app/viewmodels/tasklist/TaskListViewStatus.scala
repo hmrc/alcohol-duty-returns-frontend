@@ -17,16 +17,7 @@
 package viewmodels.tasklist
 
 import models.TaskListStatus
-import models.TaskListStatus.{Completed, Incomplete}
 
-case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
-
-  def completedTasks: Int = sections.count(_.completedTask)
-  def totalTasks: Int     = sections.size
-
-  def status: TaskListStatus = if (completedTasks == totalTasks) {
-    Completed
-  } else {
-    Incomplete
-  }
+object TaskListViewStatus {
+  def toStatusMessageKey(taskListStatus: TaskListStatus): String = taskListStatus.entryName.toLowerCase
 }

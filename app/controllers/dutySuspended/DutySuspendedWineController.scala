@@ -37,6 +37,7 @@ class DutySuspendedWineController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  checkRegime: CheckWineRegimeAction,
   formProvider: DutySuspendedWineFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DutySuspendedWineView
@@ -46,17 +47,18 @@ class DutySuspendedWineController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DutySuspendedWinePage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(DutySuspendedWinePage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkRegime).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -67,5 +69,5 @@ class DutySuspendedWineController @Inject() (
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DutySuspendedWinePage, mode, updatedAnswers))
         )
-  }
+    }
 }

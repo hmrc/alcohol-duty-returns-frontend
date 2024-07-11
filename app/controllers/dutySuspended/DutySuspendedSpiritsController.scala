@@ -37,6 +37,7 @@ class DutySuspendedSpiritsController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  checkRegime: CheckSpiritsRegimeAction,
   formProvider: DutySuspendedSpiritsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DutySuspendedSpiritsView
@@ -46,17 +47,18 @@ class DutySuspendedSpiritsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DutySuspendedSpiritsPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(DutySuspendedSpiritsPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkRegime).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -67,5 +69,5 @@ class DutySuspendedSpiritsController @Inject() (
               _              <- cacheConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DutySuspendedSpiritsPage, mode, updatedAnswers))
         )
-  }
+    }
 }
