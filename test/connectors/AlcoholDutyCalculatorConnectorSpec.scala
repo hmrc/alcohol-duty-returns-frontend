@@ -21,9 +21,8 @@ import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
-import models.adjustment.AdjustmentTypes
-import models.productEntry.TaxDuty
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.adjustment.{AdjustmentTypes, TaxDuty}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.{NOT_FOUND, OK}
@@ -57,7 +56,6 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     )
   )
   val rateBandList: Seq[RateBand]          = Seq(rateBand)
-  val rateType                             = RateTypeResponse(DraughtRelief)
   val ratePeriod                           = returnPeriodGen.sample.get
 
   "rates" - {
@@ -92,7 +90,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         connector.httpClient.POST[DutyCalculationRequest, TaxDuty](any(), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(TaxDuty(BigDecimal(1)))
 
-      whenReady(connector.calculateTaxDuty(BigDecimal(1), BigDecimal(1), AdjustmentTypes.Spoilt)) { result =>
+      whenReady(connector.calculateAdjustmentDuty(BigDecimal(1), BigDecimal(1), AdjustmentTypes.Spoilt)) { result =>
         result mustBe TaxDuty(BigDecimal(1))
         verify(connector.httpClient, atLeastOnce)
           .POST[DutyCalculationRequest, TaxDuty](
@@ -100,30 +98,6 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
             ArgumentMatchers.eq(DutyCalculationRequest(AdjustmentTypes.Spoilt, BigDecimal(1), BigDecimal(1))),
             any()
           )(any(), any(), any(), any())
-      }
-    }
-  }
-
-  "rateType" - {
-    "successfully retrieve rates" in {
-      when {
-        connector.httpClient.GET[RateTypeResponse](any(), any(), any())(any(), any(), any())
-      } thenReturn Future.successful(rateType)
-
-      whenReady(connector.rateType(AlcoholByVolume(3.5), YearMonth.of(2023, 1), Set(Beer, Wine))) { result =>
-        result mustBe rateType
-        verify(connector.httpClient, atLeastOnce)
-          .GET[RateTypeResponse](
-            any(),
-            ArgumentMatchers.eq(
-              Seq(
-                ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                ("alcoholRegimes", Json.toJson(Set("Beer", "Wine")).toString()),
-                ("abv", "3.5")
-              )
-            ),
-            any()
-          )(any(), any(), any())
       }
     }
   }
@@ -147,7 +121,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
             ArgumentMatchers.eq(
               Seq(
                 ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                ("taxType", "310")
+                ("taxTypeCode", "310")
               )
             ),
             any()
@@ -173,7 +147,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
             ArgumentMatchers.eq(
               Seq(
                 ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                ("taxType", "123")
+                ("taxTypeCode", "123")
               )
             ),
             any()

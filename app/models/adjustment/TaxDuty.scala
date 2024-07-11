@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,12 @@
  * limitations under the License.
  */
 
-package forms.productEntry
+package models.adjustment
 
-import forms.behaviours.OptionFieldBehaviours
-import play.api.data.FormError
+import play.api.libs.json.{Json, OFormat}
 
-class TaxTypeFormProviderSpec extends OptionFieldBehaviours {
+case class TaxDuty(duty: BigDecimal)
 
-  val form = new TaxTypeFormProvider()()
-
-  ".value" - {
-
-    val fieldName   = "value"
-    val requiredKey = "taxType.error.required"
-
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      nonEmptyString
-    )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-  }
+object TaxDuty {
+  implicit val formats: OFormat[TaxDuty] = Json.format[TaxDuty]
 }

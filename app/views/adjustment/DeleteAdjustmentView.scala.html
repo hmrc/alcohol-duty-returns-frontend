@@ -37,14 +37,14 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @pageHeading(messages("dutySuspendedBeer.heading"))
+    @pageHeading(messages("deleteAdjustment.heading"))
 
     @paragraph(messages("deleteAdjustment.paragraph"))
 
     @govukRadios(
         RadiosViewModel.yesNo(
         field = form("delete-adjustment-yes-no-value"),
-        legend = LegendViewModel(messages("deleteAdjustment.heading")).asPageHeading()
+        legend = LegendViewModel(messages("deleteAdjustment.heading")).asVisuallyHidden()
         )
     )
 

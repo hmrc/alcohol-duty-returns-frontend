@@ -17,8 +17,7 @@
 package connectors
 
 import config.FrontendAppConfig
-import models.adjustment.AdjustmentTypes
-import models.productEntry.TaxDuty
+import models.adjustment.{AdjustmentTypes, TaxDuty}
 import models.returns.AlcoholDuty
 import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
 import play.api.http.Status.OK
@@ -76,12 +75,12 @@ class AlcoholDutyCalculatorConnector @Inject() (
       body = requestBody
     )
 
-  def rateBand(taxType: String, ratePeriod: YearMonth)(implicit
+  def rateBand(taxTypeCode: String, ratePeriod: YearMonth)(implicit
     hc: HeaderCarrier
   ): Future[Option[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(
-      "ratePeriod" -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
-      "taxType"    -> taxType
+      "ratePeriod"  -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
+      "taxTypeCode" -> taxTypeCode
     )
     httpClient
       .GET[Either[UpstreamErrorResponse, HttpResponse]](

@@ -164,10 +164,10 @@ class AdjustmentTaxTypeController @Inject() (
       )
     )
 
-  private def fetchAdjustmentRateBand(taxCode: String, period: YearMonth)(implicit
+  private def fetchAdjustmentRateBand(taxTypeCode: String, period: YearMonth)(implicit
     hc: HeaderCarrier
   ): Future[Option[RateBand]] =
-    alcoholDutyCalculatorConnector.rateBand(taxCode, period)
+    alcoholDutyCalculatorConnector.rateBand(taxTypeCode, period)
 
   def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
     adjustmentEntry.rateBand.map(_.taxTypeCode) match {

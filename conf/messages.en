@@ -1216,6 +1216,8 @@ adjustmentEntryList.action = Action
 adjustmentList.total = Total due
 adjustmentList.question = Do you need to tell us about any other adjustments?
 adjustmentList.error.required = Select yes if you have another adjustment to declare
+adjustmentEntryList.change.hidden = this adjustment
+adjustmentEntryList.remove.hidden = this adjustment
 
 deleteAdjustment.title = Remove this adjustment?
 deleteAdjustment.heading = Remove this adjustment?

@@ -47,7 +47,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
   val rateBand        = RateBand(
     taxCode,
     "some band",
-    RateType.DraughtRelief,
+    RateType.Core,
     Some(BigDecimal(10.99)),
     Set(
       RangeDetailsByRegime(
@@ -108,7 +108,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
         ).toString
       }
     }
-    /*
+
     "must redirect to the next page when valid data is submitted" in {
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
@@ -184,7 +184,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
-     */
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]

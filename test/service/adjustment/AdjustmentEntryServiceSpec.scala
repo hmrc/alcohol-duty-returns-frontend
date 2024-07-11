@@ -21,9 +21,8 @@ import cats.data.NonEmptySeq
 import connectors.AlcoholDutyCalculatorConnector
 import pages.adjustment._
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, TaxDuty}
 import models.adjustment.AdjustmentType.Underdeclaration
-import models.productEntry.TaxDuty
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import services.adjustment.AdjustmentEntryServiceImpl
@@ -71,7 +70,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+      when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
         .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -99,7 +98,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         .value
 
       val mockConnector = mock[AlcoholDutyCalculatorConnector]
-      when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+      when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
         .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
       val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -128,7 +127,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+        when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -151,7 +150,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+        when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)
@@ -173,7 +172,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           .value
 
         val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateTaxDuty(any(), any(), any())(any()))
+        when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
           .thenReturn(Future.successful(TaxDuty(BigDecimal(1))))
 
         val service = new AdjustmentEntryServiceImpl(mockConnector)

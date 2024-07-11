@@ -21,7 +21,7 @@ import models.adjustment.AdjustmentEntry
 import pages.adjustment.AdjustmentEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
+import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 import views.ViewUtils.valueFormatter
 
@@ -61,8 +61,8 @@ object AdjustmentListSummaryHelper {
         cells = Seq(
           Text(messages(s"adjustmentType.checkYourAnswersLabel.$adjustmentType")),
           Text(
-            rateBandContent(
-              adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBandfrom cache"))
+            rateBandRecap(
+              adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
             )
           ),
           Text(valueFormatter(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache"))))
