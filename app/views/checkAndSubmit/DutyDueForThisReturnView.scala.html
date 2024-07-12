@@ -32,7 +32,7 @@
 
 @(table: TableViewModel, totalValue: BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("dutyDueForThisReturn.title"))) {
+@layout(pageTitle = titleNoForm(messages("dutyDueForThisReturn.title", messages("site.currency.2DP", totalValue)))) {
 
     @sectionHeading(
         id = "dutyDueForThisReturn-section",
@@ -45,15 +45,19 @@
 
 @paragraph(messages("dutyDueForThisReturn.nil.p1"))
 
+@subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
+
 @bulletList(Seq(
 messages("dutyDueForThisReturn.bulletList.3"),
 ))
 }
 
 @if(totalValue > 0) {
-@pageHeading(messages("dutyDueForThisReturn.heading"))
+@pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", totalValue)))
 
 @paragraph(messages("dutyDueForThisReturn.positive.p1"))
+
+@subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
 
 @bulletList(Seq(
 messages("dutyDueForThisReturn.bulletList.1"),
@@ -62,9 +66,11 @@ messages("dutyDueForThisReturn.bulletList.2")
 }
 
 @if(totalValue < 0) {
-@pageHeading(messages("dutyDueForThisReturn.heading"))
+@pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", totalValue)))
 
 @paragraph(messages("dutyDueForThisReturn.negative.p1"))
+
+@subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
 
 @bulletList(Seq(
 messages("dutyDueForThisReturn.bulletList.1"),
@@ -73,7 +79,6 @@ messages("dutyDueForThisReturn.bulletList.2")
 }
 
 
-@subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
     @paragraph(messages("dutyDueForThisReturn.p2"))
 
     @govukTable(Table(

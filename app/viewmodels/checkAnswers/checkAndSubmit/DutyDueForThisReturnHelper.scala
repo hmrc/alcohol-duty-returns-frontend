@@ -18,12 +18,12 @@ package viewmodels.checkAnswers.checkAndSubmit
 
 import models.{NormalMode, UserAnswers}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
+import play.api.Logging
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
-object DutyDueForThisReturnHelper {
+object DutyDueForThisReturnHelper extends Logging {
 
   def dutyDueByRegime(userAnswers: UserAnswers)(implicit
     messages: Messages
@@ -66,6 +66,9 @@ object DutyDueForThisReturnHelper {
             )
           )
         }.toSeq
-      case (None, None)                      => Seq.empty
+      case (None, None)                      =>
+        logger.warn("Failed to create duty due table view model")
+        Seq.empty
+
     }
 }
