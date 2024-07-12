@@ -272,5 +272,68 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+    "throw an exception for a GET if rateBand is not defined " in {
+      val adjustmentEntry     = AdjustmentEntry(
+        adjustmentType = Some(Spoilt)
+      )
+      val previousUserAnswers = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+
+      val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentVolumeWithSPRRoute)
+
+        val result = route(application, request).value
+
+        whenReady(result.failed) { exception =>
+          exception mustBe a[RuntimeException]
+          exception.getMessage mustEqual "Couldn't fetch regime value from cache"
+        }
+      }
+    }
+    "throw an exception for a GET if adjustmentType is not defined" in {
+      val adjustmentEntry     = AdjustmentEntry(
+        period = Some(YearMonth.of(2024, 1)),
+        rateBand = Some(rateBand)
+      )
+      val previousUserAnswers = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+
+      val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentVolumeWithSPRRoute)
+
+        val result = route(application, request).value
+
+        whenReady(result.failed) { exception =>
+          exception mustBe a[RuntimeException]
+          exception.getMessage mustEqual "Couldn't fetch adjustment type value from cache"
+        }
+      }
+    }
+
+    "must throw an exception for a POST if adjustmentType is not defined" in {
+      val adjustmentEntry     = AdjustmentEntry(
+        rateBand = Some(rateBand)
+      )
+      val previousUserAnswers = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+      val application         = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentVolumeWithSPRRoute)
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", validTotalLitres.toString()),
+              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.sprDutyRate", validSPRDutyRate.toString())
+            )
+
+        val result = route(application, request).value
+        whenReady(result.failed) { exception =>
+          exception mustBe a[RuntimeException]
+          exception.getMessage mustEqual "Couldn't fetch adjustment type value from cache"
+        }
+      }
+    }
   }
 }

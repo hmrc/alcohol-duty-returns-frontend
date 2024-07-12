@@ -87,6 +87,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     .success
     .value
 
+  lazy val checkYourAnswersRoute = controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url
+
   "CheckYourAnswers Controller" - {
 
     "must return OK and the correct view for a GET if all necessary questions are answered" in {
@@ -101,7 +103,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
+        val request = FakeRequest(GET, checkYourAnswersRoute)
 
         val result = route(application, request).value
 
@@ -164,7 +166,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       running(application) {
         val request =
-          FakeRequest(GET, controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
+          FakeRequest(GET, checkYourAnswersRoute)
 
         val result = route(application, request).value
 
@@ -201,7 +203,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .build()
 
         running(application) {
-          val request = FakeRequest(GET, controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
+          val request = FakeRequest(GET, checkYourAnswersRoute)
 
           val result = route(application, request).value
 
@@ -239,7 +241,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
+        val request = FakeRequest(GET, checkYourAnswersRoute)
 
         val result = route(application, request).value
 
@@ -262,7 +264,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
-          val request = FakeRequest(GET, controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
+          val request = FakeRequest(GET, checkYourAnswersRoute)
 
           val result = route(application, request).value
 
@@ -333,7 +335,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           val application = applicationBuilder(Some(incompleteUserAnswers)).build()
 
           running(application) {
-            val request = FakeRequest(GET, controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
+            val request = FakeRequest(GET, checkYourAnswersRoute)
 
             val result = route(application, request).value
 
@@ -458,5 +460,6 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         verify(mockCacheConnector, times(0)).set(any())(any())
       }
     }
+
   }
 }

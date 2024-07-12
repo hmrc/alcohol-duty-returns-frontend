@@ -37,10 +37,7 @@ case class AdjustmentEntry(
   newDuty: Option[BigDecimal] = None
 ) {
   def isComplete: Boolean = {
-    val isRepackagedAdjustment =
-      adjustmentType.isDefined && adjustmentType
-        .getOrElse(throw new RuntimeException("Couldn't fetch adjustment type"))
-        .equals(RepackagedDraughtProducts)
+    val isRepackagedAdjustment = adjustmentType.isDefined && adjustmentType.equals(RepackagedDraughtProducts)
 
     adjustmentType.isDefined && period.isDefined && rateBand.isDefined &&
     totalLitresVolume.isDefined && pureAlcoholVolume.isDefined && duty.isDefined && (rateBand
