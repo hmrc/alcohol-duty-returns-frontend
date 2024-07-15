@@ -16,6 +16,7 @@
 
 package viewmodels.returns
 
+import config.Constants
 import models.ObligationStatus.Open
 import models.{ObligationData, ObligationStatusToDisplay, ReturnPeriod}
 import play.api.Logging
@@ -43,9 +44,9 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
 
   private def getTableHeader(messages: Messages): Seq[HeadCell] =
     Seq(
-      HeadCell(content = Text(messages("viewPastReturns.period")), classes = "govuk-!-width-one-quarter"),
-      HeadCell(content = Text(messages("viewPastReturns.status")), classes = "govuk-!-width-one-quarter"),
-      HeadCell(content = Text(messages("viewPastReturns.action")), classes = "govuk-!-width-one-quarter")
+      HeadCell(content = Text(messages("viewPastReturns.period")), classes = Constants.oneQuarterCssClass),
+      HeadCell(content = Text(messages("viewPastReturns.status")), classes = Constants.oneQuarterCssClass),
+      HeadCell(content = Text(messages("viewPastReturns.action")), classes = Constants.oneQuarterCssClass)
     )
 
   private def getObligationDataTableRows(obligationData: Seq[ObligationData])(implicit
@@ -110,11 +111,11 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
   ): Html = {
     val tag = status match {
       case ObligationStatusToDisplay.Due       =>
-        Tag(content = Text(messages("viewPastReturns.status.due")), classes = "govuk-tag--blue")
+        Tag(content = Text(messages("viewPastReturns.status.due")), classes = Constants.blueTagCssClass)
       case ObligationStatusToDisplay.Overdue   =>
-        Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = "govuk-tag--red")
+        Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = Constants.redTagCssClass)
       case ObligationStatusToDisplay.Completed =>
-        Tag(content = Text(messages("viewPastReturns.status.completed")), classes = "govuk-tag--green")
+        Tag(content = Text(messages("viewPastReturns.status.completed")), classes = Constants.greenTagCssClass)
     }
     new GovukTag()(tag)
   }

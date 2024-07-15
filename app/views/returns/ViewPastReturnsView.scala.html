@@ -15,6 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading}
+@import config.Constants
 @import viewmodels.TableViewModel
 
 @this(
@@ -39,7 +40,7 @@
 
         @govukTable(Table(
             caption = Some(messages("viewPastReturns.outstandingReturns.caption")),
-            captionClasses = "govuk-table__caption--m",
+            captionClasses = Constants.tableCaptionMCssClass,
             head = Some(outstandingReturns.head),
             rows = outstandingReturns.rows.map(row => {
                 val actions = TableRow(content = HtmlContent(tableRowActionList(
@@ -58,7 +59,7 @@
 
         @govukTable(Table(
             caption = Some(messages("viewPastReturns.completedReturns.caption")),
-            captionClasses = "govuk-table__caption--m",
+            captionClasses = Constants.tableCaptionMCssClass,
             head = Some(completedReturns.head),
             rows = completedReturns.rows.map(row => {
                 val actions = TableRow(content = HtmlContent(tableRowActionList(

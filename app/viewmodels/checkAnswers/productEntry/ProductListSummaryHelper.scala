@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers.productEntry
 
+import config.Constants
 import models.UserAnswers
 import models.productEntry.ProductEntry
 import pages.productEntry.ProductEntryListPage
@@ -31,9 +32,9 @@ object ProductListSummaryHelper {
     val productEntries: Seq[ProductEntry] = getProductEntries(userAnswers)
     TableViewModel(
       head = Seq(
-        HeadCell(content = Text(messages("productEntryList.name")), classes = "govuk-!-width-one-half"),
-        HeadCell(content = Text(messages("productEntryList.duty")), classes = "govuk-!-width-one-quarter"),
-        HeadCell(content = Text(messages("productEntryList.action")), classes = "govuk-!-width-one-quarter")
+        HeadCell(content = Text(messages("productEntryList.name")), classes = Constants.oneHalfCssClass),
+        HeadCell(content = Text(messages("productEntryList.duty")), classes = Constants.oneQuarterCssClass),
+        HeadCell(content = Text(messages("productEntryList.action")), classes = Constants.oneQuarterCssClass)
       ),
       rows = getProductEntryRows(productEntries),
       total = Some(

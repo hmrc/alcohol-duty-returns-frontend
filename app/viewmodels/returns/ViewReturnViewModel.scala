@@ -16,6 +16,7 @@
 
 package viewmodels.returns
 
+import config.Constants
 import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
@@ -41,12 +42,12 @@ class ViewReturnViewModel @Inject() () {
 
   private def alcoholDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
-      HeadCell(content = Text(messages("viewReturn.table.description.legend")), classes = "govuk-!-width-one-quarter"),
-      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = "govuk-!-width-one-quarter"),
-      HeadCell(content = Text(messages("viewReturn.table.dutyRate.legend")), classes = "govuk-!-width-one-quarter"),
+      HeadCell(content = Text(messages("viewReturn.table.description.legend")), classes = Constants.oneQuarterCssClass),
+      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.oneQuarterCssClass),
+      HeadCell(content = Text(messages("viewReturn.table.dutyRate.legend")), classes = Constants.oneQuarterCssClass),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyDue.legend")),
-        classes = "govuk-!-width-one-quarter text-align-right"
+        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
       )
     )
 
@@ -54,11 +55,11 @@ class ViewReturnViewModel @Inject() () {
     Seq(
       HeadCell(
         content = Text(messages("viewReturn.table.description.legend")),
-        classes = "govuk-!-width-three-quarters"
+        classes = Constants.threeQuartersCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyDue.legend")),
-        classes = "govuk-!-width-one-quarter text-align-right"
+        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
       )
     )
 
@@ -79,7 +80,10 @@ class ViewReturnViewModel @Inject() () {
               s"${Money.format(alcoholDeclaredDetailsRow.dutyRate)} ${messages("site.unit.per.litre")}"
             )
           ),
-          TableRow(content = Text(Money.format(alcoholDeclaredDetailsRow.dutyValue)), classes = "text-align-right")
+          TableRow(
+            content = Text(Money.format(alcoholDeclaredDetailsRow.dutyValue)),
+            classes = Constants.textAlignRightCssClass
+          )
         )
       )
     }
@@ -89,7 +93,7 @@ class ViewReturnViewModel @Inject() () {
       TableRowViewModel(cells =
         Seq(
           TableRow(content = Text(messages("viewReturn.alcoholDuty.noneDeclared"))),
-          TableRow(content = Text(messages("site.nil")), classes = "text-align-right")
+          TableRow(content = Text(messages("site.nil")), classes = Constants.textAlignRightCssClass)
         )
       )
     )
@@ -100,11 +104,11 @@ class ViewReturnViewModel @Inject() () {
     TableTotalViewModel(
       HeadCell(
         content = Text(messages("viewReturn.alcoholDuty.total.legend")),
-        classes = "govuk-!-width-three-quarters"
+        classes = Constants.threeQuartersCssClass
       ),
       HeadCell(
         content = Text(Money.format(alcoholDeclared.total)),
-        classes = "govuk-!-width-one-quarter text-align-right"
+        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
       )
     )
 
@@ -131,18 +135,21 @@ class ViewReturnViewModel @Inject() () {
       HeadCell(content = Text(messages("viewReturn.table.description.legend"))),
       HeadCell(content = Text(messages("viewReturn.table.lpa.legend"))),
       HeadCell(content = Text(messages("viewReturn.table.dutyRate.legend"))),
-      HeadCell(content = Text(messages("viewReturn.table.dutyValue.legend")), classes = "text-align-right")
+      HeadCell(
+        content = Text(messages("viewReturn.table.dutyValue.legend")),
+        classes = Constants.textAlignRightCssClass
+      )
     )
 
   private def noAdjustmentsTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(
         content = Text(messages("viewReturn.table.description.legend")),
-        classes = "govuk-!-width-three-quarters"
+        classes = Constants.threeQuartersCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyValue.legend")),
-        classes = "govuk-!-width-one-quarter text-align-right"
+        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
       )
     )
 
@@ -162,7 +169,10 @@ class ViewReturnViewModel @Inject() () {
           TableRow(content =
             Text(s"${Money.format(returnAdjustmentsRow.dutyRate)} ${messages("site.unit.per.litre")}")
           ),
-          TableRow(content = Text(Money.format(returnAdjustmentsRow.dutyValue)), classes = "text-align-right")
+          TableRow(
+            content = Text(Money.format(returnAdjustmentsRow.dutyValue)),
+            classes = Constants.textAlignRightCssClass
+          )
         )
       )
     }
@@ -172,7 +182,7 @@ class ViewReturnViewModel @Inject() () {
       TableRowViewModel(cells =
         Seq(
           TableRow(content = Text(messages("viewReturn.adjustments.noneDeclared"))),
-          TableRow(content = Text(messages("site.nil")), classes = "text-align-right")
+          TableRow(content = Text(messages("site.nil")), classes = Constants.textAlignRightCssClass)
         )
       )
     )
@@ -181,9 +191,12 @@ class ViewReturnViewModel @Inject() () {
     TableTotalViewModel(
       HeadCell(
         content = Text(messages("viewReturn.adjustments.total.legend")),
-        classes = "govuk-!-width-three-quarters"
+        classes = Constants.threeQuartersCssClass
       ),
-      HeadCell(content = Text(Money.format(adjustments.total)), classes = "govuk-!-width-one-quarter text-align-right")
+      HeadCell(
+        content = Text(Money.format(adjustments.total)),
+        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+      )
     )
 
   def createTotalDueViewModel(returnDetails: ReturnDetails)(implicit messages: Messages): TableTotalViewModel = {
@@ -201,9 +214,9 @@ class ViewReturnViewModel @Inject() () {
     TableTotalViewModel(
       HeadCell(
         content = Text(messages("viewReturn.dutyDue.total.legend")),
-        classes = "govuk-!-width-three-quarters"
+        classes = Constants.threeQuartersCssClass
       ),
-      HeadCell(content = content, classes = "govuk-!-width-one-quarter text-align-right")
+      HeadCell(content = content, classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}")
     )
   }
 }

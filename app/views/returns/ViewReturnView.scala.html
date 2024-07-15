@@ -15,6 +15,7 @@
  *@
 
 @import components.{PageHeading, Paragraph, SectionHeading}
+@import config.Constants
 @import viewmodels.{TableTotalViewModel, TableViewModel}
 
 @this(
@@ -33,7 +34,7 @@
 
     @pageHeading(messages("viewReturn.heading"))
 
-    <h2 class="govuk-heading-m">@period</h2>
+    <h2 class=@{Constants.headingMCssClass}>@period</h2>
 
     @paragraph(messages("viewReturn.submittedAt", submittedAtDate, submittedAtTime))
 
@@ -41,7 +42,7 @@
 
     @govukTable(Table(
         caption = Some(messages("viewReturn.alcoholDuty.caption")),
-        captionClasses = "govuk-table__caption--m",
+        captionClasses = Constants.tableCaptionMCssClass,
         head = Some(dutyToDeclare.head),
         rows = dutyToDeclare.rows.map(_.cells)
     ))
@@ -56,7 +57,7 @@
 
     @govukTable(Table(
         caption = Some(messages("viewReturn.adjustments.caption")),
-        captionClasses = "govuk-table__caption--m",
+        captionClasses = Constants.tableCaptionMCssClass,
         head = Some(adjustments.head),
         rows = adjustments.rows.map(_.cells)
     ))
