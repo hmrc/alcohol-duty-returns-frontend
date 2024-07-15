@@ -91,7 +91,9 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
         .fold(
           formWithErrors => handleFormWithErrors(mode, request.userAnswers, formWithErrors),
           value => {
-            val currentAdjustmentEntry          = request.userAnswers.get(CurrentAdjustmentEntryPage).get
+            val currentAdjustmentEntry          = request.userAnswers
+              .get(CurrentAdjustmentEntryPage)
+              .getOrElse(throw new RuntimeException("Couldn't fetch CurrentAdjustmentEntryPage from cache"))
             val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
             val adjustmentType                  = updatedAdjustment.adjustmentType.getOrElse(
               throw new RuntimeException("Couldn't fetch adjustment type value from cache")
@@ -100,29 +102,28 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
               value.toString,
               updatedAdjustment.period.getOrElse(throw new RuntimeException("Couldn't fetch period value from cache"))
             ).flatMap {
+              case Some(rateBand)
+                  if rateBand.rateType == DraughtAndSmallProducerRelief || rateBand.rateType == DraughtRelief =>
+                rateBandResponseError(
+                  mode,
+                  value,
+                  adjustmentType,
+                  "adjustmentRepackagedTaxType.error.nonDraught"
+                )
               case Some(rateBand) =>
-                if (rateBand.rateType == DraughtAndSmallProducerRelief || rateBand.rateType == DraughtRelief) {
-                  rateBandResponseError(
-                    mode,
-                    value,
-                    adjustmentType,
-                    "adjustmentRepackagedTaxType.error.nonDraught"
-                  )
-                } else {
-                  for {
-                    updatedAnswers <-
-                      Future.fromTry(
-                        request.userAnswers
-                          .set(
-                            CurrentAdjustmentEntryPage,
-                            updatedAdjustment.copy(repackagedRateBand = Some(rateBand))
-                          )
-                      )
-                    _              <- cacheConnector.set(updatedAnswers)
-                  } yield Redirect(
-                    navigator.nextPage(AdjustmentRepackagedTaxTypePage, mode, updatedAnswers, hasChanged)
-                  )
-                }
+                for {
+                  updatedAnswers <-
+                    Future.fromTry(
+                      request.userAnswers
+                        .set(
+                          CurrentAdjustmentEntryPage,
+                          updatedAdjustment.copy(repackagedRateBand = Some(rateBand))
+                        )
+                    )
+                  _              <- cacheConnector.set(updatedAnswers)
+                } yield Redirect(
+                  navigator.nextPage(AdjustmentRepackagedTaxTypePage, mode, updatedAnswers, hasChanged)
+                )
               case None           =>
                 rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
             }
@@ -133,9 +134,11 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
   private def handleFormWithErrors(mode: Mode, userAnswers: UserAnswers, formWithErrors: Form[Int])(implicit
     request: Request[_]
   ): Future[Result] =
-    userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      case Some(value) =>
+    userAnswers
+      .get(CurrentAdjustmentEntryPage)
+      .fold {
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      } { value =>
         Future.successful(
           BadRequest(
             view(
@@ -147,7 +150,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
             )
           )
         )
-    }
+      }
 
   def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
     adjustmentEntry.repackagedRateBand.map(_.taxTypeCode) match {

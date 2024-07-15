@@ -48,16 +48,16 @@ case class AdjustmentEntry(
 
   def rate: Option[BigDecimal] =
     (rateBand.flatMap(_.rate), sprDutyRate) match {
-      case (Some(_), None) => rateBand.map(_.rate).get
-      case (None, Some(_)) => sprDutyRate
-      case _               => None
+      case (Some(rate), None) => Some(rate)
+      case (None, Some(_))    => sprDutyRate
+      case _                  => None
     }
 
   def repackagedRate: Option[BigDecimal] =
     (repackagedRateBand.flatMap(_.rate), repackagedSprDutyRate) match {
-      case (Some(_), None) => repackagedRateBand.map(_.rate).get
-      case (None, Some(_)) => repackagedSprDutyRate
-      case _               => None
+      case (Some(repackagedRate), None) => Some(repackagedRate)
+      case (None, Some(_))              => repackagedSprDutyRate
+      case _                            => None
     }
 }
 object AdjustmentEntry extends YearMonthModelFormatter {

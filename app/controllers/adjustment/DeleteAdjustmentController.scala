@@ -47,11 +47,7 @@ class DeleteAdjustmentController @Inject() (
   val form = formProvider()
 
   def onPageLoad(index: Int): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(DeleteAdjustmentPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
-
+    val preparedForm = request.userAnswers.get(DeleteAdjustmentPage).fold(form)(value => form.fill(value))
     Ok(view(preparedForm, index))
   }
 

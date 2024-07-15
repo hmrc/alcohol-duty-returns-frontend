@@ -55,35 +55,26 @@ class AdjustmentTaxTypeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                    => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.rateBand.isDefined =>
+    request.userAnswers
+      .get(CurrentAdjustmentEntryPage)
+      .fold {
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      } { value =>
+        val formWithFilledData = value.rateBand
+          .map { rateBand =>
+            form.fill(rateBand.taxTypeCode.toInt)
+          }
+          .getOrElse(form)
         Ok(
           view(
-            form.fill(
-              value.rateBand
-                .map(_.taxTypeCode)
-                .getOrElse(throw new RuntimeException("Couldn't fetch taxCode value from cache"))
-                .toInt
-            ),
+            formWithFilledData,
             mode,
             value.adjustmentType.getOrElse(
               throw new RuntimeException("Couldn't fetch adjustment type value from cache")
             )
           )
         )
-      case Some(value)                             =>
-        Ok(
-          view(
-            form,
-            mode,
-            value.adjustmentType.getOrElse(
-              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-            )
-          )
-        )
-    }
-
+      }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {

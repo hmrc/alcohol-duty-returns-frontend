@@ -49,32 +49,25 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                                 => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.repackagedSprDutyRate.isDefined =>
+    request.userAnswers
+      .get(CurrentAdjustmentEntryPage)
+      .fold {
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      } { value =>
+        val formData = value.repackagedSprDutyRate.map(form.fill).getOrElse(form)
         Ok(
           view(
-            form.fill(value.repackagedSprDutyRate.get),
+            formData,
             mode,
             value.adjustmentType.getOrElse(
               throw new RuntimeException("Couldn't fetch adjustment type value from cache")
             )
           )
         )
-      case Some(value)                                          =>
-        Ok(
-          view(
-            form,
-            mode,
-            value.adjustmentType.getOrElse(
-              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-            )
-          )
-        )
-    }
+      }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent]                                                              = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form
         .bindFromRequest()
@@ -111,6 +104,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
           }
         )
   }
+
   def updateSPRRate(adjustmentEntry: AdjustmentEntry, currentValue: BigDecimal): (AdjustmentEntry, Boolean) =
     adjustmentEntry.repackagedSprDutyRate match {
       case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)

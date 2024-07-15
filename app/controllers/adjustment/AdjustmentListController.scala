@@ -55,12 +55,12 @@ class AdjustmentListController @Inject() (
       .get(AdjustmentEntryListPage)
       .getOrElse(Seq.empty)
       .flatMap(duty => duty.newDuty.orElse(duty.duty))
-    val totalFuture  = alcoholDutyCalculatorConnector.calculateTotalAdjustment(duties)
     val preparedForm = request.userAnswers.get(AdjustmentListPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
-    totalFuture
+    alcoholDutyCalculatorConnector
+      .calculateTotalAdjustment(duties)
       .map { total =>
         val table = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers, total.duty)
         Ok(view(preparedForm, table))
@@ -69,7 +69,6 @@ class AdjustmentListController @Inject() (
         logger.warn("Unable to fetch adjustment total")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
-
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>

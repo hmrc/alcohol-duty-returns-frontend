@@ -58,7 +58,7 @@ class CheckYourAnswersController @Inject() (
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case Some(adjustmentEntry) if adjustmentEntry.isComplete  =>
+      case Some(adjustmentEntry) if adjustmentEntry.isComplete =>
         for {
           updatedAnswers <- saveAdjustmentEntry(request.userAnswers, adjustmentEntry)
           cleanedAnswers <- Future.fromTry(updatedAnswers.remove(CurrentAdjustmentEntryPage))
@@ -66,10 +66,10 @@ class CheckYourAnswersController @Inject() (
         } yield Redirect(
           controllers.adjustment.routes.AdjustmentListController.onPageLoad()
         )
-      case Some(adjustmentEntry) if !adjustmentEntry.isComplete =>
+      case Some(_)                                             =>
         logger.logger.error("Adjustment Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      case _                                                    =>
+      case _                                                   =>
         logger.logger.error("Can't fetch adjustment entry from cache")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }

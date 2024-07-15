@@ -50,29 +50,22 @@ class WhenDidYouPayDutyController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                  => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.period.isDefined =>
+    request.userAnswers
+      .get(CurrentAdjustmentEntryPage)
+      .fold {
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      } { value =>
+        val formData = value.period.map(form.fill).getOrElse(form)
         Ok(
           view(
-            form.fill(value.period.get),
+            formData,
             mode,
             value.adjustmentType.getOrElse(
               throw new RuntimeException("Couldn't fetch adjustment type value from cache")
             )
           )
         )
-      case Some(value)                           =>
-        Ok(
-          view(
-            form,
-            mode,
-            value.adjustmentType.getOrElse(
-              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-            )
-          )
-        )
-    }
+      }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {

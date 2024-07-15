@@ -52,7 +52,7 @@ class AdjustmentVolumeController @Inject() (
   private def getRegime(implicit request: DataRequest[_]): AlcoholRegime = {
     val rateBand = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.rateBand)
     rateBand
-      .map(_.rangeDetails.map(_.alcoholRegime).head)
+      .flatMap(_.rangeDetails.map(_.alcoholRegime).headOption)
       .getOrElse(throw new RuntimeException("Couldn't fetch regime value from cache"))
   }
 
