@@ -16,21 +16,22 @@
 
 package controllers.returns
 
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import forms.returns.WhatDoYouNeedToDeclareFormProvider
-
-import javax.inject.Inject
+import models.requests.DataRequest
 import models.{AlcoholRegime, Mode, RateBand, ReturnPeriod, UserAnswers}
 import navigation.ReturnsNavigator
-import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage}
+import pages.QuestionPage
+import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage, nextPages}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.returns.TaxBandsViewModel
 import views.html.returns.WhatDoYouNeedToDeclareView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
@@ -47,7 +48,10 @@ class WhatDoYouNeedToDeclareController @Inject() (
   view: WhatDoYouNeedToDeclareView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with ReturnController[Set[RateBand], WhatDoYouNeedToDeclarePage.type] {
+
+  val currentPage = WhatDoYouNeedToDeclarePage
 
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
@@ -55,7 +59,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
 
       getRateBands(request.userAnswers, request.returnPeriod, regime).map { rateBands: Seq[RateBand] =>
         val taxBandsViewModel = TaxBandsViewModel(rateBands)
-        val preparedForm      = request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
+        val preparedForm      = request.userAnswers.getByKey(currentPage, regime) match {
           case None        => form
           case Some(value) => form.fill(value.map(_.taxTypeCode))
         }
@@ -75,11 +79,15 @@ class WhatDoYouNeedToDeclareController @Inject() (
                 Future.successful(BadRequest(view(formWithErrors, regime, TaxBandsViewModel(rateBands), mode))),
               value =>
                 for {
-                  rateBands      <- Future.fromTry(rateBandFromTaxType(value, rateBands))
-                  updatedAnswers <-
-                    Future.fromTry(request.userAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands))
-                  _              <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPageWithRegime(WhatDoYouNeedToDeclarePage, mode, updatedAnswers, regime))
+                  selectedRateBands         <- Future.fromTry(rateBandFromTaxType(value, rateBands))
+                  updatedAnswers            <- Future.fromTry(request.userAnswers.setByKey(currentPage, regime, selectedRateBands))
+                  (pagesToClear, hasChanged) = changedValue(selectedRateBands, regime)
+                  clearedAnswers            <- Future.fromTry(updatedAnswers.removePagesByKey(pagesToClear, regime))
+                  _                         <- cacheConnector.set(clearedAnswers)
+                } yield Redirect(
+                  navigator
+                    .nextPageWithRegime(currentPage, mode, updatedAnswers, regime, hasChanged)
+                )
             )
         }
     }
@@ -107,4 +115,14 @@ class WhatDoYouNeedToDeclareController @Inject() (
         .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: $taxType"))
     }
   }
+
+  private def changedValue(newRateBands: Set[RateBand], regime: AlcoholRegime)(implicit
+    request: DataRequest[AnyContent]
+  ): (Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]], Boolean) =
+    request.userAnswers.getByKey(currentPage, regime) match {
+      case Some(oldRateBands) if oldRateBands != newRateBands =>
+        (nextPages(currentPage), true)
+      case _                                                  =>
+        (Seq.empty, false)
+    }
 }

@@ -54,7 +54,7 @@ object HowMuchDoYouNeedToDeclareSummary {
                     items = Seq(
                       ActionItemViewModel(
                         "site.change",
-                        controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
+                        controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
                       )
                     )
                   )
