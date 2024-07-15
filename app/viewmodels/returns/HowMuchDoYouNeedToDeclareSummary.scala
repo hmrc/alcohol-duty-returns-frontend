@@ -36,7 +36,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       case Some(dutyByTaxTypes) =>
         Some(
           SummaryList(
-            rows = rows(regime, rateBands, dutyByTaxTypes),
+            rows = rows(rateBands, dutyByTaxTypes),
             card = Some(
               Card(
                 title = Some(
@@ -56,7 +56,6 @@ object HowMuchDoYouNeedToDeclareSummary {
                         "site.change",
                         controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
                       )
-                        .withVisuallyHiddenText(messages("howMuchDoYouNeedToDeclare.change.hidden"))
                     )
                   )
                 )
@@ -67,7 +66,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       case _                    => None
     }
 
-  def rows(regime: AlcoholRegime, rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
+  def rows(rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
     val rateBandsByRateType = rateBands
@@ -76,14 +75,14 @@ object HowMuchDoYouNeedToDeclareSummary {
     val coreRows = rateBandsByRateType
       .get(Core)
       .map { coreRateBands =>
-        createRowValues(regime, Core, coreRateBands, dutyByTaxTypes)
+        createRowValues(Core, coreRateBands, dutyByTaxTypes)
       }
       .getOrElse(Seq.empty)
 
     val draughtReliefRows = rateBandsByRateType
       .get(DraughtRelief)
       .map { draughtReliefRateBands =>
-        createRowValues(regime, DraughtRelief, draughtReliefRateBands, dutyByTaxTypes)
+        createRowValues(DraughtRelief, draughtReliefRateBands, dutyByTaxTypes)
       }
       .getOrElse(Seq.empty)
 
@@ -91,7 +90,6 @@ object HowMuchDoYouNeedToDeclareSummary {
   }
 
   def createRowValues(
-    regime: AlcoholRegime,
     rateType: RateType,
     rateBands: Set[RateBand],
     dutyByTaxTypes: Seq[VolumeAndRateByTaxType]

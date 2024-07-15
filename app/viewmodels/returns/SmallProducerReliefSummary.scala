@@ -67,10 +67,7 @@ object SmallProducerReliefSummary {
           actions = Some(
             Actions(
               items = Seq(
-                ActionItemViewModel(
-                  "site.change",
-                  call
-                ).withVisuallyHiddenText(messages(s"$titleKey.change.hidden"))
+                ActionItemViewModel("site.change", call)
               )
             )
           )

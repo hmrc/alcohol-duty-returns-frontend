@@ -86,7 +86,8 @@ object DutyCalculationHelper {
       actions = Seq(
         TableRowActionViewModel(
           label = "Change",
-          href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime),
+          visuallyHiddenText = Some(rateBandRecap(rateBand))
         )
       )
     )
