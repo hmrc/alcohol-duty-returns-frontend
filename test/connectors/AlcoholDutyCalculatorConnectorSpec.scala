@@ -22,6 +22,7 @@ import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.productEntry.TaxDuty
+import models.returns.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -81,6 +82,37 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
               ),
               any()
             )(any(), any(), any())
+      }
+    }
+  }
+
+  "calculateTotalTaxDuty" - {
+    "successfully retrieve total tax duty for returns" in {
+
+      val expectedAlcoholDuty = AlcoholDuty(
+        dutiesByTaxType = Seq(DutyByTaxType("310", BigDecimal(1), BigDecimal(1), BigDecimal(1), BigDecimal(1))),
+        totalDuty = BigDecimal(1)
+      )
+
+      when {
+        connector.httpClient
+          .POST[TotalDutyCalculationRequest, AlcoholDuty](any(), any(), any())(any(), any(), any(), any())
+      } thenReturn Future.successful(expectedAlcoholDuty)
+
+      val totalDutyCalculationRequest = TotalDutyCalculationRequest(
+        Seq(
+          VolumeAndRateByTaxType("310", BigDecimal(1), BigDecimal(1), BigDecimal(1))
+        )
+      )
+
+      whenReady(connector.calculateTotalDuty(totalDutyCalculationRequest)) { result =>
+        result mustBe expectedAlcoholDuty
+        verify(connector.httpClient, atLeastOnce)
+          .POST[TotalDutyCalculationRequest, AlcoholDuty](
+            any(),
+            ArgumentMatchers.eq(totalDutyCalculationRequest),
+            any()
+          )(any(), any(), any(), any())
       }
     }
   }
