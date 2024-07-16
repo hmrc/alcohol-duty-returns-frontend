@@ -328,34 +328,64 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       }
     }
 
-    /*
-    "much throw exception if Adjustment Entry doesn't contain taxCode in repackaged rate band" in {
-      val repackagedRateBand                 = rateBand.copy(taxTypeCode = "")
-      val adjustmentEntry                    = AdjustmentEntry(
-        adjustmentType = Some(Spoilt),
-        repackagedRateBand = Some(repackagedRateBand)
-      )
-      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
-        None
-      )
-      val mockCacheConnector                 = mock[CacheConnector]
-      val previousUserAnswers                = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-      val application                        = applicationBuilder(userAnswers = Some(previousUserAnswers))
+    "must handle non-draught rate band response error" in {
+      val mockCacheConnector = mock[CacheConnector]
+      val application        = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[CacheConnector].toInstance(mockCacheConnector)
         )
         .build()
-
       running(application) {
-        val request   = FakeRequest(GET, routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode).url)
-        val result    = route(application, request).value
-        val exception = intercept[RuntimeException] {
-          await(result)
-        }
-        exception.getMessage must include("Couldn't fetch taxCode value from cache")
+        when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
+          Some(rateBand.copy(rateType = RateType.DraughtRelief))
+        )
+        val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
+          .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
+        val result  = route(application, request).value
+        status(result) mustEqual BAD_REQUEST
       }
-    }*/
+    }
+
+    "must handle invalid rate band response error" in {
+      val mockCacheConnector = mock[CacheConnector]
+      val application        = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+      running(application) {
+        when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(None)
+        val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
+          .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
+        val result  = route(application, request).value
+        status(result) mustEqual BAD_REQUEST
+      }
+    }
+
+    "must update cache and redirect on valid rate band response" in {
+      val mockCacheConnector = mock[CacheConnector]
+      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
+        Some(rateBand)
+      )
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application        = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+      running(application) {
+        val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
+          .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
   }
 }
