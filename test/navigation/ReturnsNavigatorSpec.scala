@@ -270,6 +270,34 @@ class ReturnsNavigatorSpec extends SpecBase {
         ) mustBe routes.IndexController.onPageLoad
       }
 
+      "must go from DeleteMultipleSPREntry page to MultipleSPRList page if the list is not empty" in {
+
+        val volumeAndRateByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
+
+        navigator.nextPageWithRegime(
+          pages.returns.DeleteMultipleSPREntryPage,
+          NormalMode,
+          emptyUserAnswers
+            .setByKey(pages.returns.MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType))
+            .success
+            .value,
+          regime
+        ) mustBe controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+      }
+
+      "must go from DeleteMultipleSPREntry page to DoYouHaveMultipleSPRDutyRates page if the list is empty" in {
+
+        navigator.nextPageWithRegime(
+          pages.returns.DeleteMultipleSPREntryPage,
+          NormalMode,
+          emptyUserAnswers
+            .setByKey(pages.returns.MultipleSPRListPage, regime, Seq.empty)
+            .success
+            .value,
+          regime
+        ) mustBe controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+      }
+
     }
 
     "in Check mode" - {
