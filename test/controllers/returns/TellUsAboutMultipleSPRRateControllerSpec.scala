@@ -231,7 +231,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(filledUserAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -277,7 +277,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(filledUserAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

@@ -18,7 +18,7 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.DoYouHaveMultipleSPRDutyRatesFormProvider
-import models.NormalMode
+import models.{CheckMode, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.returns.DoYouHaveMultipleSPRDutyRatesPage
@@ -39,8 +39,10 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
   val form         = formProvider()
   val regime       = regimeGen.sample.value
 
-  lazy val doYouHaveMultipleSPRDutyRatesRoute =
+  lazy val doYouHaveMultipleSPRDutyRatesRoute          =
     controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime).url
+  lazy val doYouHaveMultipleSPRDutyRatesRouteCheckMode =
+    controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(CheckMode, regime).url
 
   "DoYouHaveMultipleSPRDutyRates Controller" - {
 
@@ -99,6 +101,60 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, doYouHaveMultipleSPRDutyRatesRoute)
             .withFormUrlEncodedBody(("doYouHaveMultipleSPRDutyRates-yesNoValue", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted in Check Mode and the value has not changed" in {
+      val userAnswers = emptyUserAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, doYouHaveMultipleSPRDutyRatesRouteCheckMode)
+            .withFormUrlEncodedBody(("doYouHaveMultipleSPRDutyRates-yesNoValue", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted in Check Mode and the value has changed" in {
+      val userAnswers = emptyUserAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = true)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, doYouHaveMultipleSPRDutyRatesRouteCheckMode)
+            .withFormUrlEncodedBody(("doYouHaveMultipleSPRDutyRates-yesNoValue", "false"))
 
         val result = route(application, request).value
 

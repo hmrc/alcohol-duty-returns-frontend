@@ -18,7 +18,7 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.WhatDoYouNeedToDeclareFormProvider
-import models.NormalMode
+import models.{CheckMode, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage}
@@ -36,8 +36,9 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val regime                           = regimeGen.sample.value
-  lazy val whatDoYouNeedToDeclareRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+  val regime                                 = regimeGen.sample.value
+  lazy val whatDoYouNeedToDeclareRoute       = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+  lazy val whatDoYouNeedToDeclareChangeRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
 
   val formProvider                       = new WhatDoYouNeedToDeclareFormProvider()
   val form                               = formProvider(regime)
@@ -152,6 +153,64 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val request =
           FakeRequest(POST, whatDoYouNeedToDeclareRoute)
+            .withFormUrlEncodedBody(("rateBand[0]", selectedRateBand.taxTypeCode))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted, in Check mode and the value has changed" in {
+
+      val userAnswers =
+        emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet).success.value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+
+        val selectedRateBand = rateBandList.head
+
+        val request =
+          FakeRequest(POST, whatDoYouNeedToDeclareChangeRoute)
+            .withFormUrlEncodedBody(("rateBand[0]", selectedRateBand.taxTypeCode))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted, in Check mode and the value has not changed" in {
+
+      val selectedRateBand = rateBandList.head
+
+      val userAnswers =
+        emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, Set(selectedRateBand)).success.value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = false)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+
+        val request =
+          FakeRequest(POST, whatDoYouNeedToDeclareChangeRoute)
             .withFormUrlEncodedBody(("rateBand[0]", selectedRateBand.taxTypeCode))
 
         val result = route(application, request).value
