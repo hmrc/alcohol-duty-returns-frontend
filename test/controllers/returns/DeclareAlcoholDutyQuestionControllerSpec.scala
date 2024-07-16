@@ -55,7 +55,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         // TODO: make it testable (contains Cider flag depends on regimes)
-        contentAsString(result) mustEqual view(form, true, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, true, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -75,7 +75,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), true, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -148,7 +148,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, true, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, true, NormalMode)(request, getMessages(application)).toString
       }
     }
 

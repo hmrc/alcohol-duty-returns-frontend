@@ -58,7 +58,7 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DoYouHaveMultipleSPRDutyRatesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, regime, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, regime, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -78,7 +78,7 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), regime, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -179,7 +179,10 @@ class DoYouHaveMultipleSPRDutyRatesControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, regime, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, regime, NormalMode)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 

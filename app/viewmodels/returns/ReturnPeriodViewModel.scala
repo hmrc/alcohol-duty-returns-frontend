@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package models
+package viewmodels.returns
 
-import enumeratum.{Enum, EnumEntry}
+import models.ReturnPeriod
 
-sealed trait TaskListStatus extends EnumEntry
+import java.time.format.DateTimeFormatter
 
-object TaskListStatus extends Enum[TaskListStatus] {
-  val values = findValues
+case class ReturnPeriodViewModel(fromDate: String, toDate: String)
+object ReturnPeriodViewModel {
 
-  case object Completed extends TaskListStatus
-  case object Incomplete extends TaskListStatus
+  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
+
+  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel = {
+    val yearMonth = returnPeriod.period
+    ReturnPeriodViewModel(
+      viewDateFormatter.format(yearMonth.atDay(1)),
+      viewDateFormatter.format(yearMonth.atEndOfMonth)
+    )
+  }
+
 }

@@ -72,10 +72,10 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
 
         status(result) mustEqual OK
-        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(getMessages(application))
         contentAsString(result) mustEqual view(form, regime, taxBandsViewModel, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -100,7 +100,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(getMessages(application))
         contentAsString(result) mustEqual view(
           form.fill(rateBandList.map(_.taxTypeCode).toSet),
           regime,
@@ -108,7 +108,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           NormalMode
         )(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -128,10 +128,10 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
 
         status(result) mustEqual OK
-        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(getMessages(application))
         contentAsString(result) mustEqual view(form, regime, taxBandsViewModel, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -241,10 +241,10 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(messages(application))
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(getMessages(application))
         contentAsString(result) mustEqual view(boundForm, regime, taxBandsViewModel, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

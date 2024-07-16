@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import viewmodels.tasklist.{AlcoholDutyTaskList, TaskListViewStatus}
+@import viewmodels.tasklist.AlcoholDutyTaskList
 
 @this(
         layout: templates.Layout,
@@ -30,7 +30,7 @@
 
   @heading(messages("taskList.title"))
 
-  @subheading(text = messages(s"taskList.status.${TaskListViewStatus.toStatusMessageKey(taskList.status)}"), classes = "govuk-heading-s")
+  @subheading(text = messages(s"taskList.status.${taskList.status.messageKey}"), classes = "govuk-heading-s")
 
   @paragraph(messages("taskList.section.completed", taskList.completedTasks, taskList.totalTasks))
 

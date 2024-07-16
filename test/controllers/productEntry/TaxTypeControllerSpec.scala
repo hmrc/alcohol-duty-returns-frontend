@@ -107,9 +107,9 @@ class TaxTypeControllerSpec extends SpecBase {
           eligibleForDraughtRelief = true,
           eligibleForSmallProducerRelief = false,
           rateBandList
-        )(messages(application))
+        )(getMessages(application))
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, viewModel)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, viewModel)(request, getMessages(application)).toString
       }
     }
 
@@ -153,13 +153,13 @@ class TaxTypeControllerSpec extends SpecBase {
           eligibleForDraughtRelief = true,
           eligibleForSmallProducerRelief = false,
           rateBandList
-        )(messages(application))
+        )(getMessages(application))
 
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual view(form.fill(s"${taxCode}_$alcoholRegime"), NormalMode, viewModel)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -272,12 +272,12 @@ class TaxTypeControllerSpec extends SpecBase {
           eligibleForDraughtRelief = true,
           eligibleForSmallProducerRelief = false,
           rateBandList
-        )(messages(application))
+        )(getMessages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, viewModel)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

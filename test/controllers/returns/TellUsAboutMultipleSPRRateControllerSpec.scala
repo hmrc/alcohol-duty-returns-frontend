@@ -64,14 +64,14 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, regime, rateBandRadioButton, None)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -87,9 +87,9 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -100,7 +100,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
           None
         )(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -124,9 +124,9 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -137,7 +137,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
           Some(index)
         )(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -158,9 +158,9 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -171,7 +171,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
           Some(index)
         )(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -397,7 +397,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
           FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
@@ -405,12 +405,12 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(messages(application))
+        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, regime, rateBandRadioButton, None)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

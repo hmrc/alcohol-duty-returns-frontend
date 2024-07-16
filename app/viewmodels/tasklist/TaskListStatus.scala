@@ -16,16 +16,20 @@
 
 package viewmodels.tasklist
 
-import TaskListStatus.{Completed, Incomplete}
+import enumeratum.{Enum, EnumEntry}
 
-case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
+sealed trait TaskListStatus extends EnumEntry {
+  val messageKey: String
+}
 
-  def completedTasks: Int = sections.count(_.completedTask)
-  def totalTasks: Int     = sections.size
+object TaskListStatus extends Enum[TaskListStatus] {
+  val values = findValues
 
-  def status: TaskListStatus = if (completedTasks == totalTasks) {
-    Completed
-  } else {
-    Incomplete
+  case object Completed extends TaskListStatus {
+    val messageKey = "completed"
+  }
+
+  case object Incomplete extends TaskListStatus {
+    val messageKey = "incomplete"
   }
 }

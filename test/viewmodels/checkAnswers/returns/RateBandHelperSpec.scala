@@ -25,9 +25,8 @@ import org.scalacheck.Gen
 import play.api.i18n.Messages
 
 class RateBandHelperSpec extends SpecBase {
-
   val application                 = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
+  implicit val messages: Messages = getMessages(application)
 
   "RateBandHelper" - {
 
@@ -57,9 +56,9 @@ class RateBandHelperSpec extends SpecBase {
           )
         )
 
-        val result = RateBandHelper.rateBandContent(rateBand)(messages(application))
+        val result = RateBandHelper.rateBandContent(rateBand)
 
-        result mustEqual messages(application).messages(
+        result mustEqual messages.messages(
           "return.journey.abv.single.interval",
           alcoholLabel.capitalize,
           lowerLimit,
@@ -102,9 +101,9 @@ class RateBandHelperSpec extends SpecBase {
           )
         )
 
-        val result = RateBandHelper.rateBandContent(rateBand)(messages(application))
+        val result = RateBandHelper.rateBandContent(rateBand)
 
-        result mustEqual messages(application).messages(
+        result mustEqual messages.messages(
           "return.journey.abv.multi.interval",
           alcoholLabel.capitalize,
           lowerLimit1,
@@ -139,9 +138,9 @@ class RateBandHelperSpec extends SpecBase {
           )
         )
 
-        val result = RateBandHelper.rateBandContent(rateBand)(messages(application))
+        val result = RateBandHelper.rateBandContent(rateBand)
 
-        result mustEqual messages(application).messages(
+        result mustEqual messages.messages(
           "return.journey.abv.interval.exceeding.max",
           alcoholLabel.capitalize,
           lowerLimit,
@@ -176,9 +175,9 @@ class RateBandHelperSpec extends SpecBase {
             )
           )
 
-          val result = RateBandHelper.rateBandRecap(rateBand)(messages(application))
+          val result = RateBandHelper.rateBandRecap(rateBand)
 
-          result mustEqual messages(application)
+          result mustEqual messages
             .messages(
               s"return.journey.abv.recap.single.interval.$rateType",
               alcoholLabel,
@@ -221,9 +220,9 @@ class RateBandHelperSpec extends SpecBase {
             )
           )
 
-          val result = RateBandHelper.rateBandRecap(rateBand)(messages(application))
+          val result = RateBandHelper.rateBandRecap(rateBand)
 
-          result mustEqual messages(application)
+          result mustEqual messages
             .messages(
               s"return.journey.abv.recap.multi.interval.$rateType",
               alcoholLabel,
@@ -259,9 +258,9 @@ class RateBandHelperSpec extends SpecBase {
             )
           )
 
-          val result = RateBandHelper.rateBandRecap(rateBand)(messages(application))
+          val result = RateBandHelper.rateBandRecap(rateBand)
 
-          result mustEqual messages(application)
+          result mustEqual messages
             .messages(
               s"return.journey.abv.recap.interval.exceeding.max.$rateType",
               alcoholLabel,
@@ -274,8 +273,7 @@ class RateBandHelperSpec extends SpecBase {
     }
   }
 
-  class SetUp(implicit messages: Messages) extends ModelGenerators {
-
+  class SetUp extends ModelGenerators {
     val regime                = regimeGen.sample.value
     val taxType               = "001"
     val description           = "test"

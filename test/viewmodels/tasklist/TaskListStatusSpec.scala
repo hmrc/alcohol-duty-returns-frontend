@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.tasklist
 
-import models.ReturnPeriod
+import base.SpecBase
 
-import java.time.format.DateTimeFormatter
-
-case class ReturnPeriodViewModel(fromDate: String, toDate: String)
-object ReturnPeriodViewModel {
-
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
-
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel = {
-    val yearMonth = returnPeriod.period
-    ReturnPeriodViewModel(
-      viewDateFormatter.format(yearMonth.atDay(1)),
-      viewDateFormatter.format(yearMonth.atEndOfMonth)
-    )
+class TaskListStatusSpec extends SpecBase {
+  "taskListStatus" - {
+    "should return the correct message key" in {
+      TaskListStatus.Incomplete.messageKey mustBe "incomplete"
+      TaskListStatus.Completed.messageKey mustBe "completed"
+    }
   }
-
 }

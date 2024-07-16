@@ -58,10 +58,10 @@ class ProductListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[ProductListView]
 
         val productTable: TableViewModel =
-          ProductListSummaryHelper.productEntryTable(userAnswsers)(messages(application))
+          ProductListSummaryHelper.productEntryTable(userAnswsers)(getMessages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, productTable)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, productTable)(request, getMessages(application)).toString
       }
     }
 
@@ -79,10 +79,13 @@ class ProductListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val productTable: TableViewModel =
-          ProductListSummaryHelper.productEntryTable(userAnswsers)(messages(application))
+          ProductListSummaryHelper.productEntryTable(userAnswsers)(getMessages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), productTable)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), productTable)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
@@ -128,10 +131,10 @@ class ProductListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val productTable: TableViewModel =
-          ProductListSummaryHelper.productEntryTable(userAnswsers)(messages(application))
+          ProductListSummaryHelper.productEntryTable(userAnswsers)(getMessages(application))
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, productTable)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, productTable)(request, getMessages(application)).toString
       }
     }
 

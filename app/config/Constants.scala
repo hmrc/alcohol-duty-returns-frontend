@@ -23,4 +23,17 @@ object Constants {
   val volumeMaximumValue: BigDecimal = BigDecimal(999999999.99)
   val dutyMinimumValue: BigDecimal   = BigDecimal(0.00)
   val dutyMaximumValue: BigDecimal   = BigDecimal(999999999.99)
+
+  val oneQuarterCssClass     = "govuk-!-width-one-quarter"
+  val oneHalfCssClass        = "govuk-!-width-one-half"
+  val threeQuartersCssClass  = "govuk-!-width-three-quarters"
+  val textAlignRightCssClass = "text-align-right"
+
+  val blueTagCssClass  = "govuk-tag--blue"
+  val greenTagCssClass = "govuk-tag--green"
+  val redTagCssClass   = "govuk-tag--red"
+
+  val headingMCssClass = "govuk-heading-m"
+
+  val tableCaptionMCssClass = "govuk-table__caption--m"
 }

@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.{RadioItem, Text}
 class TaxTypePageViewModelSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
 
   val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
+  implicit val messages: Messages = getMessages(application)
 
   "TaxTypePageViewModel apply" - {
     "should return TaxTypePageViewModel with Radio items" - {
