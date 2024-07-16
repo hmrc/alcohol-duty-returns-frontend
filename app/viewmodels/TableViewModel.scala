@@ -17,10 +17,19 @@
 package viewmodels
 
 import play.api.mvc.Call
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
-import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
 
-case class TableViewModel(head: Seq[HeadCell], rows: Seq[TableRowViewModel], total: BigDecimal)
-case class TableRowViewModel(cells: Seq[Content], actions: Seq[TableRowActionViewModel])
+case class TableViewModel(
+  head: Seq[HeadCell],
+  rows: Seq[TableRowViewModel],
+  total: Option[TableTotalViewModel] = None
+)
+
+case class TableRowViewModel(cells: Seq[TableRow], actions: Seq[TableRowActionViewModel] = Seq.empty)
+
+case class TableTotalViewModel(legend: HeadCell, total: HeadCell) {
+  def toHeadCells(): Seq[HeadCell] =
+    Seq(legend, total)
+}
 
 case class TableRowActionViewModel(label: String, href: Call, visuallyHiddenText: Option[String] = None)

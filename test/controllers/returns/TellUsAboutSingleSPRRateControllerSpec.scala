@@ -66,14 +66,14 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val categoriesByRateTypeViewModel =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(messages(application))
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(getMessages(application))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, regime, categoriesByRateTypeViewModel, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -89,9 +89,9 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         val result                        = route(application, request).value
         val categoriesByRateTypeViewModel =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(messages(application))
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(getMessages(application))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -101,7 +101,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
           NormalMode
         )(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -146,7 +146,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
@@ -155,12 +155,12 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val categoriesByRateTypeViewModel =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(messages(application))
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet)(getMessages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, categoriesByRateTypeViewModel, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

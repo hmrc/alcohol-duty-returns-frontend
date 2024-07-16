@@ -14,36 +14,23 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.returns
 
 import base.SpecBase
-import models.{ObligationData, ObligationStatus}
-import play.api.test.Helpers._
-import viewmodels.ViewPastReturnsHelper
-import views.html.ViewPastReturnsView
 import connectors.AlcoholDutyReturnsConnector
+import controllers.returns
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
+import play.api.test.Helpers._
+import viewmodels.returns.ViewPastReturnsHelper
+import views.html.returns.ViewPastReturnsView
 
-import java.time.LocalDate
 import scala.concurrent.Future
+
 class ViewPastReturnsControllerSpec extends SpecBase {
-  val obligationDataSingleOpen      = ObligationData(
-    ObligationStatus.Open,
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    periodKey
-  )
-  val obligationDataSingleFulfilled = ObligationData(
-    ObligationStatus.Fulfilled,
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    LocalDate.of(2024, 1, 1),
-    periodKey
-  )
   "ViewPastReturns Controller" - {
     "must return OK and the correct view for a GET" in {
+      val viewModelHelper                 = new ViewPastReturnsHelper()
       val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
       when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
         Seq(obligationDataSingleOpen, obligationDataSingleFulfilled)
@@ -52,19 +39,19 @@ class ViewPastReturnsControllerSpec extends SpecBase {
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector))
         .build()
       running(application) {
-        val request = FakeRequest(GET, routes.ViewPastReturnsController.onPageLoad.url)
+        val request = FakeRequest(GET, returns.routes.ViewPastReturnsController.onPageLoad.url)
         val result  = route(application, request).value
 
         val view = application.injector.instanceOf[ViewPastReturnsView]
 
         val outstandingReturnsTable =
-          ViewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleOpen))(messages(application))
+          viewModelHelper.getReturnsTable(Seq(obligationDataSingleOpen))(getMessages(application))
         val completedReturnsTable   =
-          ViewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleFulfilled))(messages(application))
+          viewModelHelper.getReturnsTable(Seq(obligationDataSingleFulfilled))(getMessages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
 
@@ -76,7 +63,7 @@ class ViewPastReturnsControllerSpec extends SpecBase {
         when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.failed(
           new Exception("test Exception")
         )
-        val request = FakeRequest(GET, routes.ViewPastReturnsController.onPageLoad.url)
+        val request = FakeRequest(GET, returns.routes.ViewPastReturnsController.onPageLoad.url)
 
         val result = route(application, request).value
 

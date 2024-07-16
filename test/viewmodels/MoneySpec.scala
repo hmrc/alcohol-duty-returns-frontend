@@ -14,10 +14,25 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package viewmodels
 
-import models.TaskListStatus
+import base.SpecBase
 
-object TaskListViewStatus {
-  def toStatusMessageKey(taskListStatus: TaskListStatus): String = taskListStatus.entryName.toLowerCase
+class MoneySpec extends SpecBase {
+  "Money" - {
+    implicit val messages = getMessages(app)
+
+    "should format a positive amount to 2dp" in {
+      val amount = BigDecimal("12345.6789")
+
+      Money.format(amount) mustBe "£12,345.68"
+    }
+
+    "should format a negative amount to 2dp" in {
+      val amount      = BigDecimal("-12345.6789")
+      val minus: Char = 0x2212
+
+      Money.format(amount) mustBe s"$minus£12,345.68"
+    }
+  }
 }

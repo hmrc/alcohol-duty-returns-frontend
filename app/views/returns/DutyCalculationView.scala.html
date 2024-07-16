@@ -31,10 +31,9 @@
         tableRowAction: components.TableRowAction
 )
 
+@(regime: AlcoholRegime, dutyDueViewModel: TableViewModel, totalDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@(regime:AlcoholRegime, dutyDueViewModel:TableViewModel)(implicit request: Request[_], messages: Messages)
-
-@layout(pageTitle = titleNoForm(messages("dutyCalculation.title", dutyDueViewModel.total))) {
+@layout(pageTitle = titleNoForm(messages("dutyCalculation.title", totalDuty))) {
 
   @formHelper(action = controllers.returns.routes.DutyCalculationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
     @sectionHeading(
@@ -42,7 +41,7 @@
       text = messages(s"section.return.$regime")
     )
 
-    @pageHeading(messages("dutyCalculation.heading", dutyDueViewModel.total))
+    @pageHeading(messages("dutyCalculation.heading", totalDuty))
 
     @paragraph(messages("dutyCalculation.paragraph"))
 
@@ -55,7 +54,6 @@
       captionClasses = "govuk-table__caption--m",
       head = Some(dutyDueViewModel.head),
       rows = dutyDueViewModel.rows.map(row => {
-        val labelRows = row.cells.map(cell => TableRow(cell))
         val actions = TableRow(content = HtmlContent(tableRowActionList(
           id = "productList",
           actions = row.actions.map(action => tableRowAction(
@@ -65,7 +63,7 @@
             visuallyHiddenContent = action.visuallyHiddenText
           )
           ))))
-        labelRows :+ actions
+        row.cells :+ actions
       }
       ))
     )

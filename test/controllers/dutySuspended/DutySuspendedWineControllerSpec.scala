@@ -64,7 +64,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
@@ -82,7 +82,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(
           form.fill(DutySuspendedWine(validTotalWine, validPureAlcoholInWine)),
           NormalMode
-        )(request, messages(application)).toString
+        )(request, getMessages(application)).toString
       }
     }
 
@@ -130,7 +130,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 

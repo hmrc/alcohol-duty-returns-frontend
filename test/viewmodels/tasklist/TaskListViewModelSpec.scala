@@ -17,7 +17,7 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import models.TaskListStatus.{Completed, Incomplete}
+import TaskListStatus.{Completed, Incomplete}
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem
@@ -100,7 +100,7 @@ class TaskListViewModelSpec extends SpecBase {
 
   class SetUp {
     val application: Application = applicationBuilder().build()
-    implicit val msgs: Messages  = messages(application)
+    implicit val msgs: Messages  = getMessages(application)
 
     private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
     private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)

@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.returns
 
-import controllers.actions._
-
-import javax.inject.Inject
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.AlcoholDutyReturnsConnector
+import controllers.actions._
 import models.ObligationData
 import models.ObligationStatus.{Fulfilled, Open}
 import play.api.Logging
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ViewPastReturnsView
-import viewmodels.ViewPastReturnsHelper
+import viewmodels.returns.ViewPastReturnsHelper
+import views.html.returns.ViewPastReturnsView
 
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class ViewPastReturnsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   val controllerComponents: MessagesControllerComponents,
+  viewModelHelper: ViewPastReturnsHelper,
   view: ViewPastReturnsView,
   alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector
 )(implicit ec: ExecutionContext)
@@ -48,8 +48,8 @@ class ViewPastReturnsController @Inject() (
       .map { obligations: Seq[ObligationData] =>
         val fulfilledObligations    = obligations.filter(_.status == Fulfilled)
         val openObligations         = obligations.filter(_.status == Open)
-        val outstandingReturnsTable = ViewPastReturnsHelper.getReturnsTable(openObligations)
-        val completedReturnsTable   = ViewPastReturnsHelper.getReturnsTable(fulfilledObligations)
+        val outstandingReturnsTable = viewModelHelper.getReturnsTable(openObligations)
+        val completedReturnsTable   = viewModelHelper.getReturnsTable(fulfilledObligations)
         Ok(view(outstandingReturnsTable, completedReturnsTable))
       }
       .recover { case _ =>

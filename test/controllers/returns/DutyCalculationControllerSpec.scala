@@ -30,7 +30,6 @@ import views.html.returns.DutyCalculationView
 import scala.concurrent.Future
 
 class DutyCalculationControllerSpec extends SpecBase {
-
   val calculatorMock  = mock[AlcoholDutyCalculatorConnector]
   val regime          = regimeGen.sample.value
   val rateBands       = genListOfRateBandForRegime(regime).sample.value.toSet
@@ -91,12 +90,15 @@ class DutyCalculationControllerSpec extends SpecBase {
 
         val tableViewModel =
           DutyCalculationHelper
-            .dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(messages(application))
+            .dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(application))
             .toOption
             .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(regime, tableViewModel)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(regime, tableViewModel, alcoholDuty.totalDuty)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
@@ -124,12 +126,15 @@ class DutyCalculationControllerSpec extends SpecBase {
 
         val tableViewModel =
           DutyCalculationHelper
-            .dutyDueTableViewModel(alcoholDuty, updatedUserAnswer, regime)(messages(application))
+            .dutyDueTableViewModel(alcoholDuty, updatedUserAnswer, regime)(getMessages(application))
             .toOption
             .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(regime, tableViewModel)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(regime, tableViewModel, alcoholDuty.totalDuty)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 

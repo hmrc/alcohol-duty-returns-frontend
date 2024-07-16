@@ -25,8 +25,7 @@ import play.api.test.Helpers._
 import viewmodels.tasklist.{AlcoholDutyTaskList, TaskListViewModel}
 import views.html.TaskListView
 
-import java.time.temporal.ChronoUnit
-import java.time.{Clock, Instant, ZoneId}
+import java.time.Instant
 
 class TaskListControllerSpec extends SpecBase {
   "TaskList Controller" - {
@@ -48,7 +47,7 @@ class TaskListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[TaskListView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(taskList)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(taskList)(request, getMessages(application)).toString
       }
     }
 
@@ -95,8 +94,6 @@ class TaskListControllerSpec extends SpecBase {
   }
 
   class SetUp {
-    private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
-    private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
     private val A_DAY_IN_SEC = 86400
     val validUntil: Instant  = Instant.now(clock).plusSeconds(A_DAY_IN_SEC)
 

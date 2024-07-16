@@ -52,7 +52,6 @@
           captionClasses = "govuk-table__caption--m",
           head = Some(sprTable.head),
           rows = sprTable.rows.map(row => {
-            val labelRows = row.cells.map(cell => TableRow(cell))
             val actionList = TableRow(content = HtmlContent(tableRowActionList(
               id = "productList",
               actions = row.actions.map(action => tableRowAction(
@@ -62,7 +61,7 @@
                 visuallyHiddenContent = action.visuallyHiddenText
               )
               ))))
-            labelRows :+ actionList
+            row.cells :+ actionList
           }
           ))
         )

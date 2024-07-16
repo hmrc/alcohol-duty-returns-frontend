@@ -67,11 +67,11 @@ class MultipleSPRListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[MultipleSPRListView]
 
         val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(userAnswers, regime)(messages(application))
+          .sprTableViewModel(userAnswers, regime)(getMessages(application))
           .getOrElse(fail())
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, regime, sprTable)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, regime, sprTable)(request, getMessages(application)).toString
       }
     }
 
@@ -89,13 +89,13 @@ class MultipleSPRListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(userAnswers, regime)(messages(application))
+          .sprTableViewModel(userAnswers, regime)(getMessages(application))
           .getOrElse(fail())
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), regime, sprTable)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -142,11 +142,11 @@ class MultipleSPRListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val sprTable = MultipleSPRListHelper
-          .sprTableViewModel(userAnswers, regime)(messages(application))
+          .sprTableViewModel(userAnswers, regime)(getMessages(application))
           .getOrElse(fail())
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, regime, sprTable)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, regime, sprTable)(request, getMessages(application)).toString
       }
     }
 

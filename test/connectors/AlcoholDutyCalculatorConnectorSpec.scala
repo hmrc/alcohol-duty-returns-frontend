@@ -27,17 +27,15 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import java.time.YearMonth
 import scala.concurrent.Future
 
 class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
-
-  protected implicit val hc: HeaderCarrier = HeaderCarrier()
-  val mockConfig: FrontendAppConfig        = mock[FrontendAppConfig]
-  val connector                            = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val rateBand                             = RateBand(
+  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  val connector                     = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClient])
+  val rateBand                      = RateBand(
     "310",
     "some band",
     RateType.DraughtRelief,
@@ -55,9 +53,8 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
       )
     )
   )
-  val rateBandList: Seq[RateBand]          = Seq(rateBand)
-  val rateType                             = RateTypeResponse(DraughtRelief)
-  val ratePeriod                           = returnPeriodGen.sample.get
+  val rateBandList: Seq[RateBand]   = Seq(rateBand)
+  val rateType                      = RateTypeResponse(DraughtRelief)
 
   "rates" - {
     "successfully retrieve rates" in {
@@ -186,14 +183,14 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
           connector.httpClient.GET[Seq[RateBand]](any(), any(), any())(any(), any(), any())
         } thenReturn Future.successful(rateBandList)
 
-        whenReady(connector.rateBandByRegime(ratePeriod = ratePeriod.period, AlcoholRegime.values)) { result =>
+        whenReady(connector.rateBandByRegime(ratePeriod = returnPeriod.period, AlcoholRegime.values)) { result =>
           result mustBe rateBandList
           verify(connector.httpClient, atLeastOnce)
             .GET[Seq[RateBand]](
               any(),
               ArgumentMatchers.eq(
                 Seq(
-                  ("ratePeriod", Json.toJson(ratePeriod.period)(RatePeriod.yearMonthFormat).toString),
+                  ("ratePeriod", Json.toJson(returnPeriod.period)(RatePeriod.yearMonthFormat).toString),
                   ("alcoholRegimes", Json.toJson(AlcoholRegime.values).toString())
                 )
               ),

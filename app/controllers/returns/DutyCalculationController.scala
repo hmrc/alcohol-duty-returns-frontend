@@ -58,7 +58,7 @@ class DutyCalculationController @Inject() (
         case Left(errorMessage)      =>
           logger.warn(s"Failed to create duty due table view model: $errorMessage")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        case Right(dutyDueViewModel) => Ok(view(regime, dutyDueViewModel))
+        case Right(dutyDueViewModel) => Ok(view(regime, dutyDueViewModel, totalDuty.totalDuty))
       }
   }
 

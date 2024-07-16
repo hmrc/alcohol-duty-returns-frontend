@@ -88,11 +88,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val list = CheckYourAnswersSummaryListHelper
-          .currentProductEntrySummaryList(currentProductEntry)(messages(application))
+          .currentProductEntrySummaryList(currentProductEntry)(getMessages(application))
           .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
       }
     }
 
@@ -117,11 +117,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val list = CheckYourAnswersSummaryListHelper
-          .currentProductEntrySummaryList(savedProductEntry)(messages(application))
+          .currentProductEntrySummaryList(savedProductEntry)(getMessages(application))
           .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
       }
     }
 
@@ -151,11 +151,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val list = CheckYourAnswersSummaryListHelper
-          .currentProductEntrySummaryList(savedProductEntry)(messages(application))
+          .currentProductEntrySummaryList(savedProductEntry)(getMessages(application))
           .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
       }
     }
 
@@ -189,11 +189,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           val view = application.injector.instanceOf[CheckYourAnswersView]
 
           val list = CheckYourAnswersSummaryListHelper
-            .currentProductEntrySummaryList(incompleteProductEntry)(messages(application))
+            .currentProductEntrySummaryList(incompleteProductEntry)(getMessages(application))
             .get
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+          contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
         }
       }
     }
@@ -229,10 +229,10 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val list =
-          CheckYourAnswersSummaryListHelper.currentProductEntrySummaryList(productEntry)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.currentProductEntrySummaryList(productEntry)(getMessages(application)).get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
       }
     }
 
