@@ -295,5 +295,32 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         }
       }
     }
+    "must throw an exception for a POST if adjustmentType is not defined" in {
+      val adjustmentEntry     = AdjustmentEntry(
+        rateBand = Some(rateBand)
+      )
+      val mockCacheConnector  = mock[CacheConnector]
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val previousUserAnswers = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+      val application         = applicationBuilder(userAnswers = Some(previousUserAnswers))
+        .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentVolumeRoute)
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", validTotalLitres.toString()),
+              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+            )
+
+        val result = route(application, request).value
+        whenReady(result.failed) { exception =>
+          exception mustBe a[RuntimeException]
+          exception.getMessage mustEqual "Couldn't fetch adjustment type value from cache"
+        }
+      }
+    }
+
   }
 }

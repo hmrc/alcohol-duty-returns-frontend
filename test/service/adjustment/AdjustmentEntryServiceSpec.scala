@@ -59,7 +59,8 @@ class AdjustmentEntryServiceSpec extends SpecBase {
       adjustmentType = Some(Underdeclaration),
       totalLitresVolume = Some(BigDecimal(1)),
       pureAlcoholVolume = Some(BigDecimal(1)),
-      rateBand = Some(rateBand)
+      rateBand = Some(rateBand),
+      repackagedRateBand = Some(rateBand)
     )
 
     "must create an adjustment entry when TaxType contains rate" in {
@@ -185,5 +186,68 @@ class AdjustmentEntryServiceSpec extends SpecBase {
       }
     }
 
+    "create an adjustment entry for RepackagedDraughtProducts" in {
+      val userAnswerWithRate = emptyUserAnswers
+        .set(
+          CurrentAdjustmentEntryPage,
+          adjustmentEntry.copy(repackagedDuty = Some(BigDecimal(1)), newDuty = Some(BigDecimal(2)))
+        )
+        .success
+        .value
+      val mockConnector      = mock[AlcoholDutyCalculatorConnector]
+      when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
+        .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
+      when(mockConnector.calculateRepackagedDutyChange(any(), any())(any()))
+        .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(2))))
+      val service            = new AdjustmentEntryServiceImpl(mockConnector)
+      val result             = service.createAdjustment(userAnswerWithRate).futureValue
+      result                   shouldBe a[AdjustmentEntry]
+      result.rate              shouldBe Some(BigDecimal(10.99))
+      result.totalLitresVolume shouldBe Some(BigDecimal(1))
+      result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
+      result.duty              shouldBe Some(BigDecimal(1))
+      result.repackagedDuty    shouldBe Some(BigDecimal(1))
+      result.newDuty           shouldBe Some(BigDecimal(2))
+    }
+
+    "throw an Exception if both, TaxType and SmallProducerReliefDuty contain rate" in {
+      val updatedAdjustmentEntry = adjustmentEntry.copy(
+        rateBand = Some(rateBand),
+        sprDutyRate = Some(BigDecimal(2))
+      )
+      val userAnswerWithRate     = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
+        .success
+        .value
+      val mockConnector          = mock[AlcoholDutyCalculatorConnector]
+      when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
+        .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
+      val service                = new AdjustmentEntryServiceImpl(mockConnector)
+      val exception              = intercept[RuntimeException] {
+        service.createAdjustment(userAnswerWithRate).futureValue
+      }
+      exception.getLocalizedMessage must include("Failed to get rate, both tax rate and spr duty rate are defined.")
+    }
+
+    "throw an Exception if neither TaxType or SmallProducerReliefDutyRate contain rate" in {
+      val updatedAdjustmentEntry = adjustmentEntry.copy(
+        rateBand = Some(rateBand.copy(rate = None)),
+        sprDutyRate = None
+      )
+      val userAnswerWithRate     = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
+        .success
+        .value
+      val mockConnector          = mock[AlcoholDutyCalculatorConnector]
+      when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
+        .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
+      val service                = new AdjustmentEntryServiceImpl(mockConnector)
+      val exception              = intercept[RuntimeException] {
+        service.createAdjustment(userAnswerWithRate).futureValue
+      }
+      exception.getLocalizedMessage must include(
+        "Failed to get rate, neither tax rate nor spr duty rate are defined."
+      )
+    }
   }
 }

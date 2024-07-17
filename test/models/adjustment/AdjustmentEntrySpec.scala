@@ -118,14 +118,15 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
         adjustmentType = Some(RepackagedDraughtProducts),
         rateBand = Some(rateBand.copy(rate = None)),
         sprDutyRate = Some(BigDecimal(1)),
-        repackagedRateBand = Some(rateBand)
+        repackagedRateBand = Some(rateBand),
+        repackagedDuty = Some(BigDecimal(1))
       )
       sprAdjustmentEntry.isComplete shouldBe true
     }
     "isComplete should return true when all repackaged fields are defined" in {
       val repackagedAdjustmentEntry = adjustmentEntry.copy(
         adjustmentType = Some(RepackagedDraughtProducts),
-        rateBand = Some(rateBand),
+        repackagedRateBand = Some(rateBand),
         repackagedDuty = Some(BigDecimal(1))
       )
 
@@ -141,17 +142,13 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
 
       repackagedAdjustmentEntry.isComplete shouldBe true
     }
-    /* "isComplete should return false when all repackaged fields are not defined for spr case" in {
+    "isComplete should return false when all repackaged fields are not defined for spr case" in {
       val repackagedAdjustmentEntry = adjustmentEntry.copy(
-        adjustmentType = Some(RepackagedDraughtProducts),
-        repackagedRateBand = Some(rateBand.copy(rate = None)),
-        repackagedSprDutyRate = None,
-        repackagedDuty = None
+        adjustmentType = Some(RepackagedDraughtProducts)
       )
 
       repackagedAdjustmentEntry.isComplete shouldBe false
     }
-     */
   }
 
 }

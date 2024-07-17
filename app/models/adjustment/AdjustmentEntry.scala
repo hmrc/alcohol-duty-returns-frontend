@@ -36,14 +36,17 @@ case class AdjustmentEntry(
   repackagedDuty: Option[BigDecimal] = None,
   newDuty: Option[BigDecimal] = None
 ) {
-  def isComplete: Boolean = {
-    val isRepackagedAdjustment = adjustmentType.isDefined && adjustmentType.equals(RepackagedDraughtProducts)
-
+  def isComplete: Boolean =
     adjustmentType.isDefined && period.isDefined && rateBand.isDefined &&
-    totalLitresVolume.isDefined && pureAlcoholVolume.isDefined && duty.isDefined && (rateBand
-      .flatMap(_.rate)
-      .isDefined || sprDutyRate.isDefined) && (!isRepackagedAdjustment || (repackagedRateBand.isDefined &&
-      (repackagedRateBand.flatMap(_.rate).isDefined || repackagedSprDutyRate.isDefined) && repackagedDuty.isDefined))
+      totalLitresVolume.isDefined && pureAlcoholVolume.isDefined && duty.isDefined && (rateBand
+        .flatMap(_.rate)
+        .isDefined || sprDutyRate.isDefined) && repackagedCheck
+
+  def repackagedCheck: Boolean = {
+    val isRepackagedAdjustment = adjustmentType.isDefined && adjustmentType.get.equals(RepackagedDraughtProducts)
+
+    !isRepackagedAdjustment || (repackagedRateBand.isDefined &&
+      (repackagedRateBand.flatMap(_.rate).isDefined || repackagedSprDutyRate.isDefined) && repackagedDuty.isDefined)
   }
 
   def rate: Option[BigDecimal] =
