@@ -102,10 +102,10 @@ class AdjustmentListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentListView]
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(messages(application))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(getMessages(app))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, adjustmentTable)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, adjustmentTable)(request, getMessages(app)).toString
       }
     }
 
@@ -128,12 +128,12 @@ class AdjustmentListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total)(messages(application))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total)(getMessages(app))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), adjustmentTable)(
           request,
-          messages(application)
+          getMessages(app)
         ).toString
       }
     }
@@ -180,10 +180,10 @@ class AdjustmentListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(messages(application))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(getMessages(app))
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, adjustmentTable)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, adjustmentTable)(request, getMessages(app)).toString
       }
     }
 

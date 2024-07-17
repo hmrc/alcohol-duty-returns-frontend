@@ -25,15 +25,12 @@ import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetai
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.AdjustmentEntryListPage
-import play.api.Application
-import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import viewmodels.Money
 
 import java.time.YearMonth
 
 class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
-  val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
-
   val dutyDue             = BigDecimal(34.2)
   val rate                = BigDecimal(9.27)
   val pureAlcoholVolume   = BigDecimal(3.69)
@@ -75,13 +72,13 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
     "must return a table with the correct head" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
+      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)(getMessages(app))
       table.head.size shouldBe 4
     }
 
     "must return a table with the correct rows" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
+      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)(getMessages(app))
       table.rows.size shouldBe adjustmentEntryList.size
       table.rows.zipWithIndex.foreach { case (row, index) =>
         row.actions.head.href shouldBe controllers.adjustment.routes.CheckYourAnswersController
@@ -92,8 +89,10 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
     "must return the correct total" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
-      table.total shouldBe adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum
+      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)(getMessages(app))
+      table.total.map(_.total.content).get shouldBe Text(
+        Money.format(adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum)(getMessages(app))
+      )
     }
 
     "must return the correct total if one of the adjustment entries has an undefined duty" in {
@@ -102,9 +101,9 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
       val userAnswers =
         emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList :+ undefinedDutyAdjustmentEntry).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
+      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)(getMessages(app))
 
-      table.total shouldBe expectedSum
+      table.total.map(_.total.content).get shouldBe Text(Money.format(expectedSum)(getMessages(app)))
     }
   }
 

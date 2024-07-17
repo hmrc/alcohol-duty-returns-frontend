@@ -19,9 +19,9 @@ package viewmodels.checkAnswers.adjustment
 import models.adjustment.AdjustmentEntry
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.Money
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import views.ViewUtils.valueFormatter
 
 object AdjustmentDutyDueSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
@@ -29,7 +29,7 @@ object AdjustmentDutyDueSummary {
     dutyValue.map(duty =>
       SummaryListRowViewModel(
         key = "adjustmentDutyDue.duty.checkYourAnswersLabel",
-        value = ValueViewModel(valueFormatter(duty))
+        value = ValueViewModel(Money.format(duty))
       )
     )
   }

@@ -16,7 +16,6 @@
 
 @import components.{SectionHeading, PageHeading}
 @import viewmodels.TableViewModel
-@import views.ViewUtils.valueFormatter
 
 @this(
     layout: templates.Layout,
@@ -51,7 +50,6 @@
     @govukTable(Table(
         head = Some(adjustmentTable.head),
         rows = adjustmentTable.rows.map(row => {
-            val labelRows = row.cells.map(cell => TableRow(cell))
             val actions = TableRow(content = HtmlContent(tableRowActionList(
             id = "adjustmentList",
             actions = row.actions.map(action => tableRowAction(
@@ -61,17 +59,16 @@
             visuallyHiddenContent = action.visuallyHiddenText
             )
             ))))
-            labelRows :+ actions
+            row.cells :+ actions
         }
         ))
     )
 
-    @govukTable(Table(
-        head = Some(Seq(
-        HeadCell(content = Text(messages("adjustmentList.total")), classes = "govuk-!-width-one-half"),
-        HeadCell(content = Text(messages(s"${valueFormatter(adjustmentTable.total)}")), classes = "govuk-!-width-one-half"))
-        )),
-    )
+    @{adjustmentTable.total.map { total =>
+        govukTable(Table(
+        head = Some(total.toHeadCells())
+        ))
+    }}
 
     @govukRadios(
         RadiosViewModel.yesNo(

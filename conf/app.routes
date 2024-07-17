@@ -25,7 +25,9 @@ POST        /enrol/approval-id                           controllers.auth.DoYouH
 GET         /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onPageLoad(wasReferredFromBTA: Boolean ?= false)
 POST        /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onSubmit(wasReferredFromBTA: Boolean ?= false)
 
-GET         /check-your-returns                          controllers.ViewPastReturnsController.onPageLoad
+GET         /check-your-returns                          controllers.returns.ViewPastReturnsController.onPageLoad
+
+GET         /view-your-return/:periodKey                 controllers.returns.ViewReturnController.onPageLoad(periodKey: String)
 
 GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
 

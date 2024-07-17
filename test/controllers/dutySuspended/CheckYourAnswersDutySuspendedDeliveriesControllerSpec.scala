@@ -73,10 +73,10 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
         val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper()
         val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList(
           completeDutySuspendedDeliveriesUserAnswers
-        )(messages(application))
+        )(getMessages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
       }
     }
 
@@ -110,10 +110,10 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
 
           val view                   = application.injector.instanceOf[CheckYourAnswersDutySuspendedDeliveriesView]
           val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper()
-          val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList(userAnswers)(messages(application))
+          val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList(userAnswers)(getMessages(application))
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+          contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
         }
       }
     }

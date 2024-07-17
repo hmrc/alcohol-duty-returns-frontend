@@ -92,7 +92,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, Spoilt, regime, rateBandContent)(
           request,
-          messages(application)
+          getMessages(app)
         ).toString
       }
     }
@@ -122,7 +122,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
           rateBandContent
         )(
           request,
-          messages(application)
+          getMessages(app)
         ).toString
       }
     }
@@ -203,7 +203,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val form    = formProvider(regime)(messages(application))
+        val form    = formProvider(regime)(getMessages(app))
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
             .withFormUrlEncodedBody(
@@ -221,7 +221,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt, regime, rateBandContent)(
           request,
-          messages(application)
+          getMessages(app)
         ).toString
       }
     }

@@ -54,7 +54,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DeleteAdjustmentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, index)(request, getMessages(application)).toString
       }
     }
     "must populate the view correctly on a GET when the question has previously been answered" in {
@@ -71,7 +71,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), index)(request, getMessages(application)).toString
       }
     }
     "must redirect to the next page when valid data is submitted" in {
@@ -140,7 +140,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, index)(request, getMessages(application)).toString
       }
     }
 

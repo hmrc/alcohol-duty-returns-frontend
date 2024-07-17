@@ -25,7 +25,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
+import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
 import javax.inject.Inject
@@ -65,8 +65,13 @@ class BeforeStartReturnController @Inject() (
       case Some(periodKey) =>
         val returnAndUserDetails =
           ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
-        cacheConnector.createUserAnswers(returnAndUserDetails).map { _ =>
-          Redirect(controllers.routes.TaskListController.onPageLoad)
+        cacheConnector.createUserAnswers(returnAndUserDetails).map { response =>
+          if (response.status != CREATED) {
+            logger.warn(s"Unable to create userAnswers: ${response.status} ${response.body}")
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          } else {
+            Redirect(controllers.routes.TaskListController.onPageLoad)
+          }
         }
     }
   }

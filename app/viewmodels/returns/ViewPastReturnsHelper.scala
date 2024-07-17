@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package viewmodels
+package viewmodels.returns
+
+import config.Constants
 import models.ObligationStatus.Open
 import models.{ObligationData, ObligationStatusToDisplay, ReturnPeriod}
 import play.api.Logging
@@ -22,36 +24,44 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
+import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, YearMonth}
+import javax.inject.Inject
 
-object ViewPastReturnsHelper extends Logging {
+class ViewPastReturnsHelper @Inject() () extends Logging {
 
   def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
     val sortedObligationData = obligationData.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
-    TableViewModel(head = getTableHeader(messages), rows = getObligationDataTableRows(sortedObligationData), total = 0)
+    TableViewModel(
+      head = getTableHeader(messages),
+      rows = getObligationDataTableRows(sortedObligationData),
+      total = None
+    )
   }
 
   private def getTableHeader(messages: Messages): Seq[HeadCell] =
     Seq(
-      HeadCell(content = Text(messages("viewPastReturns.period")), classes = "govuk-!-width-one-quarter"),
-      HeadCell(content = Text(messages("viewPastReturns.status")), classes = "govuk-!-width-one-quarter"),
-      HeadCell(content = Text(messages("viewPastReturns.action")), classes = "govuk-!-width-one-quarter")
+      HeadCell(content = Text(messages("viewPastReturns.period")), classes = Constants.oneQuarterCssClass),
+      HeadCell(content = Text(messages("viewPastReturns.status")), classes = Constants.oneQuarterCssClass),
+      HeadCell(content = Text(messages("viewPastReturns.action")), classes = Constants.oneQuarterCssClass)
     )
 
   private def getObligationDataTableRows(obligationData: Seq[ObligationData])(implicit
     messages: Messages
   ): Seq[TableRowViewModel] =
     obligationData.map { obligationData =>
+      val periodKey = obligationData.periodKey
       val status    = getObligationStatus(obligationData, LocalDate.now())
       val statusTag = createStatusTag(status)
       TableRowViewModel(
         cells = Seq(
-          Text(formatYearMonth(getPeriod(obligationData.periodKey))),
-          HtmlContent(statusTag)
+          TableRow(content = Text(formatYearMonth(getPeriod(periodKey)))),
+          TableRow(content = HtmlContent(statusTag))
         ),
-        actions = getAction(messages, obligationData, status)
+        actions = getAction(messages, obligationData, status, periodKey)
       )
 
     }
@@ -59,13 +69,14 @@ object ViewPastReturnsHelper extends Logging {
   private def getAction(
     messages: Messages,
     obligationData: ObligationData,
-    status: ObligationStatusToDisplay
+    status: ObligationStatusToDisplay,
+    periodKey: String
   ): Seq[TableRowActionViewModel] =
     if (status.equals(ObligationStatusToDisplay.Completed)) {
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastReturns.viewReturn"),
-          href = controllers.routes.TaskListController.onPageLoad,
+          href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey),
           visuallyHiddenText = Some(messages("viewPastReturns.viewReturn.hidden"))
         )
       )
@@ -100,11 +111,11 @@ object ViewPastReturnsHelper extends Logging {
   ): Html = {
     val tag = status match {
       case ObligationStatusToDisplay.Due       =>
-        Tag(content = Text(messages("viewPastReturns.status.due")), classes = "govuk-tag--blue")
+        Tag(content = Text(messages("viewPastReturns.status.due")), classes = Constants.blueTagCssClass)
       case ObligationStatusToDisplay.Overdue   =>
-        Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = "govuk-tag--red")
+        Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = Constants.redTagCssClass)
       case ObligationStatusToDisplay.Completed =>
-        Tag(content = Text(messages("viewPastReturns.status.completed")), classes = "govuk-tag--green")
+        Tag(content = Text(messages("viewPastReturns.status.completed")), classes = Constants.greenTagCssClass)
     }
     new GovukTag()(tag)
   }

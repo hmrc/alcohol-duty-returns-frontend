@@ -108,7 +108,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
           newDuty
         )(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

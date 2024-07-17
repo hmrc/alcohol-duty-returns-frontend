@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package viewmodels
 
-import base.SpecBase
-import models.TaskListStatus
+import play.api.i18n.Messages
 
-class TaskListViewStatusSpec extends SpecBase {
-  "taskListStatus" - {
-    "should return the correct status key" in {
-      TaskListViewStatus.toStatusMessageKey(TaskListStatus.Incomplete) mustBe "incomplete"
-      TaskListViewStatus.toStatusMessageKey(TaskListStatus.Completed) mustBe "completed"
+object Money {
+  private val minus: Char = 0x2212
+
+  /**
+    * Note: This is intended to work with values that are already to 2dp. The rounding rules for
+    * tax may be up or down depending on the context and this code will round to nearest.
+    */
+  def format(amount: BigDecimal)(implicit messages: Messages): String =
+    if (amount < 0) {
+      s"$minus${messages("site.currency.2DP", amount.abs)}"
+    } else {
+      messages("site.currency.2DP", amount)
     }
-  }
-
 }

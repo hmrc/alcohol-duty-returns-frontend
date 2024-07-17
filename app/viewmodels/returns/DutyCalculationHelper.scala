@@ -21,7 +21,7 @@ import models.{AlcoholRegime, RateBand, UserAnswers}
 import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
 import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
@@ -41,8 +41,7 @@ object DutyCalculationHelper {
           HeadCell(Text(messages("dutyCalculation.table.dutyDue"))),
           HeadCell(Text(messages("dutyCalculation.table.action")))
         ),
-        rows = rows,
-        total = totalDutyCalculationResponse.totalDuty
+        rows = rows
       )
     }
 
@@ -79,15 +78,16 @@ object DutyCalculationHelper {
   ) =
     TableRowViewModel(
       cells = Seq(
-        Text(rateBandRecap(rateBand)),
-        Text(messages("dutyCalculation.pureAlcohol.value", totalByTaxType.pureAlcohol)),
-        Text(messages("dutyCalculation.dutyRate.value", totalByTaxType.dutyRate)),
-        Text(messages("site.currency.2DP", totalByTaxType.dutyDue))
+        TableRow(Text(rateBandRecap(rateBand))),
+        TableRow(Text(messages("dutyCalculation.pureAlcohol.value", totalByTaxType.pureAlcohol))),
+        TableRow(Text(messages("dutyCalculation.dutyRate.value", totalByTaxType.dutyRate))),
+        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)))
       ),
       actions = Seq(
         TableRowActionViewModel(
           label = "Change",
-          href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime),
+          visuallyHiddenText = Some(rateBandRecap(rateBand))
         )
       )
     )

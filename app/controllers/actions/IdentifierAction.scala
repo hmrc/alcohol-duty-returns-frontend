@@ -67,8 +67,10 @@ class AuthenticatedIdentifierAction @Inject() (
         block(IdentifierRequest(request, appaId, groupId, internalId))
     } recover {
       case e: AuthorisationException =>
+        logger.debug(s"Got AuthorisationException: $e")
         handleAuthException(e)
-      case _: UnauthorizedException  =>
+      case e: UnauthorizedException  =>
+        logger.debug(s"Got UnauthorizedException: $e")
         Redirect(routes.UnauthorisedController.onPageLoad)
     }
   }

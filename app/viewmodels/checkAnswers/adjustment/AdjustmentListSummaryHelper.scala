@@ -16,14 +16,15 @@
 
 package viewmodels.checkAnswers.adjustment
 
+import config.Constants
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
 import pages.adjustment.AdjustmentEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
-import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
-import views.ViewUtils.valueFormatter
+import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableTotalViewModel, TableViewModel}
 
 object AdjustmentListSummaryHelper {
 
@@ -32,13 +33,19 @@ object AdjustmentListSummaryHelper {
     val adjustmentEntries: Seq[AdjustmentEntry] = getAdjustmentEntries(userAnswers)
     TableViewModel(
       head = Seq(
-        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = "govuk-!-width-one-quarter"),
-        HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = "govuk-!-width-one-quarter"),
-        HeadCell(content = Text(messages("adjustmentEntryList.duty")), classes = "govuk-!-width-one-quarter"),
-        HeadCell(content = Text(messages("adjustmentEntryList.action")), classes = "govuk-!-width-one-quarter")
+        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Constants.oneQuarterCssClass),
+        HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = Constants.oneQuarterCssClass),
+        HeadCell(
+          content = Text(messages("adjustmentEntryList.duty")),
+          classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        ),
+        HeadCell(
+          content = Text(messages("adjustmentEntryList.action")),
+          classes = Constants.oneQuarterCssClass
+        )
       ),
       rows = getAdjustmentEntryRows(adjustmentEntries),
-      total = total
+      total = Some(adjustmentsTotal(total))
     )
   }
 
@@ -59,13 +66,20 @@ object AdjustmentListSummaryHelper {
       }
       TableRowViewModel(
         cells = Seq(
-          Text(messages(s"adjustmentType.checkYourAnswersLabel.$adjustmentType")),
-          Text(
-            rateBandRecap(
-              adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
+          TableRow(Text(messages(s"adjustmentType.checkYourAnswersLabel.$adjustmentType"))),
+          TableRow(
+            Text(
+              rateBandRecap(
+                adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
+              )
             )
           ),
-          Text(valueFormatter(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache"))))
+          TableRow(
+            content = Text(
+              Money.format(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache")))
+            ),
+            classes = Constants.textAlignRightCssClass
+          )
         ),
         actions = Seq(
           TableRowActionViewModel(
@@ -81,5 +95,19 @@ object AdjustmentListSummaryHelper {
         )
       )
     }
+
+  private def adjustmentsTotal(total: BigDecimal)(implicit
+    messages: Messages
+  ): TableTotalViewModel =
+    TableTotalViewModel(
+      HeadCell(
+        content = Text(messages("adjustmentList.total")),
+        classes = Constants.threeQuartersCssClass
+      ),
+      HeadCell(
+        content = Text(Money.format(total)),
+        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+      )
+    )
 
 }

@@ -72,13 +72,14 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val expectedReturnSummaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands)(messages(application))
-        val form                      = formProvider(regime)(messages(application))
+        val expectedReturnSummaryList =
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands)(getMessages(application))
+        val form                      = formProvider(regime)(getMessages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, regime, expectedReturnSummaryList, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -94,8 +95,9 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val expectedReturnSummaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands)(messages(application))
-        val form                      = formProvider(regime)(messages(application))
+        val expectedReturnSummaryList =
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands)(getMessages(application))
+        val form                      = formProvider(regime)(getMessages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(volumeAndRateByTaxTypes.map(_.toVolumes)),
@@ -104,7 +106,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
           NormalMode
         )(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -153,7 +155,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
           FakeRequest(POST, howMuchDoYouNeedToDeclareRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val form = formProvider(regime)(messages(application))
+        val form = formProvider(regime)(getMessages(application))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
@@ -161,12 +163,12 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val summaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands)(messages(application))
+        val summaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands)(getMessages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, summaryList, NormalMode)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

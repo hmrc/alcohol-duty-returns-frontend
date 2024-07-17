@@ -21,9 +21,9 @@ import models.adjustment.AdjustmentEntry
 import models.CheckMode
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.Money
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import views.ViewUtils.valueFormatter
 
 object AdjustmentSmallProducerReliefDutyRateSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
@@ -32,7 +32,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
         Some(
           SummaryListRowViewModel(
             key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
-            value = ValueViewModel(valueFormatter(repackagedSprDutyRate)),
+            value = ValueViewModel(Money.format(repackagedSprDutyRate)),
             actions = Seq(
               ActionItemViewModel(
                 "site.change",
@@ -45,7 +45,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
         Some(
           SummaryListRowViewModel(
             key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
-            value = ValueViewModel(valueFormatter(sprDutyRate)),
+            value = ValueViewModel(Money.format(sprDutyRate)),
             actions = Seq(
               ActionItemViewModel(
                 "site.change",
@@ -58,7 +58,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
         Some(
           SummaryListRowViewModel(
             key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
-            value = ValueViewModel(valueFormatter(repackagedSprDutyRate)),
+            value = ValueViewModel(Money.format(repackagedSprDutyRate)),
             actions = Seq(
               ActionItemViewModel(
                 "site.change",

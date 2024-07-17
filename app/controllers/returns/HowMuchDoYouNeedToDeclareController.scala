@@ -56,13 +56,13 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
-          val howMuchDoYouNeedToDeclareHelper = CategoriesByRateTypeHelper.rateBandCategories(rateBands)
-          val preparedForm                    = request.userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
+          val categoriesByRateType = CategoriesByRateTypeHelper.rateBandCategories(rateBands)
+          val preparedForm         = request.userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
             case None        => form
             case Some(value) => form.fill(value.map(_.toVolumes))
           }
 
-          Ok(view(preparedForm, regime, howMuchDoYouNeedToDeclareHelper, mode))
+          Ok(view(preparedForm, regime, categoriesByRateType, mode))
       }
 
     }

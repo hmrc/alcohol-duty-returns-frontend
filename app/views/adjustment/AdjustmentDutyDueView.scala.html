@@ -15,9 +15,9 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
-@import views.ViewUtils.valueFormatter
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.RepackagedDraughtProducts
+@import viewmodels.Money
 
 @this(
         layout: templates.Layout,
@@ -31,7 +31,7 @@
 
 @(adjustmentType: AdjustmentType, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal, repackagedRate:BigDecimal, repackagedDuty:BigDecimal, newDuty:BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", valueFormatter(duty)))) {
+@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(duty)))) {
 
     @sectionHeading(
         id = "adjustment-duty-due-section",
@@ -39,31 +39,31 @@
     )
 
     @if(adjustmentType != RepackagedDraughtProducts) {
-        @pageHeading(messages("adjustmentDutyDue.heading", valueFormatter(duty)))
+        @pageHeading(messages("adjustmentDutyDue.heading", Money.format(duty)))
     }
 
     @if(adjustmentType == RepackagedDraughtProducts) {
-        @pageHeading(messages("adjustmentDutyDue.heading", valueFormatter(newDuty)))
+        @pageHeading(messages("adjustmentDutyDue.heading", Money.format(newDuty)))
     }
     @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
     @if(adjustmentType != RepackagedDraughtProducts) {
         @bulletList(Seq(
         messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
-        messages("adjustmentDutyDue.bulletList.2", valueFormatter(rate)),
-        messages("adjustmentDutyDue.bulletList.3", valueFormatter(duty))
+        messages("adjustmentDutyDue.bulletList.2", Money.format(rate)),
+        messages("adjustmentDutyDue.bulletList.3", Money.format(duty))
         ))
     }
 
     @if(adjustmentType == RepackagedDraughtProducts) {
         @bulletList(Seq(
-        messages("adjustmentDutyDue.repackaged.bulletList.1", valueFormatter(rate)),
+        messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate)),
         messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
-        messages("adjustmentDutyDue.repackaged.bulletList.2", valueFormatter(duty)),
-        messages("adjustmentDutyDue.repackaged.bulletList.3", valueFormatter(duty)),
-        messages("adjustmentDutyDue.repackaged.bulletList.4", valueFormatter(repackagedRate)),
-        messages("adjustmentDutyDue.repackaged.bulletList.5", valueFormatter(repackagedDuty)),
-        messages("adjustmentDutyDue.repackaged.bulletList.6", valueFormatter(newDuty))
+        messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(duty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.3", Money.format(duty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate)),
+        messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty))
 ))
     }
 

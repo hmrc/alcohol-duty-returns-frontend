@@ -60,10 +60,10 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[CheckYourAnswersSPRView]
 
         val summaryList =
-          CheckYourAnswersSPRSummaryListHelper.summaryList(regime, userAnswers, None)(messages(application)).get
+          CheckYourAnswersSPRSummaryListHelper.summaryList(regime, userAnswers, None)(getMessages(application)).get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(regime, summaryList, None)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(regime, summaryList, None)(request, getMessages(application)).toString
       }
     }
 

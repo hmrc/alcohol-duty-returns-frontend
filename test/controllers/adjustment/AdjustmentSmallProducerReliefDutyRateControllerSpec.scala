@@ -82,7 +82,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentSmallProducerReliefDutyRateView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
 
@@ -104,7 +104,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, Spoilt)(
           request,
-          messages(application)
+          getMessages(app)
         ).toString
       }
     }
@@ -187,7 +187,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
 

@@ -29,7 +29,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class ReturnTaskListCreatorSpec extends SpecBase {
   val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
+  implicit val messages: Messages = getMessages(application)
   val returnTaskListCreator       = new ReturnTaskListCreator()
 
   "on calling returnSection" - {

@@ -34,6 +34,8 @@ class DataRequiredActionSpec extends SpecBase {
   val identifierRequest: IdentifierRequest[AnyContentAsEmpty.type] =
     IdentifierRequest(FakeRequest(), appaId, groupId, internalId)
 
+  val userAnswers = emptyUserAnswers
+
   "Data Required Action" - {
     "should redirect to the Journey Recovery when User Answers or Return Period are None" in {
 
@@ -116,5 +118,4 @@ class DataRequiredActionSpec extends SpecBase {
       }
     }
   }
-
 }

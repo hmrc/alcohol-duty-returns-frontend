@@ -27,7 +27,6 @@ import models.{ABVRange, AlcoholByVolume, AlcoholType, NormalMode, RangeDetailsB
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
-import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -40,8 +39,7 @@ import scala.concurrent.Future
 class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
   val formProvider = new AdjustmentVolumeWithSPRFormProvider()
   val regime       = Beer
-  val messages     = mock[Messages]
-  val form         = formProvider(regime)(messages)
+  val form         = formProvider(regime)(getMessages(app))
   def onwardRoute  = Call("GET", "/foo")
 
   val validTotalLitres = BigDecimal(10.23)
@@ -94,7 +92,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, Spoilt, regime, rateBandContent)(
           request,
-          messages(application)
+          getMessages(app)
         ).toString
       }
     }
@@ -128,7 +126,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
           rateBandContent
         )(
           request,
-          messages(application)
+          getMessages(app)
         ).toString
       }
     }
@@ -213,7 +211,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val form    = formProvider(regime)(messages(application))
+        val form    = formProvider(regime)(getMessages(app))
         val request =
           FakeRequest(POST, adjustmentVolumeWithSPRRoute)
             .withFormUrlEncodedBody(
@@ -237,7 +235,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt, regime, rateBandContent)(
           request,
-          messages(application)
+          getMessages(app)
         ).toString
       }
     }

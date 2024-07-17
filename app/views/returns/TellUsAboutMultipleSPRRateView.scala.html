@@ -59,8 +59,9 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("volumesWithRate.taxType"),
-                legend = LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(s"return.regime.$regime"))).withSize(LegendSize.Medium),
-                items  = rateBandRadioItems
+                fieldset = FieldsetViewModel(LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(s"return.regime.$regime"))).withSize(LegendSize.Medium)),
+                items  = rateBandRadioItems,
+                errorMessageField = form("volumesWithRate_taxType")
             )
         )
 
