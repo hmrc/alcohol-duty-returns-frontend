@@ -23,7 +23,7 @@ import org.mockito.ArgumentMatchers.any
 import play.api.test.Helpers._
 import play.api.inject.bind
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.returns.ReturnPeriodViewModel
+import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
 import scala.concurrent.Future

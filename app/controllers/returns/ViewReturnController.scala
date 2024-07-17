@@ -24,7 +24,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.DateTimeHelper
-import viewmodels.returns.ViewReturnViewModel
+import viewmodels.checkAnswers.returns.ViewReturnViewModel
 import views.html.returns.ViewReturnView
 
 import javax.inject.Inject

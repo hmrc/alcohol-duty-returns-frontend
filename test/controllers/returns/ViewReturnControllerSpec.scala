@@ -24,7 +24,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
-import viewmodels.returns.ViewReturnViewModel
+import viewmodels.checkAnswers.returns.ViewReturnViewModel
 import viewmodels.{TableTotalViewModel, TableViewModel}
 import views.html.returns.ViewReturnView
 

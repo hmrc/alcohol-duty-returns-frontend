@@ -24,7 +24,7 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.returns.ViewPastReturnsHelper
+import viewmodels.checkAnswers.returns.ViewPastReturnsHelper
 import views.html.returns.ViewPastReturnsView
 
 import javax.inject.Inject

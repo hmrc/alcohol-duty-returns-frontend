@@ -19,7 +19,6 @@ package viewmodels.checkAnswers.returns
 import base.SpecBase
 import models.ReturnPeriod
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import viewmodels.returns.ReturnPeriodViewModel
 
 class ReturnPeriodViewModelSpec extends SpecBase {
 
