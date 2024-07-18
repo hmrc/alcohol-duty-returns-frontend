@@ -16,10 +16,11 @@
 
 package pages.adjustment
 
+import models.adjustment.AdjustmentVolume
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object AdjustmentVolumePage extends QuestionPage[BigDecimal] {
+case object AdjustmentVolumePage extends QuestionPage[AdjustmentVolume] {
 
   override def path: JsPath = JsPath \ toString
 

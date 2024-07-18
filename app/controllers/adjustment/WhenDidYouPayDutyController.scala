@@ -27,6 +27,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
+import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.WhenDidYouPayDutyView
 
@@ -45,27 +46,35 @@ class WhenDidYouPayDutyController @Inject() (
   view: WhenDidYouPayDutyView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers
-      .get(CurrentAdjustmentEntryPage)
-      .fold {
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      } { value =>
-        val formData = value.period.map(form.fill).getOrElse(form)
+    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+      case Some(AdjustmentEntry(_, Some(adjustmentType), Some(period), _, _, _, _, _, _, _, _, _)) =>
         Ok(
           view(
-            formData,
+            form.fill(
+              period
+            ),
             mode,
-            value.adjustmentType.getOrElse(
-              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-            )
+            adjustmentType
           )
         )
-      }
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _))            =>
+        Ok(
+          view(
+            form,
+            mode,
+            adjustmentType
+          )
+        )
+      case _                                                                                       =>
+        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -75,18 +84,17 @@ class WhenDidYouPayDutyController @Inject() (
         .fold(
           formWithErrors =>
             request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-              case Some(value) =>
+              case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _)) =>
                 Future.successful(
                   BadRequest(
                     view(
                       formWithErrors,
                       mode,
-                      value.adjustmentType
-                        .getOrElse(throw new RuntimeException("Couldn't fetch adjustment type value from cache"))
+                      adjustmentType
                     )
                   )
                 )
+              case _                                                                            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             },
           value => {
             val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())

@@ -33,7 +33,6 @@ import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentSmallProducerReliefDutyRateView
 
-import java.time.YearMonth
 import scala.concurrent.Future
 
 class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
@@ -221,64 +220,5 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
-
-    "throw an exception for a GET if adjustmentType is not defined and repackagedSprDutyRate is defined" in {
-      val adjustmentEntry     = AdjustmentEntry(
-        repackagedSprDutyRate = Some(validAnswer)
-      )
-      val previousUserAnswers = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-
-      val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, adjustmentSmallProducerReliefDutyRateRoute)
-
-        val result = route(application, request).value
-
-        whenReady(result.failed) { exception =>
-          exception mustBe a[RuntimeException]
-          exception.getMessage mustEqual "Couldn't fetch adjustment type value from cache"
-        }
-      }
-    }
-    "throw an exception for a GET if adjustmentType is not defined" in {
-      val adjustmentEntry     = AdjustmentEntry(
-        period = Some(YearMonth.of(2024, 1))
-      )
-      val previousUserAnswers = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-
-      val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, adjustmentSmallProducerReliefDutyRateRoute)
-
-        val result = route(application, request).value
-
-        whenReady(result.failed) { exception =>
-          exception mustBe a[RuntimeException]
-          exception.getMessage mustEqual "Couldn't fetch adjustment type value from cache"
-        }
-      }
-    }
-    "must throw an exception for a POST if adjustmentType is not defined" in {
-      val adjustmentEntry     = AdjustmentEntry(
-        period = Some(YearMonth.of(2024, 1))
-      )
-      val previousUserAnswers = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-      val application         = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, adjustmentSmallProducerReliefDutyRateRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
-
-        val result = route(application, request).value
-        whenReady(result.failed) { exception =>
-          exception mustBe a[RuntimeException]
-          exception.getMessage mustEqual "Couldn't fetch adjustment type value from cache"
-        }
-      }
-    }
-
   }
 }

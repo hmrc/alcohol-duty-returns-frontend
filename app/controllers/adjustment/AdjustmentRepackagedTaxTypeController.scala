@@ -28,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, 
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -49,38 +50,34 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
   alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.repackagedRateBand.isDefined =>
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, Some(repackagedRateBand), _, _, _, _)) =>
         Ok(
           view(
             form.fill(
-              value.repackagedRateBand
-                .map(_.taxTypeCode)
-                .getOrElse(throw new RuntimeException("Couldn't fetch taxCode value from cache"))
-                .toInt
+              repackagedRateBand.taxTypeCode.toInt
             ),
             mode,
-            value.adjustmentType.getOrElse(
-              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-            )
+            adjustmentType
           )
         )
-      case Some(value)                                       =>
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _))                        =>
         Ok(
           view(
             form,
             mode,
-            value.adjustmentType.getOrElse(
-              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-            )
+            adjustmentType
           )
         )
+      case _                                                                                                   =>
+        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 
@@ -90,44 +87,43 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => handleFormWithErrors(mode, request.userAnswers, formWithErrors),
-          value => {
-            val currentAdjustmentEntry          = request.userAnswers
-              .get(CurrentAdjustmentEntryPage)
-              .getOrElse(throw new RuntimeException("Couldn't fetch CurrentAdjustmentEntryPage from cache"))
-            val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
-            val adjustmentType                  = updatedAdjustment.adjustmentType.getOrElse(
-              throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-            )
-            fetchAdjustmentRateBand(
-              value.toString,
-              updatedAdjustment.period.getOrElse(throw new RuntimeException("Couldn't fetch period value from cache"))
-            ).flatMap {
-              case Some(rateBand)
-                  if rateBand.rateType == DraughtAndSmallProducerRelief || rateBand.rateType == DraughtRelief =>
-                rateBandResponseError(
-                  mode,
-                  value,
-                  adjustmentType,
-                  "adjustmentRepackagedTaxType.error.nonDraught"
-                )
-              case Some(rateBand) =>
-                for {
-                  updatedAnswers <-
-                    Future.fromTry(
-                      request.userAnswers
-                        .set(
-                          CurrentAdjustmentEntryPage,
-                          updatedAdjustment.copy(repackagedRateBand = Some(rateBand))
+          value =>
+            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+              case Some(currentAdjustmentEntry) =>
+                val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
+                (updatedAdjustment.adjustmentType, updatedAdjustment.period) match {
+                  case (Some(adjustmentType), Some(period)) =>
+                    fetchAdjustmentRateBand(value.toString, period).flatMap {
+                      case Some(repackagedRateBand)
+                          if repackagedRateBand.rateType == DraughtAndSmallProducerRelief || repackagedRateBand.rateType == DraughtRelief =>
+                        rateBandResponseError(
+                          mode,
+                          value,
+                          adjustmentType,
+                          "adjustmentRepackagedTaxType.error.nonDraught"
                         )
-                    )
-                  _              <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(
-                  navigator.nextPage(AdjustmentRepackagedTaxTypePage, mode, updatedAnswers, hasChanged)
-                )
-              case None           =>
-                rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
+                      case Some(repackagedRateBand) =>
+                        for {
+                          updatedAnswers <-
+                            Future.fromTry(
+                              request.userAnswers
+                                .set(
+                                  CurrentAdjustmentEntryPage,
+                                  updatedAdjustment.copy(repackagedRateBand = Some(repackagedRateBand))
+                                )
+                            )
+                          _              <- cacheConnector.set(updatedAnswers)
+                        } yield Redirect(
+                          navigator.nextPage(AdjustmentRepackagedTaxTypePage, mode, updatedAnswers, hasChanged)
+                        )
+                      case None                     =>
+                        rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
+                    }
+                  case _                                    => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                }
+              case None                         =>
+                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             }
-          }
         )
   }
 
@@ -135,22 +131,19 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
     request: Request[_]
   ): Future[Result] =
     userAnswers
-      .get(CurrentAdjustmentEntryPage)
-      .fold {
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      } { value =>
+      .get(CurrentAdjustmentEntryPage) match {
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _)) =>
         Future.successful(
           BadRequest(
             view(
               formWithErrors,
               mode,
-              value.adjustmentType.getOrElse(
-                throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-              )
+              adjustmentType
             )
           )
         )
-      }
+      case _                                                                            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+    }
 
   def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
     adjustmentEntry.repackagedRateBand.map(_.taxTypeCode) match {

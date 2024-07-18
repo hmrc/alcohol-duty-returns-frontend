@@ -21,7 +21,7 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierA
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.AdjustmentNavigator
 import models.NormalMode
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
 import views.html.adjustment.AdjustmentListView
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -51,19 +51,21 @@ class AdjustmentListController @Inject() (
   val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val duties       = request.userAnswers
+    val duties = request.userAnswers
       .get(AdjustmentEntryListPage)
       .getOrElse(Seq.empty)
       .flatMap(duty => duty.newDuty.orElse(duty.duty))
-    val preparedForm = request.userAnswers.get(AdjustmentListPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+
+    val preparedForm = request.userAnswers.get(AdjustmentListPage).fold(form)(form.fill)
+
     alcoholDutyCalculatorConnector
       .calculateTotalAdjustment(duties)
-      .map { total =>
+      .flatMap { total =>
         val table = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers, total.duty)
-        Ok(view(preparedForm, table))
+        for {
+          updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
+          _              <- cacheConnector.set(updatedAnswers)
+        } yield Ok(view(preparedForm, table))
       }
       .recover { case _ =>
         logger.warn("Unable to fetch adjustment total")
@@ -72,7 +74,9 @@ class AdjustmentListController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val table = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers, 0)
+    val (userAnswers, total) =
+      (request.userAnswers, request.userAnswers.get(AdjustmentTotalPage).getOrElse(BigDecimal(0)))
+    val table                = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
     form
       .bindFromRequest()
       .fold(

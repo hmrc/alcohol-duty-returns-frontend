@@ -67,10 +67,10 @@ class CheckYourAnswersController @Inject() (
           controllers.adjustment.routes.AdjustmentListController.onPageLoad()
         )
       case Some(_)                                             =>
-        logger.logger.error("Adjustment Entry not completed")
+        logger.warn("Adjustment Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case _                                                   =>
-        logger.logger.error("Can't fetch adjustment entry from cache")
+        logger.warn("Can't fetch adjustment entry from cache")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
   }
@@ -98,17 +98,21 @@ class CheckYourAnswersController @Inject() (
     summaryList: SummaryList
   )(implicit
     request: Request[_]
-  ): Future[Result] =
-    for {
-      updateUserAnswers <- Future.fromTry(userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry))
-      _                 <- cacheConnector.set(updateUserAnswers)
-    } yield Ok(
-      view(
-        summaryList,
-        adjustmentEntry.adjustmentType.getOrElse(
-          throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+  ): Future[Result] = {
+    val adjustmentTypeOpt = adjustmentEntry.adjustmentType
+    adjustmentTypeOpt match {
+      case Some(adjustmentType) =>
+        for {
+          updateUserAnswers <- Future.fromTry(userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry))
+          _                 <- cacheConnector.set(updateUserAnswers)
+        } yield Ok(
+          view(
+            summaryList,
+            adjustmentType
+          )
         )
-      )
-    )
+      case None                 => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+    }
+  }
 
 }

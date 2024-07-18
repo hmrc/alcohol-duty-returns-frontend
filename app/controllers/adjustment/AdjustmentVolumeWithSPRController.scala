@@ -28,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import connectors.CacheConnector
 import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
 import models.requests.DataRequest
+import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
@@ -47,91 +48,118 @@ class AdjustmentVolumeWithSPRController @Inject() (
   view: AdjustmentVolumeWithSPRView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
-  private def getRegime(implicit request: DataRequest[_]): AlcoholRegime = {
-    val rateBand = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.rateBand)
-    rateBand
-      .flatMap(_.rangeDetails.map(_.alcoholRegime).headOption)
-      .getOrElse(throw new RuntimeException("Couldn't fetch regime value from cache"))
-  }
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val form                            = formProvider(getRegime)
-    val (preparedForm, adjustmentEntry) = request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                  => (form, AdjustmentEntry())
-      case Some(adjustmentEntry) =>
-        val filledForm = (for {
-          totalLitresVolume <- adjustmentEntry.totalLitresVolume
-          pureAlcoholVolume <- adjustmentEntry.pureAlcoholVolume
-          sprDutyRate       <- adjustmentEntry.sprDutyRate
-        } yield form.fill(AdjustmentVolumeWithSPR(totalLitresVolume, pureAlcoholVolume, sprDutyRate)))
-          .getOrElse(form)
-        (filledForm, adjustmentEntry)
+  private def getRegime(implicit request: DataRequest[_]): Option[AlcoholRegime] =
+    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+      case Some(AdjustmentEntry(_, _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+        rateBand.rangeDetails.map(_.alcoholRegime).headOption
+      case _                                                                      => None
     }
 
-    Ok(
-      view(
-        preparedForm,
-        mode,
-        adjustmentEntry.adjustmentType.getOrElse(
-          throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-        ),
-        getRegime,
-        rateBandContent(
-          adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
-        )
-      )
-    )
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    getRegime match {
+      case Some(regime) =>
+        val form = formProvider(regime)
+        request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+
+          case Some(
+                AdjustmentEntry(
+                  _,
+                  Some(adjustmentType),
+                  _,
+                  Some(rateBand),
+                  Some(totalLitres),
+                  Some(pureAlcohol),
+                  Some(sprDutyRate),
+                  _,
+                  _,
+                  _,
+                  _,
+                  _
+                )
+              ) =>
+            Ok(
+              view(
+                form.fill(AdjustmentVolumeWithSPR(totalLitres, pureAlcohol, sprDutyRate)),
+                mode,
+                adjustmentType,
+                regime,
+                rateBandContent(rateBand)
+              )
+            )
+          case Some(AdjustmentEntry(_, Some(adjustmentType), _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+            Ok(
+              view(
+                form,
+                mode,
+                adjustmentType,
+                regime,
+                rateBandContent(rateBand)
+              )
+            )
+          case _                                                                                         =>
+            logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        }
+      case _            =>
+        logger.warn("Couldn't fetch regime value from user answers")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
+
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val form = formProvider(getRegime)
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => handleFormErrors(mode, formWithErrors),
-          value => {
-            val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-            val (updatedAdjustment, hasChanged) = updateVolume(adjustment, value)
-            for {
-              updatedAnswers <- Future.fromTry(
-                                  request.userAnswers.set(
-                                    CurrentAdjustmentEntryPage,
-                                    updatedAdjustment.copy(
-                                      totalLitresVolume = Some(value.totalLitresVolume),
-                                      pureAlcoholVolume = Some(value.pureAlcoholVolume),
-                                      sprDutyRate = Some(value.sprDutyRate)
+      getRegime match {
+        case Some(regime) =>
+          val form = formProvider(regime)
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors => handleFormErrors(mode, formWithErrors, regime),
+              value => {
+                val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+                val (updatedAdjustment, hasChanged) = updateVolume(adjustment, value)
+                for {
+                  updatedAnswers <- Future.fromTry(
+                                      request.userAnswers.set(
+                                        CurrentAdjustmentEntryPage,
+                                        updatedAdjustment.copy(
+                                          totalLitresVolume = Some(value.totalLitresVolume),
+                                          pureAlcoholVolume = Some(value.pureAlcoholVolume),
+                                          sprDutyRate = Some(value.sprDutyRate)
+                                        )
+                                      )
                                     )
-                                  )
-                                )
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AdjustmentVolumeWithSPRPage, mode, updatedAnswers, hasChanged))
-          }
-        )
+                  _              <- cacheConnector.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(AdjustmentVolumeWithSPRPage, mode, updatedAnswers, hasChanged))
+              }
+            )
+        case _            =>
+          logger.warn("Couldn't fetch regime value from user answers")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      }
   }
 
-  private def handleFormErrors(mode: Mode, formWithErrors: Form[AdjustmentVolumeWithSPR])(implicit
-    request: DataRequest[_]
+  private def handleFormErrors(mode: Mode, formWithErrors: Form[AdjustmentVolumeWithSPR], regime: AlcoholRegime)(
+    implicit request: DataRequest[_]
   ): Future[Result] =
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      case Some(value) =>
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
         Future.successful(
           BadRequest(
             view(
               formWithErrors,
               mode,
-              value.adjustmentType.getOrElse(
-                throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-              ),
-              getRegime,
-              rateBandContent(
-                value.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
-              )
+              adjustmentType,
+              regime,
+              rateBandContent(rateBand)
             )
           )
         )
+      case _                                                                                         => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
   def updateVolume(

@@ -27,10 +27,10 @@ case class AdjustmentEntry(
   adjustmentType: Option[AdjustmentType] = None,
   period: Option[YearMonth] = None,
   rateBand: Option[RateBand] = None,
-  repackagedRateBand: Option[RateBand] = None,
   totalLitresVolume: Option[BigDecimal] = None,
   pureAlcoholVolume: Option[BigDecimal] = None,
   sprDutyRate: Option[BigDecimal] = None,
+  repackagedRateBand: Option[RateBand] = None,
   repackagedSprDutyRate: Option[BigDecimal] = None,
   duty: Option[BigDecimal] = None,
   repackagedDuty: Option[BigDecimal] = None,
@@ -42,7 +42,7 @@ case class AdjustmentEntry(
         .flatMap(_.rate)
         .isDefined || sprDutyRate.isDefined) && repackagedCheck
 
-  def repackagedCheck: Boolean = {
+  private def repackagedCheck: Boolean = {
     val isRepackagedAdjustment = adjustmentType.isDefined && adjustmentType.get.equals(RepackagedDraughtProducts)
 
     !isRepackagedAdjustment || (repackagedRateBand.isDefined &&

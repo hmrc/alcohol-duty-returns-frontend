@@ -87,11 +87,11 @@ class AdjustmentNavigator @Inject() () {
   }
 
   private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers): Call = {
-    val rateType = for {
+    val rateTypeOpt = for {
       adjustment <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
-      rateType   <- adjustment.rateBand.map(_.rateType)
-    } yield rateType
-    rateType match {
+      rateBand   <- adjustment.rateBand
+    } yield rateBand.rateType
+    rateTypeOpt match {
       case Some(Core)                          => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
       case Some(DraughtRelief)                 =>
         controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
