@@ -22,7 +22,7 @@ import controllers.returns
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import play.api.test.Helpers._
-import viewmodels.checkAnswers.returns.ViewPastReturnsHelper
+import viewmodels.returns.ViewPastReturnsHelper
 import views.html.returns.ViewPastReturnsView
 
 import scala.concurrent.Future

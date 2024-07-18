@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import controllers.returns.routes
 import models.{AlcoholRegime, CheckMode, UserAnswers}

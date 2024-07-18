@@ -27,7 +27,7 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.returns.TaxBandsViewModel
+import viewmodels.returns.TaxBandsViewModel
 import views.html.returns.WhatDoYouNeedToDeclareView
 
 import scala.concurrent.Future

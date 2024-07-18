@@ -25,7 +25,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
+import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
 import javax.inject.Inject

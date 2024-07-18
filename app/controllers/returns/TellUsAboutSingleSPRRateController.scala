@@ -28,7 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import models.returns.VolumeAndRateByTaxType
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
+import viewmodels.returns.CategoriesByRateTypeHelper
 import views.html.returns.TellUsAboutSingleSPRRateView
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.returns.VolumeAndRateByTaxType
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.returns.TellUsAboutMultipleSPRRateHelper
+import viewmodels.returns.TellUsAboutMultipleSPRRateHelper
 import views.html.returns.TellUsAboutMultipleSPRRateView
 
 import scala.concurrent.Future

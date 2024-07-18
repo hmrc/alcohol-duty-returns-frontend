@@ -23,6 +23,7 @@ import models.RateType.{Core, DraughtRelief}
 import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.scalacheck.Gen
 import play.api.i18n.Messages
+import viewmodels.returns.RateBandHelper
 
 class RateBandHelperSpec extends SpecBase {
   val application                 = applicationBuilder().build()

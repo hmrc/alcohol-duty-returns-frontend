@@ -30,7 +30,7 @@ import models.returns.VolumeAndRateByTaxType
 import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.TellUsAboutMultipleSPRRateHelper
+import viewmodels.returns.TellUsAboutMultipleSPRRateHelper
 import views.html.returns.TellUsAboutMultipleSPRRateView
 
 import scala.concurrent.{ExecutionContext, Future}

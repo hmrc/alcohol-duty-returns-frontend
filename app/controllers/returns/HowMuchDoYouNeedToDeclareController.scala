@@ -29,7 +29,7 @@ import connectors.CacheConnector
 import models.returns.{VolumeAndRateByTaxType, VolumesByTaxType}
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
+import viewmodels.returns.CategoriesByRateTypeHelper
 import views.html.returns.HowMuchDoYouNeedToDeclareView
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -22,6 +22,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import viewmodels.returns.ViewReturnViewModel
 
 import java.time.Instant
 

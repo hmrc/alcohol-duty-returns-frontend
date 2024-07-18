@@ -16,7 +16,7 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, SubHeading, PageHeading, Paragraph}
-@import viewmodels.checkAnswers.returns.CategoriesByRateTypeViewModel
+@import viewmodels.returns.CategoriesByRateTypeViewModel
 
 @this(
     layout: templates.Layout,
@@ -53,15 +53,15 @@
 
       @if(categories.smallProducer.nonEmpty) {
         @subHeading(messages(s"tellUsAboutSingleSPRRate.smallProducer.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
-        @for((categoryViewModel, index) <- categories.smallProducer.zipWithIndex) {
+        @for(categoryViewModel <- categories.smallProducer) {
           @subHeading(categoryViewModel.category, classes = "govuk-heading-s")
           @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate[$index]"),
+              field = form(s"volumesWithRate[${categoryViewModel.id}]"),
               key = "totalLitres",
               label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index}_totalLitres"),
-              value = form(s"volumesWithRate[$index].totalLitres").value
+              errorMessageField = form(s"volumesWithRate_${categoryViewModel.id}_totalLitres"),
+              value = form(s"volumesWithRate[${categoryViewModel.id}].totalLitres").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -69,11 +69,11 @@
           )
           @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate[$index]"),
+              field = form(s"volumesWithRate[${categoryViewModel.id}]"),
               key = "pureAlcohol",
               label = LabelViewModel(messages("return.journey.pureAlcohol")),
-              errorMessageField = form(s"volumesWithRate_${index}_pureAlcohol"),
-              value = form(s"volumesWithRate[$index].pureAlcohol").value
+              errorMessageField = form(s"volumesWithRate_${categoryViewModel.id}_pureAlcohol"),
+              value = form(s"volumesWithRate[${categoryViewModel.id}].pureAlcohol").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -81,11 +81,11 @@
           )
           @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate[$index]"),
+              field = form(s"volumesWithRate[${categoryViewModel.id}]"),
               key = "dutyRate",
               label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
-              value = form(s"volumesWithRate[$index].dutyRate").value
+              errorMessageField = form(s"volumesWithRate_${categoryViewModel.id}_dutyRate"),
+              value = form(s"volumesWithRate[${categoryViewModel.id}].dutyRate").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -95,10 +95,10 @@
 
           @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate[$index]"),
+              field = form(s"volumesWithRate[${categoryViewModel.id}]"),
               key = "taxType",
               label = LabelViewModel(Text("")),
-              errorMessageField = form(s"volumesWithRate_${index}_taxType"),
+              errorMessageField = form(s"volumesWithRate_${categoryViewModel.id}_taxType"),
               value = Some(categoryViewModel.id)
             ).hidden
           )
@@ -107,15 +107,15 @@
 
       @if(categories.draughtAndSmallProducer.nonEmpty) {
         @subHeading(messages(s"tellUsAboutSingleSPRRate.draughtSmallProducer.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
-        @for((categoryViewModel, index) <- categories.draughtAndSmallProducer.zipWithIndex) {
+        @for(categoryViewModel <- categories.draughtAndSmallProducer) {
           @subHeading(categoryViewModel.category, classes = "govuk-heading-s")
           @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+              field = form(s"volumesWithRate[${categoryViewModel.id}]"),
               key = "totalLitres",
               label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_totalLitres"),
-              value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
+              errorMessageField = form(s"volumesWithRate_${categoryViewModel.id}_totalLitres"),
+              value = form(s"volumesWithRate[${categoryViewModel.id}].totalLitres").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -123,11 +123,11 @@
           )
           @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+              field = form(s"volumesWithRate[${categoryViewModel.id}]"),
               key = "pureAlcohol",
               label = LabelViewModel(messages("return.journey.pureAlcohol")),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_pureAlcohol"),
-              value = form(s"volumesWithRate[${index + categories.smallProducer.size}].pureAlcohol").value
+              errorMessageField = form(s"volumesWithRate_${categoryViewModel.id}_pureAlcohol"),
+              value = form(s"volumesWithRate[${categoryViewModel.id}].pureAlcohol").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -135,11 +135,11 @@
           )
           @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+              field = form(s"volumesWithRate[${categoryViewModel.id}]"),
               key = "dutyRate",
               label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
-              value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
+              errorMessageField = form(s"volumesWithRate_${categoryViewModel.id}_dutyRate"),
+              value = form(s"volumesWithRate[${categoryViewModel.id}].dutyRate").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -149,10 +149,10 @@
 
           @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+              field = form(s"volumesWithRate[${categoryViewModel.id}]"),
               key = "taxType",
               label = LabelViewModel(Text("")),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_taxType"),
+              errorMessageField = form(s"volumesWithRate_${categoryViewModel.id}_taxType"),
               value = Some(categoryViewModel.id)
             ).hidden
           )

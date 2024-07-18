@@ -15,7 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading}
-@import viewmodels.checkAnswers.returns.ReturnPeriodViewModel
+@import viewmodels.returns.ReturnPeriodViewModel
 
 @this(
         layout: templates.Layout,
@@ -25,6 +25,7 @@
         pageHeading: PageHeading,
         paragraph: components.Paragraph
 )
+
 
 @(returnPeriod: ReturnPeriodViewModel)(implicit request: Request[_], messages: Messages)
 

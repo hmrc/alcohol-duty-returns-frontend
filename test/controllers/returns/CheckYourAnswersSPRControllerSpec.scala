@@ -25,7 +25,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.returns.CheckYourAnswersSPRSummaryListHelper
+import viewmodels.returns.CheckYourAnswersSPRSummaryListHelper
 import views.html.returns.CheckYourAnswersSPRView
 
 import scala.concurrent.Future
