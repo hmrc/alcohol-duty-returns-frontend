@@ -99,7 +99,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       value = ValueViewModel("")
     ).withCssClass("govuk-summary-list__row--no-border")
 
-    val dutyRows = rateBands.toSeq.map { rateBand =>
+    val dutyRows = rateBands.toSeq.sortBy(_.taxTypeCode).map { rateBand =>
       dutyByTaxTypes.find(_.taxType == rateBand.taxTypeCode) match {
         case Some(dutyByTaxType) =>
           Seq(

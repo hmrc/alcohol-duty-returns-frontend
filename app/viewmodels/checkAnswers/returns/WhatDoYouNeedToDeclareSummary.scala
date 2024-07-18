@@ -64,7 +64,8 @@ object WhatDoYouNeedToDeclareSummary {
       value = ValueViewModel(
         HtmlContent(
           "<ul>" +
-            rateBands
+            rateBands.toSeq
+              .sortBy(_.taxTypeCode)
               .map(answer => s"<li>${rateBandRecap(answer)}</li>")
               .mkString("")
             + "</ul>"

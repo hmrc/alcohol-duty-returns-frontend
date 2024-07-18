@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.returns
 
-import models.{AlcoholRegime, UserAnswers}
+import models.{AlcoholRegime, RateBand, UserAnswers}
 import pages.returns.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
@@ -32,6 +32,8 @@ object MultipleSPRListSummary {
       dutyByTaxTypeList <- answers.getByKey(MultipleSPRListPage, regime)
     } yield dutyByTaxTypeList
       .groupBy(_.taxType)
+      .toSeq
+      .sortBy(_._1)
       .flatMap { case (taxType, dutiesByTaxType) =>
         val rateBand = rateBands
           .find(_.taxTypeCode == taxType)
@@ -40,22 +42,26 @@ object MultipleSPRListSummary {
         val totalLitres = dutiesByTaxType.map(_.totalLitres).sum
         val pureAlcohol = dutiesByTaxType.map(_.pureAlcohol).sum
 
-        Seq(
-          SummaryListRowViewModel(
-            key = KeyViewModel(rateBandRecap(rateBand)),
-            value = Value()
-          ).withCssClass("govuk-summary-list__row--no-border"),
-          SummaryListRowViewModel(
-            key = messages("checkYourAnswersLabel.row.totalLitres"),
-            value = ValueViewModel(s"${totalLitres.toString} ${messages("site.unit.litres")}")
-          ).withCssClass("govuk-summary-list__row--no-border"),
-          SummaryListRowViewModel(
-            key = messages("checkYourAnswersLabel.row.pureAlcohol"),
-            value = ValueViewModel(s"${pureAlcohol.toString} ${messages("site.unit.litres")}")
-          )
-        )
+        createRow(rateBand, totalLitres, pureAlcohol)
       }
-      .toSeq
     rows.getOrElse(Seq.empty)
   }
+
+  private def createRow(rateBand: RateBand, totalLitres: BigDecimal, pureAlcohol: BigDecimal)(implicit
+    messages: Messages
+  ): Seq[SummaryListRow] =
+    Seq(
+      SummaryListRowViewModel(
+        key = KeyViewModel(rateBandRecap(rateBand)),
+        value = Value()
+      ).withCssClass("govuk-summary-list__row--no-border"),
+      SummaryListRowViewModel(
+        key = messages("checkYourAnswersLabel.row.totalLitres"),
+        value = ValueViewModel(s"${totalLitres.toString} ${messages("site.unit.litres")}")
+      ).withCssClass("govuk-summary-list__row--no-border"),
+      SummaryListRowViewModel(
+        key = messages("checkYourAnswersLabel.row.pureAlcohol"),
+        value = ValueViewModel(s"${pureAlcohol.toString} ${messages("site.unit.litres")}")
+      )
+    )
 }
