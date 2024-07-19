@@ -14,23 +14,8 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package pages.dutySuspended
 
-import models.ReturnPeriod
+import pages.Page
 
-import java.time.format.DateTimeFormatter
-
-case class ReturnPeriodViewModel(fromDate: String, toDate: String)
-object ReturnPeriodViewModel {
-
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
-
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel = {
-    val yearMonth = returnPeriod.period
-    ReturnPeriodViewModel(
-      viewDateFormatter.format(yearMonth.atDay(1)),
-      viewDateFormatter.format(yearMonth.atEndOfMonth)
-    )
-  }
-
-}
+case object DutySuspendedGuidancePage extends Page

@@ -25,7 +25,9 @@ POST        /enrol/approval-id                           controllers.auth.DoYouH
 GET         /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onPageLoad(wasReferredFromBTA: Boolean ?= false)
 POST        /enrol/no-approval-id                        controllers.auth.NoAppaIdController.onSubmit(wasReferredFromBTA: Boolean ?= false)
 
-GET         /check-your-returns                          controllers.ViewPastReturnsController.onPageLoad
+GET         /check-your-returns                          controllers.returns.ViewPastReturnsController.onPageLoad
+
+GET         /view-your-return/:periodKey                 controllers.returns.ViewReturnController.onPageLoad(periodKey: String)
 
 GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
 
@@ -139,6 +141,7 @@ GET        /change-do-you-need-to-declare-delivered-received-duty-suspended     
 POST       /change-do-you-need-to-declare-delivered-received-duty-suspended                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /tell-us-about-your-duty-suspended-deliveries                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onPageLoad()
+POST       /tell-us-about-your-duty-suspended-deliveries                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onSubmit()
 
 GET        /tell-us-about-your-beer-in-duty-suspense                        controllers.dutySuspended.DutySuspendedBeerController.onPageLoad(mode: Mode = NormalMode)
 POST       /tell-us-about-your-beer-in-duty-suspense                        controllers.dutySuspended.DutySuspendedBeerController.onSubmit(mode: Mode = NormalMode)

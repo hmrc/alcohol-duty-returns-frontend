@@ -18,10 +18,14 @@ package common
 
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegimes, ReturnId, UserAnswers}
+import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
+import models.{AlcoholRegimes, ObligationData, ObligationStatus, ReturnId, ReturnPeriod, UserAnswers}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
+import java.time.{Clock, Instant, LocalDate, ZoneId}
+
 trait TestData extends ModelGenerators {
+  val clock              = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))
   val appaId: String     = appaIdGen.sample.get
   val periodKey: String  = periodKeyGen.sample.get
   val groupId: String    = "groupid"
@@ -29,6 +33,10 @@ trait TestData extends ModelGenerators {
   val returnId: ReturnId = ReturnId(appaId, periodKey)
 
   val returnAndUserDetails = ReturnAndUserDetails(returnId, groupId, internalId)
+
+  val returnPeriod = returnPeriodGen.sample.get
+
+  val badPeriodKey = "24A"
 
   val periodKeyJan = "24AA"
   val periodKeyFeb = "24AB"
@@ -47,6 +55,8 @@ trait TestData extends ModelGenerators {
   val nonQuarterPeriodKeys =
     Seq(periodKeyJan, periodKeyFeb, periodKeyApr, periodKeyMay, periodKeyJul, periodKeyAug, periodKeyOct, periodKeyNov)
 
+  val returnPeriodMar = ReturnPeriod.fromPeriodKey(periodKeyMar).get
+
   val emptyUserAnswers: UserAnswers = UserAnswers(
     returnId,
     groupId,
@@ -54,7 +64,9 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
   )
 
-  val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers
+  val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers.copy(
+    regimes = AlcoholRegimes(Set(Beer))
+  )
   val userAnswersWithoutBeer: UserAnswers                  = emptyUserAnswers.copy(
     regimes = AlcoholRegimes(Set(Cider, Wine, Spirits, OtherFermentedProduct))
   )
@@ -80,10 +92,177 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(OtherFermentedProduct))
   )
   val userAnswersWithoutOtherFermentedProduct: UserAnswers = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits))
+    regimes = AlcoholRegimes(Set(Beer, Spirits))
   )
 
   val userAnswersWithAllRegimes: UserAnswers = emptyUserAnswers.copy(
     regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
+  )
+
+  def exampleReturnDetails(periodKey: String, now: Instant): ReturnDetails =
+    ReturnDetails(
+      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      alcoholDeclared = ReturnAlcoholDeclared(
+        alcoholDeclaredDetails = Some(
+          Seq(
+            ReturnAlcoholDeclaredRow(
+              taxType = "311",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("9.27"),
+              dutyValue = BigDecimal("4171.50")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "321",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("9454.50")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "331",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("28.50"),
+              dutyValue = BigDecimal("12825.00")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "341",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("31.64"),
+              dutyValue = BigDecimal("14238.00")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "351",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("8.42"),
+              dutyValue = BigDecimal("3789.00")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "356",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("19.08"),
+              dutyValue = BigDecimal("8586.00")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "361",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("8.40"),
+              dutyValue = BigDecimal("3780.00")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "366",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("16.47"),
+              dutyValue = BigDecimal("7411.50")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "371",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("8.20"),
+              dutyValue = BigDecimal("3960.00")
+            ),
+            ReturnAlcoholDeclaredRow(
+              taxType = "376",
+              litresOfPureAlcohol = BigDecimal(450),
+              dutyRate = BigDecimal("15.63"),
+              dutyValue = BigDecimal("7033.50")
+            )
+          )
+        ),
+        total = BigDecimal("75249.00")
+      ),
+      adjustments = ReturnAdjustments(
+        adjustmentDetails = Some(
+          Seq(
+            ReturnAdjustmentsRow(
+              adjustmentTypeKey = ReturnAdjustments.underDeclaredKey,
+              taxType = "321",
+              litresOfPureAlcohol = BigDecimal(150),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("3151.50")
+            ),
+            ReturnAdjustmentsRow(
+              adjustmentTypeKey = ReturnAdjustments.spoiltKey,
+              taxType = "321",
+              litresOfPureAlcohol = BigDecimal(1150),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("-24161.50")
+            ),
+            ReturnAdjustmentsRow(
+              adjustmentTypeKey = ReturnAdjustments.spoiltKey,
+              taxType = "321",
+              litresOfPureAlcohol = BigDecimal(75),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("-1575.50")
+            ),
+            ReturnAdjustmentsRow(
+              adjustmentTypeKey = ReturnAdjustments.repackagedDraughtKey,
+              taxType = "321",
+              litresOfPureAlcohol = BigDecimal(150),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("3151.50")
+            )
+          )
+        ),
+        total = BigDecimal("-19434")
+      ),
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("55815"))
+    )
+
+  def nilReturnDetails(periodKey: String, now: Instant): ReturnDetails =
+    ReturnDetails(
+      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      alcoholDeclared = ReturnAlcoholDeclared(
+        alcoholDeclaredDetails = None,
+        total = BigDecimal(0)
+      ),
+      adjustments = ReturnAdjustments(
+        adjustmentDetails = None,
+        total = BigDecimal("0")
+      ),
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0"))
+    )
+
+  def nilReturnDetailsWithEmptySections(periodKey: String, now: Instant): ReturnDetails =
+    ReturnDetails(
+      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      alcoholDeclared = ReturnAlcoholDeclared(
+        alcoholDeclaredDetails = Some(Seq.empty),
+        total = BigDecimal(0)
+      ),
+      adjustments = ReturnAdjustments(
+        adjustmentDetails = Some(Seq.empty),
+        total = BigDecimal("0")
+      ),
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0"))
+    )
+
+  val obligationDataSingleOpen = ObligationData(
+    ObligationStatus.Open,
+    LocalDate.of(2024, 8, 1),
+    LocalDate.of(2024, 8, 31),
+    LocalDate.of(2024, 9, 25),
+    periodKeyAug
+  )
+
+  val obligationDataSingleFulfilled = ObligationData(
+    ObligationStatus.Fulfilled,
+    LocalDate.of(2024, 7, 1),
+    LocalDate.of(2024, 7, 31),
+    LocalDate.of(2024, 7, 25),
+    periodKeyJul
+  )
+
+  val multipleOpenObligations = Seq(
+    obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 11, 30), periodKey = "24AK"),
+    obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 12, 30), periodKey = "24AL"),
+    obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 9, 30), periodKey = "24AI"),
+    obligationDataSingleOpen,
+    obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 10, 28), periodKey = "24AJ")
+  )
+
+  val multipleFulfilledObligations = Seq(
+    obligationDataSingleFulfilled,
+    obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 6, 30), periodKey = "24AE"),
+    obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 7, 30), periodKey = "24AF"),
+    obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 5, 30), periodKey = "24AD")
   )
 }

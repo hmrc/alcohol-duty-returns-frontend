@@ -21,37 +21,63 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.govuk.summarylist.SummaryListViewModel
 
-class CheckYourAnswersSummaryListHelper(userAnswers: UserAnswers)(implicit messages: Messages) {
+import javax.inject.Inject
 
-  def dutySuspendedDeliveriesSummaryList: Option[SummaryList] = {
+class CheckYourAnswersSummaryListHelper @Inject() () {
 
-    val totalbeer                          = getOptionalRow(DutySuspendedBeerSummary.totalVolumeRow(userAnswers))
-    val pureAlcoholInBeer                  = getOptionalRow(DutySuspendedBeerSummary.pureAlcoholRow(userAnswers))
-    val totalCider                         = getOptionalRow(DutySuspendedCiderSummary.totalVolumeRow(userAnswers))
-    val pureAlcoholInCider                 = getOptionalRow(DutySuspendedCiderSummary.pureAlcoholRow(userAnswers))
-    val totalWine                          = getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))
-    val pureAlcoholInWine                  = getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers))
-    val totalSpirts                        = getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))
-    val pureAlcoholInSpirits               = getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers))
-    val totalOtherFermentedSummary         = getOptionalRow(DutySuspendedOtherFermentedSummary.totalVolumeRow(userAnswers))
-    val pureAlcoholInOtherFermentedSummary = getOptionalRow(
-      DutySuspendedOtherFermentedSummary.pureAlcoholRow(userAnswers)
-    )
-    Some(
-      SummaryListViewModel(
-        rows = totalbeer ++
-          pureAlcoholInBeer ++
-          totalCider ++
-          pureAlcoholInCider ++
-          totalWine ++
-          pureAlcoholInWine ++
-          totalSpirts ++
-          pureAlcoholInSpirits ++
-          totalOtherFermentedSummary ++
-          pureAlcoholInOtherFermentedSummary
-      )
-    )
+  def dutySuspendedDeliveriesSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): SummaryList = {
+    val regimes = userAnswers.regimes
+
+    val hasBeer              = regimes.hasBeer()
+    val hasCider             = regimes.hasCider()
+    val hasWine              = regimes.hasWine()
+    val hasSpirits           = regimes.hasSpirits()
+    val hasFermentedProducts = regimes.hasOtherFermentedProduct()
+
+    val maybeTotalBeer                          =
+      if (hasBeer) Some(getOptionalRow(DutySuspendedBeerSummary.totalVolumeRow(userAnswers))) else None
+    val maybePureAlcoholInBeer                  =
+      if (hasBeer) Some(getOptionalRow(DutySuspendedBeerSummary.pureAlcoholRow(userAnswers))) else None
+    val maybeTotalCider                         =
+      if (hasCider) Some(getOptionalRow(DutySuspendedCiderSummary.totalVolumeRow(userAnswers))) else None
+    val maybePureAlcoholInCider                 =
+      if (hasCider) Some(getOptionalRow(DutySuspendedCiderSummary.pureAlcoholRow(userAnswers))) else None
+    val maybeTotalWine                          =
+      if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.totalVolumeRow(userAnswers))) else None
+    val maybePureAlcoholInWine                  =
+      if (hasWine) Some(getOptionalRow(DutySuspendedWineSummary.pureAlcoholRow(userAnswers))) else None
+    val maybeTotalSpirts                        =
+      if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.totalVolumeRow(userAnswers))) else None
+    val maybePureAlcoholInSpirits               =
+      if (hasSpirits) Some(getOptionalRow(DutySuspendedSpiritsSummary.pureAlcoholRow(userAnswers))) else None
+    val maybeTotalOtherFermentedSummary         =
+      if (hasFermentedProducts) Some(getOptionalRow(DutySuspendedOtherFermentedSummary.totalVolumeRow(userAnswers)))
+      else None
+    val maybePureAlcoholInOtherFermentedSummary =
+      if (hasFermentedProducts)
+        Some(
+          getOptionalRow(
+            DutySuspendedOtherFermentedSummary.pureAlcoholRow(userAnswers)
+          )
+        )
+      else None
+
+    val rows = Seq(
+      maybeTotalBeer,
+      maybePureAlcoholInBeer,
+      maybeTotalCider,
+      maybePureAlcoholInCider,
+      maybeTotalWine,
+      maybePureAlcoholInWine,
+      maybeTotalSpirts,
+      maybePureAlcoholInSpirits,
+      maybeTotalOtherFermentedSummary,
+      maybePureAlcoholInOtherFermentedSummary
+    ).flatten.fold(Seq.empty)(_ ++ _)
+
+    SummaryListViewModel(rows = rows)
   }
+
   private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
     row match {
       case Some(row) => Seq(row)

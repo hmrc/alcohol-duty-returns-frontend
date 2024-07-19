@@ -16,12 +16,14 @@
 
 package viewmodels.checkAnswers.productEntry
 
+import config.Constants
 import models.UserAnswers
 import models.productEntry.ProductEntry
 import pages.productEntry.ProductEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
-import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
+import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableTotalViewModel, TableViewModel}
 
 object ProductListSummaryHelper {
 
@@ -30,12 +32,20 @@ object ProductListSummaryHelper {
     val productEntries: Seq[ProductEntry] = getProductEntries(userAnswers)
     TableViewModel(
       head = Seq(
-        HeadCell(content = Text(messages("productEntryList.name")), classes = "govuk-!-width-one-half"),
-        HeadCell(content = Text(messages("productEntryList.duty")), classes = "govuk-!-width-one-quarter"),
-        HeadCell(content = Text(messages("productEntryList.action")), classes = "govuk-!-width-one-quarter")
+        HeadCell(content = Text(messages("productEntryList.name")), classes = Constants.oneHalfCssClass),
+        HeadCell(content = Text(messages("productEntryList.duty")), classes = Constants.oneQuarterCssClass),
+        HeadCell(content = Text(messages("productEntryList.action")), classes = Constants.oneQuarterCssClass)
       ),
       rows = getProductEntryRows(productEntries),
-      total = productEntries.map(_.duty.getOrElse(BigDecimal(0))).sum
+      total = Some(
+        TableTotalViewModel(
+          HeadCell(content = Text(messages("productList.total")), classes = "govuk-!-width-one-half"),
+          HeadCell(
+            content = Text(messages("site.currency.2DP", productEntries.map(_.duty.getOrElse(BigDecimal(0))).sum)),
+            classes = "govuk-!-width-one-half"
+          )
+        )
+      )
     )
   }
 
@@ -48,8 +58,8 @@ object ProductListSummaryHelper {
     productEntries.zipWithIndex.map { case (productEntry, index) =>
       TableRowViewModel(
         cells = Seq(
-          Text(productEntry.name.getOrElse("")),
-          Text(messages("site.currency.2DP", productEntry.duty.getOrElse(BigDecimal(0))))
+          TableRow(content = Text(productEntry.name.getOrElse(""))),
+          TableRow(content = Text(messages("site.currency.2DP", productEntry.duty.getOrElse(BigDecimal(0)))))
         ),
         actions = Seq(
           TableRowActionViewModel(

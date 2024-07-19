@@ -17,7 +17,6 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import generators.ModelGenerators
 import models.returns.AlcoholDuty
 import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
@@ -30,14 +29,15 @@ import play.api.i18n.Messages
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
-class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
+class ReturnTaskListCreatorSpec extends SpecBase {
   val application: Application    = applicationBuilder().build()
-  implicit val messages: Messages = messages(application)
+  implicit val messages: Messages = getMessages(application)
+  val returnTaskListCreator       = new ReturnTaskListCreator()
 
-  "returnSection" - {
+  "on calling returnSection" - {
 
     "when the user answers object is empty, must return the not started section" in {
-      val result = ReturnTaskListHelper.returnSection(emptyUserAnswers)
+      val result = returnTaskListCreator.returnSection(emptyUserAnswers)
 
       result.completedTask                     shouldBe false
       result.taskList.items.size               shouldBe 1
@@ -56,7 +56,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
         .value
-      val result      = ReturnTaskListHelper.returnSection(userAnswers)
+      val result      = returnTaskListCreator.returnSection(userAnswers)
 
       result.completedTask                     shouldBe true
       result.taskList.items.size               shouldBe 1
@@ -70,14 +70,14 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       )
     }
 
-    "when the user answers yes to DeclareAlcoholDuty question, must return a complete section and the Product List task" - {
+    "when the user answers yes to DeclareAlcoholDuty question, must return a complete section and the regime tasks" - {
       val declaredAlcoholDutyUserAnswer = emptyUserAnswers
         .set(DeclareAlcoholDutyQuestionPage, true)
         .success
         .value
 
       "must have a link to the 'What do you need to declare?' screen if the user has not answered any other question" in {
-        val result = ReturnTaskListHelper.returnSection(declaredAlcoholDutyUserAnswer)
+        val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
 
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
@@ -117,7 +117,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
             .value
         }
 
-        val result = ReturnTaskListHelper.returnSection(filledUserAnswers)
+        val result = returnTaskListCreator.returnSection(filledUserAnswers)
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
@@ -167,7 +167,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
             .value
         }
 
-        val result = ReturnTaskListHelper.returnSection(filledUserAnswers)
+        val result = returnTaskListCreator.returnSection(filledUserAnswers)
         result.completedTask                     shouldBe true
         result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
@@ -194,10 +194,9 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
     }
   }
 
-  "returnDSDSection" - {
-
+  "on calling returnDSDSection" - {
     "when the user answers object is empty, must return a not started section" in {
-      val result = ReturnTaskListHelper.returnDSDSection(emptyUserAnswers)
+      val result = returnTaskListCreator.returnDSDSection(emptyUserAnswers)
 
       result.completedTask                     shouldBe false
       result.taskList.items.size               shouldBe 1
@@ -216,7 +215,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
         .success
         .value
-      val result      = ReturnTaskListHelper.returnDSDSection(userAnswers)
+      val result      = returnTaskListCreator.returnDSDSection(userAnswers)
 
       result.completedTask                     shouldBe true
       result.taskList.items.size               shouldBe 1
@@ -237,7 +236,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .value
 
       "must have a link to DeclareDutySuspendedDeliveriesQuestionController if the user has not answered any other question" in {
-        val result = ReturnTaskListHelper.returnDSDSection(declaredDSDUserAnswer)
+        val result = returnTaskListCreator.returnDSDSection(declaredDSDUserAnswer)
 
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe 2
@@ -262,7 +261,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       "must have a link to DeclareDutySuspendedDeliveriesQuestionController if the user answers yes to DSD question and not all regime questions are answered" in {
         val validTotal                                                = 42.34
         val validPureAlcohol                                          = 34.23
-        val incompleteDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers
+        val incompleteDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes
           .copy(data =
             Json.obj(
               DutySuspendedBeerPage.toString    -> Json.obj(
@@ -287,7 +286,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .success
           .value
 
-        val result = ReturnTaskListHelper.returnDSDSection(incompleteDutySuspendedDeliveriesUserAnswers)
+        val result = returnTaskListCreator.returnDSDSection(incompleteDutySuspendedDeliveriesUserAnswers)
 
         result.completedTask                     shouldBe false
         result.taskList.items.size               shouldBe 2
@@ -312,7 +311,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
       "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions are answered" in {
         val validTotal                                              = 42.34
         val validPureAlcohol                                        = 34.23
-        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = emptyUserAnswers
+        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes
           .copy(data =
             Json.obj(
               DutySuspendedBeerPage.toString           -> Json.obj(
@@ -341,7 +340,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
           .success
           .value
 
-        val result = ReturnTaskListHelper.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
+        val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
 
         result.completedTask                     shouldBe true
         result.taskList.items.size               shouldBe 2
@@ -365,10 +364,9 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
     }
   }
 
-  "returnQSSection" - {
-
+  "on calling returnQSSection" - {
     "when the user answers object is empty, must return a not started section" in {
-      val result = ReturnTaskListHelper.returnQSSection(emptyUserAnswers)
+      val result = returnTaskListCreator.returnQSSection(emptyUserAnswers)
 
       result.completedTask                     shouldBe false
       result.taskList.items.size               shouldBe 1
@@ -387,7 +385,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
         .set(DeclareQuarterlySpiritsPage, false)
         .success
         .value
-      val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+      val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
       result.completedTask                     shouldBe true
       result.taskList.items.size               shouldBe 1
@@ -459,7 +457,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
 
         "not be started when no other questions are answered" in {
           val userAnswers = setUserAnswers(Seq(declareQuarterleySpiritsPage))
-          val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
           result.completedTask                     shouldBe false
           result.taskList.items.size               shouldBe 2
@@ -492,7 +490,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
 
           s"be in progress when $nextPageName has just been completed" in {
             val userAnswers = setUserAnswers(completedPages)
-            val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+            val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
             result.completedTask                     shouldBe false
             result.taskList.items.size               shouldBe 2
@@ -529,7 +527,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
               ethyleneGasOrMolassesUsedPage
             )
           )
-          val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
           result.taskList.items(1).title.content shouldBe Text(
             messages("taskList.section.spirits.inProgress")
@@ -553,7 +551,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
               ethyleneGasOrMolassesUsedPage
             )
           )
-          val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
           result.taskList.items(1).title.content shouldBe Text(
             messages("taskList.section.spirits.inProgress")
@@ -578,7 +576,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
               ethyleneGasOrMolassesUsedPageWithOther
             )
           )
-          val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
           result.taskList.items(1).title.content shouldBe Text(
             messages("taskList.section.spirits.inProgress")
@@ -601,7 +599,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
               ethyleneGasOrMolassesUsedPage
             )
           )
-          val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
           result.completedTask                     shouldBe true
           result.taskList.items.size               shouldBe 2
@@ -636,7 +634,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
               ethyleneGasOrMolassesUsedPage
             )
           )
-          val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
           result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
         }
@@ -654,7 +652,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
               ethyleneGasOrMolassesUsedPage
             )
           )
-          val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
           result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
         }
@@ -673,7 +671,7 @@ class ReturnTaskListHelperSpec extends SpecBase with ModelGenerators {
               otherIngredientsUsedPage
             )
           )
-          val result      = ReturnTaskListHelper.returnQSSection(userAnswers)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
           result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
         }

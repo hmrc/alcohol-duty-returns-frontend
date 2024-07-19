@@ -34,7 +34,6 @@ import views.html.dutySuspended.DutySuspendedBeerView
 import scala.concurrent.Future
 
 class DutySuspendedBeerControllerSpec extends SpecBase {
-
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DutySuspendedBeerFormProvider()
@@ -45,7 +44,7 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
   val validTotalBeer         = 55.6
   val validPureAlcoholInBeer = 47.5
 
-  val userAnswers = emptyUserAnswers.copy(data =
+  val userAnswers = userAnswersWithBeer.copy(data =
     Json.obj(
       DutySuspendedBeerPage.toString -> Json.obj(
         "totalBeer"         -> validTotalBeer,
@@ -55,10 +54,8 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
   )
 
   "DutySuspendedBeer Controller" - {
-
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithBeer)).build()
 
       running(application) {
         val request = FakeRequest(GET, dutySuspendedBeerRoute)
@@ -68,12 +65,11 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -89,19 +85,18 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
           NormalMode
         )(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithBeer))
           .overrides(
             bind[DeclareDutySuspendedDeliveriesNavigator]
               .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
@@ -125,8 +120,7 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithBeer)).build()
 
       running(application) {
         val request =
@@ -140,12 +134,11 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -158,14 +151,44 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery if regime is missing for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutBeer)).build()
 
+      running(application) {
+        val request = FakeRequest(GET, dutySuspendedBeerRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedBeerRoute)
             .withFormUrlEncodedBody(("totalBeer", "5.6"), ("pureAlcoholInBeer", "47.5"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery if regime is missing for a POST" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutBeer)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, dutySuspendedBeerRoute)
+            .withFormUrlEncodedBody(
+              ("totalBeer", validTotalBeer.toString),
+              ("pureAlcoholInBeer", validPureAlcoholInBeer.toString)
+            )
 
         val result = route(application, request).value
 

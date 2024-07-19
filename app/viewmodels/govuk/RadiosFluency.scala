@@ -38,20 +38,22 @@ trait RadiosFluency {
       apply(
         field = field,
         items = items,
-        fieldset = FieldsetViewModel(legend)
+        fieldset = FieldsetViewModel(legend),
+        errorMessageField = field
       )
 
     def apply(
       field: Field,
       items: Seq[RadioItem],
-      fieldset: Fieldset
+      fieldset: Fieldset,
+      errorMessageField: Field
     )(implicit messages: Messages): Radios =
       Radios(
         fieldset = Some(fieldset),
         name = field.name,
         idPrefix = Some(field.id),
         items = items map (item => item.copy(checked = field.value.isDefined && field.value == item.value)),
-        errorMessage = errorMessage(field)
+        errorMessage = errorMessage(errorMessageField)
       )
 
     def yesNo(
@@ -84,7 +86,8 @@ trait RadiosFluency {
       apply(
         field = field,
         fieldset = fieldset,
-        items = items
+        items = items,
+        errorMessageField = field
       ).inline()
     }
   }

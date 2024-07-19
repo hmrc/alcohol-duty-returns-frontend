@@ -73,7 +73,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DeleteMultipleSPREntryView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, regime, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, regime, index)(request, getMessages(application)).toString
       }
     }
 
@@ -167,7 +167,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, regime, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, regime, index)(request, getMessages(application)).toString
       }
     }
 

@@ -53,12 +53,12 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val expectedReturnSummaryList =
-          CheckYourAnswersSummaryListHelper.createSummaryList(regime, userAnswers)(messages(application)).get
+          CheckYourAnswersSummaryListHelper.createSummaryList(regime, userAnswers)(getMessages(application)).get
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(regime, expectedReturnSummaryList)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }

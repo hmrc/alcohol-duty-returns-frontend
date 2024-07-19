@@ -16,14 +16,16 @@
 
 package viewmodels.tasklist
 
+import TaskListStatus.{Completed, Incomplete}
+
 case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
 
-  def completedTask: Int = sections.count(_.completedTask)
-  def totalTask: Int     = sections.size
+  def completedTasks: Int = sections.count(_.completedTask)
+  def totalTasks: Int     = sections.size
 
-  def status: String = if (completedTask == totalTask) {
-    "completed"
+  def status: TaskListStatus = if (completedTasks == totalTasks) {
+    Completed
   } else {
-    "incomplete"
+    Incomplete
   }
 }
