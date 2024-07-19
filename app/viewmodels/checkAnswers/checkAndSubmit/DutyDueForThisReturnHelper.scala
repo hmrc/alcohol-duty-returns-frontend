@@ -21,6 +21,7 @@ import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object DutyDueForThisReturnHelper extends Logging {
@@ -30,8 +31,7 @@ object DutyDueForThisReturnHelper extends Logging {
   ): TableViewModel =
     TableViewModel(
       head = Seq(),
-      rows = createRows(userAnswers),
-      total = 0
+      rows = createRows(userAnswers)
     )
 
   private def createRows(userAnswers: UserAnswers)(implicit messages: Messages): Seq[TableRowViewModel] =
@@ -40,8 +40,11 @@ object DutyDueForThisReturnHelper extends Logging {
         Seq(
           TableRowViewModel(
             cells = Seq(
-              Text(messages("dutyDueForThisReturn.table.nil.label")),
-              Text(messages("dutyDueForThisReturn.table.nil.value"))
+              TableRow(
+                content = Text(messages("dutyDueForThisReturn.table.nil.label")),
+                classes = "govuk-body govuk-!-font-weight-bold"
+              ),
+              TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
             ),
             actions = Seq(
               TableRowActionViewModel(
@@ -55,8 +58,12 @@ object DutyDueForThisReturnHelper extends Logging {
         alcoholDuties.map { case (alcoholRegime, alcoholDuty) =>
           TableRowViewModel(
             cells = Seq(
-              Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
-              Text(messages("site.currency.2DP", alcoholDuty.totalDuty))
+              TableRow(
+                content =
+                  Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
+                classes = "govuk-!-font-weight-bold"
+              ),
+              TableRow(Text(messages("site.currency.2DP", alcoholDuty.totalDuty)))
             ),
             actions = Seq(
               TableRowActionViewModel(
@@ -66,9 +73,8 @@ object DutyDueForThisReturnHelper extends Logging {
             )
           )
         }.toSeq
-      case (None, None)                      =>
+      case (_, _)                            =>
         logger.warn("Failed to create duty due table view model")
         Seq.empty
-
     }
 }

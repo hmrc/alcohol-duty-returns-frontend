@@ -17,7 +17,6 @@
 package controllers.checkAndSubmit
 
 import controllers.actions._
-import models.AlcoholRegime.Beer
 import models.UserAnswers
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 
@@ -39,9 +38,10 @@ class DutyDueForThisReturnController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val table = DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers)
     calculationTotal(request.userAnswers) match {
-      case Some(totalValue) => Ok(view(table, totalValue))
+      case Some(totalValue) =>
+        val table = DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers)
+        Ok(view(table, totalValue))
       case None             => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

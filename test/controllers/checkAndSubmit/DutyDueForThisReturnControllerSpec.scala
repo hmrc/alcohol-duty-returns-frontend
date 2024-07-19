@@ -73,8 +73,9 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     .success
     .value
 
-  val totalValue = BigDecimal(10.23)
-  val nilValue   = 0.00
+  val totalValue = alcoholDuty.totalDuty + alcoholDuty.totalDuty
+
+  val nilValue = 0.00
 
   "DutyDueForThisReturn Controller" - {
 
@@ -91,10 +92,10 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DutyDueForThisReturnView]
 
         val table = DutyDueForThisReturnHelper
-          .dutyDueByRegime(filledUserAnswers)(messages(application))
+          .dutyDueByRegime(filledUserAnswers)(getMessages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(table, totalValue)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(table, totalValue)(request, getMessages(application)).toString
       }
     }
 
@@ -111,10 +112,10 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DutyDueForThisReturnView]
 
         val table = DutyDueForThisReturnHelper
-          .dutyDueByRegime(userAnswers)(messages(application))
+          .dutyDueByRegime(userAnswers)(getMessages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(table, nilValue)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(table, nilValue)(request, getMessages(application)).toString
       }
     }
 
