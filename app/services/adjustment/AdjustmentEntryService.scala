@@ -19,10 +19,11 @@ package services.adjustment
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
-import models.adjustment.AdjustmentEntry
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import models.adjustment.AdjustmentTypes.fromAdjustmentType
 import pages.adjustment.CurrentAdjustmentEntryPage
+import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,31 +31,41 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AdjustmentEntryServiceImpl @Inject() (
   alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
-) extends AdjustmentEntryService {
+)(implicit ec: ExecutionContext)
+    extends AdjustmentEntryService
+    with Logging {
 
   override def createAdjustment(
     userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry] = {
-
-    val adjustmentEntry   =
-      userAnswers
-        .get(CurrentAdjustmentEntryPage)
-        .getOrElse(throw new RuntimeException("Can't fetch adjustment entry from cache"))
-    val pureAlcoholVolume =
-      adjustmentEntry.pureAlcoholVolume.getOrElse(
-        throw new RuntimeException("Can't fetch pure alcohol volume from cache")
-      )
-    val rate              = adjustmentEntry.rate.getOrElse(throw getError(adjustmentEntry))
-    val adjustmentType    =
-      adjustmentEntry.adjustmentType.getOrElse(throw new RuntimeException("Couldn't fetch adjustmentType from cache"))
-
-    val taxDutyFuture           =
-      alcoholDutyCalculatorConnector
+  )(implicit hc: HeaderCarrier): Future[AdjustmentEntry] = {
+    val adjustmentEntry = for {
+      adjustmentEntry   <- userAnswers.get(CurrentAdjustmentEntryPage)
+      pureAlcoholVolume <- adjustmentEntry.pureAlcoholVolume
+      adjustmentType    <- adjustmentEntry.adjustmentType
+    } yield {
+      val rate          = adjustmentEntry.rate.getOrElse(throw getError(adjustmentEntry))
+      val taxDutyFuture = alcoholDutyCalculatorConnector
         .calculateAdjustmentDuty(pureAlcoholVolume, rate, fromAdjustmentType(adjustmentType))
         .map { taxDuty =>
           adjustmentEntry.copy(duty = Some(taxDuty.duty))
         }
-    val updatedAdjustmentFuture = adjustmentType match {
+      repackagedAdjustmentDutyCalculation(adjustmentEntry, pureAlcoholVolume, adjustmentType, taxDutyFuture)
+    }
+    adjustmentEntry match {
+      case Some(adjustmentEntry) => adjustmentEntry
+      case _                     =>
+        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        Future.failed(new Exception(s"Couldn't fetch correct AdjustmentEntry from user answers"))
+    }
+  }
+
+  private def repackagedAdjustmentDutyCalculation(
+    adjustmentEntry: AdjustmentEntry,
+    pureAlcoholVolume: BigDecimal,
+    adjustmentType: AdjustmentType,
+    taxDutyFuture: Future[AdjustmentEntry]
+  )(implicit hc: HeaderCarrier): Future[AdjustmentEntry] =
+    adjustmentType match {
       case RepackagedDraughtProducts =>
         val repackagedRate = adjustmentEntry.repackagedRate.getOrElse(throw getRepackagedError(adjustmentEntry))
         for {
@@ -68,7 +79,9 @@ class AdjustmentEntryServiceImpl @Inject() (
           newDuty           <-
             alcoholDutyCalculatorConnector.calculateRepackagedDutyChange(
               repackagedTaxDuty.duty,
-              updatedAdjustment.duty.getOrElse(throw new RuntimeException("Couldn't fetch adjustment duty from cache"))
+              updatedAdjustment.duty.getOrElse(
+                throw new RuntimeException("Couldn't fetch adjustment duty from cache")
+              )
             )
         } yield updatedAdjustment.copy(
           repackagedDuty = Some(repackagedTaxDuty.duty),
@@ -76,8 +89,6 @@ class AdjustmentEntryServiceImpl @Inject() (
         )
       case _                         => taxDutyFuture
     }
-    updatedAdjustmentFuture
-  }
 
   private def getError(adjustmentEntry: AdjustmentEntry): RuntimeException =
     (adjustmentEntry.rateBand.flatMap(_.rate), adjustmentEntry.sprDutyRate) match {
@@ -106,5 +117,5 @@ class AdjustmentEntryServiceImpl @Inject() (
 trait AdjustmentEntryService {
   def createAdjustment(
     userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AdjustmentEntry]
+  )(implicit hc: HeaderCarrier): Future[AdjustmentEntry]
 }

@@ -79,7 +79,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET" in {
 
       val adjustmentEntryService = mock[AdjustmentEntryService]
-      when(adjustmentEntryService.createAdjustment(any())(any(), any())) thenReturn Future.successful(adjustmentEntry)
+      when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
@@ -138,7 +138,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
       s"must redirect to Journey Recovery for a GET if adjustment entry does not contain $msg" in {
 
         val adjustmentEntryService = mock[AdjustmentEntryService]
-        when(adjustmentEntryService.createAdjustment(any())(any(), any())) thenReturn Future.successful(adjustmentEntry)
+        when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
 
         val application =
           applicationBuilder(userAnswers = Some(emptyUserAnswers))

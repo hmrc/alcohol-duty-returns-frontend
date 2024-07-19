@@ -236,35 +236,15 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           "Failed to get rate, neither tax rate nor spr duty rate are defined."
         )
       }
-
-      "if Adjustment Entry doesn't contain pure alcohol volume value" in {
-
-        val userAnswers = emptyUserAnswers
-          .set(
-            CurrentAdjustmentEntryPage,
-            adjustmentEntry.copy(pureAlcoholVolume = None)
-          )
-          .success
-          .value
-
-        val mockConnector = mock[AlcoholDutyCalculatorConnector]
-        when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
-          .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
-
-        val service = new AdjustmentEntryServiceImpl(mockConnector)
-
-        val exception = intercept[RuntimeException] {
-          service.createAdjustment(userAnswers).futureValue
-        }
-
-        exception.getLocalizedMessage must include(s"Can't fetch pure alcohol volume from cache")
-      }
     }
 
-    "if both TaxType and SmallProducerReliefDuty contain rate" in {
+    "if both TaxType and SmallProducerReliefDuty contain rate for RepackagedDraughtProducts" in {
       val updatedAdjustmentEntry = adjustmentEntry.copy(
-        rateBand = Some(rateBand),
-        sprDutyRate = Some(BigDecimal(2))
+        adjustmentType = Some(RepackagedDraughtProducts),
+        repackagedRateBand = Some(rateBand),
+        repackagedSprDutyRate = Some(BigDecimal(2)),
+        repackagedDuty = Some(BigDecimal(1)),
+        newDuty = Some(BigDecimal(2))
       )
       val userAnswerWithRate     = emptyUserAnswers
         .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
@@ -273,17 +253,22 @@ class AdjustmentEntryServiceSpec extends SpecBase {
       val mockConnector          = mock[AlcoholDutyCalculatorConnector]
       when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
         .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
+      when(mockConnector.calculateRepackagedDutyChange(any(), any())(any()))
+        .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(2))))
       val service                = new AdjustmentEntryServiceImpl(mockConnector)
       val exception              = intercept[RuntimeException] {
         service.createAdjustment(userAnswerWithRate).futureValue
       }
-      exception.getLocalizedMessage must include("Failed to get rate, both tax rate and spr duty rate are defined.")
+      exception.getLocalizedMessage must include(
+        "Failed to get rate, both tax rate and spr duty rate are defined for repackaged draught products."
+      )
     }
 
-    "if neither TaxType or SmallProducerReliefDutyRate contain rate" in {
+    "if neither TaxType or SmallProducerReliefDutyRate contain rate for RepackagedDraughtProducts" in {
       val updatedAdjustmentEntry = adjustmentEntry.copy(
-        rateBand = Some(rateBand.copy(rate = None)),
-        sprDutyRate = None
+        adjustmentType = Some(RepackagedDraughtProducts),
+        repackagedRateBand = Some(rateBand.copy(rate = None)),
+        repackagedSprDutyRate = None
       )
       val userAnswerWithRate     = emptyUserAnswers
         .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
@@ -297,7 +282,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         service.createAdjustment(userAnswerWithRate).futureValue
       }
       exception.getLocalizedMessage must include(
-        "Failed to get rate, neither tax rate nor spr duty rate are defined."
+        "Failed to get rate, neither tax rate nor spr duty rate are defined for repackaged draught products."
       )
     }
   }

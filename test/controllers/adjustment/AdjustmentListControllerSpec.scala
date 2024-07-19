@@ -21,7 +21,7 @@ import cats.data.NonEmptySeq
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -111,7 +111,8 @@ class AdjustmentListControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val updatedUserAnswers                 = userAnswsers.set(AdjustmentListPage, true).success.value
+      val updatedUserAnswers                 =
+        userAnswsers.set(AdjustmentListPage, true).success.value.set(AdjustmentTotalPage, total).success.value
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
         AdjustmentDuty(total)
