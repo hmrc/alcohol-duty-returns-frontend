@@ -86,12 +86,17 @@ class AdjustmentListControllerSpec extends SpecBase {
   "AdjustmentList Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      val mockCacheConnector                 = mock[CacheConnector]
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
         AdjustmentDuty(total)
       )
       val application                        = applicationBuilder(userAnswers = Some(userAnswsers))
-        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
         .build()
 
       running(application) {
@@ -110,7 +115,8 @@ class AdjustmentListControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
+      val mockCacheConnector                 = mock[CacheConnector]
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       val updatedUserAnswers                 =
         userAnswsers.set(AdjustmentListPage, true).success.value.set(AdjustmentTotalPage, total).success.value
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
@@ -118,7 +124,10 @@ class AdjustmentListControllerSpec extends SpecBase {
         AdjustmentDuty(total)
       )
       val application                        = applicationBuilder(userAnswers = Some(updatedUserAnswers))
-        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
         .build()
 
       running(application) {
