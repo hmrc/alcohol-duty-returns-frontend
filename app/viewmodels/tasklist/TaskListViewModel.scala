@@ -30,6 +30,7 @@ class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator)
     AlcoholDutyTaskList(
       Seq(
         Some(returnTaskListCreator.returnSection(userAnswers)),
+        Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
         Some(returnTaskListCreator.returnDSDSection(userAnswers)),
         if (shouldIncludeQSSection(periodKey)) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
       ).flatten,

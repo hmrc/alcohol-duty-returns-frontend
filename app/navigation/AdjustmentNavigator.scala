@@ -46,6 +46,11 @@ class AdjustmentNavigator @Inject() () {
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
+    case pages.adjustment.DeclareAdjustmentQuestionPage             =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(CheckMode)
+          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentTypePage                        =>
       _ =>
         hasChanged =>
