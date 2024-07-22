@@ -157,7 +157,9 @@ class AdjustmentVolumeController @Inject() (
             )
           )
         )
-      case _                                                                                         => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case _                                                                                         =>
+        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
   def updateVolume(adjustmentEntry: AdjustmentEntry, currentValue: AdjustmentVolume): (AdjustmentEntry, Boolean) =

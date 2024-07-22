@@ -53,7 +53,10 @@ class CheckYourAnswersController @Inject() (
         summaryList     <- CheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
       } yield setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList)
 
-      result.getOrElse(Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
+      result.getOrElse {
+        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      }
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
@@ -111,7 +114,9 @@ class CheckYourAnswersController @Inject() (
             adjustmentType
           )
         )
-      case None                 => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case None                 =>
+        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
   }
 

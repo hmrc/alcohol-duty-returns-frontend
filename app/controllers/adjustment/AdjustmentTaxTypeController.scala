@@ -114,6 +114,7 @@ class AdjustmentTaxTypeController @Inject() (
                   case _                                    => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
                 }
               case None                         =>
+                logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
                 Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             }
         )
@@ -138,7 +139,9 @@ class AdjustmentTaxTypeController @Inject() (
             )
           )
         )
-      case _                                                                            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case _                                                                            =>
+        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
   private def rateBandResponseError(mode: Mode, value: Int, adjustmentType: AdjustmentType, errorMessage: String)(

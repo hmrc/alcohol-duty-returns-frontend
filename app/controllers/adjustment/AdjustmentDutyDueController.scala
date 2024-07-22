@@ -20,6 +20,7 @@ import connectors.CacheConnector
 import controllers.actions._
 import models.adjustment.AdjustmentEntry
 import pages.adjustment.CurrentAdjustmentEntryPage
+import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -41,7 +42,8 @@ class AdjustmentDutyDueController @Inject() (
   view: AdjustmentDutyDueView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     for {
@@ -56,7 +58,7 @@ class AdjustmentDutyDueController @Inject() (
     val result = for {
       volume            <- adjustmentEntry.totalLitresVolume
       pureAlcoholVolume <- adjustmentEntry.pureAlcoholVolume
-      taxCode           <- adjustmentEntry.rateBand.map(_.taxTypeCode)
+      rateBand          <- adjustmentEntry.rateBand
       duty              <- adjustmentEntry.duty
       rate              <- adjustmentEntry.rate
       adjustmentType    <- adjustmentEntry.adjustmentType
@@ -64,10 +66,22 @@ class AdjustmentDutyDueController @Inject() (
       repackagedDuty     = adjustmentEntry.repackagedDuty.getOrElse(BigDecimal(0))
       newDuty            = adjustmentEntry.newDuty.getOrElse(BigDecimal(0))
     } yield Ok(
-      view(adjustmentType, volume, duty, pureAlcoholVolume, taxCode, rate, repackagedRate, repackagedDuty, newDuty)
+      view(
+        adjustmentType,
+        volume,
+        duty,
+        pureAlcoholVolume,
+        rateBand.taxTypeCode,
+        rate,
+        repackagedRate,
+        repackagedDuty,
+        newDuty
+      )
     )
-
-    result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+    result.getOrElse {
+      logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 
 }
