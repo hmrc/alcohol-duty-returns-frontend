@@ -101,7 +101,7 @@ object MultipleSPRListHelper {
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
-            href = controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, index),
+            href = controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(index)),
             visuallyHiddenText = Some(messages("productList.remove.hidden"))
           )
         )
