@@ -100,11 +100,13 @@ class AdjustmentVolumeWithSPRController @Inject() (
               )
             )
           case _                                                                                         =>
-            logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+            logger.warn(
+              "Couldn't fetch the adjustmentType, rateBand, totalLitres, pureAlcohol and sprDutyRate in AdjustmentEntry from user answers"
+            )
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
       case _            =>
-        logger.warn("Couldn't fetch regime value from user answers")
+        logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
 
@@ -138,7 +140,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
               }
             )
         case _            =>
-          logger.warn("Couldn't fetch regime value from user answers")
+          logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
   }
@@ -160,7 +162,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
           )
         )
       case _                                                                                         =>
-        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 

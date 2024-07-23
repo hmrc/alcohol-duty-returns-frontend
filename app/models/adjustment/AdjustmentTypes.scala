@@ -24,7 +24,6 @@ object AdjustmentTypes extends Enum[AdjustmentTypes] with PlayEnum[AdjustmentTyp
 
   val values = findValues
 
-  case object AlcoholToDeclare extends AdjustmentTypes
   case object Underdeclaration extends AdjustmentTypes
 
   case object Overdeclaration extends AdjustmentTypes

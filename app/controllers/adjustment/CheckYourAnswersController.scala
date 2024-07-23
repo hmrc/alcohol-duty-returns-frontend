@@ -54,7 +54,7 @@ class CheckYourAnswersController @Inject() (
       } yield setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList)
 
       result.getOrElse {
-        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        logger.warn("Couldn't create the summaryList from user answers")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
   }
@@ -73,7 +73,7 @@ class CheckYourAnswersController @Inject() (
         logger.warn("Adjustment Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case _                                                   =>
-        logger.warn("Can't fetch adjustment entry from cache")
+        logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
   }
@@ -115,7 +115,7 @@ class CheckYourAnswersController @Inject() (
           )
         )
       case None                 =>
-        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
   }
