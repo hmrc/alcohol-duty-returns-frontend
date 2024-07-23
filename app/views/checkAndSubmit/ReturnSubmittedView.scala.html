@@ -1,0 +1,25 @@
+@import components.{SectionHeading, PageHeading}
+
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        sectionHeading: SectionHeading,
+        pageHeading: PageHeading
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("returnSubmitted.title"))) {
+
+    @sectionHeading(
+        id = "returnSubmitted-section",
+        text = messages("section.checkAndSubmit"),
+    )
+
+    @pageHeading(messages("returnSubmitted.heading"))
+
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.continue"))
+    )
+
+}

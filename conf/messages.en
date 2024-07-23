@@ -1167,3 +1167,6 @@ adjustmentDutyDue.duty.checkYourAnswersLabel = Duty due
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 
 # End of adjustments sub-journey
+
+returnSubmitted.title = returnSubmitted
+returnSubmitted.heading = returnSubmitted
