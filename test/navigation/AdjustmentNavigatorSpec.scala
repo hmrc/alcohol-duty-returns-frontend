@@ -24,7 +24,7 @@ import pages._
 import models._
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
-import pages.adjustment.AdjustmentListPage
+import pages.adjustment.{AdjustmentListPage, DeclareAdjustmentQuestionPage}
 
 class AdjustmentNavigatorSpec extends SpecBase {
 
@@ -64,6 +64,24 @@ class AdjustmentNavigatorSpec extends SpecBase {
           NormalMode,
           emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value
         ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Adjustment to declare to Adjustment Type page if the answer is Yes" in {
+
+        navigator.nextPage(
+          DeclareAdjustmentQuestionPage,
+          NormalMode,
+          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value
+        ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Alcohol to declare to task list page if the answer is No" in {
+
+        navigator.nextPage(
+          DeclareAdjustmentQuestionPage,
+          NormalMode,
+          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, false).success.value
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from Adjustment Type Page to WhenDidYouPayDutyController" in {
@@ -250,6 +268,26 @@ class AdjustmentNavigatorSpec extends SpecBase {
     }
 
     "in Check mode" - {
+
+      "must go from the Adjustment to declare to Adjustment Type page if the answer is Yes" in {
+
+        navigator.nextPage(
+          DeclareAdjustmentQuestionPage,
+          CheckMode,
+          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value,
+          true
+        ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Alcohol to declare to task list page if the answer is No" in {
+
+        navigator.nextPage(
+          DeclareAdjustmentQuestionPage,
+          NormalMode,
+          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, false).success.value,
+          true
+        ) mustBe routes.TaskListController.onPageLoad
+      }
 
       "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
         case object UnknownPage extends Page
