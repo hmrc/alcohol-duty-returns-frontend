@@ -19,6 +19,7 @@ package viewmodels.tasklist
 import base.SpecBase
 import TaskListStatus.{Completed, Incomplete}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import pages.adjustment.DeclareAdjustmentQuestionPage
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
 import pages.returns.DeclareAlcoholDutyQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
@@ -40,6 +41,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
       val expectedSections = Seq(
         returnTaskListCreator.returnSection(emptyUserAnswers),
+        returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
         returnTaskListCreator.returnDSDSection(emptyUserAnswers),
         returnTaskListCreator.returnQSSection(emptyUserAnswers)
       )
@@ -64,6 +66,9 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
         .value
+        .set(DeclareAdjustmentQuestionPage, false)
+        .success
+        .value
         .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
         .success
         .value
@@ -74,6 +79,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       val expectedSections =
         Seq(
           returnTaskListCreator.returnSection(userAnswers),
+          returnTaskListCreator.returnAdjustmentSection(userAnswers),
           returnTaskListCreator.returnDSDSection(userAnswers),
           returnTaskListCreator.returnQSSection(userAnswers)
         )
@@ -89,18 +95,20 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
       result.status mustBe Completed
       result.totalTasks mustBe expectedSections.size
-      result.completedTasks mustBe 3
+      result.completedTasks mustBe 4
     }
 
     "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in {
       val expectedSectionsWithQS = Seq(
         returnTaskListCreator.returnSection(emptyUserAnswers),
+        returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
         returnTaskListCreator.returnDSDSection(emptyUserAnswers),
         returnTaskListCreator.returnQSSection(emptyUserAnswers)
       )
 
       val expectedSectionsWithoutQS = Seq(
         returnTaskListCreator.returnSection(emptyUserAnswers),
+        returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
         returnTaskListCreator.returnDSDSection(emptyUserAnswers)
       )
 
