@@ -19,6 +19,7 @@ package controllers.checkAndSubmit
 import controllers.actions._
 import models.UserAnswers
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
+import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -35,22 +36,30 @@ class DutyDueForThisReturnController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: DutyDueForThisReturnView
 ) extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    calculationTotal(request.userAnswers) match {
-      case Some(totalValue) =>
-        val table = DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers)
-        Ok(view(table, totalValue))
-      case None             => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-    }
+    val result = for {
+      totalValue <- calculationTotal(request.userAnswers)
+      table      <- DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers)
+    } yield Ok(view(table, totalValue))
+
+    result.fold(
+      error => {
+        logger.error(error)
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      },
+      identity
+    )
   }
 
-  private def calculationTotal(userAnswers: UserAnswers): Option[BigDecimal] =
+  // TODO: this method will be substituted by a call to the calculator in the next iteration
+  private def calculationTotal(userAnswers: UserAnswers): Either[String, BigDecimal] =
     (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
-      case (Some(false), _)                  => Some(0.00)
-      case (Some(true), Some(alcoholDuties)) => Some(alcoholDuties.map(_._2.totalDuty).sum)
-      case (_, _)                            => None
+      case (Some(false), _)                  => Right(0.00)
+      case (Some(true), Some(alcoholDuties)) => Right(alcoholDuties.map(_._2.totalDuty).sum)
+      case (_, _)                            => Left("No duty calculation found")
 
     }
 }

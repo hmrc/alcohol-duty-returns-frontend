@@ -16,54 +16,61 @@
 
 package viewmodels.checkAnswers.checkAndSubmit
 
+import config.Constants
 import models.{NormalMode, UserAnswers}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
-import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
+import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object DutyDueForThisReturnHelper extends Logging {
 
   def dutyDueByRegime(userAnswers: UserAnswers)(implicit
     messages: Messages
-  ): TableViewModel =
-    TableViewModel(
-      head = Seq(),
-      rows = createRows(userAnswers)
-    )
+  ): Either[String, TableViewModel] =
+    createRows(userAnswers).map { rows =>
+      TableViewModel(
+        head = Seq(),
+        rows = rows
+      )
+    }
 
-  private def createRows(userAnswers: UserAnswers)(implicit messages: Messages): Seq[TableRowViewModel] =
+  private def createRows(
+    userAnswers: UserAnswers
+  )(implicit messages: Messages): Either[String, Seq[TableRowViewModel]] =
     (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
       case (Some(false), _)                  =>
-        Seq(
-          TableRowViewModel(
-            cells = Seq(
-              TableRow(
-                content = Text(messages("dutyDueForThisReturn.table.nil.label")),
-                classes = "govuk-body govuk-!-font-weight-bold"
+        Right(
+          Seq(
+            TableRowViewModel(
+              cells = Seq(
+                TableRow(
+                  content = Text(messages("dutyDueForThisReturn.table.nil.label")),
+                  classes = Constants.boldFontCssClass
+                ),
+                TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
               ),
-              TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
-            ),
-            actions = Seq(
-              TableRowActionViewModel(
-                label = "Change",
-                href = controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
+              actions = Seq(
+                TableRowActionViewModel(
+                  label = "Change",
+                  href = controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
+                )
               )
             )
           )
         )
       case (Some(true), Some(alcoholDuties)) =>
-        alcoholDuties.map { case (alcoholRegime, alcoholDuty) =>
+        Right(alcoholDuties.map { case (alcoholRegime, alcoholDuty) =>
           TableRowViewModel(
             cells = Seq(
               TableRow(
                 content =
                   Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
-                classes = "govuk-!-font-weight-bold"
+                classes = Constants.boldFontCssClass
               ),
-              TableRow(Text(messages("site.currency.2DP", alcoholDuty.totalDuty)))
+              TableRow(Text(Money.format(alcoholDuty.totalDuty)))
             ),
             actions = Seq(
               TableRowActionViewModel(
@@ -72,9 +79,8 @@ object DutyDueForThisReturnHelper extends Logging {
               )
             )
           )
-        }.toSeq
+        }.toSeq)
       case (_, _)                            =>
-        logger.warn("Failed to create duty due table view model")
-        Seq.empty
+        Left("Failed to create duty due table view model")
     }
 }

@@ -25,6 +25,7 @@ import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
+import viewmodels.TableViewModel
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
@@ -91,8 +92,9 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DutyDueForThisReturnView]
 
-        val table = DutyDueForThisReturnHelper
+        val table: TableViewModel = DutyDueForThisReturnHelper
           .dutyDueByRegime(filledUserAnswers)(getMessages(application))
+          .getOrElse(fail())
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(table, totalValue)(request, getMessages(application)).toString
@@ -113,6 +115,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val table = DutyDueForThisReturnHelper
           .dutyDueByRegime(userAnswers)(getMessages(application))
+          .getOrElse(fail())
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(table, nilValue)(request, getMessages(application)).toString
