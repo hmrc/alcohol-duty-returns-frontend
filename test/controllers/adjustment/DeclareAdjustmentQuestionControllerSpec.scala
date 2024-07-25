@@ -102,6 +102,32 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
       }
     }
 
+    "must redirect to the Task list  when valid question is answered as No" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, declareAdjustmentQuestionRoute)
+            .withFormUrlEncodedBody(("declare-adjustment-question-value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()

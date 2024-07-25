@@ -269,7 +269,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
 
     "in Check mode" - {
 
-      "must go from the Adjustment to declare to Adjustment Type page if the answer is Yes" in {
+      "must go from the Adjustment to declare to Adjustment Type page if the answer has changed" in {
 
         navigator.nextPage(
           DeclareAdjustmentQuestionPage,
@@ -279,14 +279,14 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
       }
 
-      "must go from the Alcohol to declare to task list page if the answer is No" in {
+      "must go from the Alcohol to declare to CYA page if the answer is the same" in {
 
         navigator.nextPage(
           DeclareAdjustmentQuestionPage,
-          NormalMode,
-          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, false).success.value,
-          true
-        ) mustBe routes.TaskListController.onPageLoad
+          CheckMode,
+          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value,
+          false
+        ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
       }
 
       "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
