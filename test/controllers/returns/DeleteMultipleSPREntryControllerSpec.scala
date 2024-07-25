@@ -57,7 +57,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
   val form         = formProvider()
 
   lazy val deleteMultipleSPREntryRoute =
-    controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, index).url
+    controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(index)).url
 
   "DeleteMultipleSPREntry Controller" - {
 
@@ -174,6 +174,23 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, deleteMultipleSPREntryRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no index is provided" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      val deleteMultipleSPREntryRoute =
+        controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, None).url
 
       running(application) {
         val request = FakeRequest(GET, deleteMultipleSPREntryRoute)

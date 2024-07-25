@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import connectors.CacheConnector
 import org.scalacheck.Arbitrary._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
+import viewmodels.returns.CategoriesByRateTypeHelper
 import views.html.returns.HowMuchDoYouNeedToDeclareView
 
 import scala.concurrent.Future

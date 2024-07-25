@@ -35,5 +35,6 @@ object Constants {
 
   val headingMCssClass = "govuk-heading-m"
 
-  val tableCaptionMCssClass = "govuk-table__caption--m"
+  val tableCaptionMCssClass    = "govuk-table__caption--m"
+  val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"
 }

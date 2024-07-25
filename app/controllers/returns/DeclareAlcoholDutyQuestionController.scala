@@ -22,7 +22,7 @@ import forms.returns.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegime, Mode, UserAnswers}
 import navigation.ReturnsNavigator
-import pages.returns.{DeclareAlcoholDutyQuestionPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{DeclareAlcoholDutyQuestionPage, sectionPages}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -80,11 +80,6 @@ class DeclareAlcoholDutyQuestionController @Inject() (
     if (value) {
       Try(userAnswer)
     } else {
-      userAnswer.remove(
-        List(
-          WhatDoYouNeedToDeclarePage,
-          HowMuchDoYouNeedToDeclarePage
-        )
-      )
+      userAnswer.remove(sectionPages.toList)
     }
 }
