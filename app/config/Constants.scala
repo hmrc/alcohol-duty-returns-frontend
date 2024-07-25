@@ -28,6 +28,7 @@ object Constants {
   val oneHalfCssClass        = "govuk-!-width-one-half"
   val threeQuartersCssClass  = "govuk-!-width-three-quarters"
   val textAlignRightCssClass = "text-align-right"
+  val boldFontCssClass       = "govuk-!-font-weight-bold"
 
   val blueTagCssClass  = "govuk-tag--blue"
   val greenTagCssClass = "govuk-tag--green"

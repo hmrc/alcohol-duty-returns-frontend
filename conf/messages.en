@@ -8,6 +8,7 @@ site.yes = Yes
 site.dot = .
 site.continue = Continue
 site.saveAndContinue = Save and continue
+site.agreeAndSubmit = Agree and send return
 site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
@@ -85,6 +86,11 @@ noAppaId.link.text = Read guidance on getting approval to produce alcoholic prod
 
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty return
+section.return.Beer = Declare beer
+section.return.Cider = Declare cider
+section.return.Wine = Declare wine
+section.return.Spirits = Declare spirits
+section.return.OtherFermentedProduct = Declare other fermented products
 section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits return
 section.adjustment = Adjust a previous return
 section.adjustment.default = Alcohol Duty adjustment
@@ -94,12 +100,7 @@ section.adjustment.spoilt = Adjust for spoilt alcohol
 section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
 section.dutySuspended = Duty suspended alcohol
-
-section.return.Beer = Declare beer
-section.return.Cider = Declare cider
-section.return.Wine = Declare wine
-section.return.Spirits = Declare spirits
-section.return.OtherFermentedProduct = Declare other fermented products
+section.checkAndSubmit = Submit your return
 
 viewPastReturns.heading = Your Alcohol Duty returns
 viewPastReturns.title = Your Alcohol Duty returns
@@ -1270,3 +1271,31 @@ deleteAdjustment.error.required = Select yes to remove this adjustment
 
 
 # End of adjustments sub-journey
+
+
+
+# Beginning of Check and submit sub-journey
+
+dutyDueForThisReturn.title = The duty due for this return is {0}
+dutyDueForThisReturn.nil.title = No Duty due
+dutyDueForThisReturn.heading = The duty due for this return is {0}
+dutyDueForThisReturn.nil.heading = No duty due (nil return)
+dutyDueForThisReturn.positive.p1 = You will be liable for this amount once you submit your return.
+dutyDueForThisReturn.negative.p1 = Your return has a negative value. You will be able to claim this back. If you do not claim it back we will automatically deduct it from your next return.
+dutyDueForThisReturn.nil.p1 = Your return has a nil value and no duty is due.
+dutyDueForThisReturn.h2 = How we worked this out
+dutyDueForThisReturn.bulletList.1 = We calculated the total duty due on the alcoholic products you declared
+dutyDueForThisReturn.bulletList.2 = We calculated the total duty applicable on all the adjustments you declared in this return
+dutyDueForThisReturn.bulletList.3 = You told us you do not have any duty applicable alcoholic products or adjustments to declare
+dutyDueForThisReturn.p2 = Check the values of declared alcohol and adjustments are correct before continuing.
+dutyDueForThisReturn.h3 = Final duty summary
+dutyDueForThisReturn.table.dutyDue = Declared {0} duty
+dutyDueForThisReturn.table.action = Action
+dutyDueForThisReturn.table.nil.label = Declared duty
+dutyDueForThisReturn.table.nil.value = Nil
+dutyDueForThisReturn.h4 = Declaration
+dutyDueForThisReturn.p3 = By submitting this return, I agree that the information I have given is complete and correct.
+
+
+# End of Check and submit sub-journey
+
