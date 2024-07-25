@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package viewmodels.returns
+package pages
 
-import models.{AlcoholRegime, UserAnswers}
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import models.AlcoholRegime
 
-object CheckYourAnswersSPRSummaryListHelper {
+package object returns {
 
-  def summaryList(regime: AlcoholRegime, userAnswers: UserAnswers, index: Option[Int])(implicit
-    messages: Messages
-  ): Option[SummaryList] = {
-    val rows = TellUsAboutMultipleSPRRateSummary.rows(regime, userAnswers, index)
-    if (rows.isEmpty) None else Some(SummaryList(rows = rows))
-  }
+  def nextPages(currentPage: QuestionPage[_]): Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]] =
+    sectionPages.dropWhile(_ != currentPage).tail
+
+  val sectionPages: Seq[QuestionPage[Map[AlcoholRegime, _]]] = Seq(
+    WhatDoYouNeedToDeclarePage,
+    HowMuchDoYouNeedToDeclarePage,
+    DoYouHaveMultipleSPRDutyRatesPage,
+    TellUsAboutSingleSPRRatePage,
+    TellUsAboutMultipleSPRRatePage,
+    MultipleSPRListPage,
+    DutyCalculationPage
+  ).map(_.asInstanceOf[QuestionPage[Map[AlcoholRegime, _]]])
 
 }

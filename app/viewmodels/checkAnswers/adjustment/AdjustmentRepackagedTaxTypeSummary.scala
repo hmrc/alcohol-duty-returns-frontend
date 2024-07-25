@@ -21,7 +21,7 @@ import models.adjustment.AdjustmentEntry
 import models.CheckMode
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
+import viewmodels.returns.RateBandHelper.rateBandRecap
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

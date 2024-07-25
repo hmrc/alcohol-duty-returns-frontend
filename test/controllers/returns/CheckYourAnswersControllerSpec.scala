@@ -21,7 +21,7 @@ import models.AlcoholRegime
 import org.scalacheck.Arbitrary._
 import pages.returns.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.test.Helpers._
-import viewmodels.checkAnswers.returns.CheckYourAnswersSummaryListHelper
+import viewmodels.returns.CheckYourAnswersSummaryListHelper
 import views.html.returns.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends SpecBase {

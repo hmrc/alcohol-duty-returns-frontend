@@ -23,7 +23,7 @@ import pages.adjustment.AdjustmentEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
+import viewmodels.returns.RateBandHelper.rateBandRecap
 import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableTotalViewModel, TableViewModel}
 
 object AdjustmentListSummaryHelper {

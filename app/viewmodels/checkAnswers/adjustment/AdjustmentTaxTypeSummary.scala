@@ -24,7 +24,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
+import viewmodels.returns.RateBandHelper.rateBandRecap
 
 object AdjustmentTaxTypeSummary {
 

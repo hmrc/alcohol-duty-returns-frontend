@@ -22,7 +22,7 @@ import controllers.routes
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
-import pages.returns.{DeclareAlcoholDutyQuestionPage, DeleteMultipleSPREntryPage, DoYouHaveMultipleSPRDutyRatesPage, DoYouWantToAddMultipleSPRToListPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.returns._
 
 @Singleton
 class ReturnsNavigator @Inject() () {
@@ -127,6 +127,34 @@ class ReturnsNavigator @Inject() () {
   }
 
   private val checkRouteMapReturnJourney: Page => UserAnswers => AlcoholRegime => Boolean => Option[Int] => Call = {
+    case WhatDoYouNeedToDeclarePage =>
+      ua =>
+        regime =>
+          hasChanged =>
+            index =>
+              if (hasChanged) {
+                normalRoutesReturnJourney(WhatDoYouNeedToDeclarePage)(ua)(regime)(hasChanged)(index)
+              } else {
+                controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+              }
+
+    case HowMuchDoYouNeedToDeclarePage =>
+      _ => regime => _ => _ => controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+
+    case DoYouHaveMultipleSPRDutyRatesPage =>
+      ua =>
+        regime =>
+          hasChanged =>
+            index =>
+              if (hasChanged) {
+                normalRoutesReturnJourney(DoYouHaveMultipleSPRDutyRatesPage)(ua)(regime)(hasChanged)(index)
+              } else {
+                controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+              }
+
+    case TellUsAboutSingleSPRRatePage =>
+      _ => regime => _ => _ => controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+
     case TellUsAboutMultipleSPRRatePage =>
       _ =>
         regime =>
