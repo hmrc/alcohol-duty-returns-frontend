@@ -29,7 +29,7 @@ import connectors.CacheConnector
 import models.returns.{VolumeAndRateByTaxType, VolumesByTaxType}
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
+import viewmodels.returns.CategoriesByRateTypeHelper
 import views.html.returns.HowMuchDoYouNeedToDeclareView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,7 +48,10 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
+    with ReturnController[Seq[VolumeAndRateByTaxType], HowMuchDoYouNeedToDeclarePage.type]
     with Logging {
+
+  val currentPage = HowMuchDoYouNeedToDeclarePage
 
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
@@ -80,12 +83,21 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
                 Future.successful(BadRequest(view(formWithErrors, regime, howMuchDoYouNeedToDeclareHelper, mode))),
               value =>
                 for {
-                  dutyByTaxTypes <- Future.fromTry(rateBandFromTaxType(value, rateBands))
-                  updatedAnswers <-
-                    Future.fromTry(request.userAnswers.setByKey(HowMuchDoYouNeedToDeclarePage, regime, dutyByTaxTypes))
-                  _              <- cacheConnector.set(updatedAnswers)
+                  volumesAndRateByTaxTypes <- Future.fromTry(rateBandFromTaxType(value, rateBands))
+                  updatedAnswers           <-
+                    Future.fromTry(
+                      request.userAnswers.setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumesAndRateByTaxTypes)
+                    )
+                  hasChanged                = hasValueChanged(volumesAndRateByTaxTypes, regime)
+                  _                        <- cacheConnector.set(updatedAnswers)
                 } yield Redirect(
-                  navigator.nextPageWithRegime(HowMuchDoYouNeedToDeclarePage, mode, updatedAnswers, regime)
+                  navigator.nextPageWithRegime(
+                    HowMuchDoYouNeedToDeclarePage,
+                    mode,
+                    updatedAnswers,
+                    regime,
+                    hasChanged
+                  )
                 )
             )
       }

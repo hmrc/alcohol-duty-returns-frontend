@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import models.{RateBand, RateType}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
+import RateBandHelper.rateBandContent
 import viewmodels.govuk.all.CheckboxGroupedItemViewModel
 
 case class TaxBandsViewModel(

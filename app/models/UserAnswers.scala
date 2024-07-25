@@ -187,6 +187,11 @@ final case class UserAnswers(
     cleanupPage(page, updatedData)
   }
 
+  def removePagesByKey[A, B](pages: Seq[_ <: Settable[Map[A, B]]], key: A): Try[UserAnswers] =
+    pages.foldLeft(Try(this)) { (oldAnswerList, page) =>
+      oldAnswerList.flatMap(_.removeByKey(page, key))
+    }
+
   def removeByKeyAndIndex[A, B](page: Settable[B], key: A, index: Int): Try[UserAnswers] = {
     val path        = page.path \ key.toString \ index
     val updatedData = remove(path)
