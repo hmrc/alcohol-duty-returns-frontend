@@ -22,18 +22,14 @@ import viewmodels.govuk.all.FluentInstant
 
 import java.time.Instant
 import javax.inject.Inject
+import scala.+:
 
 class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator) {
   def getTaskList(userAnswers: UserAnswers, validUntil: Instant, periodKey: String)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
-      Seq(
-        Some(returnTaskListCreator.returnSection(userAnswers)),
-        Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
-        Some(returnTaskListCreator.returnDSDSection(userAnswers)),
-        if (shouldIncludeQSSection(periodKey)) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
-      ).flatten,
+      sections(userAnswers, periodKey),
       validUntil.toLocalDateString()
     )
 
@@ -41,4 +37,23 @@ class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator)
     case 'C' | 'F' | 'I' | 'L' => true
     case _                     => false
   }
+
+  private def sections(userAnswers: UserAnswers, periodKey: String)(implicit
+    messages: Messages
+  ): Seq[Section] = {
+    val sections = Seq(
+      Some(returnTaskListCreator.returnSection(userAnswers)),
+      Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
+      Some(returnTaskListCreator.returnDSDSection(userAnswers)),
+      if (shouldIncludeQSSection(periodKey)) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
+    ).flatten
+
+    def completedTasks: Int = sections.count(_.completedTask)
+    def totalTasks: Int     = sections.size
+
+    val checkAndSubmitSection = returnTaskListCreator.returnCheckAndSubmitSection(completedTasks, totalTasks)
+    sections :+ checkAndSubmitSection
+  }
+
 }
+///Some(returnTaskListCreator.returnCheckAndSubmitSection(userAnswers))
