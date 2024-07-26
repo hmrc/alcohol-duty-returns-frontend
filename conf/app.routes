@@ -280,3 +280,8 @@ POST       /change-how-much-is-the-adjustment                        controllers
 
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
+
+# Beginning of check and submit sub-journey
+GET        /return-summary                      controllers.checkAndSubmit.DutyDueForThisReturnController.onPageLoad()
+
+# End of check and submit sub-journey
