@@ -141,7 +141,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       )
     }
 
-    "when the user answers yes to DeclareAdjustment question, must return a complete section and the regime tasks" - {
+    "when the user answers yes to DeclareAdjustment question, must return a complete section and the other task" - {
       val declaredAdjustmentUserAnswer = emptyUserAnswers
         .set(DeclareAdjustmentQuestionPage, true)
         .success
@@ -710,6 +710,37 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
         }
       }
+    }
+  }
+
+  "on calling checkAndSubmitSection" - {
+
+    "when the other sections are incomplete, must return the cannot start section" in {
+      val result = returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
+
+      result.completedTask                     shouldBe false
+      result.taskList.items.size               shouldBe 1
+      result.title                             shouldBe messages("taskList.section.checkAndSubmit.heading")
+      result.taskList.items.head.title.content shouldBe Text(
+        messages("taskList.section.checkAndSubmit.needToDeclare")
+      )
+      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.cannotStart
+      result.taskList.items.head.href          shouldBe None
+    }
+
+    "when the other sections are complete, must return the not started section" in {
+      val result = returnTaskListCreator.returnCheckAndSubmitSection(4, 4)
+
+      result.completedTask                     shouldBe false
+      result.taskList.items.size               shouldBe 1
+      result.title                             shouldBe messages("taskList.section.checkAndSubmit.heading")
+      result.taskList.items.head.title.content shouldBe Text(
+        messages("taskList.section.checkAndSubmit.needToDeclare")
+      )
+      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+      result.taskList.items.head.href          shouldBe Some(
+        controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onPageLoad().url
+      )
     }
   }
 }

@@ -242,7 +242,7 @@ class ReturnTaskListCreator @Inject() () {
                 .url
             )
           ),
-          AlcholDutyTaskListItemStatus.notStarted
+          AlcholDutyTaskListItemStatus.completed
         )
       } else {
         (
@@ -252,7 +252,7 @@ class ReturnTaskListCreator @Inject() () {
             href = None,
             hint = Some(Hint(content = Text(messages("taskList.section.checkAndSubmit.hint"))))
           ),
-          AlcholDutyTaskListItemStatus.cannotStart
+          AlcholDutyTaskListItemStatus.completed
         )
       }
     Section(

@@ -22,7 +22,6 @@ import viewmodels.govuk.all.FluentInstant
 
 import java.time.Instant
 import javax.inject.Inject
-import scala.+:
 
 class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator) {
   def getTaskList(userAnswers: UserAnswers, validUntil: Instant, periodKey: String)(implicit
@@ -52,8 +51,8 @@ class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator)
     def totalTasks: Int     = sections.size
 
     val checkAndSubmitSection = returnTaskListCreator.returnCheckAndSubmitSection(completedTasks, totalTasks)
+
     sections :+ checkAndSubmitSection
   }
 
 }
-///Some(returnTaskListCreator.returnCheckAndSubmitSection(userAnswers))
