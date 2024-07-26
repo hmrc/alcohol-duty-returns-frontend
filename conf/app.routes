@@ -281,4 +281,4 @@ POST       /change-how-much-is-the-adjustment                        controllers
 GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 # End of adjustments sub-journey
 
-GET        /return-submitted                       controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
+GET        /return-submitted                       controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad(processingDate: java.time.Instant, amount: BigDecimal, chargeReference: Option[String], paymentDueDate: java.time.LocalDate)

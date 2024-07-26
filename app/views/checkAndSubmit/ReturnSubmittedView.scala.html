@@ -1,25 +1,107 @@
-@import components.{SectionHeading, PageHeading}
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{SectionHeading, PageHeading, Paragraph, Link, SubHeading}
+@import java.time.{Instant, LocalDate}
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
-        pageHeading: PageHeading
+        subHeading: SubHeading,
+        pageHeading: PageHeading,
+        govukPanel : GovukPanel,
+        paragraph: Paragraph,
+        link: Link,
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(processingDate: Instant, amount: BigDecimal, chargeReference: Option[String], paymentDueDate: LocalDate, periodKey: String)(implicit request: Request[_], messages: Messages)
+
+@panelContent = {
+    @paragraph(messages("returnSubmitted.panel.body.reference"), classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.balanceDue"), classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.dutyOwed"), classes = "")
+}
 
 @layout(pageTitle = titleNoForm(messages("returnSubmitted.title"))) {
 
-    @sectionHeading(
-        id = "returnSubmitted-section",
-        text = messages("section.checkAndSubmit"),
+@govukPanel(Panel(
+    title = Text((messages("returnSubmitted.heading"))),
+    content = HtmlContent(panelContent)
+))
+
+@paragraph(messages("returnSubmitted.p1"))
+
+@paragraph( content =
+    HtmlContent(
+        link(
+        id = "view-return-link",
+        text = messages("returnSubmitted.viewReturnLink.text"),
+        href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+        ))
     )
 
-    @pageHeading(messages("returnSubmitted.heading"))
+@subHeading(messages("returnSubmitted.positive.h1"))
+
+@paragraph(messages("returnSubmitted.positive.p1"))
+
+@paragraph(messages("returnSubmitted.positive.p2"))
+
+@paragraph(messages("returnSubmitted.positive.p3"))
+
+@paragraph(messages("returnSubmitted.negative.p1"))
+
+@subHeading(messages("returnSubmitted.direct.debit.h2"))
+
+@paragraph(messages("returnSubmitted.direct.debit.p1"))
+@paragraph( content =
+HtmlContent(
+link(
+id = "view-return-link",
+text = messages("returnSubmitted.direct.debit.manageLink.text"),
+href = routes.TaskListController.onPageLoad.url
+))
+)
+
+@paragraph(messages("returnSubmitted.direct.debit.p2"))
+@paragraph( content =
+HtmlContent(
+link(
+id = "view-return-link",
+text = messages("returnSubmitted.direct.debit.setupLink.text"),
+href = routes.TaskListController.onPageLoad.url
+))
+)
+
+@paragraph(messages("returnSubmitted.direct.debit.p3"))
+@paragraph( content =
+HtmlContent(
+link(
+id = "view-return-link",
+text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
+href = routes.TaskListController.onPageLoad.url
+))
+)
 
     @govukButton(
-        ButtonViewModel("continueButton", messages("site.continue"))
+        ButtonViewModel("continueButton", messages("site.payNow"))
     )
 
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.claimRepayment"))
+    )
 }

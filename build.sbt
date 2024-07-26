@@ -16,8 +16,11 @@ lazy val root = Project(appName, file("."))
   .settings(ThisBuild / useSuperShell := false)
   .settings(
     RoutesKeys.routesImport ++= Seq(
+      "java.time.LocalDate",
+      "java.time.Instant",
       "models._",
-      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
+      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl",
+      "models.binders.Binders._"
     ),
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
