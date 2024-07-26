@@ -16,7 +16,6 @@
 
 package forms.mappings
 
-import forms.mappings.BigDecimalFieldFormatter.nameToId
 import models.adjustment.AdjustmentVolumeWithSPR
 import play.api.data.FormError
 import play.api.data.format.Formatter

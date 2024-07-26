@@ -31,7 +31,7 @@ import models.requests.DataRequest
 import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandContent
+import viewmodels.returns.RateBandHelper.rateBandContent
 import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.{ExecutionContext, Future}

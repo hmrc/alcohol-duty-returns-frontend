@@ -76,8 +76,8 @@ GET        /return-check-your-answers/:regime                      controllers.r
 GET        /multiple-spr-list/:regime                        controllers.returns.MultipleSPRListController.onPageLoad(regime:AlcoholRegime)
 POST       /multiple-spr-list/:regime                        controllers.returns.MultipleSPRListController.onSubmit(regime:AlcoholRegime)
 
-GET        /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onPageLoad(regime:AlcoholRegime, index: Int)
-POST       /delete-multiple-spr-entry/:regime/:index                        controllers.returns.DeleteMultipleSPREntryController.onSubmit(regime:AlcoholRegime, index: Int)
+GET        /delete-multiple-spr-entry/:regime                       controllers.returns.DeleteMultipleSPREntryController.onPageLoad(regime:AlcoholRegime, index:Option[Int] ?= None)
+POST       /delete-multiple-spr-entry/:regime                       controllers.returns.DeleteMultipleSPREntryController.onSubmit(regime:AlcoholRegime, index:Option[Int] ?= None)
 
 GET        /duty-due/:regime                                  controllers.returns.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
 POST       /duty-due/:regime                                  controllers.returns.DutyCalculationController.onSubmit(regime:AlcoholRegime)
@@ -244,3 +244,8 @@ POST       /change-adjustments-to-previous-returns                  controllers.
 GET        /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onPageLoad(index: Int)
 POST       /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onSubmit(index: Int)
 # End of adjustments sub-journey
+
+# Beginning of check and submit sub-journey
+GET        /return-summary                      controllers.checkAndSubmit.DutyDueForThisReturnController.onPageLoad()
+
+# End of check and submit sub-journey

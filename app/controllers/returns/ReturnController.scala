@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package viewmodels.returns
+package controllers.returns
 
-import models.{AlcoholRegime, UserAnswers}
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import models.AlcoholRegime
+import models.requests.DataRequest
+import pages.QuestionPage
+import play.api.libs.json.Reads
+import play.api.mvc.AnyContent
 
-object CheckYourAnswersSPRSummaryListHelper {
+trait ReturnController[A, B <: QuestionPage[Map[AlcoholRegime, A]]] {
 
-  def summaryList(regime: AlcoholRegime, userAnswers: UserAnswers, index: Option[Int])(implicit
-    messages: Messages
-  ): Option[SummaryList] = {
-    val rows = TellUsAboutMultipleSPRRateSummary.rows(regime, userAnswers, index)
-    if (rows.isEmpty) None else Some(SummaryList(rows = rows))
-  }
+  val currentPage: B
 
+  def hasValueChanged(value: A, regime: AlcoholRegime)(implicit
+    request: DataRequest[AnyContent],
+    rds: Reads[A]
+  ): Boolean =
+    request.userAnswers.getByKey(currentPage, regime) match {
+      case Some(existingValue) => existingValue != value
+      case _                   => false
+    }
 }

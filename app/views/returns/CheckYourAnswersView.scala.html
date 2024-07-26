@@ -15,8 +15,8 @@
  *@
 
 @import components.{SectionHeading, PageHeading}
+@import viewmodels.returns.ReturnSummaryList
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import viewmodels.checkAnswers.returns.ReturnSummaryList
 
 @this(
         layout: templates.Layout,
@@ -25,6 +25,7 @@
         pageHeading: PageHeading,
         govukSummaryList : GovukSummaryList
 )
+
 
 @(regime: AlcoholRegime, summaryList:ReturnSummaryList)(implicit request: Request[_], messages: Messages)
 

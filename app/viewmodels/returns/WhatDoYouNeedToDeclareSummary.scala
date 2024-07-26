@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import models.{AlcoholRegime, CheckMode, RateBand}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow}
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
+import RateBandHelper.rateBandRecap
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -64,7 +64,8 @@ object WhatDoYouNeedToDeclareSummary {
       value = ValueViewModel(
         HtmlContent(
           "<ul>" +
-            rateBands
+            rateBands.toSeq
+              .sortBy(_.taxTypeCode)
               .map(answer => s"<li>${rateBandRecap(answer)}</li>")
               .mkString("")
             + "</ul>"
