@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers.adjustment
 
-import models.{CheckMode, UserAnswers, YearMonthModelFormatter}
-import pages.adjustment.WhenDidYouPayDutyPage
+import models.adjustment.AdjustmentEntry
+import models.{CheckMode, YearMonthModelFormatter}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -27,11 +27,13 @@ import viewmodels.implicits._
 
 object WhenDidYouPayDutySummary extends YearMonthModelFormatter {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WhenDidYouPayDutyPage).map { answer =>
-      val value =
-        HtmlFormat.escape(answer.getMonth.toString).toString + "<br/>" + HtmlFormat
-          .escape(answer.getYear.toString)
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    adjustmentEntry.period.map { period =>
+      val month            = period.getMonth.toString
+      val capitalizedMonth = s"${month.charAt(0).toUpper}${month.substring(1).toLowerCase}"
+      val value            =
+        HtmlFormat.escape(capitalizedMonth).toString + " " + HtmlFormat
+          .escape(period.getYear.toString)
           .toString
 
       SummaryListRowViewModel(

@@ -19,9 +19,12 @@ package navigation
 import play.api.mvc.Call
 import pages._
 import models.{Mode, UserAnswers}
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
-class FakeAdjustmentNavigator(desiredRoute: Call) extends AdjustmentNavigator {
+class FakeAdjustmentNavigator(desiredRoute: Call, hasValueChanged: Boolean) extends AdjustmentNavigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call = {
+    hasValueChanged shouldBe hasChanged
     desiredRoute
+  }
 }

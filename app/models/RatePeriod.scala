@@ -42,12 +42,6 @@ object RateType extends Enum[RateType] with PlayJsonEnum[RateType] {
     }
 }
 
-case class RateTypeResponse(rateType: RateType)
-
-object RateTypeResponse {
-  implicit val format: Format[RateTypeResponse] = Json.format[RateTypeResponse]
-}
-
 case class AlcoholByVolume private (value: BigDecimal) {
   require(value >= 0 && value <= 100, "Percentage must be between 0 and 100")
 }

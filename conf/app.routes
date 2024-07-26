@@ -35,7 +35,6 @@ GET         /before-you-start-your-return/:periodKey     controllers.BeforeStart
 POST        /before-you-start-your-return                controllers.BeforeStartReturnController.onSubmit()
 
 # Beginning of product entry sub-journey
-GET        /tell-us-about-your-alcohol                       controllers.productEntry.ProductEntryGuidanceController.onPageLoad()
 
 GET        /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
 POST       /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
@@ -82,57 +81,6 @@ POST       /delete-multiple-spr-entry/:regime                       controllers.
 
 GET        /duty-due/:regime                                  controllers.returns.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
 POST       /duty-due/:regime                                  controllers.returns.DutyCalculationController.onSubmit(regime:AlcoholRegime)
-
-# old journey
-
-GET        /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-name-do-you-want-to-give-this-product                        controllers.productEntry.ProductNameController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-name-do-you-want-to-give-this-product                  controllers.productEntry.ProductNameController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-name-do-you-want-to-give-this-product                  controllers.productEntry.ProductNameController.onSubmit(mode: Mode = CheckMode)
-
-GET        /what-is-this-products-alcohol-by-volume-strength                  controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-this-products-alcohol-by-volume-strength                  controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-is-this-products-alcohol-by-volume-strength                        controllers.productEntry.AlcoholByVolumeQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-is-this-products-alcohol-by-volume-strength                        controllers.productEntry.AlcoholByVolumeQuestionController.onSubmit(mode: Mode = CheckMode)
-
-GET        /is-this-product-eligible-for-draught-relief                        controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /is-this-product-eligible-for-draught-relief                        controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-is-this-product-eligible-for-draught-relief                  controllers.productEntry.DraughtReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-is-this-product-eligible-for-draught-relief                  controllers.productEntry.DraughtReliefQuestionController.onSubmit(mode: Mode = CheckMode)
-
-GET        /what-is-this-products-tax-type                        controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-this-products-tax-type                        controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-is-this-products-tax-type                  controllers.productEntry.TaxTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-is-this-products-tax-type                  controllers.productEntry.TaxTypeController.onSubmit(mode: Mode = CheckMode)
-
-GET        /is-this-product-eligible-for-small-producer-relief                        controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /is-this-product-eligible-for-small-producer-relief                        controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-is-this-product-eligible-for-small-producer-relief                  controllers.productEntry.SmallProducerReliefQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-is-this-product-eligible-for-small-producer-relief                  controllers.productEntry.SmallProducerReliefQuestionController.onSubmit(mode: Mode = CheckMode)
-
-GET        /how-much-of-this-product-do-you-need-to-declare                  controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-of-this-product-do-you-need-to-declare                  controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-of-this-product-do-you-need-to-declare                        controllers.productEntry.ProductVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-of-this-product-do-you-need-to-declare                        controllers.productEntry.ProductVolumeController.onSubmit(mode: Mode = CheckMode)
-
-GET        /what-is-your-small-producer-duty-rate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-your-small-producer-duty-rate                  controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
-GET        /change-what-is-your-small-producer-duty-rate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-what-is-your-small-producer-duty-rate                        controllers.productEntry.DeclareSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
-
-GET        /the-duty-due-on-this-product                       controllers.productEntry.DutyDueController.onPageLoad()
-
-GET        /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
-POST       /return-check-your-answers                       controllers.productEntry.CheckYourAnswersController.onSubmit()
-
-GET        /return-products                        controllers.productEntry.ProductListController.onPageLoad()
-POST       /return-products                        controllers.productEntry.ProductListController.onSubmit()
-GET        /change-return-products                  controllers.productEntry.ProductListController.onPageLoad()
-POST       /change-return-products                  controllers.productEntry.ProductListController.onSubmit()
-
-GET        /delete-return-product                        controllers.productEntry.DeleteProductController.onPageLoad(index: Int)
-POST       /delete-return-product                        controllers.productEntry.DeleteProductController.onSubmit(index: Int)
-# End of product entry sub-journey
 
 # Beginning of duty suspended deliveries sub-journey
 GET        /do-you-need-to-declare-delivered-received-duty-suspended                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
@@ -243,42 +191,58 @@ GET        /spirits-check-your-answers                 controllers.spiritsQuesti
 
 
 # Beginning of adjustments sub-journey
-GET        /do-you-need-to-make-any-adjustments-from-a-previous-return                        controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /do-you-need-to-make-any-adjustments-from-a-previous-return                       controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-do-you-need-to-make-any-adjustments-from-a-previous-return                 controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /adjust-a-previous-return                       controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjust-a-previous-return                      controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjust-a-previous-return                controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjust-a-previous-return                controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /what-type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /type-of-adjustment                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
 GET        /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-the-type-of-adjustment                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /when-did-you-pay-duty                        controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = NormalMode)
-POST       /when-did-you-pay-duty                        controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = NormalMode)
-GET        /change-when-did-you-pay-duty                  controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-when-did-you-pay-duty                  controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-return-date                        controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-return-date                        controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-return-date                  controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-return-date                  controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /what-is-the-adjustment-abv                  controllers.adjustment.AlcoholByVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-the-adjustment-abv                  controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-the-adjustment-abv                        controllers.adjustment.AlcoholByVolumeController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-tax-type-code                 controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-tax-type-code                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-tax-type-code                       controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-tax-type-code                        controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /what-is-the-adjustment-tax-type                  controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-the-adjustment-tax-type                  controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-the-adjustment-tax-type                        controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /new-spr-duty-rate                controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
+POST       /new-spr-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
+GET        /change-new-spr-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-new-spr-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 
-GET        /what-is-your-adjustment-small-producer-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
-POST       /what-is-your-adjustment-small-producer-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
-GET        /change--your-adjustment-small-producer-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-your-adjustment-small-producer-duty-rate                        controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-volume                 controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-volume                controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-volume                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-volume                       controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
-POST       /how-much-is-the-adjustment                 controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
-GET        /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-how-much-is-the-adjustment                        controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = CheckMode)
+GET        /adjustment-volume-with-spr                        controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-volume-with-spr                        controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-volume-with-spr                 controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-volume-with-spr                 controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = CheckMode)
 
-GET        /check-your-calculations                       controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
+GET        /adjustment-duty-value                      controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
+
+GET        /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
+POST       /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onSubmit()
+
+GET        /new-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /new-tax-type-code                  controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /adjustments-to-previous-returns                        controllers.adjustment.AdjustmentListController.onPageLoad()
+POST       /adjustments-to-previous-returns                        controllers.adjustment.AdjustmentListController.onSubmit()
+GET        /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onPageLoad()
+POST       /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onSubmit()
+
+GET        /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onPageLoad(index: Int)
+POST       /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onSubmit(index: Int)
 # End of adjustments sub-journey
 
 # Beginning of check and submit sub-journey

@@ -17,9 +17,9 @@
 package connectors
 
 import config.FrontendAppConfig
-import models.productEntry.TaxDuty
+import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.returns.AlcoholDuty
-import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
@@ -33,20 +33,6 @@ class AlcoholDutyCalculatorConnector @Inject() (
   implicit val httpClient: HttpClient
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances {
-  def calculateTaxDuty(abv: AlcoholByVolume, volume: BigDecimal, rate: BigDecimal)(implicit
-    hc: HeaderCarrier
-  ): Future[TaxDuty] = {
-    val body: DutyCalculationRequest = DutyCalculationRequest(abv, volume, rate)
-    httpClient.POST[DutyCalculationRequest, TaxDuty](url = config.adrCalculatorCalculateDutyUrl(), body = body)
-  }
-
-  def calculateTotalDuty(requestBody: TotalDutyCalculationRequest)(implicit
-    hc: HeaderCarrier
-  ): Future[AlcoholDuty] =
-    httpClient.POST[TotalDutyCalculationRequest, AlcoholDuty](
-      url = config.adrCalculatorCalculateTotalDutyUrl(),
-      body = requestBody
-    )
 
   def rates(
     rateType: RateType,
@@ -81,12 +67,20 @@ class AlcoholDutyCalculatorConnector @Inject() (
     httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
   }
 
-  def rateBand(taxType: String, ratePeriod: YearMonth)(implicit
+  def calculateTotalDuty(requestBody: TotalDutyCalculationRequest)(implicit
+    hc: HeaderCarrier
+  ): Future[AlcoholDuty] =
+    httpClient.POST[TotalDutyCalculationRequest, AlcoholDuty](
+      url = config.adrCalculatorCalculateTotalDutyUrl(),
+      body = requestBody
+    )
+
+  def rateBand(taxTypeCode: String, ratePeriod: YearMonth)(implicit
     hc: HeaderCarrier
   ): Future[Option[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(
-      "ratePeriod" -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
-      "taxType"    -> taxType
+      "ratePeriod"  -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
+      "taxTypeCode" -> taxTypeCode
     )
     httpClient
       .GET[Either[UpstreamErrorResponse, HttpResponse]](
@@ -98,20 +92,34 @@ class AlcoholDutyCalculatorConnector @Inject() (
         case _                                        => None
       })
   }
-  def rateType(
-    abv: AlcoholByVolume,
-    ratePeriod: YearMonth,
-    approvedAlcoholRegimes: Set[AlcoholRegime]
-  )(implicit hc: HeaderCarrier): Future[RateTypeResponse] = {
-    val queryParams: Seq[(String, String)] = Seq(
-      "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
-      "alcoholRegimes" -> Json
-        .toJson(
-          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegime](_))
-        )
-        .toString,
-      "abv"            -> Json.toJson(abv).toString
+  def calculateAdjustmentDuty(pureAlcoholVolume: BigDecimal, rate: BigDecimal, adjustmentType: AdjustmentTypes)(implicit
+    hc: HeaderCarrier
+  ): Future[AdjustmentDuty] = {
+    val body: AdjustmentDutyCalculationRequest =
+      AdjustmentDutyCalculationRequest(adjustmentType, pureAlcoholVolume, rate)
+    httpClient
+      .POST[AdjustmentDutyCalculationRequest, AdjustmentDuty](
+        url = config.adrCalculatorCalculateAdjustmentDutyUrl(),
+        body = body
+      )
+  }
+  def calculateRepackagedDutyChange(newDuty: BigDecimal, oldDuty: BigDecimal)(implicit
+    hc: HeaderCarrier
+  ): Future[AdjustmentDuty] = {
+    val body: RepackagedDutyChangeRequest = RepackagedDutyChangeRequest(newDuty, oldDuty)
+    httpClient.POST[RepackagedDutyChangeRequest, AdjustmentDuty](
+      url = config.adrCalculatorCalculateRepackagedDutyChangeUrl(),
+      body = body
     )
-    httpClient.GET[RateTypeResponse](url = config.adrCalculatorRateTypeUrl(), queryParams = queryParams)
+  }
+
+  def calculateTotalAdjustment(
+    duties: Seq[BigDecimal]
+  )(implicit hc: HeaderCarrier): Future[AdjustmentDuty] = {
+    val body: AdjustmentTotalCalculationRequest = AdjustmentTotalCalculationRequest(duties)
+    httpClient.POST[AdjustmentTotalCalculationRequest, AdjustmentDuty](
+      url = config.adrCalculatorCalculateTotalAdjustmentUrl(),
+      body = body
+    )
   }
 }

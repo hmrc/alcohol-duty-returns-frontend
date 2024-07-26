@@ -17,13 +17,11 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import models.returns.AlcoholDuty
 import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.productEntry.ProductEntryListPage
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
-import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import pages.dutySuspended._
+import pages.returns.DeclareAlcoholDutyQuestionPage
+import pages.spiritsQuestions._
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.libs.json.{JsObject, Json}
@@ -97,95 +95,6 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               task.status shouldBe AlcholDutyTaskListItemStatus.notStarted
               task.href   shouldBe Some(
                 controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
-              )
-            case None       => fail(s"Task for regime $regime not found")
-          }
-        )
-      }
-
-      "must have a link to 'What do you need to declare?' screen and status set as 'In Progress' if the user has answered some questions" in {
-        val userAnswers = declaredAlcoholDutyUserAnswer
-          .set(ProductEntryListPage, Seq.empty)
-          .success
-          .value
-
-        val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
-          val rateBands = genListOfRateBandForRegime(regime).sample.value
-          ua
-            .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
-            .success
-            .value
-        }
-
-        val result = returnTaskListCreator.returnSection(filledUserAnswers)
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
-        result.title                             shouldBe messages("taskList.section.returns.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.returns.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-        )
-
-        AlcoholRegime.values.foreach(regime =>
-          result.taskList.items
-            .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
-            case Some(task) =>
-              task.status shouldBe AlcholDutyTaskListItemStatus.inProgress
-              task.href   shouldBe Some(
-                controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
-              )
-            case None       => fail(s"Task for regime $regime not found")
-          }
-        )
-      }
-
-      "must have a link to 'CheckYourAnswers' screen and status set as 'Completed' if the user has answered all the questions" in {
-        val userAnswers = declaredAlcoholDutyUserAnswer
-          .set(ProductEntryListPage, Seq.empty)
-          .success
-          .value
-
-        val filledUserAnswers = AlcoholRegime.values.foldRight(userAnswers) { (regime, ua) =>
-          val rateBands = genListOfRateBandForRegime(regime).sample.value
-
-          val dutiesByTaxType = arbitraryDutyByTaxType(rateBands).arbitrary.sample.value
-
-          val alcoholDutyMock = AlcoholDuty(
-            dutiesByTaxType = dutiesByTaxType,
-            totalDuty = dutiesByTaxType.map(_.dutyRate).sum
-          )
-
-          ua
-            .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
-            .success
-            .value
-            .setByKey(AlcoholDutyPage, regime, alcoholDutyMock)
-            .success
-            .value
-        }
-
-        val result = returnTaskListCreator.returnSection(filledUserAnswers)
-        result.completedTask                     shouldBe true
-        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
-        result.title                             shouldBe messages("taskList.section.returns.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.returns.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-        )
-
-        AlcoholRegime.values.foreach(regime =>
-          result.taskList.items
-            .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
-            case Some(task) =>
-              task.status shouldBe AlcholDutyTaskListItemStatus.completed
-              task.href   shouldBe Some(
-                controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url
               )
             case None       => fail(s"Task for regime $regime not found")
           }

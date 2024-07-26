@@ -17,8 +17,9 @@
 package controllers.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import forms.adjustment.AdjustmentSmallProducerReliefDutyRateFormProvider
-import models.NormalMode
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
@@ -26,6 +27,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
@@ -40,12 +42,30 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer                                     = BigDecimal(0.00)
-  val spoilt                                          = Spoilt.toString
+  val validAnswer                                     = BigDecimal(2.00)
   val adjustmentEntry                                 = AdjustmentEntry(adjustmentType = Some(Spoilt))
   val userAnswers                                     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
   lazy val adjustmentSmallProducerReliefDutyRateRoute =
     controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode).url
+  val regime                                          = Beer
+  val rateBand                                        = RateBand(
+    "310",
+    "some band",
+    RateType.DraughtRelief,
+    Some(BigDecimal(10.99)),
+    Set(
+      RangeDetailsByRegime(
+        AlcoholRegime.Beer,
+        NonEmptySeq.one(
+          ABVRange(
+            AlcoholType.Beer,
+            AlcoholByVolume(0.1),
+            AlcoholByVolume(5.8)
+          )
+        )
+      )
+    )
+  )
 
   "AdjustmentSmallProducerReliefDutyRate Controller" - {
 
@@ -61,13 +81,13 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentSmallProducerReliefDutyRateView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, spoilt)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), sprDutyRate = Some(validAnswer))
+      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), repackagedSprDutyRate = Some(validAnswer))
 
       val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
 
@@ -81,9 +101,9 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, spoilt)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, Spoilt)(
           request,
-          getMessages(application)
+          getMessages(app)
         ).toString
       }
     }
@@ -97,7 +117,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -113,7 +133,43 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
+    "must redirect to the next page when the same data is submitted" in {
+      val userAnswers =
+        emptyUserAnswers
+          .set(
+            CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              adjustmentType = Some(Spoilt),
+              rateBand = Some(rateBand),
+              repackagedSprDutyRate = Some(validAnswer)
+            )
+          )
+          .success
+          .value
 
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentSmallProducerReliefDutyRateRoute)
+            .withFormUrlEncodedBody(("adjustment-small-producer-relief-duty-rate-input", validAnswer.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -130,10 +186,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, spoilt)(
-          request,
-          getMessages(application)
-        ).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
 

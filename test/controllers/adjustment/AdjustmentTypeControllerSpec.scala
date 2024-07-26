@@ -27,6 +27,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentTypeView
 
@@ -93,7 +94,7 @@ class AdjustmentTypeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -102,6 +103,42 @@ class AdjustmentTypeControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentTypeRoute)
             .withFormUrlEncodedBody(("adjustment-type-value", AdjustmentType.values.head.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when the same data is submitted" in {
+      val userAnswers =
+        emptyUserAnswers
+          .set(
+            CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              adjustmentType = Some(Spoilt)
+            )
+          )
+          .success
+          .value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentTypeRoute)
+            .withFormUrlEncodedBody(("adjustment-type-value", Spoilt.toString))
 
         val result = route(application, request).value
 

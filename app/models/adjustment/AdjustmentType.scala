@@ -29,18 +29,18 @@ object AdjustmentType extends Enumerable.Implicits {
   case object Underdeclaration extends WithName("under-declaration") with AdjustmentType
   case object Overdeclaration extends WithName("over-declaration") with AdjustmentType
   case object Spoilt extends WithName("spoilt") with AdjustmentType
-  case object Drawback extends WithName("drawback") with AdjustmentType
   case object RepackagedDraughtProducts extends WithName("repackaged-draught-products") with AdjustmentType
+  case object Drawback extends WithName("drawback") with AdjustmentType
 
   val values: Seq[AdjustmentType] = Seq(
     Underdeclaration,
     Overdeclaration,
+    RepackagedDraughtProducts,
     Spoilt,
-    Drawback,
-    RepackagedDraughtProducts
+    Drawback
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
+  def adjustmentTypeOptions(implicit messages: Messages): Seq[RadioItem] = values.map { value =>
     RadioItem(
       content = Text(messages(s"adjustmentType.${value.toString}")),
       value = Some(value.toString),

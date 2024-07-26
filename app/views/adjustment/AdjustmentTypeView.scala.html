@@ -33,20 +33,20 @@
     @formHelper(action = controllers.adjustment.routes.AdjustmentTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("adjustment-type-value" -> AdjustmentType.options.headOption.flatMap(_.id).getOrElse(""))))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("adjustment-type-value" -> AdjustmentType.adjustmentTypeOptions.headOption.flatMap(_.id).getOrElse(""))))
 
         }
 
         @sectionHeading(
             id = "adjustment-type-section",
-            text = messages("section.alcoholDutyReturn"),
+            text = messages("section.adjustment"),
         )
 
         @govukRadios(
             RadiosViewModel(
                 field  = form("adjustment-type-value"),
                 legend = LegendViewModel(messages("adjustmentType.heading")).asPageHeading(),
-                items  = AdjustmentType.options
+                items  = AdjustmentType.adjustmentTypeOptions
             )
         )
 

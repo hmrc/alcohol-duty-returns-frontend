@@ -20,20 +20,23 @@ import controllers.actions._
 import forms.adjustment.AdjustmentTaxTypeFormProvider
 
 import javax.inject.Inject
-import models.{Mode, RateBand}
+import models.{Mode, RateBand, UserAnswers}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import models.adjustment.AdjustmentType.RepackagedDraughtProducts
+import play.api.Logging
+import play.api.data.Form
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentTaxTypeView
 
 import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 class AdjustmentTaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
@@ -48,18 +51,35 @@ class AdjustmentTaxTypeController @Inject() (
   alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                   => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.taxCode.isDefined =>
-        Ok(view(form.fill(value.taxCode.get.toInt), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      case Some(value)                            => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+        Ok(
+          view(
+            form.fill(
+              rateBand.taxTypeCode.toInt
+            ),
+            mode,
+            adjustmentType
+          )
+        )
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _))              =>
+        Ok(
+          view(
+            form,
+            mode,
+            adjustmentType
+          )
+        )
+      case _                                                                                         =>
+        logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
-
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -67,53 +87,99 @@ class AdjustmentTaxTypeController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
-            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-              case Some(value) =>
-                Future.successful(
-                  BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-                )
-            },
+          formWithErrors => handleFormWithErrors(mode, request.userAnswers, formWithErrors),
           value =>
-            fetchAdjustmentRateBand(value.toString).flatMap {
-              case Some(rateBand) =>
-                for {
-                  currentAdjustmentEntry <- Future.fromTry(Try(request.userAnswers.get(CurrentAdjustmentEntryPage).get))
-                  updatedAnswers         <-
-                    Future.fromTry(
-                      request.userAnswers
-                        .set(
-                          CurrentAdjustmentEntryPage,
-                          currentAdjustmentEntry.copy(
-                            taxCode = Some(value.toString),
-                            taxRate = rateBand.rate,
-                            rateType = Some(rateBand.rateType)
-                          )
-                        )
-                    )
-                  _                      <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers))
-              case None           =>
-                Future.successful(
-                  BadRequest(
-                    view(
-                      formProvider()
-                        .withError("adjustment-tax-type-input", "adjustmentTaxType.error.invalid")
-                        .fill(value),
-                      mode,
-                      AdjustmentTypeHelper
-                        .getAdjustmentTypeValue(request.userAnswers.get(CurrentAdjustmentEntryPage).get)
-                    )
-                  )
-                )
+            request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+              case Some(currentAdjustmentEntry) =>
+                val (updatedAdjustment, hasChanged) = updateTaxCode(currentAdjustmentEntry, value)
+                (updatedAdjustment.adjustmentType, updatedAdjustment.period) match {
+                  case (Some(adjustmentType), Some(period)) =>
+                    fetchAdjustmentRateBand(value.toString, period).flatMap {
+                      case Some(rateBand) =>
+                        if (checkRepackagedDraughtReliefEligibility(adjustmentType, rateBand)) {
+                          rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.notDraught")
+                        } else {
+                          for {
+                            updatedAnswers <-
+                              Future.fromTry(
+                                request.userAnswers
+                                  .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(rateBand = Some(rateBand)))
+                              )
+                            _              <- cacheConnector.set(updatedAnswers)
+                          } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers, hasChanged))
+                        }
+                      case None           =>
+                        rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.invalid")
+                    }
+                  case _                                    => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                }
+              case None                         =>
+                logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
+                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             }
         )
   }
 
-  private def fetchAdjustmentRateBand(taxCode: String)(implicit hc: HeaderCarrier): (Future[Option[RateBand]]) = {
-    //hardcoded for now, will need to get this from obligation period
-    val ratePeriod: YearMonth = YearMonth.of(2024, 1)
-    alcoholDutyCalculatorConnector.rateBand(taxCode, ratePeriod)
-  }
+  private def checkRepackagedDraughtReliefEligibility(adjustmentType: AdjustmentType, rateBand: RateBand): Boolean =
+    adjustmentType.equals(
+      RepackagedDraughtProducts
+    ) && (rateBand.rateType != DraughtRelief) && (rateBand.rateType != DraughtAndSmallProducerRelief)
+
+  private def handleFormWithErrors(mode: Mode, userAnswers: UserAnswers, formWithErrors: Form[Int])(implicit
+    request: Request[_]
+  ): Future[Result] =
+    userAnswers.get(CurrentAdjustmentEntryPage) match {
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _)) =>
+        Future.successful(
+          BadRequest(
+            view(
+              formWithErrors,
+              mode,
+              adjustmentType
+            )
+          )
+        )
+      case _                                                                            =>
+        logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+    }
+
+  private def rateBandResponseError(mode: Mode, value: Int, adjustmentType: AdjustmentType, errorMessage: String)(
+    implicit request: Request[_]
+  ): Future[Result] =
+    Future.successful(
+      BadRequest(
+        view(
+          formProvider()
+            .withError("adjustment-tax-type-input", errorMessage)
+            .fill(value),
+          mode,
+          adjustmentType
+        )
+      )
+    )
+
+  private def fetchAdjustmentRateBand(taxTypeCode: String, period: YearMonth)(implicit
+    hc: HeaderCarrier
+  ): Future[Option[RateBand]] =
+    alcoholDutyCalculatorConnector.rateBand(taxTypeCode, period)
+
+  def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
+    adjustmentEntry.rateBand.map(_.taxTypeCode) match {
+      case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, false)
+      case _                                                             =>
+        (
+          adjustmentEntry.copy(
+            totalLitresVolume = None,
+            pureAlcoholVolume = None,
+            sprDutyRate = None,
+            duty = None,
+            repackagedRateBand = None,
+            repackagedDuty = None,
+            repackagedSprDutyRate = None,
+            newDuty = None
+          ),
+          true
+        )
+    }
 }

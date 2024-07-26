@@ -17,24 +17,33 @@
 package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
-import models.{CheckMode, UserAnswers}
-import pages.adjustment.AdjustmentTaxTypePage
+import models.adjustment.AdjustmentEntry
+import models.CheckMode
+import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import viewmodels.returns.RateBandHelper.rateBandRecap
 
 object AdjustmentTaxTypeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdjustmentTaxTypePage).map { answer =>
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
+    val adjustmentType = adjustmentEntry.adjustmentType.getOrElse(
+      throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+    )
+    val label          = if (adjustmentType.equals(RepackagedDraughtProducts)) {
+      "adjustmentTaxType.repackaged.checkYourAnswersLabel"
+    } else { "adjustmentTaxType.checkYourAnswersLabel" }
+    adjustmentEntry.rateBand.map { rateBand =>
       SummaryListRowViewModel(
-        key = "adjustmentTaxType.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        key = label,
+        value = ValueViewModel(rateBandRecap(rateBand)),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("adjustmentTaxType.change.hidden"))
         )
       )
     }
+  }
 }

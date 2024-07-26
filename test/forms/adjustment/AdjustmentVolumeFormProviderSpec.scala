@@ -16,58 +16,108 @@
 
 package forms.adjustment
 
+import base.SpecBase
 import forms.behaviours.BigDecimalFieldBehaviours
+import generators.ModelGenerators
+import models.adjustment.AdjustmentVolume
 import play.api.data.FormError
+import play.api.i18n.Messages
 
-import scala.collection.immutable.ArraySeq
+class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with ModelGenerators with SpecBase {
 
-class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours {
+  val regime   = regimeGen.sample.value
+  val messages = mock[Messages]
+  val form     = new AdjustmentVolumeFormProvider()(regime)(messages)
 
-  val form = new AdjustmentVolumeFormProvider()()
+  ".volumes" - {
+    "must bind valid data" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "1",
+        "volumes.pureAlcoholVolume" -> "1"
+      )
+      form.bind(data).value.value mustBe AdjustmentVolume(1, 1)
+    }
 
-  ".value" - {
+    "must unbind valid data" in {
+      val data = AdjustmentVolume(1, 1)
+      form.fill(data).data must contain theSameElementsAs Map(
+        "volumes.totalLitresVolume" -> "1",
+        "volumes.pureAlcoholVolume" -> "1"
+      )
+    }
 
-    val fieldName = "adjustment-volume-input"
+    "fail to bind when no answers are selected" in {
+      val data = Map.empty[String, String]
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq(""))
+      )
+    }
 
-    val minimum = 0.01
-    val maximum = 999999999.99
-    val decimal = 2
+    "fail to bind when blank answer provided" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "",
+        "volumes.pureAlcoholVolume" -> ""
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq(""))
+      )
+    }
 
-    val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
+    "fail to bind when values with too many decimal places are provided" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "1.1123",
+        "volumes.pureAlcoholVolume" -> "1.1123"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.twoDecimalPlaces.totalLitresVolume", Seq("")),
+        FormError("volumes_pureAlcoholVolume", s"adjustmentVolume.error.twoDecimalPlaces.pureAlcoholVolume", Seq(""))
+      )
+    }
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      validDataGenerator
-    )
+    "fail to bind when invalid values are provided" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "invalid",
+        "volumes.pureAlcoholVolume" -> "invalid"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.invalid.totalLitresVolume", List("")),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.invalid.pureAlcoholVolume", List(""))
+      )
+    }
 
-    behave like bigDecimalField(
-      form,
-      fieldName,
-      nonNumericError = FormError(fieldName, "adjustmentVolume.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "adjustmentVolume.error.twoDecimalPlaces")
-    )
+    "fail to bind when values below minimum are provided" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "0",
+        "volumes.pureAlcoholVolume" -> "0"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.minimumValue.totalLitresVolume", List("")),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.minimumValue.pureAlcoholVolume", List(""))
+      )
+    }
 
-    behave like bigDecimalFieldWithMinimum(
-      form,
-      fieldName,
-      minimum = minimum,
-      decimal = decimal,
-      expectedError = FormError(fieldName, "adjustmentVolume.error.minimumRequired", ArraySeq(minimum))
-    )
+    "fail to bind when values exceed maximum are provided" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "100000000000",
+        "volumes.pureAlcoholVolume" -> "100000000000"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.maximumValue.totalLitresVolume", List("")),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.maximumValue.pureAlcoholVolume", List(""))
+      )
+    }
 
-    behave like bigDecimalFieldWithMaximum(
-      form,
-      fieldName,
-      maximum = maximum,
-      decimal = decimal,
-      expectedError = FormError(fieldName, "adjustmentVolume.error.maximumRequired", ArraySeq(999999999.99))
-    )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, "adjustmentVolume.error.required")
-    )
+    "fail to bind when pure alcohol volume is higher than total litres value" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "1",
+        "volumes.pureAlcoholVolume" -> "2"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", List(""))
+      )
+    }
   }
+
 }

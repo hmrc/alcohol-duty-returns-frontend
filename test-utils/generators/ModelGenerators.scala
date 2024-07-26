@@ -18,7 +18,6 @@ package generators
 
 import cats.data.NonEmptySeq
 import models._
-import models.productEntry.ProductEntry
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
@@ -28,6 +27,23 @@ import models.returns.{DutyByTaxType, VolumeAndRateByTaxType}
 import java.time.YearMonth
 
 trait ModelGenerators {
+
+  implicit lazy val arbitraryAdjustmentVolumeWithSpr: Arbitrary[adjustment.AdjustmentVolumeWithSPR] =
+    Arbitrary {
+      for {
+        totalLitresVolume <- arbitrary[BigDecimal]
+        pureAlcoholVolume <- arbitrary[BigDecimal]
+        sprDutyRate       <- arbitrary[BigDecimal]
+      } yield adjustment.AdjustmentVolumeWithSPR(totalLitresVolume, pureAlcoholVolume, sprDutyRate)
+    }
+
+  implicit lazy val arbitraryAdjustmentVolume: Arbitrary[adjustment.AdjustmentVolume] =
+    Arbitrary {
+      for {
+        totalLitresVolume <- arbitrary[BigDecimal]
+        pureAlcoholVolume <- arbitrary[BigDecimal]
+      } yield adjustment.AdjustmentVolume(totalLitresVolume, pureAlcoholVolume)
+    }
 
   implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =
     Arbitrary {
@@ -138,7 +154,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryAdjustmentType: Arbitrary[adjustment.AdjustmentType] =
     Arbitrary {
-      Gen.oneOf(adjustment.AdjustmentType.values.toSeq)
+      Gen.oneOf(adjustment.AdjustmentType.values)
     }
 
   implicit lazy val arbitrarySpiritType: Arbitrary[SpiritType] =
@@ -163,15 +179,6 @@ trait ModelGenerators {
       AlcoholRegime.Cider,
       AlcoholRegime.Wine,
       AlcoholRegime.Spirits
-    )
-  }
-
-  implicit val arbitraryRateTypeResponse: Arbitrary[RateTypeResponse] = Arbitrary {
-    Gen.oneOf(
-      RateTypeResponse(RateType.DraughtRelief),
-      RateTypeResponse(RateType.SmallProducerRelief),
-      RateTypeResponse(RateType.DraughtAndSmallProducerRelief),
-      RateTypeResponse(RateType.Core)
     )
   }
 
@@ -257,42 +264,6 @@ trait ModelGenerators {
   implicit val arbitraryListOfRatePeriod: Arbitrary[Seq[RatePeriod]] = Arbitrary {
     Gen.listOf(arbitraryRatePeriod.arbitrary)
   }
-
-  implicit val arbitraryProductEntry: Arbitrary[ProductEntry] = Arbitrary {
-    productEntryGen
-  }
-
-  implicit val arbitraryProductEntryList: Arbitrary[List[ProductEntry]] = Arbitrary {
-    Gen.listOf(productEntryGen)
-  }
-
-  def productEntryGen: Gen[ProductEntry] = for {
-    name                <- Gen.alphaStr
-    abv                 <- arbitrary[AlcoholByVolume]
-    rateType            <- arbitrary[RateType]
-    volume              <- Gen.posNum[BigDecimal]
-    draughtRelief       <- Gen.oneOf(true, false)
-    smallProducerRelief <- Gen.oneOf(true, false)
-    taxCode             <- Gen.alphaStr
-    regime              <- arbitrary[AlcoholRegime]
-    taxRate             <- Gen.posNum[BigDecimal]
-    sprDutyRate         <- Gen.posNum[BigDecimal]
-    duty                <- Gen.posNum[BigDecimal]
-    pureAlcoholVolume   <- Gen.posNum[BigDecimal]
-  } yield ProductEntry(
-    name = Some(name),
-    abv = Some(abv),
-    rateType = Some(rateType),
-    volume = Some(volume),
-    draughtRelief = Some(draughtRelief),
-    smallProducerRelief = Some(smallProducerRelief),
-    taxCode = Some(taxCode),
-    regime = Some(regime),
-    taxRate = if (!smallProducerRelief) Some(taxRate) else None,
-    sprDutyRate = if (smallProducerRelief) Some(sprDutyRate) else None,
-    duty = Some(duty),
-    pureAlcoholVolume = Some(pureAlcoholVolume)
-  )
 
   def periodKeyGen: Gen[String] = for {
     year  <- Gen.chooseNum(23, 50)

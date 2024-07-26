@@ -22,6 +22,7 @@ import java.time.{LocalDate, YearMonth}
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
 import models.Enumerable
+import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR}
 
 trait Mappings extends Formatters with Constraints {
 
@@ -72,9 +73,56 @@ trait Mappings extends Formatters with Constraints {
     invalidKey: String,
     allRequiredKey: String,
     requiredKey: String,
+    invalidYear: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[YearMonth] =
-    of(new YearMonthFormatter(invalidKey, allRequiredKey, requiredKey, args))
+    of(new YearMonthFormatter(invalidKey, allRequiredKey, requiredKey, invalidYear, args))
+
+  protected def adjustmentVolumes(
+    invalidKey: String,
+    allRequiredKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    inconsistentKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[AdjustmentVolume] =
+    of(
+      new AdjustmentVolumesFormatter(
+        invalidKey,
+        allRequiredKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        inconsistentKey,
+        args
+      )
+    )
+
+  protected def adjustmentVolumesWithRate(
+    invalidKey: String,
+    allRequiredKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    inconsistentKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[AdjustmentVolumeWithSPR] =
+    of(
+      new AdjustmentVolumesAndRateFormatter(
+        invalidKey,
+        allRequiredKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        inconsistentKey,
+        args
+      )
+    )
 
   protected def volumes(
     invalidKey: String,

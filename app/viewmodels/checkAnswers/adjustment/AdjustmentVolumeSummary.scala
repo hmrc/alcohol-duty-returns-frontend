@@ -17,24 +17,42 @@
 package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
-import models.{CheckMode, UserAnswers}
-import pages.adjustment.AdjustmentVolumePage
+import models.adjustment.AdjustmentEntry
+import models.CheckMode
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AdjustmentVolumeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdjustmentVolumePage).map { answer =>
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    for {
+      totalLitres <- adjustmentEntry.totalLitresVolume
+      pureAlcohol <- adjustmentEntry.pureAlcoholVolume
+      regime      <- adjustmentEntry.rateBand.map(_.rangeDetails.map(_.alcoholRegime).head)
+    } yield {
+      val route =
+        if (adjustmentEntry.sprDutyRate.isDefined) {
+          routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url
+        } else { routes.AdjustmentVolumeController.onPageLoad(CheckMode).url }
+      val value = HtmlFormat.escape(totalLitres.toString()).toString + " " + messages(
+        "adjustmentVolume.totalLitres",
+        messages(s"return.regime.$regime")
+      ) + "<br/>" + HtmlFormat.escape(pureAlcohol.toString()).toString + " " + messages(
+        "adjustmentVolume.pureAlcohol"
+      )
+
       SummaryListRowViewModel(
         key = "adjustmentVolume.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.AdjustmentVolumeController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", route)
             .withVisuallyHiddenText(messages("adjustmentVolume.change.hidden"))
         )
       )
     }
+
 }

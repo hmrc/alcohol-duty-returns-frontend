@@ -15,7 +15,9 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
-@import views.ViewUtils.valueFormatter
+@import models.adjustment.AdjustmentType
+@import models.adjustment.AdjustmentType.RepackagedDraughtProducts
+@import viewmodels.Money
 
 @this(
         layout: templates.Layout,
@@ -27,39 +29,47 @@
         subHeading: SubHeading
 )
 
-@(adjustmentType: String, abv:BigDecimal, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentType: AdjustmentType, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal, repackagedRate:BigDecimal, repackagedDuty:BigDecimal, newDuty:BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title"))) {
+@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(duty)))) {
 
     @sectionHeading(
-    id = "adjustment-duty-due-section",
-    text = messages(s"section.adjustment.$adjustmentType"),
+        id = "adjustment-duty-due-section",
+        text = messages(s"section.adjustment.$adjustmentType"),
     )
-    @pageHeading(messages("adjustmentDutyDue.heading"))
 
+    @if(adjustmentType != RepackagedDraughtProducts) {
+        @pageHeading(messages("adjustmentDutyDue.heading", Money.format(duty)))
+    }
+
+    @if(adjustmentType == RepackagedDraughtProducts) {
+        @pageHeading(messages("adjustmentDutyDue.heading", Money.format(newDuty)))
+    }
     @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
-    @subHeading(messages("adjustmentDutyDue.subheading1", pureAlcoholVolume))
+    @if(adjustmentType != RepackagedDraughtProducts) {
+        @bulletList(Seq(
+        messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
+        messages("adjustmentDutyDue.bulletList.2", Money.format(rate)),
+        messages("adjustmentDutyDue.bulletList.3", Money.format(duty))
+        ))
+    }
 
-    @paragraph(messages("adjustmentDutyDue.paragraph2"))
-
-    @bulletList(Seq(
-    messages("adjustmentDutyDue.bulletList.1", abv),
-    messages("adjustmentDutyDue.bulletList.2", volume),
-
-    ))
-
-    @subHeading(messages("adjustmentDutyDue.subheading2", valueFormatter(duty)))
-
-    @paragraph(messages("adjustmentDutyDue.paragraph3"))
-
-    @bulletList(Seq(
-    messages("adjustmentDutyDue.bulletList.3", pureAlcoholVolume),
-    messages("adjustmentDutyDue.bulletList.4", valueFormatter(rate))
-    ))
+    @if(adjustmentType == RepackagedDraughtProducts) {
+        @bulletList(Seq(
+        messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate)),
+        messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
+        messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(duty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.3", Money.format(duty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate)),
+        messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty)),
+        messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty))
+))
+    }
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
+        .asLink(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
     )
 
 }
