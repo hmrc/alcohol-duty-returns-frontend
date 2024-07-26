@@ -34,12 +34,12 @@ class AdjustmentNavigator @Inject() () {
       _ => controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
     case pages.adjustment.WhenDidYouPayDutyPage                     =>
       _ => controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
-    case pages.adjustment.AdjustmentTaxTypePage                     => adjustmentTaxTypePageRoute
-    case pages.adjustment.AdjustmentVolumePage                      => adjustmentVolumePageRoute
-    case pages.adjustment.AdjustmentVolumeWithSPRPage               => adjustmentVolumePageRoute
+    case pages.adjustment.AdjustmentTaxTypePage                     => userAnswers => adjustmentTaxTypePageRoute(userAnswers)
+    case pages.adjustment.AdjustmentVolumePage                      => userAnswers => adjustmentVolumePageRoute(userAnswers)
+    case pages.adjustment.AdjustmentVolumeWithSPRPage               => userAnswers => adjustmentVolumePageRoute(userAnswers)
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
-    case pages.adjustment.AdjustmentRepackagedTaxTypePage           => repackagedTaxTypeRoute
+    case pages.adjustment.AdjustmentRepackagedTaxTypePage           => userAnswers => repackagedTaxTypeRoute(userAnswers)
     case pages.adjustment.AdjustmentListPage                        => adjustmentListPageRoute
     case _                                                          =>
       _ => routes.IndexController.onPageLoad
@@ -59,22 +59,22 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.AdjustmentTaxTypePage                     =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) adjustmentTaxTypePageRoute(userAnswers)
+          if (hasChanged) adjustmentTaxTypePageRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) adjustmentVolumePageRoute(userAnswers)
+          if (hasChanged) adjustmentVolumePageRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) adjustmentVolumePageRoute(userAnswers)
+          if (hasChanged) adjustmentVolumePageRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           =>
       userAnswers =>
         hasChanged =>
-          if (hasChanged) repackagedTaxTypeRoute(userAnswers)
+          if (hasChanged) repackagedTaxTypeRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ =>
@@ -84,42 +84,42 @@ class AdjustmentNavigator @Inject() () {
     case _                                                          => _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
   }
 
-  private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers): Call = {
+  private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
     val rateTypeOpt = for {
       adjustment <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
       rateBand   <- adjustment.rateBand
     } yield rateBand.rateType
     rateTypeOpt match {
-      case Some(Core)          => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+      case Some(Core)          => controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
       case Some(DraughtRelief) =>
-        controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
+        controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(mode)
       case _                   =>
-        controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
+        controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(mode)
     }
   }
 
-  private def adjustmentVolumePageRoute(userAnswers: UserAnswers): Call = {
+  private def adjustmentVolumePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
     val adjustmentTypeOpt = for {
       adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
       adjustmentType <- adjustment.adjustmentType
     } yield adjustmentType
     adjustmentTypeOpt match {
       case Some(RepackagedDraughtProducts) =>
-        controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode)
+        controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(mode)
       case _                               => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
   }
 
-  private def repackagedTaxTypeRoute(userAnswers: UserAnswers): Call = {
+  private def repackagedTaxTypeRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
     val rateType = for {
       adjustment         <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
       repackagedRateBand <- adjustment.repackagedRateBand
     } yield repackagedRateBand.rateType
     rateType match {
       case Some(DraughtAndSmallProducerRelief) =>
-        controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+        controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode)
       case Some(SmallProducerRelief)           =>
-        controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
+        controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode)
       case _                                   => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
   }
