@@ -49,11 +49,11 @@ object DutyCalculationHelper {
     messages: Messages
   ): Either[String, Seq[TableRowViewModel]] =
     userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-      case Some(rateBands) => extractRateBandsAndCreteRows(regime, rateBands, totalsByTaxType)
+      case Some(rateBands) => extractRateBandsAndCreateRows(regime, rateBands, totalsByTaxType)
       case None            => Left("No rate bands found")
     }
 
-  private def extractRateBandsAndCreteRows(
+  private def extractRateBandsAndCreateRows(
     regime: AlcoholRegime,
     rateBands: Set[RateBand],
     totalsByTaxType: Seq[DutyByTaxType]
