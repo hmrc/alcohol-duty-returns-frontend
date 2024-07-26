@@ -1174,7 +1174,7 @@ adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 # Beginning of Check and submit sub-journey
 
 dutyDueForThisReturn.title = The duty due for this return is {0}
-dutyDueForThisReturn.nil.title = No Duty due
+dutyDueForThisReturn.nil.title = No duty due
 dutyDueForThisReturn.heading = The duty due for this return is {0}
 dutyDueForThisReturn.nil.heading = No duty due (nil return)
 dutyDueForThisReturn.positive.p1 = You will be liable for this amount once you submit your return.
