@@ -24,7 +24,7 @@ import pages.returns.{DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, Ho
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.returns.DutyCalculationHelper
+import viewmodels.returns.DutyCalculationHelper
 import views.html.returns.DutyCalculationView
 
 import scala.concurrent.Future

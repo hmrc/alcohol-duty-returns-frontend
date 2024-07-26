@@ -76,7 +76,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
           )
         )
       case _                                                                                                   =>
-        logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
+        logger.warn("Couldn't fetch the adjustmentType and repackagedRateBand in AdjustmentEntry from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
@@ -119,9 +119,12 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                       case None                     =>
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
                     }
-                  case _                                    => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                  case _                                    =>
+                    logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
+                    Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
                 }
               case None                         =>
+                logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
                 Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             }
         )
@@ -142,7 +145,9 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
             )
           )
         )
-      case _                                                                            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case _                                                                            =>
+        logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
   def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =

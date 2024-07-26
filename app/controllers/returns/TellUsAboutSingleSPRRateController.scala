@@ -26,8 +26,9 @@ import pages.returns.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
+import models.returns.VolumeAndRateByTaxType
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.CategoriesByRateTypeHelper
+import viewmodels.returns.CategoriesByRateTypeHelper
 import views.html.returns.TellUsAboutSingleSPRRateView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,7 +45,10 @@ class TellUsAboutSingleSPRRateController @Inject() (
   view: TellUsAboutSingleSPRRateView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with ReturnController[Seq[VolumeAndRateByTaxType], TellUsAboutSingleSPRRatePage.type] {
+
+  val currentPage = TellUsAboutSingleSPRRatePage
 
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
@@ -52,7 +56,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
-          val preparedForm               = request.userAnswers.getByKey(TellUsAboutSingleSPRRatePage, regime) match {
+          val preparedForm               = request.userAnswers.getByKey(currentPage, regime) match {
             case None        => form
             case Some(value) => form.fill(value)
           }
@@ -75,14 +79,17 @@ class TellUsAboutSingleSPRRateController @Inject() (
                     view(formWithErrors, regime, CategoriesByRateTypeHelper.rateBandCategories(rateBands), mode)
                   )
                 ),
-              value =>
+              value => {
+                val hasChanged = hasValueChanged(value, regime)
                 for {
                   updatedAnswers <-
-                    Future.fromTry(request.userAnswers.setByKey(TellUsAboutSingleSPRRatePage, regime, value))
+                    Future.fromTry(request.userAnswers.setByKey(currentPage, regime, value))
                   _              <- cacheConnector.set(updatedAnswers)
                 } yield Redirect(
-                  navigator.nextPageWithRegime(TellUsAboutSingleSPRRatePage, mode, updatedAnswers, regime)
+                  navigator
+                    .nextPageWithRegime(currentPage, mode, updatedAnswers, regime, hasChanged)
                 )
+              }
             )
       }
     }

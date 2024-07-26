@@ -26,6 +26,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import navigation.ReturnsNavigator
+import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.returns.DeleteMultipleSPREntryView
 
@@ -43,33 +44,45 @@ class DeleteMultipleSPREntryController @Inject() (
   view: DeleteMultipleSPREntryView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   val form = formProvider()
 
-  def onPageLoad(regime: AlcoholRegime, index: Int): Action[AnyContent] =
+  def onPageLoad(regime: AlcoholRegime, indexOpt: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      Ok(view(form, regime, index))
+      indexOpt match {
+        case Some(index) => Ok(view(form, regime, index))
+        case None        =>
+          logger.warn(s"No index provided")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
     }
 
-  def onSubmit(regime: AlcoholRegime, index: Int): Action[AnyContent] =
+  def onSubmit(regime: AlcoholRegime, indexOpt: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, index))),
-          value =>
-            if (value) {
-              for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.removeByKeyAndIndex(MultipleSPRListPage, regime, index))
-                _              <- cacheConnector.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPageWithRegime(DeleteMultipleSPREntryPage, NormalMode, updatedAnswers, regime)
-              )
-            } else {
-              Future.successful(Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)))
-            }
-        )
+      indexOpt match {
+        case None        =>
+          logger.warn(s"No index provided")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case Some(index) =>
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, index))),
+              value =>
+                if (value) {
+                  for {
+                    updatedAnswers <-
+                      Future.fromTry(request.userAnswers.removeByKeyAndIndex(MultipleSPRListPage, regime, index))
+                    _              <- cacheConnector.set(updatedAnswers)
+                  } yield Redirect(
+                    navigator.nextPageWithRegime(DeleteMultipleSPREntryPage, NormalMode, updatedAnswers, regime)
+                  )
+                } else {
+                  Future.successful(Redirect(controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)))
+                }
+            )
+      }
     }
 }

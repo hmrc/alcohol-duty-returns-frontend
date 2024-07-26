@@ -26,7 +26,7 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.returns.MultipleSPRListHelper
+import viewmodels.returns.MultipleSPRListHelper
 import views.html.returns.MultipleSPRListView
 
 import scala.concurrent.Future

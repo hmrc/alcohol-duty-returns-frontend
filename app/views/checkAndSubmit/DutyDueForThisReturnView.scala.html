@@ -32,7 +32,15 @@
 
 @(table: TableViewModel, totalValue: BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("dutyDueForThisReturn.title", messages("site.currency.2DP", totalValue)))) {
+@titleMessage = @{
+  if (totalValue == 0) {
+    messages("dutyDueForThisReturn.nil.title")
+  } else {
+    messages("dutyDueForThisReturn.title", messages("site.currency.2DP", totalValue))
+  }
+}
+
+@layout(pageTitle = titleNoForm(titleMessage)) {
 
     @sectionHeading(
         id = "dutyDueForThisReturn-section",
