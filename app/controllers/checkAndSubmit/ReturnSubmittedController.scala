@@ -17,12 +17,14 @@
 package controllers.checkAndSubmit
 
 import controllers.actions._
+import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.DateTimeHelper
 import views.html.checkAndSubmit.ReturnSubmittedView
 
 import java.time.{Instant, LocalDate}
@@ -33,21 +35,37 @@ class ReturnSubmittedController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: ReturnSubmittedView
+  view: ReturnSubmittedView,
+  dateTimeHelper: DateTimeHelper
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  def onPageLoad(
-    processingDate: Instant,
-    amount: BigDecimal,
-    chargeReference: Option[String],
-    paymentDueDate: LocalDate
-  ): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    if ((amount != 0 && chargeReference.isDefined) || (amount == 0 && chargeReference.isEmpty)) {
-      Ok(view(processingDate, amount, chargeReference, paymentDueDate, request.returnPeriod.toPeriodKey))
-    } else {
-      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-    }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val staticData = AdrReturnCreatedDetails(
+      processingDate = Instant.now(),
+      amount = 100.00,
+      chargeReference = Some("XA12345"),
+      paymentDueDate = LocalDate.of(2024, 8, 25)
+    )
+
+    val localDateProcessingDate = dateTimeHelper.instantToLocalDate(Instant.now())
+    val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(localDateProcessingDate)
+
+    val formattedPaymentDueDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 8, 25))
+
+    val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
+    val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
+
+    Ok(
+      view(
+        staticData,
+        periodStartDate,
+        periodEndDate,
+        formattedProcessingDate,
+        formattedPaymentDueDate,
+        request.returnPeriod.toPeriodKey
+      )
+    )
   }
 }

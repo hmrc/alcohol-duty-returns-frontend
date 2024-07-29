@@ -20,7 +20,6 @@ lazy val root = Project(appName, file("."))
       "java.time.Instant",
       "models._",
       "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl",
-      "models.binders.Binders._"
     ),
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",

@@ -19,11 +19,8 @@ package models.checkAndSubmit
 import java.time.{Instant, LocalDate}
 
 case class AdrReturnCreatedDetails(
-                                      processingDate: Instant,
-                                      amount: BigDecimal,
-                                      chargeReference: Option[String],
-                                      paymentDueDate: LocalDate
-                                    )
-
-
-
+  processingDate: Instant,
+  amount: BigDecimal,
+  chargeReference: Option[String],
+  paymentDueDate: LocalDate
+)
