@@ -112,6 +112,7 @@
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.agreeAndSubmit"))
+            .asLink(controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad.url)
     )
 
 }
