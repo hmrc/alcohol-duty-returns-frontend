@@ -31,69 +31,73 @@ class TaskListViewModelSpec extends SpecBase {
   "TaskListViewModel" - {
     "must return an incomplete task list if not all sections are complete" in new SetUp {
       when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
       when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
       when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
 
       val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
 
       result mustBe AlcoholDutyTaskList(
-        Seq(notStartedSection, inProgressSection, completeSection),
+        Seq(notStartedSection, notStartedSection, inProgressSection, completeSection),
         validUntilString
       )
 
       result.status mustBe Incomplete
-      result.totalTasks mustBe 3
+      result.totalTasks mustBe 4
       result.completedTasks mustBe 1
     }
 
     "must return an complete task list if all the sections are complete" in new SetUp {
       when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
 
       val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
 
       result mustBe AlcoholDutyTaskList(
-        Seq(completeSection, completeSection, completeSection),
+        Seq(completeSection, completeSection, completeSection, completeSection),
         validUntilString
       )
 
       result.status mustBe Completed
-      result.totalTasks mustBe 3
-      result.completedTasks mustBe 3
+      result.totalTasks mustBe 4
+      result.completedTasks mustBe 4
     }
 
     quarterPeriodKeys.foreach { periodKey =>
       s"must return the QS section as the period key $periodKey falls on a quarter" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
         when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
 
         val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKey)
 
         result mustBe AlcoholDutyTaskList(
-          Seq(notStartedSection, inProgressSection, completeSection),
+          Seq(notStartedSection, notStartedSection, inProgressSection, completeSection),
           validUntilString
         )
 
-        result.totalTasks mustBe 3
+        result.totalTasks mustBe 4
       }
     }
 
     nonQuarterPeriodKeys.foreach { periodKey =>
       s"must not return the QS section as the period key $periodKey doesn't fall on a quarter" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
         when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
 
         val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKey)
 
         result mustBe AlcoholDutyTaskList(
-          Seq(notStartedSection, inProgressSection),
+          Seq(notStartedSection, notStartedSection, inProgressSection),
           validUntilString
         )
 
-        result.totalTasks mustBe 2
+        result.totalTasks mustBe 3
       }
     }
   }

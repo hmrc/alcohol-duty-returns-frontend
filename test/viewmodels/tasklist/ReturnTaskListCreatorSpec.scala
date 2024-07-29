@@ -17,8 +17,10 @@
 package viewmodels.tasklist
 
 import base.SpecBase
+import models.adjustment.AdjustmentEntry
 import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage}
 import pages.dutySuspended._
 import pages.returns.DeclareAlcoholDutyQuestionPage
 import pages.spiritsQuestions._
@@ -98,6 +100,129 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               )
             case None       => fail(s"Task for regime $regime not found")
           }
+        )
+      }
+    }
+  }
+
+  "on calling returnAdjustmentSection" - {
+
+    "when the user answers object is empty, must return a not started section" in {
+      val result = returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)
+
+      result.completedTask                     shouldBe false
+      result.taskList.items.size               shouldBe 1
+      result.title                             shouldBe messages("taskList.section.adjustment.heading")
+      result.taskList.items.head.title.content shouldBe Text(
+        messages("taskList.section.adjustment.needToDeclare.notStarted")
+      )
+      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+      result.taskList.items.head.href          shouldBe Some(
+        controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url
+      )
+    }
+
+    "when the user answers no to DeclareAdjustment question, must return a complete section" in {
+      val userAnswers = emptyUserAnswers
+        .set(DeclareAdjustmentQuestionPage, false)
+        .success
+        .value
+      val result      = returnTaskListCreator.returnAdjustmentSection(userAnswers)
+
+      result.completedTask                     shouldBe true
+      result.taskList.items.size               shouldBe 1
+      result.title                             shouldBe messages("taskList.section.adjustment.heading")
+      result.taskList.items.head.title.content shouldBe Text(
+        messages("taskList.section.adjustment.needToDeclare.no")
+      )
+      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+      result.taskList.items.head.href          shouldBe Some(
+        controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+      )
+    }
+
+    "when the user answers yes to DeclareAdjustment question, must return a complete section and the regime tasks" - {
+      val declaredAdjustmentUserAnswer = emptyUserAnswers
+        .set(DeclareAdjustmentQuestionPage, true)
+        .success
+        .value
+
+      "must have a link to the 'Adjustment List' screen if the user has not answered any other question and the task must be not started" in {
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
+
+        result.completedTask                     shouldBe false
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.adjustment.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.adjustment.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.adjustment.notStarted")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+        )
+      }
+
+      "must have a link to the 'Adjustment List' screen if the user has answered some questions and the task must be in progress" in {
+        val result = returnTaskListCreator.returnAdjustmentSection(
+          declaredAdjustmentUserAnswer.set(AdjustmentEntryListPage, List(AdjustmentEntry())).success.value
+        )
+
+        result.completedTask                     shouldBe false
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.adjustment.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.adjustment.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.adjustment.inProgress")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+        )
+      }
+
+      "must have a link to the 'Adjustment List' screen if the user has answered some questions and the task must be completed" in {
+        val result = returnTaskListCreator.returnAdjustmentSection(
+          declaredAdjustmentUserAnswer
+            .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+            .success
+            .value
+            .set(AdjustmentListPage, false)
+            .success
+            .value
+        )
+
+        result.completedTask                     shouldBe true
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.adjustment.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.adjustment.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.adjustment.completed")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
         )
       }
     }

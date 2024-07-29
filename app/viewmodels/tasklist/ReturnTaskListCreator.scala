@@ -17,6 +17,7 @@
 package viewmodels.tasklist
 
 import models.{CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
@@ -132,6 +133,26 @@ class ReturnTaskListCreator @Inject() () {
 
       }
 
+  private def returnAdjustmentJourneyTaskListItem(
+    userAnswers: UserAnswers
+  )(implicit messages: Messages): TaskListItem = {
+    val getDeclarationState = () => {
+      (userAnswers.get(AdjustmentListPage), userAnswers.get(AdjustmentEntryListPage)) match {
+        case (Some(false), Some(_)) => Completed
+        case (_, Some(_))           => InProgress
+        case (_, _)                 => NotStarted
+      }
+    }
+
+    createDeclarationTask(
+      getDeclarationState,
+      "adjustment",
+      controllers.adjustment.routes.AdjustmentListController.onPageLoad().url,
+      controllers.adjustment.routes.AdjustmentListController.onPageLoad().url,
+      controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+    )
+  }
+
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
       val regimes             = userAnswers.regimes
@@ -211,6 +232,14 @@ class ReturnTaskListCreator @Inject() () {
       () => returnJourneyTaskListItem(userAnswers),
       controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(_).url,
       sectionName = "returns"
+    )
+
+  def returnAdjustmentSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
+    createSection(
+      userAnswers.get(DeclareAdjustmentQuestionPage),
+      () => Seq(returnAdjustmentJourneyTaskListItem(userAnswers)),
+      controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(_).url,
+      sectionName = "adjustment"
     )
 
   def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
