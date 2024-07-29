@@ -29,7 +29,7 @@
         link: Link,
 )
 
-@(staticData: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String)(implicit request: Request[_], messages: Messages)
+@(staticData: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String, businessTaxAccounturl: String)(implicit request: Request[_], messages: Messages)
 
 @nilPanelContent = {
     @paragraph(messages("returnSubmitted.panel.body.reference", staticData.chargeReference.get.value), classes = "")
@@ -81,7 +81,7 @@
             link(
                 id = "business-tax-account-link",
                 text = messages("site.returnToBusinessAccount"),
-                href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+                href = businessTaxAccounturl
             ))
         )
     }

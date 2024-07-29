@@ -16,6 +16,7 @@
 
 package controllers.checkAndSubmit
 
+import config.FrontendAppConfig
 import controllers.actions._
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.Logging
@@ -30,6 +31,7 @@ import views.html.checkAndSubmit.ReturnSubmittedView
 import java.time.{Instant, LocalDate}
 
 class ReturnSubmittedController @Inject() (
+  appConfig: FrontendAppConfig,
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -57,6 +59,8 @@ class ReturnSubmittedController @Inject() (
     val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
     val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
 
+    val businessTaxAccounturl = appConfig.businessTaxAccountUrl
+
     Ok(
       view(
         staticData,
@@ -64,7 +68,8 @@ class ReturnSubmittedController @Inject() (
         periodEndDate,
         formattedProcessingDate,
         formattedPaymentDueDate,
-        request.returnPeriod.toPeriodKey
+        request.returnPeriod.toPeriodKey,
+        businessTaxAccounturl
       )
     )
   }
