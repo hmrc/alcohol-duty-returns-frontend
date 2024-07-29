@@ -17,7 +17,9 @@
 package viewmodels.checkAnswers.checkAndSubmit
 
 import config.Constants
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{NormalMode, UserAnswers}
+import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 import play.api.i18n.Messages
@@ -27,17 +29,20 @@ import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableViewM
 
 object DutyDueForThisReturnHelper extends Logging {
 
+  val dutyDueOrder = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
+
   def dutyDueByRegime(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Either[String, TableViewModel] =
-    createRows(userAnswers).map { rows =>
-      TableViewModel(
-        head = Seq(),
-        rows = rows
-      )
-    }
+    for {
+      rows          <- createReturnRows(userAnswers)
+      adjustmentRow <- createAdjustmentRow(userAnswers)
+    } yield TableViewModel(
+      head = Seq(),
+      rows = rows :+ adjustmentRow
+    )
 
-  private def createRows(
+  private def createReturnRows(
     userAnswers: UserAnswers
   )(implicit messages: Messages): Either[String, Seq[TableRowViewModel]] =
     (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
@@ -62,25 +67,71 @@ object DutyDueForThisReturnHelper extends Logging {
           )
         )
       case (Some(true), Some(alcoholDuties)) =>
-        Right(alcoholDuties.map { case (alcoholRegime, alcoholDuty) =>
+        Right(
+          alcoholDuties.toSeq.sortBy(entry => dutyDueOrder.indexOf(entry._1)).map { case (alcoholRegime, alcoholDuty) =>
+            TableRowViewModel(
+              cells = Seq(
+                TableRow(
+                  content =
+                    Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
+                  classes = Constants.boldFontCssClass
+                ),
+                TableRow(Text(Money.format(alcoholDuty.totalDuty)))
+              ),
+              actions = Seq(
+                TableRowActionViewModel(
+                  label = "Change",
+                  href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
+                )
+              )
+            )
+          }
+        )
+      case (_, _)                            =>
+        Left("Failed to create duty due table view model")
+    }
+
+  private def createAdjustmentRow(
+    userAnswers: UserAnswers
+  )(implicit messages: Messages): Either[String, TableRowViewModel] =
+    (userAnswers.get(DeclareAdjustmentQuestionPage), userAnswers.get(AdjustmentTotalPage)) match {
+      case (Some(false), _)                   =>
+        Right(
           TableRowViewModel(
             cells = Seq(
               TableRow(
-                content =
-                  Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
+                content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
                 classes = Constants.boldFontCssClass
               ),
-              TableRow(Text(Money.format(alcoholDuty.totalDuty)))
+              TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
             ),
             actions = Seq(
               TableRowActionViewModel(
                 label = "Change",
-                href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
+                href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
               )
             )
           )
-        }.toSeq)
-      case (_, _)                            =>
+        )
+      case (Some(true), Some(adjustmentDuty)) =>
+        Right(
+          TableRowViewModel(
+            cells = Seq(
+              TableRow(
+                content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
+                classes = Constants.boldFontCssClass
+              ),
+              TableRow(Text(Money.format(adjustmentDuty)))
+            ),
+            actions = Seq(
+              TableRowActionViewModel(
+                label = "Change",
+                href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+              )
+            )
+          )
+        )
+      case (_, _)                             =>
         Left("Failed to create duty due table view model")
     }
 }

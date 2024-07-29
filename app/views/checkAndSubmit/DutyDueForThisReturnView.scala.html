@@ -19,6 +19,7 @@
 
 @this(
         layout: templates.Layout,
+        formHelper: FormWithCSRF,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
@@ -41,77 +42,72 @@
 }
 
 @layout(pageTitle = titleNoForm(titleMessage)) {
-
+  @formHelper(action = controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
     @sectionHeading(
-        id = "dutyDueForThisReturn-section",
-        text = messages("section.checkAndSubmit"),
+      id = "dutyDueForThisReturn-section",
+      text = messages("section.checkAndSubmit"),
     )
 
-
     @if(totalValue == 0) {
-        @pageHeading(messages("dutyDueForThisReturn.nil.heading"))
+      @pageHeading(messages("dutyDueForThisReturn.nil.heading"))
 
-        @paragraph(messages("dutyDueForThisReturn.nil.p1"))
+      @paragraph(messages("dutyDueForThisReturn.nil.p1"))
 
-        @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
+      @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
 
-        @bulletList(Seq(messages("dutyDueForThisReturn.bulletList.3")))
+      @bulletList(Seq(messages("dutyDueForThisReturn.bulletList.3")))
     }
 
     @if(totalValue > 0) {
-        @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", totalValue)))
+      @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", totalValue)))
 
-        @paragraph(messages("dutyDueForThisReturn.positive.p1"))
+      @paragraph(messages("dutyDueForThisReturn.positive.p1"))
 
-        @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
+      @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
 
-        @bulletList(Seq(
-            messages("dutyDueForThisReturn.bulletList.1")
-        ))
+      @bulletList(Seq(
+        messages("dutyDueForThisReturn.bulletList.1")
+      ))
     }
 
     @if(totalValue < 0) {
-        @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", totalValue)))
+      @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", totalValue)))
 
-        @paragraph(messages("dutyDueForThisReturn.negative.p1"))
+      @paragraph(messages("dutyDueForThisReturn.negative.p1"))
 
-        @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
+      @subHeading(messages("dutyDueForThisReturn.h2"), classes = "govuk-heading-m")
 
-        @bulletList(Seq(
-            messages("dutyDueForThisReturn.bulletList.1")
-        ))
+      @bulletList(Seq(
+        messages("dutyDueForThisReturn.bulletList.1")
+      ))
     }
-
 
     @paragraph(messages("dutyDueForThisReturn.p2"))
 
     @govukTable(Table(
-        caption = Some(messages("dutyDueForThisReturn.h3")),
-        captionClasses = "govuk-table__caption--m",
-        head = Some(table.head),
-        rows = table.rows.map(row => {
-            val actions = TableRow(content = HtmlContent(tableRowActionList(
-                id = "productList",
-                actions = row.actions.map(action => tableRowAction(
-                    id = "",
-                    text = action.label,
-                    href = action.href,
-                    visuallyHiddenContent = action.visuallyHiddenText
-                )
-                ))))
-            row.cells :+ actions
-        }
-        ))
+      caption = Some(messages("dutyDueForThisReturn.h3")),
+      captionClasses = "govuk-table__caption--m",
+      head = Some(table.head),
+      rows = table.rows.map(row => {
+        val actions = TableRow(content = HtmlContent(tableRowActionList(
+          id = "productList",
+          actions = row.actions.map(action => tableRowAction(
+            id = "",
+            text = action.label,
+            href = action.href,
+            visuallyHiddenContent = action.visuallyHiddenText
+          )
+          ))))
+        row.cells :+ actions
+      }
+      ))
     )
 
     @subHeading(messages("dutyDueForThisReturn.h4"), classes = "govuk-heading-m")
     @paragraph(messages("dutyDueForThisReturn.p3"))
 
-
-
-
     @govukButton(
-        ButtonViewModel("continueButton", messages("site.agreeAndSubmit"))
+      ButtonViewModel("continueButton", messages("site.agreeAndSubmit"))
     )
-
+  }
 }
