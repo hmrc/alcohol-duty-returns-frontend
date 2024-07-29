@@ -21,10 +21,6 @@ import play.api.data.format.Formatter
 
 import scala.util.control.Exception.nonFatalCatch
 
-object BigDecimalFieldFormatter {
-  def nameToId(name: String): String = name.replace("[", "_").replace("]", "").replace(".", "_")
-}
-
 class BigDecimalFieldFormatter(
   requiredKey: String,
   invalidKey: String,
@@ -38,8 +34,6 @@ class BigDecimalFieldFormatter(
   minimumValue: BigDecimal = BigDecimal(0.01)
 ) extends Formatter[BigDecimal]
     with Formatters {
-
-  import BigDecimalFieldFormatter._
 
   val decimalRegexp = s"""^[+-]?[0-9]*(\\.[0-9]{0,$decimalPlaces})?$$"""
 

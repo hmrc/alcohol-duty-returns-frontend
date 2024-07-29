@@ -19,9 +19,6 @@ package views
 import play.api.data.Form
 import play.api.i18n.Messages
 
-import java.text.DecimalFormat
-import java.util.Locale
-
 object ViewUtils {
 
   def title(form: Form[_], title: String, section: Option[String] = None)(implicit messages: Messages): String =
@@ -38,9 +35,4 @@ object ViewUtils {
 
   def withPercentage(percentage: BigDecimal)(implicit messages: Messages) =
     s"$percentage${messages("site.unit.percentage")}"
-
-  def valueFormatter(value: BigDecimal): String = {
-    val decimalFormat = new DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(Locale.UK))
-    decimalFormat.format(value)
-  }
 }

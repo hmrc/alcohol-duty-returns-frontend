@@ -27,10 +27,11 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import models.adjustment.AdjustmentEntry
+import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.WhenDidYouPayDutyView
 
+import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
 class WhenDidYouPayDutyController @Inject() (
@@ -45,16 +46,34 @@ class WhenDidYouPayDutyController @Inject() (
   view: WhenDidYouPayDutyView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case None                                  => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) if value.period.isDefined =>
-        Ok(view(form.fill(value.period.get), mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
-      case Some(value)                           => Ok(view(form, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+      case Some(AdjustmentEntry(_, Some(adjustmentType), Some(period), _, _, _, _, _, _, _, _, _)) =>
+        Ok(
+          view(
+            form.fill(
+              period
+            ),
+            mode,
+            adjustmentType
+          )
+        )
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _))            =>
+        Ok(
+          view(
+            form,
+            mode,
+            adjustmentType
+          )
+        )
+      case _                                                                                       =>
+        logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 
@@ -65,23 +84,52 @@ class WhenDidYouPayDutyController @Inject() (
         .fold(
           formWithErrors =>
             request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-              case None        => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-              case Some(value) =>
+              case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _)) =>
                 Future.successful(
-                  BadRequest(view(formWithErrors, mode, AdjustmentTypeHelper.getAdjustmentTypeValue(value)))
+                  BadRequest(
+                    view(
+                      formWithErrors,
+                      mode,
+                      adjustmentType
+                    )
+                  )
                 )
+              case _                                                                            =>
+                logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
+                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             },
           value => {
-            val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+            val (updatedAdjustment, hasChanged) = updatePeriod(adjustment, value)
             for {
               updatedAnswers <-
                 Future.fromTry(
                   request.userAnswers
-                    .set(CurrentAdjustmentEntryPage, adjustment.copy(period = Some(value)))
+                    .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(period = Some(value)))
                 )
               _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(WhenDidYouPayDutyPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(WhenDidYouPayDutyPage, mode, updatedAnswers, hasChanged))
           }
         )
   }
+
+  def updatePeriod(adjustmentEntry: AdjustmentEntry, currentValue: YearMonth): (AdjustmentEntry, Boolean) =
+    adjustmentEntry.period match {
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case _                                                    =>
+        (
+          adjustmentEntry.copy(
+            totalLitresVolume = None,
+            pureAlcoholVolume = None,
+            sprDutyRate = None,
+            rateBand = None,
+            duty = None,
+            repackagedRateBand = None,
+            repackagedDuty = None,
+            repackagedSprDutyRate = None,
+            newDuty = None
+          ),
+          true
+        )
+    }
 }

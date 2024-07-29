@@ -28,6 +28,7 @@ object Constants {
   val oneHalfCssClass        = "govuk-!-width-one-half"
   val threeQuartersCssClass  = "govuk-!-width-three-quarters"
   val textAlignRightCssClass = "text-align-right"
+  val boldFontCssClass       = "govuk-!-font-weight-bold"
 
   val blueTagCssClass  = "govuk-tag--blue"
   val greenTagCssClass = "govuk-tag--green"
@@ -35,5 +36,6 @@ object Constants {
 
   val headingMCssClass = "govuk-heading-m"
 
-  val tableCaptionMCssClass = "govuk-table__caption--m"
+  val tableCaptionMCssClass    = "govuk-table__caption--m"
+  val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"
 }

@@ -22,7 +22,7 @@ import forms.returns.DoYouHaveMultipleSPRDutyRatesFormProvider
 import javax.inject.Inject
 import models.{AlcoholRegime, Mode}
 import navigation.ReturnsNavigator
-import pages.returns.DoYouHaveMultipleSPRDutyRatesPage
+import pages.returns.{DoYouHaveMultipleSPRDutyRatesPage, nextPages}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
@@ -43,13 +43,15 @@ class DoYouHaveMultipleSPRDutyRatesController @Inject() (
   view: DoYouHaveMultipleSPRDutyRatesView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with ReturnController[Boolean, DoYouHaveMultipleSPRDutyRatesPage.type] {
 
-  val form = formProvider()
+  val currentPage = DoYouHaveMultipleSPRDutyRatesPage
+  val form        = formProvider()
 
   def onPageLoad(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.getByKey(DoYouHaveMultipleSPRDutyRatesPage, regime) match {
+      val preparedForm = request.userAnswers.getByKey(currentPage, regime) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -63,14 +65,18 @@ class DoYouHaveMultipleSPRDutyRatesController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, regime, mode))),
-          value =>
+          value => {
+            val hasChanged   = hasValueChanged(value, regime)
+            val pagesToClear = if (hasChanged) nextPages(currentPage) else Seq.empty
             for {
-              updatedAnswers <-
-                Future.fromTry(request.userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, value))
-              _              <- cacheConnector.set(updatedAnswers)
+              updatedAnswers     <-
+                Future.fromTry(request.userAnswers.setByKey(currentPage, regime, value))
+              clearedUserAnswers <- Future.fromTry(updatedAnswers.removePagesByKey(pagesToClear, regime))
+              _                  <- cacheConnector.set(clearedUserAnswers)
             } yield Redirect(
-              navigator.nextPageWithRegime(DoYouHaveMultipleSPRDutyRatesPage, mode, updatedAnswers, regime)
+              navigator.nextPageWithRegime(currentPage, mode, updatedAnswers, regime, pagesToClear.nonEmpty)
             )
+          }
         )
     }
 }

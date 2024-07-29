@@ -15,7 +15,8 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import models.adjustment.AdjustmentType
 
 @this(
     layout: templates.Layout,
@@ -23,10 +24,13 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading,
+    paragraph: Paragraph,
+    subHeading: SubHeading
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, regime: AlcoholRegime, rateBandContent: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentVolume.title"))) {
 
@@ -41,15 +45,36 @@
             text = messages(s"section.adjustment.$adjustmentType"),
         )
 
+        @pageHeading(messages("adjustmentVolume.heading"))
+
+        @paragraph(messages("adjustmentVolume.hint"), classes = "govuk-hint")
+
+        @subHeading(rateBandContent, "govuk-heading-s")
+
         @govukInput(
             InputViewModel(
-                field = form("adjustment-volume-input"),
-                label = LabelViewModel(messages("adjustmentVolume.heading")).asPageHeading()
+                field = form("volumes"),
+                key="totalLitresVolume",
+                label = LabelViewModel(messages("adjustmentVolume.totalLitresVolume.heading",  messages(s"return.regime.$regime"))),
+                errorMessageField = form(s"volumes_totalLitresVolume"),
+                value = form(s"volumes.totalLitresVolume").value
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            .withHint(Hint(content = HtmlContent(messages("adjustmentVolume.hint"))))
+        )
+
+        @govukInput(
+        InputViewModel(
+            field = form("volumes"),
+            key="pureAlcoholVolume",
+            label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading")),
+            errorMessageField = form(s"volumes_pureAlcoholVolume"),
+            value = form(s"volumes.pureAlcoholVolume").value
+        )
+        .asNumeric()
+        .withWidth(Fixed10)
+        .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
         )
 
         @govukButton(

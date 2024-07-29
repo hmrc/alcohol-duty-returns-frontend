@@ -17,17 +17,19 @@
 package controllers.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import connectors.CacheConnector
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentDutyDueView
-import models.AlcoholByVolume
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import services.adjustment.AdjustmentEntryService
 
+import java.time.YearMonth
 import scala.concurrent.Future
 
 class AdjustmentDutyDueControllerSpec extends SpecBase {
@@ -39,18 +41,36 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     val rate              = BigDecimal(9.27)
     val pureAlcoholVolume = BigDecimal(3.69)
     val taxCode           = "311"
-    val volume            = BigDecimal(1)
-    val abv               = AlcoholByVolume(1)
-    val spoilt            = Spoilt.toString
+    val volume            = BigDecimal(10)
+    val repackagedRate    = BigDecimal(10)
+    val repackagedDuty    = BigDecimal(33.2)
+    val newDuty           = BigDecimal(1)
+    val rateBand          = RateBand(
+      "310",
+      "some band",
+      RateType.DraughtRelief,
+      Some(rate),
+      Set(
+        RangeDetailsByRegime(
+          AlcoholRegime.Beer,
+          NonEmptySeq.one(
+            ABVRange(
+              AlcoholType.Beer,
+              AlcoholByVolume(0.1),
+              AlcoholByVolume(5.8)
+            )
+          )
+        )
+      )
+    )
 
     val adjustmentEntry = AdjustmentEntry(
-      abv = Some(AlcoholByVolume(1)),
-      volume = Some(BigDecimal(1)),
-      taxRate = Some(rate),
       pureAlcoholVolume = Some(pureAlcoholVolume),
+      totalLitresVolume = Some(volume),
+      rateBand = Some(rateBand),
       duty = Some(dutyDue),
-      taxCode = Some(taxCode),
-      adjustmentType = Some(Spoilt)
+      adjustmentType = Some(Spoilt),
+      period = Some(YearMonth.of(24, 1))
     )
 
     val mockCacheConnector = mock[CacheConnector]
@@ -59,7 +79,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET" in {
 
       val adjustmentEntryService = mock[AdjustmentEntryService]
-      when(adjustmentEntryService.createAdjustment(any())(any(), any())) thenReturn Future.successful(adjustmentEntry)
+      when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
@@ -76,7 +96,17 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentDutyDueView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(spoilt, abv.value, volume, dutyDue, pureAlcoholVolume, taxCode, rate)(
+        contentAsString(result) mustEqual view(
+          Spoilt,
+          volume,
+          dutyDue,
+          pureAlcoholVolume,
+          taxCode,
+          rate,
+          repackagedRate,
+          repackagedDuty,
+          newDuty
+        )(
           request,
           getMessages(application)
         ).toString
@@ -98,10 +128,9 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     }
 
     val incompleteAdjustmentEntries = List(
-      (adjustmentEntry.copy(abv = None), "abv"),
-      (adjustmentEntry.copy(volume = None), "volume"),
+      (adjustmentEntry.copy(totalLitresVolume = None), "totalLitres"),
       (adjustmentEntry.copy(pureAlcoholVolume = None), "pureAlcoholVolume"),
-      (adjustmentEntry.copy(taxRate = None, sprDutyRate = None), "rate"),
+      (adjustmentEntry.copy(rateBand = None, sprDutyRate = None), "rate"),
       (adjustmentEntry.copy(duty = None), "duty")
     )
 
@@ -109,7 +138,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
       s"must redirect to Journey Recovery for a GET if adjustment entry does not contain $msg" in {
 
         val adjustmentEntryService = mock[AdjustmentEntryService]
-        when(adjustmentEntryService.createAdjustment(any())(any(), any())) thenReturn Future.successful(adjustmentEntry)
+        when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
 
         val application =
           applicationBuilder(userAnswers = Some(emptyUserAnswers))

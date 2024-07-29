@@ -25,6 +25,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.adjustment.AdjustmentType.Spoilt
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HttpResponse
@@ -75,7 +76,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, adjustmentType.toString)(
+        contentAsString(result) mustEqual view(form, NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -94,7 +95,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(period), NormalMode, adjustmentType.toString)(
+        contentAsString(result) mustEqual view(form.fill(period), NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -110,7 +111,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(validEmptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -139,7 +140,47 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whenDidYouPayDutyRoute)
+            .withFormUrlEncodedBody(
+              ("when-did-you-pay-duty-input.month", "1"),
+              ("when-did-you-pay-duty-input.year", "2024")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when the same data is submitted" in {
+      val userAnswers =
+        emptyUserAnswers
+          .set(
+            CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              adjustmentType = Some(Spoilt),
+              period = Some(YearMonth.of(2024, 1))
+            )
+          )
+          .success
+          .value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -175,7 +216,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, adjustmentType.toString)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, adjustmentType)(
           request,
           getMessages(application)
         ).toString
@@ -242,5 +283,4 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }
-
 }

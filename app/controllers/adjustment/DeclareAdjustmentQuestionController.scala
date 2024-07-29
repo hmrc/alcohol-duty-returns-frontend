@@ -18,10 +18,11 @@ package controllers.adjustment
 
 import controllers.actions._
 import forms.adjustment.DeclareAdjustmentQuestionFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.AdjustmentNavigator
-import pages.adjustment.DeclareAdjustmentQuestionPage
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
@@ -29,6 +30,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.DeclareAdjustmentQuestionView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class DeclareAdjustmentQuestionController @Inject() (
   override val messagesApi: MessagesApi,
@@ -63,9 +65,19 @@ class DeclareAdjustmentQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareAdjustmentQuestionPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(DeclareAdjustmentQuestionPage, mode, updatedAnswers))
+              updatedAnswers   <- Future.fromTry(request.userAnswers.set(DeclareAdjustmentQuestionPage, value))
+              filterUserAnswer <- Future.fromTry(filterAdjustmentQuestionAnswer(updatedAnswers, value))
+              _                <- cacheConnector.set(filterUserAnswer)
+            } yield Redirect(navigator.nextPage(DeclareAdjustmentQuestionPage, mode, filterUserAnswer))
         )
   }
+
+  private def filterAdjustmentQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
+    if (value) {
+      Try(userAnswer)
+    } else {
+      userAnswer.remove(
+        List(AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, AdjustmentTotalPage)
+      )
+    }
 }

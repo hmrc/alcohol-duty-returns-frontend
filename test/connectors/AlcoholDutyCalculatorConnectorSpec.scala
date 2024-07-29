@@ -21,8 +21,9 @@ import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
-import models.productEntry.TaxDuty
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
+import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.{NOT_FOUND, OK}
@@ -54,7 +55,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     )
   )
   val rateBandList: Seq[RateBand]   = Seq(rateBand)
-  val rateType                      = RateTypeResponse(DraughtRelief)
+  val ratePeriod                    = returnPeriodGen.sample.get
 
   "rates" - {
     "successfully retrieve rates" in {
@@ -82,48 +83,6 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     }
   }
 
-  "calculateTaxDuty" - {
-    "successfully retrieve tax duty" in {
-      when {
-        connector.httpClient.POST[DutyCalculationRequest, TaxDuty](any(), any(), any())(any(), any(), any(), any())
-      } thenReturn Future.successful(TaxDuty(BigDecimal(1), BigDecimal(1)))
-
-      whenReady(connector.calculateTaxDuty(AlcoholByVolume(3.5), BigDecimal(1), BigDecimal(1))) { result =>
-        result mustBe TaxDuty(BigDecimal(1), BigDecimal(1))
-        verify(connector.httpClient, atLeastOnce)
-          .POST[DutyCalculationRequest, TaxDuty](
-            any(),
-            ArgumentMatchers.eq(DutyCalculationRequest(AlcoholByVolume(3.5), BigDecimal(1), BigDecimal(1))),
-            any()
-          )(any(), any(), any(), any())
-      }
-    }
-  }
-
-  "rateType" - {
-    "successfully retrieve rates" in {
-      when {
-        connector.httpClient.GET[RateTypeResponse](any(), any(), any())(any(), any(), any())
-      } thenReturn Future.successful(rateType)
-
-      whenReady(connector.rateType(AlcoholByVolume(3.5), YearMonth.of(2023, 1), Set(Beer, Wine))) { result =>
-        result mustBe rateType
-        verify(connector.httpClient, atLeastOnce)
-          .GET[RateTypeResponse](
-            any(),
-            ArgumentMatchers.eq(
-              Seq(
-                ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                ("alcoholRegimes", Json.toJson(Set("Beer", "Wine")).toString()),
-                ("abv", "3.5")
-              )
-            ),
-            any()
-          )(any(), any(), any())
-      }
-    }
-  }
-
   "rateBand" - {
     "successfully retrieve rate band" in {
       val rateBandResponse: Future[Either[UpstreamErrorResponse, HttpResponse]] = Future.successful(
@@ -143,7 +102,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
             ArgumentMatchers.eq(
               Seq(
                 ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                ("taxType", "310")
+                ("taxTypeCode", "310")
               )
             ),
             any()
@@ -169,7 +128,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
             ArgumentMatchers.eq(
               Seq(
                 ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                ("taxType", "123")
+                ("taxTypeCode", "123")
               )
             ),
             any()
@@ -199,6 +158,63 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         }
       }
 
+    }
+  }
+
+  "calculateAdjustmentDuty" - {
+    "successfully retrieve adjustment duty" in {
+      when {
+        connector.httpClient
+          .POST[AdjustmentDutyCalculationRequest, AdjustmentDuty](any(), any(), any())(any(), any(), any(), any())
+      } thenReturn Future.successful(AdjustmentDuty(BigDecimal(1)))
+
+      whenReady(connector.calculateAdjustmentDuty(BigDecimal(1), BigDecimal(1), AdjustmentTypes.Spoilt)) { result =>
+        result mustBe AdjustmentDuty(BigDecimal(1))
+        verify(connector.httpClient, atLeastOnce)
+          .POST[AdjustmentDutyCalculationRequest, AdjustmentDuty](
+            any(),
+            ArgumentMatchers.eq(AdjustmentDutyCalculationRequest(AdjustmentTypes.Spoilt, BigDecimal(1), BigDecimal(1))),
+            any()
+          )(any(), any(), any(), any())
+      }
+    }
+  }
+
+  "calculateRepackagedDutyChange" - {
+    "successfully retrieve adjustment duty" in {
+      when {
+        connector.httpClient
+          .POST[RepackagedDutyChangeRequest, AdjustmentDuty](any(), any(), any())(any(), any(), any(), any())
+      } thenReturn Future.successful(AdjustmentDuty(BigDecimal(1)))
+
+      whenReady(connector.calculateRepackagedDutyChange(BigDecimal(2), BigDecimal(1))) { result =>
+        result mustBe AdjustmentDuty(BigDecimal(1))
+        verify(connector.httpClient, atLeastOnce)
+          .POST[RepackagedDutyChangeRequest, AdjustmentDuty](
+            any(),
+            ArgumentMatchers.eq(RepackagedDutyChangeRequest(BigDecimal(2), BigDecimal(1))),
+            any()
+          )(any(), any(), any(), any())
+      }
+    }
+  }
+
+  "calculateTotalAdjustment" - {
+    "successfully adjustment duty" in {
+      when {
+        connector.httpClient
+          .POST[AdjustmentTotalCalculationRequest, AdjustmentDuty](any(), any(), any())(any(), any(), any(), any())
+      } thenReturn Future.successful(AdjustmentDuty(BigDecimal(10)))
+
+      whenReady(connector.calculateTotalAdjustment(Seq(BigDecimal(8), BigDecimal(1), BigDecimal(1)))) { result =>
+        result mustBe AdjustmentDuty(BigDecimal(10))
+        verify(connector.httpClient, atLeastOnce)
+          .POST[AdjustmentTotalCalculationRequest, AdjustmentDuty](
+            any(),
+            ArgumentMatchers.eq(AdjustmentTotalCalculationRequest(Seq(BigDecimal(8), BigDecimal(1), BigDecimal(1)))),
+            any()
+          )(any(), any(), any(), any())
+      }
     }
   }
 }

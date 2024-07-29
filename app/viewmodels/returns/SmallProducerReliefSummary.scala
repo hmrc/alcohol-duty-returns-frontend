@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import models.{AlcoholRegime, CheckMode, UserAnswers}
 import pages.returns.DoYouHaveMultipleSPRDutyRatesPage

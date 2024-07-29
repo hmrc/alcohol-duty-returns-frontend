@@ -1,1 +1,1 @@
-GET         /clear-all         testonly.controllers.TestOnlyController.clearAllData()
+GET         /clear-all        testonly.controllers.TestOnlyController.clearAllData()

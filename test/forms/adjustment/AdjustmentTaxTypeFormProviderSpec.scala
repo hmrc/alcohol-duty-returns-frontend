@@ -41,8 +41,8 @@ class AdjustmentTaxTypeFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "adjustmentTaxType.error.valid"),
-      wholeNumberError = FormError(fieldName, "adjustmentTaxType.error.valid")
+      nonNumericError = FormError(fieldName, "adjustmentTaxType.error.invalid"),
+      wholeNumberError = FormError(fieldName, "adjustmentTaxType.error.invalid")
     )
 
     behave like intFieldWithRange(
@@ -50,13 +50,13 @@ class AdjustmentTaxTypeFormProviderSpec extends IntFieldBehaviours {
       fieldName,
       minimum = minimum,
       maximum = maximum,
-      expectedError = FormError(fieldName, "adjustmentTaxType.error.valid", Seq(minimum, maximum))
+      expectedError = FormError(fieldName, "adjustmentTaxType.error.invalid", Seq(minimum, maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "adjustmentTaxType.error.valid")
+      requiredError = FormError(fieldName, "adjustmentTaxType.error.required")
     )
   }
 }

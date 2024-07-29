@@ -17,7 +17,7 @@
 package models
 
 import enumeratum.{Enum, EnumEntry, PlayEnum}
-import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
+import play.api.libs.json._
 
 sealed trait AlcoholRegime extends EnumEntry
 object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {

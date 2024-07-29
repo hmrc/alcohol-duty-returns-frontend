@@ -28,7 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.returns.MultipleSPRListHelper
+import viewmodels.returns.MultipleSPRListHelper
 import views.html.returns.MultipleSPRListView
 
 import scala.concurrent.{ExecutionContext, Future}

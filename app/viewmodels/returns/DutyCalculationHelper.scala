@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import models.returns.{AlcoholDuty, DutyByTaxType}
 import models.{AlcoholRegime, RateBand, UserAnswers}
@@ -22,7 +22,7 @@ import pages.returns.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
+import RateBandHelper.rateBandRecap
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object DutyCalculationHelper {
@@ -49,11 +49,11 @@ object DutyCalculationHelper {
     messages: Messages
   ): Either[String, Seq[TableRowViewModel]] =
     userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-      case Some(rateBands) => extractRateBandsAndCreteRows(regime, rateBands, totalsByTaxType)
+      case Some(rateBands) => extractRateBandsAndCreateRows(regime, rateBands, totalsByTaxType)
       case None            => Left("No rate bands found")
     }
 
-  private def extractRateBandsAndCreteRows(
+  private def extractRateBandsAndCreateRows(
     regime: AlcoholRegime,
     rateBands: Set[RateBand],
     totalsByTaxType: Seq[DutyByTaxType]

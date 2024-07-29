@@ -85,7 +85,7 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -94,6 +94,32 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, declareAdjustmentQuestionRoute)
             .withFormUrlEncodedBody(("declare-adjustment-question-value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the Task list  when valid question is answered as No" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, declareAdjustmentQuestionRoute)
+            .withFormUrlEncodedBody(("declare-adjustment-question-value", "false"))
 
         val result = route(application, request).value
 

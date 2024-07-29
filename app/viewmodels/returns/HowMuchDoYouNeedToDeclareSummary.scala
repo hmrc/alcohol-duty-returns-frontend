@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import models.RateType.{Core, DraughtRelief}
 import models.returns.VolumeAndRateByTaxType
@@ -23,7 +23,8 @@ import pages.returns.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow, Value}
-import viewmodels.checkAnswers.returns.RateBandHelper.rateBandRecap
+import RateBandHelper.rateBandRecap
+import config.Constants
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -54,7 +55,7 @@ object HowMuchDoYouNeedToDeclareSummary {
                     items = Seq(
                       ActionItemViewModel(
                         "site.change",
-                        controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
+                        controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
                       )
                     )
                   )
@@ -97,20 +98,20 @@ object HowMuchDoYouNeedToDeclareSummary {
     val headRow = SummaryListRowViewModel(
       key = messages(s"howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.${rateType.toString}"),
       value = ValueViewModel("")
-    ).withCssClass("govuk-summary-list__row--no-border")
+    ).withCssClass(Constants.tableRowNoBorderCssClass)
 
-    val dutyRows = rateBands.toSeq.map { rateBand =>
+    val dutyRows = rateBands.toSeq.sortBy(_.taxTypeCode).map { rateBand =>
       dutyByTaxTypes.find(_.taxType == rateBand.taxTypeCode) match {
         case Some(dutyByTaxType) =>
           Seq(
             SummaryListRowViewModel(
               key = KeyViewModel(rateBandRecap(rateBand)),
               value = Value()
-            ).withCssClass("govuk-summary-list__row--no-border"),
+            ).withCssClass(Constants.tableRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres"),
               value = ValueViewModel(s"${dutyByTaxType.totalLitres.toString} ${messages("site.unit.litres")}")
-            ).withCssClass("govuk-summary-list__row--no-border"),
+            ).withCssClass(Constants.tableRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol"),
               value = ValueViewModel(s"${dutyByTaxType.pureAlcohol.toString} ${messages("site.unit.litres")}")

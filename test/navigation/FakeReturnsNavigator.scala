@@ -19,8 +19,9 @@ package navigation
 import play.api.mvc.Call
 import pages._
 import models.{Mode, UserAnswers}
+import org.scalatest.Assertions.fail
 
-class FakeReturnsNavigator(desiredRoute: Call) extends ReturnsNavigator {
+class FakeReturnsNavigator(desiredRoute: Call, hasAnswerChangeValue: Boolean = false) extends ReturnsNavigator {
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, boolean: Boolean): Call =
     desiredRoute
@@ -33,5 +34,9 @@ class FakeReturnsNavigator(desiredRoute: Call) extends ReturnsNavigator {
     hasAnswerChanged: Boolean,
     index: Option[Int]
   ): Call =
-    desiredRoute
+    if (hasAnswerChanged == hasAnswerChangeValue) {
+      desiredRoute
+    } else {
+      fail("Answer has not changed")
+    }
 }
