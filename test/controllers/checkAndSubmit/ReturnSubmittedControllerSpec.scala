@@ -27,7 +27,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
 
   val currentDate = LocalDate.now()
 
-  val staticData = AdrReturnCreatedDetails(
+  val returnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
     chargeReference = Some("XA1527404500736"),
@@ -39,6 +39,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
   val formattedProcessingDate = "String"
   val formattedPaymentDueDate = "String"
   override val periodKey      = "String"
+  val businessTaxAccountUrl   = "businessTaxAccountUrl"
 
   "ReturnSubmitted Controller" - {
 
@@ -59,12 +60,13 @@ class ReturnSubmittedControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          staticData,
+          returnDetails,
           periodStartDate,
           periodEndDate,
           formattedProcessingDate,
           formattedPaymentDueDate,
-          periodKey
+          periodKey,
+          businessTaxAccountUrl
         )(
           request,
           getMessages(application)

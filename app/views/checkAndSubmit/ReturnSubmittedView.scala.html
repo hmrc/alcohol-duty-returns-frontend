@@ -29,27 +29,27 @@
         link: Link,
 )
 
-@(staticData: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String, businessTaxAccounturl: String)(implicit request: Request[_], messages: Messages)
+@(adrReturnCreatedDetails: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
 
 @nilPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", staticData.chargeReference.get.value), classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.reference", adrReturnCreatedDetails.chargeReference.get.value), classes = "")
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 
 @posPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", staticData.chargeReference.get.value), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} £${messages("site.2DP", staticData.amount)}", classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.reference", adrReturnCreatedDetails.chargeReference.get.value), classes = "")
+    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} £${messages("site.2DP", adrReturnCreatedDetails.amount)}", classes = "")
 }
 
 @negPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", staticData.chargeReference.get.value), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.dutyOwed")} £${messages("site.2DP", staticData.amount)}", classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.reference", adrReturnCreatedDetails.chargeReference.get.value), classes = "")
+    @paragraph(s"${messages("returnSubmitted.panel.body.dutyOwed")} £${messages("site.2DP", adrReturnCreatedDetails.amount)}", classes = "")
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 
 @layout(pageTitle = titleNoForm(messages("returnSubmitted.title"))) {
 
-    @if(staticData.amount > 0) {
+    @if(adrReturnCreatedDetails.amount > 0) {
         @govukPanel(Panel(
             title = Text((messages("returnSubmitted.heading"))),
             content = HtmlContent(posPanelContent)
@@ -81,13 +81,13 @@
             link(
                 id = "business-tax-account-link",
                 text = messages("site.returnToBusinessAccount"),
-                href = businessTaxAccounturl
+                href = businessTaxAccountUrl
             ))
         )
     }
 
 
-    @if(staticData.amount == 0) {
+    @if(adrReturnCreatedDetails.amount == 0) {
         @govukPanel(Panel(
             title = Text((messages("returnSubmitted.heading"))),
             content = HtmlContent(nilPanelContent)
@@ -115,7 +115,7 @@
     }
 
 
-    @if(staticData.amount < 0) {
+    @if(adrReturnCreatedDetails.amount < 0) {
         @govukPanel(Panel(
             title = Text((messages("returnSubmitted.heading"))),
             content = HtmlContent(negPanelContent)

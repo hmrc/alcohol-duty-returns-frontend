@@ -16,6 +16,8 @@
 
 package models.checkAndSubmit
 
+import play.api.libs.json.{Json, OFormat}
+
 import java.time.{Instant, LocalDate}
 
 case class AdrReturnCreatedDetails(
@@ -24,3 +26,7 @@ case class AdrReturnCreatedDetails(
   chargeReference: Option[String],
   paymentDueDate: LocalDate
 )
+
+object AdrReturnCreatedDetails {
+  implicit val format: OFormat[AdrReturnCreatedDetails] = Json.format[AdrReturnCreatedDetails]
+}

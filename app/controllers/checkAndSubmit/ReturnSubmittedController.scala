@@ -16,6 +16,7 @@
 
 package controllers.checkAndSubmit
 
+import config.Constants.adrReturnCreatedDetails
 import config.FrontendAppConfig
 import controllers.actions._
 import models.checkAndSubmit.AdrReturnCreatedDetails
@@ -23,6 +24,7 @@ import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.DateTimeHelper
@@ -44,13 +46,6 @@ class ReturnSubmittedController @Inject() (
     with Logging {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val staticData = AdrReturnCreatedDetails(
-      processingDate = Instant.now(),
-      amount = 100.00,
-      chargeReference = Some("XA12345"),
-      paymentDueDate = LocalDate.of(2024, 8, 25)
-    )
-
     val localDateProcessingDate = dateTimeHelper.instantToLocalDate(Instant.now())
     val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(localDateProcessingDate)
 
@@ -59,18 +54,30 @@ class ReturnSubmittedController @Inject() (
     val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
     val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
 
-    val businessTaxAccounturl = appConfig.businessTaxAccountUrl
+    val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
 
-    Ok(
-      view(
-        staticData,
-        periodStartDate,
-        periodEndDate,
-        formattedProcessingDate,
-        formattedPaymentDueDate,
-        request.returnPeriod.toPeriodKey,
-        businessTaxAccounturl
-      )
-    )
+    request.session.get(adrReturnCreatedDetails) match {
+      case None                       =>
+        logger.warn("return details not present in session")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case Some(returnCreatedDetails) =>
+        Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
+          case Some(returnDetails: AdrReturnCreatedDetails) =>
+            Ok(
+              view(
+                returnDetails,
+                periodStartDate,
+                periodEndDate,
+                formattedProcessingDate,
+                formattedPaymentDueDate,
+                request.returnPeriod.toPeriodKey,
+                businessTaxAccountUrl
+              )
+            )
+          case None                                         =>
+            logger.warn("return details not valid")
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        }
+    }
   }
 }
