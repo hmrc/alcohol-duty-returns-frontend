@@ -22,7 +22,7 @@ import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySusp
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.TaskList
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, TaskList}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
 import viewmodels.AlcoholRegimesViewOrder
@@ -223,6 +223,42 @@ class ReturnTaskListCreator @Inject() () {
       controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
       controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
       controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
+    )
+  }
+
+  def returnCheckAndSubmitSection(completedTasksCount: Int, totalTasksCount: Int)(implicit
+    messages: Messages
+  ): Section = {
+
+    val (item, status) =
+      if (completedTasksCount == totalTasksCount) {
+        (
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages("taskList.section.checkAndSubmit.needToDeclare"))),
+            status = AlcholDutyTaskListItemStatus.notStarted,
+            href = Some(
+              controllers.checkAndSubmit.routes.DutyDueForThisReturnController
+                .onPageLoad()
+                .url
+            )
+          ),
+          AlcholDutyTaskListItemStatus.completed
+        )
+      } else {
+        (
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages("taskList.section.checkAndSubmit.needToDeclare"))),
+            status = AlcholDutyTaskListItemStatus.cannotStart,
+            href = None,
+            hint = Some(Hint(content = Text(messages("taskList.section.checkAndSubmit.hint"))))
+          ),
+          AlcholDutyTaskListItemStatus.completed
+        )
+      }
+    Section(
+      title = messages("taskList.section.checkAndSubmit.heading"),
+      taskList = TaskList(items = Seq(item)),
+      statusCompleted = status
     )
   }
 
