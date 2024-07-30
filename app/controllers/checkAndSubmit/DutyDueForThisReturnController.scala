@@ -16,17 +16,12 @@
 
 package controllers.checkAndSubmit
 
-import cats.data.EitherT
-import connectors.AlcoholDutyCalculatorConnector
 import controllers.actions._
-import models.UserAnswers
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
@@ -39,54 +34,27 @@ class DutyDueForThisReturnController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: DutyDueForThisReturnView,
-  calculatorConnector: AlcoholDutyCalculatorConnector
+  dutyDueForThisReturnHelper: DutyDueForThisReturnHelper,
+  view: DutyDueForThisReturnView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with Logging {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    calculationTotal(request.userAnswers).foldF(
-      { error: String =>
-        logger.error(error)
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      },
-      totalValue =>
-        DutyDueForThisReturnHelper
-          .dutyDueByRegime(request.userAnswers)
-          .fold(
-            error => {
-              logger.error(error)
-              Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-            },
-            table => Future.successful(Ok(view(table, totalValue)))
-          )
-    )
+    dutyDueForThisReturnHelper
+      .getDutyDueViewModel(request.userAnswers)
+      .foldF(
+        error => {
+          logger.warn(error)
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        },
+        result => Future.successful(Ok(view(result)))
+      )
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     Future.successful(Redirect(controllers.routes.CheckYourAnswersController.onPageLoad()))
   }
 
-  private def calculationTotal(
-    userAnswers: UserAnswers
-  )(implicit headerCarrier: HeaderCarrier): EitherT[Future, String, BigDecimal] =
-    (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
-      case (Some(false), _)                  => EitherT.rightT(0.00)
-      case (Some(true), Some(alcoholDuties)) =>
-        EitherT {
-          val totalDuty = alcoholDuties.map(_._2.totalDuty).toSeq
-          calculatorConnector
-            .calculateTotalAdjustment(totalDuty)
-            .flatMap(response => Future.successful(Right(response.duty)))
-            .recover { case e: Exception =>
-              Left(s"Failed to calculate total duty due: ${e.getMessage}")
-            }
-        }
-      case (_, _)                            => EitherT.leftT("No duty calculation found")
-
-    }
-
-  // add adjustments here
 }

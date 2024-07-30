@@ -16,6 +16,7 @@
 
 @import viewmodels.TableViewModel
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
+@import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnViewModel
 
 @this(
         layout: templates.Layout,
@@ -31,13 +32,13 @@
         tableRowAction: components.TableRowAction
 )
 
-@(table: TableViewModel, totalValue: BigDecimal)(implicit request: Request[_], messages: Messages)
+@(dutyDueViewModel: DutyDueForThisReturnViewModel)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{
-  if (totalValue == 0) {
+  if (dutyDueViewModel.totalDue == 0) {
     messages("dutyDueForThisReturn.nil.title")
   } else {
-    messages("dutyDueForThisReturn.title", messages("site.currency.2DP", totalValue))
+    messages("dutyDueForThisReturn.title", messages("site.currency.2DP", dutyDueViewModel.totalDue))
   }
 }
 
@@ -48,7 +49,7 @@
       text = messages("section.checkAndSubmit"),
     )
 
-    @if(totalValue == 0) {
+    @if(dutyDueViewModel.totalDue == 0) {
       @pageHeading(messages("dutyDueForThisReturn.nil.heading"))
 
       @paragraph(messages("dutyDueForThisReturn.nil.p1"))
@@ -58,8 +59,8 @@
       @bulletList(Seq(messages("dutyDueForThisReturn.bulletList.3")))
     }
 
-    @if(totalValue > 0) {
-      @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", totalValue)))
+    @if(dutyDueViewModel.totalDue > 0) {
+      @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", dutyDueViewModel.totalDue)))
 
       @paragraph(messages("dutyDueForThisReturn.positive.p1"))
 
@@ -70,8 +71,8 @@
       ))
     }
 
-    @if(totalValue < 0) {
-      @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", totalValue)))
+    @if(dutyDueViewModel.totalDue < 0) {
+      @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", dutyDueViewModel.totalDue)))
 
       @paragraph(messages("dutyDueForThisReturn.negative.p1"))
 
@@ -87,8 +88,8 @@
     @govukTable(Table(
       caption = Some(messages("dutyDueForThisReturn.h3")),
       captionClasses = "govuk-table__caption--m",
-      head = Some(table.head),
-      rows = table.rows.map(row => {
+      head = Some(dutyDueViewModel.dutiesBreakdownTable.head),
+      rows = dutyDueViewModel.dutiesBreakdownTable.rows.map(row => {
         val actions = TableRow(content = HtmlContent(tableRowActionList(
           id = "productList",
           actions = row.actions.map(action => tableRowAction(
