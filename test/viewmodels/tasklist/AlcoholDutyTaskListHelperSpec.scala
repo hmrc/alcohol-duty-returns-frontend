@@ -17,7 +17,7 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import TaskListStatus.{Completed, Incomplete}
+import TaskListStatus.Incomplete
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.DeclareAdjustmentQuestionPage
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
@@ -43,7 +43,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         returnTaskListCreator.returnSection(emptyUserAnswers),
         returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
         returnTaskListCreator.returnDSDSection(emptyUserAnswers),
-        returnTaskListCreator.returnQSSection(emptyUserAnswers)
+        returnTaskListCreator.returnQSSection(emptyUserAnswers),
+        returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
       )
 
       val result           =
@@ -60,7 +61,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       result.completedTasks mustBe 0
     }
 
-    "must return a completed task list" in {
+    "must return an incomplete task list when all sections are completed except for check and submit" in {
 
       val userAnswers = emptyUserAnswers
         .set(DeclareAlcoholDutyQuestionPage, false)
@@ -81,7 +82,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
           returnTaskListCreator.returnSection(userAnswers),
           returnTaskListCreator.returnAdjustmentSection(userAnswers),
           returnTaskListCreator.returnDSDSection(userAnswers),
-          returnTaskListCreator.returnQSSection(userAnswers)
+          returnTaskListCreator.returnQSSection(userAnswers),
+          returnTaskListCreator.returnCheckAndSubmitSection(4, 4)
         )
 
       val result           =
@@ -93,7 +95,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         validUntilString
       )
 
-      result.status mustBe Completed
+      result.status mustBe Incomplete
       result.totalTasks mustBe expectedSections.size
       result.completedTasks mustBe 4
     }
@@ -103,13 +105,15 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         returnTaskListCreator.returnSection(emptyUserAnswers),
         returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
         returnTaskListCreator.returnDSDSection(emptyUserAnswers),
-        returnTaskListCreator.returnQSSection(emptyUserAnswers)
+        returnTaskListCreator.returnQSSection(emptyUserAnswers),
+        returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
       )
 
       val expectedSectionsWithoutQS = Seq(
         returnTaskListCreator.returnSection(emptyUserAnswers),
         returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
-        returnTaskListCreator.returnDSDSection(emptyUserAnswers)
+        returnTaskListCreator.returnDSDSection(emptyUserAnswers),
+        returnTaskListCreator.returnCheckAndSubmitSection(0, 3)
       )
 
       forAll(periodKeyGen) { case periodKey =>

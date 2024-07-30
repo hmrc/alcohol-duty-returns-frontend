@@ -151,6 +151,7 @@ taskList.expiry.date = We will save your answers until {0}.
 taskList.section.status.completed = Completed
 taskList.section.status.notStarted = Not started
 taskList.section.status.inProgress = In progress
+taskList.section.status.cannotStart = Cannot Start
 taskList.section.returns.heading = Alcohol to declare
 taskList.section.returns.needToDeclare.notStarted = Do you need to declare duty?
 taskList.section.returns.needToDeclare.no = You’ve told us you don’t need to declare duty
@@ -185,6 +186,10 @@ taskList.section.adjustment.needToDeclare.no = You’ve told us you do not need 
 taskList.section.adjustment.notStarted = Change the entries you’ve told us about
 taskList.section.adjustment.completed = Change the entries you’ve told us about
 taskList.section.adjustment.inProgress = Change the entries you’ve told us about
+
+taskList.section.checkAndSubmit.heading = Send return
+taskList.section.checkAndSubmit.needToDeclare = Check how much duty is payable and send return
+taskList.section.checkAndSubmit.hint = Complete all tasks
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start

@@ -22,13 +22,16 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskListItemStatus
 
 object AlcholDutyTaskListItemStatus {
-  def completed(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
+  def completed(implicit messages: Messages): TaskListItemStatus   = TaskListItemStatus(
     content = Text(messages("taskList.section.status.completed"))
   )
-  def notStarted(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
+  def notStarted(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
     tag = Some(Tag(content = Text(messages("taskList.section.status.notStarted")), classes = "govuk-tag--blue"))
   )
-  def inProgress(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
+  def inProgress(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
     tag = Some(Tag(content = Text(messages("taskList.section.status.inProgress")), classes = "govuk-tag--light-blue"))
+  )
+  def cannotStart(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
+    tag = Some(Tag(content = Text(messages("taskList.section.status.cannotStart")), classes = "govuk-tag--grey"))
   )
 }

@@ -28,12 +28,7 @@ class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator)
     messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
-      Seq(
-        Some(returnTaskListCreator.returnSection(userAnswers)),
-        Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
-        Some(returnTaskListCreator.returnDSDSection(userAnswers)),
-        if (shouldIncludeQSSection(periodKey)) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
-      ).flatten,
+      sections(userAnswers, periodKey),
       validUntil.toLocalDateString()
     )
 
@@ -41,4 +36,23 @@ class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator)
     case 'C' | 'F' | 'I' | 'L' => true
     case _                     => false
   }
+
+  private def sections(userAnswers: UserAnswers, periodKey: String)(implicit
+    messages: Messages
+  ): Seq[Section] = {
+    val sections = Seq(
+      Some(returnTaskListCreator.returnSection(userAnswers)),
+      Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
+      Some(returnTaskListCreator.returnDSDSection(userAnswers)),
+      if (shouldIncludeQSSection(periodKey)) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
+    ).flatten
+
+    def completedTasks: Int = sections.count(_.completedTask)
+    def totalTasks: Int     = sections.size
+
+    val checkAndSubmitSection = returnTaskListCreator.returnCheckAndSubmitSection(completedTasks, totalTasks)
+
+    sections :+ checkAndSubmitSection
+  }
+
 }
