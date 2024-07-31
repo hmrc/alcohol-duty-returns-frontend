@@ -55,7 +55,6 @@ class ReturnSubmittedController @Inject() (
     val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
 
     val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
-
     request.session.get(adrReturnCreatedDetails) match {
       case None                       =>
         logger.warn("return details not present in session")

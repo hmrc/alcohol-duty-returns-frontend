@@ -17,7 +17,12 @@
 package controllers.checkAndSubmit
 
 import base.SpecBase
+import config.Constants.{adrReturnCreatedDetails, periodKeySessionKey}
+import config.FrontendAppConfig
 import models.checkAndSubmit.AdrReturnCreatedDetails
+import org.mockito.Mockito.when
+import play.api.inject
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import views.html.checkAndSubmit.ReturnSubmittedView
 
@@ -34,17 +39,20 @@ class ReturnSubmittedControllerSpec extends SpecBase {
     paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
   )
 
-  val periodStartDate         = "String"
-  val periodEndDate           = "String"
-  val formattedProcessingDate = "String"
-  val formattedPaymentDueDate = "String"
-  override val periodKey      = "String"
-  val businessTaxAccountUrl   = "businessTaxAccountUrl"
+  val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
+  val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
+
+  val localDateProcessingDate = dateTimeHelper.instantToLocalDate(Instant.now())
+  val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(localDateProcessingDate)
+
+  val formattedPaymentDueDate      = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 8, 25))
+  val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
 
   "ReturnSubmitted Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .build()
 
       running(application) {
         val request = FakeRequest(
@@ -52,6 +60,8 @@ class ReturnSubmittedControllerSpec extends SpecBase {
           controllers.checkAndSubmit.routes.ReturnSubmittedController
             .onPageLoad()
             .url
+        ).withSession(
+          adrReturnCreatedDetails -> Json.toJson(returnDetails).toString()
         )
 
         val result = route(application, request).value
@@ -65,8 +75,8 @@ class ReturnSubmittedControllerSpec extends SpecBase {
           periodEndDate,
           formattedProcessingDate,
           formattedPaymentDueDate,
-          periodKey,
-          businessTaxAccountUrl
+          "-1976AA",
+          appConfig.businessTaxAccountUrl
         )(
           request,
           getMessages(application)

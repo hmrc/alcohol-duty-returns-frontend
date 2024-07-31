@@ -16,17 +16,22 @@
 
 package controllers.checkAndSubmit
 
+import config.Constants.adrReturnCreatedDetails
 import controllers.actions._
 import models.UserAnswers
+import models.checkAndSubmit.AdrReturnCreatedDetails
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
+
+import java.time.{Instant, LocalDate}
 
 class DutyDueForThisReturnController @Inject() (
   override val messagesApi: MessagesApi,
@@ -40,10 +45,19 @@ class DutyDueForThisReturnController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val currentDate          = LocalDate.now()
+    val returnCreatedDetails = AdrReturnCreatedDetails(
+      processingDate = Instant.now(),
+      amount = BigDecimal(10.45),
+      chargeReference = Some("XA1527404500736"),
+      paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+    )
+    val session              = request.session + (adrReturnCreatedDetails -> Json.toJson(returnCreatedDetails).toString())
+
     val result = for {
       totalValue <- calculationTotal(request.userAnswers)
       table      <- DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers)
-    } yield Ok(view(table, totalValue))
+    } yield Ok(view(table, totalValue)).withSession(session)
 
     result.fold(
       error => {
