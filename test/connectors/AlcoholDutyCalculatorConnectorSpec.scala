@@ -23,7 +23,6 @@ import models.AlcoholRegime.{Beer, Wine}
 import models.RateType.DraughtRelief
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
-import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.{NOT_FOUND, OK}
