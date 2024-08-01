@@ -16,71 +16,165 @@
 
 package viewmodels.checkAnswers.checkAndSubmit
 
+import cats.data.EitherT
 import config.Constants
-import models.{NormalMode, UserAnswers}
+import connectors.AlcoholDutyCalculatorConnector
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.returns.AlcoholDuty
+import models.{AlcoholRegime, NormalMode, UserAnswers}
+import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
+import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
-object DutyDueForThisReturnHelper extends Logging {
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-  def dutyDueByRegime(userAnswers: UserAnswers)(implicit
-    messages: Messages
-  ): Either[String, TableViewModel] =
-    createRows(userAnswers).map { rows =>
-      TableViewModel(
-        head = Seq(),
-        rows = rows
-      )
+case class DutyDueForThisReturnViewModel(
+  dutiesBreakdownTable: TableViewModel,
+  totalDue: BigDecimal
+)
+
+class DutyDueForThisReturnHelper @Inject() (
+  calculatorConnector: AlcoholDutyCalculatorConnector
+)(implicit executionContext: ExecutionContext)
+    extends Logging {
+
+  val dutyDueOrder = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
+
+  def getDutyDueViewModel(
+    userAnswers: UserAnswers
+  )(implicit hc: HeaderCarrier, messages: Messages): EitherT[Future, String, DutyDueForThisReturnViewModel] =
+    for {
+      dutiesByRegime  <- getDutiesByAlcoholRegime(userAnswers)
+      totalAdjustment <- getTotalAdjustment(userAnswers)
+      total           <- calculateTotal(dutiesByRegime, totalAdjustment)
+      tableViewModel  <- createTableViewModel(dutiesByRegime, totalAdjustment)
+    } yield DutyDueForThisReturnViewModel(
+      tableViewModel,
+      total
+    )
+
+  private def getTotalAdjustment(userAnswers: UserAnswers): EitherT[Future, String, BigDecimal] =
+    (userAnswers.get(DeclareAdjustmentQuestionPage), userAnswers.get(AdjustmentTotalPage)) match {
+      case (Some(false), _)                    => EitherT.rightT[Future, String](BigDecimal(0))
+      case (Some(true), Some(adjustmentTotal)) => EitherT.rightT[Future, String](adjustmentTotal)
+      case (_, _)                              => EitherT.leftT[Future, BigDecimal]("")
     }
 
-  private def createRows(
+  private def getDutiesByAlcoholRegime(
     userAnswers: UserAnswers
-  )(implicit messages: Messages): Either[String, Seq[TableRowViewModel]] =
+  ): EitherT[Future, String, Seq[Tuple2[AlcoholRegime, AlcoholDuty]]] =
     (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
-      case (Some(false), _)                  =>
-        Right(
-          Seq(
-            TableRowViewModel(
-              cells = Seq(
-                TableRow(
-                  content = Text(messages("dutyDueForThisReturn.table.nil.label")),
-                  classes = Constants.boldFontCssClass
-                ),
-                TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
-              ),
-              actions = Seq(
-                TableRowActionViewModel(
-                  label = "Change",
-                  href = controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
-                )
-              )
+      case (Some(false), _)                  => EitherT.rightT(Seq.empty)
+      case (Some(true), Some(alcoholDuties)) => EitherT.rightT(alcoholDuties.toSeq.sortBy(dutyDueOrder.indexOf(_)))
+      case (_, _)                            => EitherT.leftT("")
+    }
+
+  def calculateTotal(dutiesByAlcoholRegime: Seq[Tuple2[AlcoholRegime, AlcoholDuty]], adjustment: BigDecimal)(implicit
+    hc: HeaderCarrier
+  ): EitherT[Future, String, BigDecimal] = EitherT {
+    calculatorConnector
+      .calculateTotalAdjustment(dutiesByAlcoholRegime.map(_._2.totalDuty) :+ adjustment)
+      .flatMap(response => Future.successful(Right(response.duty)))
+      .recover { case e: Exception =>
+        Left(s"Failed to calculate total duty due: ${e.getMessage}")
+      }
+  }
+
+  private def createTableViewModel(dutiesByRegime: Seq[(AlcoholRegime, AlcoholDuty)], totalAdjustment: BigDecimal)(
+    implicit messages: Messages
+  ): EitherT[Future, String, TableViewModel] = {
+
+    val returnDutiesRow = createReturnRows(dutiesByRegime)
+    val adjustmentRow   = createAdjustmentRow(totalAdjustment)
+    EitherT.rightT[Future, String](
+      TableViewModel(
+        head = Seq.empty,
+        rows = returnDutiesRow :+ adjustmentRow
+      )
+    )
+
+  }
+
+  private def createReturnRows(
+    dutiesByRegime: Seq[(AlcoholRegime, AlcoholDuty)]
+  )(implicit messages: Messages): Seq[TableRowViewModel] =
+    if (dutiesByRegime.isEmpty) {
+      Seq(
+        TableRowViewModel(
+          cells = Seq(
+            TableRow(
+              content = Text(messages("dutyDueForThisReturn.table.nil.label")),
+              classes = Constants.boldFontCssClass
+            ),
+            TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
+          ),
+          actions = Seq(
+            TableRowActionViewModel(
+              label = "Change",
+              href = controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
             )
           )
         )
-      case (Some(true), Some(alcoholDuties)) =>
-        Right(alcoholDuties.map { case (alcoholRegime, alcoholDuty) =>
-          TableRowViewModel(
-            cells = Seq(
-              TableRow(
-                content =
-                  Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
-                classes = Constants.boldFontCssClass
-              ),
-              TableRow(Text(Money.format(alcoholDuty.totalDuty)))
+      )
+    } else {
+      dutiesByRegime.map { case (alcoholRegime, alcoholDuty) =>
+        TableRowViewModel(
+          cells = Seq(
+            TableRow(
+              content = Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
+              classes = Constants.boldFontCssClass
             ),
-            actions = Seq(
-              TableRowActionViewModel(
-                label = "Change",
-                href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
-              )
+            TableRow(Text(Money.format(alcoholDuty.totalDuty)))
+          ),
+          actions = Seq(
+            TableRowActionViewModel(
+              label = "Change",
+              href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
             )
           )
-        }.toSeq)
-      case (_, _)                            =>
-        Left("Failed to create duty due table view model")
+        )
+      }
+    }
+
+  private def createAdjustmentRow(totalAdjustment: BigDecimal)(implicit messages: Messages): TableRowViewModel =
+    // TODO: check if the sum is 0 is still a nil adjustment
+    if (totalAdjustment == 0) {
+      TableRowViewModel(
+        cells = Seq(
+          TableRow(
+            content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
+            classes = Constants.boldFontCssClass
+          ),
+          TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
+        ),
+        actions = Seq(
+          TableRowActionViewModel(
+            label = "Change",
+            href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
+          )
+        )
+      )
+    } else {
+      TableRowViewModel(
+        cells = Seq(
+          TableRow(
+            content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
+            classes = Constants.boldFontCssClass
+          ),
+          TableRow(Text(Money.format(totalAdjustment)))
+        ),
+        actions = Seq(
+          TableRowActionViewModel(
+            label = "Change",
+            href = controllers.adjustment.routes.AdjustmentListController.onPageLoad()
+          )
+        )
+      )
     }
 }
