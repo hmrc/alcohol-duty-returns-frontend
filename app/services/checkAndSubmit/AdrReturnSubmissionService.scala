@@ -87,7 +87,6 @@ class AdrReturnSubmissionServiceImpl @Inject() (
 
   private def getAdjustments(userAnswers: UserAnswers): EitherT[Future, String, AdrAdjustments] =
     getValue(userAnswers, DeclareAdjustmentQuestionPage).flatMap { isAnyAdjustmentDeclared =>
-      println("@@@@@@@@@@@@@ HERE " + isAnyAdjustmentDeclared)
       if (isAnyAdjustmentDeclared) {
         getValue(userAnswers, AdjustmentEntryListPage).flatMap(adjustmentEntryList =>
           EitherT.fromEither {
@@ -208,7 +207,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       newDutyRate      <- adjustmentEntry.repackagedRate
       litres           <- adjustmentEntry.totalLitresVolume
       lpa              <- adjustmentEntry.pureAlcoholVolume
-      dutyAdjustment   <- adjustmentEntry.repackagedDuty
+      dutyAdjustment   <- adjustmentEntry.newDuty
     } yield AdrRepackagedDraughtAdjustmentItem(
       returnPeriod = ReturnPeriod(period).toPeriodKey,
       originalTaxCode = rateBand.taxTypeCode,
@@ -240,8 +239,9 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     userAnswers: UserAnswers
   ): EitherT[Future, String, Map[AdjustmentType, Seq[BigDecimal]]] =
     getValue(userAnswers, AdjustmentEntryListPage).map { adjustmentEntries =>
-      adjustmentEntries.groupBy(_.adjustmentType).collect { case (Some(adjustmentType), entries) =>
-        adjustmentType -> entries.map(_.duty.get)
+      adjustmentEntries.groupBy(_.adjustmentType).collect {
+        case (Some(RepackagedDraughtProducts), entries) => RepackagedDraughtProducts -> entries.map(_.newDuty.get)
+        case (Some(adjustmentType), entries)            => adjustmentType            -> entries.map(_.duty.get)
       }
     }
 

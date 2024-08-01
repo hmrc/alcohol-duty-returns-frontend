@@ -63,7 +63,9 @@ class DutyDueForThisReturnController @Inject() (
       adrReturnSubmission         <- adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers)
       adrSubmissionCreatedDetails <-
         alcoholDutyReturnsConnector.submitReturn(request.appaId, request.returnPeriod.toPeriodKey, adrReturnSubmission)
-    } yield adrSubmissionCreatedDetails
+    } yield {
+      adrSubmissionCreatedDetails
+    }
 
     result.foldF(
       error => {
@@ -71,6 +73,7 @@ class DutyDueForThisReturnController @Inject() (
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       },
       adrSubmissionCreatedDetails => {
+        // TODO: remove once the return submitted screen is implemented
         logger.warn("Successfully submitted return: " + adrSubmissionCreatedDetails)
         val session =
           request.session + ("adrSubmissionCreatedDetails" -> Json.toJson(adrSubmissionCreatedDetails).toString)
