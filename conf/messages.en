@@ -1316,12 +1316,12 @@ returnSubmitted.positive.p1 = You can pay your duty now or later from your Busin
 returnSubmitted.positive.p2 = Payment for this return was due on {0} and is late. You will be charged interest for the period from {0} to the date you make payment.
 returnSubmitted.positive.p3 = Your reference number can be used as a payment reference when you pay this return.
 returnSubmitted.direct.debit.h2 = Direct Debit
-returnSubmitted.direct.debit.p1 = You have a direct debit set up. The duty due will automatically be taken on {0}.
-returnSubmitted.direct.debit.manageLink.text = Manage your direct debit
-returnSubmitted.direct.debit.p2 = You can pay the duty automatically with a direct debit. Payments are taken on 25th of each month.
-returnSubmitted.direct.debit.setupLink.text = Set up a direct debit
-returnSubmitted.direct.debit.p3 = You can pay duty automatically by direct debit.
+returnSubmitted.direct.debit.p1 = You can pay duty automatically by direct debit.
 returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit
+returnSubmitted.direct.debit.p2 = You have a direct debit set up. The duty due will automatically be taken on {0}.
+returnSubmitted.direct.debit.manageLink.text = Manage your direct debit
+returnSubmitted.direct.debit.p3 = You can pay the duty automatically with a direct debit. Payments are taken on 25th of each month.
+returnSubmitted.direct.debit.setupLink.text = Set up a direct debit
 returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcohol Duty account. If you do not claim it back then it will be used toward any duty due from your next return.
 
 # End of Check and submit sub-journey

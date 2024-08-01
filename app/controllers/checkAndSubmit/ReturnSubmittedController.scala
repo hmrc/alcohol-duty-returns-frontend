@@ -37,7 +37,6 @@ class ReturnSubmittedController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnSubmittedView,
   dateTimeHelper: DateTimeHelper
@@ -46,24 +45,23 @@ class ReturnSubmittedController @Inject() (
     with Logging {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val localDateProcessingDate = dateTimeHelper.instantToLocalDate(Instant.now())
-    val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(localDateProcessingDate)
-
-    val formattedPaymentDueDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 8, 25))
-
     val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
-    val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
+    val periodEndDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
 
     val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
+    val directDebitBackendUrl = appConfig.directDebitBackendUrl
 
     request.session.get(adrReturnCreatedDetails) match {
-      case None                       =>
+      case None =>
         logger.warn("return details not present in session")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       case Some(returnCreatedDetails) =>
-        println("#####" + returnCreatedDetails)
         Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
           case Some(returnDetails: AdrReturnCreatedDetails) =>
+            val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)
+            val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
+            val formattedPaymentDueDate = dateTimeHelper.formatDateMonthYear(returnDetails.paymentDueDate)
+
             Ok(
               view(
                 returnDetails,
@@ -72,13 +70,16 @@ class ReturnSubmittedController @Inject() (
                 formattedProcessingDate,
                 formattedPaymentDueDate,
                 request.returnPeriod.get.toPeriodKey,
-                businessTaxAccountUrl
+                businessTaxAccountUrl,
+                directDebitBackendUrl
               )
             )
-          case None                                         =>
+          case None =>
             logger.warn("return details not valid")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }
+
   }
 }
+

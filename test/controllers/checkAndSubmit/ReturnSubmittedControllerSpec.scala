@@ -41,7 +41,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
   val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
   val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
 
-  val localDateProcessingDate = dateTimeHelper.instantToLocalDate(Instant.now())
+  val localDateProcessingDate = dateTimeHelper.instantToLocalDate(Instant.now(clock))
   val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(localDateProcessingDate)
 
   val formattedPaymentDueDate      = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 8, 25))
@@ -75,7 +75,8 @@ class ReturnSubmittedControllerSpec extends SpecBase {
           formattedProcessingDate,
           formattedPaymentDueDate,
           "-1976AA",
-          appConfig.businessTaxAccountUrl
+          appConfig.businessTaxAccountUrl,
+          appConfig.directDebitBackendUrl
         )(
           request,
           getMessages(application)
