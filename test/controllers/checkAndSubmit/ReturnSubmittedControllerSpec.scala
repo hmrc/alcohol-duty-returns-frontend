@@ -17,11 +17,10 @@
 package controllers.checkAndSubmit
 
 import base.SpecBase
-import config.Constants.{adrReturnCreatedDetails, periodKeySessionKey}
+import config.Constants.adrReturnCreatedDetails
 import config.FrontendAppConfig
+import controllers.routes
 import models.checkAndSubmit.AdrReturnCreatedDetails
-import org.mockito.Mockito.when
-import play.api.inject
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import views.html.checkAndSubmit.ReturnSubmittedView
@@ -81,6 +80,56 @@ class ReturnSubmittedControllerSpec extends SpecBase {
           request,
           getMessages(application)
         ).toString
+      }
+    }
+
+    "must redirect in the Journey Recovery screen if the return details in session is empty" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request =
+          FakeRequestWithoutSession(GET, controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+      }
+    }
+
+    "return details" - {
+      "should deserialise a valid json into a adrReturnCreatedDetails object" in {
+        val json =
+          """
+            |{
+            |"processingDate":"2024-06-11T15:07:47.838Z",
+            |"amount":10.45,
+            |"chargeReference":"XA1527404500736",
+            |"paymentDueDate":"2024-08-25"
+            |}
+            |
+            |""".stripMargin
+
+        val result = Json.parse(json).validate[AdrReturnCreatedDetails].get
+
+        result mustBe a[AdrReturnCreatedDetails]
+        result.processingDate mustBe Instant.parse("2024-06-11T15:07:47.838Z")
+        result.amount mustBe 10.45
+        result.chargeReference mustBe Some("XA1527404500736")
+        result.paymentDueDate mustBe LocalDate.parse("2024-08-25")
+      }
+
+      "should redirect to journey recovery if not valid" in {
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+        val request =
+          FakeRequest(GET, controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url)
+            .withSession(adrReturnCreatedDetails -> "{}")
+        val result  = route(application, request).get
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

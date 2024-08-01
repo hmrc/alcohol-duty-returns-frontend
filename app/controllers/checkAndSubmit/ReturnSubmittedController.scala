@@ -45,7 +45,7 @@ class ReturnSubmittedController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
     val localDateProcessingDate = dateTimeHelper.instantToLocalDate(Instant.now())
     val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(localDateProcessingDate)
 
@@ -55,11 +55,13 @@ class ReturnSubmittedController @Inject() (
     val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
 
     val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
+
     request.session.get(adrReturnCreatedDetails) match {
       case None                       =>
         logger.warn("return details not present in session")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       case Some(returnCreatedDetails) =>
+        println("#####" + returnCreatedDetails)
         Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
           case Some(returnDetails: AdrReturnCreatedDetails) =>
             Ok(
@@ -69,7 +71,7 @@ class ReturnSubmittedController @Inject() (
                 periodEndDate,
                 formattedProcessingDate,
                 formattedPaymentDueDate,
-                request.returnPeriod.toPeriodKey,
+                request.returnPeriod.get.toPeriodKey,
                 businessTaxAccountUrl
               )
             )
