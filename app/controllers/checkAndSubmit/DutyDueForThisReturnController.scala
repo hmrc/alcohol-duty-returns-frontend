@@ -16,12 +16,15 @@
 
 package controllers.checkAndSubmit
 
+import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
 import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.checkAndSubmit.AdrReturnSubmissionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
@@ -33,6 +36,8 @@ class DutyDueForThisReturnController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector,
+  adrReturnSubmissionService: AdrReturnSubmissionService,
   val controllerComponents: MessagesControllerComponents,
   dutyDueForThisReturnHelper: DutyDueForThisReturnHelper,
   view: DutyDueForThisReturnView
@@ -54,7 +59,24 @@ class DutyDueForThisReturnController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    Future.successful(Redirect(controllers.routes.CheckYourAnswersController.onPageLoad()))
+    val result = for {
+      adrReturnSubmission         <- adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers)
+      adrSubmissionCreatedDetails <-
+        alcoholDutyReturnsConnector.submitReturn(request.appaId, request.returnPeriod.toPeriodKey, adrReturnSubmission)
+    } yield adrSubmissionCreatedDetails
+
+    result.foldF(
+      error => {
+        logger.warn(error)
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      },
+      adrSubmissionCreatedDetails => {
+        logger.warn("Successfully submitted return: " + adrSubmissionCreatedDetails)
+        val session =
+          request.session + ("adrSubmissionCreatedDetails" -> Json.toJson(adrSubmissionCreatedDetails).toString)
+        Future.successful(Redirect(controllers.routes.CheckYourAnswersController.onPageLoad()).withSession(session))
+      }
+    )
   }
 
 }

@@ -16,15 +16,16 @@
 
 package connectors
 
+import cats.data.EitherT
 import config.FrontendAppConfig
 import models.ObligationData
-import models.returns.ReturnDetails
+import models.returns.{AdrReturnCreatedDetails, AdrReturnSubmission, ReturnDetails}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
-import play.api.http.Status.OK
+import play.api.http.Status.{CREATED, OK}
 
 class AlcoholDutyReturnsConnector @Inject() (
   config: FrontendAppConfig,
@@ -57,4 +58,25 @@ class AlcoholDutyReturnsConnector @Inject() (
         case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
         case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
       }
+
+  def submitReturn(appaId: String, periodKey: String, returnSubmission: AdrReturnSubmission)(implicit
+    hc: HeaderCarrier
+  ): EitherT[Future, String, AdrReturnCreatedDetails] =
+    EitherT {
+      httpClient
+        .POST[AdrReturnSubmission, Either[UpstreamErrorResponse, HttpResponse]](
+          url = config.adrSubmitReturnUrl(appaId, periodKey),
+          returnSubmission
+        )
+        .map {
+          case Right(response) if response.status == CREATED =>
+            Try(response.json.as[AdrReturnCreatedDetails]) match {
+              case Success(data)      => Right[String, AdrReturnCreatedDetails](data)
+              case Failure(exception) => Left(s"Invalid JSON format $exception")
+            }
+          case Left(errorResponse)                           =>
+            Left(s"Impossible to submit return. Unexpected response: ${errorResponse.message}")
+          case Right(response)                               => Left(s"Impossible to submit return. Unexpected status code: ${response.status}")
+        }
+    }
 }
