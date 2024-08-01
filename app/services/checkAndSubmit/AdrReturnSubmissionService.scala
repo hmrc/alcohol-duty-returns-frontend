@@ -87,6 +87,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
 
   private def getAdjustments(userAnswers: UserAnswers): EitherT[Future, String, AdrAdjustments] =
     getValue(userAnswers, DeclareAdjustmentQuestionPage).flatMap { isAnyAdjustmentDeclared =>
+      println("@@@@@@@@@@@@@ HERE " + isAnyAdjustmentDeclared)
       if (isAnyAdjustmentDeclared) {
         getValue(userAnswers, AdjustmentEntryListPage).flatMap(adjustmentEntryList =>
           EitherT.fromEither {
@@ -246,14 +247,21 @@ class AdrReturnSubmissionServiceImpl @Inject() (
 
   private def getTotals(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): EitherT[Future, String, AdrTotals] =
     for {
-      declaredAlcoholDutyByRegime <- getValue(userAnswers, AlcoholDutyPage)
+      hasAlcoholDuty              <- getValue(userAnswers, DeclareAlcoholDutyQuestionPage)
+      declaredAlcoholDutyByRegime <- if (hasAlcoholDuty) getValue(userAnswers, AlcoholDutyPage)
+                                     else EitherT.rightT[Future, String](Map.empty[AlcoholRegime, AlcoholDuty])
+      hasAdjustments              <- getValue(userAnswers, DeclareAdjustmentQuestionPage)
       declaredAlcoholDuty         <- calculateTotalDuties(declaredAlcoholDutyByRegime.map(_._2.totalDuty).toSeq)
-      adjustmentDutiesByType      <- getAdjustmentsByType(userAnswers)
-      overDeclaration             <- calculateTotalDuties(adjustmentDutiesByType.getOrElse(Overdeclaration, Seq.empty))
-      underDeclaration            <- calculateTotalDuties(adjustmentDutiesByType.getOrElse(Underdeclaration, Seq.empty))
-      spoiltProduct               <- calculateTotalDuties(adjustmentDutiesByType.getOrElse(Spoilt, Seq.empty))
-      drawback                    <- calculateTotalDuties(adjustmentDutiesByType.getOrElse(Drawback, Seq.empty))
-      repackagedDraught           <- calculateTotalDuties(adjustmentDutiesByType.getOrElse(RepackagedDraughtProducts, Seq.empty))
+      adjustmentDutiesByType      <- if (hasAdjustments) getAdjustmentsByType(userAnswers)
+                                     else EitherT.rightT[Future, String](Map.empty[AdjustmentType, Seq[BigDecimal]])
+      overDeclaration             <-
+        conditionalTotalDuty(hasAdjustments, adjustmentDutiesByType.getOrElse(Overdeclaration, Seq.empty))
+      underDeclaration            <-
+        conditionalTotalDuty(hasAdjustments, adjustmentDutiesByType.getOrElse(Underdeclaration, Seq.empty))
+      spoiltProduct               <- conditionalTotalDuty(hasAdjustments, adjustmentDutiesByType.getOrElse(Spoilt, Seq.empty))
+      drawback                    <- conditionalTotalDuty(hasAdjustments, adjustmentDutiesByType.getOrElse(Drawback, Seq.empty))
+      repackagedDraught           <-
+        conditionalTotalDuty(hasAdjustments, adjustmentDutiesByType.getOrElse(RepackagedDraughtProducts, Seq.empty))
       totalDutyDue                <-
         calculateTotalDuties(
           Seq(declaredAlcoholDuty, overDeclaration, underDeclaration, spoiltProduct, drawback, repackagedDraught)
@@ -267,6 +275,15 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       repackagedDraught = repackagedDraught,
       totalDutyDue = totalDutyDue
     )
+
+  private def conditionalTotalDuty(condition: Boolean, duties: Seq[BigDecimal])(implicit
+    hc: HeaderCarrier
+  ): EitherT[Future, String, BigDecimal] =
+    if (condition) {
+      calculateTotalDuties(duties)
+    } else {
+      EitherT.rightT[Future, String](BigDecimal(0))
+    }
 
   private def getValue[T](userAnswers: UserAnswers, page: QuestionPage[T])(implicit
     reads: Reads[T]
