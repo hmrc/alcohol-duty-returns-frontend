@@ -20,6 +20,7 @@ import cats.data.EitherT
 import config.FrontendAppConfig
 import models.ObligationData
 import models.returns.{AdrReturnCreatedDetails, AdrReturnSubmission, ReturnDetails}
+import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
 
 import javax.inject.Inject
@@ -31,7 +32,8 @@ class AlcoholDutyReturnsConnector @Inject() (
   config: FrontendAppConfig,
   implicit val httpClient: HttpClient
 )(implicit ec: ExecutionContext)
-    extends HttpReadsInstances {
+    extends HttpReadsInstances
+    with Logging {
 
   def obligationDetails(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[ObligationData]] =
     httpClient
@@ -72,11 +74,16 @@ class AlcoholDutyReturnsConnector @Inject() (
           case Right(response) if response.status == CREATED =>
             Try(response.json.as[AdrReturnCreatedDetails]) match {
               case Success(data)      => Right[String, AdrReturnCreatedDetails](data)
-              case Failure(exception) => Left(s"Invalid JSON format $exception")
+              case Failure(exception) =>
+                logger.warn(s"Invalid JSON format $exception")
+                Left(s"Invalid JSON format $exception")
             }
           case Left(errorResponse)                           =>
+            logger.warn(s"Impossible to submit return. Unexpected response: ${errorResponse.message}")
             Left(s"Impossible to submit return. Unexpected response: ${errorResponse.message}")
-          case Right(response)                               => Left(s"Impossible to submit return. Unexpected status code: ${response.status}")
+          case Right(response)                               =>
+            logger.warn(s"Impossible to submit return. Unexpected status code: ${response.status}")
+            Left(s"Impossible to submit return. Unexpected status code: ${response.status}")
         }
     }
 }
