@@ -1274,7 +1274,12 @@ deleteAdjustment.heading = Remove this adjustment?
 deleteAdjustment.paragraph = The adjustment and its information will be removed from your return.
 deleteAdjustment.error.required = Select yes to remove this adjustment
 
-
+underDeclarationReason.title = Why were these alcoholic products not declared until now?
+underDeclarationReason.heading = Why were these alcoholic products not declared until now?
+underDeclarationReason.checkYourAnswersLabel = underDeclarationReason
+underDeclarationReason.error.required = Enter the reason why these alcoholic products were not declared until now
+underDeclarationReason.error.length = The reason these alcoholic products were not declared must be {0} characters or less.
+underDeclarationReason.change.hidden = UnderDeclarationReason
 # End of adjustments sub-journey
 
 
@@ -1301,6 +1306,4 @@ dutyDueForThisReturn.table.nil.value = Nil
 dutyDueForThisReturn.h4 = Declaration
 dutyDueForThisReturn.p3 = By submitting this return, I agree that the information I have given is complete and correct.
 
-
 # End of Check and submit sub-journey
-

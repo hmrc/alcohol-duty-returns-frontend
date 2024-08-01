@@ -40,6 +40,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
+
     @sectionHeading(
         id = "adjustment-list-section",
         text = messages("section.adjustment"),

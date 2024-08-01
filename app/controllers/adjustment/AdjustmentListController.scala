@@ -88,4 +88,5 @@ class AdjustmentListController @Inject() (
           } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, updatedAnswers))
       )
   }
+
 }
