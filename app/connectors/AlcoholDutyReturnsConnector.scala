@@ -75,7 +75,7 @@ class AlcoholDutyReturnsConnector @Inject() (
             Try(response.json.as[AdrReturnCreatedDetails]) match {
               case Success(data)      => Right[String, AdrReturnCreatedDetails](data)
               case Failure(exception) =>
-                logger.warn(s"Invalid JSON format $exception")
+                logger.warn(s"Invalid JSON format", exception)
                 Left(s"Invalid JSON format $exception")
             }
           case Left(errorResponse)                           =>
