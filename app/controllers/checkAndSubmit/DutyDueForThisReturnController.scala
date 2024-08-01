@@ -63,9 +63,7 @@ class DutyDueForThisReturnController @Inject() (
       adrReturnSubmission         <- adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers)
       adrSubmissionCreatedDetails <-
         alcoholDutyReturnsConnector.submitReturn(request.appaId, request.returnPeriod.toPeriodKey, adrReturnSubmission)
-    } yield {
-      adrSubmissionCreatedDetails
-    }
+    } yield adrSubmissionCreatedDetails
 
     result.foldF(
       error => {
