@@ -33,8 +33,6 @@ import scala.concurrent.ExecutionContext
 class ViewReturnController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   viewModel: ViewReturnViewModel,
   view: ViewReturnView,
@@ -45,43 +43,42 @@ class ViewReturnController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(periodKey: String): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      val appaId = request.appaId
-      alcoholDutyReturnsConnector
-        .getReturn(appaId, periodKey)
-        .map { returnDetails =>
-          val periodKey = returnDetails.identification.periodKey
-          ReturnPeriod
-            .fromPeriodKey(periodKey)
-            .fold {
-              logger.warn(s"Cannot parse period key $periodKey for $appaId on return")
-              Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-            } { returnPeriod =>
-              val dutyToDeclareViewModel = viewModel.createAlcoholDeclaredViewModel(returnDetails)
-              val adjustmentsViewModel   = viewModel.createAdjustmentsViewModel(returnDetails)
-              val totalDueViewModel      = viewModel.createTotalDueViewModel(returnDetails)
-              val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriod.period)
-              val submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
-              val submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
-              val submittedTime          = dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
-              val submittedTimeStr       = dateTimeHelper.formatHourMinuteMerediem(submittedTime)
+  def onPageLoad(periodKey: String): Action[AnyContent] = identify.async { implicit request =>
+    val appaId = request.appaId
+    alcoholDutyReturnsConnector
+      .getReturn(appaId, periodKey)
+      .map { returnDetails =>
+        val periodKey = returnDetails.identification.periodKey
+        ReturnPeriod
+          .fromPeriodKey(periodKey)
+          .fold {
+            logger.warn(s"Cannot parse period key $periodKey for $appaId on return")
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          } { returnPeriod =>
+            val dutyToDeclareViewModel = viewModel.createAlcoholDeclaredViewModel(returnDetails)
+            val adjustmentsViewModel   = viewModel.createAdjustmentsViewModel(returnDetails)
+            val totalDueViewModel      = viewModel.createTotalDueViewModel(returnDetails)
+            val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriod.period)
+            val submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
+            val submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
+            val submittedTime          = dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
+            val submittedTimeStr       = dateTimeHelper.formatHourMinuteMerediem(submittedTime)
 
-              Ok(
-                view(
-                  returnPeriodStr,
-                  submittedDateStr,
-                  submittedTimeStr,
-                  dutyToDeclareViewModel,
-                  adjustmentsViewModel,
-                  totalDueViewModel
-                )
+            Ok(
+              view(
+                returnPeriodStr,
+                submittedDateStr,
+                submittedTimeStr,
+                dutyToDeclareViewModel,
+                adjustmentsViewModel,
+                totalDueViewModel
               )
-            }
-        }
-        .recover { case _ =>
-          logger.warn(s"Unable to fetch return $appaId $periodKey")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        }
+            )
+          }
+      }
+      .recover { case _ =>
+        logger.warn(s"Unable to fetch return $appaId $periodKey")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
   }
 }

@@ -20,6 +20,7 @@ import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, Smal
 import models._
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 import pages._
+import pages.adjustment.DeclareAdjustmentQuestionPage
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -28,8 +29,7 @@ import javax.inject.{Inject, Singleton}
 class AdjustmentNavigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case pages.adjustment.DeclareAdjustmentQuestionPage             =>
-      _ => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+    case pages.adjustment.DeclareAdjustmentQuestionPage             => declareAdjustmentQuestionRoute
     case pages.adjustment.AdjustmentTypePage                        =>
       _ => controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
     case pages.adjustment.WhenDidYouPayDutyPage                     =>
@@ -46,6 +46,11 @@ class AdjustmentNavigator @Inject() () {
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
+    case pages.adjustment.DeclareAdjustmentQuestionPage             =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) declareAdjustmentQuestionRoute(userAnswers)
+          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentTypePage                        =>
       _ =>
         hasChanged =>
@@ -83,6 +88,13 @@ class AdjustmentNavigator @Inject() () {
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case _                                                          => _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
   }
+
+  private def declareAdjustmentQuestionRoute(userAnswers: UserAnswers): Call =
+    userAnswers.get(DeclareAdjustmentQuestionPage) match {
+      case Some(true)  => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+      case Some(false) => routes.TaskListController.onPageLoad
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
 
   private def adjustmentTaxTypePageRoute(userAnswers: UserAnswers, mode: Mode = NormalMode): Call = {
     val rateTypeOpt = for {

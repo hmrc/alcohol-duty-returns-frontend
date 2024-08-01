@@ -149,6 +149,7 @@ taskList.expiry.date = We will save your answers until {0}.
 taskList.section.status.completed = Completed
 taskList.section.status.notStarted = Not started
 taskList.section.status.inProgress = In progress
+taskList.section.status.cannotStart = Cannot Start
 taskList.section.returns.heading = Alcohol to declare
 taskList.section.returns.needToDeclare.notStarted = Do you need to declare duty?
 taskList.section.returns.needToDeclare.no = You’ve told us you don’t need to declare duty
@@ -175,6 +176,18 @@ taskList.section.spirits.needToDeclare.yes = You’ve told us you need to declar
 taskList.section.spirits.notStarted = Tell us about your spirits and ingredients
 taskList.section.spirits.inProgress = Change the spirits and ingredients you’ve told us about
 taskList.section.spirits.completed = Change the spirits and ingredients you’ve told us about
+
+taskList.section.adjustment.heading = Declare adjustments from earlier returns
+taskList.section.adjustment.needToDeclare.notStarted = Do you need to declare any adjustments?
+taskList.section.adjustment.needToDeclare.yes = You’ve told us you need to declare an adjustment
+taskList.section.adjustment.needToDeclare.no = You’ve told us you do not need to declare any adjustments
+taskList.section.adjustment.notStarted = Change the entries you’ve told us about
+taskList.section.adjustment.completed = Change the entries you’ve told us about
+taskList.section.adjustment.inProgress = Change the entries you’ve told us about
+
+taskList.section.checkAndSubmit.heading = Send return
+taskList.section.checkAndSubmit.needToDeclare = Check how much duty is payable and send return
+taskList.section.checkAndSubmit.hint = Complete all tasks
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start

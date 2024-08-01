@@ -17,7 +17,7 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import TaskListStatus.{Completed, Incomplete}
+import TaskListStatus.Incomplete
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem
@@ -31,69 +31,77 @@ class TaskListViewModelSpec extends SpecBase {
   "TaskListViewModel" - {
     "must return an incomplete task list if not all sections are complete" in new SetUp {
       when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
       when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
       when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnCheckAndSubmitSection(1, 4)).thenReturn(cannotStartSection)
 
       val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
 
       result mustBe AlcoholDutyTaskList(
-        Seq(notStartedSection, inProgressSection, completeSection),
+        Seq(notStartedSection, notStartedSection, inProgressSection, completeSection, cannotStartSection),
         validUntilString
       )
 
       result.status mustBe Incomplete
-      result.totalTasks mustBe 3
+      result.totalTasks mustBe 5
       result.completedTasks mustBe 1
     }
 
-    "must return an complete task list if all the sections are complete" in new SetUp {
+    "must return an incomplete task list if all sections other than check and submit are complete" in new SetUp {
       when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnCheckAndSubmitSection(4, 4)).thenReturn(notStartedSection)
 
       val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
 
       result mustBe AlcoholDutyTaskList(
-        Seq(completeSection, completeSection, completeSection),
+        Seq(completeSection, completeSection, completeSection, completeSection, notStartedSection),
         validUntilString
       )
 
-      result.status mustBe Completed
-      result.totalTasks mustBe 3
-      result.completedTasks mustBe 3
+      result.status mustBe Incomplete
+      result.totalTasks mustBe 5
+      result.completedTasks mustBe 4
     }
 
     quarterPeriodKeys.foreach { periodKey =>
       s"must return the QS section as the period key $periodKey falls on a quarter" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
         when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnCheckAndSubmitSection(1, 4)).thenReturn(cannotStartSection)
 
         val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKey)
 
         result mustBe AlcoholDutyTaskList(
-          Seq(notStartedSection, inProgressSection, completeSection),
+          Seq(notStartedSection, notStartedSection, inProgressSection, completeSection, cannotStartSection),
           validUntilString
         )
 
-        result.totalTasks mustBe 3
+        result.totalTasks mustBe 5
       }
     }
 
     nonQuarterPeriodKeys.foreach { periodKey =>
       s"must not return the QS section as the period key $periodKey doesn't fall on a quarter" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
         when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnCheckAndSubmitSection(0, 3)).thenReturn(cannotStartSection)
 
         val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKey)
 
         result mustBe AlcoholDutyTaskList(
-          Seq(notStartedSection, inProgressSection),
+          Seq(notStartedSection, notStartedSection, inProgressSection, cannotStartSection),
           validUntilString
         )
 
-        result.totalTasks mustBe 2
+        result.totalTasks mustBe 4
       }
     }
   }
@@ -109,13 +117,15 @@ class TaskListViewModelSpec extends SpecBase {
 
     val completedStatus = AlcholDutyTaskListItemStatus.completed
 
-    val notStartedTaskList = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.notStarted)))
-    val inProgressTaskList = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.inProgress)))
-    val completeTaskList   = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.completed)))
+    val notStartedTaskList  = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.notStarted)))
+    val inProgressTaskList  = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.inProgress)))
+    val completeTaskList    = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.completed)))
+    val cannotStartTaskList = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.cannotStart)))
 
-    val notStartedSection = Section("title", notStartedTaskList, completedStatus)
-    val inProgressSection = Section("title", inProgressTaskList, completedStatus)
-    val completeSection   = Section("title", completeTaskList, completedStatus)
+    val notStartedSection  = Section("title", notStartedTaskList, completedStatus)
+    val inProgressSection  = Section("title", inProgressTaskList, completedStatus)
+    val completeSection    = Section("title", completeTaskList, completedStatus)
+    val cannotStartSection = Section("title", cannotStartTaskList, AlcholDutyTaskListItemStatus.notStarted)
 
     val mockReturnTaskListCreator = mock[ReturnTaskListCreator]
     val taskListViewModel         = new TaskListViewModel(mockReturnTaskListCreator)
