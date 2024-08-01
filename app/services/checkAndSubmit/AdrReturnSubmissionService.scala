@@ -22,9 +22,10 @@ import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
 import models.{AlcoholRegime, ReturnPeriod, UserAnswers}
-import models.returns.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrTotals, AlcoholDuty}
+import models.returns.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrTotals, AlcoholDuty}
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
+import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DeclareDutySuspendedReceivedPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedDeliveriesPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
@@ -223,12 +224,79 @@ class AdrReturnSubmissionServiceImpl @Inject() (
   }.toRight(s"Impossible to create a Repackaged Adjustment item with values: $adjustmentEntry")
 
   private def getDutySuspended(userAnswers: UserAnswers): EitherT[Future, String, AdrDutySuspended] =
-    // TODO: map duty suspended products
-    EitherT.rightT(
-      AdrDutySuspended(
-        declared = false,
-        dutySuspendedProducts = Seq.empty
-      )
+    getValue(userAnswers, DeclareDutySuspendedDeliveriesQuestionPage).flatMap { hasDeclaredDutySuspended =>
+      if (hasDeclaredDutySuspended) {
+        getDutySuspendedProducts(userAnswers).map { dutySuspendedProducts =>
+          AdrDutySuspended(
+            declared = true,
+            dutySuspendedProducts
+          )
+        }
+      } else {
+        EitherT.rightT[Future, String](AdrDutySuspended(declared = false, Seq.empty))
+      }
+    }
+
+  private def getDutySuspendedProducts(
+    userAnswers: UserAnswers
+  ): EitherT[Future, String, Seq[AdrDutySuspendedProduct]] =
+    for {
+      beerDutySuspended           <- getValue(userAnswers, DutySuspendedBeerPage)
+                                       .map(dutySuspendedBeer =>
+                                         AdrDutySuspendedProduct(
+                                           regime = AdrDutySuspendedAlcoholRegime.Beer,
+                                           suspendedQuantity = AdrAlcoholQuantity(
+                                             dutySuspendedBeer.totalBeer,
+                                             dutySuspendedBeer.pureAlcoholInBeer
+                                           )
+                                         )
+                                       )
+      ciderDutySuspended          <- getValue(userAnswers, DutySuspendedCiderPage)
+                                       .map(dutySuspendedCider =>
+                                         AdrDutySuspendedProduct(
+                                           regime = AdrDutySuspendedAlcoholRegime.Cider,
+                                           suspendedQuantity = AdrAlcoholQuantity(
+                                             dutySuspendedCider.totalCider,
+                                             dutySuspendedCider.pureAlcoholInCider
+                                           )
+                                         )
+                                       )
+      spiritsDutySuspended        <- getValue(userAnswers, DutySuspendedSpiritsPage)
+                                       .map(dutySuspendedSpirits =>
+                                         AdrDutySuspendedProduct(
+                                           regime = AdrDutySuspendedAlcoholRegime.Spirits,
+                                           suspendedQuantity = AdrAlcoholQuantity(
+                                             dutySuspendedSpirits.totalSpirits,
+                                             dutySuspendedSpirits.pureAlcoholInSpirits
+                                           )
+                                         )
+                                       )
+      wineDutySuspended           <- getValue(userAnswers, DutySuspendedWinePage)
+                                       .map(dutySuspendedWine =>
+                                         AdrDutySuspendedProduct(
+                                           regime = AdrDutySuspendedAlcoholRegime.Wine,
+                                           suspendedQuantity = AdrAlcoholQuantity(
+                                             dutySuspendedWine.totalWine,
+                                             dutySuspendedWine.pureAlcoholInWine
+                                           )
+                                         )
+                                       )
+      otherFermentedDutySuspended <- getValue(userAnswers, DutySuspendedOtherFermentedPage)
+                                       .map(dutySuspendedOtherFermentedProducts =>
+                                         AdrDutySuspendedProduct(
+                                           regime = AdrDutySuspendedAlcoholRegime.OtherFermentedProduct,
+                                           suspendedQuantity = AdrAlcoholQuantity(
+                                             dutySuspendedOtherFermentedProducts.totalOtherFermented,
+                                             dutySuspendedOtherFermentedProducts.pureAlcoholInOtherFermented
+                                           )
+                                         )
+                                       )
+    } yield Seq(
+      beerDutySuspended,
+      ciderDutySuspended,
+      spiritsDutySuspended,
+      wineDutySuspended,
+      otherFermentedDutySuspended
     )
 
   private def getSpirits(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrSpirits]] =
