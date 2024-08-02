@@ -22,8 +22,8 @@ import play.api.data.FormError
 class OverDeclarationReasonFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "overDeclarationReason.error.required"
-  val lengthKey = "overDeclarationReason.error.length"
-  val maxLength = 250
+  val lengthKey   = "overDeclarationReason.error.length"
+  val maxLength   = 250
 
   val form = new OverDeclarationReasonFormProvider()()
 

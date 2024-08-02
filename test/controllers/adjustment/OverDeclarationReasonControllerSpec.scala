@@ -19,7 +19,7 @@ package controllers.adjustment
 import base.SpecBase
 import forms.adjustment.OverDeclarationReasonFormProvider
 import models.NormalMode
-import navigation.{FakeAdjustmentNavigator, AdjustmentNavigator}
+import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.OverDeclarationReasonPage
 import play.api.inject.bind
@@ -36,9 +36,10 @@ class OverDeclarationReasonControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new OverDeclarationReasonFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val overDeclarationReasonRoute = controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+  lazy val overDeclarationReasonRoute =
+    controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
 
   "OverDeclarationReason Controller" - {
 
@@ -72,7 +73,10 @@ class OverDeclarationReasonControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 

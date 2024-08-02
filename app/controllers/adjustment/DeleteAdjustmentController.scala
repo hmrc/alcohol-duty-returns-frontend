@@ -24,7 +24,7 @@ import models.adjustment.{AdjustmentDuty, AdjustmentType}
 import models.adjustment.AdjustmentType.{Overdeclaration, Underdeclaration}
 import navigation.AdjustmentNavigator
 import pages.QuestionPage
-import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -98,7 +98,7 @@ class DeleteAdjustmentController @Inject() (
         )
       finalUserAnswers                <-
         Future.fromTry(
-          clearIfBelowThreshold(UnderDeclarationTotalPage, underDeclarationTotal.duty, answersRemovingOverDeclaration)
+          clearIfBelowThreshold(UnderDeclarationReasonPage, underDeclarationTotal.duty, answersRemovingOverDeclaration)
         )
     } yield finalUserAnswers
   }

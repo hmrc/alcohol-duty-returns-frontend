@@ -19,7 +19,7 @@ package controllers.adjustment
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import forms.adjustment.AdjustmentListFormProvider
-import models.adjustment.{AdjustmentDuty, AdjustmentType, AdjustmentTypes}
+import models.adjustment.{AdjustmentDuty, AdjustmentType}
 import models.adjustment.AdjustmentType.{Overdeclaration, Underdeclaration}
 import navigation.AdjustmentNavigator
 import models.{NormalMode, UserAnswers}
@@ -123,7 +123,8 @@ class AdjustmentListController @Inject() (
       .flatten
       .filter(_.adjustmentType.contains(adjustmentType))
       .flatMap(_.duty)
-  private def calculateTotalDuty(duties: Seq[BigDecimal])(implicit hc: HeaderCarrier): Future[AdjustmentDuty]      =
+
+  private def calculateTotalDuty(duties: Seq[BigDecimal])(implicit hc: HeaderCarrier): Future[AdjustmentDuty] =
     if (duties.nonEmpty) {
       alcoholDutyCalculatorConnector.calculateTotalAdjustment(duties)
     } else {

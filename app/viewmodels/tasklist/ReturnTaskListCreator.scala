@@ -31,8 +31,6 @@ import viewmodels.AlcoholRegimesViewOrder
 import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 
 import javax.inject.Inject
-import scala.math.abs
-import scala.util.Try
 
 class ReturnTaskListCreator @Inject() () {
   private def createSection(
