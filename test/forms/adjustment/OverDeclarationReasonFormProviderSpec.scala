@@ -19,17 +19,17 @@ package forms.adjustment
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
-class UnderDeclarationReasonFormProviderSpec extends StringFieldBehaviours {
+class OverDeclarationReasonFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "underDeclarationReason.error.required"
-  val lengthKey   = "underDeclarationReason.error.length"
-  val maxLength   = 250
+  val requiredKey = "overDeclarationReason.error.required"
+  val lengthKey = "overDeclarationReason.error.length"
+  val maxLength = 250
 
-  val form = new UnderDeclarationReasonFormProvider()()
+  val form = new OverDeclarationReasonFormProvider()()
 
   ".value" - {
 
-    val fieldName = "under-declaration-reason-input"
+    val fieldName = "over-declaration-reason-input"
 
     behave like fieldThatBindsValidData(
       form,

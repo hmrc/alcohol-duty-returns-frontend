@@ -246,6 +246,11 @@ POST       /adjustment-reason-for-under-declaration                        contr
 GET        /change-adjustment-reason-for-under-declaration                 controllers.adjustment.UnderDeclarationReasonController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-adjustment-reason-for-under-declaration                 controllers.adjustment.UnderDeclarationReasonController.onSubmit(mode: Mode = CheckMode)
 
+GET        /adjustment-reason-for-over-declaration                        controllers.adjustment.OverDeclarationReasonController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-reason-for-over-declaration                        controllers.adjustment.OverDeclarationReasonController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-reason-for-over-declaration                  controllers.adjustment.OverDeclarationReasonController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-reason-for-over-declaration                  controllers.adjustment.OverDeclarationReasonController.onSubmit(mode: Mode = CheckMode)
+
 GET        /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onPageLoad(index: Int)
 POST       /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onSubmit(index: Int)
 # End of adjustments sub-journey

@@ -16,8 +16,10 @@
 
 package viewmodels.tasklist
 
+import models.adjustment.AdjustmentType
 import models.{CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage}
+import pages.QuestionPage
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
@@ -29,6 +31,8 @@ import viewmodels.AlcoholRegimesViewOrder
 import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 
 import javax.inject.Inject
+import scala.math.abs
+import scala.util.Try
 
 class ReturnTaskListCreator @Inject() () {
   private def createSection(
@@ -153,6 +157,45 @@ class ReturnTaskListCreator @Inject() () {
     )
   }
 
+  private def returnAdjustmentJourneyUnderDeclarationTaskListItem(userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): TaskListItem =
+    createTaskListItem(
+      userAnswers,
+      AdjustmentType.Underdeclaration,
+      UnderDeclarationReasonPage,
+      controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+    )
+
+  private def returnAdjustmentJourneyOverDeclarationTaskListItem(userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): TaskListItem =
+    createTaskListItem(
+      userAnswers,
+      AdjustmentType.Overdeclaration,
+      OverDeclarationReasonPage,
+      controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+    )
+
+  private def createTaskListItem(
+    userAnswers: UserAnswers,
+    adjustmentType: AdjustmentType,
+    reasonPage: QuestionPage[String],
+    href: String
+  )(implicit messages: Messages): TaskListItem = {
+    val title  = TaskListItemTitle(content = Text(messages(s"taskList.section.adjustment.$adjustmentType")))
+    val status = (userAnswers.get(AdjustmentListPage), userAnswers.get(reasonPage)) match {
+      case (Some(false), None)    => AlcholDutyTaskListItemStatus.notStarted
+      case (Some(false), Some(_)) => AlcholDutyTaskListItemStatus.completed
+      case _                      => AlcholDutyTaskListItemStatus.notStarted
+    }
+    TaskListItem(
+      title = title,
+      status = status,
+      href = Some(href)
+    )
+  }
+
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
       val regimes             = userAnswers.regimes
@@ -270,13 +313,26 @@ class ReturnTaskListCreator @Inject() () {
       sectionName = "returns"
     )
 
-  def returnAdjustmentSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
+  def returnAdjustmentSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
+    val overDeclarationTotal   = userAnswers.get(OverDeclarationTotalPage).getOrElse(BigDecimal(0))
+    val underDeclarationTotal  = userAnswers.get(UnderDeclarationTotalPage).getOrElse(BigDecimal(0))
+    val adjustmentListQuestion = userAnswers.get(AdjustmentListPage).getOrElse(true)
+    val taskListItems          = Seq(
+      Some(returnAdjustmentJourneyTaskListItem(userAnswers)),
+      if (underDeclarationTotal > 1000 && !adjustmentListQuestion) {
+        Some(returnAdjustmentJourneyUnderDeclarationTaskListItem(userAnswers))
+      } else { None },
+      if (overDeclarationTotal.abs > 1000 && !adjustmentListQuestion) {
+        Some(returnAdjustmentJourneyOverDeclarationTaskListItem(userAnswers))
+      } else { None }
+    ).flatten
     createSection(
       userAnswers.get(DeclareAdjustmentQuestionPage),
-      () => Seq(returnAdjustmentJourneyTaskListItem(userAnswers)),
+      () => taskListItems,
       controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(_).url,
       sectionName = "adjustment"
     )
+  }
 
   def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(

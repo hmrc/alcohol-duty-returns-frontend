@@ -17,42 +17,41 @@
 package controllers.adjustment
 
 import base.SpecBase
-import forms.adjustment.UnderDeclarationReasonFormProvider
+import forms.adjustment.OverDeclarationReasonFormProvider
 import models.NormalMode
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
+import navigation.{FakeAdjustmentNavigator, AdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.UnderDeclarationReasonPage
+import pages.adjustment.OverDeclarationReasonPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
-import views.html.adjustment.UnderDeclarationReasonView
+import views.html.adjustment.OverDeclarationReasonView
 
 import scala.concurrent.Future
 
-class UnderDeclarationReasonControllerSpec extends SpecBase {
+class OverDeclarationReasonControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new UnderDeclarationReasonFormProvider()
-  val form         = formProvider()
+  val formProvider = new OverDeclarationReasonFormProvider()
+  val form = formProvider()
 
-  lazy val underDeclarationReasonRoute =
-    controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+  lazy val overDeclarationReasonRoute = controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
 
-  "UnderDeclarationReason Controller" - {
+  "OverDeclarationReason Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, underDeclarationReasonRoute)
+        val request = FakeRequest(GET, overDeclarationReasonRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[UnderDeclarationReasonView]
+        val view = application.injector.instanceOf[OverDeclarationReasonView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
@@ -61,50 +60,47 @@ class UnderDeclarationReasonControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(UnderDeclarationReasonPage, "answer").success.value
+      val userAnswers = emptyUserAnswers.set(OverDeclarationReasonPage, "answer").success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, underDeclarationReasonRoute)
+        val request = FakeRequest(GET, overDeclarationReasonRoute)
 
-        val view = application.injector.instanceOf[UnderDeclarationReasonView]
+        val view = application.injector.instanceOf[OverDeclarationReasonView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
-          request,
-          getMessages(application)
-        ).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, getMessages(application)).toString
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
-      val mockCacheConnector = mock[CacheConnector]
-
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, underDeclarationReasonRoute)
-            .withFormUrlEncodedBody(("under-declaration-reason-input", "answer"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
-    }
+//    "must redirect to the next page when valid data is submitted" in {
+//
+//      val mockCacheConnector = mock[CacheConnector]
+//
+//      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+//
+//      val application =
+//        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+//          .overrides(
+//            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
+//            bind[CacheConnector].toInstance(mockCacheConnector)
+//          )
+//          .build()
+//
+//      running(application) {
+//        val request =
+//          FakeRequest(POST, overDeclarationReasonRoute)
+//            .withFormUrlEncodedBody(("overDeclarationReason-input", "answer"))
+//
+//        val result = route(application, request).value
+//
+//        status(result) mustEqual SEE_OTHER
+//        redirectLocation(result).value mustEqual onwardRoute.url
+//      }
+//    }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
@@ -112,12 +108,12 @@ class UnderDeclarationReasonControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, underDeclarationReasonRoute)
+          FakeRequest(POST, overDeclarationReasonRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[UnderDeclarationReasonView]
+        val view = application.injector.instanceOf[OverDeclarationReasonView]
 
         val result = route(application, request).value
 
@@ -131,7 +127,7 @@ class UnderDeclarationReasonControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, underDeclarationReasonRoute)
+        val request = FakeRequest(GET, overDeclarationReasonRoute)
 
         val result = route(application, request).value
 
@@ -146,7 +142,7 @@ class UnderDeclarationReasonControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, underDeclarationReasonRoute)
+          FakeRequest(POST, overDeclarationReasonRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

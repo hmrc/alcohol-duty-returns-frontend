@@ -19,15 +19,18 @@ package controllers.adjustment
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import forms.adjustment.AdjustmentListFormProvider
+import models.adjustment.{AdjustmentDuty, AdjustmentType, AdjustmentTypes}
+import models.adjustment.AdjustmentType.{Overdeclaration, Underdeclaration}
 import navigation.AdjustmentNavigator
-import models.NormalMode
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
+import models.{NormalMode, UserAnswers}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
 import views.html.adjustment.AdjustmentListView
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentListSummaryHelper
 import play.api.Logging
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -83,10 +86,47 @@ class AdjustmentListController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, table))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, updatedAnswers))
+            updatedAnswers                 <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
+            userAnswersWithOverUnderTotals <- fetchOverUnderDeclarationTotals(updatedAnswers, value)
+            _                              <- cacheConnector.set(userAnswersWithOverUnderTotals)
+          } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, userAnswersWithOverUnderTotals))
       )
   }
 
+  private def fetchOverUnderDeclarationTotals(
+    userAnswers: UserAnswers,
+    value: Boolean
+  )(implicit hc: HeaderCarrier): Future[UserAnswers] =
+    if (value) {
+      Future.successful(userAnswers)
+    } else {
+      val underDeclarationDuties = getDutiesByAdjustmentType(Underdeclaration, userAnswers)
+      val overDeclarationDuties  = getDutiesByAdjustmentType(Overdeclaration, userAnswers)
+
+      val underDeclarationTotalFuture = calculateTotalDuty(underDeclarationDuties)
+      val overDeclarationTotalFuture  = calculateTotalDuty(overDeclarationDuties)
+
+      for {
+        underDeclarationTotal           <- underDeclarationTotalFuture
+        overDeclarationTotal            <- overDeclarationTotalFuture
+        userAnswersWithUnderDeclaration <-
+          Future.fromTry(userAnswers.set(UnderDeclarationTotalPage, underDeclarationTotal.duty))
+        updatedUserAnswers              <-
+          Future.fromTry(userAnswersWithUnderDeclaration.set(OverDeclarationTotalPage, overDeclarationTotal.duty))
+      } yield updatedUserAnswers
+    }
+
+  private def getDutiesByAdjustmentType(adjustmentType: AdjustmentType, userAnswers: UserAnswers): Seq[BigDecimal] =
+    userAnswers
+      .get(AdjustmentEntryListPage)
+      .toSeq
+      .flatten
+      .filter(_.adjustmentType.contains(adjustmentType))
+      .flatMap(_.duty)
+  private def calculateTotalDuty(duties: Seq[BigDecimal])(implicit hc: HeaderCarrier): Future[AdjustmentDuty]      =
+    if (duties.nonEmpty) {
+      alcoholDutyCalculatorConnector.calculateTotalAdjustment(duties)
+    } else {
+      Future.successful(AdjustmentDuty(BigDecimal(0)))
+    }
 }

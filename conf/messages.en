@@ -184,6 +184,8 @@ taskList.section.adjustment.needToDeclare.no = You’ve told us you do not need 
 taskList.section.adjustment.notStarted = Change the entries you’ve told us about
 taskList.section.adjustment.completed = Change the entries you’ve told us about
 taskList.section.adjustment.inProgress = Change the entries you’ve told us about
+taskList.section.adjustment.under-declaration = Reason for under-declaration
+taskList.section.adjustment.over-declaration = Reason for over declaration
 
 taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check how much duty is payable and send return
@@ -1280,6 +1282,14 @@ underDeclarationReason.checkYourAnswersLabel = underDeclarationReason
 underDeclarationReason.error.required = Enter the reason why these alcoholic products were not declared until now
 underDeclarationReason.error.length = The reason these alcoholic products were not declared must be {0} characters or less.
 underDeclarationReason.change.hidden = UnderDeclarationReason
+
+overDeclarationReason.title = Why was too much alcoholic product over-declared previously?
+overDeclarationReason.heading = Why was too much alcoholic product over-declared previously?
+overDeclarationReason.checkYourAnswersLabel = overDeclarationReason
+overDeclarationReason.error.required = Enter the reason why too much alcoholic product was over-declared
+overDeclarationReason.error.length = The reason why too much alcoholic product was over-declared must be {0} characters or less.
+overDeclarationReason.change.hidden = OverDeclarationReason
+
 # End of adjustments sub-journey
 
 

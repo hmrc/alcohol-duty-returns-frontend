@@ -18,24 +18,26 @@ package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
 import models.{CheckMode, UserAnswers}
-import pages.adjustment.UnderDeclarationReasonPage
+import pages.adjustment.OverDeclarationReasonPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object UnderDeclarationReasonSummary {
+object OverDeclarationReasonSummary  {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(UnderDeclarationReasonPage).map { answer =>
-      SummaryListRowViewModel(
-        key = "underDeclarationReason.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlFormat.escape(answer).toString),
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.UnderDeclarationReasonController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("underDeclarationReason.change.hidden"))
+    answers.get(OverDeclarationReasonPage).map {
+      answer =>
+
+        SummaryListRowViewModel(
+          key     = "overDeclarationReason.checkYourAnswersLabel",
+          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+          actions = Seq(
+            ActionItemViewModel("site.change", routes.OverDeclarationReasonController.onPageLoad(CheckMode).url)
+              .withVisuallyHiddenText(messages("overDeclarationReason.change.hidden"))
+          )
         )
-      )
     }
 }
