@@ -17,6 +17,7 @@
 package models.returns
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import models.{SpiritType, UnitsOfMeasure}
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.{Instant, LocalDate}
@@ -156,6 +157,17 @@ object AdrTypeOfSpirit extends Enum[AdrTypeOfSpirit] with PlayJsonEnum[AdrTypeOf
   case object CiderOrPerry extends AdrTypeOfSpirit
   case object WineOrMadeWine extends AdrTypeOfSpirit
   case object Other extends AdrTypeOfSpirit
+
+  def fromSpiritsType(spiritsType: SpiritType): AdrTypeOfSpirit = spiritsType match {
+    case SpiritType.Maltspirits               => Malt
+    case SpiritType.Grainspirits              => Grain
+    case SpiritType.NeutralAgriculturalOrigin => NeutralAgricultural
+    case SpiritType.NeutralIndustrialOrigin   => NeutralIndustrial
+    case SpiritType.Beer                      => Beer
+    case SpiritType.CiderOrPerry              => CiderOrPerry
+    case SpiritType.WineOrMadeWine            => WineOrMadeWine
+    case SpiritType.Other                     => Other
+  }
 }
 
 case class AdrSpiritsGrainsQuantities(
@@ -191,6 +203,12 @@ object AdrUnitOfMeasure extends Enum[AdrUnitOfMeasure] with PlayJsonEnum[AdrUnit
 
   case object Tonnes extends AdrUnitOfMeasure
   case object Litres extends AdrUnitOfMeasure
+
+  def apply(unit: UnitsOfMeasure): AdrUnitOfMeasure =
+    unit match {
+      case UnitsOfMeasure.Tonnes => Tonnes
+      case UnitsOfMeasure.Litres => Litres
+    }
 }
 
 case class AdrOtherIngredient(
