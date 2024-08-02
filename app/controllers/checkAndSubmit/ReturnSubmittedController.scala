@@ -46,21 +46,21 @@ class ReturnSubmittedController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
     val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
-    val periodEndDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
+    val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
 
     val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
     val directDebitBackendUrl = appConfig.directDebitBackendUrl
 
     request.session.get(adrReturnCreatedDetails) match {
-      case None =>
+      case None                       =>
         logger.warn("return details not present in session")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       case Some(returnCreatedDetails) =>
         Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
           case Some(returnDetails: AdrReturnCreatedDetails) =>
             val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)
-            val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
-            val formattedPaymentDueDate = dateTimeHelper.formatDateMonthYear(returnDetails.paymentDueDate)
+            val formattedProcessingDate            = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
+            val formattedPaymentDueDate            = dateTimeHelper.formatDateMonthYear(returnDetails.paymentDueDate)
 
             Ok(
               view(
@@ -74,7 +74,7 @@ class ReturnSubmittedController @Inject() (
                 directDebitBackendUrl
               )
             )
-          case None =>
+          case None                                         =>
             logger.warn("return details not valid")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
@@ -82,4 +82,3 @@ class ReturnSubmittedController @Inject() (
 
   }
 }
-

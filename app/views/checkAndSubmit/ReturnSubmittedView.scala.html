@@ -37,7 +37,6 @@
 }
 
 @nilPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", returnDetails.chargeReference.get.value), classes = "")
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 
@@ -47,7 +46,7 @@
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 
-@layout(pageTitle = titleNoForm(messages("returnSubmitted.title"))) {
+@layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false) {
 
     @if(returnDetails.amount > 0) {
         @govukPanel(Panel(
