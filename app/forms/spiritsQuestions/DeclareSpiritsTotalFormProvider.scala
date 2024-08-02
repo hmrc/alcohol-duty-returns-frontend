@@ -28,7 +28,7 @@ class DeclareSpiritsTotalFormProvider @Inject() extends Mappings {
         2,
         "declareSpiritsTotal.error.required",
         "declareSpiritsTotal.error.nonNumeric",
-        "declareSpiritsTotal.error.twoDecimalPlaces"
+        "declareSpiritsTotal.error.decimalPlaces"
       )
         .verifying(minimumValue(BigDecimal(0.01), "declareSpiritsTotal.error.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "declareSpiritsTotal.error.maximumRequired"))

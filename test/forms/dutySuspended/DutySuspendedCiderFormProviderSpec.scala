@@ -45,7 +45,7 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedCider.error.totalCider.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.totalCider.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.totalCider.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -91,7 +91,7 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

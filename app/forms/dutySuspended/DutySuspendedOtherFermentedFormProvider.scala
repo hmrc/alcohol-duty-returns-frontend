@@ -31,7 +31,7 @@ class DutySuspendedOtherFermentedFormProvider @Inject() extends Mappings {
         2,
         "dutySuspendedOtherFermented.error.totalOtherFermented.required",
         "dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric",
-        "dutySuspendedOtherFermented.error.totalOtherFermented.twoDecimalPlaces"
+        "dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces"
       ).verifying(
         minimumValue(BigDecimal(-999999999.99), "dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired")
       ).verifying(
@@ -41,7 +41,7 @@ class DutySuspendedOtherFermentedFormProvider @Inject() extends Mappings {
         4,
         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required",
         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric",
-        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.twoDecimalPlaces"
+        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.decimalPlaces"
       ).verifying(
         minimumValue(
           BigDecimal(-999999999.9999),

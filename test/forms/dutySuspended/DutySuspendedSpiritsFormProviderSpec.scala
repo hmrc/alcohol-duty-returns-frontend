@@ -44,7 +44,7 @@ class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -90,7 +90,7 @@ class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

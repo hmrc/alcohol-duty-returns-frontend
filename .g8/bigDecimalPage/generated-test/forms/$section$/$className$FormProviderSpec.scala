@@ -28,7 +28,7 @@ class $className$FormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError  = FormError(fieldName, "$className;format="decap"$.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "$className;format="decap"$.error.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "$className;format="decap"$.error.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

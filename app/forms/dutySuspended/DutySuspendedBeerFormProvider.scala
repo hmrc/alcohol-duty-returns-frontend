@@ -31,14 +31,14 @@ class DutySuspendedBeerFormProvider @Inject() extends Mappings {
         2,
         "dutySuspendedBeer.error.totalBeer.required",
         "dutySuspendedBeer.error.totalBeer.nonNumeric",
-        "dutySuspendedBeer.error.totalBeer.twoDecimalPlaces"
+        "dutySuspendedBeer.error.totalBeer.decimalPlaces"
       ).verifying(minimumValue(BigDecimal(-999999999.99), "dutySuspendedBeer.error.totalBeer.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedBeer.error.totalBeer.maximumRequired")),
       "pureAlcoholInBeer" -> bigDecimal(
         4,
         "dutySuspendedBeer.error.pureAlcoholInBeer.required",
         "dutySuspendedBeer.error.pureAlcoholInBeer.nonNumeric",
-        "dutySuspendedBeer.error.pureAlcoholInBeer.twoDecimalPlaces"
+        "dutySuspendedBeer.error.pureAlcoholInBeer.decimalPlaces"
       ).verifying(
         minimumValue(BigDecimal(-999999999.9999), "dutySuspendedBeer.error.pureAlcoholInBeer.minimumRequired")
       ).verifying(

@@ -44,7 +44,7 @@ class AdjustmentSmallProducerReliefDutyRateFormProviderSpec extends BigDecimalFi
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "adjustmentSmallProducerReliefDutyRate.error.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

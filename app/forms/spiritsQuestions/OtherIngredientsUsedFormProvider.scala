@@ -37,7 +37,7 @@ class OtherIngredientsUsedFormProvider @Inject() extends Mappings {
         quantityMaxDecimalPlaces,
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.required",
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.nonNumeric",
-        "otherIngredientsUsed.error.otherIngredientsUsedQuantity.twoDecimalPlaces"
+        "otherIngredientsUsed.error.otherIngredientsUsedQuantity.decimalPlaces"
       ).verifying(
         minimumValue(quantityMinValue, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired")
       ).verifying(

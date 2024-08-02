@@ -45,7 +45,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedWine.error.totalWine.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.totalWine.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.totalWine.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -91,7 +91,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

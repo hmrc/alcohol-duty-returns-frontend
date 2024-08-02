@@ -44,7 +44,7 @@ class DeclareDutySuspendedDeliveriesOutsideUkFormProviderSpec extends BigDecimal
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "declareDutySuspendedDeliveriesOutsideUk.error.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

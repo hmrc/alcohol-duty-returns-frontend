@@ -31,14 +31,14 @@ class DutySuspendedSpiritsFormProvider @Inject() extends Mappings {
         2,
         "dutySuspendedSpirits.error.totalSpirits.required",
         "dutySuspendedSpirits.error.totalSpirits.nonNumeric",
-        "dutySuspendedSpirits.error.totalSpirits.twoDecimalPlaces"
+        "dutySuspendedSpirits.error.totalSpirits.decimalPlaces"
       ).verifying(minimumValue(BigDecimal(-999999999.99), "dutySuspendedSpirits.error.totalSpirits.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedSpirits.error.totalSpirits.maximumRequired")),
       "pureAlcoholInSpirits" -> bigDecimal(
         4,
         "dutySuspendedSpirits.error.pureAlcoholInSpirits.required",
         "dutySuspendedSpirits.error.pureAlcoholInSpirits.nonNumeric",
-        "dutySuspendedSpirits.error.pureAlcoholInSpirits.twoDecimalPlaces"
+        "dutySuspendedSpirits.error.pureAlcoholInSpirits.decimalPlaces"
       ).verifying(
         minimumValue(BigDecimal(-999999999.9999), "dutySuspendedSpirits.error.pureAlcoholInSpirits.minimumRequired")
       ).verifying(
