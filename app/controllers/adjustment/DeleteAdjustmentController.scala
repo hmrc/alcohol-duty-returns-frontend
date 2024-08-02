@@ -20,8 +20,6 @@ import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import forms.adjustment.DeleteAdjustmentFormProvider
 import models.UserAnswers
-import models.adjustment.{AdjustmentDuty, AdjustmentType}
-import models.adjustment.AdjustmentType.{Overdeclaration, Underdeclaration}
 import navigation.AdjustmentNavigator
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
@@ -29,6 +27,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.adjustment.AdjustmentOverUnderDeclarationCalculationHelper
 import views.html.adjustment.DeleteAdjustmentView
 
 import javax.inject.Inject
@@ -45,7 +44,8 @@ class DeleteAdjustmentController @Inject() (
   formProvider: DeleteAdjustmentFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DeleteAdjustmentView,
-  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
+  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
+  adjustmentOverUnderDeclarationCalculationHelper: AdjustmentOverUnderDeclarationCalculationHelper
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -78,45 +78,26 @@ class DeleteAdjustmentController @Inject() (
 
   private def updateOverUnderDeclarationReasons(
     userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier): Future[UserAnswers] = {
-    val underDeclarationDuties = getDutiesByAdjustmentType(Underdeclaration, userAnswers)
-    val overDeclarationDuties  = getDutiesByAdjustmentType(Overdeclaration, userAnswers)
-
-    val underDeclarationTotalFuture = calculateTotalDuty(underDeclarationDuties)
-    val overDeclarationTotalFuture  = calculateTotalDuty(overDeclarationDuties)
-
+  )(implicit hc: HeaderCarrier): Future[UserAnswers] =
     for {
-      underDeclarationTotal           <- underDeclarationTotalFuture
-      overDeclarationTotal            <- overDeclarationTotalFuture
-      userAnswersWithUnderDeclaration <-
-        Future.fromTry(userAnswers.set(UnderDeclarationTotalPage, underDeclarationTotal.duty))
-      updatedUserAnswers              <-
-        Future.fromTry(userAnswersWithUnderDeclaration.set(OverDeclarationTotalPage, overDeclarationTotal.duty))
-      answersRemovingOverDeclaration  <-
+      updatedUserAnswers             <- adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(userAnswers)
+      answersRemovingOverDeclaration <-
         Future.fromTry(
-          clearIfBelowThreshold(OverDeclarationReasonPage, overDeclarationTotal.duty.abs, updatedUserAnswers)
+          clearIfBelowThreshold(
+            OverDeclarationReasonPage,
+            updatedUserAnswers.get(OverDeclarationTotalPage).getOrElse(BigDecimal(0)).abs,
+            updatedUserAnswers
+          )
         )
-      finalUserAnswers                <-
+      finalUserAnswers               <-
         Future.fromTry(
-          clearIfBelowThreshold(UnderDeclarationReasonPage, underDeclarationTotal.duty, answersRemovingOverDeclaration)
+          clearIfBelowThreshold(
+            UnderDeclarationReasonPage,
+            answersRemovingOverDeclaration.get(UnderDeclarationTotalPage).getOrElse(BigDecimal(0)),
+            answersRemovingOverDeclaration
+          )
         )
     } yield finalUserAnswers
-  }
-
-  private def getDutiesByAdjustmentType(adjustmentType: AdjustmentType, userAnswers: UserAnswers): Seq[BigDecimal] =
-    userAnswers
-      .get(AdjustmentEntryListPage)
-      .toSeq
-      .flatten
-      .filter(_.adjustmentType.contains(adjustmentType))
-      .flatMap(_.duty)
-
-  private def calculateTotalDuty(duties: Seq[BigDecimal])(implicit hc: HeaderCarrier): Future[AdjustmentDuty] =
-    if (duties.nonEmpty) {
-      alcoholDutyCalculatorConnector.calculateTotalAdjustment(duties)
-    } else {
-      Future.successful(AdjustmentDuty(BigDecimal(0)))
-    }
 
   private def clearIfBelowThreshold(
     reasonPage: QuestionPage[_],
