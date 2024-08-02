@@ -71,7 +71,7 @@ class ReturnSubmittedController @Inject() (
                 periodEndDate,
                 formattedProcessingDate,
                 formattedPaymentDueDate,
-                request.returnPeriod.get.toPeriodKey,
+                returnPeriod.toPeriodKey,
                 businessTaxAccountUrl,
                 directDebitBackendUrl
               )

@@ -40,13 +40,6 @@ class ReturnSubmittedControllerSpec extends SpecBase {
     paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
   )
 
-  val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
-  val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
-
-  val localDateProcessingDate = dateTimeHelper.instantToLocalDate(Instant.now(clock))
-  val formattedProcessingDate = dateTimeHelper.formatDateMonthYear(localDateProcessingDate)
-
-  val formattedPaymentDueDate      = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 8, 25))
   val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
 
   "ReturnSubmitted Controller" - {
@@ -67,26 +60,8 @@ class ReturnSubmittedControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ReturnSubmittedView]
-
-        val returnPeriodViewModel = ReturnPeriodViewModel(returnPeriod)
-        val periodStartDate       = returnPeriodViewModel.fromDate
-        val periodEndDate         = returnPeriodViewModel.toDate
-
         status(result) mustEqual OK
-//        contentAsString(result) mustEqual view(
-//          returnDetails,
-//          periodStartDate,
-//          periodEndDate,
-//          formattedProcessingDate,
-//          formattedPaymentDueDate,
-//          "-1976AA",
-//          appConfig.businessTaxAccountUrl,
-//          appConfig.directDebitBackendUrl
-//        )(
-//          request,
-//          getMessages(application)
-//        ).toString
+        // TODO: add test for the view with correct period key
       }
     }
 
