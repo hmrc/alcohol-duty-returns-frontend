@@ -29,7 +29,7 @@
         link: Link,
 )
 
-@(returnDetails: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String, businessTaxAccountUrl: String, directDebitBackendUrl: String)(implicit request: Request[_], messages: Messages)
+@(returnDetails: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
 
 @posPanelContent = {
     @paragraph(messages("returnSubmitted.panel.body.reference", returnDetails.chargeReference.get.value), classes = "")
