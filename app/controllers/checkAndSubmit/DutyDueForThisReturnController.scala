@@ -16,6 +16,7 @@
 
 package controllers.checkAndSubmit
 
+import config.Constants.adrReturnCreatedDetails
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
 import play.api.Logging
@@ -71,11 +72,12 @@ class DutyDueForThisReturnController @Inject() (
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       },
       adrSubmissionCreatedDetails => {
-        // TODO: remove once the return submitted screen is implemented
         logger.warn("Successfully submitted return: " + adrSubmissionCreatedDetails)
         val session =
-          request.session + ("adrSubmissionCreatedDetails" -> Json.toJson(adrSubmissionCreatedDetails).toString)
-        Future.successful(Redirect(controllers.routes.CheckYourAnswersController.onPageLoad()).withSession(session))
+          request.session + (adrReturnCreatedDetails -> Json.toJson(adrSubmissionCreatedDetails).toString)
+        Future.successful(
+          Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad()).withSession(session)
+        )
       }
     )
   }
