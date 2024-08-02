@@ -257,4 +257,6 @@ POST       /remove-adjustment                       controllers.adjustment.Delet
 
 # Beginning of check and submit sub-journey
 GET        /return-summary                      controllers.checkAndSubmit.DutyDueForThisReturnController.onPageLoad()
+POST       /return-summary                      controllers.checkAndSubmit.DutyDueForThisReturnController.onSubmit()
+
 # End of check and submit sub-journey

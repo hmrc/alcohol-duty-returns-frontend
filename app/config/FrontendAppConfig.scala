@@ -101,6 +101,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrGetReturnsUrl(appaId: String, periodKey: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/producers/$appaId/returns/$periodKey"
 
+  def adrSubmitReturnUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/producers/$appaId/returns/$periodKey"
+
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart
 
