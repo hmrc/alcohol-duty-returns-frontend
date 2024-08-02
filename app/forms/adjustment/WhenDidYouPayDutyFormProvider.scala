@@ -31,6 +31,6 @@ class WhenDidYouPayDutyFormProvider @Inject() extends Mappings {
       "whenDidYouPayDuty.date.error.invalidYear"
     )
       .verifying("whenDidYouPayDuty.date.error.invalid.future", value => value.isBefore(YearMonth.now()))
-      .verifying("whenDidYouPayDuty.date.error.invalid.past", value => value.isAfter(YearMonth.of(2023, 8)))
+      .verifying("whenDidYouPayDuty.date.error.invalid.past", value => value.isAfter(YearMonth.of(2023, 7)))
   )
 }

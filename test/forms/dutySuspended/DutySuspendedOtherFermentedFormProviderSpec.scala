@@ -29,7 +29,7 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
 
     val fieldName   = "totalOtherFermented"
     val requiredKey = "dutySuspendedOtherFermented.error.totalOtherFermented.required"
-    val minimum     = 0.00
+    val minimum     = -999999999.99
     val maximum     = 999999999.99
     val decimal     = 2
 
@@ -78,9 +78,9 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
 
     val fieldName   = "pureAlcoholInOtherFermented"
     val requiredKey = "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val minimum     = -999999999.9999
+    val maximum     = 999999999.9999
+    val decimal     = 4
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 

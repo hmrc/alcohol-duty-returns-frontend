@@ -43,15 +43,14 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
   val form                    = new AdjustmentVolumeWithSPRFormProvider()(regime)(messages)
 
   ".volumes" - {
-    /*"must bind valid data" in {
+    "must bind valid data" in {
       val data = Map(
         "volumes.totalLitresVolume" -> validTotalLitres.toString(),
         "volumes.pureAlcoholVolume" -> validPureAlcohol.toString(),
-      "volumes.sprDutyRate" -> validSPRDutyRate.toString()
+        "volumes.sprDutyRate"       -> validSPRDutyRate.toString()
       )
-      form.bind(data).data mustBe AdjustmentVolumeWithSPR(validTotalLitres,validPureAlcohol,validSPRDutyRate)
+      form.bind(data).value.value mustBe AdjustmentVolumeWithSPR(validTotalLitres, validPureAlcohol, validSPRDutyRate)
     }
-     */
 
     "must unbind valid data" in {
       val data = AdjustmentVolumeWithSPR(validTotalLitres, validPureAlcohol, validSPRDutyRate)
@@ -86,9 +85,9 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
 
     "fail to bind when values with too many decimal places are provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "1.1123",
-        "volumes.pureAlcoholVolume" -> "1.1123",
-        "volumes.sprDutyRate"       -> "1.1123"
+        "volumes.totalLitresVolume" -> "1.112",
+        "volumes.pureAlcoholVolume" -> "1.11234",
+        "volumes.sprDutyRate"       -> "1.112"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.twoDecimalPlaces.totalLitresVolume", Seq("")),

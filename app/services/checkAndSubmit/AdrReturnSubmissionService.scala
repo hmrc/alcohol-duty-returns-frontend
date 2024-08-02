@@ -25,7 +25,7 @@ import models.{AlcoholRegime, ReturnPeriod, UserAnswers}
 import models.returns.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrTotals, AlcoholDuty}
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DeclareDutySuspendedReceivedPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedDeliveriesPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
