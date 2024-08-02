@@ -27,27 +27,27 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentOverUnderDeclarationCalculationHelper @Inject() (
-                                                                  calculatorConnector: AlcoholDutyCalculatorConnector
-                                                               )(implicit ec: ExecutionContext) {
+  calculatorConnector: AlcoholDutyCalculatorConnector
+)(implicit ec: ExecutionContext) {
   def fetchOverUnderDeclarationTotals(
-                                       userAnswers: UserAnswers,
-                                       value: Boolean = false
-                                     )(implicit hc: HeaderCarrier): Future[UserAnswers] =
+    userAnswers: UserAnswers,
+    value: Boolean = false
+  )(implicit hc: HeaderCarrier): Future[UserAnswers] =
     if (value) {
       Future.successful(userAnswers)
     } else {
       val underDeclarationDuties = getDutiesByAdjustmentType(Underdeclaration, userAnswers)
-      val overDeclarationDuties = getDutiesByAdjustmentType(Overdeclaration, userAnswers)
+      val overDeclarationDuties  = getDutiesByAdjustmentType(Overdeclaration, userAnswers)
 
       val underDeclarationTotalFuture = calculateTotalDuty(underDeclarationDuties)
-      val overDeclarationTotalFuture = calculateTotalDuty(overDeclarationDuties)
+      val overDeclarationTotalFuture  = calculateTotalDuty(overDeclarationDuties)
 
       for {
-        underDeclarationTotal <- underDeclarationTotalFuture
-        overDeclarationTotal <- overDeclarationTotalFuture
+        underDeclarationTotal           <- underDeclarationTotalFuture
+        overDeclarationTotal            <- overDeclarationTotalFuture
         userAnswersWithUnderDeclaration <-
           Future.fromTry(userAnswers.set(UnderDeclarationTotalPage, underDeclarationTotal.duty))
-        updatedUserAnswers <-
+        updatedUserAnswers              <-
           Future.fromTry(userAnswersWithUnderDeclaration.set(OverDeclarationTotalPage, overDeclarationTotal.duty))
       } yield updatedUserAnswers
     }
