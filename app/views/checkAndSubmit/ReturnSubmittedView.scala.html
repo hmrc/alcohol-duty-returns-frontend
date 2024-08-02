@@ -77,7 +77,7 @@
     @paragraph( content =
         HtmlContent(
             link(
-                id = "pay-now-link",
+                id = "direct-debit-backend-link",
                 text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
                 href = directDebitBackendUrl
             ))
@@ -145,10 +145,6 @@
 
     @subHeading(messages("returnSubmitted.positive.h1"))
     @paragraph(messages("returnSubmitted.negative.p1"))
-
-    @govukButton(
-        ButtonViewModel("continueButton", messages("site.claimRepayment"))
-    )
 
     @paragraph( content =
         HtmlContent(

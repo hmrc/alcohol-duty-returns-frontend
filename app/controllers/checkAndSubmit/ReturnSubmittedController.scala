@@ -28,6 +28,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.DateTimeHelper
+import viewmodels.returns.ReturnPeriodViewModel
 import views.html.checkAndSubmit.ReturnSubmittedView
 
 import java.time.{Instant, LocalDate}
@@ -45,9 +46,6 @@ class ReturnSubmittedController @Inject() (
     with Logging {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val periodStartDate = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 1))
-    val periodEndDate   = dateTimeHelper.formatDateMonthYear(LocalDate.of(2024, 7, 31))
-
     val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
     val directDebitBackendUrl = appConfig.directDebitBackendUrl
 
@@ -58,6 +56,10 @@ class ReturnSubmittedController @Inject() (
       case Some(returnCreatedDetails) =>
         Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
           case Some(returnDetails: AdrReturnCreatedDetails) =>
+            val returnPeriod                       = request.returnPeriod.get
+            val returnPeriodViewModel              = ReturnPeriodViewModel(returnPeriod)
+            val periodStartDate                    = returnPeriodViewModel.fromDate
+            val periodEndDate                      = returnPeriodViewModel.toDate
             val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)
             val formattedProcessingDate            = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
             val formattedPaymentDueDate            = dateTimeHelper.formatDateMonthYear(returnDetails.paymentDueDate)
