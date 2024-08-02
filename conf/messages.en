@@ -1300,6 +1300,7 @@ dutyDueForThisReturn.table.dutyDue = Declared {0} duty
 dutyDueForThisReturn.table.action = Action
 dutyDueForThisReturn.table.nil.label = Declared duty
 dutyDueForThisReturn.table.nil.value = Nil
+dutyDueForThisReturn.table.adjustmentDue = Adjustment duty value
 dutyDueForThisReturn.h4 = Declaration
 dutyDueForThisReturn.p3 = By submitting this return, I agree that the information I have given is complete and correct.
 

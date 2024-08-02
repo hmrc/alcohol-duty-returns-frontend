@@ -17,63 +17,68 @@
 package controllers.checkAndSubmit
 
 import config.Constants.adrReturnCreatedDetails
+import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
-import models.UserAnswers
-import models.checkAndSubmit.AdrReturnCreatedDetails
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.checkAndSubmit.AdrReturnSubmissionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
-import java.time.{Instant, LocalDate}
+import scala.concurrent.{ExecutionContext, Future}
 
 class DutyDueForThisReturnController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector,
+  adrReturnSubmissionService: AdrReturnSubmissionService,
   val controllerComponents: MessagesControllerComponents,
+  dutyDueForThisReturnHelper: DutyDueForThisReturnHelper,
   view: DutyDueForThisReturnView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val currentDate          = LocalDate.now()
-    val returnCreatedDetails = AdrReturnCreatedDetails(
-      processingDate = Instant.now(),
-      amount = BigDecimal(10.45),
-      chargeReference = Some("XA1527404500736"),
-      paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
-    )
-    val session              = request.session + (adrReturnCreatedDetails -> Json.toJson(returnCreatedDetails).toString())
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    dutyDueForThisReturnHelper
+      .getDutyDueViewModel(request.userAnswers)
+      .foldF(
+        error => {
+          logger.warn(error)
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        },
+        result => Future.successful(Ok(view(result)))
+      )
+  }
 
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val result = for {
-      totalValue <- calculationTotal(request.userAnswers)
-      table      <- DutyDueForThisReturnHelper.dutyDueByRegime(request.userAnswers)
-    } yield Ok(view(table, totalValue)).withSession(session)
+      adrReturnSubmission         <- adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers)
+      adrSubmissionCreatedDetails <-
+        alcoholDutyReturnsConnector.submitReturn(request.appaId, request.returnPeriod.toPeriodKey, adrReturnSubmission)
+    } yield adrSubmissionCreatedDetails
 
-    result.fold(
+    result.foldF(
       error => {
-        logger.error(error)
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        logger.warn(error)
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       },
-      identity
+      adrSubmissionCreatedDetails => {
+        // TODO: remove once the return submitted screen is implemented
+        logger.warn("Successfully submitted return: " + adrSubmissionCreatedDetails)
+        val session =
+          request.session + ("adrSubmissionCreatedDetails" -> Json.toJson(adrSubmissionCreatedDetails).toString)
+        Future.successful(Redirect(controllers.routes.CheckYourAnswersController.onPageLoad()).withSession(session))
+      }
     )
   }
 
-  // TODO: this method will be substituted by a call to the calculator in the next iteration
-  private def calculationTotal(userAnswers: UserAnswers): Either[String, BigDecimal] =
-    (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
-      case (Some(false), _)                  => Right(0.00)
-      case (Some(true), Some(alcoholDuties)) => Right(alcoholDuties.map(_._2.totalDuty).sum)
-      case (_, _)                            => Left("No duty calculation found")
-
-    }
 }
