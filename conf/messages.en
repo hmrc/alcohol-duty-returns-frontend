@@ -10,6 +10,8 @@ site.continue = Continue
 site.saveAndContinue = Save and continue
 site.agreeAndSubmit = Agree and send return
 site.start = Start now
+site.payNow = Pay now
+site.claimRepayment = Claim duty repayment
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
@@ -184,6 +186,8 @@ taskList.section.adjustment.needToDeclare.no = You’ve told us you do not need 
 taskList.section.adjustment.notStarted = Change the entries you’ve told us about
 taskList.section.adjustment.completed = Change the entries you’ve told us about
 taskList.section.adjustment.inProgress = Change the entries you’ve told us about
+taskList.section.adjustment.under-declaration = Reason for under-declaration
+taskList.section.adjustment.over-declaration = Reason for over declaration
 
 taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check how much duty is payable and send return
@@ -1274,6 +1278,19 @@ deleteAdjustment.heading = Remove this adjustment?
 deleteAdjustment.paragraph = The adjustment and its information will be removed from your return.
 deleteAdjustment.error.required = Select yes to remove this adjustment
 
+underDeclarationReason.title = Why were these alcoholic products not declared until now?
+underDeclarationReason.heading = Why were these alcoholic products not declared until now?
+underDeclarationReason.checkYourAnswersLabel = underDeclarationReason
+underDeclarationReason.error.required = Enter the reason why these alcoholic products were not declared until now
+underDeclarationReason.error.length = The reason these alcoholic products were not declared must be {0} characters or less.
+underDeclarationReason.change.hidden = UnderDeclarationReason
+
+overDeclarationReason.title = Why was too much alcoholic product over-declared previously?
+overDeclarationReason.heading = Why was too much alcoholic product over-declared previously?
+overDeclarationReason.checkYourAnswersLabel = overDeclarationReason
+overDeclarationReason.error.required = Enter the reason why too much alcoholic product was over-declared
+overDeclarationReason.error.length = The reason why too much alcoholic product was over-declared must be {0} characters or less.
+overDeclarationReason.change.hidden = OverDeclarationReason
 
 # End of adjustments sub-journey
 
@@ -1302,6 +1319,25 @@ dutyDueForThisReturn.table.adjustmentDue = Adjustment duty value
 dutyDueForThisReturn.h4 = Declaration
 dutyDueForThisReturn.p3 = By submitting this return, I agree that the information I have given is complete and correct.
 
+returnSubmitted.title = Return submitted
+returnSubmitted.heading = Return submitted
+returnSubmitted.panel.body.reference = Your return reference is {0}
+returnSubmitted.panel.body.nil = You have nothing to pay
+returnSubmitted.panel.body.balanceDue = You need to pay
+returnSubmitted.panel.body.dutyOwed = You are owed
+returnSubmitted.p1 = You have submitted a return for Alcohol Duty on {0} for the period {1} to {2}.
+returnSubmitted.viewReturnLink.text = View your return
+returnSubmitted.positive.h1 = What happens next
+returnSubmitted.positive.p1 = You can pay your duty now or later from your Business Tax Account, but you must pay it by {0}. You will be charged interest if you do not pay by this date.
+returnSubmitted.positive.p2 = Payment for this return was due on {0} and is late. You will be charged interest for the period from {0} to the date you make payment.
+returnSubmitted.positive.p3 = Your reference number can be used as a payment reference when you pay this return.
+returnSubmitted.direct.debit.h2 = Direct Debit
+returnSubmitted.direct.debit.p1 = You can pay duty automatically by direct debit.
+returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit
+returnSubmitted.direct.debit.p2 = You have a direct debit set up. The duty due will automatically be taken on {0}.
+returnSubmitted.direct.debit.manageLink.text = Manage your direct debit
+returnSubmitted.direct.debit.p3 = You can pay the duty automatically with a direct debit. Payments are taken on 25th of each month.
+returnSubmitted.direct.debit.setupLink.text = Set up a direct debit
+returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcohol Duty account. If you do not claim it back then it will be used toward any duty due from your next return.
 
 # End of Check and submit sub-journey
-

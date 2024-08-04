@@ -241,6 +241,16 @@ POST       /adjustments-to-previous-returns                        controllers.a
 GET        /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onPageLoad()
 POST       /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onSubmit()
 
+GET        /adjustment-reason-for-under-declaration                       controllers.adjustment.UnderDeclarationReasonController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-reason-for-under-declaration                        controllers.adjustment.UnderDeclarationReasonController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-reason-for-under-declaration                 controllers.adjustment.UnderDeclarationReasonController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-reason-for-under-declaration                 controllers.adjustment.UnderDeclarationReasonController.onSubmit(mode: Mode = CheckMode)
+
+GET        /adjustment-reason-for-over-declaration                        controllers.adjustment.OverDeclarationReasonController.onPageLoad(mode: Mode = NormalMode)
+POST       /adjustment-reason-for-over-declaration                        controllers.adjustment.OverDeclarationReasonController.onSubmit(mode: Mode = NormalMode)
+GET        /change-adjustment-reason-for-over-declaration                  controllers.adjustment.OverDeclarationReasonController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-adjustment-reason-for-over-declaration                  controllers.adjustment.OverDeclarationReasonController.onSubmit(mode: Mode = CheckMode)
+
 GET        /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onPageLoad(index: Int)
 POST       /remove-adjustment                       controllers.adjustment.DeleteAdjustmentController.onSubmit(index: Int)
 # End of adjustments sub-journey
@@ -249,4 +259,5 @@ POST       /remove-adjustment                       controllers.adjustment.Delet
 GET        /return-summary                      controllers.checkAndSubmit.DutyDueForThisReturnController.onPageLoad()
 POST       /return-summary                      controllers.checkAndSubmit.DutyDueForThisReturnController.onSubmit()
 
+GET        /return-submitted                       controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
 # End of check and submit sub-journey

@@ -19,7 +19,7 @@ import views.html.$section$.$className$View
 
 import scala.concurrent.Future
 
-class $className$ControllerSpec extends SpecBase with MockitoSugar {
+class $className$ControllerSpec extends SpecBase{
 
   def onwardRoute = Call("GET", "/foo")
 

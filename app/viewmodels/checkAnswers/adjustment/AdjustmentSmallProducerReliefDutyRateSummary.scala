@@ -28,7 +28,7 @@ import viewmodels.implicits._
 object AdjustmentSmallProducerReliefDutyRateSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     (adjustmentEntry.sprDutyRate, adjustmentEntry.repackagedSprDutyRate) match {
-      case (Some(_), Some(repackagedSprDutyRate)) if repackagedSprDutyRate.isValidLong =>
+      case (Some(_), Some(repackagedSprDutyRate)) =>
         Some(
           SummaryListRowViewModel(
             key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
@@ -41,7 +41,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
             )
           )
         )
-      case (Some(sprDutyRate), _)                                                      =>
+      case (Some(sprDutyRate), _)                 =>
         Some(
           SummaryListRowViewModel(
             key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
@@ -54,7 +54,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
             )
           )
         )
-      case (_, Some(repackagedSprDutyRate)) if repackagedSprDutyRate.isValidLong       =>
+      case (_, Some(repackagedSprDutyRate))       =>
         Some(
           SummaryListRowViewModel(
             key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
@@ -67,7 +67,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
             )
           )
         )
-      case _                                                                           =>
+      case _                                      =>
         None
     }
 }

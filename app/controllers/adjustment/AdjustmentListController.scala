@@ -26,7 +26,7 @@ import views.html.adjustment.AdjustmentListView
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AdjustmentListSummaryHelper
+import viewmodels.checkAnswers.adjustment.{AdjustmentListSummaryHelper, AdjustmentOverUnderDeclarationCalculationHelper}
 import play.api.Logging
 
 import javax.inject.Inject
@@ -42,7 +42,8 @@ class AdjustmentListController @Inject() (
   formProvider: AdjustmentListFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: AdjustmentListView,
-  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector
+  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
+  adjustmentOverUnderDeclarationCalculationHelper: AdjustmentOverUnderDeclarationCalculationHelper
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -83,9 +84,12 @@ class AdjustmentListController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, table))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, updatedAnswers))
+            updatedAnswers                 <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
+            userAnswersWithOverUnderTotals <-
+              adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers, value)
+            _                              <- cacheConnector.set(userAnswersWithOverUnderTotals)
+          } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, userAnswersWithOverUnderTotals))
       )
   }
+
 }
