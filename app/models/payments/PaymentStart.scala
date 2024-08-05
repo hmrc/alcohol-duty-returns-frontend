@@ -3,8 +3,8 @@ package models.payments
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.libs.json.{Format, JsError, JsNumber, JsResult, JsString, JsSuccess, JsValue, Json, OFormat}
 
-case class PaymentStart(appaId: String, chargeReference: String, amountInPence: BigInt, returnUrl: String, backUrl: String)
-
+case class PaymentStart(amountInPence: BigInt, chargeReference: String, returnUrl: String, backUrl: String)
+//appaId : String
 
 object PaymentStart {
 
@@ -26,15 +26,15 @@ object PaymentStart {
   implicit val formats: OFormat[PaymentStart] = Json.format[PaymentStart]
 
 // TODO: get an appaID from session
-  def apply(returnDetails : AdrReturnCreatedDetails, returnUrl: String, backUrl: String): PaymentStart = {
+  def createPaymentStart(returnDetails : AdrReturnCreatedDetails, returnUrl: String, backUrl: String): PaymentStart = {
 
     returnDetails match {
-      case AdrReturnCreatedDetails(_, amount, chargeReference, paymentDueDate) => {
+      case AdrReturnCreatedDetails(_, amount, Some(chargeReference), _) => {
 
-        val amountInPence = amount * 100
+        val amountInPence = (amount * 100).toBigInt
 
         PaymentStart(
-          amountInPence, chargeReference, paymentDueDate, returnUrl, backUrl
+          amountInPence, chargeReference, returnUrl, backUrl
         )
       }
       case _ => throw new RuntimeException("Cannot generate a PaymentStart without any charge reference")

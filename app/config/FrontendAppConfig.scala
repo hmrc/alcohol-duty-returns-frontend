@@ -121,4 +121,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrCalculatorCalculateTotalAdjustmentUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateTotalAdjustmentUrlPart
+
+  def alcoholDutyStartPaymentUrl: String = serviceConfig.baseUrl("pay-api") + serviceConfig.getString("ad-handoff.start-payment-url")
+
 }
