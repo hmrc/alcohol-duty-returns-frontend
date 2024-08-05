@@ -122,7 +122,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCalculatorCalculateTotalAdjustmentUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorCalculateTotalAdjustmentUrlPart
 
-  def alcoholDutyStartPaymentUrl: String =
+  def startPaymentUrl: String =
     servicesConfig.baseUrl("pay-api") + configuration.get[String]("microservice.services.pay-api.url")
+
+  def startDirectDebitUrl: String =
+    servicesConfig.baseUrl("direct-debit") + configuration.get[String]("microservice.services.direct-debit.url")
 
 }

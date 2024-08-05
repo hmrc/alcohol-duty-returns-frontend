@@ -75,6 +75,17 @@
 
     @paragraph(messages("returnSubmitted.direct.debit.p1"))
 
+    @paragraph( content =
+        HtmlContent(
+            link(
+                id = "direct-debit-start",
+                text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
+                href = controllers.routes.StartDirectDebitController.initiateAndRedirect().url
+            )
+        )
+    )
+
+
     @govukButton(
         ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.routes.StartPaymentController.initiateAndRedirect().url)
     )
