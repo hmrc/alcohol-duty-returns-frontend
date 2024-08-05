@@ -85,6 +85,10 @@
             )
         }
 
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.routes.StartPaymentController.initiateAndRedirect().url)
+    )
+
 
     @if(returnDetails.amount == 0) {
         @govukPanel(Panel(
