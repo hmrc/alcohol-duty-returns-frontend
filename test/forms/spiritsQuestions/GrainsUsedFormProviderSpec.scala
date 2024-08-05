@@ -42,7 +42,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "grainsUsed.error.maltedBarleyQuantity.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "grainsUsed.error.maltedBarleyQuantity.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "grainsUsed.error.maltedBarleyQuantity.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -87,7 +87,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "grainsUsed.error.wheatQuantity.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "grainsUsed.error.wheatQuantity.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "grainsUsed.error.wheatQuantity.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -132,7 +132,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "grainsUsed.error.maizeQuantity.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "grainsUsed.error.maizeQuantity.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "grainsUsed.error.maizeQuantity.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -177,7 +177,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "grainsUsed.error.ryeQuantity.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "grainsUsed.error.ryeQuantity.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "grainsUsed.error.ryeQuantity.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -222,7 +222,7 @@ class GrainsUsedFormProviderSpec extends BigDecimalFieldBehaviours with BooleanF
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "grainsUsed.error.unmaltedGrainQuantity.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "grainsUsed.error.unmaltedGrainQuantity.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "grainsUsed.error.unmaltedGrainQuantity.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

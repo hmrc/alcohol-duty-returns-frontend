@@ -31,7 +31,7 @@ class AlcoholUsedFormProvider @Inject() extends Mappings {
         quantityMaxDecimalPlaces,
         "alcoholUsed.error.beer.required",
         "alcoholUsed.error.beer.nonNumeric",
-        "alcoholUsed.error.beer.twoDecimalPlaces"
+        "alcoholUsed.error.beer.decimalPlaces"
       )
         .verifying(minimumValue(quantityMinValue, "alcoholUsed.error.beer.minimumRequired"))
         .verifying(maximumValue(quantityMaxValue, "alcoholUsed.error.beer.maximumRequired")),
@@ -39,7 +39,7 @@ class AlcoholUsedFormProvider @Inject() extends Mappings {
         2,
         "alcoholUsed.error.wine.required",
         "alcoholUsed.error.wine.nonNumeric",
-        "alcoholUsed.error.wine.twoDecimalPlaces"
+        "alcoholUsed.error.wine.decimalPlaces"
       )
         .verifying(minimumValue(quantityMinValue, "alcoholUsed.error.wine.minimumRequired"))
         .verifying(maximumValue(quantityMaxValue, "alcoholUsed.error.wine.maximumRequired")),
@@ -47,7 +47,7 @@ class AlcoholUsedFormProvider @Inject() extends Mappings {
         2,
         "alcoholUsed.error.madeWine.required",
         "alcoholUsed.error.madeWine.nonNumeric",
-        "alcoholUsed.error.madeWine.twoDecimalPlaces"
+        "alcoholUsed.error.madeWine.decimalPlaces"
       )
         .verifying(minimumValue(quantityMinValue, "alcoholUsed.error.madeWine.minimumRequired"))
         .verifying(maximumValue(quantityMaxValue, "alcoholUsed.error.madeWine.maximumRequired")),
@@ -55,7 +55,7 @@ class AlcoholUsedFormProvider @Inject() extends Mappings {
         2,
         "alcoholUsed.error.ciderOrPerry.required",
         "alcoholUsed.error.ciderOrPerry.nonNumeric",
-        "alcoholUsed.error.ciderOrPerry.twoDecimalPlaces"
+        "alcoholUsed.error.ciderOrPerry.decimalPlaces"
       )
         .verifying(minimumValue(quantityMinValue, "alcoholUsed.error.ciderOrPerry.minimumRequired"))
         .verifying(maximumValue(quantityMaxValue, "alcoholUsed.error.ciderOrPerry.maximumRequired"))

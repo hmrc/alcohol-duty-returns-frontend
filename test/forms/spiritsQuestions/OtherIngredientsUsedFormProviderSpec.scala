@@ -94,8 +94,7 @@ class OtherIngredientsUsedFormProviderSpec
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.nonNumeric"),
-      twoDecimalPlacesError =
-        FormError(fieldName, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

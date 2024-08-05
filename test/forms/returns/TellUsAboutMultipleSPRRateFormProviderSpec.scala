@@ -92,7 +92,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         Map(
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "1.123",
-          "volumesWithRate.pureAlcohol" -> "1.123",
+          "volumesWithRate.pureAlcohol" -> "1.12345",
           "volumesWithRate.dutyRate"    -> "1.123"
         )
       )

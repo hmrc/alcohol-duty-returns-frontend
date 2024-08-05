@@ -42,6 +42,19 @@ class AdjustmentVolumesFormatter(
     args
   )
 
+  def pureAlcoholBigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+    requiredKey,
+    invalidKey,
+    decimalPlacesKey,
+    minimumValueKey,
+    maximumValueKey,
+    fieldKey,
+    args,
+    decimalPlaces = 4,
+    maximumValue = BigDecimal(999999999.9999),
+    minimumValue = BigDecimal(0.0001)
+  )
+
   val NUMBER_OF_FIELDS = 2
 
   val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume")
@@ -55,7 +68,7 @@ class AdjustmentVolumesFormatter(
   def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolume] = {
 
     val totalLitres = bigDecimalFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
-    val pureAlcohol = bigDecimalFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
+    val pureAlcohol = pureAlcoholBigDecimalFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
 
     (totalLitres, pureAlcohol) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue)) =>

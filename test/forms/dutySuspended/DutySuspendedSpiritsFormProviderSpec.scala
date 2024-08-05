@@ -28,7 +28,7 @@ class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "totalSpirits"
     val requiredKey = "dutySuspendedSpirits.error.totalSpirits.required"
-    val minimum     = 0.00
+    val minimum     = -999999999.99
     val maximum     = 999999999.99
     val decimal     = 2
 
@@ -44,7 +44,7 @@ class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.totalSpirits.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -74,9 +74,9 @@ class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "pureAlcoholInSpirits"
     val requiredKey = "dutySuspendedSpirits.error.pureAlcoholInSpirits.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val minimum     = -999999999.9999
+    val maximum     = 999999999.9999
+    val decimal     = 4
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -90,7 +90,7 @@ class DutySuspendedSpiritsFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedSpirits.error.pureAlcoholInSpirits.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

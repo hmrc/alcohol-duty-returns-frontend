@@ -26,7 +26,7 @@ import models.{AlcoholRegime, ReturnPeriod, UserAnswers}
 import models.returns.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrOtherIngredient, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit, AdrUnitOfMeasure, AlcoholDuty}
 import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, OtherMaltedGrains}
 import pages.QuestionPage
-import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
+import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, UnderDeclarationReasonPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
@@ -106,10 +106,10 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                   repackagedDraughtDeclared <- mapRepackagedAdjustments(adjustmentEntryByType)
                 } yield AdrAdjustments(
                   overDeclarationDeclared = overDeclarationProducts.nonEmpty,
-                  reasonForOverDeclaration = None,
+                  reasonForOverDeclaration = userAnswers.get(OverDeclarationReasonPage),
                   overDeclarationProducts = overDeclarationProducts,
                   underDeclarationDeclared = underDeclarationProducts.nonEmpty,
-                  reasonForUnderDeclaration = None,
+                  reasonForUnderDeclaration = userAnswers.get(UnderDeclarationReasonPage),
                   underDeclarationProducts = underDeclarationProducts,
                   spoiltProductDeclared = spoiltProducts.nonEmpty,
                   spoiltProducts = spoiltProducts,

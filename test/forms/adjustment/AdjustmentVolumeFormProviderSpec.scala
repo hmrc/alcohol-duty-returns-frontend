@@ -67,12 +67,12 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
 
     "fail to bind when values with too many decimal places are provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "1.1123",
-        "volumes.pureAlcoholVolume" -> "1.1123"
+        "volumes.totalLitresVolume" -> "1.111",
+        "volumes.pureAlcoholVolume" -> "1.11234"
       )
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.twoDecimalPlaces.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", s"adjustmentVolume.error.twoDecimalPlaces.pureAlcoholVolume", Seq(""))
+        FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.decimalPlaces.totalLitresVolume", Seq("")),
+        FormError("volumes_pureAlcoholVolume", s"adjustmentVolume.error.decimalPlaces.pureAlcoholVolume", Seq(""))
       )
     }
 
