@@ -18,6 +18,7 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import TaskListStatus.Incomplete
+import models.ReturnPeriod
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.DeclareAdjustmentQuestionPage
 import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
@@ -48,7 +49,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       )
 
       val result           =
-        taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)(getMessages(application))
+        taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodMar)(getMessages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -87,7 +88,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         )
 
       val result           =
-        taskListViewModel.getTaskList(userAnswers, validUntil, periodKeyMar)(getMessages(application))
+        taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriodMar)(getMessages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -117,8 +118,10 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       )
 
       forAll(periodKeyGen) { case periodKey =>
+        val returnPeriod = ReturnPeriod.fromPeriodKey(periodKey).get
+
         val result =
-          taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKey)(getMessages(application))
+          taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriod)(getMessages(application))
 
         val periodQuarters = "CFIL"
         val lastChar       = periodKey.last

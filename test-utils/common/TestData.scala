@@ -22,7 +22,7 @@ import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDec
 import models.{AlcoholRegimes, ObligationData, ObligationStatus, ReturnId, ReturnPeriod, UserAnswers}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
-import java.time.{Clock, Instant, LocalDate, ZoneId}
+import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
 
 trait TestData extends ModelGenerators {
   val clock              = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))
@@ -51,9 +51,23 @@ trait TestData extends ModelGenerators {
   val periodKeyNov = "24AK"
   val periodKeyDec = "24AL"
 
-  val quarterPeriodKeys    = Seq(periodKeyMar, periodKeyJun, periodKeySep, periodKeyDec)
+  val quarterPeriodKeys    = Set(
+    ReturnPeriod(YearMonth.of(2024, Month.MARCH)),
+    ReturnPeriod(YearMonth.of(2024, Month.JUNE)),
+    ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
+    ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))
+  )
   val nonQuarterPeriodKeys =
-    Seq(periodKeyJan, periodKeyFeb, periodKeyApr, periodKeyMay, periodKeyJul, periodKeyAug, periodKeyOct, periodKeyNov)
+    Set(
+      ReturnPeriod(YearMonth.of(2024, Month.JANUARY)),
+      ReturnPeriod(YearMonth.of(2024, Month.FEBRUARY)),
+      ReturnPeriod(YearMonth.of(2024, Month.APRIL)),
+      ReturnPeriod(YearMonth.of(2024, Month.MAY)),
+      ReturnPeriod(YearMonth.of(2024, Month.JULY)),
+      ReturnPeriod(YearMonth.of(2024, Month.AUGUST)),
+      ReturnPeriod(YearMonth.of(2024, Month.OCTOBER)),
+      ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER))
+    )
 
   val returnPeriodMar = ReturnPeriod.fromPeriodKey(periodKeyMar).get
 
