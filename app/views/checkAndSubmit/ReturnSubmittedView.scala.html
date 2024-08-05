@@ -75,17 +75,17 @@
 
     @paragraph(messages("returnSubmitted.direct.debit.p1"))
 
-        @paragraph( content =
-            HtmlContent(
-                link(
-                    id = "business-tax-account-link",
-                    text = messages("site.returnToBusinessAccount"),
-                    href = businessTaxAccountUrl
-                ))
-            )
-
     @govukButton(
         ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.routes.StartPaymentController.initiateAndRedirect().url)
+    )
+
+    @paragraph( content =
+        HtmlContent(
+            link(
+                id = "business-tax-account-link",
+                text = messages("site.returnToBusinessAccount"),
+                href = businessTaxAccountUrl
+            ))
         )
     }
 
