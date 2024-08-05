@@ -259,5 +259,7 @@ POST       /remove-adjustment                       controllers.adjustment.Delet
 GET        /return-summary                      controllers.checkAndSubmit.DutyDueForThisReturnController.onPageLoad()
 POST       /return-summary                      controllers.checkAndSubmit.DutyDueForThisReturnController.onSubmit()
 
-GET        /return-submitted                       controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
+GET        /return-submitted                    controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
+
+GET        /start-charge-payment                controllers.StartPaymentController.initiateAndRedirect()
 # End of check and submit sub-journey

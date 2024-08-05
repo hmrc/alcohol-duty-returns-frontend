@@ -45,7 +45,6 @@ class ReturnSubmittedController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
     val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
-    val directDebitBackendUrl = appConfig.directDebitBackendUrl
 
     request.session.get(adrReturnCreatedDetails) match {
       case None                       =>
@@ -70,8 +69,7 @@ class ReturnSubmittedController @Inject() (
                 formattedProcessingDate,
                 formattedPaymentDueDate,
                 returnPeriod.toPeriodKey,
-                businessTaxAccountUrl,
-                directDebitBackendUrl
+                businessTaxAccountUrl
               )
             )
           case None                                         =>

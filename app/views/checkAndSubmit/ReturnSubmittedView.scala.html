@@ -29,7 +29,7 @@
         link: Link,
 )
 
-@(returnDetails: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String, businessTaxAccountUrl: String, directDebitBackendUrl: String)(implicit request: Request[_], messages: Messages)
+@(returnDetails: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
 
 @posPanelContent = {
     @paragraph(messages("returnSubmitted.panel.body.reference", returnDetails.chargeReference.get.value), classes = "")
@@ -69,21 +69,24 @@
 
     @paragraph(messages("returnSubmitted.positive.p1", formattedPaymentDueDate))
     @paragraph(messages("returnSubmitted.positive.p2", formattedPaymentDueDate))
-    @paragraph(messages("returnSubmitted.positive.p3"))
 
     @subHeading(messages("returnSubmitted.direct.debit.h2"))
 
     @paragraph(messages("returnSubmitted.direct.debit.p1"))
 
-        @paragraph( content =
-            HtmlContent(
-                link(
-                    id = "business-tax-account-link",
-                    text = messages("site.returnToBusinessAccount"),
-                    href = businessTaxAccountUrl
-                ))
-            )
-        }
+    @govukButton(
+        ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.routes.StartPaymentController.initiateAndRedirect().url)
+    )
+
+    @paragraph( content =
+        HtmlContent(
+            link(
+                id = "business-tax-account-link",
+                text = messages("site.returnToBusinessAccount"),
+                href = businessTaxAccountUrl
+            ))
+        )
+    }
 
 
     @if(returnDetails.amount == 0) {
@@ -108,7 +111,7 @@
             link(
                 id = "business-tax-account-link",
                 text = messages("site.returnToBusinessAccount"),
-                href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+                href = businessTaxAccountUrl
             ))
         )
     }
@@ -139,7 +142,7 @@
             link(
                 id = "business-tax-account-link",
                 text = messages("site.returnToBusinessAccount"),
-                href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+                href = businessTaxAccountUrl
             ))
         )
     }
