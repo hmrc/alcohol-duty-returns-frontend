@@ -22,14 +22,14 @@ import play.api.libs.json.{Format, JsError, JsNumber, JsResult, JsString, JsSucc
 case class StartPaymentRequest(
   referenceNumber: String,
   amountInPence: BigInt,
-  chargeReference: String,
+  chargeReferenceNumber: String,
   returnUrl: String,
   backUrl: String
 )
 
 object StartPaymentRequest {
 
-  implicit val bigIntFormats = new Format[BigInt] {
+  implicit val bigIntFormats: Format[BigInt] = new Format[BigInt] {
 
     val error = JsError(s"Unable to read value as a BigInt")
 
@@ -46,7 +46,7 @@ object StartPaymentRequest {
 
   implicit val formats: OFormat[StartPaymentRequest] = Json.format[StartPaymentRequest]
 
-  def createPaymentStart(
+  def apply(
     returnDetails: AdrReturnCreatedDetails,
     appaId: String,
     returnUrl: String,

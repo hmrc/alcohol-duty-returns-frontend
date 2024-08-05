@@ -42,13 +42,13 @@ class StartPaymentController @Inject() (
     with I18nSupport
     with Logging {
 
-  def initiateAndRedirect() = (identify andThen getData).async { implicit request =>
+  def initiateAndRedirect() = identify.async { implicit request =>
     val returnUrl = appConfig.businessTaxAccountUrl
     val backUrl   = appConfig.host + controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url
 
     getReturnDetails(request.session) match {
       case Some(returnDetails) =>
-        val startPaymentRequest = StartPaymentRequest.createPaymentStart(
+        val startPaymentRequest = StartPaymentRequest(
           returnDetails,
           request.appaId,
           returnUrl,
