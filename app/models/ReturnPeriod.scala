@@ -26,7 +26,7 @@ case class ReturnPeriod(period: YearMonth) {
   def toPeriodKey = s"${period.getYear - 2000}A${(period.getMonthValue + 64).toChar}"
 
   def hasQuarterlySpirits: Boolean =
-    Constants.quarterlySpiritsMonths.contains(period.getMonthValue)
+    Constants.quarterlySpiritsMonths.contains(period.getMonth)
 }
 
 object ReturnPeriod {

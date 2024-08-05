@@ -16,7 +16,7 @@
 
 package viewmodels.tasklist
 
-import models.UserAnswers
+import models.{ReturnPeriod, UserAnswers}
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
 
@@ -24,27 +24,22 @@ import java.time.Instant
 import javax.inject.Inject
 
 class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator) {
-  def getTaskList(userAnswers: UserAnswers, validUntil: Instant, periodKey: String)(implicit
+  def getTaskList(userAnswers: UserAnswers, validUntil: Instant, returnPeriod: ReturnPeriod)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
-      sections(userAnswers, periodKey),
+      sections(userAnswers, returnPeriod),
       validUntil.toLocalDateString()
     )
 
-  private def shouldIncludeQSSection(periodKey: String): Boolean = periodKey.last match {
-    case 'C' | 'F' | 'I' | 'L' => true
-    case _                     => false
-  }
-
-  private def sections(userAnswers: UserAnswers, periodKey: String)(implicit
+  private def sections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
     messages: Messages
   ): Seq[Section] = {
     val sections = Seq(
       Some(returnTaskListCreator.returnSection(userAnswers)),
       Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
       Some(returnTaskListCreator.returnDSDSection(userAnswers)),
-      if (shouldIncludeQSSection(periodKey)) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
+      if (returnPeriod.hasQuarterlySpirits) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
     ).flatten
 
     def completedTasks: Int = sections.count(_.completedTask)
