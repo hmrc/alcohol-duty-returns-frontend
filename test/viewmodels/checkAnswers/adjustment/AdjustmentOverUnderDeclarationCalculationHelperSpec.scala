@@ -16,6 +16,4 @@
 
 package viewmodels.checkAnswers.adjustment
 
-class AdjustmentOverUnderDeclarationCalculationHelperSpec {
-
-}
+class AdjustmentOverUnderDeclarationCalculationHelperSpec {}

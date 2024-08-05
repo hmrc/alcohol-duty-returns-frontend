@@ -317,10 +317,10 @@ class ReturnTaskListCreator @Inject() () {
     val adjustmentListQuestion = userAnswers.get(AdjustmentListPage).getOrElse(true)
     val taskListItems          = Seq(
       Some(returnAdjustmentJourneyTaskListItem(userAnswers)),
-      if (underDeclarationTotal > 1000 && !adjustmentListQuestion) {
+      if (underDeclarationTotal >= 1000 && !adjustmentListQuestion) {
         Some(returnAdjustmentJourneyUnderDeclarationTaskListItem(userAnswers))
       } else { None },
-      if (overDeclarationTotal.abs > 1000 && !adjustmentListQuestion) {
+      if (overDeclarationTotal.abs >= 1000 && !adjustmentListQuestion) {
         Some(returnAdjustmentJourneyOverDeclarationTaskListItem(userAnswers))
       } else { None }
     ).flatten
