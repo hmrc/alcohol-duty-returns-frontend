@@ -33,7 +33,7 @@
 
 @(form: Form[_], adjustmentTable:TableViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("adjustmentList.title")), showBackLink = false) {
+@layout(pageTitle = title(form, messages("adjustmentList.title")), showBackLink = false, fullWidth = true) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentListController.onSubmit(), Symbol("autoComplete") -> "off") {
 
