@@ -44,7 +44,7 @@ class DeclareSpiritsTotalFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "declareSpiritsTotal.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "declareSpiritsTotal.error.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "declareSpiritsTotal.error.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

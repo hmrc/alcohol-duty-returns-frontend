@@ -25,7 +25,7 @@ class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBeha
 
   private val clock               = Clock.fixed(LocalDate.of(2024, 2, 1).atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
   val form                        = new WhenDidYouPayDutyFormProvider()()
-  val invalidYearMonth: YearMonth = YearMonth.of(2023, 8)
+  val invalidYearMonth: YearMonth = YearMonth.of(2023, 7)
   val inputKey                    = "when-did-you-pay-duty-input"
 
   "input" - {

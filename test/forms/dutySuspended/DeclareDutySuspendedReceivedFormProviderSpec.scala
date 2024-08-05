@@ -44,7 +44,7 @@ class DeclareDutySuspendedReceivedFormProviderSpec extends BigDecimalFieldBehavi
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "declareDutySuspendedReceived.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "declareDutySuspendedReceived.error.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "declareDutySuspendedReceived.error.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

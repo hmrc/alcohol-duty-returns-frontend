@@ -32,7 +32,7 @@ class AdjustmentVolumeFormProvider @Inject() extends Mappings {
         "adjustmentVolume.error.invalid",
         "adjustmentVolume.error.allRequired",
         "adjustmentVolume.error.noValue",
-        "adjustmentVolume.error.twoDecimalPlaces",
+        "adjustmentVolume.error.decimalPlaces",
         "adjustmentVolume.error.minimumValue",
         "adjustmentVolume.error.maximumValue",
         "adjustmentVolume.error.lessThanExpected",

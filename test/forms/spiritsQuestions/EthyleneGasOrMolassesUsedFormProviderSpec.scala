@@ -44,7 +44,7 @@ class EthyleneGasOrMolassesUsedFormProviderSpec extends BigDecimalFieldBehaviour
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.ethyleneGas.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.ethyleneGas.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -91,7 +91,7 @@ class EthyleneGasOrMolassesUsedFormProviderSpec extends BigDecimalFieldBehaviour
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.molasses.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.molasses.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "ethyleneGasOrMolassesUsed.error.molasses.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

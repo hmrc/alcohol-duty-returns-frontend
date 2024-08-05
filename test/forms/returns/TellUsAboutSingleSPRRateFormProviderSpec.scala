@@ -156,7 +156,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "1.123",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "1.123",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "1.12345",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.123"
           )
       }

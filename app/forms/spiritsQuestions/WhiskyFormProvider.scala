@@ -31,14 +31,14 @@ class WhiskyFormProvider @Inject() extends Mappings {
         2,
         "whisky.error.scotchWhisky.required",
         "whisky.error.scotchWhisky.nonNumeric",
-        "whisky.error.scotchWhisky.twoDecimalPlaces"
+        "whisky.error.scotchWhisky.decimalPlaces"
       ).verifying(minimumValue(BigDecimal(0.00), "whisky.error.scotchWhisky.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "whisky.error.scotchWhisky.maximumRequired")),
       "irishWhiskey" -> bigDecimal(
         2,
         "whisky.error.irishWhiskey.required",
         "whisky.error.irishWhiskey.nonNumeric",
-        "whisky.error.irishWhiskey.twoDecimalPlaces"
+        "whisky.error.irishWhiskey.decimalPlaces"
       ).verifying(minimumValue(BigDecimal(0.00), "whisky.error.irishWhiskey.minimumRequired"))
         .verifying(maximumValue(BigDecimal(999999999.99), "whisky.error.irishWhiskey.maximumRequired"))
     )(Whisky.apply)(Whisky.unapply)

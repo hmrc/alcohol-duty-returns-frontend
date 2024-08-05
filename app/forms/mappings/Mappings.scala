@@ -41,7 +41,7 @@ trait Mappings extends Formatters with Constraints {
     decimalPlaces: Int = 2,
     requiredKey: String = "error.required",
     nonNumericKey: String = "error.nonNumeric",
-    decimalPlacesKey: String = "error.twoDecimalPlaces",
+    decimalPlacesKey: String = "error.decimalPlaces",
     args: Seq[String] = Seq.empty
   ): FieldMapping[BigDecimal] =
     of(bigDecimalFormatter(decimalPlaces, requiredKey, nonNumericKey, decimalPlacesKey, args))

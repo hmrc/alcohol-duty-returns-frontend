@@ -69,7 +69,7 @@ class OtherMaltedGrainsFormProviderSpec extends StringFieldBehaviours with BigDe
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "otherMaltedGrains.error.otherMaltedGrainsQuantity.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

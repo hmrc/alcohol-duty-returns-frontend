@@ -29,7 +29,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "totalWine"
     val requiredKey = "dutySuspendedWine.error.totalWine.required"
-    val minimum     = 0.00
+    val minimum     = -999999999.99
     val maximum     = 999999999.99
     val decimal     = 2
 
@@ -45,7 +45,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedWine.error.totalWine.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.totalWine.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.totalWine.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -75,9 +75,9 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "pureAlcoholInWine"
     val requiredKey = "dutySuspendedWine.error.pureAlcoholInWine.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val minimum     = -999999999.9999
+    val maximum     = 999999999.9999
+    val decimal     = 4
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -91,7 +91,7 @@ class DutySuspendedWineFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedWine.error.pureAlcoholInWine.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

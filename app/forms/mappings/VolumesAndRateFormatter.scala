@@ -44,6 +44,19 @@ class VolumesAndRateFormatter(
     args = args
   )
 
+  def pureAlcoholVolumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+    requiredKey,
+    invalidKey,
+    decimalPlacesKey,
+    minimumValueKey,
+    maximumValueKey,
+    fieldKey,
+    args = args,
+    decimalPlaces = 4,
+    maximumValue = BigDecimal(999999999.9999),
+    minimumValue = BigDecimal(0.0001)
+  )
+
   def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
@@ -67,7 +80,7 @@ class VolumesAndRateFormatter(
   def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
     val taxType     = stringFormatter(s"$requiredKey.taxType").bind(s"$key.taxType", data)
     val totalLitres = volumeFormatter("totalLitres").bind(s"$key.totalLitres", data)
-    val pureAlcohol = volumeFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
+    val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
     val dutyRate    = dutyRateFormatter("dutyRate").bind(s"$key.dutyRate", data)
 
     (taxType, totalLitres, pureAlcohol, dutyRate) match {

@@ -45,7 +45,7 @@ class DutySuspendedDeliveriesFormProviderSpec extends BigDecimalFieldBehaviours 
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedDeliveries.error.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedDeliveries.error.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedDeliveries.error.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

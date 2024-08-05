@@ -29,7 +29,7 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "totalCider"
     val requiredKey = "dutySuspendedCider.error.totalCider.required"
-    val minimum     = 0.00
+    val minimum     = -999999999.99
     val maximum     = 999999999.99
     val decimal     = 2
 
@@ -45,7 +45,7 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedCider.error.totalCider.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.totalCider.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.totalCider.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -75,9 +75,9 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
 
     val fieldName   = "pureAlcoholInCider"
     val requiredKey = "dutySuspendedCider.error.pureAlcoholInCider.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val minimum     = -999999999.9999
+    val maximum     = 999999999.9999
+    val decimal     = 4
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -91,7 +91,7 @@ class DutySuspendedCiderFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedCider.error.pureAlcoholInCider.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

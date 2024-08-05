@@ -76,8 +76,8 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
     "fail to bind when values with too many decimal places are provided" in {
       val data = Map(
         "volumes[0].taxType"     -> "taxType",
-        "volumes[0].totalLitres" -> "1.1123",
-        "volumes[0].pureAlcohol" -> "1.1123"
+        "volumes[0].totalLitres" -> "1.112",
+        "volumes[0].pureAlcohol" -> "1.11234"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_0_totalLitres", s"return.journey.error.tooManyDecimalPlaces.totalLitres", Seq("")),
