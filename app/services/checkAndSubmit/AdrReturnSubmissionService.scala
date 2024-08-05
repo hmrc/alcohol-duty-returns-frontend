@@ -43,13 +43,14 @@ class AdrReturnSubmissionServiceImpl @Inject() (
 ) extends AdrReturnSubmissionService {
 
   override def getAdrReturnSubmission(
-    userAnswers: UserAnswers
+    userAnswers: UserAnswers,
+    returnPeriod: ReturnPeriod
   )(implicit hc: HeaderCarrier): EitherT[Future, String, AdrReturnSubmission] =
     for {
       dutyDeclared  <- getDutyDeclared(userAnswers)
       adjustments   <- getAdjustments(userAnswers)
       dutySuspended <- getDutySuspended(userAnswers)
-      spirits       <- getSpirits(userAnswers)
+      spirits       <- if (returnPeriod.hasQuarterlySpirit) getSpirits(userAnswers) else EitherT.rightT[Future, String](None)
       totals        <- getTotals(userAnswers)
     } yield AdrReturnSubmission(
       dutyDeclared = dutyDeclared,
@@ -472,7 +473,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
 
 @ImplementedBy(classOf[AdrReturnSubmissionServiceImpl])
 trait AdrReturnSubmissionService {
-  def getAdrReturnSubmission(userAnswers: UserAnswers)(implicit
+  def getAdrReturnSubmission(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
     hc: HeaderCarrier
   ): EitherT[Future, String, AdrReturnSubmission]
 }

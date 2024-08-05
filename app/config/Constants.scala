@@ -39,4 +39,6 @@ object Constants {
 
   val tableCaptionMCssClass    = "govuk-table__caption--m"
   val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"
+
+  val quarterlySpiritsMonths = Seq(3, 6, 9, 12)
 }
