@@ -39,19 +39,11 @@ class TaskListController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    (request.userAnswers.validUntil, request.session.get(periodKeySessionKey)) match {
-      case (Some(validUntil), Some(periodKey)) =>
-        Ok(view(taskListViewModel.getTaskList(request.userAnswers, validUntil, periodKey)))
-      case (None, Some(_))                     =>
+    request.userAnswers.validUntil match {
+      case Some(validUntil) =>
+        Ok(view(taskListViewModel.getTaskList(request.userAnswers, validUntil, request.returnPeriod)))
+      case None             =>
         logger.warn("'Valid until' property not defined in User Answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case (Some(_), None)                     =>
-        logger.warn(s"'$periodKeySessionKey' session property not found")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      case (None, None)                        =>
-        logger.warn(
-          s"'Valid until' property not defined in User Answers and '$periodKeySessionKey' session property not found"
-        )
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }

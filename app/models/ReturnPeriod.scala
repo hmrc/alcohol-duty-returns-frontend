@@ -16,6 +16,7 @@
 
 package models
 
+import config.Constants
 import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 
 import java.time.YearMonth
@@ -23,6 +24,9 @@ import scala.util.matching.Regex
 
 case class ReturnPeriod(period: YearMonth) {
   def toPeriodKey = s"${period.getYear - 2000}A${(period.getMonthValue + 64).toChar}"
+
+  def hasQuarterlySpirits: Boolean =
+    Constants.quarterlySpiritsMonths.contains(period.getMonth)
 }
 
 object ReturnPeriod {

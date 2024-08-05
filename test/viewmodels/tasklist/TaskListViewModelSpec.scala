@@ -18,6 +18,7 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import TaskListStatus.Incomplete
+import models.ReturnPeriod
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem
@@ -36,7 +37,7 @@ class TaskListViewModelSpec extends SpecBase {
       when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnCheckAndSubmitSection(1, 4)).thenReturn(cannotStartSection)
 
-      val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
+      val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodMar)
 
       result mustBe AlcoholDutyTaskList(
         Seq(notStartedSection, notStartedSection, inProgressSection, completeSection, cannotStartSection),
@@ -55,7 +56,7 @@ class TaskListViewModelSpec extends SpecBase {
       when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnCheckAndSubmitSection(4, 4)).thenReturn(notStartedSection)
 
-      val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKeyMar)
+      val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodMar)
 
       result mustBe AlcoholDutyTaskList(
         Seq(completeSection, completeSection, completeSection, completeSection, notStartedSection),
