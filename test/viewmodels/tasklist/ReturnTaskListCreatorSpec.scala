@@ -20,7 +20,7 @@ import base.SpecBase
 import models.adjustment.AdjustmentEntry
 import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended._
 import pages.returns.DeclareAlcoholDutyQuestionPage
 import pages.spiritsQuestions._
@@ -225,6 +225,84 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
         )
       }
+
+      "must have a link to the Under/Over declaration reason screens if the user has totals over 1000 and the task must be Not started" in {
+        val result = returnTaskListCreator.returnAdjustmentSection(
+          declaredAdjustmentUserAnswer
+            .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+            .success
+            .value
+            .set(AdjustmentListPage, false)
+            .success
+            .value
+            .set(UnderDeclarationTotalPage, BigDecimal(1000))
+            .success
+            .value
+            .set(OverDeclarationTotalPage, BigDecimal(2000))
+            .success
+            .value
+        )
+
+        result.completedTask       shouldBe false
+        result.taskList.items.size shouldBe 4
+
+        result.taskList.items(2).title.content shouldBe Text(
+          messages("taskList.section.adjustment.under-declaration")
+        )
+        result.taskList.items(2).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+        result.taskList.items(2).href          shouldBe Some(
+          controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+        )
+
+        result.taskList.items(3).title.content shouldBe Text(
+          messages("taskList.section.adjustment.over-declaration")
+        )
+        result.taskList.items(3).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+        result.taskList.items(3).href          shouldBe Some(
+          controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+        )
+      }
+
+      "and must have a link to the Under/OverDeclaration reason screens if user has totals over 1000 and reasons are completed then it must be Completed" in {
+        val result = returnTaskListCreator.returnAdjustmentSection(
+          declaredAdjustmentUserAnswer
+            .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+            .success
+            .value
+            .set(AdjustmentListPage, false)
+            .success
+            .value
+            .set(UnderDeclarationTotalPage, BigDecimal(1000))
+            .success
+            .value
+            .set(OverDeclarationTotalPage, BigDecimal(2000))
+            .success
+            .value
+            .set(UnderDeclarationReasonPage, "test")
+            .success
+            .value
+            .set(OverDeclarationReasonPage, "test")
+            .success
+            .value
+        )
+
+        result.taskList.items(2).title.content shouldBe Text(
+          messages("taskList.section.adjustment.under-declaration")
+        )
+        result.taskList.items(2).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(2).href          shouldBe Some(
+          controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+        )
+
+        result.taskList.items(3).title.content shouldBe Text(
+          messages("taskList.section.adjustment.over-declaration")
+        )
+        result.taskList.items(3).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(3).href          shouldBe Some(
+          controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+        )
+      }
+
     }
   }
 
