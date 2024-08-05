@@ -20,12 +20,13 @@ import base.SpecBase
 import forms.adjustment.DeleteAdjustmentFormProvider
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.DeleteAdjustmentPage
+import pages.adjustment.{DeleteAdjustmentPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import uk.gov.hmrc.http.HttpResponse
+import viewmodels.checkAnswers.adjustment.AdjustmentOverUnderDeclarationCalculationHelper
 import views.html.adjustment.DeleteAdjustmentView
 
 import scala.concurrent.Future
@@ -121,6 +122,60 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
 
+      }
+    }
+
+    "must not clear if total UnderDeclaration is above threshold" in {
+      val mockCacheConnector = mock[CacheConnector]
+      val mockHelper         = mock[AdjustmentOverUnderDeclarationCalculationHelper]
+      when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
+        emptyUserAnswers
+          .set(UnderDeclarationTotalPage, BigDecimal(1500))
+          .success
+          .value
+      )
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application        = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
+        )
+        .build()
+      running(application) {
+        val request = FakeRequest(POST, deleteAdjustmentRoute)
+          .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+
+        verify(mockCacheConnector, times(1)).set(any())(any())
+      }
+    }
+
+    "must clear if total UnderDeclaration is not defined or is below threshold" in {
+      val mockCacheConnector = mock[CacheConnector]
+      val mockHelper         = mock[AdjustmentOverUnderDeclarationCalculationHelper]
+      when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
+        emptyUserAnswers
+          .set(OverDeclarationTotalPage, BigDecimal(1500))
+          .success
+          .value
+      )
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application        = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
+        )
+        .build()
+      running(application) {
+        val request = FakeRequest(POST, deleteAdjustmentRoute)
+          .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+
+        verify(mockCacheConnector, times(1)).set(any())(any())
       }
     }
 
