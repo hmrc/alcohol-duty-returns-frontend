@@ -19,13 +19,9 @@ package controllers.checkAndSubmit
 import base.SpecBase
 import config.Constants.adrReturnCreatedDetails
 import config.FrontendAppConfig
-import controllers.routes
-import models.ReturnPeriod
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import viewmodels.returns.ReturnPeriodViewModel
-import views.html.checkAndSubmit.ReturnSubmittedView
 
 import java.time.{Instant, LocalDate}
 

@@ -211,7 +211,7 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
 
     "must not bind a non numeric value with 3 decimal digits" in {
       val result = testForm.bind(Map("value" -> "1.349"))
-      result.errors must contain(FormError("value", "error.twoDecimalPlaces"))
+      result.errors must contain(FormError("value", "error.decimalPlaces"))
     }
 
   }

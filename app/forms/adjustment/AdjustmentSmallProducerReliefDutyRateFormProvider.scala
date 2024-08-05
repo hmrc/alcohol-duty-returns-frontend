@@ -28,7 +28,7 @@ class AdjustmentSmallProducerReliefDutyRateFormProvider @Inject() extends Mappin
         2,
         "adjustmentSmallProducerReliefDutyRate.error.required",
         "adjustmentSmallProducerReliefDutyRate.error.nonNumeric",
-        "adjustmentSmallProducerReliefDutyRate.error.twoDecimalPlaces"
+        "adjustmentSmallProducerReliefDutyRate.error.decimalPlaces"
       )
         .verifying(minimumValue(BigDecimal(0.00), "adjustmentSmallProducerReliefDutyRate.error.minimumRequired"))
         .verifying(

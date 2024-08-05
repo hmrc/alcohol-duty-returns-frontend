@@ -43,6 +43,19 @@ class VolumesFormatter(
     args
   )
 
+  def pureAlcoholBigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+    requiredKey,
+    invalidKey,
+    decimalPlacesKey,
+    minimumValueKey,
+    maximumValueKey,
+    fieldKey,
+    args,
+    decimalPlaces = 4,
+    maximumValue = BigDecimal(999999999.9999),
+    minimumValue = BigDecimal(0.0001)
+  )
+
   val NUMBER_OF_FIELDS = 3
 
   val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol")
@@ -57,7 +70,7 @@ class VolumesFormatter(
 
     val taxType     = stringFormatter(s"$requiredKey.taxType").bind(s"$key.taxType", data)
     val totalLitres = bigDecimalFormatter("totalLitres").bind(s"$key.totalLitres", data)
-    val pureAlcohol = bigDecimalFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
+    val pureAlcohol = pureAlcoholBigDecimalFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
 
     (taxType, totalLitres, pureAlcohol) match {
       case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue)) =>

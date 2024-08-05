@@ -31,8 +31,6 @@ import viewmodels.DateTimeHelper
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.checkAndSubmit.ReturnSubmittedView
 
-import java.time.{Instant, LocalDate}
-
 class ReturnSubmittedController @Inject() (
   appConfig: FrontendAppConfig,
   override val messagesApi: MessagesApi,

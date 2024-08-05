@@ -34,7 +34,7 @@ class OtherMaltedGrainsFormProvider @Inject() extends Mappings {
         quantityMaxDecimalPlaces,
         "otherMaltedGrains.error.otherMaltedGrainsQuantity.required",
         "otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric",
-        "otherMaltedGrains.error.otherMaltedGrainsQuantity.twoDecimalPlaces"
+        "otherMaltedGrains.error.otherMaltedGrainsQuantity.decimalPlaces"
       ).verifying(minimumValue(quantityMinValue, "otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired"))
         .verifying(maximumValue(quantityMaxValue, "otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired"))
     )(OtherMaltedGrains.apply)(OtherMaltedGrains.unapply)

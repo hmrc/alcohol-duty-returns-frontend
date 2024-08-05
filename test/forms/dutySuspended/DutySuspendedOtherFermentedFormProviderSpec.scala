@@ -29,7 +29,7 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
 
     val fieldName   = "totalOtherFermented"
     val requiredKey = "dutySuspendedOtherFermented.error.totalOtherFermented.required"
-    val minimum     = 0.00
+    val minimum     = -999999999.99
     val maximum     = 999999999.99
     val decimal     = 2
 
@@ -45,8 +45,7 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric"),
-      twoDecimalPlacesError =
-        FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -78,9 +77,9 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
 
     val fieldName   = "pureAlcoholInOtherFermented"
     val requiredKey = "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required"
-    val minimum     = 0.00
-    val maximum     = 999999999.99
-    val decimal     = 2
+    val minimum     = -999999999.9999
+    val maximum     = 999999999.9999
+    val decimal     = 4
 
     val validDataGenerator = bigDecimalsInRangeWithCommas(minimum, maximum, decimal)
 
@@ -95,8 +94,8 @@ class DutySuspendedOtherFermentedFormProviderSpec extends BigDecimalFieldBehavio
       fieldName,
       nonNumericError =
         FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric"),
-      twoDecimalPlacesError =
-        FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.twoDecimalPlaces")
+      decimalPlacesError =
+        FormError(fieldName, "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

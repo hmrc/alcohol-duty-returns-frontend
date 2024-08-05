@@ -44,7 +44,7 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "whisky.error.scotchWhisky.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "whisky.error.scotchWhisky.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "whisky.error.scotchWhisky.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -90,7 +90,7 @@ class WhiskyFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "whisky.error.irishWhiskey.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "whisky.error.irishWhiskey.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "whisky.error.irishWhiskey.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

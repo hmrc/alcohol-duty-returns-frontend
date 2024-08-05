@@ -28,7 +28,7 @@ class DeclareDutySuspendedReceivedFormProvider @Inject() extends Mappings {
         2,
         "declareDutySuspendedReceived.error.required",
         "declareDutySuspendedReceived.error.nonNumeric",
-        "declareDutySuspendedReceived.error.twoDecimalPlaces"
+        "declareDutySuspendedReceived.error.decimalPlaces"
       )
         .verifying(minimumValue(BigDecimal(0.00), "declareDutySuspendedReceived.error.minimumRequired"))
         .verifying(

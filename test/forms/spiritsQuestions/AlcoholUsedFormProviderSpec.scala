@@ -44,7 +44,7 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "alcoholUsed.error.beer.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "alcoholUsed.error.beer.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "alcoholUsed.error.beer.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -89,7 +89,7 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "alcoholUsed.error.wine.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "alcoholUsed.error.wine.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "alcoholUsed.error.wine.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -134,7 +134,7 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "alcoholUsed.error.madeWine.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "alcoholUsed.error.madeWine.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "alcoholUsed.error.madeWine.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -179,7 +179,7 @@ class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
       form,
       fieldName,
       nonNumericError = FormError(fieldName, "alcoholUsed.error.ciderOrPerry.nonNumeric"),
-      twoDecimalPlacesError = FormError(fieldName, "alcoholUsed.error.ciderOrPerry.twoDecimalPlaces")
+      decimalPlacesError = FormError(fieldName, "alcoholUsed.error.ciderOrPerry.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(

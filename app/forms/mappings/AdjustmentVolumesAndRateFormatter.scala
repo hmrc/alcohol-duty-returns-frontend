@@ -43,6 +43,19 @@ class AdjustmentVolumesAndRateFormatter(
     args = args
   )
 
+  def pureAlcoholVolumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+    requiredKey,
+    invalidKey,
+    decimalPlacesKey,
+    minimumValueKey,
+    maximumValueKey,
+    fieldKey,
+    args = args,
+    decimalPlaces = 4,
+    maximumValue = BigDecimal(999999999.9999),
+    minimumValue = BigDecimal(0.0001)
+  )
+
   def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
@@ -65,7 +78,7 @@ class AdjustmentVolumesAndRateFormatter(
 
   def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
     val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
-    val pureAlcohol = volumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
+    val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
     val sprDutyRate = dutyRateFormatter("sprDutyRate").bind(s"$key.sprDutyRate", data)
 
     (totalLitres, pureAlcohol, sprDutyRate) match {

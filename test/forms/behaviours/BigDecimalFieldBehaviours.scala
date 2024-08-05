@@ -24,7 +24,7 @@ trait BigDecimalFieldBehaviours extends FieldBehaviours {
     form: Form[_],
     fieldName: String,
     nonNumericError: FormError,
-    twoDecimalPlacesError: FormError
+    decimalPlacesError: FormError
   ): Unit = {
 
     "not bind non-numeric numbers" in {
@@ -39,7 +39,7 @@ trait BigDecimalFieldBehaviours extends FieldBehaviours {
 
       forAll(decimalsNotTwoDecimalPlaces -> "decimal") { decimal =>
         val result = form.bind(Map(fieldName -> decimal)).apply(fieldName)
-        result.errors must contain only twoDecimalPlacesError
+        result.errors must contain only decimalPlacesError
       }
     }
   }
