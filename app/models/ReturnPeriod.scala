@@ -25,7 +25,7 @@ import scala.util.matching.Regex
 case class ReturnPeriod(period: YearMonth) {
   def toPeriodKey = s"${period.getYear - 2000}A${(period.getMonthValue + 64).toChar}"
 
-  def hasQuarterlySpirit: Boolean =
+  def hasQuarterlySpirits: Boolean =
     Constants.quarterlySpiritsMonths.contains(period.getMonthValue)
 }
 
