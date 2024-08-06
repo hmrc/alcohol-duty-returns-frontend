@@ -20,6 +20,7 @@ import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
 import models.{AlcoholRegimes, ObligationData, ObligationStatus, ReturnId, ReturnPeriod, UserAnswers}
+import org.scalacheck.Gen
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
@@ -68,6 +69,9 @@ trait TestData extends ModelGenerators {
       ReturnPeriod(YearMonth.of(2024, Month.OCTOBER)),
       ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER))
     )
+
+  val nonQuarterReturnPeriodGen = Gen.oneOf(nonQuarterPeriodKeys.toSeq)
+  val quarterReturnPeriodGen = Gen.oneOf(quarterPeriodKeys.toSeq)
 
   val returnPeriodMar = ReturnPeriod.fromPeriodKey(periodKeyMar).get
 
