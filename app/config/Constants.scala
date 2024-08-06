@@ -16,6 +16,8 @@
 
 package config
 
+import java.time.Month._
+
 object Constants {
   val adrReturnCreatedDetails: String = "return-created-details"
   val periodKeySessionKey: String     = "period-key"
@@ -39,4 +41,6 @@ object Constants {
 
   val tableCaptionMCssClass    = "govuk-table__caption--m"
   val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"
+
+  val quarterlySpiritsMonths = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
 }

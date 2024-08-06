@@ -37,7 +37,7 @@ class TaskListControllerSpec extends SpecBase {
         )
         .build()
 
-      when(mockTaskListViewModel.getTaskList(any, eqTo(validUntil), eqTo(periodKey))(any)).thenReturn(taskList)
+      when(mockTaskListViewModel.getTaskList(any, eqTo(validUntil), any)(any)).thenReturn(taskList)
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
@@ -56,34 +56,6 @@ class TaskListControllerSpec extends SpecBase {
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no period key is found" in new SetUp {
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequestWithoutSession(GET, routes.TaskListController.onPageLoad.url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data nor period key is found" in new SetUp {
-      override def userAnswers: UserAnswers = super.userAnswers.copy(validUntil = None)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequestWithoutSession(GET, routes.TaskListController.onPageLoad.url)
 
         val result = route(application, request).value
 

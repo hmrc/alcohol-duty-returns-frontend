@@ -61,7 +61,8 @@ class DutyDueForThisReturnController @Inject() (
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val result = for {
-      adrReturnSubmission         <- adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers)
+      adrReturnSubmission         <-
+        adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers, request.returnPeriod)
       adrSubmissionCreatedDetails <-
         alcoholDutyReturnsConnector.submitReturn(request.appaId, request.returnPeriod.toPeriodKey, adrReturnSubmission)
     } yield adrSubmissionCreatedDetails

@@ -98,7 +98,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
 
-      when(adrReturnSubmissionService.getAdrReturnSubmission(any())(any())).thenReturn(
+      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
         EitherT.rightT(adrReturnSubmission)
       )
 
@@ -130,7 +130,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
 
-      when(adrReturnSubmissionService.getAdrReturnSubmission(any())(any())).thenReturn(
+      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
         EitherT.leftT("Error message")
       )
 
@@ -157,7 +157,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
 
-      when(adrReturnSubmissionService.getAdrReturnSubmission(any())(any())).thenReturn(
+      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
         EitherT.rightT(adrReturnSubmission)
       )
 

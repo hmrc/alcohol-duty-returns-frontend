@@ -16,35 +16,28 @@
 
 package controllers.adjustment
 
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import connectors.CacheConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import forms.adjustment.DeleteAdjustmentFormProvider
-import models.UserAnswers
-import navigation.AdjustmentNavigator
-import pages.QuestionPage
-import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentOverUnderDeclarationCalculationHelper
 import views.html.adjustment.DeleteAdjustmentView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 class DeleteAdjustmentController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  navigator: AdjustmentNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: DeleteAdjustmentFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DeleteAdjustmentView,
-  alcoholDutyCalculatorConnector: AlcoholDutyCalculatorConnector,
   adjustmentOverUnderDeclarationCalculationHelper: AdjustmentOverUnderDeclarationCalculationHelper
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -67,7 +60,8 @@ class DeleteAdjustmentController @Inject() (
             if (value) {
               for {
                 updatedAnswers                        <- Future.fromTry(request.userAnswers.removeBySeqIndex(AdjustmentEntryListPage, index))
-                userAnswersWithUpdatedOverUnderReason <- updateOverUnderDeclarationReasons(updatedAnswers)
+                userAnswersWithUpdatedOverUnderReason <-
+                  adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers)
                 _                                     <- cacheConnector.set(userAnswersWithUpdatedOverUnderReason)
               } yield Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad())
             } else {
@@ -75,35 +69,5 @@ class DeleteAdjustmentController @Inject() (
             }
         )
   }
-
-  private def updateOverUnderDeclarationReasons(
-    userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier): Future[UserAnswers] =
-    for {
-      updatedUserAnswers             <- adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(userAnswers)
-      answersRemovingOverDeclaration <-
-        Future.fromTry(
-          clearIfBelowThreshold(
-            OverDeclarationReasonPage,
-            updatedUserAnswers.get(OverDeclarationTotalPage).getOrElse(BigDecimal(0)).abs,
-            updatedUserAnswers
-          )
-        )
-      finalUserAnswers               <-
-        Future.fromTry(
-          clearIfBelowThreshold(
-            UnderDeclarationReasonPage,
-            answersRemovingOverDeclaration.get(UnderDeclarationTotalPage).getOrElse(BigDecimal(0)),
-            answersRemovingOverDeclaration
-          )
-        )
-    } yield finalUserAnswers
-
-  private def clearIfBelowThreshold(
-    reasonPage: QuestionPage[_],
-    total: BigDecimal,
-    userAnswers: UserAnswers
-  ): Try[UserAnswers] =
-    if (total.abs < 1000) userAnswers.remove(reasonPage) else Try(userAnswers)
 
 }

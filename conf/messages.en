@@ -187,7 +187,7 @@ taskList.section.adjustment.notStarted = Change the entries you’ve told us abo
 taskList.section.adjustment.completed = Change the entries you’ve told us about
 taskList.section.adjustment.inProgress = Change the entries you’ve told us about
 taskList.section.adjustment.under-declaration = Reason for under-declaration
-taskList.section.adjustment.over-declaration = Reason for over declaration
+taskList.section.adjustment.over-declaration = Reason for over-declaration
 
 taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check how much duty is payable and send return

@@ -20,11 +20,13 @@ import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
 import models.adjustment.{AdjustmentDuty, AdjustmentType}
 import models.adjustment.AdjustmentType.{Overdeclaration, Underdeclaration}
-import pages.adjustment.{AdjustmentEntryListPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
+import pages.QuestionPage
+import pages.adjustment.{AdjustmentEntryListPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class AdjustmentOverUnderDeclarationCalculationHelper @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector
@@ -49,7 +51,23 @@ class AdjustmentOverUnderDeclarationCalculationHelper @Inject() (
           Future.fromTry(userAnswers.set(UnderDeclarationTotalPage, underDeclarationTotal.duty))
         updatedUserAnswers              <-
           Future.fromTry(userAnswersWithUnderDeclaration.set(OverDeclarationTotalPage, overDeclarationTotal.duty))
-      } yield updatedUserAnswers
+        answersRemovingOverDeclaration  <-
+          Future.fromTry(
+            clearIfBelowThreshold(
+              OverDeclarationReasonPage,
+              updatedUserAnswers.get(OverDeclarationTotalPage).getOrElse(BigDecimal(0)).abs,
+              updatedUserAnswers
+            )
+          )
+        finalUserAnswers                <-
+          Future.fromTry(
+            clearIfBelowThreshold(
+              UnderDeclarationReasonPage,
+              answersRemovingOverDeclaration.get(UnderDeclarationTotalPage).getOrElse(BigDecimal(0)),
+              answersRemovingOverDeclaration
+            )
+          )
+      } yield finalUserAnswers
     }
 
   private def getDutiesByAdjustmentType(adjustmentType: AdjustmentType, userAnswers: UserAnswers): Seq[BigDecimal] =
@@ -66,4 +84,11 @@ class AdjustmentOverUnderDeclarationCalculationHelper @Inject() (
     } else {
       Future.successful(AdjustmentDuty(BigDecimal(0)))
     }
+
+  private def clearIfBelowThreshold(
+    reasonPage: QuestionPage[_],
+    total: BigDecimal,
+    userAnswers: UserAnswers
+  ): Try[UserAnswers] =
+    if (total.abs < 1000) userAnswers.remove(reasonPage) else Try(userAnswers)
 }
