@@ -22,7 +22,7 @@ The service runs on port `16000` by default.
 
 ### Integration tests
 
-> `sbt it:test`
+> `sbt it/test`
 
 ## Scalafmt and Scalastyle
 
