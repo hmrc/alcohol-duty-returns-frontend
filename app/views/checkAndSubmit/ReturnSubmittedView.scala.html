@@ -72,10 +72,9 @@
 
     @subHeading(messages("returnSubmitted.direct.debit.h2"))
 
-    @paragraph(messages("returnSubmitted.direct.debit.p1"))
-
     @paragraph( content =
         HtmlContent(
+            messages("returnSubmitted.direct.debit.p1") +
             link(
                 id = "direct-debit-start",
                 text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
