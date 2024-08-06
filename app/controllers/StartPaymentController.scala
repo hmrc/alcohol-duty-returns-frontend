@@ -33,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class StartPaymentController @Inject() (
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
   appConfig: FrontendAppConfig,
   payApiConnector: PayApiConnector,
   val controllerComponents: MessagesControllerComponents
