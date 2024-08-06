@@ -39,7 +39,9 @@ class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator)
       Some(returnTaskListCreator.returnSection(userAnswers)),
       Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
       Some(returnTaskListCreator.returnDSDSection(userAnswers)),
-      if (returnPeriod.hasQuarterlySpirits) Some(returnTaskListCreator.returnQSSection(userAnswers)) else None
+      if (userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits)
+        Some(returnTaskListCreator.returnQSSection(userAnswers))
+      else None
     ).flatten
 
     def completedTasks: Int = sections.count(_.completedTask)
