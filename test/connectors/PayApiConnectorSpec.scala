@@ -34,30 +34,36 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
   val connector                     = new PayApiConnector(config = mockConfig, httpClient = mock[HttpClient])
   val mockUrl                       = "/mock-url"
 
-  val startPaymentRequest = StartPaymentRequest(
-    "referenceNumber",
-    BigInt(1000),
-    "chargeReferenceNumber",
-    "/return/url",
-    "/back/url")
+  val startPaymentRequest =
+    StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
 
   "startPayment" - {
     "successfully retrieve a start payment response" in {
       val startPaymentResponse = StartPaymentResponse("journey-id", "/next-url")
-      val jsonResponse = Json.toJson(startPaymentResponse).toString()
-      val httpResponse = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
+      val jsonResponse         = Json.toJson(startPaymentResponse).toString()
+      val httpResponse         = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
 
       when(mockConfig.alcoholDutyStartPaymentUrl).thenReturn(mockUrl)
 
       when {
         connector.httpClient
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any(), any())
+          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
       } thenReturn httpResponse
 
       whenReady(connector.startPayment(startPaymentRequest).value) { result =>
         result mustBe Right(startPaymentResponse)
         verify(connector.httpClient, atLeastOnce)
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any(), any())
+          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
       }
     }
 
@@ -66,7 +72,12 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
       when(mockConfig.alcoholDutyStartPaymentUrl).thenReturn(mockUrl)
       when(
         connector.httpClient
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any(), any())
+          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
       )
         .thenReturn(invalidJsonResponse)
       recoverToExceptionIf[Exception] {
@@ -74,7 +85,12 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
       } map { ex =>
         ex.getMessage must include("Invalid JSON format")
         verify(connector.httpClient, atLeastOnce)
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any(), any())
+          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
       }
     }
 
@@ -83,7 +99,12 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
       when(mockConfig.alcoholDutyStartPaymentUrl).thenReturn(mockUrl)
       when(
         connector.httpClient
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any(), any())
+          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
       )
         .thenReturn(invalidStatusCodeResponse)
       recoverToExceptionIf[Exception] {
@@ -91,10 +112,14 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
       } map { ex =>
         ex.getMessage must include("Unexpected status code: 400")
         verify(connector.httpClient, atLeastOnce)
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any(), any())
+          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
       }
     }
   }
 
-  }
-
+}

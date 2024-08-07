@@ -68,7 +68,7 @@ class StartPaymentController @Inject() (
     }
   }
 
-  def getReturnDetails(session: Session): Option[AdrReturnCreatedDetails] =
+  private def getReturnDetails(session: Session): Option[AdrReturnCreatedDetails] =
     session
       .get(adrReturnCreatedDetails)
       .flatMap(returnDetailsString => Json.parse(returnDetailsString).asOpt[AdrReturnCreatedDetails])

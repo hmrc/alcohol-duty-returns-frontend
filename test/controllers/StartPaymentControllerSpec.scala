@@ -16,6 +16,106 @@
 
 package controllers
 
-class StartPaymentControllerSpec {
+import base.SpecBase
+import cats.data.EitherT
+import config.Constants.adrReturnCreatedDetails
+import connectors.{PayApiConnector, StartPaymentResponse}
+import models.checkAndSubmit.AdrReturnCreatedDetails
+import models.payments.StartPaymentRequest
+import org.mockito.ArgumentMatchers.any
+import play.api.http.Status.SEE_OTHER
+import play.api.inject.bind
+import play.api.libs.json.Json
+import play.api.test.Helpers._
 
+import java.time.{Instant, LocalDate}
+
+class StartPaymentControllerSpec extends SpecBase {
+
+  val startPaymentRequest =
+    StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
+
+  val startPaymentResponse = StartPaymentResponse("journey-id", "/next-url")
+
+  val currentDate = LocalDate.now()
+
+  val returnDetails = AdrReturnCreatedDetails(
+    processingDate = Instant.now(clock),
+    amount = BigDecimal(10.45),
+    chargeReference = Some("XA1527404500736"),
+    paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+  )
+
+  "StartPayment Controller" - {
+
+    "must redirect to the nextUrl if startPaymentResponse is successful" in {
+      val payApiConnector = mock[PayApiConnector]
+
+      when(payApiConnector.startPayment(any())(any())).thenReturn(
+        EitherT.rightT(startPaymentResponse)
+      )
+
+      val application = applicationBuilder()
+        .overrides(bind[PayApiConnector].toInstance(payApiConnector))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.routes.StartPaymentController.initiateAndRedirect().url).withSession(
+            adrReturnCreatedDetails -> Json.toJson(returnDetails).toString()
+          )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe "/next-url"
+      }
+    }
+
+    "must redirect to the Journey Recovery controller if startPayment fails" in {
+      val payApiConnector = mock[PayApiConnector]
+
+      when(payApiConnector.startPayment(any())(any())).thenReturn(
+        EitherT.leftT("Error message")
+      )
+
+      val application = applicationBuilder()
+        .overrides(bind[PayApiConnector].toInstance(payApiConnector))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.routes.StartPaymentController.initiateAndRedirect().url)
+            .withSession(adrReturnCreatedDetails -> Json.toJson(returnDetails).toString())
+
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the Journey Recovery controller if no return details are present" in {
+      val payApiConnector = mock[PayApiConnector]
+
+      when(payApiConnector.startPayment(any())(any())).thenReturn(
+        EitherT.rightT(startPaymentResponse)
+      )
+
+      val application = applicationBuilder()
+        .overrides(bind[PayApiConnector].toInstance(payApiConnector))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.routes.StartPaymentController.initiateAndRedirect().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+  }
 }

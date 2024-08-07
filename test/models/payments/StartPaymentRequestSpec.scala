@@ -1,0 +1,84 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package models.payments
+
+import base.SpecBase
+import generators.ModelGenerators
+import models.checkAndSubmit.AdrReturnCreatedDetails
+import org.scalatest.matchers.must.Matchers
+import play.api.libs.json.{JsResultException, Json}
+
+import java.time.{Instant, LocalDate}
+
+class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerators {
+
+  val startPaymentRequest =
+    StartPaymentRequest("referenceNumber", BigInt(1045), "XA1527404500736", "/return/url", "/back/url")
+
+  val currentDate = LocalDate.now()
+
+  val returnDetails = AdrReturnCreatedDetails(
+    processingDate = Instant.now(clock),
+    amount = BigDecimal(10.45),
+    chargeReference = Some("XA1527404500736"),
+    paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+  )
+
+  val startPaymentRequestInvalidNumericStringJson  = Json.obj(
+    "referenceNumber" -> "appa-id",
+    "chargeReference" -> "charge-ref",
+    "amountInPence" -> "32700x",
+    "returnUrl" -> "/return/url",
+    "backUrl" -> "/back/url"
+  )
+
+  val startPaymentRequestInvalidAmountTypeJson  = Json.obj(
+    "referenceNumber" -> "appa-id",
+    "chargeReference" -> "charge-ref",
+    "amountInPence" -> true,
+    "returnUrl" -> "/return/url",
+    "backUrl" -> "/back/url"
+  )
+
+  "must throw an exception if unable to read value as a BigInt" in {
+    a[JsResultException] mustBe thrownBy(startPaymentRequestInvalidNumericStringJson.as[StartPaymentRequest])
+    a[JsResultException] mustBe thrownBy(startPaymentRequestInvalidAmountTypeJson.as[StartPaymentRequest])
+  }
+
+  ".apply" - {
+
+    "must generate a new startPaymentRequest, converting the duty amount from pounds into a pence value" in {
+
+     StartPaymentRequest.apply(returnDetails,
+       "referenceNumber",
+       "/return/url",
+       "/back/url") mustEqual startPaymentRequest
+
+    }
+
+//    "must throw an exception if unable to fetch charge reference" in {
+//      val nilStartPaymentRequest = StartPaymentRequest("referenceNumber", BigInt(1045), "XA1527404500736", "/return/url", "/back/url")
+//
+//      StartPaymentRequest.apply(returnDetails,
+//        "referenceNumber",
+//        "/return/url",
+//        "/back/url") mustEqual startPaymentRequest
+//
+//    }
+  }
+
+}
