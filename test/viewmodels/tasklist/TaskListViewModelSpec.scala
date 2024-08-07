@@ -18,7 +18,6 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import TaskListStatus.Incomplete
-import models.ReturnPeriod
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem

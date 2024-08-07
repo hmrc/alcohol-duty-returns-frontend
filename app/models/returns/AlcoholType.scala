@@ -16,7 +16,7 @@
 
 package models.returns
 
-import models.{AlcoholRegimes, Enumerable, WithName}
+import models.AlcoholRegimes
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text

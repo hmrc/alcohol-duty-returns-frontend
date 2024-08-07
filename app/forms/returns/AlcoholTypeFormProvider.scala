@@ -18,10 +18,8 @@ package forms.returns
 
 import javax.inject.Inject
 import forms.mappings.Mappings
-import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms.set
-import models.returns.AlcoholType
 
 class AlcoholTypeFormProvider @Inject() extends Mappings {
 

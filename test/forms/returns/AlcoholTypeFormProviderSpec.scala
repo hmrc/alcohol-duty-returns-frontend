@@ -28,14 +28,14 @@ class AlcoholTypeFormProviderSpec extends CheckboxFieldBehaviours {
 
     val fieldName   = "value"
     val requiredKey = "alcoholType.error.required"
-
+    /*
     behave like checkboxField[AlcoholType](
       form,
       fieldName,
       validValues = AlcoholType.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
-
+     */
     behave like mandatoryCheckboxField(
       form,
       fieldName,

@@ -18,17 +18,16 @@ package controllers.returns
 
 import base.SpecBase
 import forms.returns.AlcoholTypeFormProvider
-import models.NormalMode
+import models.{AlcoholRegime, AlcoholRegimes, NormalMode}
 import models.returns.AlcoholType
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import pages.returns.AlcoholTypePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import models.AlcoholRegime.{Beer, Cider, Wine}
 import uk.gov.hmrc.http.HttpResponse
 import views.html.returns.AlcoholTypeView
 
@@ -40,9 +39,9 @@ class AlcoholTypeControllerSpec extends SpecBase {
 
   lazy val alcoholTypeRoute = routes.AlcoholTypeController.onPageLoad(NormalMode).url
 
-  val formProvider = new AlcoholTypeFormProvider()
-  val form         = formProvider()
-
+  val formProvider   = new AlcoholTypeFormProvider()
+  val form           = formProvider()
+  val alcoholRegimes = AlcoholRegimes(Set(Beer, Cider, Wine))
   "AlcoholType Controller" - {
 
     "must return OK and the correct view for a GET" in {
@@ -58,13 +57,16 @@ class AlcoholTypeControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, alcoholRegimes)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(AlcoholTypePage, AlcoholType.values.toSet).success.value
+      val alcoholRegimesValues: Set[AlcoholRegime] = Set(Beer, Cider, Wine)
+      val userAnswers                              = emptyUserAnswers.set(AlcoholTypePage, alcoholRegimesValues).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,9 +78,9 @@ class AlcoholTypeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(AlcoholType.values.toSet), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(Set("beer", "cider", "wine")), NormalMode, alcoholRegimes)(
           request,
-          messages(application)
+          getMessages(application)
         ).toString
       }
     }
@@ -100,7 +102,7 @@ class AlcoholTypeControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, alcoholTypeRoute)
-            .withFormUrlEncodedBody(("value[0]", AlcoholType.values.head.toString))
+            .withFormUrlEncodedBody(("value[0]", alcoholRegimes.toString))
 
         val result = route(application, request).value
 
@@ -125,7 +127,10 @@ class AlcoholTypeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, alcoholRegimes)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
@@ -150,7 +155,7 @@ class AlcoholTypeControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, alcoholTypeRoute)
-            .withFormUrlEncodedBody(("value[0]", AlcoholType.values.head.toString))
+            .withFormUrlEncodedBody(("value[0]", alcoholRegimes.toString))
 
         val result = route(application, request).value
 

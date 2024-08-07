@@ -17,7 +17,6 @@
 package pages.returns
 
 import models.AlcoholRegime
-import models.returns.AlcoholType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
