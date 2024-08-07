@@ -38,47 +38,86 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
     paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
   )
 
-  val startPaymentRequestInvalidNumericStringJson  = Json.obj(
-    "referenceNumber" -> "appa-id",
-    "chargeReference" -> "charge-ref",
-    "amountInPence" -> "32700x",
-    "returnUrl" -> "/return/url",
-    "backUrl" -> "/back/url"
+  val missingReturnDetails = AdrReturnCreatedDetails(
+    processingDate = Instant.now(clock),
+    amount = BigDecimal(10.45),
+    chargeReference = None,
+    paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
   )
 
-  val startPaymentRequestInvalidAmountTypeJson  = Json.obj(
-    "referenceNumber" -> "appa-id",
-    "chargeReference" -> "charge-ref",
-    "amountInPence" -> true,
-    "returnUrl" -> "/return/url",
-    "backUrl" -> "/back/url"
+  val startPaymentRequestJson = Json.obj(
+    "referenceNumber"       -> "referenceNumber",
+    "amountInPence"         -> 1045,
+    "chargeReferenceNumber" -> "XA1527404500736",
+    "returnUrl"             -> "/return/url",
+    "backUrl"               -> "/back/url"
   )
 
-  "must throw an exception if unable to read value as a BigInt" in {
-    a[JsResultException] mustBe thrownBy(startPaymentRequestInvalidNumericStringJson.as[StartPaymentRequest])
-    a[JsResultException] mustBe thrownBy(startPaymentRequestInvalidAmountTypeJson.as[StartPaymentRequest])
+  val startPaymentRequestWithNumericAmountJson = Json.obj(
+    "referenceNumber"       -> "referenceNumber",
+    "amountInPence"         -> "1045",
+    "chargeReferenceNumber" -> "XA1527404500736",
+    "returnUrl"             -> "/return/url",
+    "backUrl"               -> "/back/url"
+  )
+
+  val startPaymentRequestInvalidNumericStringJson = Json.obj(
+    "referenceNumber"       -> "referenceNumber",
+    "chargeReferenceNumber" -> "charge-ref",
+    "amountInPence"         -> "32700x",
+    "returnUrl"             -> "/return/url",
+    "backUrl"               -> "/back/url"
+  )
+
+  val startPaymentRequestInvalidAmountTypeJson = Json.obj(
+    "referenceNumber"       -> "referenceNumber",
+    "chargeReferenceNumber" -> "charge-ref",
+    "amountInPence"         -> true,
+    "returnUrl"             -> "/return/url",
+    "backUrl"               -> "/back/url"
+  )
+
+  ".formats writes" - {
+
+    "must generate a json representation, including a numeric 'amountInPence' value" in {
+      Json.toJson(startPaymentRequest) mustBe startPaymentRequestJson
+    }
   }
 
+  ".formats reads" - {
+
+    "must return a new PaymentStart instance" - {
+
+      "when all fields are present & correct" in {
+        startPaymentRequestJson.as[StartPaymentRequest] mustBe startPaymentRequest
+        startPaymentRequestWithNumericAmountJson.as[StartPaymentRequest] mustBe startPaymentRequest
+      }
+    }
+
+    "must throw an exception if unable to read value as a BigInt" in {
+      a[JsResultException] mustBe thrownBy(startPaymentRequestInvalidNumericStringJson.as[StartPaymentRequest])
+      a[JsResultException] mustBe thrownBy(startPaymentRequestInvalidAmountTypeJson.as[StartPaymentRequest])
+    }
+  }
   ".apply" - {
 
     "must generate a new startPaymentRequest, converting the duty amount from pounds into a pence value" in {
 
-     StartPaymentRequest.apply(returnDetails,
-       "referenceNumber",
-       "/return/url",
-       "/back/url") mustEqual startPaymentRequest
+      StartPaymentRequest.apply(
+        returnDetails,
+        "referenceNumber",
+        "/return/url",
+        "/back/url"
+      ) mustEqual startPaymentRequest
 
     }
 
-//    "must throw an exception if unable to fetch charge reference" in {
-//      val nilStartPaymentRequest = StartPaymentRequest("referenceNumber", BigInt(1045), "XA1527404500736", "/return/url", "/back/url")
-//
-//      StartPaymentRequest.apply(returnDetails,
-//        "referenceNumber",
-//        "/return/url",
-//        "/back/url") mustEqual startPaymentRequest
-//
-//    }
-  }
+    "must throw an exception if unable to fetch charge reference" in {
 
+      a[RuntimeException] mustBe thrownBy(
+        StartPaymentRequest.apply(missingReturnDetails, "referenceNumber", "/return/url", "/back/url")
+      )
+
+    }
+  }
 }
