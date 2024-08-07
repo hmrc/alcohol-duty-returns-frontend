@@ -17,11 +17,11 @@
 package viewmodels.tasklist
 
 import models.adjustment.AdjustmentType
-import models.{CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import models.{AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, TaskList}
@@ -109,7 +109,11 @@ class ReturnTaskListCreator @Inject() () {
   private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Seq[TaskListItem] =
-    for (regime <- AlcoholRegimesViewOrder.regimesInViewOrder(userAnswers.regimes))
+    for (
+      regime <- AlcoholRegimesViewOrder.regimesInViewOrder(
+                  AlcoholRegimes(userAnswers.get(AlcoholTypePage).getOrElse(Set.empty))
+                )
+    )
       yield (
         userAnswers.getByKey(AlcoholDutyPage, regime),
         userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)

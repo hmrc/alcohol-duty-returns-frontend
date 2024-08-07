@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.{AlcoholRegime, Mode, RateBand, ReturnPeriod, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.QuestionPage
-import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage, nextPages}
+import pages.returns.{AlcoholTypePage, RateBandsPage, WhatDoYouNeedToDeclarePage, nextPages}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -97,12 +97,16 @@ class WhatDoYouNeedToDeclareController @Inject() (
     returnPeriod: ReturnPeriod,
     selectedRegime: AlcoholRegime
   )(implicit hc: HeaderCarrier): Future[Seq[RateBand]] =
-    userAnswers.get(RateBandsPage) match {
-      case Some(rateBands) =>
+    (userAnswers.get(RateBandsPage), userAnswers.get(AlcoholTypePage)) match {
+      case (Some(rateBands), _)  =>
         Future.successful(rateBands.filter(_.rangeDetails.map(_.alcoholRegime).contains(selectedRegime)))
-      case None            =>
+      case (None, Some(regimes)) =>
         for {
-          rateBands      <- calculatorConnector.rateBandByRegime(returnPeriod.period, userAnswers.regimes.regimes.toSeq)
+          rateBands      <-
+            calculatorConnector.rateBandByRegime(
+              returnPeriod.period,
+              regimes.toSeq
+            )
           updatedAnswers <- Future.fromTry(userAnswers.set(RateBandsPage, rateBands))
           _              <- cacheConnector.set(updatedAnswers)
         } yield rateBands.filter(_.rangeDetails.map(_.alcoholRegime).contains(selectedRegime))

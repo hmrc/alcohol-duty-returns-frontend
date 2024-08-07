@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package pages
+package forms.returns
 
+import javax.inject.Inject
+import forms.mappings.Mappings
 import models.AlcoholRegime
+import play.api.data.Form
+import play.api.data.Forms.set
+import models.returns.AlcoholType
 
-package object returns {
+class AlcoholTypeFormProvider @Inject() extends Mappings {
 
-  def nextPages(currentPage: QuestionPage[_]): Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]] =
-    sectionPages.dropWhile(_ != currentPage).tail
-
-  val sectionPages: Seq[QuestionPage[Map[AlcoholRegime, _]]] = Seq(
-    AlcoholTypePage,
-    RateBandsPage,
-    WhatDoYouNeedToDeclarePage,
-    HowMuchDoYouNeedToDeclarePage,
-    DoYouHaveMultipleSPRDutyRatesPage,
-    TellUsAboutSingleSPRRatePage,
-    TellUsAboutMultipleSPRRatePage,
-    MultipleSPRListPage,
-    DutyCalculationPage,
-    AlcoholDutyPage
-  ).map(_.asInstanceOf[QuestionPage[Map[AlcoholRegime, _]]])
-
+  def apply(): Form[Set[String]] =
+    Form(
+      "value" -> set(text("alcoholType.error.required")).verifying(nonEmptySet("alcoholType.error.required"))
+    )
 }
