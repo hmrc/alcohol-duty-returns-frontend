@@ -18,6 +18,8 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import TaskListStatus.Incomplete
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Wine}
+import models.AlcoholRegimes
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem
@@ -68,7 +70,7 @@ class TaskListViewModelSpec extends SpecBase {
     }
 
     quarterPeriodKeys.foreach { periodKey =>
-      s"must return the QS section as the period key $periodKey falls on a quarter" in new SetUp {
+      s"must return the QS section as the period key $periodKey falls on a quarter and the producer has the regime 'Spirits'" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
@@ -86,8 +88,28 @@ class TaskListViewModelSpec extends SpecBase {
       }
     }
 
-    nonQuarterPeriodKeys.foreach { periodKey =>
+    quarterPeriodKeys.foreach { periodKey =>
       s"must not return the QS section as the period key $periodKey doesn't fall on a quarter" in new SetUp {
+        val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct)))
+        when(mockReturnTaskListCreator.returnSection(userAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnDSDSection(userAnswers)).thenReturn(inProgressSection)
+        when(mockReturnTaskListCreator.returnQSSection(userAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnCheckAndSubmitSection(0, 3)).thenReturn(cannotStartSection)
+
+        val result = taskListViewModel.getTaskList(userAnswers, validUntil, periodKey)
+
+        result mustBe AlcoholDutyTaskList(
+          Seq(notStartedSection, notStartedSection, inProgressSection, cannotStartSection),
+          validUntilString
+        )
+
+        result.totalTasks mustBe 4
+      }
+    }
+
+    nonQuarterPeriodKeys.foreach { periodKey =>
+      s"must not return the QS section as the period key $periodKey fall on a quarter but the producer doesn't have the regime 'Spirits'" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)

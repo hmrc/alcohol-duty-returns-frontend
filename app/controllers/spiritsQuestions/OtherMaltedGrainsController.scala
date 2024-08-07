@@ -39,6 +39,7 @@ class OtherMaltedGrainsController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: OtherMaltedGrainsFormProvider,
+  checkSpiritsRegime: CheckSpiritsRegimeAction,
   val controllerComponents: MessagesControllerComponents,
   view: OtherMaltedGrainsView
 )(implicit ec: ExecutionContext)
@@ -47,14 +48,15 @@ class OtherMaltedGrainsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(OtherMaltedGrainsPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
+      val preparedForm = request.userAnswers.get(OtherMaltedGrainsPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
-  }
+      Ok(view(preparedForm, mode))
+    }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
