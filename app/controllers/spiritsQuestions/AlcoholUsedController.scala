@@ -37,6 +37,7 @@ class AlcoholUsedController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  checkSpiritsRegime: CheckSpiritsRegimeAction,
   formProvider: AlcoholUsedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: AlcoholUsedView
@@ -46,14 +47,15 @@ class AlcoholUsedController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(AlcoholUsedPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
+      val preparedForm = request.userAnswers.get(AlcoholUsedPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
-  }
+      Ok(view(preparedForm, mode))
+    }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>

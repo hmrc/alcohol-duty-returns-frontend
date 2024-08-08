@@ -19,7 +19,7 @@ package controllers
 import config.Constants.adrReturnCreatedDetails
 import config.FrontendAppConfig
 import connectors.PayApiConnector
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import controllers.actions.IdentifierAction
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.payments.StartPaymentRequest
 import play.api.Logging
@@ -64,7 +64,11 @@ class StartPaymentController @Inject() (
             startPaymentResponse => Future.successful(Redirect(startPaymentResponse.nextUrl))
           )
 
-      case _ => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case _ =>
+        logger.warn(
+          "Return details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
+        )
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
   }
 

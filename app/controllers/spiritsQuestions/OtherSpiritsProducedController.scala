@@ -39,6 +39,7 @@ class OtherSpiritsProducedController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: OtherSpiritsProducedFormProvider,
+  checkSpiritsRegime: CheckSpiritsRegimeAction,
   val controllerComponents: MessagesControllerComponents,
   view: OtherSpiritsProducedView
 )(implicit ec: ExecutionContext)
@@ -47,14 +48,15 @@ class OtherSpiritsProducedController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(OtherSpiritsProducedPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
+      val preparedForm = request.userAnswers.get(OtherSpiritsProducedPage) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, mode))
-  }
+      Ok(view(preparedForm, mode))
+    }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
