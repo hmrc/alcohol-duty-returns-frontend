@@ -70,11 +70,11 @@ class StartDirectDebitControllerSpec extends SpecBase {
         val request =
           FakeRequest(GET, controllers.routes.StartDirectDebitController.initiateAndRedirect().url)
 
-        val result  = route(application, request).value
+        val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
-    }
+  }
 }
