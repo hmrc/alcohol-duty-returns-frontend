@@ -22,17 +22,11 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 import enumeratum.scalacheck._
-import models.AlcoholRegime._
 import models.returns.{DutyByTaxType, VolumeAndRateByTaxType}
 
 import java.time.YearMonth
 
 trait ModelGenerators {
-  /*
-  implicit lazy val arbitraryAlcoholType: Arbitrary[returns.AlcoholType] =
-    Arbitrary {
-      Gen.oneOf(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
-    }*/
 
   implicit lazy val arbitraryAdjustmentVolumeWithSpr: Arbitrary[adjustment.AdjustmentVolumeWithSPR] =
     Arbitrary {

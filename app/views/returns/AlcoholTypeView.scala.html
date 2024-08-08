@@ -15,7 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph}
-@import models.returns.AlcoholType
+@import viewmodels.returns.AlcoholTypeViewModel
 @import models.AlcoholRegimes
 
 @this(
@@ -36,7 +36,7 @@
     @formHelper(action = controllers.returns.routes.AlcoholTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> AlcoholType.checkboxItems(regimes).headOption.flatMap(_.id).getOrElse(""))))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> AlcoholTypeViewModel.checkboxItems(regimes).headOption.flatMap(_.id).getOrElse(""))))
         }
 
         @sectionHeading(
@@ -53,7 +53,7 @@
                 form   = form,
                 name   = "value",
                 legend = LegendViewModel(messages("alcoholType.heading")).asVisuallyHidden(),
-                items  = AlcoholType.checkboxItems(regimes)
+                items  = AlcoholTypeViewModel.checkboxItems(regimes)
             )
             .withHint(Hint(content =  messages("alcoholType.hint")))
         )

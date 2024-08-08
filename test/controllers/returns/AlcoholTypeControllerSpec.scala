@@ -19,7 +19,6 @@ package controllers.returns
 import base.SpecBase
 import forms.returns.AlcoholTypeFormProvider
 import models.{AlcoholRegime, AlcoholRegimes, NormalMode}
-import models.returns.AlcoholType
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.returns.AlcoholTypePage

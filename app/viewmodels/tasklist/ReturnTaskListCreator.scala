@@ -353,7 +353,7 @@ class ReturnTaskListCreator @Inject() () {
             status = AlcholDutyTaskListItemStatus.notStarted,
             href = Some(
               controllers.returns.routes.DeclareAlcoholDutyQuestionController
-                .onPageLoad(CheckMode)
+                .onPageLoad(NormalMode)
                 .url
             )
           )

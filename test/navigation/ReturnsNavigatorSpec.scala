@@ -54,7 +54,7 @@ class ReturnsNavigatorSpec extends SpecBase {
           DeclareAlcoholDutyQuestionPage,
           NormalMode,
           emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
-        ) mustBe routes.TaskListController.onPageLoad
+        ) mustBe controllers.returns.routes.AlcoholTypeController.onPageLoad(NormalMode)
       }
 
       "must go from the Alcohol to declare to task list page if the answer is No" in {
@@ -312,7 +312,7 @@ class ReturnsNavigatorSpec extends SpecBase {
           DeclareAlcoholDutyQuestionPage,
           CheckMode,
           emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
-        ) mustBe controllers.returns.routes.AlcoholTypeController.onPageLoad(NormalMode)
+        ) mustBe controllers.returns.routes.AlcoholTypeController.onPageLoad(CheckMode)
       }
 
       "must go from a page that doesn't exist in the route map to Index with regime" in {

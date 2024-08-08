@@ -24,6 +24,7 @@ import models.{AlcoholRegime, Mode, RateBand, ReturnPeriod, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.QuestionPage
 import pages.returns.{AlcoholTypePage, RateBandsPage, WhatDoYouNeedToDeclarePage, nextPages}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -49,7 +50,8 @@ class WhatDoYouNeedToDeclareController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with ReturnController[Set[RateBand], WhatDoYouNeedToDeclarePage.type] {
+    with ReturnController[Set[RateBand], WhatDoYouNeedToDeclarePage.type]
+    with Logging {
 
   val currentPage = WhatDoYouNeedToDeclarePage
 
@@ -110,6 +112,9 @@ class WhatDoYouNeedToDeclareController @Inject() (
           updatedAnswers <- Future.fromTry(userAnswers.set(RateBandsPage, rateBands))
           _              <- cacheConnector.set(updatedAnswers)
         } yield rateBands.filter(_.rangeDetails.map(_.alcoholRegime).contains(selectedRegime))
+      case (_, _)                =>
+        logger.warn("Alcohol Type unselected")
+        Future.failed(new Exception("Alcohol Type unselected"))
     }
 
   private def rateBandFromTaxType(rateBandTaxTypes: Set[String], rateBands: Seq[RateBand]): Try[Set[RateBand]] = Try {

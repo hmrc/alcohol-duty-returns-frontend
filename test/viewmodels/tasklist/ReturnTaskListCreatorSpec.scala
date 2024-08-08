@@ -22,7 +22,7 @@ import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended._
-import pages.returns.DeclareAlcoholDutyQuestionPage
+import pages.returns.{AlcoholTypePage, DeclareAlcoholDutyQuestionPage}
 import pages.spiritsQuestions._
 import play.api.Application
 import play.api.i18n.Messages
@@ -70,9 +70,33 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       )
     }
 
+    "when the user answers yes to DeclareAlcoholDuty question, and the AlcoholType screen must return a In progress section" - {
+      val declaredAlcoholDutyUserAnswer = emptyUserAnswers
+        .set(DeclareAlcoholDutyQuestionPage, true)
+        .success
+        .value
+
+      val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
+
+      result.completedTask                     shouldBe false
+      result.taskList.items.size               shouldBe 1
+      result.title                             shouldBe messages("taskList.section.returns.heading")
+      result.taskList.items.head.title.content shouldBe Text(
+        messages("taskList.section.returns.needToDeclare.yes")
+      )
+      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+      result.taskList.items.head.href          shouldBe Some(
+        controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+      )
+
+    }
+
     "when the user answers yes to DeclareAlcoholDuty question, must return a complete section and the regime tasks" - {
       val declaredAlcoholDutyUserAnswer = emptyUserAnswers
         .set(DeclareAlcoholDutyQuestionPage, true)
+        .success
+        .value
+        .set(AlcoholTypePage, AlcoholRegime.values.toSet)
         .success
         .value
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.returns
+package viewmodels.returns
 
 import models.AlcoholRegimes
 import play.api.i18n.Messages
@@ -23,10 +23,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.AlcoholRegimesViewOrder.regimesInViewOrder
 import viewmodels.govuk.checkbox._
 
-sealed trait AlcoholType
-
-object AlcoholType {
-
+object AlcoholTypeViewModel {
+  
   def checkboxItems(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[CheckboxItem] = {
     val orderedRegimes = regimesInViewOrder(regimes)
     orderedRegimes.zipWithIndex.map { case (value, index) =>
