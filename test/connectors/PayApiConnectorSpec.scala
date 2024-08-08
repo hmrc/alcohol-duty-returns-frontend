@@ -18,7 +18,7 @@ package connectors
 
 import base.SpecBase
 import config.FrontendAppConfig
-import models.payments.StartPaymentRequest
+import models.payments.{StartPaymentRequest, StartPaymentResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.RecoverMethods.recoverToExceptionIf
@@ -43,7 +43,7 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
       val jsonResponse         = Json.toJson(startPaymentResponse).toString()
       val httpResponse         = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
 
-      when(mockConfig.alcoholDutyStartPaymentUrl).thenReturn(mockUrl)
+      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
 
       when {
         connector.httpClient
@@ -69,7 +69,7 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
 
     "fail when an invalid JSON format is returned" in {
       val invalidJsonResponse = Future.successful(Right(HttpResponse(OK, """{ "invalid": "json" }""")))
-      when(mockConfig.alcoholDutyStartPaymentUrl).thenReturn(mockUrl)
+      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
       when(
         connector.httpClient
           .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
@@ -96,7 +96,7 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
 
     "fail when an unexpected status code is returned" in {
       val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
-      when(mockConfig.alcoholDutyStartPaymentUrl).thenReturn(mockUrl)
+      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
       when(
         connector.httpClient
           .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(

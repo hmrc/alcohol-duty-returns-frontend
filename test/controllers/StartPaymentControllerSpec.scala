@@ -19,9 +19,9 @@ package controllers
 import base.SpecBase
 import cats.data.EitherT
 import config.Constants.adrReturnCreatedDetails
-import connectors.{PayApiConnector, StartPaymentResponse}
+import connectors.PayApiConnector
 import models.checkAndSubmit.AdrReturnCreatedDetails
-import models.payments.StartPaymentRequest
+import models.payments.{StartPaymentRequest, StartPaymentResponse}
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.SEE_OTHER
 import play.api.inject.bind
