@@ -30,7 +30,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
   val returnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
-    chargeReference,
+    Some(chargeReference),
     paymentDueDate
   )
 

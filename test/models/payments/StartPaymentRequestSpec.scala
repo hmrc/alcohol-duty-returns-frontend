@@ -27,12 +27,12 @@ import java.time.Instant
 class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerators {
 
   val startPaymentRequest =
-    StartPaymentRequest("referenceNumber", BigInt(1045), "XA1527404500736", "/return/url", "/back/url")
+    StartPaymentRequest("referenceNumber", BigInt(1045), chargeReference, "/return/url", "/back/url")
 
   val returnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
-    chargeReference,
+    Some(chargeReference),
     paymentDueDate
   )
 
@@ -46,7 +46,7 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
   val startPaymentRequestJson = Json.obj(
     "referenceNumber"       -> "referenceNumber",
     "amountInPence"         -> 1045,
-    "chargeReferenceNumber" -> "XA1527404500736",
+    "chargeReferenceNumber" -> chargeReference,
     "returnUrl"             -> "/return/url",
     "backUrl"               -> "/back/url"
   )
@@ -54,14 +54,14 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
   val startPaymentRequestWithNumericAmountJson = Json.obj(
     "referenceNumber"       -> "referenceNumber",
     "amountInPence"         -> "1045",
-    "chargeReferenceNumber" -> "XA1527404500736",
+    "chargeReferenceNumber" -> chargeReference,
     "returnUrl"             -> "/return/url",
     "backUrl"               -> "/back/url"
   )
 
   val startPaymentRequestInvalidNumericStringJson = Json.obj(
     "referenceNumber"       -> "referenceNumber",
-    "chargeReferenceNumber" -> "charge-ref",
+    "chargeReferenceNumber" -> chargeReference,
     "amountInPence"         -> "32700x",
     "returnUrl"             -> "/return/url",
     "backUrl"               -> "/back/url"
@@ -69,7 +69,7 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
 
   val startPaymentRequestInvalidAmountTypeJson = Json.obj(
     "referenceNumber"       -> "referenceNumber",
-    "chargeReferenceNumber" -> "charge-ref",
+    "chargeReferenceNumber" -> chargeReference,
     "amountInPence"         -> true,
     "returnUrl"             -> "/return/url",
     "backUrl"               -> "/back/url"
