@@ -238,6 +238,19 @@ return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught 
 
 # Beginning of product entry sub-journey
 
+alcoholType.title = What alcohol do you need to declare on this return?
+alcoholType.heading = What alcohol do you need to declare on this return?
+alcoholType.Beer = Beer
+alcoholType.Cider = Cider
+alcoholType.Wine = Wine
+alcoholType.Spirits = Spirits
+alcoholType.OtherFermentedProduct = Other fermented products
+alcoholType.checkYourAnswersLabel = What alcohol do you need to declare on this return?
+alcoholType.error.required = Select the types of alcoholic products you need to declare
+alcoholType.change.hidden = AlcoholType
+alcoholType.paragraph = If you do not select an alcohol type to declare, then you will not be asked to input any information for this type.
+alcoholType.hint = Select all that apply.
+
 return.journey.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
 return.journey.error.moreThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
 

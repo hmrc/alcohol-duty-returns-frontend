@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-package pages
+package pages.returns
 
 import models.AlcoholRegime
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-package object returns {
+case object AlcoholTypePage extends QuestionPage[Set[AlcoholRegime]] {
 
-  def nextPages(currentPage: QuestionPage[_]): Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]] =
-    sectionPages.dropWhile(_ != currentPage).tail
+  override def path: JsPath = JsPath \ toString
 
-  val sectionPages: Seq[QuestionPage[Map[AlcoholRegime, _]]] = Seq(
-    AlcoholTypePage,
-    RateBandsPage,
-    WhatDoYouNeedToDeclarePage,
-    HowMuchDoYouNeedToDeclarePage,
-    DoYouHaveMultipleSPRDutyRatesPage,
-    TellUsAboutSingleSPRRatePage,
-    TellUsAboutMultipleSPRRatePage,
-    MultipleSPRListPage,
-    DutyCalculationPage,
-    AlcoholDutyPage
-  ).map(_.asInstanceOf[QuestionPage[Map[AlcoholRegime, _]]])
-
+  override def toString: String = "alcoholType"
 }

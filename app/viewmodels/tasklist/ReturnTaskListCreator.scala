@@ -17,11 +17,11 @@
 package viewmodels.tasklist
 
 import models.adjustment.AdjustmentType
-import models.{CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import models.{AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, TaskList}
@@ -106,10 +106,14 @@ class ReturnTaskListCreator @Inject() () {
         )
     }
 
-  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit
+  private def returnsAlcoholByRegimesTask(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Seq[TaskListItem] =
-    for (regime <- AlcoholRegimesViewOrder.regimesInViewOrder(userAnswers.regimes))
+    for (
+      regime <- AlcoholRegimesViewOrder.regimesInViewOrder(
+                  AlcoholRegimes(userAnswers.get(AlcoholTypePage).getOrElse(Set.empty))
+                )
+    )
       yield (
         userAnswers.getByKey(AlcoholDutyPage, regime),
         userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
@@ -303,13 +307,65 @@ class ReturnTaskListCreator @Inject() () {
     )
   }
 
-  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
-    createSection(
-      userAnswers.get(DeclareAlcoholDutyQuestionPage),
-      () => returnJourneyTaskListItem(userAnswers),
-      controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(_).url,
-      sectionName = "returns"
+  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
+    val taskListItems = (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholTypePage)) match {
+      case (Some(true), Some(_)) =>
+        val declareAlcoholQuestionTask =
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(
+              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          )
+        declareAlcoholQuestionTask +: returnsAlcoholByRegimesTask(userAnswers)
+      case (Some(true), None)    =>
+        Seq(
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
+            status = AlcholDutyTaskListItemStatus.inProgress,
+            href = Some(
+              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          )
+        )
+      case (Some(false), _)      =>
+        Seq(
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.no"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(
+              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          )
+        )
+
+      case (_, _) =>
+        Seq(
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.notStarted"))),
+            status = AlcholDutyTaskListItemStatus.notStarted,
+            href = Some(
+              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+                .onPageLoad(NormalMode)
+                .url
+            )
+          )
+        )
+    }
+
+    Section(
+      title = messages(s"taskList.section.returns.heading"),
+      taskList = TaskList(items = taskListItems),
+      statusCompleted = AlcholDutyTaskListItemStatus.completed
     )
+  }
 
   def returnAdjustmentSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
     val overDeclarationTotal   = userAnswers.get(OverDeclarationTotalPage).getOrElse(BigDecimal(0))
