@@ -21,7 +21,7 @@ import forms.returns.WhatDoYouNeedToDeclareFormProvider
 import models.{CheckMode, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{AlcoholTypePage, RateBandsPage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -53,11 +53,13 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
   val mockCacheConnector = mock[CacheConnector]
   when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
+  val userAnswersWithAlcoholType = emptyUserAnswers.set(AlcoholTypePage, emptyUserAnswers.regimes.regimes).success.value
+
   "WhatDoYouNeedToDeclare Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[CacheConnector].toInstance(mockCacheConnector)
@@ -83,7 +85,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet).success.value
+        userAnswersWithAlcoholType.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
@@ -116,7 +118,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
     "must populate the view correctly on a GET when the rate band has already been populated" in {
 
       val userAnswers =
-        emptyUserAnswers.set(RateBandsPage, rateBandList).success.value
+        userAnswersWithAlcoholType.set(RateBandsPage, rateBandList).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -139,7 +141,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
@@ -165,7 +167,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted, in Check mode and the value has changed" in {
 
       val userAnswers =
-        emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet).success.value
+        userAnswersWithAlcoholType.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -196,7 +198,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val selectedRateBand = rateBandList.head
 
       val userAnswers =
-        emptyUserAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, Set(selectedRateBand)).success.value
+        userAnswersWithAlcoholType.setByKey(WhatDoYouNeedToDeclarePage, regime, Set(selectedRateBand)).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -222,7 +224,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[CacheConnector].toInstance(mockCacheConnector)
@@ -253,7 +255,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
       val invalidTaxType = "invalidValue"
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[CacheConnector].toInstance(mockCacheConnector)

@@ -45,7 +45,6 @@ class AlcoholTypeControllerSpec extends SpecBase {
   "AlcoholType Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -57,7 +56,7 @@ class AlcoholTypeControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, NormalMode, alcoholRegimes)(
+        contentAsString(result) mustEqual view(form, NormalMode, emptyUserAnswers.regimes)(
           request,
           getMessages(application)
         ).toString
@@ -78,7 +77,11 @@ class AlcoholTypeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(Set("beer", "cider", "wine")), NormalMode, alcoholRegimes)(
+        contentAsString(result) mustEqual view(
+          form.fill(Set("Beer", "Cider", "Wine")),
+          NormalMode,
+          userAnswers.regimes
+        )(
           request,
           getMessages(application)
         ).toString
@@ -127,7 +130,7 @@ class AlcoholTypeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, alcoholRegimes)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, emptyUserAnswers.regimes)(
           request,
           getMessages(application)
         ).toString
