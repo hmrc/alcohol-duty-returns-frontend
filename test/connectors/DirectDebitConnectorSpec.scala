@@ -40,8 +40,8 @@ class DirectDebitConnectorSpec extends SpecBase with ScalaFutures {
   "startPayment" - {
     "successfully retrieve a start payment response" in {
       val startDirectDebitResponse = StartDirectDebitResponse("/next-url")
-      val jsonResponse         = Json.toJson(startDirectDebitResponse).toString()
-      val httpResponse         = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
+      val jsonResponse             = Json.toJson(startDirectDebitResponse).toString()
+      val httpResponse             = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
 
       when(mockConfig.startDirectDebitUrl).thenReturn(mockUrl)
 
