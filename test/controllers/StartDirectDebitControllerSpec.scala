@@ -19,15 +19,12 @@ package controllers
 import base.SpecBase
 import cats.data.EitherT
 import connectors.DirectDebitConnector
-import models.payments.{StartDirectDebitRequest, StartDirectDebitResponse}
+import models.payments.StartDirectDebitResponse
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import play.api.test.Helpers._
 
 class StartDirectDebitControllerSpec extends SpecBase {
-
-  val startDirectDebitRequest =
-    StartDirectDebitRequest("/return/url", "/back/url")
 
   val startDirectDebitResponse = StartDirectDebitResponse("/next-url")
 
