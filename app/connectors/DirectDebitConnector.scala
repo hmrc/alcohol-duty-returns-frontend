@@ -18,7 +18,7 @@ package connectors
 
 import cats.data.EitherT
 import config.FrontendAppConfig
-import models.payments.{StartPaymentRequest, StartPaymentResponse}
+import models.payments.{StartDirectDebitRequest, StartDirectDebitResponse}
 import play.api.Logging
 import play.api.http.Status.CREATED
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
@@ -27,36 +27,36 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
-class PayApiConnector @Inject() (
+class DirectDebitConnector @Inject() (
   config: FrontendAppConfig,
   implicit val httpClient: HttpClient
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances
     with Logging {
 
-  def startPayment(
-    startPaymentRequest: StartPaymentRequest
-  )(implicit hc: HeaderCarrier): EitherT[Future, String, StartPaymentResponse] =
+  def startDirectDebit(
+    startDirectDebitRequest: StartDirectDebitRequest
+  )(implicit hc: HeaderCarrier): EitherT[Future, String, StartDirectDebitResponse] =
     EitherT {
       httpClient
-        .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](
-          url = config.startPaymentUrl,
-          startPaymentRequest
+        .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](
+          url = config.startDirectDebitUrl,
+          startDirectDebitRequest
         )
         .map {
           case Right(response) if response.status == CREATED =>
-            Try(response.json.as[StartPaymentResponse]) match {
-              case Success(data)      => Right[String, StartPaymentResponse](data)
+            Try(response.json.as[StartDirectDebitResponse]) match {
+              case Success(data)      => Right[String, StartDirectDebitResponse](data)
               case Failure(exception) =>
-                logger.warn("Invalid JSON format when starting payment", exception)
-                Left(s"Invalid JSON format  when starting payment. Exception: $exception")
+                logger.warn("Invalid JSON format when starting direct debit", exception)
+                Left(s"Invalid JSON format when starting direct debit. Exception: $exception")
             }
           case Left(errorResponse: UpstreamErrorResponse)    =>
-            logger.warn("Start Payment failed with error. Error response", errorResponse)
-            Left(s"Start Payment failed with error. Error response: ${errorResponse.message}")
+            logger.warn("Start Direct Debit failed with error. Error response", errorResponse)
+            Left(s"Start Direct Debit failed with error. Error response: ${errorResponse.message}")
           case Right(otherStatusResponse)                    =>
-            logger.warn(s"Unexpected status code: ${otherStatusResponse.status}")
-            Left(s"Unexpected status code: ${otherStatusResponse.status}")
+            logger.warn(s"Unexpected status code received when starting direct debit: ${otherStatusResponse.status}")
+            Left(s"Unexpected status code received when starting direct debit: ${otherStatusResponse.status}")
         }
     }
 }

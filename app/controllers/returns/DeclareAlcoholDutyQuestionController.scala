@@ -69,7 +69,8 @@ class DeclareAlcoholDutyQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, regimes.contains(Cider), mode))),
           value =>
             for {
-              updatedAnswers   <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
+
               filterUserAnswer <- Future.fromTry(filterAlcoholDutyQuestionAnswer(updatedAnswers, value))
               _                <- cacheConnector.set(filterUserAnswer)
             } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer))

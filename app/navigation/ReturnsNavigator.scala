@@ -202,8 +202,9 @@ class ReturnsNavigator @Inject() () {
 
   private def declareAlcoholQuestionRoute(userAnswers: UserAnswers, mode: Mode): Call =
     userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
-      case Some(true)  => controllers.returns.routes.AlcoholTypeController.onPageLoad(mode)
-      case Some(false) => routes.TaskListController.onPageLoad
-      case _           => routes.JourneyRecoveryController.onPageLoad()
+      case Some(true) if userAnswers.regimes.regimes.size > 1 =>
+        controllers.returns.routes.AlcoholTypeController.onPageLoad(mode)
+      case Some(_)                                            => routes.TaskListController.onPageLoad
+      case _                                                  => routes.JourneyRecoveryController.onPageLoad()
     }
 }

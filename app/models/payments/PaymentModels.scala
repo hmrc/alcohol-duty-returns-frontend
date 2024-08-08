@@ -66,3 +66,9 @@ object StartPaymentRequest {
       case _                     => throw new RuntimeException("Cannot generate a PaymentStart without any charge reference")
     }
 }
+
+case class StartPaymentResponse(journeyId: String, nextUrl: String)
+
+object StartPaymentResponse {
+  implicit val formats: OFormat[StartPaymentResponse] = Json.format[StartPaymentResponse]
+}

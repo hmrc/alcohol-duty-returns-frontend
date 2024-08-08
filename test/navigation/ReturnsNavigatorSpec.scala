@@ -311,8 +311,8 @@ class ReturnsNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareAlcoholDutyQuestionPage,
           CheckMode,
-          emptyUserAnswers
-        ) mustBe routes.TaskListController.onPageLoad
+          emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
+        ) mustBe controllers.returns.routes.AlcoholTypeController.onPageLoad(NormalMode)
       }
 
       "must go from a page that doesn't exist in the route map to Index with regime" in {

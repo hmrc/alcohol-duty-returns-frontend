@@ -265,5 +265,6 @@ POST       /return-summary                      controllers.checkAndSubmit.DutyD
 
 GET        /return-submitted                    controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
 
-GET        /start-charge-payment                controllers.StartPaymentController.initiateAndRedirect()
+GET        /start-payment                controllers.StartPaymentController.initiateAndRedirect()
+GET        /start-direct-debit                controllers.StartDirectDebitController.initiateAndRedirect()
 # End of check and submit sub-journey
