@@ -92,6 +92,12 @@ class WhatDoYouNeedToDeclareController @Inject() (
                 )
             )
         }
+        .recover(
+          { case e =>
+            logger.warn("Alcohol Type unselected", e)
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          }
+        )
     }
 
   private def getRateBands(
@@ -114,7 +120,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
         } yield rateBands.filter(_.rangeDetails.map(_.alcoholRegime).contains(selectedRegime))
       case (_, _)                =>
         logger.warn("Alcohol Type unselected")
-        Future.failed(new Exception("Alcohol Type unselected"))
+        Future.failed(new RuntimeException("Alcohol Type unselected"))
     }
 
   private def rateBandFromTaxType(rateBandTaxTypes: Set[String], rateBands: Seq[RateBand]): Try[Set[RateBand]] = Try {

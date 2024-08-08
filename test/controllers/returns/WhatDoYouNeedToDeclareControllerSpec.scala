@@ -222,6 +222,29 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
+    "must redirect to JourneyRecoveryController when RateBandsPage and AlcoholTypePage are not defined" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = false)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whatDoYouNeedToDeclareChangeRoute)
+            .withFormUrlEncodedBody(("rateBand[0]", rateBandList.head.taxTypeCode))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
@@ -251,7 +274,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
-    "must throw an exception if an invalid tax type is submitted" in {
+    "must redirect to JourneyRecoveryController if an invalid tax type is submitted" in {
 
       val invalidTaxType = "invalidValue"
 
@@ -267,11 +290,9 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           FakeRequest(POST, whatDoYouNeedToDeclareRoute)
             .withFormUrlEncodedBody((s"rateBand[0]", invalidTaxType))
 
-        route(application, request).value
+        val result = route(application, request).value
 
-        the[Exception] thrownBy status(
-          route(application, request).value
-        ) must have message s"Invalid tax type: $invalidTaxType"
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
