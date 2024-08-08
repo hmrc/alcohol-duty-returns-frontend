@@ -106,7 +106,7 @@ class ReturnTaskListCreator @Inject() () {
         )
     }
 
-  private def returnJourneyTaskListItem(userAnswers: UserAnswers)(implicit
+  private def returnsAlcoholByRegimesTask(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Seq[TaskListItem] =
     for (
@@ -307,13 +307,65 @@ class ReturnTaskListCreator @Inject() () {
     )
   }
 
-  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
-    createSection(
-      userAnswers.get(DeclareAlcoholDutyQuestionPage),
-      () => returnJourneyTaskListItem(userAnswers),
-      controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(_).url,
-      sectionName = "returns"
+  def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
+    val taskListItems = (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholTypePage)) match {
+      case (Some(true), Some(_)) =>
+        val declareAlcoholQuestionTask =
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(
+              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          )
+        declareAlcoholQuestionTask +: returnsAlcoholByRegimesTask(userAnswers)
+      case (Some(true), None)    =>
+        Seq(
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
+            status = AlcholDutyTaskListItemStatus.inProgress,
+            href = Some(
+              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          )
+        )
+      case (Some(false), _)      =>
+        Seq(
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.no"))),
+            status = AlcholDutyTaskListItemStatus.completed,
+            href = Some(
+              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          )
+        )
+
+      case (_, _) =>
+        Seq(
+          TaskListItem(
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.notStarted"))),
+            status = AlcholDutyTaskListItemStatus.notStarted,
+            href = Some(
+              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+                .onPageLoad(CheckMode)
+                .url
+            )
+          )
+        )
+    }
+
+    Section(
+      title = messages(s"taskList.section.returns.heading"),
+      taskList = TaskList(items = taskListItems),
+      statusCompleted = AlcholDutyTaskListItemStatus.completed
     )
+  }
 
   def returnAdjustmentSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
     val overDeclarationTotal   = userAnswers.get(OverDeclarationTotalPage).getOrElse(BigDecimal(0))
