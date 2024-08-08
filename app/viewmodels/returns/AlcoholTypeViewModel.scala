@@ -24,7 +24,7 @@ import viewmodels.AlcoholRegimesViewOrder.regimesInViewOrder
 import viewmodels.govuk.checkbox._
 
 object AlcoholTypeViewModel {
-  
+
   def checkboxItems(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[CheckboxItem] = {
     val orderedRegimes = regimesInViewOrder(regimes)
     orderedRegimes.zipWithIndex.map { case (value, index) =>

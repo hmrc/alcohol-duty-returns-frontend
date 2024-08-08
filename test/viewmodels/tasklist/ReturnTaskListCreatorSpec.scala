@@ -18,11 +18,12 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import models.adjustment.AdjustmentEntry
+import models.returns.{AlcoholDuty, DutyByTaxType}
 import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended._
-import pages.returns.{AlcoholTypePage, DeclareAlcoholDutyQuestionPage}
+import pages.returns.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions._
 import play.api.Application
 import play.api.i18n.Messages
@@ -104,7 +105,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
 
         result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe AlcoholRegime.values.size + 1
+        result.taskList.items.size               shouldBe AlcoholRegime.values.toSet.size + 1
         result.title                             shouldBe messages("taskList.section.returns.heading")
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
@@ -126,6 +127,103 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           }
         )
       }
+
+      "when return data is filled in it must return a completed section" in {
+
+        val regime          = regimeGen.sample.value
+        val rateBands       = genListOfRateBandForRegime(regime).sample.value.toSet
+        val volumesAndRates = arbitraryVolumeAndRateByTaxType(
+          rateBands.toSeq
+        ).arbitrary.sample.value
+
+        val dutiesByTaxType = volumesAndRates.map { volumeAndRate =>
+          val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
+          DutyByTaxType(
+            taxType = volumeAndRate.taxType,
+            totalLitres = volumeAndRate.totalLitres,
+            pureAlcohol = volumeAndRate.pureAlcohol,
+            dutyRate = volumeAndRate.dutyRate,
+            dutyDue = totalDuty
+          )
+        }
+
+        val alcoholDuty = AlcoholDuty(
+          dutiesByTaxType = dutiesByTaxType,
+          totalDuty = dutiesByTaxType.map(_.dutyDue).sum
+        )
+
+        val result = returnTaskListCreator.returnSection(
+          declaredAlcoholDutyUserAnswer
+            .setByKey(AlcoholDutyPage, regime, alcoholDuty)
+            .success
+            .value
+            .set(AlcoholTypePage, Set(regime))
+            .success
+            .value
+        )
+
+        result.completedTask                     shouldBe true
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.returns.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.returns.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items
+          .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
+          case Some(task) =>
+            task.status shouldBe AlcholDutyTaskListItemStatus.completed
+            task.href   shouldBe Some(
+              controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url
+            )
+          case None       => fail(s"Task for regime $regime not found")
+        }
+
+      }
+
+      "when return data is not completely filled in it must return an In progress section" in {
+
+        val regime = regimeGen.sample.value
+
+        val rateBandList = genListOfRateBandForRegime(regime).sample.value
+
+        val result = returnTaskListCreator.returnSection(
+          declaredAlcoholDutyUserAnswer
+            .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet)
+            .success
+            .value
+            .set(AlcoholTypePage, Set(regime))
+            .success
+            .value
+        )
+
+        result.completedTask                     shouldBe false
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.returns.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.returns.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items
+          .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
+          case Some(task) =>
+            task.status shouldBe AlcholDutyTaskListItemStatus.inProgress
+            task.href   shouldBe Some(
+              controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+            )
+          case None       => fail(s"Task for regime $regime not found")
+        }
+
+      }
+
     }
   }
 
