@@ -21,29 +21,24 @@ import cats.data.EitherT
 import config.Constants.adrReturnCreatedDetails
 import connectors.PayApiConnector
 import models.checkAndSubmit.AdrReturnCreatedDetails
-import models.payments.{StartPaymentRequest, StartPaymentResponse}
+import models.payments.StartPaymentResponse
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.SEE_OTHER
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 
-import java.time.{Instant, LocalDate}
+import java.time.Instant
 
 class StartPaymentControllerSpec extends SpecBase {
 
-  val startPaymentRequest =
-    StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
-
   val startPaymentResponse = StartPaymentResponse("journey-id", "/next-url")
-
-  val currentDate = LocalDate.now()
 
   val returnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
-    chargeReference = Some("XA1527404500736"),
-    paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+    chargeReference,
+    paymentDueDate
   )
 
   "StartPayment Controller" - {

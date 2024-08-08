@@ -22,27 +22,25 @@ import models.checkAndSubmit.AdrReturnCreatedDetails
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.{JsResultException, Json}
 
-import java.time.{Instant, LocalDate}
+import java.time.Instant
 
 class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerators {
 
   val startPaymentRequest =
     StartPaymentRequest("referenceNumber", BigInt(1045), "XA1527404500736", "/return/url", "/back/url")
 
-  val currentDate = LocalDate.now()
-
   val returnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
-    chargeReference = Some("XA1527404500736"),
-    paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+    chargeReference,
+    paymentDueDate
   )
 
   val missingReturnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
     chargeReference = None,
-    paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+    paymentDueDate
   )
 
   val startPaymentRequestJson = Json.obj(

@@ -279,4 +279,9 @@ trait TestData extends ModelGenerators {
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 7, 30), periodKey = "24AF"),
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 5, 30), periodKey = "24AD")
   )
+
+  val chargeReference = Some("XA1527404500736")
+
+  val currentDate    = LocalDate.now()
+  val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
 }
