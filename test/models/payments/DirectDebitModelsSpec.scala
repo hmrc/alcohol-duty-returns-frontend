@@ -26,8 +26,8 @@ class DirectDebitModelsSpec extends SpecBase with Matchers with ModelGenerators 
     StartDirectDebitRequest("/return/url", "/back/url")
 
   val startDirectDebitRequestJson = Json.obj(
-    "returnUrl"             -> "/return/url",
-    "backUrl"               -> "/back/url"
+    "returnUrl" -> "/return/url",
+    "backUrl"   -> "/back/url"
   )
 
   ".formats writes" - {
