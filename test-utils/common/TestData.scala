@@ -20,6 +20,7 @@ import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
 import models.{AlcoholRegimes, ObligationData, ObligationStatus, ReturnId, ReturnPeriod, UserAnswers}
+import org.scalacheck.Gen.{listOfN, numChar}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
@@ -279,4 +280,9 @@ trait TestData extends ModelGenerators {
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 7, 30), periodKey = "24AF"),
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 5, 30), periodKey = "24AD")
   )
+
+  val chargeReference = "XA" + listOfN(10, numChar).sample.get.toString()
+
+  val currentDate    = LocalDate.now()
+  val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
 }
