@@ -28,7 +28,7 @@ import pages.returns._
 class ReturnsNavigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case DeclareAlcoholDutyQuestionPage => _ => routes.TaskListController.onPageLoad
+    case DeclareAlcoholDutyQuestionPage => userAnswers => declareAlcoholQuestionRoute(userAnswers, NormalMode)
     case _                              => _ => routes.IndexController.onPageLoad
   }
 
@@ -169,7 +169,8 @@ class ReturnsNavigator @Inject() () {
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
-    case pages.returns.DeclareAlcoholDutyQuestionPage => _ => _ => routes.TaskListController.onPageLoad
+    case pages.returns.DeclareAlcoholDutyQuestionPage =>
+      userAnswers => _ => declareAlcoholQuestionRoute(userAnswers, CheckMode)
     case _                                            => _ => _ => routes.IndexController.onPageLoad
   }
 
@@ -198,4 +199,12 @@ class ReturnsNavigator @Inject() () {
     case CheckMode  =>
       checkRouteMap(page)(userAnswers)(hasAnswerChanged)
   }
+
+  private def declareAlcoholQuestionRoute(userAnswers: UserAnswers, mode: Mode): Call =
+    userAnswers.get(DeclareAlcoholDutyQuestionPage) match {
+      case Some(true) if userAnswers.regimes.regimes.size > 1 =>
+        controllers.returns.routes.AlcoholTypeController.onPageLoad(mode)
+      case Some(_)                                            => routes.TaskListController.onPageLoad
+      case _                                                  => routes.JourneyRecoveryController.onPageLoad()
+    }
 }
