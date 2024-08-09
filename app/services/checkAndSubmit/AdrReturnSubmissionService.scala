@@ -50,7 +50,8 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       dutyDeclared  <- getDutyDeclared(userAnswers)
       adjustments   <- getAdjustments(userAnswers)
       dutySuspended <- getDutySuspended(userAnswers)
-      spirits       <- if (returnPeriod.hasQuarterlySpirits) getSpirits(userAnswers) else EitherT.rightT[Future, String](None)
+      spirits       <- if (userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits) getSpirits(userAnswers)
+                       else EitherT.rightT[Future, String](None)
       totals        <- getTotals(userAnswers)
     } yield AdrReturnSubmission(
       dutyDeclared = dutyDeclared,

@@ -41,6 +41,10 @@ POST       /do-you-need-to-declare-duty                        controllers.retur
 GET        /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
 
+GET        /which-types-do-you-need-to-declare                        controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /which-types-do-you-need-to-declare                        controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-which-types-do-you-need-to-declare                  controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-which-types-do-you-need-to-declare                  controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = CheckMode)
 
 GET        /what-do-you-need-to-declare/:regime                controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
 POST       /what-do-you-need-to-declare/:regime                controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
@@ -261,5 +265,6 @@ POST       /return-summary                      controllers.checkAndSubmit.DutyD
 
 GET        /return-submitted                    controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
 
-GET        /start-charge-payment                controllers.StartPaymentController.initiateAndRedirect()
+GET        /start-payment                controllers.StartPaymentController.initiateAndRedirect()
+GET        /start-direct-debit                controllers.StartDirectDebitController.initiateAndRedirect()
 # End of check and submit sub-journey

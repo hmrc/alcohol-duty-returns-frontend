@@ -19,7 +19,8 @@ package controllers.returns
 import base.SpecBase
 import connectors.CacheConnector
 import forms.returns.DeclareAlcoholDutyQuestionFormProvider
-import models.NormalMode
+import models.AlcoholRegime.Beer
+import models.{AlcoholRegimes, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.returns.DeclareAlcoholDutyQuestionPage
@@ -88,6 +89,33 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, declareAlcoholDutyQuestionRoute)
+            .withFormUrlEncodedBody(("declareAlcoholDutyQuestion-yesNoValue", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted and user is approved for a single regime" in {
+
+      val userAnswers        = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[CacheConnector].toInstance(mockCacheConnector)

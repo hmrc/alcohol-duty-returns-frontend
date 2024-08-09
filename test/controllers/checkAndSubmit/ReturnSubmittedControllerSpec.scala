@@ -27,13 +27,11 @@ import java.time.{Instant, LocalDate}
 
 class ReturnSubmittedControllerSpec extends SpecBase {
 
-  val currentDate = LocalDate.now()
-
   val returnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
-    chargeReference = Some("XA1527404500736"),
-    paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+    Some(chargeReference),
+    paymentDueDate
   )
 
   val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]

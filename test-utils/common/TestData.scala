@@ -22,13 +22,14 @@ import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.returns.AdrUnitOfMeasure.Tonnes
 import models.returns._
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholRegimes, AlcoholType, ObligationData, ObligationStatus, RangeDetailsByRegime, RateBand, RateType, ReturnId, ReturnPeriod, UserAnswers}
+import models._
 import org.scalacheck.Gen
 import pages.adjustment._
 import pages.dutySuspended._
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.spiritsQuestions._
 import play.api.libs.json.Json
+import org.scalacheck.Gen.{listOfN, numChar}
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
@@ -291,6 +292,11 @@ trait TestData extends ModelGenerators {
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 7, 30), periodKey = "24AF"),
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 5, 30), periodKey = "24AD")
   )
+
+  val chargeReference = "XA" + listOfN(10, numChar).sample.get.toString()
+
+  val currentDate    = LocalDate.now()
+  val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
 
   val nilReturn = AdrReturnSubmission(
     dutyDeclared = AdrDutyDeclared(false, Nil),
