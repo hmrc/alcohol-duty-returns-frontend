@@ -23,7 +23,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.RecoverMethods.recoverToExceptionIf
 import org.scalatest.concurrent.ScalaFutures
-import play.api.http.Status.{BAD_REQUEST, CREATED, OK}
+import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, NOT_FOUND, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
 
@@ -94,8 +94,8 @@ class DirectDebitConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "fail when an invalid status code is returned" in {
-      val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
+    "fail when Start Direct Debit returns an error" in {
+      val upstreamErrorResponse = Future.successful(Right(HttpResponse(BAD_GATEWAY, "")))
       when(mockConfig.startDirectDebitUrl).thenReturn(mockUrl)
       when(
         connector.httpClient
@@ -106,7 +106,7 @@ class DirectDebitConnectorSpec extends SpecBase with ScalaFutures {
             any()
           )
       )
-        .thenReturn(invalidStatusCodeResponse)
+        .thenReturn(upstreamErrorResponse)
       recoverToExceptionIf[Exception] {
         connector.startDirectDebit(startDirectDebitRequest).value
       } map { ex =>
