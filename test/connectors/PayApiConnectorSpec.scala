@@ -23,7 +23,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.RecoverMethods.recoverToExceptionIf
 import org.scalatest.concurrent.ScalaFutures
-import play.api.http.Status.{BAD_REQUEST, CREATED, OK}
+import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
 
@@ -84,6 +84,33 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
         connector.startPayment(startPaymentRequest).value
       } map { ex =>
         ex.getMessage must include("Invalid JSON format")
+        verify(connector.httpClient, atLeastOnce)
+          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
+      }
+    }
+
+    "fail when Start Payment returns an error" in {
+      val upstreamErrorResponse = Future.successful(Right(HttpResponse(BAD_GATEWAY, "")))
+      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
+      when(
+        connector.httpClient
+          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
+      )
+        .thenReturn(upstreamErrorResponse)
+      recoverToExceptionIf[Exception] {
+        connector.startPayment(startPaymentRequest).value
+      } map { ex =>
+        ex.getMessage must include("Start Payment failed")
         verify(connector.httpClient, atLeastOnce)
           .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
             any(),
