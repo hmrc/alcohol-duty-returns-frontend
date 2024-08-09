@@ -88,9 +88,9 @@ object MultipleSPRListHelper {
       TableRowViewModel(
         cells = Seq(
           TableRow(Text(rateBandRecap(sprEntry.rateBand))),
-          TableRow(Text(messages("multipleSPRList.totalLitres.value", sprEntry.dutyByTaxType.totalLitres))),
-          TableRow(Text(messages("multipleSPRList.pureAlcohol.value", sprEntry.dutyByTaxType.pureAlcohol))),
-          TableRow(Text(messages("multipleSPRList.dutyRate.value", sprEntry.dutyByTaxType.dutyRate)))
+          TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres))),
+          TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol))),
+          TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)))
         ),
         actions = Seq(
           TableRowActionViewModel(
