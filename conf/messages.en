@@ -478,14 +478,10 @@ multipleSPRList.error.required = Select yes if you have more than one Small Prod
 multipleSPRList.change.hidden = MultipleSPRList
 
 multipleSPRList.description.label = Description
-multipleSPRList.totalLitres.label = Total volume declared
-multipleSPRList.pureAlcohol.label = Pure alcohol declared
-multipleSPRList.dutyRate.label = SPR duty rate
+multipleSPRList.totalLitres.label = Total volume declared (litres)
+multipleSPRList.pureAlcohol.label = Pure alcohol declared (lpa)
+multipleSPRList.dutyRate.label = SPR duty rate (per litre)
 multipleSPRList.action.label = Action
-
-multipleSPRList.totalLitres.value = {0}l
-multipleSPRList.pureAlcohol.value = {0} Lpa
-multipleSPRList.dutyRate.value = £{0,number,#,##0.00} per litre
 
 checkYourAnswersLabel.row.totalLitres = Total volume
 checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
