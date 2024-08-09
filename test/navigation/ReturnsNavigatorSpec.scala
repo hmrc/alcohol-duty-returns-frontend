@@ -18,7 +18,8 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.{CheckMode, NormalMode}
+import models.AlcoholRegime.Beer
+import models.{AlcoholRegimes, CheckMode, NormalMode}
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages.Page
 import pages.returns.DeclareAlcoholDutyQuestionPage
@@ -54,6 +55,19 @@ class ReturnsNavigatorSpec extends SpecBase {
           DeclareAlcoholDutyQuestionPage,
           NormalMode,
           emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
+        ) mustBe controllers.returns.routes.AlcoholTypeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Alcohol to declare to task list page if the user has only 1 approval" in {
+
+        navigator.nextPage(
+          pages.returns.DeclareAlcoholDutyQuestionPage,
+          NormalMode,
+          emptyUserAnswers
+            .copy(regimes = AlcoholRegimes(Set(Beer)))
+            .set(pages.returns.DeclareAlcoholDutyQuestionPage, true)
+            .success
+            .value
         ) mustBe routes.TaskListController.onPageLoad
       }
 
@@ -311,7 +325,28 @@ class ReturnsNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareAlcoholDutyQuestionPage,
           CheckMode,
+          emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
+        ) mustBe controllers.returns.routes.AlcoholTypeController.onPageLoad(CheckMode)
+      }
+
+      "must go from DeclareAlcoholDutyQuestion page to the Task List page when answer is No" in {
+        navigator.nextPage(
+          DeclareAlcoholDutyQuestionPage,
+          CheckMode,
+          emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, false).success.value
+        ) mustBe routes.TaskListController.onPageLoad
+      }
+
+      "must go from the Alcohol to declare to task list page if the user has only 1 approval in CheckMode" in {
+
+        navigator.nextPage(
+          pages.returns.DeclareAlcoholDutyQuestionPage,
+          CheckMode,
           emptyUserAnswers
+            .copy(regimes = AlcoholRegimes(Set(Beer)))
+            .set(pages.returns.DeclareAlcoholDutyQuestionPage, true)
+            .success
+            .value
         ) mustBe routes.TaskListController.onPageLoad
       }
 

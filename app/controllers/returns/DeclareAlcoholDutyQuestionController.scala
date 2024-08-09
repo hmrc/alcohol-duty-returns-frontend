@@ -22,7 +22,7 @@ import forms.returns.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegime, Mode, UserAnswers}
 import navigation.ReturnsNavigator
-import pages.returns.{DeclareAlcoholDutyQuestionPage, sectionPages}
+import pages.returns.{AlcoholTypePage, DeclareAlcoholDutyQuestionPage, sectionPages}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -69,14 +69,22 @@ class DeclareAlcoholDutyQuestionController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, regimes.contains(Cider), mode))),
           value =>
             for {
-              updatedAnswers   <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
-              filterUserAnswer <- Future.fromTry(filterAlcoholDutyQuestionAnswer(updatedAnswers, value))
-              _                <- cacheConnector.set(filterUserAnswer)
+              updatedAnswers                <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
+              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(updatedAnswers))
+              filterUserAnswer              <- Future.fromTry(filterAlcoholDutyQuestionAnswer(singleRegimeUpdatedUserAnswer, value))
+              _                             <- cacheConnector.set(filterUserAnswer)
             } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer))
         )
   }
 
-  def filterAlcoholDutyQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
+  private def checkIfOneRegimeAndUpdateUserAnswer(userAnswer: UserAnswers): Try[UserAnswers] =
+    if (userAnswer.regimes.regimes.size == 1) {
+      userAnswer.set(AlcoholTypePage, userAnswer.regimes.regimes)
+    } else {
+      Try(userAnswer)
+    }
+
+  private def filterAlcoholDutyQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
     if (value) {
       Try(userAnswer)
     } else {
