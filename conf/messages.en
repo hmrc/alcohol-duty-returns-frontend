@@ -24,6 +24,7 @@ site.unit.litre.unit = l
 site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
+site.4DP = {0,number,#,###.####}
 site.currency.2DP = £{0,number,#,##0.00}
 site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
@@ -483,7 +484,7 @@ multipleSPRList.dutyRate.label = SPR duty rate
 multipleSPRList.action.label = Action
 
 multipleSPRList.totalLitres.value = {0}l
-multipleSPRList.pureAlcohol.value = {0} Lpa
+multipleSPRList.pureAlcohol.value = {0,number,#,##0.0000} Lpa
 multipleSPRList.dutyRate.value = £{0,number,#,##0.00} per litre
 
 checkYourAnswersLabel.row.totalLitres = Total volume
@@ -512,13 +513,10 @@ dutyCalculation.list = multiplying the volume of pure alcohol you entered by its
 dutyCalculation.h2 = Duty due
 
 dutyCalculation.table.description = Description
-dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol
-dutyCalculation.table.dutyRate = Duty rate
+dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol (lpa)
+dutyCalculation.table.dutyRate = Duty rate (per litre)
 dutyCalculation.table.dutyDue = Duty due
 dutyCalculation.table.action = Action
-
-dutyCalculation.pureAlcohol.value = {0} Lpa
-dutyCalculation.dutyRate.value = £{0,number,#,##0.00} per litre
 
 # old return journey
 
