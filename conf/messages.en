@@ -484,7 +484,7 @@ multipleSPRList.dutyRate.label = SPR duty rate
 multipleSPRList.action.label = Action
 
 multipleSPRList.totalLitres.value = {0}l
-multipleSPRList.pureAlcohol.value = {0,number,#,##0.0000} Lpa
+multipleSPRList.pureAlcohol.value = {0} Lpa
 multipleSPRList.dutyRate.value = £{0,number,#,##0.00} per litre
 
 checkYourAnswersLabel.row.totalLitres = Total volume
