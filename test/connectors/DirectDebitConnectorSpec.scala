@@ -94,6 +94,33 @@ class DirectDebitConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
+    "fail when an invalid status code is returned" in {
+      val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
+      when(mockConfig.startDirectDebitUrl).thenReturn(mockUrl)
+      when(
+        connector.httpClient
+          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
+      )
+        .thenReturn(invalidStatusCodeResponse)
+      recoverToExceptionIf[Exception] {
+        connector.startDirectDebit(startDirectDebitRequest).value
+      } map { ex =>
+        ex.getMessage must include("Start Direct Debit failed")
+        verify(connector.httpClient, atLeastOnce)
+          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
+            any(),
+            any(),
+            any(),
+            any()
+          )
+      }
+    }
+
     "fail when an unexpected status code is returned" in {
       val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
       when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
