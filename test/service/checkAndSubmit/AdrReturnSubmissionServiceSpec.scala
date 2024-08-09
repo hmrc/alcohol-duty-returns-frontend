@@ -21,12 +21,13 @@ import common.TestData
 import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.AdjustmentDuty
-import models.returns.AdrSpirits
+import models.returns.{AdrAdjustments, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsProduced, AdrTotals}
+import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, GrainsUsed}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
+import pages.dutySuspended._
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage}
 import queries.Settable
 import services.checkAndSubmit.AdrReturnSubmissionServiceImpl
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -50,7 +51,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
     val quarterlySpiritsReturnPeriod    = quarterReturnPeriodGen.sample.value
 
     "Nil return" - {
-      "must return the correct return submission when for a Nil return" in {
+      "must return the valid return submission when for a Nil return" in {
         val userAnswers = emptyUserAnswers
           .set(DeclareAlcoholDutyQuestionPage, false)
           .success
@@ -69,7 +70,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         }
       }
 
-      "must return the correct return submission when for a Nil return with Quarterly Spirits" in {
+      "must return the valid return submission when for a Nil return with Quarterly Spirits" in {
         val userAnswers = emptyUserAnswers
           .set(DeclareAlcoholDutyQuestionPage, false)
           .success
@@ -93,7 +94,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
 
     "Full return" - {
 
-      "must return the correct return submission when for a return is passed" in {
+      "must return the valid return submission when for a return is passed" in {
         whenReady(
           adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
         ) { result =>
@@ -101,7 +102,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         }
       }
 
-      "must return the correct return submission without Spirits if the return period is not a quarter return" in {
+      "must return the valid return submission without Spirits if the return period is not a quarter return" in {
         val expectedReturn = fullReturn.copy(spirits = None)
 
         whenReady(
@@ -110,6 +111,134 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           result mustBe Right(expectedReturn)
         }
       }
+
+      "must return the valid return submission if one adjustment type is not filled" in {
+        val drawbackAdjustmentIndex = 5
+        val userAnswers             =
+          fullUserAnswers.removeBySeqIndex(AdjustmentEntryListPage, drawbackAdjustmentIndex).success.value
+
+        val adjustments: AdrAdjustments = fullReturn.adjustments.copy(
+          drawbackDeclared = false,
+          drawbackProducts = Nil
+        )
+
+        val totals: AdrTotals = AdrTotals(
+          declaredDutyDue = 1748.2,
+          overDeclaration = -1854,
+          underDeclaration = 1019.7,
+          spoiltProduct = -92.7,
+          drawback = 0,
+          repackagedDraught = 606,
+          totalDutyDue = 1427.2
+        )
+
+        val expectedReturn = fullReturn.copy(adjustments = adjustments, totals = totals)
+
+        whenReady(
+          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+        ) { result =>
+          result mustBe Right(expectedReturn)
+        }
+
+      }
+
+      "must return the valid return submission if there are no repackage adjustments" in {
+        val repackagedAdjustmentIndex = 3
+        val userAnswers               =
+          fullUserAnswers.removeBySeqIndex(AdjustmentEntryListPage, repackagedAdjustmentIndex).success.value
+
+        val adjustments: AdrAdjustments = fullReturn.adjustments.copy(
+          repackagedDraughtDeclared = false,
+          repackagedDraughtProducts = Nil
+        )
+
+        val totals: AdrTotals = AdrTotals(
+          declaredDutyDue = 1748.2,
+          overDeclaration = -1854,
+          underDeclaration = 1019.7,
+          spoiltProduct = -92.7,
+          drawback = -194.67,
+          repackagedDraught = 0,
+          totalDutyDue = 626.53
+        )
+
+        val expectedReturn = fullReturn.copy(adjustments = adjustments, totals = totals)
+
+        whenReady(
+          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+        ) { result =>
+          result mustBe Right(expectedReturn)
+        }
+      }
+
+      "must return the valid return submission if the users didn't selected any 'other malted grains'" in {
+        val grainsUsed  = GrainsUsed(
+          maltedBarleyQuantity = BigDecimal(1111),
+          wheatQuantity = BigDecimal(2222),
+          maizeQuantity = BigDecimal(3333),
+          ryeQuantity = BigDecimal(4444),
+          unmaltedGrainQuantity = BigDecimal(5555),
+          usedMaltedGrainNotBarley = false
+        )
+        val userAnswers = fullUserAnswers
+          .set(GrainsUsedPage, grainsUsed)
+          .success
+          .value
+          .remove(OtherMaltedGrainsPage)
+          .success
+          .value
+
+        val adrSpiritsGrainsQuantities: AdrSpiritsGrainsQuantities =
+          fullReturn.spirits.get.spiritsProduced.get.grainsQuantities.copy(
+            otherMaltedGrain = None
+          )
+
+        val adrSpiritsProduced: AdrSpiritsProduced = fullReturn.spirits.get.spiritsProduced.get.copy(
+          hasOtherMaltedGrain = false,
+          otherMaltedGrainType = None,
+          grainsQuantities = adrSpiritsGrainsQuantities
+        )
+
+        val spirits: AdrSpirits = fullReturn.spirits.get.copy(spiritsProduced = Some(adrSpiritsProduced))
+        val expectedReturn      = fullReturn.copy(spirits = Some(spirits))
+
+        whenReady(
+          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+        ) { result =>
+          result mustBe Right(expectedReturn)
+        }
+
+      }
+
+      "must return the valid return submission if the users didn't selected any 'other ingredients' in the spirits journey" in {
+        val ethyleneGasOrMolassesUsed = EthyleneGasOrMolassesUsed(
+          ethyleneGas = BigDecimal(6666),
+          molasses = BigDecimal(7777),
+          otherIngredients = false
+        )
+        val userAnswers               = fullUserAnswers
+          .set(EthyleneGasOrMolassesUsedPage, ethyleneGasOrMolassesUsed)
+          .success
+          .value
+          .remove(OtherIngredientsUsedPage)
+          .success
+          .value
+
+        val adrSpiritsProduced: AdrSpiritsProduced = fullReturn.spirits.get.spiritsProduced.get.copy(
+          otherIngredient = None
+        )
+
+        val spirits: AdrSpirits = fullReturn.spirits.get.copy(spiritsProduced = Some(adrSpiritsProduced))
+        val expectedReturn      = fullReturn.copy(spirits = Some(spirits))
+
+        whenReady(
+          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+        ) { result =>
+          result mustBe Right(expectedReturn)
+        }
+
+      }
+
     }
 
     "Errors for missing data" - {
@@ -200,6 +329,20 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
                 _ => fail()
               )
             }
+          }
+        }
+
+        "must return Left if OtherMaltedGrains is not populated but the producer answered 'yes' into the GrainsUsed page for otherMaltedGrain" - {
+          val userAnswers = fullUserAnswers.remove(OtherMaltedGrainsPage).success.value
+
+          whenReady(
+            adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+          ) { result =>
+            result.isLeft mustBe true
+            result.fold(
+              errorMessage => errorMessage must include("Other malted grain value not found"),
+              _ => fail()
+            )
           }
         }
 

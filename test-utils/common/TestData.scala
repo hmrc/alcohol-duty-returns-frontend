@@ -438,10 +438,9 @@ trait TestData extends ModelGenerators {
           "adjustmentType"     -> "under-declaration",
           "period"             -> "2023-12",
           "rateBand"           -> Json.obj(
-            "taxTypeCode"  -> "311",
-            "description"  -> "Beer from 1.3% to 3.4%",
-            "rateType"     -> "Core",
-            "rate"         -> 9.27,
+            "taxTypeCode"  -> "371",
+            "description"  -> "Beer to 3.4%, eligible for small producer relief and draught relief",
+            "rateType"     -> "DraughtAndSmallProducerRelief",
             "rangeDetails" -> Json.arr(
               Json.obj(
                 "alcoholRegime" -> "Beer",
@@ -457,6 +456,7 @@ trait TestData extends ModelGenerators {
           ),
           "totalLitresVolume"  -> 100,
           "pureAlcoholVolume"  -> 10,
+          "sprDutyRate"        -> 9.27,
           "duty"               -> 92.7
         ),
         Json.obj(
@@ -677,7 +677,7 @@ trait TestData extends ModelGenerators {
         Some("Reason for under declaration"),
         List(
           AdrAdjustmentItem("23AL", AdrAlcoholQuantity(1000, 100), AdrDuty("311", 9.27, 927)),
-          AdrAdjustmentItem("23AL", AdrAlcoholQuantity(100, 10), AdrDuty("311", 9.27, 92.7))
+          AdrAdjustmentItem("23AL", AdrAlcoholQuantity(100, 10), AdrDuty("371", 9.27, 92.7))
         ),
         true,
         List(AdrAdjustmentItem("24AC", AdrAlcoholQuantity(100, 10), AdrDuty("314", 9.27, -92.7))),
