@@ -80,7 +80,10 @@ object TellUsAboutMultipleSPRRateSummary {
                 key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.label",
                 value = ValueViewModel(
                   HtmlContent(
-                    messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value", answer.pureAlcohol)
+                    messages(
+                      "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value",
+                      messages("site.4DP", answer.pureAlcohol)
+                    )
                   )
                 ),
                 actions = actions(
