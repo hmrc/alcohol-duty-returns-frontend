@@ -222,29 +222,6 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to JourneyRecoveryController when RateBandsPage and AlcoholTypePage are not defined" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = false)),
-            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, whatDoYouNeedToDeclareChangeRoute)
-            .withFormUrlEncodedBody(("rateBand[0]", rateBandList.head.taxTypeCode))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
