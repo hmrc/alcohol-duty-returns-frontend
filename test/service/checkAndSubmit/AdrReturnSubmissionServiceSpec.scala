@@ -247,12 +247,12 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           DeclareAlcoholDutyQuestionPage,
           AlcoholDutyPage
         ).foreach { page =>
-          s"must return Left if ${page.toString} is not present" in {
+          s"must return Left if $page is not present" in {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
             ) { result =>
-              result mustBe Left(s"Value not found for page: ${page.toString}")
+              result mustBe Left(s"Value not found for page: $page")
             }
           }
         }
@@ -263,12 +263,12 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           DeclareAdjustmentQuestionPage,
           AdjustmentEntryListPage
         ).foreach { page: Settable[_] =>
-          s"must return Left if ${page.toString} is not present" in {
+          s"must return Left if $page is not present" in {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
             ) { result =>
-              result mustBe Left(s"Value not found for page: ${page.toString}")
+              result mustBe Left(s"Value not found for page: $page")
             }
           }
         }
@@ -357,12 +357,12 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           DutySuspendedWinePage,
           DutySuspendedOtherFermentedPage
         ).foreach { page: Settable[_] =>
-          s"must return Left if ${page.toString} is not present" in {
+          s"must return Left if $page is not present" in {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
             ) { result =>
-              result mustBe Left(s"Value not found for page: ${page.toString}")
+              result mustBe Left(s"Value not found for page: $page")
             }
           }
         }
@@ -372,12 +372,12 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         Seq(
           DeclareQuarterlySpiritsPage
         ).foreach { page =>
-          s"must return Left if ${page.toString} is not present" in {
+          s"must return Left if $page is not present" in {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
             ) { result =>
-              result mustBe Left(s"Value not found for page: ${page.toString}")
+              result mustBe Left(s"Value not found for page: $page")
             }
           }
         }
