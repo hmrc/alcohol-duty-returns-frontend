@@ -17,6 +17,7 @@
 @import components.{SectionHeading, PageHeading, Paragraph, Link, SubHeading}
 @import java.time.{Instant, LocalDate}
 @import models.checkAndSubmit.AdrReturnCreatedDetails
+@import viewmodels.Money
 
 @this(
         layout: templates.Layout,
@@ -33,7 +34,7 @@
 
 @posPanelContent = {
     @paragraph(messages("returnSubmitted.panel.body.reference", returnDetails.chargeReference.get.value), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} £${messages("site.2DP", returnDetails.amount)}", classes = "")
+    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} ${messages(Money.format(returnDetails.amount))}", classes = "")
 }
 
 @nilPanelContent = {
@@ -42,7 +43,7 @@
 
 @negPanelContent = {
     @paragraph(messages("returnSubmitted.panel.body.reference", returnDetails.chargeReference.get.value), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.dutyOwed")} £${messages("site.2DP", returnDetails.amount)}", classes = "")
+    @paragraph(s"${messages("returnSubmitted.panel.body.dutyOwed")} ${messages(Money.format(returnDetails.amount))}", classes = "")
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 
