@@ -49,7 +49,7 @@
 
     @if(adjustmentType != RepackagedDraughtProducts) {
         @bulletList(Seq(
-        messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
+        messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume)),
         messages("adjustmentDutyDue.bulletList.2", Money.format(rate)),
         messages("adjustmentDutyDue.bulletList.3", Money.format(duty))
         ))
@@ -58,7 +58,7 @@
     @if(adjustmentType == RepackagedDraughtProducts) {
         @bulletList(Seq(
         messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate)),
-        messages("adjustmentDutyDue.bulletList.1", pureAlcoholVolume),
+        messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume)),
         messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(duty)),
         messages("adjustmentDutyDue.repackaged.bulletList.3", Money.format(duty)),
         messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate)),
