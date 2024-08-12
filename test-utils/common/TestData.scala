@@ -16,11 +16,20 @@
 
 package common
 
+import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
-import models.{AlcoholRegimes, ObligationData, ObligationStatus, ReturnId, ReturnPeriod, UserAnswers}
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import models.returns.AdrUnitOfMeasure.Tonnes
+import models.returns._
+import models._
+import org.scalacheck.Gen
+import pages.adjustment._
+import pages.dutySuspended._
+import pages.spiritsQuestions._
+import play.api.libs.json.Json
 import org.scalacheck.Gen.{listOfN, numChar}
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
@@ -69,6 +78,9 @@ trait TestData extends ModelGenerators {
       ReturnPeriod(YearMonth.of(2024, Month.OCTOBER)),
       ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER))
     )
+
+  val nonQuarterReturnPeriodGen = Gen.oneOf(nonQuarterPeriodKeys.toSeq)
+  val quarterReturnPeriodGen    = Gen.oneOf(quarterPeriodKeys.toSeq)
 
   val returnPeriodMar = ReturnPeriod.fromPeriodKey(periodKeyMar).get
 
@@ -285,4 +297,498 @@ trait TestData extends ModelGenerators {
 
   val currentDate    = LocalDate.now()
   val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+
+  val nilReturn = AdrReturnSubmission(
+    dutyDeclared = AdrDutyDeclared(false, Nil),
+    adjustments = AdrAdjustments(
+      overDeclarationDeclared = false,
+      reasonForOverDeclaration = None,
+      overDeclarationProducts = Nil,
+      underDeclarationDeclared = false,
+      reasonForUnderDeclaration = None,
+      underDeclarationProducts = Nil,
+      spoiltProductDeclared = false,
+      spoiltProducts = Nil,
+      drawbackDeclared = false,
+      drawbackProducts = Nil,
+      repackagedDraughtDeclared = false,
+      repackagedDraughtProducts = Nil
+    ),
+    dutySuspended = AdrDutySuspended(false, Nil),
+    spirits = None,
+    totals = AdrTotals(
+      declaredDutyDue = 0,
+      overDeclaration = 0,
+      underDeclaration = 0,
+      spoiltProduct = 0,
+      drawback = 0,
+      repackagedDraught = 0,
+      totalDutyDue = 0
+    )
+  )
+
+  val fullUserAnswers: UserAnswers = emptyUserAnswers.copy(
+    data = Json.obj(
+      DeclareAlcoholDutyQuestionPage.toString             -> true,
+      AlcoholDutyPage.toString                            -> Json.obj(
+        "Beer"                  -> Json.obj(
+          "dutiesByTaxType" -> Json.arr(
+            Json.obj(
+              "taxType"     -> "311",
+              "totalLitres" -> 100,
+              "pureAlcohol" -> 10,
+              "dutyRate"    -> 9.27,
+              "dutyDue"     -> 92.7
+            ),
+            Json.obj(
+              "taxType"     -> "361",
+              "totalLitres" -> 100,
+              "pureAlcohol" -> 10,
+              "dutyRate"    -> 10.01,
+              "dutyDue"     -> 100.1
+            )
+          ),
+          "totalDuty"       -> 192.8
+        ),
+        "Cider"                 -> Json.obj(
+          "dutiesByTaxType" -> Json.arr(
+            Json.obj(
+              "taxType"     -> "312",
+              "totalLitres" -> 200,
+              "pureAlcohol" -> 20,
+              "dutyRate"    -> 9.27,
+              "dutyDue"     -> 185.4
+            ),
+            Json.obj(
+              "taxType"     -> "372",
+              "totalLitres" -> 300,
+              "pureAlcohol" -> 30,
+              "dutyRate"    -> 3.03,
+              "dutyDue"     -> 90.9
+            )
+          ),
+          "totalDuty"       -> 276.3
+        ),
+        "Wine"                  -> Json.obj(
+          "dutiesByTaxType" -> Json.arr(
+            Json.obj(
+              "taxType"     -> "313",
+              "totalLitres" -> 110,
+              "pureAlcohol" -> 10,
+              "dutyRate"    -> 9.27,
+              "dutyDue"     -> 92.7
+            ),
+            Json.obj(
+              "taxType"     -> "373",
+              "totalLitres" -> 1000,
+              "pureAlcohol" -> 100,
+              "dutyRate"    -> 10.01,
+              "dutyDue"     -> 1001
+            )
+          ),
+          "totalDuty"       -> 1093.7
+        ),
+        "Spirits"               -> Json.obj(
+          "dutiesByTaxType" -> Json.arr(
+            Json.obj(
+              "taxType"     -> "315",
+              "totalLitres" -> 100,
+              "pureAlcohol" -> 10,
+              "dutyRate"    -> 9.27,
+              "dutyDue"     -> 92.7
+            )
+          ),
+          "totalDuty"       -> 92.7
+        ),
+        "OtherFermentedProduct" -> Json.obj(
+          "dutiesByTaxType" -> Json.arr(
+            Json.obj(
+              "taxType"     -> "314",
+              "totalLitres" -> 100,
+              "pureAlcohol" -> 10,
+              "dutyRate"    -> 9.27,
+              "dutyDue"     -> 92.7
+            )
+          ),
+          "totalDuty"       -> 92.7
+        )
+      ),
+      DeclareAdjustmentQuestionPage.toString              -> true,
+      AdjustmentEntryListPage.toString                    -> Json.arr(
+        Json.obj(
+          "adjustmentType"     -> "under-declaration",
+          "period"             -> "2023-12",
+          "rateBand"           -> Json.obj(
+            "taxTypeCode"  -> "311",
+            "description"  -> "Beer from 1.3% to 3.4%",
+            "rateType"     -> "Core",
+            "rate"         -> 9.27,
+            "rangeDetails" -> Json.arr(
+              Json.obj(
+                "alcoholRegime" -> "Beer",
+                "abvRanges"     -> Json.arr(
+                  Json.obj(
+                    "alcoholType" -> "Beer",
+                    "minABV"      -> 1.3,
+                    "maxABV"      -> 3.4
+                  )
+                )
+              )
+            )
+          ),
+          "totalLitresVolume"  -> 1000,
+          "pureAlcoholVolume"  -> 100,
+          "duty"               -> 927
+        ),
+        Json.obj(
+          "adjustmentType"     -> "under-declaration",
+          "period"             -> "2023-12",
+          "rateBand"           -> Json.obj(
+            "taxTypeCode"  -> "371",
+            "description"  -> "Beer to 3.4%, eligible for small producer relief and draught relief",
+            "rateType"     -> "DraughtAndSmallProducerRelief",
+            "rangeDetails" -> Json.arr(
+              Json.obj(
+                "alcoholRegime" -> "Beer",
+                "abvRanges"     -> Json.arr(
+                  Json.obj(
+                    "alcoholType" -> "Beer",
+                    "minABV"      -> 1.3,
+                    "maxABV"      -> 3.4
+                  )
+                )
+              )
+            )
+          ),
+          "totalLitresVolume"  -> 100,
+          "pureAlcoholVolume"  -> 10,
+          "sprDutyRate"        -> 9.27,
+          "duty"               -> 92.7
+        ),
+        Json.obj(
+          "adjustmentType"     -> "over-declaration",
+          "period"             -> "2024-01",
+          "rateBand"           -> Json.obj(
+            "taxTypeCode"  -> "312",
+            "description"  -> "Cider (but not sparkling cider) from 1.3% to 3.4%",
+            "rateType"     -> "Core",
+            "rate"         -> 9.27,
+            "rangeDetails" -> Json.arr(
+              Json.obj(
+                "alcoholRegime" -> "Cider",
+                "abvRanges"     -> Json.arr(
+                  Json.obj(
+                    "alcoholType" -> "Cider",
+                    "minABV"      -> 1.3,
+                    "maxABV"      -> 3.4
+                  )
+                )
+              )
+            )
+          ),
+          "totalLitresVolume"  -> 2000,
+          "pureAlcoholVolume"  -> 200,
+          "duty"               -> -1854
+        ),
+        Json.obj(
+          "adjustmentType"     -> "repackaged-draught-products",
+          "period"             -> "2024-02",
+          "rateBand"           -> Json.obj(
+            "taxTypeCode"  -> "371",
+            "description"  -> "Beer to 3.4%, eligible for small producer relief and draught relief",
+            "rateType"     -> "DraughtAndSmallProducerRelief",
+            "rangeDetails" -> Json.arr(
+              Json.obj(
+                "alcoholRegime" -> "Beer",
+                "abvRanges"     -> Json.arr(
+                  Json.obj(
+                    "alcoholType" -> "Beer",
+                    "minABV"      -> 1.3,
+                    "maxABV"      -> 3.4
+                  )
+                )
+              )
+            )
+          ),
+          "totalLitresVolume"  -> 1000,
+          "pureAlcoholVolume"  -> 100,
+          "sprDutyRate"        -> 3.21,
+          "repackagedRateBand" -> Json.obj(
+            "taxTypeCode"  -> "311",
+            "description"  -> "Beer from 1.3% to 3.4%",
+            "rateType"     -> "Core",
+            "rate"         -> 9.27,
+            "rangeDetails" -> Json.arr(
+              Json.obj(
+                "alcoholRegime" -> "Beer",
+                "abvRanges"     -> Json.arr(
+                  Json.obj(
+                    "alcoholType" -> "Beer",
+                    "minABV"      -> 1.3,
+                    "maxABV"      -> 3.4
+                  )
+                )
+              )
+            )
+          ),
+          "duty"               -> 321,
+          "repackagedDuty"     -> 927,
+          "newDuty"            -> 606
+        ),
+        Json.obj(
+          "adjustmentType"     -> "spoilt",
+          "period"             -> "2024-03",
+          "rateBand"           -> Json.obj(
+            "taxTypeCode"  -> "314",
+            "description"  -> "Other fermented products like fruit ciders from 1.3% to 3.4%",
+            "rateType"     -> "Core",
+            "rate"         -> 9.27,
+            "rangeDetails" -> Json.arr(
+              Json.obj(
+                "alcoholRegime" -> "OtherFermentedProduct",
+                "abvRanges"     -> Json.arr(
+                  Json.obj(
+                    "alcoholType" -> "OtherFermentedProduct",
+                    "minABV"      -> 1.3,
+                    "maxABV"      -> 3.4
+                  )
+                )
+              )
+            )
+          ),
+          "totalLitresVolume"  -> 100,
+          "pureAlcoholVolume"  -> 10,
+          "duty"               -> -92.7
+        ),
+        Json.obj(
+          "adjustmentType"     -> "drawback",
+          "period"             -> "2024-04",
+          "rateBand"           -> Json.obj(
+            "taxTypeCode"  -> "313",
+            "description"  -> "Wine (including sparkling wine) from 1.3% to 3.4%",
+            "rateType"     -> "Core",
+            "rate"         -> 9.27,
+            "rangeDetails" -> Json.arr(
+              Json.obj(
+                "alcoholRegime" -> "Wine",
+                "abvRanges"     -> Json.arr(
+                  Json.obj(
+                    "alcoholType" -> "Wine",
+                    "minABV"      -> 1.3,
+                    "maxABV"      -> 3.4
+                  )
+                )
+              )
+            )
+          ),
+          "totalLitresVolume"  -> 210,
+          "pureAlcoholVolume"  -> 21,
+          "duty"               -> -194.67
+        )
+      ),
+      AdjustmentTotalPage.toString                        -> -515.67,
+      UnderDeclarationTotalPage.toString                  -> 1019.7,
+      UnderDeclarationReasonPage.toString                 -> "Reason for under declaration",
+      OverDeclarationTotalPage.toString                   -> -1854,
+      OverDeclarationReasonPage.toString                  -> "Reason for over declaration",
+      DeclareDutySuspendedDeliveriesQuestionPage.toString -> true,
+      DutySuspendedBeerPage.toString                      -> Json.obj(
+        "totalBeer"         -> 1000,
+        "pureAlcoholInBeer" -> 100
+      ),
+      DutySuspendedCiderPage.toString                     -> Json.obj(
+        "totalCider"         -> 2000,
+        "pureAlcoholInCider" -> 200
+      ),
+      DutySuspendedSpiritsPage.toString                   -> Json.obj(
+        "totalSpirits"         -> 1000,
+        "pureAlcoholInSpirits" -> 100
+      ),
+      DutySuspendedWinePage.toString                      -> Json.obj(
+        "totalWine"         -> 1000,
+        "pureAlcoholInWine" -> 100
+      ),
+      DutySuspendedOtherFermentedPage.toString            -> Json.obj(
+        "totalOtherFermented"         -> 1000,
+        "pureAlcoholInOtherFermented" -> 100
+      ),
+      DeclareQuarterlySpiritsPage.toString                -> true,
+      DeclareSpiritsTotalPage.toString                    -> 1234,
+      WhiskyPage.toString                                 -> Json.obj(
+        "scotchWhisky" -> 111,
+        "irishWhiskey" -> 222
+      ),
+      SpiritTypePage.toString                             -> Json.arr(
+        "neutralIndustrialOrigin",
+        "other",
+        "neutralAgriculturalOrigin",
+        "ciderOrPerry",
+        "wineOrMadeWine",
+        "beer",
+        "maltSpirits",
+        "grainSpirits"
+      ),
+      OtherSpiritsProducedPage.toString                   -> "Other Type of Spirit",
+      GrainsUsedPage.toString                             -> Json.obj(
+        "maltedBarleyQuantity"     -> 1111,
+        "wheatQuantity"            -> 2222,
+        "maizeQuantity"            -> 3333,
+        "ryeQuantity"              -> 4444,
+        "unmaltedGrainQuantity"    -> 5555,
+        "usedMaltedGrainNotBarley" -> true
+      ),
+      OtherMaltedGrainsPage.toString                      -> Json.obj(
+        "otherMaltedGrainsTypes"    -> "Other malted grains",
+        "otherMaltedGrainsQuantity" -> 6666
+      ),
+      AlcoholUsedPage.toString                            -> Json.obj(
+        "beer"         -> 1111,
+        "wine"         -> 2222,
+        "madeWine"     -> 3333,
+        "ciderOrPerry" -> 4444
+      ),
+      EthyleneGasOrMolassesUsedPage.toString              -> Json.obj(
+        "ethyleneGas"      -> 6666,
+        "molasses"         -> 7777,
+        "otherIngredients" -> true
+      ),
+      OtherIngredientsUsedPage.toString                   -> Json.obj(
+        "otherIngredientsUsedTypes"    -> "Other Ingredient",
+        "otherIngredientsUsedUnit"     -> "Tonnes",
+        "otherIngredientsUsedQuantity" -> 4321
+      )
+    )
+  )
+
+  val fullReturn =
+    AdrReturnSubmission(
+      AdrDutyDeclared(
+        true,
+        List(
+          AdrDutyDeclaredItem(AdrAlcoholQuantity(100, 10), AdrDuty("315", 9.27, 92.7)),
+          AdrDutyDeclaredItem(AdrAlcoholQuantity(110, 10), AdrDuty("313", 9.27, 92.7)),
+          AdrDutyDeclaredItem(AdrAlcoholQuantity(1000, 100), AdrDuty("373", 10.01, 1001)),
+          AdrDutyDeclaredItem(AdrAlcoholQuantity(200, 20), AdrDuty("312", 9.27, 185.4)),
+          AdrDutyDeclaredItem(AdrAlcoholQuantity(300, 30), AdrDuty("372", 3.03, 90.9)),
+          AdrDutyDeclaredItem(AdrAlcoholQuantity(100, 10), AdrDuty("314", 9.27, 92.7)),
+          AdrDutyDeclaredItem(AdrAlcoholQuantity(100, 10), AdrDuty("311", 9.27, 92.7)),
+          AdrDutyDeclaredItem(AdrAlcoholQuantity(100, 10), AdrDuty("361", 10.01, 100.1))
+        )
+      ),
+      AdrAdjustments(
+        true,
+        Some("Reason for over declaration"),
+        List(AdrAdjustmentItem("24AA", AdrAlcoholQuantity(2000, 200), AdrDuty("312", 9.27, -1854))),
+        true,
+        Some("Reason for under declaration"),
+        List(
+          AdrAdjustmentItem("23AL", AdrAlcoholQuantity(1000, 100), AdrDuty("311", 9.27, 927)),
+          AdrAdjustmentItem("23AL", AdrAlcoholQuantity(100, 10), AdrDuty("371", 9.27, 92.7))
+        ),
+        true,
+        List(AdrAdjustmentItem("24AC", AdrAlcoholQuantity(100, 10), AdrDuty("314", 9.27, -92.7))),
+        true,
+        List(AdrAdjustmentItem("24AD", AdrAlcoholQuantity(210, 21), AdrDuty("313", 9.27, -194.67))),
+        true,
+        List(AdrRepackagedDraughtAdjustmentItem("24AB", "371", 3.21, "311", 9.27, AdrAlcoholQuantity(1000, 100), 606))
+      ),
+      AdrDutySuspended(
+        true,
+        List(
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Beer, AdrAlcoholQuantity(1000, 100)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Cider, AdrAlcoholQuantity(2000, 200)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Spirits, AdrAlcoholQuantity(1000, 100)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Wine, AdrAlcoholQuantity(1000, 100)),
+          AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.OtherFermentedProduct, AdrAlcoholQuantity(1000, 100))
+        )
+      ),
+      Some(
+        AdrSpirits(
+          true,
+          Some(
+            AdrSpiritsProduced(
+              AdrSpiritsVolumes(1234, 111, 222),
+              Set(
+                AdrTypeOfSpirit.Other,
+                AdrTypeOfSpirit.CiderOrPerry,
+                AdrTypeOfSpirit.NeutralAgricultural,
+                AdrTypeOfSpirit.WineOrMadeWine,
+                AdrTypeOfSpirit.Grain,
+                AdrTypeOfSpirit.NeutralIndustrial,
+                AdrTypeOfSpirit.Beer,
+                AdrTypeOfSpirit.Malt
+              ),
+              Some("Other Type of Spirit"),
+              true,
+              AdrSpiritsGrainsQuantities(Some(1111), Some(6666), Some(2222), Some(3333), Some(4444), Some(5555)),
+              Some("Other malted grains"),
+              AdrSpiritsIngredientsVolumes(Some(6666), Some(7777), Some(1111), Some(2222), Some(3333), Some(4444)),
+              Some(AdrOtherIngredient(4321, Tonnes, "Other Ingredient"))
+            )
+          )
+        )
+      ),
+      AdrTotals(1748.2, -1854, 1019.7, -92.7, -194.67, 606, 1232.53)
+    )
+
+  val fullRepackageAdjustmentEntry: AdjustmentEntry = AdjustmentEntry(
+    index = Some(0),
+    adjustmentType = Some(AdjustmentType.RepackagedDraughtProducts),
+    period = Some(returnPeriodMar.period),
+    rateBand = Some(
+      RateBand(
+        taxTypeCode = "001",
+        description = "",
+        rateType = RateType.DraughtAndSmallProducerRelief,
+        rate = Some(BigDecimal(1)),
+        rangeDetails = Set(
+          RangeDetailsByRegime(
+            alcoholRegime = AlcoholRegime.Beer,
+            abvRanges = NonEmptySeq.one(
+              ABVRange(
+                AlcoholType.Beer,
+                minABV = AlcoholByVolume(BigDecimal(1)),
+                maxABV = AlcoholByVolume(BigDecimal(1))
+              )
+            )
+          )
+        )
+      )
+    ),
+    totalLitresVolume = Some(BigDecimal(0)),
+    pureAlcoholVolume = Some(BigDecimal(1)),
+    sprDutyRate = Some(BigDecimal(1)),
+    repackagedRateBand = Some(
+      RateBand(
+        taxTypeCode = "002",
+        description = "",
+        rateType = RateType.Core,
+        rate = Some(BigDecimal(1)),
+        rangeDetails = Set(
+          RangeDetailsByRegime(
+            alcoholRegime = AlcoholRegime.Beer,
+            abvRanges = NonEmptySeq.one(
+              ABVRange(
+                AlcoholType.Beer,
+                minABV = AlcoholByVolume(BigDecimal(1)),
+                maxABV = AlcoholByVolume(BigDecimal(1))
+              )
+            )
+          )
+        )
+      )
+    ),
+    repackagedSprDutyRate = Some(BigDecimal(1)),
+    duty = Some(BigDecimal(1)),
+    repackagedDuty = Some(BigDecimal(1)),
+    newDuty = Some(BigDecimal(1))
+  )
+
+  val fullAdjustmentEntry: AdjustmentEntry = fullRepackageAdjustmentEntry.copy(
+    adjustmentType = Some(AdjustmentType.Underdeclaration),
+    repackagedRateBand = None,
+    repackagedSprDutyRate = None,
+    repackagedDuty = None,
+    newDuty = None
+  )
 }
