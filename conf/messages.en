@@ -143,6 +143,27 @@ viewReturn.table.dutyRate.legend = Duty rate (per litre)
 viewReturn.table.dutyValue.legend = Duty value
 viewReturn.table.dutyDue.legend = Duty value
 
+viewPastPayments.heading = Alcohol Duty payments
+viewPastPayments.title = Alcohol Duty payments
+viewPastPayments.paragraph = Payments will take up to 7 working days to show, depending on how you pay. After you complete your return your tax calculation will take up to 2 days.
+viewPastPayments.subHeading = Your alcohol duty balance is {0}
+viewPastPayments.caption = Outstanding payments
+viewPastPayments.outstandingPayments.dueDate = Due date
+viewPastPayments.outstandingPayments.description = Description
+viewPastPayments.outstandingPayments.totalAmount = Total amount
+viewPastPayments.outstandingPayments.remainingAmount = Remaining amount
+viewPastPayments.outstandingPayments.status = Status
+viewPastPayments.outstandingPayments.action = Action
+viewPastPayments.duty = Your alcohol duty balance is
+viewPastPayments.duty.value = {0}
+viewPastPayments.Return.description = Payment
+viewPastPayments.RPI.description = 	Refund interest charge
+viewPastPayments.LPI.description = 	Late payment interest charge
+viewPastPayments.ref = (ref: {0})
+viewPastPayments.status.nothingToPay = Nothing to pay
+viewPastPayments.status.partiallyPaid = Partially paid
+viewPastPayments.action = Pay now
+
 taskList.title = Alcohol Duty return
 taskList.status.completed = Return ready to submit
 taskList.status.incomplete = Return incomplete
