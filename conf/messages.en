@@ -8,6 +8,7 @@ site.yes = Yes
 site.dot = .
 site.continue = Continue
 site.saveAndContinue = Save and continue
+site.saveAndReturn = Save and return to BTA
 site.agreeAndSubmit = Agree and send return
 site.start = Start now
 site.payNow = Pay now
