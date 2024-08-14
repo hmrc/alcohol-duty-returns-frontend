@@ -28,12 +28,12 @@ import scala.reflect.runtime.universe.Try
 import scala.util.{Failure, Success}
 
 class AlcoholDutyAccountConnector @Inject() (
-                                              config: FrontendAppConfig,
-                                              implicit val httpClient: HttpClient
-                                            )(implicit ec: ExecutionContext)
-  extends HttpReadsInstances
+  config: FrontendAppConfig,
+  implicit val httpClient: HttpClient
+)(implicit ec: ExecutionContext)
+    extends HttpReadsInstances
     with Logging {
-/*
+  /*
   def getOutstandingPayments(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[OutstandingPayment]]={
     httpClient
       .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetOutstandingPaymentsUrl(appaId))

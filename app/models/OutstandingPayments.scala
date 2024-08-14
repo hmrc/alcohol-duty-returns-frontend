@@ -27,25 +27,27 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
   val values = findValues
 
   case object Return extends TransactionType
+  case object PaymentOnAccount extends TransactionType
   case object LPI extends TransactionType
   case object RPI extends TransactionType
 }
 
 case class OutstandingPayment(
-                               transactionType: TransactionType,
-                               date: Option[LocalDate],
-                               chargeReference: String,
-                               totalAmountPence: BigInt,
-                               remainingAmountPence: BigInt
-                             )
+  transactionType: TransactionType,
+  date: Option[LocalDate],
+  chargeReference: Option[String],
+  totalAmount: BigDecimal,
+  remainingAmount: BigDecimal
+)
 
 object OutstandingPayment {
   implicit val outstandingPaymentFormat: OFormat[OutstandingPayment] = Json.format[OutstandingPayment]
 }
 
 case class OutstandingPayments(
-                                outstandingPayments: Seq[OutstandingPayment]
-                              )
+  outstandingPayments: Seq[OutstandingPayment],
+  totalBalance: BigDecimal
+)
 
 object OutstandingPayments {
   implicit val outstandingPaymentsFormat: OFormat[OutstandingPayments] = Json.format[OutstandingPayments]

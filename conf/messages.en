@@ -162,7 +162,10 @@ viewPastPayments.LPI.description = 	Late payment interest charge
 viewPastPayments.ref = (ref: {0})
 viewPastPayments.status.nothingToPay = Nothing to pay
 viewPastPayments.status.partiallyPaid = Partially paid
-viewPastPayments.action = Pay now
+viewPastPayments.claimRefund = Claim refund
+viewPastPayments.payNow = Pay now
+viewPastPayments.claimRefund.hidden = Claim refund
+viewPastPayments.payNow.hidden = Pay now
 
 taskList.title = Alcohol Duty return
 taskList.status.completed = Return ready to submit

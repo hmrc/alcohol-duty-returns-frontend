@@ -17,6 +17,7 @@
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 @import config.Constants
 @import viewmodels.TableViewModel
+@import viewmodels.Money
 
 @this(
     layout: templates.Layout,
@@ -33,7 +34,7 @@
 )
 
 
-@(outstandingPaymentsTable: TableViewModel)(implicit request: Request[_], messages: Messages)
+@(outstandingPaymentsTable: TableViewModel, dutyBalance: BigDecimal)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewPastPayments.title")), fullWidth = true){
 
@@ -43,15 +44,28 @@
 
     <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.duty")
     <br>
-        <span class="govuk-heading-l">@messages("viewPastPayments.duty.value", 1234)</span>
+        <span class="govuk-heading-l">@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
     </p>
 
     @govukTable(Table(
-    caption = Some(messages("viewPastPayments.caption")),
-    captionClasses = Constants.tableCaptionMCssClass,
-    head = Some(outstandingPaymentsTable.head),
-    rows = outstandingPaymentsTable.rows.map(_.cells)
-    ))
+        caption = Some(messages("viewPastPayments.caption")),
+        captionClasses = Constants.tableCaptionMCssClass,
+        head = Some(outstandingPaymentsTable.head),
+        rows = outstandingPaymentsTable.rows.map(row => {
+            val actions = TableRow(content = HtmlContent(tableRowActionList(
+            id = "outstandingPaymentsId",
+            actions = row.actions.map(action => tableRowAction(
+            id = "",
+            text = action.label,
+            href = action.href,
+            visuallyHiddenContent = action.visuallyHiddenText
+            )
+            ))))
+            row.cells :+ actions
+            }
+            )
+        )
+    )
 
 
 }
