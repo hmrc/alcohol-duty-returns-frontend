@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -27,6 +28,7 @@ import views.html.TaskListView
 import javax.inject.Inject
 
 class TaskListController @Inject() (
+  appConfig: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -38,9 +40,16 @@ class TaskListController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
+
     request.userAnswers.validUntil match {
       case Some(validUntil) =>
-        Ok(view(taskListViewModel.getTaskList(request.userAnswers, validUntil, request.returnPeriod)))
+        Ok(
+          view(
+            taskListViewModel.getTaskList(request.userAnswers, validUntil, request.returnPeriod),
+            businessTaxAccountUrl
+          )
+        )
       case None             =>
         logger.warn("'Valid until' property not defined in User Answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
