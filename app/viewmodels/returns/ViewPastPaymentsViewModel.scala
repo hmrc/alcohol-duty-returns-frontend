@@ -27,7 +27,7 @@ import config.Constants
 import config.Constants.boldFontCssClass
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue, PartiallyPaid}
 import models.TransactionType.{LPI, PaymentOnAccount, RPI}
-import models.{OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType}
+import models.{OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import play.twirl.api.Html
 
@@ -38,26 +38,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   def getOutstandingPaymentsTable(
     outstandingPaymentsData: Seq[OutstandingPayment]
   )(implicit messages: Messages): TableViewModel = {
-
-    implicit val transactionTypeOrdering: Ordering[TransactionType] = {
-      val customOrder = Map[TransactionType, Int](
-        TransactionType.Return           -> 1,
-        TransactionType.LPI              -> 2,
-        TransactionType.RPI              -> 3,
-        TransactionType.PaymentOnAccount -> 4
-      )
-      Ordering.by[TransactionType, Int](customOrder)
-    }
-//      Ordering.by[TransactionType, String](_.entryName).reverse
-
-    implicit val reverseDateOrdering: Ordering[Option[LocalDate]] = Ordering
-      .by[Option[LocalDate], Long] {
-        case Some(date) => date.toEpochDay
-        case None       => Long.MinValue
-      }
-      .reverse
-
-    val sortedOutstandingPaymentsData = outstandingPaymentsData.sortBy(data => (data.transactionType, data.date))
+    val sortedOutstandingPaymentsData = outstandingPaymentsData.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
     TableViewModel(
       head = getOutstandingPaymentsTableHeader(),
       rows = getOutstandingPaymentsDataTableRows(sortedOutstandingPaymentsData),
@@ -68,9 +49,12 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   private def getOutstandingPaymentsTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.dueDate"))),
-      HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.description"))),
-      HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.totalAmount"))),
-      HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.remainingAmount"))),
+      HeadCell(content = Text(messages("viewPastPayments.description"))),
+      HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Constants.textAlignRightCssClass),
+      HeadCell(
+        content = Text(messages("viewPastPayments.outstandingPayments.remainingAmount")),
+        classes = Constants.textAlignRightCssClass
+      ),
       HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.status"))),
       HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.action")))
     )
@@ -83,7 +67,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
       val statusTag = createStatusTag(status)
       TableRowViewModel(
         cells = Seq(
-          TableRow(content = Text(outstandingPaymentsData.date.map(formatDateYearMonth).getOrElse(" "))),
+          TableRow(content = Text(formatDateYearMonth(outstandingPaymentsData.dueDate))),
           TableRow(content =
             HtmlContent(
               formatDescription(outstandingPaymentsData.transactionType, outstandingPaymentsData.chargeReference)
@@ -91,15 +75,49 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
           ),
           TableRow(
             content = Text(Money.format(outstandingPaymentsData.totalAmount)),
-            classes = boldFontCssClass
+            classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
           ),
           TableRow(
-            content = Text(Money.format(outstandingPaymentsData.remainingAmount)),
-            classes = boldFontCssClass
+            content = Text(Money.format(outstandingPaymentsData.remainingAmount.max(BigDecimal(0)))),
+            classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
           ),
           TableRow(content = HtmlContent(statusTag))
         ),
         actions = getAction(outstandingPaymentsData, status)
+      )
+    }
+
+  def getUnallocatedPaymentsTable(
+    unallocatedPaymentsData: Seq[UnallocatedPayment]
+  )(implicit messages: Messages): TableViewModel = {
+    val sortedUnallocatedPaymentsData = unallocatedPaymentsData.sortBy(_.paymentDate)(Ordering[LocalDate].reverse)
+    TableViewModel(
+      head = getUnallocatedPaymentsHeader(),
+      rows = getUnallocatedPaymentsDataTableRows(sortedUnallocatedPaymentsData),
+      total = None
+    )
+  }
+
+  private def getUnallocatedPaymentsHeader()(implicit messages: Messages): Seq[HeadCell] =
+    Seq(
+      HeadCell(content = Text(messages("viewPastPayments.unallocatedPayments.paymentDate"))),
+      HeadCell(content = Text(messages("viewPastPayments.description"))),
+      HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Constants.textAlignRightCssClass)
+    )
+
+  private def getUnallocatedPaymentsDataTableRows(
+    unallocatedPaymentsData: Seq[UnallocatedPayment]
+  )(implicit messages: Messages): Seq[TableRowViewModel] =
+    unallocatedPaymentsData.map { unallocatedPaymentData =>
+      TableRowViewModel(
+        cells = Seq(
+          TableRow(content = Text(formatDateYearMonth(unallocatedPaymentData.paymentDate))),
+          TableRow(content = Text(messages("viewPastPayments.Return.description"))),
+          TableRow(
+            content = Text(Money.format(unallocatedPaymentData.amount)),
+            classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
+          )
+        )
       )
     }
 
@@ -108,13 +126,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     status: OutstandingPaymentStatusToDisplay
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
-      Seq(
-        TableRowActionViewModel(
-          label = messages("viewPastPayments.claimRefund"),
-          href = controllers.routes.JourneyRecoveryController.onPageLoad(),
-          visuallyHiddenText = Some(messages("viewPastPayments.claimRefund.hidden"))
-        )
-      )
+      Seq.empty
     } else {
       Seq(
         TableRowActionViewModel(
@@ -144,15 +156,11 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   private def getOutstandingPaymentStatus(
     outstandingPaymentsData: OutstandingPayment
   ): OutstandingPaymentStatusToDisplay =
-    if (outstandingPaymentsData.transactionType == LPI) {
-      Due
-    } else if (
-      outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.transactionType == PaymentOnAccount
-    ) {
+    if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.transactionType == PaymentOnAccount) {
       NothingToPay
     } else if (outstandingPaymentsData.totalAmount < 0) {
       NothingToPay
-    } else if (outstandingPaymentsData.date.exists(_.isBefore(LocalDate.now()))) {
+    } else if (outstandingPaymentsData.dueDate.isBefore(LocalDate.now())) {
       Overdue
     } else if (outstandingPaymentsData.totalAmount != outstandingPaymentsData.remainingAmount) {
       PartiallyPaid

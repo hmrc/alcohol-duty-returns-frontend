@@ -27,32 +27,46 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
   val values = findValues
 
   case object Return extends TransactionType
+
   case object PaymentOnAccount extends TransactionType
+
   case object LPI extends TransactionType
+
   case object RPI extends TransactionType
 }
 
+sealed trait OpenPayment
+
 case class OutstandingPayment(
   transactionType: TransactionType,
-  date: Option[LocalDate],
+  dueDate: LocalDate,
   chargeReference: Option[String],
   totalAmount: BigDecimal,
   remainingAmount: BigDecimal
-)
+) extends OpenPayment
 
 object OutstandingPayment {
   implicit val outstandingPaymentFormat: OFormat[OutstandingPayment] = Json.format[OutstandingPayment]
 }
 
-case class OutstandingPayments(
+case class UnallocatedPayment(
+  paymentDate: LocalDate,
+  amount: BigDecimal
+) extends OpenPayment
+
+object UnallocatedPayment {
+  implicit val unallocatedPaymentFormat: OFormat[UnallocatedPayment] = Json.format[UnallocatedPayment]
+}
+
+case class OpenPayments(
   outstandingPayments: Seq[OutstandingPayment],
+  unallocatedPayments: Seq[UnallocatedPayment],
   totalBalance: BigDecimal
 )
 
-object OutstandingPayments {
-  implicit val outstandingPaymentsFormat: OFormat[OutstandingPayments] = Json.format[OutstandingPayments]
+object OpenPayments {
+  implicit val openPaymentsPaymentsFormat: OFormat[OpenPayments] = Json.format[OpenPayments]
 }
-
 sealed trait OutstandingPaymentStatusToDisplay extends EnumEntry
 
 object OutstandingPaymentStatusToDisplay extends PlayEnum[OutstandingPaymentStatusToDisplay] {

@@ -17,7 +17,7 @@
 package connectors
 
 import config.FrontendAppConfig
-import models.{OutstandingPayment, OutstandingPayments}
+import models.{OpenPayments, OutstandingPayment}
 import play.api.Logging
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}

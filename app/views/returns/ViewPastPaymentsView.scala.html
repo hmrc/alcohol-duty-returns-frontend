@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading, Link}
 @import config.Constants
 @import viewmodels.TableViewModel
 @import viewmodels.Money
@@ -30,11 +30,12 @@
     paragraph: Paragraph,
     subHeading: SubHeading,
     tableRowActionList: components.TableRowActionList,
-    tableRowAction: components.TableRowAction
+    tableRowAction: components.TableRowAction,
+    link: Link
 )
 
 
-@(outstandingPaymentsTable: TableViewModel, dutyBalance: BigDecimal)(implicit request: Request[_], messages: Messages)
+@(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, dutyBalance: BigDecimal)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewPastPayments.title")), fullWidth = true){
 
@@ -43,12 +44,25 @@
     @paragraph(messages("viewPastPayments.paragraph"))
 
     <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.duty")
-    <br>
+        <br>
+    @if(dutyBalance > 0) {
         <span class="govuk-heading-l">@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
+    }
+    @if(dutyBalance < 0) {
+            <span class="govuk-heading-l">@messages("viewPastPayments.negative.duty.value", Money.format(dutyBalance.abs))</span>
+            <p class="govuk-body">@messages("viewPastPayments.credit.para1")
+                @link(
+                id = "view-past-payments-refund-link",
+                text = messages("viewPastPayments.link.content"),
+                href = "test",
+                newTab = true
+                ) @messages("viewPastPayments.credit.para2")
+            </p>
+    }
     </p>
 
     @govukTable(Table(
-        caption = Some(messages("viewPastPayments.caption")),
+        caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
         captionClasses = Constants.tableCaptionMCssClass,
         head = Some(outstandingPaymentsTable.head),
         rows = outstandingPaymentsTable.rows.map(row => {
@@ -66,6 +80,15 @@
             )
         )
     )
+
+    @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"))
+
+    @govukTable(Table(
+        caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
+        captionClasses = Constants.tableCaptionMCssClass,
+        head = Some(unallocatedPaymentsTable.head),
+        rows = unallocatedPaymentsTable.rows.map(_.cells)
+    ))
 
 
 }
