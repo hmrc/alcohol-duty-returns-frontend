@@ -16,10 +16,8 @@
 
 package controllers.returns
 
-import connectors.{AlcoholDutyAccountConnector, AlcoholDutyReturnsConnector}
+import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifierAction
-import models.TransactionType.{LPI, PaymentOnAccount, RPI, Return}
-import models.{OpenPayments, OutstandingPayment, TransactionType, UnallocatedPayment}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,7 +25,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ViewPastPaymentsViewModel
 import views.html.returns.ViewPastPaymentsView
 
-import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
@@ -43,95 +40,22 @@ class ViewPastPaymentsController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = identify //identify.async
-  { implicit request =>
-    val appaId                   = request.appaId
-//    alcoholDutyAccountConnector.getOutstandingPayments(appaId).map {
-//      outstandingPaymentsData =>
-    val outstandingPaymentsData  = OpenPayments(
-      outstandingPayments = Seq(
-        OutstandingPayment(
-          TransactionType.Return,
-          LocalDate.now(),
-          Some("XM0026103011594"),
-          BigDecimal(-7234),
-          BigDecimal(-2345)
-        ),
-        OutstandingPayment(
-          TransactionType.LPI,
-          LocalDate.of(2024, 8, 25),
-          Some("1234ChangreRef"),
-          BigDecimal(3234),
-          BigDecimal(2345)
-        ),
-        OutstandingPayment(
-          Return,
-          LocalDate.of(2024, 8, 25),
-          Some(s"XM0026103011593"),
-          BigDecimal(4773),
-          BigDecimal(4735)
-        ),
-        OutstandingPayment(
-          Return,
-          LocalDate.of(2024, 9, 25),
-          Some(s"XM0026130011595"),
-          BigDecimal(4773),
-          BigDecimal(3775)
-        ),
-        OutstandingPayment(
-          RPI,
-          LocalDate.of(2024, 9, 25),
-          Some(s"XM0026130011597"),
-          BigDecimal(2011),
-          BigDecimal(2011)
-        ),
-        OutstandingPayment(
-          LPI,
-          LocalDate.of(2024, 9, 25),
-          Some(s"XM0026103011598"),
-          BigDecimal(1011),
-          BigDecimal(1011)
-        ),
-        OutstandingPayment(
-          LPI,
-          LocalDate.of(2024, 6, 24),
-          Some(s"XM0026103011598"),
-          BigDecimal(1011),
-          BigDecimal(1011)
-        ),
-        OutstandingPayment(
-          Return,
-          LocalDate.of(2024, 7, 25),
-          Some(s"XM0026103011596"),
-          BigDecimal(2131411),
-          BigDecimal(2131411)
-        ),
-        OutstandingPayment(
-          Return,
-          LocalDate.of(2024, 6, 25),
-          Some(s"XM00261030115948"),
-          BigDecimal(3235),
-          BigDecimal(441)
-        ),
-        OutstandingPayment(
-          PaymentOnAccount,
-          LocalDate.of(2024, 9, 25),
-          None,
-          BigDecimal(6441),
-          BigDecimal(6141)
-        )
-      ),
-      unallocatedPayments = Seq(UnallocatedPayment(LocalDate.of(2024, 9, 25), BigDecimal(123))),
-      totalBalance = BigDecimal(1234.45)
-    )
-    val outstandingPaymentsTable =
-      viewPastPaymentsModel.getOutstandingPaymentsTable(outstandingPaymentsData.outstandingPayments)
-    val unallocatedPaymentsTable =
-      viewPastPaymentsModel.getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
-    Ok(view(outstandingPaymentsTable, unallocatedPaymentsTable, outstandingPaymentsData.totalBalance))
-//    }.recover { case _ =>
-//      logger.warn(s"Unable to fetch outstanding payments data for $appaId")
-//      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-//    }
+  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
+    val appaId = request.appaId
+    alcoholDutyAccountConnector
+      .outstandingPayments(appaId)
+      .map { outstandingPaymentsData =>
+        println(outstandingPaymentsData)
+        val outstandingPaymentsTable =
+          viewPastPaymentsModel.getOutstandingPaymentsTable(outstandingPaymentsData.outstandingPayments)
+        val unallocatedPaymentsTable =
+          viewPastPaymentsModel.getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
+        println(unallocatedPaymentsTable)
+        Ok(view(outstandingPaymentsTable, unallocatedPaymentsTable, outstandingPaymentsData.totalOpenPaymentsAmount))
+      }
+      .recover { case _ =>
+        logger.warn(s"Unable to fetch open payments data for $appaId")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
   }
 }

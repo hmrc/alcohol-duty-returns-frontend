@@ -18,8 +18,9 @@ package common
 
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.TransactionType.{LPI, RPI, Return}
 import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
-import models.{AlcoholRegimes, ObligationData, ObligationStatus, ReturnId, ReturnPeriod, UserAnswers}
+import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, TransactionType, UnallocatedPayment, UserAnswers}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
@@ -278,5 +279,70 @@ trait TestData extends ModelGenerators {
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 6, 30), periodKey = "24AE"),
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 7, 30), periodKey = "24AF"),
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 5, 30), periodKey = "24AD")
+  )
+
+  val openPaymentsData = OpenPayments(
+    outstandingPayments = Seq(
+      OutstandingPayment(
+        TransactionType.Return,
+        LocalDate.now(),
+        Some("XM0026103011594"),
+        BigDecimal(-7234),
+        BigDecimal(-2345)
+      ),
+      OutstandingPayment(
+        TransactionType.LPI,
+        LocalDate.of(2024, 8, 25),
+        Some("1234ChangreRef"),
+        BigDecimal(3234),
+        BigDecimal(2345)
+      ),
+      OutstandingPayment(
+        Return,
+        LocalDate.of(2024, 8, 25),
+        Some(s"XM0026103011593"),
+        BigDecimal(4773),
+        BigDecimal(4735)
+      ),
+      OutstandingPayment(
+        Return,
+        LocalDate.of(2024, 9, 25),
+        Some(s"XM0026130011595"),
+        BigDecimal(4773),
+        BigDecimal(3775)
+      ),
+      OutstandingPayment(
+        RPI,
+        LocalDate.of(2024, 9, 25),
+        Some(s"XM0026130011597"),
+        BigDecimal(2011),
+        BigDecimal(2011)
+      ),
+      OutstandingPayment(
+        LPI,
+        LocalDate.of(2024, 9, 25),
+        Some(s"XM0026103011598"),
+        BigDecimal(1011),
+        BigDecimal(1011)
+      ),
+      OutstandingPayment(
+        LPI,
+        LocalDate.of(2024, 6, 24),
+        Some(s"XM0026103011598"),
+        BigDecimal(1011),
+        BigDecimal(1011)
+      ),
+      OutstandingPayment(
+        Return,
+        LocalDate.of(2024, 7, 25),
+        Some(s"XM0026103011596"),
+        BigDecimal(2131411),
+        BigDecimal(2131411)
+      )
+    ),
+    unallocatedPayments = Seq(UnallocatedPayment(LocalDate.of(2024, 9, 25), BigDecimal(-123))),
+    totalOpenPaymentsAmount = BigDecimal(12134.67),
+    totalUnallocatedPayments = BigDecimal(134.67),
+    totalOutstandingPayments = BigDecimal(1234.67)
   )
 }

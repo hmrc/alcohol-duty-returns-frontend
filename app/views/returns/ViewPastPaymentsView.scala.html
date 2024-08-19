@@ -41,25 +41,31 @@
 
     @pageHeading(messages("viewPastPayments.heading"))
 
-    @paragraph(messages("viewPastPayments.paragraph"))
-
-    <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.duty")
-        <br>
     @if(dutyBalance > 0) {
-        <span class="govuk-heading-l">@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
+        <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.youOwe")
+            <br>
+            <span class=@{Constants.headingLCssClass}>@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
+        </p>
     }
     @if(dutyBalance < 0) {
-            <span class="govuk-heading-l">@messages("viewPastPayments.negative.duty.value", Money.format(dutyBalance.abs))</span>
-            <p class="govuk-body">@messages("viewPastPayments.credit.para1")
+        <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.youAre")
+            <br>
+            <span class=@{Constants.headingLCssClass}>@messages("viewPastPayments.negative.duty.value", Money.format(dutyBalance.abs))</span>
+            <p class=@{Constants.bodyCssClass}>@messages("viewPastPayments.credit.para1")
                 @link(
                 id = "view-past-payments-refund-link",
-                text = messages("viewPastPayments.link.content"),
+                text = messages("viewPastPayments.credit.link.content"),
                 href = "test",
                 newTab = true
                 ) @messages("viewPastPayments.credit.para2")
             </p>
+        </p>
     }
-    </p>
+    @if(dutyBalance == 0) {
+      @paragraph(messages("viewPastPayments.zeroBalance.paragraph"))
+    }
+
+    @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
 
     @govukTable(Table(
         caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
@@ -81,14 +87,17 @@
         )
     )
 
-    @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"))
+    @if(unallocatedPaymentsTable.rows.size > 0) {
 
-    @govukTable(Table(
-        caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
-        captionClasses = Constants.tableCaptionMCssClass,
-        head = Some(unallocatedPaymentsTable.head),
-        rows = unallocatedPaymentsTable.rows.map(_.cells)
-    ))
+        @govukTable(Table(
+            caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
+            captionClasses = Constants.tableCaptionMCssClass,
+            head = Some(unallocatedPaymentsTable.head),
+            rows = unallocatedPaymentsTable.rows.map(_.cells),
+        ))
+
+        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"))
+    }
 
 
 }

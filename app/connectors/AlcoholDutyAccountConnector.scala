@@ -17,15 +17,14 @@
 package connectors
 
 import config.FrontendAppConfig
-import models.{OpenPayments, OutstandingPayment}
+import models.OpenPayments
 import play.api.Logging
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.reflect.runtime.universe.Try
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 class AlcoholDutyAccountConnector @Inject() (
   config: FrontendAppConfig,
@@ -33,18 +32,16 @@ class AlcoholDutyAccountConnector @Inject() (
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances
     with Logging {
-  /*
-  def getOutstandingPayments(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[OutstandingPayment]]={
+  def outstandingPayments(appaId: String)(implicit hc: HeaderCarrier): Future[OpenPayments] =
     httpClient
       .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetOutstandingPaymentsUrl(appaId))
       .flatMap {
         case Right(response) if response.status == OK =>
-          Try(response.json.as[Seq[OutstandingPayment]]) match {
-            case Success(data) => Future.successful(data)
+          Try(response.json.as[OpenPayments]) match {
+            case Success(data)      => Future.successful(data)
             case Failure(exception) => Future.failed(new Exception(s"Invalid JSON format $exception"))
           }
-        case Left(errorResponse) => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
-        case Right(response) => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
+        case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
+        case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
       }
-  }*/
 }

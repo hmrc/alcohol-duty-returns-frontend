@@ -26,7 +26,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, TableRow,
 import config.Constants
 import config.Constants.boldFontCssClass
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue, PartiallyPaid}
-import models.TransactionType.{LPI, PaymentOnAccount, RPI}
+import models.TransactionType.RPI
 import models.{OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import play.twirl.api.Html
@@ -70,7 +70,11 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
           TableRow(content = Text(formatDateYearMonth(outstandingPaymentsData.dueDate))),
           TableRow(content =
             HtmlContent(
-              formatDescription(outstandingPaymentsData.transactionType, outstandingPaymentsData.chargeReference)
+              formatDescription(
+                outstandingPaymentsData.transactionType,
+                outstandingPaymentsData.chargeReference,
+                outstandingPaymentsData.totalAmount
+              )
             )
           ),
           TableRow(
@@ -78,7 +82,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
             classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
           ),
           TableRow(
-            content = Text(Money.format(outstandingPaymentsData.remainingAmount.max(BigDecimal(0)))),
+            content = Text(Money.format(outstandingPaymentsData.remainingAmount)),
             classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
           ),
           TableRow(content = HtmlContent(statusTag))
@@ -91,11 +95,15 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     unallocatedPaymentsData: Seq[UnallocatedPayment]
   )(implicit messages: Messages): TableViewModel = {
     val sortedUnallocatedPaymentsData = unallocatedPaymentsData.sortBy(_.paymentDate)(Ordering[LocalDate].reverse)
-    TableViewModel(
-      head = getUnallocatedPaymentsHeader(),
-      rows = getUnallocatedPaymentsDataTableRows(sortedUnallocatedPaymentsData),
-      total = None
-    )
+    if (sortedUnallocatedPaymentsData.nonEmpty) {
+      TableViewModel(
+        head = getUnallocatedPaymentsHeader(),
+        rows = getUnallocatedPaymentsDataTableRows(sortedUnallocatedPaymentsData),
+        total = None
+      )
+    } else {
+      TableViewModel(head = Seq.empty, Seq.empty, total = None)
+    }
   }
 
   private def getUnallocatedPaymentsHeader()(implicit messages: Messages): Seq[HeadCell] =
@@ -112,9 +120,9 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
       TableRowViewModel(
         cells = Seq(
           TableRow(content = Text(formatDateYearMonth(unallocatedPaymentData.paymentDate))),
-          TableRow(content = Text(messages("viewPastPayments.Return.description"))),
+          TableRow(content = Text(messages("viewPastPayments.unallocatedPayments.description"))),
           TableRow(
-            content = Text(Money.format(unallocatedPaymentData.amount)),
+            content = Text(Money.format(unallocatedPaymentData.unallocatedAmount)),
             classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
           )
         )
@@ -142,21 +150,31 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     date.format(formatter)
   }
 
-  private def formatDescription(transactionType: TransactionType, chargeReference: Option[String])(implicit
+  private def formatDescription(
+    transactionType: TransactionType,
+    chargeReference: Option[String],
+    totalAmount: BigDecimal
+  )(implicit
     messages: Messages
-  ): Html =
-    (transactionType, chargeReference) match {
-      case (_, Some(chargeReference))                                     =>
-        val description = messages(s"viewPastPayments.$transactionType.description")
-        val reference   = messages("viewPastPayments.ref", chargeReference)
-        Html(s"$description<br>$reference")
-      case (transactionType, None) if transactionType == PaymentOnAccount => Html("Payment on account")
+  ): Html = {
+    val (description, reference) = (totalAmount, chargeReference, transactionType) match {
+      case (_, Some(chargeReference), transactionType) if transactionType == RPI =>
+        (messages(s"viewPastPayments.RPI.description"), messages("viewPastPayments.ref", chargeReference))
+      case (totalAmount, Some(chargeReference), _) if totalAmount < 0            =>
+        (messages(s"viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
+      case (_, Some(chargeReference), _)                                         =>
+        (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
+      case (_, None, _)                                                          =>
+        logger.logger.warn("Couldn't fetch chargeReference for outstanding payment")
+        throw new RuntimeException("Couldn't fetch chargeReference for outstanding payment")
     }
+    Html(s"$description<br>$reference")
+  }
 
   private def getOutstandingPaymentStatus(
     outstandingPaymentsData: OutstandingPayment
   ): OutstandingPaymentStatusToDisplay =
-    if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.transactionType == PaymentOnAccount) {
+    if (outstandingPaymentsData.transactionType == RPI) {
       NothingToPay
     } else if (outstandingPaymentsData.totalAmount < 0) {
       NothingToPay

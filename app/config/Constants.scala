@@ -27,6 +27,7 @@ object Constants {
   val dutyMinimumValue: BigDecimal    = BigDecimal(0.00)
   val dutyMaximumValue: BigDecimal    = BigDecimal(999999999.99)
 
+  val bodyCssClass           = "govuk-body"
   val oneQuarterCssClass     = "govuk-!-width-one-quarter"
   val oneHalfCssClass        = "govuk-!-width-one-half"
   val threeQuartersCssClass  = "govuk-!-width-three-quarters"
@@ -40,6 +41,7 @@ object Constants {
   val greyTagCssClass   = "govuk-tag--grey"
 
   val headingMCssClass = "govuk-heading-m"
+  val headingLCssClass = "govuk-heading-l"
 
   val tableCaptionMCssClass    = "govuk-table__caption--m"
   val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"

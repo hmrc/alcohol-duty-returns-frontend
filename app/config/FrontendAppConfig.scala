@@ -35,7 +35,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     servicesConfig.baseUrl("alcohol-duty-returns")
 
   private lazy val adrAccountHost: String =
-    servicesConfig.baseUrl("alcohol-duty-accounts")
+    servicesConfig.baseUrl("alcohol-duty-account")
 
   private lazy val adrCalculatorHost: String =
     servicesConfig.baseUrl("alcohol-duty-calculator")
@@ -109,7 +109,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     s"$adrReturnsHost/alcohol-duty-returns/producers/$appaId/returns/$periodKey"
 
   def adrGetOutstandingPaymentsUrl(appaId: String): String =
-    s"$adrAccountHost/alcohol-duty-account/payments/outstanding/$appaId"
+    s"$adrAccountHost/alcohol-duty-account/producers/$appaId/payments/open"
 
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart

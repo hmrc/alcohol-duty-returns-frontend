@@ -28,8 +28,6 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
 
   case object Return extends TransactionType
 
-  case object PaymentOnAccount extends TransactionType
-
   case object LPI extends TransactionType
 
   case object RPI extends TransactionType
@@ -51,7 +49,7 @@ object OutstandingPayment {
 
 case class UnallocatedPayment(
   paymentDate: LocalDate,
-  amount: BigDecimal
+  unallocatedAmount: BigDecimal
 ) extends OpenPayment
 
 object UnallocatedPayment {
@@ -60,8 +58,10 @@ object UnallocatedPayment {
 
 case class OpenPayments(
   outstandingPayments: Seq[OutstandingPayment],
+  totalOutstandingPayments: BigDecimal,
   unallocatedPayments: Seq[UnallocatedPayment],
-  totalBalance: BigDecimal
+  totalUnallocatedPayments: BigDecimal,
+  totalOpenPaymentsAmount: BigDecimal
 )
 
 object OpenPayments {
