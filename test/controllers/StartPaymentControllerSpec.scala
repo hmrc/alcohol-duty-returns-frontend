@@ -38,7 +38,7 @@ class StartPaymentControllerSpec extends SpecBase {
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
     Some(chargeReference),
-    paymentDueDate
+    Some(paymentDueDate)
   )
 
   "StartPayment Controller" - {
