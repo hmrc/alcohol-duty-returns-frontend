@@ -96,7 +96,40 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
         processingDate = Instant.now(),
         amount = BigDecimal(1),
         chargeReference = Some("1234567890"),
-        paymentDueDate = LocalDate.now()
+        paymentDueDate = Some(LocalDate.now())
+      )
+      val jsonResponse            = Json.toJson(adrReturnCreatedDetails).toString()
+      val httpResponse            = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
+
+      when(mockConfig.adrSubmitReturnUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when {
+        connector.httpClient
+          .POST[AdrReturnSubmission, Either[UpstreamErrorResponse, HttpResponse]](
+            eqTo(mockUrl),
+            eqTo(adrReturnSubmission),
+            any()
+          )(any(), any(), any(), any())
+      } thenReturn httpResponse
+
+      whenReady(connector.submitReturn(appaId, periodKey, adrReturnSubmission).value) { result =>
+        result mustBe Right(adrReturnCreatedDetails)
+        verify(connector.httpClient, atLeastOnce)
+          .POST[AdrReturnSubmission, Either[UpstreamErrorResponse, HttpResponse]](
+            eqTo(mockUrl),
+            eqTo(adrReturnSubmission),
+            any()
+          )(any(), any(), any(), any())
+      }
+    }
+
+    "successfully submit a return and receive nil return response" in {
+      val adrReturnSubmission     = mock[AdrReturnSubmission]
+      val adrReturnCreatedDetails = AdrReturnCreatedDetails(
+        processingDate = Instant.now(),
+        amount = BigDecimal(1),
+        chargeReference = None,
+        paymentDueDate = None
       )
       val jsonResponse            = Json.toJson(adrReturnCreatedDetails).toString()
       val httpResponse            = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
