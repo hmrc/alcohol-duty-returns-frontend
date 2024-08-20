@@ -55,48 +55,44 @@
             content = HtmlContent(posPanelContent)
         ))
 
-    @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
+        @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
 
-    @paragraph( content =
-        HtmlContent(
-            link(
-                id = "view-return-link",
-                text = messages("returnSubmitted.viewReturnLink.text"),
-                href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
-            ))
+        @paragraph( content =
+            HtmlContent(
+                link(
+                    id = "view-return-link",
+                    text = messages("returnSubmitted.viewReturnLink.text"),
+                    href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+        )))
+
+        @subHeading(messages("returnSubmitted.positive.h1"))
+
+        @paragraph(messages("returnSubmitted.positive.p1", formattedPaymentDueDate))
+        @paragraph(messages("returnSubmitted.positive.p2", formattedPaymentDueDate))
+
+        @subHeading(messages("returnSubmitted.direct.debit.h2"))
+
+        @paragraph( content =
+            HtmlContent(
+                messages("returnSubmitted.direct.debit.p1") +
+                link(
+                    id = "direct-debit-start",
+                    text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
+                    href = controllers.routes.StartDirectDebitController.initiateAndRedirect().url
+        )))
+
+
+        @govukButton(
+            ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.routes.StartPaymentController.initiateAndRedirect().url)
         )
 
-    @subHeading(messages("returnSubmitted.positive.h1"))
-
-    @paragraph(messages("returnSubmitted.positive.p1", formattedPaymentDueDate))
-    @paragraph(messages("returnSubmitted.positive.p2", formattedPaymentDueDate))
-
-    @subHeading(messages("returnSubmitted.direct.debit.h2"))
-
-    @paragraph( content =
-        HtmlContent(
-            messages("returnSubmitted.direct.debit.p1") +
-            link(
-                id = "direct-debit-start",
-                text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
-                href = controllers.routes.StartDirectDebitController.initiateAndRedirect().url
-            )
-        )
-    )
-
-
-    @govukButton(
-        ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.routes.StartPaymentController.initiateAndRedirect().url)
-    )
-
-    @paragraph( content =
-        HtmlContent(
-            link(
-                id = "business-tax-account-link",
-                text = messages("site.returnToBusinessAccount"),
-                href = businessTaxAccountUrl
-            ))
-        )
+        @paragraph( content =
+            HtmlContent(
+                link(
+                    id = "business-tax-account-link",
+                    text = messages("site.returnToBusinessAccount"),
+                    href = businessTaxAccountUrl
+        )))
     }
 
 
@@ -106,25 +102,23 @@
             content = HtmlContent(nilPanelContent)
         ))
 
-    @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
+        @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
 
-    @paragraph( content =
-        HtmlContent(
-            link(
-                id = "view-return-link",
-                text = messages("returnSubmitted.viewReturnLink.text"),
-                href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
-            ))
-        )
+        @paragraph( content =
+            HtmlContent(
+                link(
+                    id = "view-return-link",
+                    text = messages("returnSubmitted.viewReturnLink.text"),
+                    href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+        )))
 
-    @paragraph( content =
-        HtmlContent(
-            link(
-                id = "business-tax-account-link",
-                text = messages("site.returnToBusinessAccount"),
-                href = businessTaxAccountUrl
-            ))
-        )
+        @paragraph( content =
+            HtmlContent(
+                link(
+                    id = "business-tax-account-link",
+                    text = messages("site.returnToBusinessAccount"),
+                    href = businessTaxAccountUrl
+        )))
     }
 
 
@@ -134,27 +128,25 @@
             content = HtmlContent(negPanelContent)
         ))
 
-    @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
+        @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
 
-    @paragraph( content =
-        HtmlContent(
-            link(
-                id = "view-return-link",
-                text = messages("returnSubmitted.viewReturnLink.text"),
-                href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
-            ))
-        )
+        @paragraph( content =
+            HtmlContent(
+                link(
+                    id = "view-return-link",
+                    text = messages("returnSubmitted.viewReturnLink.text"),
+                    href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+        )))
 
-    @subHeading(messages("returnSubmitted.positive.h1"))
-    @paragraph(messages("returnSubmitted.negative.p1"))
+        @subHeading(messages("returnSubmitted.positive.h1"))
+        @paragraph(messages("returnSubmitted.negative.p1"))
 
-    @paragraph( content =
-        HtmlContent(
-            link(
-                id = "business-tax-account-link",
-                text = messages("site.returnToBusinessAccount"),
-                href = businessTaxAccountUrl
-            ))
-        )
+        @paragraph( content =
+            HtmlContent(
+                link(
+                    id = "business-tax-account-link",
+                    text = messages("site.returnToBusinessAccount"),
+                    href = businessTaxAccountUrl
+        )))
     }
 }

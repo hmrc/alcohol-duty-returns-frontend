@@ -92,7 +92,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         processingDate = Instant.now(),
         amount = BigDecimal(1),
         chargeReference = Some("1234567890"),
-        paymentDueDate = LocalDate.now()
+        paymentDueDate = Some(LocalDate.now())
       )
 
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]

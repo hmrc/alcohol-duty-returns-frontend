@@ -33,14 +33,14 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
     Some(chargeReference),
-    paymentDueDate
+    Some(paymentDueDate)
   )
 
   val missingReturnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
     chargeReference = None,
-    paymentDueDate
+    Some(paymentDueDate)
   )
 
   val startPaymentRequestJson = Json.obj(
