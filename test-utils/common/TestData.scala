@@ -20,7 +20,7 @@ import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.TransactionType.{LPI, RPI, Return}
 import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
-import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, TransactionType, UnallocatedPayment, UserAnswers}
+import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
@@ -285,7 +285,6 @@ trait TestData extends ModelGenerators {
     Return,
     LocalDate.of(9998, 7, 25),
     Some("XM0026103011594"),
-    BigDecimal(3234.12),
     BigDecimal(2345.12)
   )
 
@@ -293,14 +292,12 @@ trait TestData extends ModelGenerators {
     Return,
     LocalDate.of(9999, 6, 25),
     Some(s"XM0026103011593"),
-    BigDecimal(4773.34),
     BigDecimal(4773.34)
   )
   val outstandingOverduePartialPayment = OutstandingPayment(
     Return,
     LocalDate.of(2022, 9, 25),
     Some(s"XM0026103011593"),
-    BigDecimal(4773.34),
     BigDecimal(4735)
   )
 
@@ -308,21 +305,18 @@ trait TestData extends ModelGenerators {
     Return,
     LocalDate.of(2024, 10, 25),
     Some(s"XM0026103011593"),
-    BigDecimal(-4773.34),
     BigDecimal(-4735)
   )
   val outstandingLPIPayment    = OutstandingPayment(
     LPI,
     LocalDate.of(9997, 8, 25),
     Some("1234ChargeRef"),
-    BigDecimal(3234.18),
     BigDecimal(3234.18)
   )
   val RPIPayment               = OutstandingPayment(
     RPI,
     LocalDate.of(2024, 7, 25),
     Some(s"XM0026130011597"),
-    BigDecimal(-2011),
     BigDecimal(-2011)
   )
 

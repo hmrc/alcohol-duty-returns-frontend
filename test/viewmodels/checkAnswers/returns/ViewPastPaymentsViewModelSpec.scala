@@ -35,7 +35,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
 
     "must return a table with the correct number of rows and head for outstanding payments" in {
       val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
-      table.head.size shouldBe 6
+      table.head.size shouldBe 5
       table.rows.size shouldBe openPaymentsData.outstandingPayments.size
     }
 
@@ -52,20 +52,11 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       table.rows.size shouldBe openPaymentsWithoutUnallocatedData.unallocatedPayments.size
     }
 
-    "must return the Partially paid status for an outstanding payment which is Partially paid" in {
-      val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingPartialPayment))
-      table.rows.map { row =>
-        row.cells(4).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text("Partially paid"), classes = "govuk-tag--yellow")
-        )
-      }
-    }
-
     "must return the Due status for an outstanding payment which is Due" in {
       val table =
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingDuePayment))
       table.rows.map { row =>
-        row.cells(4).content.asHtml shouldBe new GovukTag()(
+        row.cells(3).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text("Due"), classes = "govuk-tag--blue")
         )
       }
@@ -75,7 +66,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       val table =
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingOverduePartialPayment))
       table.rows.map { row =>
-        row.cells(4).content.asHtml shouldBe new GovukTag()(
+        row.cells(3).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text("Overdue"), classes = "govuk-tag--red")
         )
       }
@@ -85,7 +76,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       val table =
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingCreditPayment))
       table.rows.map { row =>
-        row.cells(4).content.asHtml shouldBe new GovukTag()(
+        row.cells(3).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text("Nothing to pay"), classes = "govuk-tag--grey")
         )
       }
@@ -95,7 +86,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       val table =
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingLPIPayment))
       table.rows.map { row =>
-        row.cells(4).content.asHtml shouldBe new GovukTag()(
+        row.cells(3).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text("Due"), classes = "govuk-tag--blue")
         )
       }
@@ -105,7 +96,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       val table =
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(RPIPayment))
       table.rows.map { row =>
-        row.cells(4).content.asHtml shouldBe new GovukTag()(
+        row.cells(3).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text("Nothing to pay"), classes = "govuk-tag--grey")
         )
       }

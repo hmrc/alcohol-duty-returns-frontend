@@ -45,12 +45,10 @@ class ViewPastPaymentsController @Inject() (
     alcoholDutyAccountConnector
       .outstandingPayments(appaId)
       .map { outstandingPaymentsData =>
-        println(outstandingPaymentsData)
         val outstandingPaymentsTable =
           viewPastPaymentsModel.getOutstandingPaymentsTable(outstandingPaymentsData.outstandingPayments)
         val unallocatedPaymentsTable =
           viewPastPaymentsModel.getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
-        println(unallocatedPaymentsTable)
         Ok(view(outstandingPaymentsTable, unallocatedPaymentsTable, outstandingPaymentsData.totalOpenPaymentsAmount))
       }
       .recover { case _ =>

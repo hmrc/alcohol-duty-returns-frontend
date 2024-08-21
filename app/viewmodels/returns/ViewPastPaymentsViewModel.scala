@@ -25,7 +25,7 @@ import javax.inject.Inject
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, TableRow, Text}
 import config.Constants
 import config.Constants.boldFontCssClass
-import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue, PartiallyPaid}
+import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
 import models.TransactionType.RPI
 import models.{OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
@@ -50,7 +50,6 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     Seq(
       HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.dueDate"))),
       HeadCell(content = Text(messages("viewPastPayments.description"))),
-      HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Constants.textAlignRightCssClass),
       HeadCell(
         content = Text(messages("viewPastPayments.outstandingPayments.remainingAmount")),
         classes = Constants.textAlignRightCssClass
@@ -73,13 +72,9 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
               formatDescription(
                 outstandingPaymentsData.transactionType,
                 outstandingPaymentsData.chargeReference,
-                outstandingPaymentsData.totalAmount
+                outstandingPaymentsData.remainingAmount
               )
             )
-          ),
-          TableRow(
-            content = Text(Money.format(outstandingPaymentsData.totalAmount)),
-            classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
           ),
           TableRow(
             content = Text(Money.format(outstandingPaymentsData.remainingAmount)),
@@ -153,14 +148,14 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   private def formatDescription(
     transactionType: TransactionType,
     chargeReference: Option[String],
-    totalAmount: BigDecimal
+    remainingAmount: BigDecimal
   )(implicit
     messages: Messages
   ): Html = {
-    val (description, reference) = (totalAmount, chargeReference, transactionType) match {
+    val (description, reference) = (remainingAmount, chargeReference, transactionType) match {
       case (_, Some(chargeReference), transactionType) if transactionType == RPI =>
         (messages(s"viewPastPayments.RPI.description"), messages("viewPastPayments.ref", chargeReference))
-      case (totalAmount, Some(chargeReference), _) if totalAmount < 0            =>
+      case (remainingAmount, Some(chargeReference), _) if remainingAmount < 0    =>
         (messages(s"viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, Some(chargeReference), _)                                         =>
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
@@ -174,14 +169,10 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   private def getOutstandingPaymentStatus(
     outstandingPaymentsData: OutstandingPayment
   ): OutstandingPaymentStatusToDisplay =
-    if (outstandingPaymentsData.transactionType == RPI) {
-      NothingToPay
-    } else if (outstandingPaymentsData.totalAmount < 0) {
+    if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.remainingAmount < 0) {
       NothingToPay
     } else if (outstandingPaymentsData.dueDate.isBefore(LocalDate.now())) {
       Overdue
-    } else if (outstandingPaymentsData.totalAmount != outstandingPaymentsData.remainingAmount) {
-      PartiallyPaid
     } else {
       Due
     }

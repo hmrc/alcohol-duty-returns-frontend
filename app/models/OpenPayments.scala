@@ -39,7 +39,6 @@ case class OutstandingPayment(
   transactionType: TransactionType,
   dueDate: LocalDate,
   chargeReference: Option[String],
-  totalAmount: BigDecimal,
   remainingAmount: BigDecimal
 ) extends OpenPayment
 
