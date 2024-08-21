@@ -29,6 +29,10 @@ GET         /check-your-returns                          controllers.returns.Vie
 
 GET         /view-your-return/:periodKey                 controllers.returns.ViewReturnController.onPageLoad(periodKey: String)
 
+GET         /view-payments                               controllers.returns.ViewPastPaymentsController.onPageLoad
+
+GET         /make-payments/:index                              controllers.returns.PayNowController.initiateAndRedirect(index: Int)
+
 GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
 
 GET         /before-you-start-your-return/:periodKey     controllers.BeforeStartReturnController.onPageLoad(periodKey: String)

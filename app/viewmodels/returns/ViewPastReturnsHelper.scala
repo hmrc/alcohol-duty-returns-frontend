@@ -63,7 +63,6 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
         ),
         actions = getAction(messages, obligationData, status, periodKey)
       )
-
     }
 
   private def getAction(
