@@ -31,10 +31,12 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
   "ViewPastPaymentsController Controller" - {
     "must return OK and the correct view for a GET" in {
-      val viewModelHelper                 = new ViewPastPaymentsViewModel()
+      val viewModelHelper                  = new ViewPastPaymentsViewModel()
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
-      when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(openPaymentsData)
-      val application                     = applicationBuilder(userAnswers = None)
+      when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
+        openPaymentsData
+      )
+      val application                      = applicationBuilder(userAnswers = None)
         .overrides(bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector))
         .build()
       running(application) {
@@ -45,10 +47,14 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
         val outstandingPaymentsTable =
           viewModelHelper.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)(getMessages(application))
-        val unallocatedPaymentsTable   =
+        val unallocatedPaymentsTable =
           viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(outstandingPaymentsTable, unallocatedPaymentsTable, openPaymentsData.totalOpenPaymentsAmount)(
+        contentAsString(result) mustEqual view(
+          outstandingPaymentsTable,
+          unallocatedPaymentsTable,
+          openPaymentsData.totalOpenPaymentsAmount
+        )(
           request,
           getMessages(application)
         ).toString
@@ -57,7 +63,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET on Exception" in {
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
-      val application                     = applicationBuilder(userAnswers = None).build()
+      val application                      = applicationBuilder(userAnswers = None).build()
       running(application) {
         when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.failed(
           new Exception("test Exception")

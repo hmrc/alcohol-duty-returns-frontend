@@ -166,7 +166,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, None, _)                                                          =>
         logger.logger.warn("Couldn't fetch chargeReference for outstanding payment")
-        throw new RuntimeException("Couldn't fetch chargeReference for outstanding payment")
+        (messages(s"viewPastPayments.$transactionType.description"), "")
     }
     Html(s"$description<br>$reference")
   }
