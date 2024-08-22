@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -28,9 +29,12 @@ import views.html.TaskListView
 import java.time.Instant
 
 class TaskListControllerSpec extends SpecBase {
+  val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
+
   "TaskList Controller" - {
 
     "must return OK and the correct view for a GET" in new SetUp {
+
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[TaskListViewModel].toInstance(mockTaskListViewModel)
@@ -47,7 +51,10 @@ class TaskListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[TaskListView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(taskList)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(taskList, appConfig.businessTaxAccountUrl)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 

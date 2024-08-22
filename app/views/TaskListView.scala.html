@@ -15,33 +15,48 @@
  *@
 
 @import viewmodels.tasklist.AlcoholDutyTaskList
+@import components.Link
 
 @this(
         layout: templates.Layout,
         heading: components.PageHeading,
         subheading: components.SubHeading,
         paragraph: components.Paragraph,
-        govukTaskList: GovukTaskList
+        govukTaskList: GovukTaskList,
+        govukButton: GovukButton,
+        link: Link
+
 )
 
-@(taskList:AlcoholDutyTaskList)(implicit request: Request[_], messages: Messages)
+@(taskList:AlcoholDutyTaskList, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("taskList.title"))) {
 
-  @heading(messages("taskList.title"))
+@heading(messages("taskList.title"))
 
-  @subheading(text = messages(s"taskList.status.${taskList.status.messageKey}"), classes = "govuk-heading-s")
+@subheading(text = messages(s"taskList.status.${taskList.status.messageKey}"), classes = "govuk-heading-s")
 
-  @paragraph(messages("taskList.section.completed", taskList.completedTasks, taskList.totalTasks))
+@paragraph(messages("taskList.section.completed", taskList.completedTasks, taskList.totalTasks))
 
-  @paragraph(messages("taskList.expiry.date", taskList.sessionExpiryDate))
+@paragraph(messages("taskList.expiry.date", taskList.sessionExpiryDate))
 
-  <ol class="govuk-heading-m">
-      @for(section <- taskList.sections) {
-        <li>
-          @subheading(section.title, classes = "govuk-heading-m")
-          @govukTaskList(section.taskList)
-        </li>
-      }
-  </ol>
+<ol class="govuk-heading-m">
+    @for(section <- taskList.sections) {
+    <li>
+        @subheading(section.title, classes = "govuk-heading-m")
+        @govukTaskList(section.taskList)
+    </li>
+    }
+</ol>
+
+@paragraph( content =
+        HtmlContent(
+            link(
+                id = "business-tax-account-link",
+                text = messages("site.saveAndReturn"),
+                href = businessTaxAccountUrl
+            ))
+        )
+
 }
+

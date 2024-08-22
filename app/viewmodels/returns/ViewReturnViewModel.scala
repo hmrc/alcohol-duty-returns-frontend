@@ -72,7 +72,7 @@ class ViewReturnViewModel @Inject() () {
           TableRow(content = Text(alcoholDeclaredDetailsRow.taxType)),
           TableRow(content =
             Text(
-              s"${messages("site.2DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
+              s"${messages("site.4DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
             )
           ),
           TableRow(content =
@@ -163,7 +163,7 @@ class ViewReturnViewModel @Inject() () {
           TableRow(content = Text(returnAdjustmentsRow.taxType)),
           TableRow(content =
             Text(
-              s"${messages("site.2DP", returnAdjustmentsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
+              s"${messages("site.4DP", returnAdjustmentsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
             )
           ),
           TableRow(content =

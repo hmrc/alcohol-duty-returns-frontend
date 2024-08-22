@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.{AlcoholRegime, Mode, RateBand, ReturnPeriod, UserAnswers}
 import navigation.ReturnsNavigator
 import pages.QuestionPage
-import pages.returns.{AlcoholTypePage, RateBandsPage, WhatDoYouNeedToDeclarePage, nextPages}
+import pages.returns.{RateBandsPage, WhatDoYouNeedToDeclarePage, nextPages}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -105,22 +105,15 @@ class WhatDoYouNeedToDeclareController @Inject() (
     returnPeriod: ReturnPeriod,
     selectedRegime: AlcoholRegime
   )(implicit hc: HeaderCarrier): Future[Seq[RateBand]] =
-    (userAnswers.get(RateBandsPage), userAnswers.get(AlcoholTypePage)) match {
-      case (Some(rateBands), _)  =>
+    userAnswers.get(RateBandsPage) match {
+      case Some(rateBands) =>
         Future.successful(rateBands.filter(_.rangeDetails.map(_.alcoholRegime).contains(selectedRegime)))
-      case (None, Some(regimes)) =>
+      case None            =>
         for {
-          rateBands      <-
-            calculatorConnector.rateBandByRegime(
-              returnPeriod.period,
-              regimes.toSeq
-            )
+          rateBands      <- calculatorConnector.rateBandByRegime(returnPeriod.period, userAnswers.regimes.regimes.toSeq)
           updatedAnswers <- Future.fromTry(userAnswers.set(RateBandsPage, rateBands))
           _              <- cacheConnector.set(updatedAnswers)
         } yield rateBands.filter(_.rangeDetails.map(_.alcoholRegime).contains(selectedRegime))
-      case (_, _)                =>
-        logger.warn("Alcohol Type unselected")
-        Future.failed(new RuntimeException("Alcohol Type unselected"))
     }
 
   private def rateBandFromTaxType(rateBandTaxTypes: Set[String], rateBands: Seq[RateBand]): Try[Set[RateBand]] = Try {

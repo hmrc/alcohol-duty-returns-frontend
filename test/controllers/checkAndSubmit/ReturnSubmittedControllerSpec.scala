@@ -27,13 +27,11 @@ import java.time.{Instant, LocalDate}
 
 class ReturnSubmittedControllerSpec extends SpecBase {
 
-  val currentDate = LocalDate.now()
-
   val returnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(10.45),
-    chargeReference = Some("XA1527404500736"),
-    paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
+    Some(chargeReference),
+    Some(paymentDueDate)
   )
 
   val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
@@ -95,7 +93,26 @@ class ReturnSubmittedControllerSpec extends SpecBase {
         result.processingDate mustBe Instant.parse("2024-06-11T15:07:47.838Z")
         result.amount mustBe 10.45
         result.chargeReference mustBe Some("XA1527404500736")
-        result.paymentDueDate mustBe LocalDate.parse("2024-08-25")
+        result.paymentDueDate mustBe Some(LocalDate.parse("2024-08-25"))
+      }
+
+      "should deserialise a valid json into a adrReturnCreatedDetails object with minimal payload" in {
+        val json =
+          """
+            |{
+            |"processingDate":"2024-06-11T15:07:47.838Z",
+            |"amount":10.45
+            |}
+            |
+            |""".stripMargin
+
+        val result = Json.parse(json).validate[AdrReturnCreatedDetails].get
+
+        result mustBe a[AdrReturnCreatedDetails]
+        result.processingDate mustBe Instant.parse("2024-06-11T15:07:47.838Z")
+        result.amount mustBe 10.45
+        result.chargeReference mustBe None
+        result.paymentDueDate mustBe None
       }
 
       "should redirect to journey recovery if not valid" in {

@@ -275,7 +275,7 @@ case class AdrReturnCreatedDetails(
   processingDate: Instant,
   amount: BigDecimal,
   chargeReference: Option[String],
-  paymentDueDate: LocalDate
+  paymentDueDate: Option[LocalDate]
 )
 
 object AdrReturnCreatedDetails {

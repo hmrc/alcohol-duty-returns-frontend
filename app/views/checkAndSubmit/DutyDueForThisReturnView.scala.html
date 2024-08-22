@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.TableViewModel
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
 @import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnViewModel
+@import viewmodels.Money
 
 @this(
         layout: templates.Layout,
@@ -60,7 +60,7 @@
     }
 
     @if(dutyDueViewModel.totalDue > 0) {
-      @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", dutyDueViewModel.totalDue)))
+      @pageHeading(messages("dutyDueForThisReturn.heading", Money.format(dutyDueViewModel.totalDue)))
 
       @paragraph(messages("dutyDueForThisReturn.positive.p1"))
 
@@ -72,7 +72,7 @@
     }
 
     @if(dutyDueViewModel.totalDue < 0) {
-      @pageHeading(messages("dutyDueForThisReturn.heading", messages("site.currency.2DP", dutyDueViewModel.totalDue)))
+      @pageHeading(messages("dutyDueForThisReturn.heading", Money.format(dutyDueViewModel.totalDue)))
 
       @paragraph(messages("dutyDueForThisReturn.negative.p1"))
 

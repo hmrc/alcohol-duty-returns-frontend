@@ -8,6 +8,7 @@ site.yes = Yes
 site.dot = .
 site.continue = Continue
 site.saveAndContinue = Save and continue
+site.saveAndReturn = Save and return to your Business Tax Account
 site.agreeAndSubmit = Agree and send return
 site.start = Start now
 site.payNow = Pay now
@@ -24,6 +25,7 @@ site.unit.litre.unit = l
 site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
+site.4DP = {0,number,#,###.####}
 site.currency.2DP = £{0,number,#,##0.00}
 site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
@@ -417,7 +419,7 @@ howMuchDoYouNeedToDeclare.p1.Beer = Tell us about the beer you need to declare a
 howMuchDoYouNeedToDeclare.p1.Cider = Tell us about the cider you need to declare and the pure alcohol in that cider at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.p1.Wine = Tell us about the wine you need to declare and the pure alcohol in that wine at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.p1.Spirits = Tell us about the spirits you need to declare and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.
-howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Tell us about the other fermented product you need to declare and the pure alcohol in them at the following Alcohol by Volume (ABV) strengths.
+howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Tell us about other fermented products you need to declare and the pure alcohol in them at the following Alcohol by Volume (ABV) strengths.
 howMuchDoYouNeedToDeclare.warning = We will ask about {0} eligible for Small Producer Relief on the next page.
 howMuchDoYouNeedToDeclare.hint = Give your answers in litres, to 2 decimal places.
 howMuchDoYouNeedToDeclare.core.heading = How much non-draught {0} (standard rate) do you need to declare?
@@ -511,14 +513,10 @@ multipleSPRList.error.required = Select yes if you have more than one Small Prod
 multipleSPRList.change.hidden = MultipleSPRList
 
 multipleSPRList.description.label = Description
-multipleSPRList.totalLitres.label = Total volume declared
-multipleSPRList.pureAlcohol.label = Pure alcohol declared
-multipleSPRList.dutyRate.label = SPR duty rate
+multipleSPRList.totalLitres.label = Total volume declared (litres)
+multipleSPRList.pureAlcohol.label = Pure alcohol declared (lpa)
+multipleSPRList.dutyRate.label = SPR duty rate (per litre)
 multipleSPRList.action.label = Action
-
-multipleSPRList.totalLitres.value = {0}l
-multipleSPRList.pureAlcohol.value = {0} Lpa
-multipleSPRList.dutyRate.value = £{0,number,#,##0.00} per litre
 
 checkYourAnswersLabel.row.totalLitres = Total volume
 checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
@@ -546,13 +544,10 @@ dutyCalculation.list = multiplying the volume of pure alcohol you entered by its
 dutyCalculation.h2 = Duty due
 
 dutyCalculation.table.description = Description
-dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol
-dutyCalculation.table.dutyRate = Duty rate
+dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol (lpa)
+dutyCalculation.table.dutyRate = Duty rate (per litre)
 dutyCalculation.table.dutyDue = Duty due
 dutyCalculation.table.action = Action
-
-dutyCalculation.pureAlcohol.value = {0} Lpa
-dutyCalculation.dutyRate.value = £{0,number,#,##0.00} per litre
 
 # old return journey
 

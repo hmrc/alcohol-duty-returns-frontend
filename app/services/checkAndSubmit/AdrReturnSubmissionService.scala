@@ -226,7 +226,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       ),
       dutyAdjustment = dutyAdjustment
     )
-  }.toRight(s"Impossible to create a Repackaged Adjustment item with values: $adjustmentEntry")
+  }.toRight(s"Impossible to create a Repackaged Adjustment item for values: $adjustmentEntry")
 
   private def getDutySuspended(userAnswers: UserAnswers): EitherT[Future, String, AdrDutySuspended] =
     getValue(userAnswers, DeclareDutySuspendedDeliveriesQuestionPage).flatMap { hasDeclaredDutySuspended =>

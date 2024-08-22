@@ -63,7 +63,7 @@ object StartPaymentRequest {
           returnUrl,
           backUrl
         )
-      case _                     => throw new RuntimeException("Cannot generate a PaymentStart without any charge reference")
+      case _                     => throw new RuntimeException("Cannot generate a StartPaymentRequest without any charge reference")
     }
 }
 
