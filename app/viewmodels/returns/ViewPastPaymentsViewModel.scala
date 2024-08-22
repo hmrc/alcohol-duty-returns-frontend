@@ -35,6 +35,11 @@ import java.time.format.DateTimeFormatter
 
 class ViewPastPaymentsViewModel @Inject() () extends Logging {
 
+  private val formatDateYearMonth: LocalDate => String = { date =>
+    val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+    date.format(formatter)
+  }
+
   def getOutstandingPaymentsTable(
     outstandingPaymentsData: Seq[OutstandingPayment]
   )(implicit messages: Messages): TableViewModel = {
@@ -139,11 +144,6 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
         )
       )
     }
-
-  private def formatDateYearMonth(date: LocalDate): String = {
-    val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-    date.format(formatter)
-  }
 
   private def formatDescription(
     transactionType: TransactionType,
