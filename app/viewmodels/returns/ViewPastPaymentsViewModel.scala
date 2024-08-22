@@ -35,7 +35,7 @@ import java.time.format.DateTimeFormatter
 
 class ViewPastPaymentsViewModel @Inject() () extends Logging {
 
-  val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  private val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def getOutstandingPaymentsTable(
     outstandingPaymentsData: Seq[OutstandingPayment]
