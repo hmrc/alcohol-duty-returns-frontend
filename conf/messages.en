@@ -150,7 +150,7 @@ viewPastPayments.title = Alcohol Duty payments
 viewPastPayments.outstandingPayments.caption = Outstanding payments
 viewPastPayments.outstandingPayments.dueDate = To be paid by
 viewPastPayments.description = Description
-viewPastPayments.totalAmount = Total amount
+viewPastPayments.totalAmount = Amount
 viewPastPayments.outstandingPayments.remainingAmount = Left to pay
 viewPastPayments.outstandingPayments.status = Status
 viewPastPayments.outstandingPayments.action = Action
@@ -177,7 +177,7 @@ viewPastPayments.payNow.hidden = Pay now
 viewPastPayments.unallocatedPayments.caption = Unallocated payments
 viewPastPayments.unallocatedPayments.paymentDate = Payment date
 viewPastPayments.unallocatedPayments.description = Payment
-viewPastPayments.unallocatedPayments.paragraph = An unallocated payment is when you have overpaid or made a payment without a reference so it hasn’t been allocated to a specific return
+viewPastPayments.unallocatedPayments.paragraph = An unallocated payment is when you have overpaid or made a payment without a reference so it hasn’t been allocated to a specific return. Unallocated payments will be used to pay any due or overdue payments.
 
 taskList.title = Alcohol Duty return
 taskList.status.completed = Return ready to submit
