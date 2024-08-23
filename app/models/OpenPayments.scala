@@ -73,6 +73,5 @@ object OutstandingPaymentStatusToDisplay extends PlayEnum[OutstandingPaymentStat
 
   case object Due extends OutstandingPaymentStatusToDisplay
   case object Overdue extends OutstandingPaymentStatusToDisplay
-  case object PartiallyPaid extends OutstandingPaymentStatusToDisplay
   case object NothingToPay extends OutstandingPaymentStatusToDisplay
 }

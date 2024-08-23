@@ -181,13 +181,11 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     messages: Messages
   ): Html = {
     val tag = status match {
-      case OutstandingPaymentStatusToDisplay.Due           =>
+      case OutstandingPaymentStatusToDisplay.Due          =>
         Tag(content = Text(messages("viewPastReturns.status.due")), classes = Constants.blueTagCssClass)
-      case OutstandingPaymentStatusToDisplay.Overdue       =>
+      case OutstandingPaymentStatusToDisplay.Overdue      =>
         Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = Constants.redTagCssClass)
-      case OutstandingPaymentStatusToDisplay.PartiallyPaid =>
-        Tag(content = Text(messages("viewPastPayments.status.partiallyPaid")), classes = Constants.yellowTagCssClass)
-      case OutstandingPaymentStatusToDisplay.NothingToPay  =>
+      case OutstandingPaymentStatusToDisplay.NothingToPay =>
         Tag(content = Text(messages("viewPastPayments.status.nothingToPay")), classes = Constants.greyTagCssClass)
     }
     new GovukTag()(tag)
