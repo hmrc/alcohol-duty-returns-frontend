@@ -31,8 +31,6 @@ GET         /view-your-return/:periodKey                 controllers.returns.Vie
 
 GET         /view-payments                               controllers.returns.ViewPastPaymentsController.onPageLoad
 
-GET         /make-payments/:index                              controllers.returns.PayNowController.initiateAndRedirect(index: Int)
-
 GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
 
 GET         /before-you-start-your-return/:periodKey     controllers.BeforeStartReturnController.onPageLoad(periodKey: String)
@@ -271,4 +269,5 @@ GET        /return-submitted                    controllers.checkAndSubmit.Retur
 
 GET        /start-payment                controllers.StartPaymentController.initiateAndRedirect()
 GET        /start-direct-debit                controllers.StartDirectDebitController.initiateAndRedirect()
+GET        /start-payment/:index                              controllers.StartPaymentController.initiateAndRedirectFromPastPayments(index: Int)
 # End of check and submit sub-journey

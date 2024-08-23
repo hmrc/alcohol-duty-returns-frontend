@@ -132,8 +132,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastPayments.payNow"),
-          href = controllers.returns.routes.PayNowController
-            .initiateAndRedirect(index),
+          href = controllers.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
           visuallyHiddenText = Some(messages("viewPastPayments.payNow.hidden"))
         )
       )
@@ -180,13 +179,11 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     messages: Messages
   ): Html = {
     val tag = status match {
-      case OutstandingPaymentStatusToDisplay.Due           =>
+      case OutstandingPaymentStatusToDisplay.Due          =>
         Tag(content = Text(messages("viewPastReturns.status.due")), classes = Constants.blueTagCssClass)
-      case OutstandingPaymentStatusToDisplay.Overdue       =>
+      case OutstandingPaymentStatusToDisplay.Overdue      =>
         Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = Constants.redTagCssClass)
-      case OutstandingPaymentStatusToDisplay.PartiallyPaid =>
-        Tag(content = Text(messages("viewPastPayments.status.partiallyPaid")), classes = Constants.yellowTagCssClass)
-      case OutstandingPaymentStatusToDisplay.NothingToPay  =>
+      case OutstandingPaymentStatusToDisplay.NothingToPay =>
         Tag(content = Text(messages("viewPastPayments.status.nothingToPay")), classes = Constants.greyTagCssClass)
     }
     new GovukTag()(tag)
