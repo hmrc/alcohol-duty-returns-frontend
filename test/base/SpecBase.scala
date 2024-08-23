@@ -60,7 +60,8 @@ trait SpecBase
         bind[FakeIdentifierUserDetails].toInstance(fakeIdentifierUserDetails),
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[IdentifierWithoutEnrolmentAction].to[FakeIdentifierWithoutEnrolmentAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[EnrolmentAction].to[FakeEnrolmentAction]
       )
   def FakeRequest()                                                                                  = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
   def FakeRequest(verb: String, route: String)                                                       =

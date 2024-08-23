@@ -34,6 +34,7 @@ class Module extends AbstractModule {
       .to(classOf[AuthenticatedIdentifierWithoutEnrolmentAction])
       .asEagerSingleton()
 
+    bind(classOf[EnrolmentAction]).to(classOf[EnrolmentActionImpl]).asEagerSingleton()
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
   }
 }

@@ -34,6 +34,8 @@ GET         /task-list/your-alcohol-duty-return          controllers.TaskListCon
 GET         /before-you-start-your-return/:periodKey     controllers.BeforeStartReturnController.onPageLoad(periodKey: String)
 POST        /before-you-start-your-return                controllers.BeforeStartReturnController.onSubmit()
 
+GET         /start                                       controllers.ServiceEntryController.onPageLoad
+
 # Beginning of product entry sub-journey
 
 GET        /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
