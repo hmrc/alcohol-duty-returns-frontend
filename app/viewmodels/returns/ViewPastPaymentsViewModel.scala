@@ -169,7 +169,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   private def getOutstandingPaymentStatus(
     outstandingPaymentsData: OutstandingPayment
   ): OutstandingPaymentStatusToDisplay =
-    if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.remainingAmount < 0) {
+    if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.remainingAmount <= 0) {
       NothingToPay
     } else if (outstandingPaymentsData.dueDate.isBefore(LocalDate.now())) {
       Overdue
