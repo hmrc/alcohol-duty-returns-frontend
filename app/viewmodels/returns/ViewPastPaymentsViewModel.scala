@@ -35,6 +35,8 @@ import java.time.format.DateTimeFormatter
 
 class ViewPastPaymentsViewModel @Inject() () extends Logging {
 
+  private val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+
   def getOutstandingPaymentsTable(
     outstandingPaymentsData: Seq[OutstandingPayment]
   )(implicit messages: Messages): TableViewModel =
@@ -138,10 +140,8 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
       )
     }
 
-  private def formatDateYearMonth(date: LocalDate): String = {
-    val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  private def formatDateYearMonth(date: LocalDate): String =
     date.format(formatter)
-  }
 
   private def formatDescription(
     transactionType: TransactionType,
@@ -167,7 +167,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   private def getOutstandingPaymentStatus(
     outstandingPaymentsData: OutstandingPayment
   ): OutstandingPaymentStatusToDisplay =
-    if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.remainingAmount < 0) {
+    if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.remainingAmount <= 0) {
       NothingToPay
     } else if (outstandingPaymentsData.dueDate.isBefore(LocalDate.now())) {
       Overdue
