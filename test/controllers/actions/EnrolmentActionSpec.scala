@@ -36,7 +36,6 @@ class EnrolmentActionSpec extends SpecBase {
   val appaIdKey               = "APPAID"
   val state                   = "Activated"
   val testContent             = "Ok"
-  val requestAccessUrl        = "https://request-access-url"
   val enrolments              = Enrolments(Set(Enrolment(enrolment, Seq(EnrolmentIdentifier(appaIdKey, appaId)), state)))
   val emptyEnrolments         = Enrolments(Set.empty)
   val enrolmentsWithoutAppaId = Enrolments(Set(Enrolment(enrolment, Seq.empty, state)))
@@ -67,32 +66,43 @@ class EnrolmentActionSpec extends SpecBase {
     "should redirect to enrolment request page if not adr appaId is present" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
-      when(appConfig.requestAccessUrl).thenReturn(requestAccessUrl)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
         .thenReturn(Future(enrolmentsWithoutAppaId))
 
       val result: Future[Result] = enrolmentAction.invokeBlock(request, testAction)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).value mustBe requestAccessUrl
+      redirectLocation(result).value mustBe controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad().url
     }
 
     "should redirect to enrolment request page if not there are no enrolments" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
-      when(appConfig.requestAccessUrl).thenReturn(requestAccessUrl)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any())).thenReturn(Future(emptyEnrolments))
 
       val result: Future[Result] = enrolmentAction.invokeBlock(request, testAction)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).value mustBe requestAccessUrl
+      redirectLocation(result).value mustBe controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad().url
+    }
+
+    "should redirect to enrolment request page if the AppaId is an empty string" in {
+      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      val enrolmentsWithEmptyAppaId =
+        Enrolments(Set(Enrolment(enrolment, Seq(EnrolmentIdentifier(appaIdKey, "")), state)))
+      when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
+        .thenReturn(Future(enrolmentsWithEmptyAppaId))
+
+      val result: Future[Result] = enrolmentAction.invokeBlock(request, testAction)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).value mustBe controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad().url
     }
 
     "should redirect Unauthorised if the authorization method throw an exception" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
-      when(appConfig.requestAccessUrl).thenReturn(requestAccessUrl)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
         .thenReturn(Future.failed(new Exception()))
 
@@ -105,14 +115,13 @@ class EnrolmentActionSpec extends SpecBase {
     "should redirect request access url if the authorization method throw an InsufficientEnrolments exception" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
-      when(appConfig.requestAccessUrl).thenReturn(requestAccessUrl)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
         .thenReturn(Future.failed(InsufficientEnrolments()))
 
       val result: Future[Result] = enrolmentAction.invokeBlock(request, testAction)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).value mustBe requestAccessUrl
+      redirectLocation(result).value mustBe controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad().url
     }
   }
 

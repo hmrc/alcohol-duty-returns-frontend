@@ -53,7 +53,7 @@ class EnrolmentActionImpl @Inject() (
 
     authorised(predicate).retrieve(allEnrolments) { enrolments: Enrolments =>
       getAppaId(enrolments) match {
-        case Some(appaId) =>
+        case Some(appaId) if appaId.nonEmpty =>
           block(
             IdentifierRequest(
               request = request.request,
@@ -62,14 +62,14 @@ class EnrolmentActionImpl @Inject() (
               userId = request.userId
             )
           )
-        case None         =>
+        case _                               =>
           logger.warn(s"ADR Enrolment Identifier not found for user: ${request.userId}")
-          Future.successful(Redirect(config.requestAccessUrl))
+          Future.successful(Redirect(controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad()))
       }
     } recover {
       case _: InsufficientEnrolments =>
         logger.warn(s"Enrolment not found for user: ${request.userId}")
-        Redirect(config.requestAccessUrl)
+        Redirect(controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad())
       case e                         =>
         logger.warn("Enrolment check error: ", e)
         Redirect(routes.UnauthorisedController.onPageLoad)
