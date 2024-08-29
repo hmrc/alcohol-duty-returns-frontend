@@ -64,6 +64,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     outstandingPaymentsData.zipWithIndex.map { case (outstandingPaymentsData, index) =>
       val status    = getOutstandingPaymentStatus(outstandingPaymentsData)
       val statusTag = createStatusTag(status)
+      val amount    = Money.format(outstandingPaymentsData.remainingAmount)
       TableRowViewModel(
         cells = Seq(
           TableRow(content = Text(formatDateYearMonth(outstandingPaymentsData.dueDate))),
@@ -82,7 +83,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
           ),
           TableRow(content = HtmlContent(statusTag))
         ),
-        actions = getAction(status, index)
+        actions = getAction(status, index, amount)
       )
     }
 
@@ -126,16 +127,17 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
 
   private def getAction(
     status: OutstandingPaymentStatusToDisplay,
-    index: Int
+    index: Int,
+    amount: String
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
       Seq.empty
     } else {
       Seq(
         TableRowActionViewModel(
-          label = messages("viewPastPayments.payNow"),
+          label = messages("viewPastPayments.payNow.firstPart.hidden"),
           href = controllers.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
-          visuallyHiddenText = Some(messages("viewPastPayments.payNow.hidden"))
+          visuallyHiddenText = Some(messages("viewPastPayments.payNow.secondPart.hidden", amount))
         )
       )
     }
