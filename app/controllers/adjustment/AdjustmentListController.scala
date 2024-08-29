@@ -17,7 +17,7 @@
 package controllers.adjustment
 
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.AdjustmentNavigator
 import models.NormalMode
@@ -36,7 +36,7 @@ class AdjustmentListController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: AdjustmentNavigator,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: AdjustmentListFormProvider,

@@ -29,12 +29,12 @@ class Module extends AbstractModule {
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
-    bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
-    bind(classOf[IdentifierWithoutEnrolmentAction])
-      .to(classOf[AuthenticatedIdentifierWithoutEnrolmentAction])
+    bind(classOf[IdentifyWithEnrolmentAction]).to(classOf[IdentifyWithEnrolmentActionImpl]).asEagerSingleton()
+    bind(classOf[IdentifyWithoutEnrolmentAction])
+      .to(classOf[IdentifyWithoutEnrolmentActionImpl])
       .asEagerSingleton()
 
-    bind(classOf[EnrolmentAction]).to(classOf[EnrolmentActionImpl]).asEagerSingleton()
+    bind(classOf[ServiceEntryCheckAction]).to(classOf[ServiceEntryCheckActionImpl]).asEagerSingleton()
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
   }
 }

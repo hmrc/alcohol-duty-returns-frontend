@@ -58,10 +58,10 @@ trait SpecBase
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[FakeIdentifierUserDetails].toInstance(fakeIdentifierUserDetails),
-        bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[IdentifierWithoutEnrolmentAction].to[FakeIdentifierWithoutEnrolmentAction],
+        bind[IdentifyWithEnrolmentAction].to[FakeIdentifyWithEnrolmentAction],
+        bind[IdentifyWithoutEnrolmentAction].to[FakeIdentifyWithoutEnrolmentAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[EnrolmentAction].to[FakeEnrolmentAction]
+        bind[ServiceEntryCheckAction].to[FakeServiceEntryCheckAction]
       )
   def FakeRequest()                                                                                  = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
   def FakeRequest(verb: String, route: String)                                                       =

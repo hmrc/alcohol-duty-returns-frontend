@@ -32,13 +32,13 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-trait EnrolmentAction extends ActionFunction[IdentifierWithoutEnrolmentRequest, IdentifierRequest]
+trait ServiceEntryCheckAction extends ActionFunction[IdentifierWithoutEnrolmentRequest, IdentifierRequest]
 
-class EnrolmentActionImpl @Inject() (
+class ServiceEntryCheckActionImpl @Inject() (
   override val authConnector: AuthConnector,
   config: FrontendAppConfig
 )(implicit val executionContext: ExecutionContext)
-    extends EnrolmentAction
+    extends ServiceEntryCheckAction
     with AuthorisedFunctions
     with Logging {
 

@@ -42,7 +42,7 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           => userAnswers => repackagedTaxTypeRoute(userAnswers)
     case pages.adjustment.AdjustmentListPage                        => adjustmentListPageRoute
     case _                                                          =>
-      _ => routes.IndexController.onPageLoad
+      _ => routes.TaskListController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {

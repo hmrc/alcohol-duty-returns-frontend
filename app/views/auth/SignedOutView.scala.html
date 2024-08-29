@@ -19,7 +19,7 @@
     govukButton: GovukButton
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(businessTaxAccountUrl:String)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("signedOut.title")),
@@ -35,7 +35,7 @@
     <p class="govuk-body">
         @govukButton(
             ButtonViewModel("signInButton", messages("site.signIn"))
-                .asLink(routes.IndexController.onPageLoad.url)
+                .asLink(businessTaxAccountUrl)
         )
     </p>
 }

@@ -32,7 +32,7 @@ import scala.concurrent.ExecutionContext
 
 class ViewPastReturnsController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
   viewModelHelper: ViewPastReturnsHelper,
   view: ViewPastReturnsView,

@@ -34,7 +34,7 @@ import views.html.checkAndSubmit.ReturnSubmittedView
 class ReturnSubmittedController @Inject() (
   appConfig: FrontendAppConfig,
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnSubmittedView,

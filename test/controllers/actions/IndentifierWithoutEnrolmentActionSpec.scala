@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.UnauthorizedException
 
 import scala.concurrent.Future
 
-class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
+class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
   val loginUrl         = "loginUrl"
   val loginContinueUrl = "continueUrl"
   val testContent      = "Test"
@@ -43,7 +43,7 @@ class IdentifierWithoutEnrolmentActionSpec extends SpecBase {
   val mockAuthConnector: AuthConnector       = mock[AuthConnector]
 
   val identifierAction =
-    new AuthenticatedIdentifierWithoutEnrolmentAction(mockAuthConnector, appConfig, defaultBodyParser)
+    new IdentifyWithoutEnrolmentActionImpl(mockAuthConnector, appConfig, defaultBodyParser)
 
   val testAction: Request[_] => Future[Result] = { _ =>
     Future(Ok(testContent))

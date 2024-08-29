@@ -36,7 +36,7 @@ class DeclareAdjustmentQuestionController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: AdjustmentNavigator,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: DeclareAdjustmentQuestionFormProvider,

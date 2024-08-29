@@ -41,7 +41,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
   cacheConnector: CacheConnector,
   calculatorConnector: AlcoholDutyCalculatorConnector,
   navigator: ReturnsNavigator,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: WhatDoYouNeedToDeclareFormProvider,

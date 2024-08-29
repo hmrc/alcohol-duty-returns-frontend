@@ -30,7 +30,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, Enrolment, EnrolmentIdentifier, Enr
 
 import scala.concurrent.Future
 
-class EnrolmentActionSpec extends SpecBase {
+class ServiceEntryCheckActionSpec extends SpecBase {
 
   val enrolment               = "HMRC-AD-ORG"
   val appaIdKey               = "APPAID"
@@ -43,7 +43,7 @@ class EnrolmentActionSpec extends SpecBase {
   val appConfig: FrontendAppConfig     = mock[FrontendAppConfig]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
-  val enrolmentAction = new EnrolmentActionImpl(mockAuthConnector, appConfig)
+  val enrolmentAction = new ServiceEntryCheckActionImpl(mockAuthConnector, appConfig)
 
   val request = IdentifierWithoutEnrolmentRequest(FakeRequest(), groupId, internalId)
 

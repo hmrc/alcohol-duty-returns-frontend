@@ -36,7 +36,7 @@ class ReturnsNavigatorSpec extends SpecBase {
 
       "must go from a page that doesn't exist in the route map to Index" in {
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.IndexController.onPageLoad
+        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from a page that doesn't exist in the route map to Index with regime" in {
@@ -46,7 +46,7 @@ class ReturnsNavigatorSpec extends SpecBase {
           NormalMode,
           emptyUserAnswers,
           regime
-        ) mustBe routes.IndexController.onPageLoad
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from the Alcohol to declare to task list page if the answer is Yes" in {
@@ -116,7 +116,7 @@ class ReturnsNavigatorSpec extends SpecBase {
           NormalMode,
           emptyUserAnswers,
           regime
-        ) mustBe routes.IndexController.onPageLoad
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from HowMuchDoYouNeedToDeclare page to DoYouHaveMultipleSPRDutyRates page if the user selected any 'SmallProducerRelief' or 'DraughtAndSmallProducerRelief' entries" in {
@@ -155,7 +155,7 @@ class ReturnsNavigatorSpec extends SpecBase {
           NormalMode,
           emptyUserAnswers,
           regime
-        ) mustBe routes.IndexController.onPageLoad
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from DoYouHaveMultipleSPRDutyRates page to TellUsAboutMultipleSPRRate page if the user selected 'Yes' and the Multiple SPR list is empty" in {
@@ -206,7 +206,7 @@ class ReturnsNavigatorSpec extends SpecBase {
           NormalMode,
           emptyUserAnswers,
           regime
-        ) mustBe routes.IndexController.onPageLoad
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from TellUsAboutMultipleSPRRate page to CheckYourAnswersSPR page if hasAnswerChanged variable is true and an index is provided" in {
@@ -275,13 +275,13 @@ class ReturnsNavigatorSpec extends SpecBase {
         ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
       }
 
-      "must go from DoYouWantToAddMultipleSPRToList page to IndexController page if the user hasn't selected any entries" in {
+      "must go from DoYouWantToAddMultipleSPRToList page to TaskList page if the user hasn't selected any entries" in {
         navigator.nextPageWithRegime(
           pages.returns.DoYouWantToAddMultipleSPRToListPage,
           NormalMode,
           emptyUserAnswers,
           regime
-        ) mustBe routes.IndexController.onPageLoad
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from DeleteMultipleSPREntry page to MultipleSPRList page if the list is not empty" in {
@@ -316,9 +316,9 @@ class ReturnsNavigatorSpec extends SpecBase {
 
     "in Check mode" - {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
+      "must go from a page that doesn't exist in the route map to Task List" in {
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe routes.IndexController.onPageLoad
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from DeclareAlcoholDutyQuestion page to the Task List page" in {
@@ -350,14 +350,14 @@ class ReturnsNavigatorSpec extends SpecBase {
         ) mustBe routes.TaskListController.onPageLoad
       }
 
-      "must go from a page that doesn't exist in the route map to Index with regime" in {
+      "must go from a page that doesn't exist in the route map to TaskList" in {
         case object UnknownPage extends Page
         navigator.nextPageWithRegime(
           UnknownPage,
           CheckMode,
           emptyUserAnswers,
           regime
-        ) mustBe routes.IndexController.onPageLoad
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from WhatDoYouNeedToDeclare page to HowMuchDoYouNeedToDeclare page if the user has changed answers and selected any 'Core' or 'DraughtRelief' entries" in {

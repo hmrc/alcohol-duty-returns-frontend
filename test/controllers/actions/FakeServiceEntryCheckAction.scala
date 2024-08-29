@@ -20,7 +20,7 @@ import play.api.mvc.Result
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeEnrolmentAction extends EnrolmentAction {
+class FakeServiceEntryCheckAction extends ServiceEntryCheckAction {
 
   override def invokeBlock[A](
     request: IdentifierWithoutEnrolmentRequest[A],

@@ -17,7 +17,7 @@
 package controllers.adjustment
 
 import connectors.CacheConnector
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import forms.adjustment.DeleteAdjustmentFormProvider
 import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteAdjustmentController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: DeleteAdjustmentFormProvider,

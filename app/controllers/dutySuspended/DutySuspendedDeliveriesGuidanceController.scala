@@ -30,7 +30,7 @@ import views.html.dutySuspended.DutySuspendedDeliveriesGuidanceView
 class DutySuspendedDeliveriesGuidanceController @Inject() (
   override val messagesApi: MessagesApi,
   navigator: DeclareDutySuspendedDeliveriesNavigator,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,

@@ -34,7 +34,7 @@ class DutySuspendedCiderController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: DeclareDutySuspendedDeliveriesNavigator,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkRegime: CheckCiderRegimeAction,

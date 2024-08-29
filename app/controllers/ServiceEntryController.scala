@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import controllers.actions.{EnrolmentAction, IdentifierWithoutEnrolmentAction}
+import controllers.actions.{IdentifyWithoutEnrolmentAction, ServiceEntryCheckAction}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -25,12 +25,12 @@ import javax.inject.Inject
 
 class ServiceEntryController @Inject() (
   config: FrontendAppConfig,
-  identify: IdentifierWithoutEnrolmentAction,
-  checkEnrolment: EnrolmentAction,
+  identifyWithoutEnrolment: IdentifyWithoutEnrolmentAction,
+  checkEnrolment: ServiceEntryCheckAction,
   val controllerComponents: MessagesControllerComponents
 ) extends FrontendBaseController {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen checkEnrolment) { _ =>
+  def onPageLoad: Action[AnyContent] = (identifyWithoutEnrolment andThen checkEnrolment) { _ =>
     Redirect(config.businessTaxAccountUrl)
   }
 

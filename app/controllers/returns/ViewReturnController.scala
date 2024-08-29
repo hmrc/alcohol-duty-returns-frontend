@@ -32,7 +32,7 @@ import scala.concurrent.ExecutionContext
 
 class ViewReturnController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
   viewModel: ViewReturnViewModel,
   view: ViewReturnView,

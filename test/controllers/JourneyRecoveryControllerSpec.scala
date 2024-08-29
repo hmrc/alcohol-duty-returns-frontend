@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
@@ -62,8 +63,13 @@ class JourneyRecoveryControllerSpec extends SpecBase {
 
           val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
 
+          val config = application.injector.instanceOf[FrontendAppConfig]
+
           status(result) mustEqual OK
-          contentAsString(result) mustEqual startAgainView()(request, getMessages(application)).toString
+          contentAsString(result) mustEqual startAgainView(config.businessTaxAccountUrl)(
+            request,
+            getMessages(application)
+          ).toString
         }
       }
     }
@@ -81,8 +87,13 @@ class JourneyRecoveryControllerSpec extends SpecBase {
 
           val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
 
+          val config = application.injector.instanceOf[FrontendAppConfig]
+
           status(result) mustEqual OK
-          contentAsString(result) mustEqual startAgainView()(request, getMessages(application)).toString
+          contentAsString(result) mustEqual startAgainView(config.businessTaxAccountUrl)(
+            request,
+            getMessages(application)
+          ).toString
         }
       }
     }

@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.UnauthorizedException
 
 import scala.concurrent.Future
 
-class IdentifierActionSpec extends SpecBase {
+class IdentifyWithEnrolmentActionSpec extends SpecBase {
   val loginUrl                = "loginUrl"
   val loginContinueUrl        = "continueUrl"
   val testContent             = "Test"
@@ -48,7 +48,7 @@ class IdentifierActionSpec extends SpecBase {
   val defaultBodyParser: BodyParsers.Default = app.injector.instanceOf[BodyParsers.Default]
   val mockAuthConnector: AuthConnector       = mock[AuthConnector]
 
-  val identifierAction = new AuthenticatedIdentifierAction(mockAuthConnector, appConfig, defaultBodyParser)
+  val identifierAction = new IdentifyWithEnrolmentActionImpl(mockAuthConnector, appConfig, defaultBodyParser)
 
   val testAction: Request[_] => Future[Result] = { _ =>
     Future(Ok(testContent))

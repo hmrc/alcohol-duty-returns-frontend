@@ -16,20 +16,19 @@
 
 package controllers.actions
 
-import models.requests.IdentifierWithoutEnrolmentRequest
+import javax.inject.Inject
+import models.requests.IdentifierRequest
 import play.api.mvc._
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierWithoutEnrolmentAction @Inject() (bodyParsers: PlayBodyParsers)
-    extends IdentifierWithoutEnrolmentAction {
+case class FakeIdentifierUserDetails(appaId: String, groupId: String, userId: String)
 
-  override def invokeBlock[A](
-    request: Request[A],
-    block: IdentifierWithoutEnrolmentRequest[A] => Future[Result]
-  ): Future[Result] =
-    block(IdentifierWithoutEnrolmentRequest(request, "groupId", "id"))
+class FakeIdentifyWithEnrolmentAction @Inject() (bodyParsers: PlayBodyParsers, userDetails: FakeIdentifierUserDetails)
+    extends IdentifyWithEnrolmentAction {
+
+  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
+    block(IdentifierRequest(request, userDetails.appaId, userDetails.groupId, userDetails.userId))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

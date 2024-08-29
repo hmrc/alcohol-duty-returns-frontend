@@ -18,7 +18,7 @@ package controllers.auth
 
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
-import controllers.actions.IdentifierAction
+import controllers.actions.IdentifyWithEnrolmentAction
 import models.ReturnId
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -32,7 +32,7 @@ class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   config: FrontendAppConfig,
   sessionRepository: SessionRepository,
-  identify: IdentifierAction
+  identify: IdentifyWithEnrolmentAction
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {

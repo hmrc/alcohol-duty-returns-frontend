@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DutyCalculationController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   cacheConnector: CacheConnector,
