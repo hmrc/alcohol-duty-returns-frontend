@@ -269,4 +269,5 @@ GET        /return-submitted                    controllers.checkAndSubmit.Retur
 
 GET        /start-payment                controllers.StartPaymentController.initiateAndRedirect()
 GET        /start-direct-debit                controllers.StartDirectDebitController.initiateAndRedirect()
+GET        /start-payment/:index                              controllers.StartPaymentController.initiateAndRedirectFromPastPayments(index: Int)
 # End of check and submit sub-journey

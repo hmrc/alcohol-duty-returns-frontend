@@ -16,16 +16,18 @@
 
 package controllers
 
-import config.Constants.adrReturnCreatedDetails
+import config.Constants.{adrReturnCreatedDetails, pastPaymentsSessionKey}
 import config.FrontendAppConfig
 import connectors.PayApiConnector
 import controllers.actions.IdentifierAction
+import models.OutstandingPayment
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.payments.StartPaymentRequest
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
-import play.api.mvc.{MessagesControllerComponents, Session}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result, Session}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
@@ -41,7 +43,7 @@ class StartPaymentController @Inject() (
     with I18nSupport
     with Logging {
 
-  def initiateAndRedirect() = identify.async { implicit request =>
+  def initiateAndRedirect(): Action[AnyContent] = identify.async { implicit request =>
     val returnUrl = appConfig.businessTaxAccountUrl
     val backUrl   = appConfig.host + controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url
 
@@ -53,18 +55,8 @@ class StartPaymentController @Inject() (
           returnUrl,
           backUrl
         )
-
-        payApiConnector
-          .startPayment(startPaymentRequest)
-          .foldF(
-            _ => {
-              logger.warn("Start payment failed. Redirecting user to Journey Recovery")
-              Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-            },
-            startPaymentResponse => Future.successful(Redirect(startPaymentResponse.nextUrl))
-          )
-
-      case _ =>
+        startPayment(startPaymentRequest)
+      case _                   =>
         logger.warn(
           "Return details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
         )
@@ -72,8 +64,53 @@ class StartPaymentController @Inject() (
     }
   }
 
+  def initiateAndRedirectFromPastPayments(index: Int): Action[AnyContent] = identify.async { implicit request =>
+    val url = appConfig.host + controllers.returns.routes.ViewPastPaymentsController.onPageLoad.url
+    getPaymentDetails(request.session, index, request.appaId, url) match {
+      case Some(startPaymentRequest) => startPayment(startPaymentRequest)
+      case _                         =>
+        logger.warn(
+          "OutstandingPayment details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
+        )
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+    }
+
+  }
+
   private def getReturnDetails(session: Session): Option[AdrReturnCreatedDetails] =
     session
       .get(adrReturnCreatedDetails)
       .flatMap(returnDetailsString => Json.parse(returnDetailsString).asOpt[AdrReturnCreatedDetails])
+
+  private def startPayment(startPaymentRequest: StartPaymentRequest)(implicit hc: HeaderCarrier): Future[Result] =
+    payApiConnector
+      .startPayment(startPaymentRequest)
+      .foldF(
+        _ => {
+          logger.warn("Start payment failed. Redirecting user to Journey Recovery")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        },
+        startPaymentResponse => Future.successful(Redirect(startPaymentResponse.nextUrl))
+      )
+
+  private def getPaymentDetails(
+    session: Session,
+    index: Int,
+    appaId: String,
+    url: String
+  ): Option[StartPaymentRequest] =
+    session
+      .get(pastPaymentsSessionKey)
+      .flatMap { paymentDetails =>
+        Json.parse(paymentDetails).asOpt[Seq[OutstandingPayment]] match {
+          case Some(outstandingPayments) =>
+            outstandingPayments.lift(index) match {
+              case Some(outstandingPayment) => Some(StartPaymentRequest(outstandingPayment, appaId, url))
+              case None                     =>
+                logger.warn(s"outstandingPayment details at index $index not found.")
+                None
+            }
+          case _                         => None
+        }
+      }
 }

@@ -47,4 +47,6 @@ object Constants {
   val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"
 
   val quarterlySpiritsMonths = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
+
+  val pastPaymentsSessionKey: String = "past-payment-amount"
 }

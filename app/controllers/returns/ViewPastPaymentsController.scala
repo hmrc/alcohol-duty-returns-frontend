@@ -24,9 +24,11 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ViewPastPaymentsViewModel
 import views.html.returns.ViewPastPaymentsView
-
+import play.api.libs.json.Json
+import java.time.LocalDate
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
+import config.Constants.pastPaymentsSessionKey
 
 class ViewPastPaymentsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -44,12 +46,22 @@ class ViewPastPaymentsController @Inject() (
     val appaId = request.appaId
     alcoholDutyAccountConnector
       .outstandingPayments(appaId)
-      .map { outstandingPaymentsData =>
-        val outstandingPaymentsTable =
-          viewPastPaymentsModel.getOutstandingPaymentsTable(outstandingPaymentsData.outstandingPayments)
+      .flatMap { outstandingPaymentsData =>
+        val sortedOutstandingPaymentsData =
+          outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+        val outstandingPaymentsTable      =
+          viewPastPaymentsModel.getOutstandingPaymentsTable(
+            sortedOutstandingPaymentsData
+          )
+        val session                       = request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
+
         val unallocatedPaymentsTable =
           viewPastPaymentsModel.getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
-        Ok(view(outstandingPaymentsTable, unallocatedPaymentsTable, outstandingPaymentsData.totalOpenPaymentsAmount))
+
+        Future.successful(
+          Ok(view(outstandingPaymentsTable, unallocatedPaymentsTable, outstandingPaymentsData.totalOpenPaymentsAmount))
+            .withSession(session)
+        )
       }
       .recover { case _ =>
         logger.warn(s"Unable to fetch open payments data for $appaId")

@@ -26,6 +26,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
 import viewmodels.returns.ViewPastPaymentsViewModel
 
+import java.time.LocalDate
+
 class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChecks {
   val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = getMessages(application)
@@ -103,7 +105,9 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
     }
 
     "must return a sorted table by due date in descending order for outstanding payments" in {
-      val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
+      val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(
+        openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+      )
       table.rows.size                                                 shouldBe openPaymentsData.outstandingPayments.size
       table.rows.map(row => row.cells.head.content.asHtml.toString()) shouldBe Seq(
         Text("25 June 9999").asHtml.toString(),

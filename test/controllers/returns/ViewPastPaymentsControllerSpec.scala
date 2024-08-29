@@ -25,6 +25,7 @@ import play.api.test.Helpers._
 import viewmodels.returns.ViewPastPaymentsViewModel
 import views.html.returns.ViewPastPaymentsView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class ViewPastPaymentsControllerSpec extends SpecBase {
@@ -43,11 +44,12 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         val request = FakeRequest(GET, returns.routes.ViewPastPaymentsController.onPageLoad.url)
         val result  = route(application, request).value
 
-        val view = application.injector.instanceOf[ViewPastPaymentsView]
-
-        val outstandingPaymentsTable =
-          viewModelHelper.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)(getMessages(application))
-        val unallocatedPaymentsTable =
+        val view                          = application.injector.instanceOf[ViewPastPaymentsView]
+        val sortedOutstandingPaymentsData =
+          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+        val outstandingPaymentsTable      =
+          viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
+        val unallocatedPaymentsTable      =
           viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(

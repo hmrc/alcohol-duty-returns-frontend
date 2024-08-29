@@ -298,6 +298,85 @@ trait TestData extends ModelGenerators {
 
   val chargeReference = "XA" + listOfN(10, numChar).sample.get.toString()
 
+  val outstandingPartialPayment = OutstandingPayment(
+    Return,
+    LocalDate.of(9998, 7, 25),
+    Some(chargeReference),
+    BigDecimal(3234.12)
+  )
+
+  val outstandingDuePayment = OutstandingPayment(
+    Return,
+    LocalDate.of(9999, 6, 25),
+    Some(chargeReference),
+    BigDecimal(4773.34)
+  )
+
+  val outstandingOverduePartialPayment = OutstandingPayment(
+    Return,
+    LocalDate.of(2022, 9, 25),
+    Some(chargeReference),
+    BigDecimal(4773.34)
+  )
+
+  val outstandingCreditPayment = OutstandingPayment(
+    Return,
+    LocalDate.of(2024, 10, 25),
+    Some(chargeReference),
+    BigDecimal(-4773.34)
+  )
+
+  val outstandingLPIPayment = OutstandingPayment(
+    LPI,
+    LocalDate.of(9997, 8, 25),
+    Some(chargeReference),
+    BigDecimal(3234.18)
+  )
+
+  val RPIPayment = OutstandingPayment(
+    RPI,
+    LocalDate.of(2024, 7, 25),
+    Some(chargeReference),
+    BigDecimal(-2011)
+  )
+
+  val openPaymentsData = OpenPayments(
+    outstandingPayments = Seq(
+      outstandingCreditPayment,
+      outstandingPartialPayment,
+      outstandingLPIPayment,
+      RPIPayment,
+      outstandingOverduePartialPayment,
+      outstandingDuePayment
+    ),
+    unallocatedPayments = Seq(
+      UnallocatedPayment(LocalDate.of(2024, 9, 25), BigDecimal(-123)),
+      UnallocatedPayment(LocalDate.of(2024, 8, 25), BigDecimal(-1273)),
+      UnallocatedPayment(LocalDate.of(2024, 7, 25), BigDecimal(-1273))
+    ),
+    totalOpenPaymentsAmount = BigDecimal(12134.67),
+    totalUnallocatedPayments = BigDecimal(134.67),
+    totalOutstandingPayments = BigDecimal(1234.67)
+  )
+
+  val openPaymentsWithoutUnallocatedData = OpenPayments(
+    outstandingPayments = Seq(
+      outstandingCreditPayment,
+      outstandingPartialPayment
+    ),
+    unallocatedPayments = Seq.empty,
+    totalOpenPaymentsAmount = BigDecimal(12134.67),
+    totalUnallocatedPayments = BigDecimal(0),
+    totalOutstandingPayments = BigDecimal(1234.67)
+  )
+
+  val outstandingPaymentMissingChargeReference = OutstandingPayment(
+    Return,
+    LocalDate.of(9999, 6, 25),
+    None,
+    BigDecimal(4773.34)
+  )
+
   val currentDate    = LocalDate.now()
   val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
 
@@ -793,74 +872,5 @@ trait TestData extends ModelGenerators {
     repackagedSprDutyRate = None,
     repackagedDuty = None,
     newDuty = None
-  )
-
-  val outstandingPartialPayment = OutstandingPayment(
-    Return,
-    LocalDate.of(9998, 7, 25),
-    Some("XM0026103011594"),
-    BigDecimal(2345.12)
-  )
-
-  val outstandingDuePayment            = OutstandingPayment(
-    Return,
-    LocalDate.of(9999, 6, 25),
-    Some(s"XM0026103011593"),
-    BigDecimal(4773.34)
-  )
-  val outstandingOverduePartialPayment = OutstandingPayment(
-    Return,
-    LocalDate.of(2022, 9, 25),
-    Some(s"XM0026103011593"),
-    BigDecimal(4735)
-  )
-
-  val outstandingCreditPayment = OutstandingPayment(
-    Return,
-    LocalDate.of(2024, 10, 25),
-    Some(s"XM0026103011593"),
-    BigDecimal(-4735)
-  )
-  val outstandingLPIPayment    = OutstandingPayment(
-    LPI,
-    LocalDate.of(9997, 8, 25),
-    Some("1234ChargeRef"),
-    BigDecimal(3234.18)
-  )
-  val RPIPayment               = OutstandingPayment(
-    RPI,
-    LocalDate.of(2024, 7, 25),
-    Some(s"XM0026130011597"),
-    BigDecimal(-2011)
-  )
-
-  val openPaymentsData = OpenPayments(
-    outstandingPayments = Seq(
-      outstandingCreditPayment,
-      outstandingPartialPayment,
-      outstandingLPIPayment,
-      RPIPayment,
-      outstandingOverduePartialPayment,
-      outstandingDuePayment
-    ),
-    unallocatedPayments = Seq(
-      UnallocatedPayment(LocalDate.of(2024, 9, 25), BigDecimal(-123)),
-      UnallocatedPayment(LocalDate.of(2024, 8, 25), BigDecimal(-1273)),
-      UnallocatedPayment(LocalDate.of(2024, 7, 25), BigDecimal(-1273))
-    ),
-    totalOpenPaymentsAmount = BigDecimal(12134.67),
-    totalUnallocatedPayments = BigDecimal(134.67),
-    totalOutstandingPayments = BigDecimal(1234.67)
-  )
-
-  val openPaymentsWithoutUnallocatedData = OpenPayments(
-    outstandingPayments = Seq(
-      outstandingCreditPayment,
-      outstandingPartialPayment
-    ),
-    unallocatedPayments = Seq.empty,
-    totalOpenPaymentsAmount = BigDecimal(12134.67),
-    totalUnallocatedPayments = BigDecimal(0),
-    totalOutstandingPayments = BigDecimal(1234.67)
   )
 }
