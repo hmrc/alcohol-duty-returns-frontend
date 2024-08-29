@@ -43,29 +43,43 @@ class ViewPastPaymentsController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
-    val appaId = request.appaId
-    alcoholDutyAccountConnector
-      .outstandingPayments(appaId)
-      .flatMap { outstandingPaymentsData =>
+    val appaId                    = request.appaId
+    val outstandingPaymentsFuture =
+      alcoholDutyAccountConnector.outstandingPayments(appaId).map { outstandingPaymentsData =>
         val sortedOutstandingPaymentsData =
           outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
-        val outstandingPaymentsTable      =
-          viewPastPaymentsModel.getOutstandingPaymentsTable(
-            sortedOutstandingPaymentsData
-          )
-        val session                       = request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
+        val updatedSession                =
+          request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
+        val outstandingPaymentsTable = viewPastPaymentsModel.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
 
         val unallocatedPaymentsTable =
           viewPastPaymentsModel.getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
-
-        Future.successful(
-          Ok(view(outstandingPaymentsTable, unallocatedPaymentsTable, outstandingPaymentsData.totalOpenPaymentsAmount))
-            .withSession(session)
+        (
+          outstandingPaymentsTable,
+          unallocatedPaymentsTable,
+          updatedSession,
+          outstandingPaymentsData.totalOpenPaymentsAmount
         )
       }
-      .recover { case _ =>
-        logger.warn(s"Unable to fetch open payments data for $appaId")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    // hardcoding 2024 until next iteration of past payments
+    val historicPaymentsFuture    =
+      alcoholDutyAccountConnector.historicPayments(appaId, 2024).map { historicPaymentsData =>
+        val historicPaymentsTable = viewPastPaymentsModel.getHistoricPaymentsTable(historicPaymentsData.payments)
+        (historicPaymentsTable, historicPaymentsData.year)
       }
+
+    val openAndHistoricPaymentsFuture = for {
+      (outstandingPaymentsTable, unallocatedPaymentsTable, session, totalOpenPaymentsAmount) <-
+        outstandingPaymentsFuture
+      (historicPaymentsTable, year)                                                          <- historicPaymentsFuture
+    } yield Ok(
+      view(outstandingPaymentsTable, unallocatedPaymentsTable, totalOpenPaymentsAmount, historicPaymentsTable, year)
+    )
+      .withSession(session)
+
+    openAndHistoricPaymentsFuture.recover { case ex =>
+      logger.warn(s"Error fetching payments data for $appaId: ${ex.getMessage}")
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 }

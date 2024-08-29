@@ -22,6 +22,7 @@ import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
@@ -110,6 +111,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrGetOutstandingPaymentsUrl(appaId: String): String =
     s"$adrAccountHost/alcohol-duty-account/producers/$appaId/payments/open"
+
+  def adrGetHistoricPaymentsUrl(appaId: String, year: Int): String =
+    s"$adrAccountHost/alcohol-duty-account/producers/$appaId/payments/historic/$year"
 
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart

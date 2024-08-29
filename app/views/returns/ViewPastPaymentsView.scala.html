@@ -35,7 +35,7 @@
 )
 
 
-@(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, dutyBalance: BigDecimal)(implicit request: Request[_], messages: Messages)
+@(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, dutyBalance: BigDecimal, historicPaymentsTable: TableViewModel, year: Int)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewPastPayments.title")), fullWidth = true){
 
@@ -67,25 +67,27 @@
 
     @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
 
-    @govukTable(Table(
-        caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
-        captionClasses = Constants.tableCaptionMCssClass,
-        head = Some(outstandingPaymentsTable.head),
-        rows = outstandingPaymentsTable.rows.map(row => {
-            val actions = TableRow(content = HtmlContent(tableRowActionList(
-            id = "outstandingPaymentsId",
-            actions = row.actions.map(action => tableRowAction(
-            id = "",
-            text = action.label,
-            href = action.href,
-            visuallyHiddenContent = action.visuallyHiddenText
-            )
-            ))))
-            row.cells :+ actions
-            }
+    @if(outstandingPaymentsTable.rows.size > 0) {
+        @govukTable(Table(
+            caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
+            captionClasses = Constants.tableCaptionMCssClass,
+            head = Some(outstandingPaymentsTable.head),
+            rows = outstandingPaymentsTable.rows.map(row => {
+                val actions = TableRow(content = HtmlContent(tableRowActionList(
+                id = "outstandingPaymentsId",
+                actions = row.actions.map(action => tableRowAction(
+                id = "",
+                text = action.label,
+                href = action.href,
+                visuallyHiddenContent = action.visuallyHiddenText
+                )
+                ))))
+                row.cells :+ actions
+                }
+                )
             )
         )
-    )
+    }
 
     @if(unallocatedPaymentsTable.rows.size > 0) {
 
@@ -99,5 +101,14 @@
         @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"))
     }
 
+
+    @if(historicPaymentsTable.rows.size > 0) {
+        @govukTable(Table(
+            caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", year))),
+            captionClasses = Constants.tableCaptionMCssClass,
+            head = Some(historicPaymentsTable.head),
+            rows = historicPaymentsTable.rows.map(_.cells),
+        ))
+    }
 
 }
