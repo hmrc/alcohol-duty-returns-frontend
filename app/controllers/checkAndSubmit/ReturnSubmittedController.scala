@@ -59,7 +59,8 @@ class ReturnSubmittedController @Inject() (
             val periodEndDate                      = returnPeriodViewModel.toDate
             val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)
             val formattedProcessingDate            = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
-            val formattedPaymentDueDate            = dateTimeHelper.formatDateMonthYear(returnDetails.paymentDueDate)
+            val formattedPaymentDueDate            =
+              returnDetails.paymentDueDate.map(dateTimeHelper.formatDateMonthYear).getOrElse("")
 
             Ok(
               view(
