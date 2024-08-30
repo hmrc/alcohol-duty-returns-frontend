@@ -18,16 +18,20 @@ package models.payments
 
 import base.SpecBase
 import generators.ModelGenerators
+import models.OutstandingPayment
+import models.TransactionType.Return
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.{JsResultException, Json}
 
-import java.time.Instant
+import java.time.{Instant, LocalDate}
 
 class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerators {
 
   val startPaymentRequest =
     StartPaymentRequest("referenceNumber", BigInt(1045), chargeReference, "/return/url", "/back/url")
+
+  val pastPaymentsStartPaymentRequest = StartPaymentRequest("appaId", BigInt(477334), chargeReference, "/url", "/url")
 
   val returnDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
@@ -43,12 +47,27 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
     Some(paymentDueDate)
   )
 
+  val outstandingPayment = OutstandingPayment(
+    Return,
+    LocalDate.of(9999, 6, 25),
+    Some(chargeReference),
+    BigDecimal(4773.34)
+  )
+
   val startPaymentRequestJson = Json.obj(
     "referenceNumber"       -> "referenceNumber",
     "amountInPence"         -> 1045,
     "chargeReferenceNumber" -> chargeReference,
     "returnUrl"             -> "/return/url",
     "backUrl"               -> "/back/url"
+  )
+
+  val pastPaymentsStartPaymentRequestJson = Json.obj(
+    "referenceNumber"       -> "appaId",
+    "amountInPence"         -> 477334,
+    "chargeReferenceNumber" -> chargeReference,
+    "returnUrl"             -> "/url",
+    "backUrl"               -> "/url"
   )
 
   val startPaymentRequestWithNumericAmountJson = Json.obj(
@@ -77,8 +96,12 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
 
   ".formats writes" - {
 
-    "must generate a json representation, including a numeric 'amountInPence' value" in {
+    "must generate a json representation, including a numeric 'amountInPence' value for return payment" in {
       Json.toJson(startPaymentRequest) mustBe startPaymentRequestJson
+    }
+
+    "must generate a json representation, including a numeric 'amountInPence' value for past payment" in {
+      Json.toJson(pastPaymentsStartPaymentRequest) mustBe pastPaymentsStartPaymentRequestJson
     }
   }
 
@@ -88,6 +111,7 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
 
       "when all fields are present & correct" in {
         startPaymentRequestJson.as[StartPaymentRequest] mustBe startPaymentRequest
+        pastPaymentsStartPaymentRequestJson.as[StartPaymentRequest] mustBe pastPaymentsStartPaymentRequest
         startPaymentRequestWithNumericAmountJson.as[StartPaymentRequest] mustBe startPaymentRequest
       }
     }
@@ -99,7 +123,7 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
   }
   ".apply" - {
 
-    "must generate a new startPaymentRequest, converting the duty amount from pounds into a pence value" in {
+    "must generate a new startPaymentRequest, converting the duty amount from pounds into a pence value for return payment" in {
 
       StartPaymentRequest.apply(
         returnDetails,
@@ -110,12 +134,31 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
 
     }
 
-    "must throw an exception if unable to fetch charge reference" in {
+    "must throw an exception if unable to fetch charge reference for return payment" in {
 
       a[RuntimeException] mustBe thrownBy(
         StartPaymentRequest.apply(missingReturnDetails, "referenceNumber", "/return/url", "/back/url")
       )
 
     }
+
+    "must generate a new startPaymentRequest, converting the duty amount from pounds into a pence value for past payment" in {
+
+      StartPaymentRequest.apply(
+        outstandingPayment,
+        "appaId",
+        "/url"
+      ) mustEqual pastPaymentsStartPaymentRequest
+
+    }
+
+    "must throw an exception if unable to fetch charge reference for Past payment transaction" in {
+
+      a[RuntimeException] mustBe thrownBy(
+        StartPaymentRequest.apply(outstandingPaymentMissingChargeReference, "appaId", "/url")
+      )
+
+    }
+
   }
 }

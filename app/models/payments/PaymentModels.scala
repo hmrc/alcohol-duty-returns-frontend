@@ -16,6 +16,7 @@
 
 package models.payments
 
+import models.OutstandingPayment
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.libs.json.{Format, JsError, JsNumber, JsResult, JsString, JsSuccess, JsValue, Json, OFormat}
 
@@ -65,6 +66,26 @@ object StartPaymentRequest {
         )
       case _                     => throw new RuntimeException("Cannot generate a StartPaymentRequest without any charge reference")
     }
+
+  def apply(
+    outstandingPayment: OutstandingPayment,
+    appaId: String,
+    url: String
+  ): StartPaymentRequest = outstandingPayment.chargeReference match {
+    case Some(chargeReference) =>
+      val amountInPence = (outstandingPayment.remainingAmount * 100).toBigInt
+      StartPaymentRequest(
+        appaId,
+        amountInPence,
+        chargeReference,
+        url,
+        url
+      )
+    case _                     =>
+      throw new RuntimeException(
+        "Cannot generate a StartPaymentRequest without any charge reference for OutstandingPayment"
+      )
+  }
 }
 
 case class StartPaymentResponse(journeyId: String, nextUrl: String)

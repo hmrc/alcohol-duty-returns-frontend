@@ -18,8 +18,10 @@ package controllers
 
 import base.SpecBase
 import cats.data.EitherT
-import config.Constants.adrReturnCreatedDetails
+import config.Constants.{adrReturnCreatedDetails, pastPaymentsSessionKey}
 import connectors.PayApiConnector
+import models.OutstandingPayment
+import models.TransactionType.Return
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.payments.StartPaymentResponse
 import org.mockito.ArgumentMatchers.any
@@ -28,7 +30,7 @@ import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 
-import java.time.Instant
+import java.time.{Instant, LocalDate}
 
 class StartPaymentControllerSpec extends SpecBase {
 
@@ -41,7 +43,14 @@ class StartPaymentControllerSpec extends SpecBase {
     Some(paymentDueDate)
   )
 
-  "StartPayment Controller" - {
+  val outstandingPayment = OutstandingPayment(
+    Return,
+    LocalDate.of(9999, 6, 25),
+    Some(chargeReference),
+    BigDecimal(4773.34)
+  )
+
+  "StartPayment Controller return payment" - {
 
     "must redirect to the nextUrl if startPaymentResponse is successful" in {
       val payApiConnector = mock[PayApiConnector]
@@ -112,5 +121,97 @@ class StartPaymentControllerSpec extends SpecBase {
       }
     }
 
+  }
+
+  "StartPayment Controller past payment" - {
+
+    "must redirect to the nextUrl if startPaymentResponse is successful" in {
+      val payApiConnector = mock[PayApiConnector]
+
+      when(payApiConnector.startPayment(any())(any())).thenReturn(
+        EitherT.rightT(startPaymentResponse)
+      )
+
+      val application = applicationBuilder()
+        .overrides(bind[PayApiConnector].toInstance(payApiConnector))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.routes.StartPaymentController.initiateAndRedirectFromPastPayments(0).url)
+            .withSession(
+              pastPaymentsSessionKey -> Json.toJson(Seq(outstandingPayment)).toString()
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe "/next-url"
+      }
+    }
+
+    "must redirect to the Journey Recovery controller if startPayment fails" in {
+      val payApiConnector = mock[PayApiConnector]
+
+      when(payApiConnector.startPayment(any())(any())).thenReturn(
+        EitherT.leftT("Error message")
+      )
+
+      val application = applicationBuilder()
+        .overrides(bind[PayApiConnector].toInstance(payApiConnector))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.routes.StartPaymentController.initiateAndRedirectFromPastPayments(0).url)
+            .withSession(pastPaymentsSessionKey -> Json.toJson(Seq(outstandingPayment)).toString())
+
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the Journey Recovery controller if no outstanding payment is found at given index" in {
+      val payApiConnector = mock[PayApiConnector]
+
+      val application = applicationBuilder()
+        .overrides(bind[PayApiConnector].toInstance(payApiConnector))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.routes.StartPaymentController.initiateAndRedirectFromPastPayments(3).url)
+            .withSession(
+              pastPaymentsSessionKey -> Json.toJson(Seq(outstandingPayment)).toString()
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the Journey Recovery controller if session contains valid but incorrect JSON format for OutstandingPayment" in {
+      val payApiConnector = mock[PayApiConnector]
+
+      val application = applicationBuilder()
+        .overrides(bind[PayApiConnector].toInstance(payApiConnector))
+        .build()
+      running(application) {
+
+        val request =
+          FakeRequest(GET, controllers.routes.StartPaymentController.initiateAndRedirectFromPastPayments(0).url)
+            .withSession(
+              pastPaymentsSessionKey -> Json.toJson("malformed JSON").toString()
+            )
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
   }
 }
