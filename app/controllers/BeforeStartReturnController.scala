@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BeforeStartReturnController @Inject() (
   cacheConnector: CacheConnector,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   val controllerComponents: MessagesControllerComponents,
   view: BeforeStartReturnView

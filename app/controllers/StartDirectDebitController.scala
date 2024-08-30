@@ -18,7 +18,7 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.DirectDebitConnector
-import controllers.actions.IdentifierAction
+import controllers.actions.IdentifyWithEnrolmentAction
 import models.payments.StartDirectDebitRequest
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -29,7 +29,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class StartDirectDebitController @Inject() (
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   appConfig: FrontendAppConfig,
   directDebitConnector: DirectDebitConnector,
   val controllerComponents: MessagesControllerComponents

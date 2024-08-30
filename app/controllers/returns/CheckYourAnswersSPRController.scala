@@ -35,7 +35,7 @@ import scala.util.Try
 class CheckYourAnswersSPRController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,

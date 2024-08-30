@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,28 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
+import play.api.http.Status.SEE_OTHER
 import play.api.test.Helpers._
+import play.api.test.Helpers.{GET, redirectLocation, route, running, status}
 
-class IndexControllerSpec extends SpecBase {
+class ServiceEntryControllerSpec extends SpecBase {
 
-  "Index Controller" - {
+  "ServiceEntry controller" - {
+    "should redirect to BTA" in {
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder().build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
+        val request =
+          FakeRequest(GET, controllers.routes.ServiceEntryController.onPageLoad.url)
+
+        val config = application.injector.instanceOf[FrontendAppConfig]
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+        redirectLocation(result).value mustBe config.businessTaxAccountUrl
       }
     }
   }

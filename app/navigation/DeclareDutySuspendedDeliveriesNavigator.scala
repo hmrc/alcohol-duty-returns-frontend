@@ -48,7 +48,7 @@ class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator
     case pages.dutySuspended.DutySuspendedOtherFermentedPage             =>
       _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
     case _                                                               =>
-      _ => routes.IndexController.onPageLoad
+      _ => routes.TaskListController.onPageLoad
   }
 
   override val checkRouteMap: Page => UserAnswers => Call = {

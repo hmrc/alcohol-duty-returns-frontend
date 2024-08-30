@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,22 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
-import javax.inject.Inject
-import play.api.i18n.I18nSupport
+import config.FrontendAppConfig
+import controllers.actions.{IdentifyWithoutEnrolmentAction, ServiceEntryCheckAction}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IndexView
 
-class IndexController @Inject() (
-  val controllerComponents: MessagesControllerComponents,
-  identify: IdentifierAction,
-  view: IndexView
-) extends FrontendBaseController
-    with I18nSupport {
+import javax.inject.Inject
 
-  def onPageLoad: Action[AnyContent] = identify {
-    Redirect("/manage-alcohol-duty/task-list/your-alcohol-duty-return")
+class ServiceEntryController @Inject() (
+  config: FrontendAppConfig,
+  identifyWithoutEnrolment: IdentifyWithoutEnrolmentAction,
+  checkEnrolment: ServiceEntryCheckAction,
+  val controllerComponents: MessagesControllerComponents
+) extends FrontendBaseController {
+
+  def onPageLoad: Action[AnyContent] = (identifyWithoutEnrolment andThen checkEnrolment) { _ =>
+    Redirect(config.businessTaxAccountUrl)
   }
+
 }

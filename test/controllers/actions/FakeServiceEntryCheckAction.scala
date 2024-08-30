@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,18 @@
  */
 
 package controllers.actions
+import models.requests.{IdentifierRequest, IdentifierWithoutEnrolmentRequest}
+import play.api.mvc.Result
 
-import models.requests.IdentifierWithoutEnrolmentRequest
-import play.api.mvc._
-
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierWithoutEnrolmentAction @Inject() (bodyParsers: PlayBodyParsers)
-    extends IdentifierWithoutEnrolmentAction {
+class FakeServiceEntryCheckAction extends ServiceEntryCheckAction {
 
   override def invokeBlock[A](
-    request: Request[A],
-    block: IdentifierWithoutEnrolmentRequest[A] => Future[Result]
+    request: IdentifierWithoutEnrolmentRequest[A],
+    block: IdentifierRequest[A] => Future[Result]
   ): Future[Result] =
-    block(IdentifierWithoutEnrolmentRequest(request, "groupId", "id"))
+    block(IdentifierRequest(request.request, appaId = "appaId", groupId = request.groupId, userId = request.userId))
 
-  override def parser: BodyParser[AnyContent] =
-    bodyParsers.default
-
-  override protected def executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+  override protected def executionContext: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }

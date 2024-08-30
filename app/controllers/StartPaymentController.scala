@@ -19,8 +19,8 @@ package controllers
 import config.Constants.{adrReturnCreatedDetails, pastPaymentsSessionKey}
 import config.FrontendAppConfig
 import connectors.PayApiConnector
-import controllers.actions.IdentifierAction
 import models.OutstandingPayment
+import controllers.actions.IdentifyWithEnrolmentAction
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.payments.StartPaymentRequest
 import play.api.Logging
@@ -34,7 +34,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class StartPaymentController @Inject() (
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   appConfig: FrontendAppConfig,
   payApiConnector: PayApiConnector,
   val controllerComponents: MessagesControllerComponents

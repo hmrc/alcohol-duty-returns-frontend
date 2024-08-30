@@ -17,6 +17,7 @@
 package controllers.auth
 
 import base.SpecBase
+import config.FrontendAppConfig
 import play.api.test.Helpers._
 import views.html.auth.SignedOutView
 
@@ -35,8 +36,10 @@ class SignedOutControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[SignedOutView]
 
+        val config = application.injector.instanceOf[FrontendAppConfig]
+
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(config.businessTaxAccountUrl)(request, getMessages(application)).toString
       }
     }
   }
