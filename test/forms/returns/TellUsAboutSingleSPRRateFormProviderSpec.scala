@@ -45,6 +45,12 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       }
 
       val result = form.bind(values)
+
+      if (result.value.isEmpty) {
+        println(s"*************Values: $values")
+        println(s"*************Form data: ${result.data}")
+        println(s"*************Form errors: ${result.errors}")
+      }
       result.value.value mustEqual volumeAndRateByTaxTypes
     }
 
