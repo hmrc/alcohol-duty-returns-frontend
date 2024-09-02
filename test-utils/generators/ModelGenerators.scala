@@ -243,7 +243,7 @@ trait ModelGenerators {
 
   implicit val arbitraryRateBand: Arbitrary[RateBand] = Arbitrary {
     for {
-      taxType        <- Gen.alphaStr
+      taxType        <- Gen.alphaStr.suchThat(_.nonEmpty)
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
       alcoholRegimes <- arbitrarySetOfAlcoholRegimes.arbitrary
@@ -295,7 +295,7 @@ trait ModelGenerators {
 
   def genRateBandForRegime(alcoholRegime: AlcoholRegime): Gen[RateBand] =
     for {
-      taxType        <- Gen.alphaStr
+      taxType        <- Gen.alphaStr.suchThat(_.nonEmpty)
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
       alcoholRegimes <- genAlcoholRegime(alcoholRegime)
@@ -304,7 +304,7 @@ trait ModelGenerators {
 
   def genRateBandForRegimeWithSPR(alcoholRegime: AlcoholRegime): Gen[RateBand] =
     for {
-      taxType        <- Gen.alphaStr
+      taxType        <- Gen.alphaStr.suchThat(_.nonEmpty)
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
       alcoholRegimes <- genAlcoholRegime(alcoholRegime)
