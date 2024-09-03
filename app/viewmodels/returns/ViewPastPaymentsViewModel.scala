@@ -77,8 +77,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
               formatDescription(
                 outstandingPaymentsData.transactionType,
                 outstandingPaymentsData.chargeReference,
-                outstandingPaymentsData.remainingAmount,
-                "outstanding"
+                outstandingPaymentsData.remainingAmount
               )
             )
           ),
@@ -154,11 +153,9 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
           TableRow(content = Text(historicPaymentsData.period.period.format(monthYearformatter))),
           TableRow(content =
             HtmlContent(
-              formatDescription(
+              formatHistoricPaymentsDescription(
                 historicPaymentsData.transactionType,
-                historicPaymentsData.chargeReference,
-                historicPaymentsData.amountPaid,
-                "historic"
+                historicPaymentsData.chargeReference
               )
             )
           ),
@@ -192,8 +189,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   private def formatDescription(
     transactionType: TransactionType,
     chargeReference: Option[String],
-    remainingAmount: BigDecimal,
-    paymentType: String
+    remainingAmount: BigDecimal
   )(implicit
     messages: Messages
   ): Html = {
@@ -201,15 +197,28 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
       case (_, Some(chargeReference), transactionType) if transactionType == RPI =>
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (remainingAmount, Some(chargeReference), _) if remainingAmount < 0    =>
-        (
-          messages(s"viewPastPayments.$paymentType.credit.description"),
-          messages("viewPastPayments.ref", chargeReference)
-        )
+        (messages("viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, Some(chargeReference), _)                                         =>
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, None, _)                                                          =>
         logger.logger.warn("Couldn't fetch chargeReference for outstanding payment")
         (messages(s"viewPastPayments.$transactionType.description"), "")
+    }
+    Html(s"$description<br>$reference")
+  }
+
+  private def formatHistoricPaymentsDescription(transactionType: TransactionType, chargeReference: Option[String])(
+    implicit messages: Messages
+  ): Html = {
+    val (description, reference) = (chargeReference, transactionType) match {
+      case (Some(chargeReference), transactionType) =>
+        (
+          messages(s"viewPastPayments.historic.$transactionType.description"),
+          messages("viewPastPayments.ref", chargeReference)
+        )
+      case (None, _)                                =>
+        logger.logger.warn("Couldn't fetch chargeReference for historc payment")
+        (messages(s"viewPastPayments.historic.$transactionType.description"), "")
     }
     Html(s"$description<br>$reference")
   }

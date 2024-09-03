@@ -19,20 +19,20 @@ package models
 import play.api.libs.json.{Json, OFormat}
 
 case class HistoricPayment(
-                            period: ReturnPeriod,
-                            transactionType: TransactionType,
-                            chargeReference: Option[String],
-                            amountPaid: BigDecimal
-                          )
+  period: ReturnPeriod,
+  transactionType: TransactionType,
+  chargeReference: Option[String],
+  amountPaid: BigDecimal
+)
 
 object HistoricPayment {
   implicit val historicPaymentFormat: OFormat[HistoricPayment] = Json.format[HistoricPayment]
 }
 
 case class HistoricPayments(
-                             year: Int,
-                             payments: Seq[HistoricPayment]
-                           )
+  year: Int,
+  payments: Seq[HistoricPayment]
+)
 
 object HistoricPayments {
   implicit val historicPaymentsFormat: OFormat[HistoricPayments] = Json.format[HistoricPayments]

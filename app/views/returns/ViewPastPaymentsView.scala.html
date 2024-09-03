@@ -46,6 +46,7 @@
             <br>
             <span class=@{Constants.headingLCssClass}>@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
         </p>
+        @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance < 0) {
         <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.youAre")
@@ -60,12 +61,13 @@
                 ) @messages("viewPastPayments.credit.para2")
             </p>
         </p>
+        @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance == 0) {
-      @paragraph(messages("viewPastPayments.zeroBalance.paragraph"))
+        <p class=@{Constants.headingLCssClass}>@messages("viewPastPayments.zeroBalance.paragraph")</p>
     }
 
-    @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
+
 
     @if(outstandingPaymentsTable.rows.size > 0) {
         @govukTable(Table(
@@ -98,7 +100,8 @@
             rows = unallocatedPaymentsTable.rows.map(_.cells),
         ))
 
-        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"))
+        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"), "govuk-body govuk-!-padding-bottom-3")
+
     }
 
 
@@ -109,6 +112,12 @@
             head = Some(historicPaymentsTable.head),
             rows = historicPaymentsTable.rows.map(_.cells),
         ))
+
+        @paragraph(messages("viewPastPayments.historic.paragraph"))
+    }
+    @if(historicPaymentsTable.rows.size == 0) {
+            <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.historic.caption", messages("site.year", year))</p>
+            @paragraph(messages("viewPastPayments.historic.noPayments"))
     }
 
 }
