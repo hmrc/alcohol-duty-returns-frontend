@@ -19,15 +19,19 @@ package controllers
 import config.Constants.periodKeySessionKey
 import connectors.CacheConnector
 import controllers.actions._
-import models.{ReturnId, ReturnPeriod}
+import models.audit.AuditContinueReturn
+import models.{ReturnId, ReturnPeriod, UserAnswers}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.AuditService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
+import java.time.Instant
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,6 +39,7 @@ class BeforeStartReturnController @Inject() (
   cacheConnector: CacheConnector,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
+  auditService: AuditService,
   val controllerComponents: MessagesControllerComponents,
   view: BeforeStartReturnView
 )(implicit ec: ExecutionContext)
@@ -50,8 +55,14 @@ class BeforeStartReturnController @Inject() (
       case Some(returnPeriod) =>
         val session = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
-          case Some(_) => Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+          case Some(_) =>
+            val returnContinueTime = Some(Instant.now)
+            auditContinueReturn(request.userAnswers, ReturnId(request.appaId, periodKey), returnContinueTime)
+            Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case None    =>
+            val returnContinueTime = None
+            logger.warn("User answers couldn't be retrieved while auditing continue return")
+            auditContinueReturn(None, ReturnId(request.appaId, periodKey), returnContinueTime)
             Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
         }
     }
@@ -75,4 +86,24 @@ class BeforeStartReturnController @Inject() (
         }
     }
   }
+
+  private def auditContinueReturn(
+    userAnswers: Option[UserAnswers],
+    returnId: ReturnId,
+    returnContinueTime: Option[Instant]
+  )(implicit
+    hc: HeaderCarrier
+  ): Unit = {
+    val eventDetail = AuditContinueReturn(
+      appaId = returnId.appaId,
+      periodKey = returnId.periodKey,
+      governmentGatewayId = userAnswers.map(_.internalId),
+      governmentGatewayGroupId = userAnswers.map(_.groupId),
+      returnContinueTime = returnContinueTime,
+      returnStartedTime = userAnswers.map(_.lastUpdated),
+      returnValidUntilTime = userAnswers.flatMap(_.validUntil)
+    )
+    auditService.audit(eventDetail)
+  }
+
 }
