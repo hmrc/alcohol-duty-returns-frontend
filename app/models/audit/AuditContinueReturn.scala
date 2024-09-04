@@ -22,14 +22,14 @@ import models.audit.AuditType.ContinueReturn
 import java.time.Instant
 
 case class AuditContinueReturn(
-                                appaId: String,
-                                periodKey: String,
-                                governmentGatewayId: Option[String],
-                                governmentGatewayGroupId: Option[String],
-                                returnContinueTime: Option[Instant],
-                                returnStartedTime: Option[Instant],
-                                returnValidUntilTime: Option[Instant]
-                              ) extends AuditEventDetail {
+  appaId: String,
+  periodKey: String,
+  governmentGatewayId: Option[String],
+  governmentGatewayGroupId: Option[String],
+  returnContinueTime: Option[Instant],
+  returnStartedTime: Option[Instant],
+  returnValidUntilTime: Option[Instant]
+) extends AuditEventDetail {
   protected val _auditType = ContinueReturn
 }
 

@@ -56,13 +56,9 @@ class BeforeStartReturnController @Inject() (
         val session = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
           case Some(_) =>
-            val returnContinueTime = Some(Instant.now)
-            auditContinueReturn(request.userAnswers, ReturnId(request.appaId, periodKey), returnContinueTime)
+            auditContinueReturn(request.userAnswers, ReturnId(request.appaId, periodKey))
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case None    =>
-            val returnContinueTime = None
-            logger.warn("User answers couldn't be retrieved while auditing continue return")
-            auditContinueReturn(None, ReturnId(request.appaId, periodKey), returnContinueTime)
             Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
         }
     }
@@ -89,12 +85,12 @@ class BeforeStartReturnController @Inject() (
 
   private def auditContinueReturn(
     userAnswers: Option[UserAnswers],
-    returnId: ReturnId,
-    returnContinueTime: Option[Instant]
+    returnId: ReturnId
   )(implicit
     hc: HeaderCarrier
   ): Unit = {
-    val eventDetail = AuditContinueReturn(
+    val returnContinueTime = Some(Instant.now)
+    val eventDetail        = AuditContinueReturn(
       appaId = returnId.appaId,
       periodKey = returnId.periodKey,
       governmentGatewayId = userAnswers.map(_.internalId),
