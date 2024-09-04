@@ -29,7 +29,7 @@ class ReturnsNavigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case DeclareAlcoholDutyQuestionPage => userAnswers => declareAlcoholQuestionRoute(userAnswers, NormalMode)
-    case _                              => _ => routes.IndexController.onPageLoad
+    case _                              => _ => routes.TaskListController.onPageLoad
   }
 
   private val normalRoutesReturnJourney: Page => UserAnswers => AlcoholRegime => Boolean => Option[Int] => Call = {
@@ -48,7 +48,7 @@ class ReturnsNavigator @Inject() () {
                 case Some(_) =>
                   controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
                 case _       =>
-                  routes.IndexController.onPageLoad
+                  routes.TaskListController.onPageLoad
               }
 
     case HowMuchDoYouNeedToDeclarePage =>
@@ -66,7 +66,7 @@ class ReturnsNavigator @Inject() () {
                 case Some(_) =>
                   controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
                 case _       =>
-                  routes.IndexController.onPageLoad
+                  routes.TaskListController.onPageLoad
               }
 
     case DoYouHaveMultipleSPRDutyRatesPage =>
@@ -82,7 +82,7 @@ class ReturnsNavigator @Inject() () {
                 case (Some(false), _)                          =>
                   controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
                 case _                                         =>
-                  routes.IndexController.onPageLoad
+                  routes.TaskListController.onPageLoad
               }
 
     case TellUsAboutMultipleSPRRatePage =>
@@ -108,7 +108,7 @@ class ReturnsNavigator @Inject() () {
                 case Some(true)  =>
                   controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
                 case Some(false) => controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
-                case _           => routes.IndexController.onPageLoad
+                case _           => routes.TaskListController.onPageLoad
               }
 
     case DeleteMultipleSPREntryPage =>
@@ -123,7 +123,7 @@ class ReturnsNavigator @Inject() () {
                   controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
               }
 
-    case _ => _ => _ => _ => _ => routes.IndexController.onPageLoad
+    case _ => _ => _ => _ => _ => routes.TaskListController.onPageLoad
   }
 
   private val checkRouteMapReturnJourney: Page => UserAnswers => AlcoholRegime => Boolean => Option[Int] => Call = {
@@ -165,13 +165,13 @@ class ReturnsNavigator @Inject() () {
               else
                 controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
     case _                              =>
-      _ => _ => _ => _ => routes.IndexController.onPageLoad
+      _ => _ => _ => _ => routes.TaskListController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
     case pages.returns.DeclareAlcoholDutyQuestionPage =>
       userAnswers => _ => declareAlcoholQuestionRoute(userAnswers, CheckMode)
-    case _                                            => _ => _ => routes.IndexController.onPageLoad
+    case _                                            => _ => _ => routes.TaskListController.onPageLoad
   }
 
   def nextPageWithRegime(

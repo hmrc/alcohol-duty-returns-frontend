@@ -35,7 +35,7 @@ class OtherSpiritsProducedController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: QuarterlySpiritsQuestionsNavigator,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: OtherSpiritsProducedFormProvider,

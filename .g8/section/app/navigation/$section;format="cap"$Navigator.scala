@@ -12,7 +12,7 @@ class $section;format="cap"$Navigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
     case _                           =>
-      _ => routes.IndexController.onPageLoad
+      _ => routes.TaskListController.onPageLoad
 
   }
 

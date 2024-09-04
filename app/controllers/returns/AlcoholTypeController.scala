@@ -36,7 +36,7 @@ class AlcoholTypeController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: ReturnsNavigator,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: AlcoholTypeFormProvider,

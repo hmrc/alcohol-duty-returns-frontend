@@ -18,7 +18,7 @@ class $className$Controller @Inject()(
                                         override val messagesApi: MessagesApi,
                                         cacheConnector: CacheConnector,
                                         navigator: $section;format="cap"$Navigator,
-                                        identify: IdentifierAction,
+                                        identify: IdentifyWithEnrolmentAction,
                                         getData: DataRetrievalAction,
                                         requireData: DataRequiredAction,
                                         formProvider: $className$FormProvider,

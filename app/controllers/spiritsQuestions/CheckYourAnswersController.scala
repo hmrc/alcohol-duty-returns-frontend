@@ -16,7 +16,7 @@
 
 package controllers.spiritsQuestions
 import com.google.inject.Inject
-import controllers.actions.{CheckSpiritsRegimeAction, DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{CheckSpiritsRegimeAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -24,7 +24,7 @@ import viewmodels.checkAnswers.spiritsQuestions.CheckYourAnswersSummaryListHelpe
 import views.html.spiritsQuestions.CheckYourAnswersView
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkSpiritsRegime: CheckSpiritsRegimeAction,

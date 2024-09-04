@@ -9,7 +9,7 @@ import views.html.$section$.$className$View
 
 class $className$Controller @Inject()(
                                        override val messagesApi: MessagesApi,
-                                       identify: IdentifierAction,
+                                       identify: IdentifyWithEnrolmentAction,
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
                                        val controllerComponents: MessagesControllerComponents,

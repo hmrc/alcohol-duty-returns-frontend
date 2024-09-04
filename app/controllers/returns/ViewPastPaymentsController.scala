@@ -17,7 +17,7 @@
 package controllers.returns
 
 import connectors.AlcoholDutyAccountConnector
-import controllers.actions.IdentifierAction
+import controllers.actions.IdentifyWithEnrolmentAction
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ViewPastPaymentsViewModel
 import views.html.returns.ViewPastPaymentsView
 import play.api.libs.json.Json
+
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -32,7 +33,7 @@ import config.Constants.pastPaymentsSessionKey
 
 class ViewPastPaymentsController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
+  identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
   viewPastPaymentsModel: ViewPastPaymentsViewModel,
   view: ViewPastPaymentsView,
@@ -74,8 +75,7 @@ class ViewPastPaymentsController @Inject() (
       (historicPaymentsTable, year)                                                          <- historicPaymentsFuture
     } yield Ok(
       view(outstandingPaymentsTable, unallocatedPaymentsTable, totalOpenPaymentsAmount, historicPaymentsTable, year)
-    )
-      .withSession(session)
+    ).withSession(session)
 
     openAndHistoricPaymentsFuture.recover { case ex =>
       logger.warn(s"Error fetching payments data for $appaId: ${ex.getMessage}")

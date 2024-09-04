@@ -24,8 +24,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 case class FakeIdentifierUserDetails(appaId: String, groupId: String, userId: String)
 
-class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers, userDetails: FakeIdentifierUserDetails)
-    extends IdentifierAction {
+class FakeIdentifyWithEnrolmentAction @Inject() (bodyParsers: PlayBodyParsers, userDetails: FakeIdentifierUserDetails)
+    extends IdentifyWithEnrolmentAction {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
     block(IdentifierRequest(request, userDetails.appaId, userDetails.groupId, userDetails.userId))
