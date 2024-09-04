@@ -39,6 +39,7 @@ class SpiritTypeController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkSpiritsRegime: CheckSpiritsRegimeAction,
+  checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   formProvider: SpiritTypeFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: SpiritTypeView
@@ -49,31 +50,33 @@ class SpiritTypeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
-      val preparedForm = request.userAnswers.get(SpiritTypePage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(SpiritTypePage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode))
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value => {
-            val (intermediateAnswers, otherSpiritsNowSelected) =
-              handleOtherSpiritsChange(request.userAnswers, SpiritTypePage.hasMadeOtherSpirits(value))
-            for {
-              updatedAnswers <- Future.fromTry(intermediateAnswers.set(SpiritTypePage, value))
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, otherSpiritsNowSelected))
-          }
-        )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value => {
+              val (intermediateAnswers, otherSpiritsNowSelected) =
+                handleOtherSpiritsChange(request.userAnswers, SpiritTypePage.hasMadeOtherSpirits(value))
+              for {
+                updatedAnswers <- Future.fromTry(intermediateAnswers.set(SpiritTypePage, value))
+                _              <- cacheConnector.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, otherSpiritsNowSelected))
+            }
+          )
+      }
 
   def isNowSelected(oldValue: Boolean, newValue: Boolean) = !oldValue && newValue
 

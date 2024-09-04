@@ -28,6 +28,7 @@ import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
 import pages.dutySuspended._
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage}
+import play.api.Application
 import queries.Settable
 import services.checkAndSubmit.AdrReturnSubmissionServiceImpl
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -37,21 +38,8 @@ import scala.concurrent.Future
 class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
 
   "AdrReturnSubmissionService" - {
-
-    case object CalculatorMock extends AlcoholDutyCalculatorConnector(mock[FrontendAppConfig], mock[HttpClient]) {
-      override def calculateTotalAdjustment(duties: Seq[BigDecimal])(implicit
-        hc: HeaderCarrier
-      ): Future[AdjustmentDuty] =
-        Future.successful(AdjustmentDuty(duty = duties.sum))
-    }
-
-    val adrReturnSubmissionService = new AdrReturnSubmissionServiceImpl(CalculatorMock)
-
-    val notQuarterlySpiritsReturnPeriod = nonQuarterReturnPeriodGen.sample.value
-    val quarterlySpiritsReturnPeriod    = quarterReturnPeriodGen.sample.value
-
     "Nil return" - {
-      "must return the valid return submission when for a Nil return" in {
+      "must return the valid return submission when for a Nil return" in new SetUp {
         val userAnswers = emptyUserAnswers
           .set(DeclareAlcoholDutyQuestionPage, false)
           .success
@@ -70,7 +58,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         }
       }
 
-      "must return the valid return submission when for a Nil return with Quarterly Spirits" in {
+      "must return the valid return submission when for a Nil return with Quarterly Spirits" in new SetUp {
         val userAnswers = emptyUserAnswers
           .set(DeclareAlcoholDutyQuestionPage, false)
           .success
@@ -93,8 +81,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
     }
 
     "Full return" - {
-
-      "must return the valid return submission when for a return is passed" in {
+      "must return the valid return submission when for a return is passed" in new SetUp {
         whenReady(
           adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
         ) { result =>
@@ -102,7 +89,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         }
       }
 
-      "must return the valid return submission without Spirits if the return period is not a quarter return" in {
+      "must return the valid return submission without Spirits if the return period is not a quarter return" in new SetUp {
         val expectedReturn = fullReturn.copy(spirits = None)
 
         whenReady(
@@ -112,7 +99,17 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         }
       }
 
-      "must return the valid return submission if one adjustment type is not filled" in {
+      "must return the valid return submission without Spirits if the feature toggle is off" in new SetUp(false) {
+        val expectedReturn = fullReturn.copy(spirits = None)
+
+        whenReady(
+          adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
+        ) { result =>
+          result mustBe Right(expectedReturn)
+        }
+      }
+
+      "must return the valid return submission if one adjustment type is not filled" in new SetUp {
         val drawbackAdjustmentIndex = 5
         val userAnswers             =
           fullUserAnswers.removeBySeqIndex(AdjustmentEntryListPage, drawbackAdjustmentIndex).success.value
@@ -142,7 +139,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
 
       }
 
-      "must return the valid return submission if there are no repackage adjustments" in {
+      "must return the valid return submission if there are no repackage adjustments" in new SetUp {
         val repackagedAdjustmentIndex = 3
         val userAnswers               =
           fullUserAnswers.removeBySeqIndex(AdjustmentEntryListPage, repackagedAdjustmentIndex).success.value
@@ -171,7 +168,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         }
       }
 
-      "must return the valid return submission if the users didn't selected any 'other malted grains'" in {
+      "must return the valid return submission if the users didn't selected any 'other malted grains'" in new SetUp {
         val grainsUsed  = GrainsUsed(
           maltedBarleyQuantity = BigDecimal(1111),
           wheatQuantity = BigDecimal(2222),
@@ -210,7 +207,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
 
       }
 
-      "must return the valid return submission if the users didn't selected any 'other ingredients' in the spirits journey" in {
+      "must return the valid return submission if the users didn't selected any 'other ingredients' in the spirits journey" in new SetUp {
         val ethyleneGasOrMolassesUsed = EthyleneGasOrMolassesUsed(
           ethyleneGas = BigDecimal(6666),
           molasses = BigDecimal(7777),
@@ -247,7 +244,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           DeclareAlcoholDutyQuestionPage,
           AlcoholDutyPage
         ).foreach { page =>
-          s"must return Left if $page is not present" in {
+          s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
@@ -263,7 +260,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           DeclareAdjustmentQuestionPage,
           AdjustmentEntryListPage
         ).foreach { page: Settable[_] =>
-          s"must return Left if $page is not present" in {
+          s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
@@ -273,7 +270,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           }
         }
 
-        "must return Left if one of the AdjustmentType is None" in {
+        "must return Left if one of the AdjustmentType is None" in new SetUp {
           val incompleteAdjustment = fullRepackageAdjustmentEntry.copy(
             adjustmentType = None
           )
@@ -296,7 +293,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           "repackagedDuty"        -> fullRepackageAdjustmentEntry.copy(repackagedDuty = None),
           "newDuty"               -> fullRepackageAdjustmentEntry.copy(newDuty = None)
         ).foreach { case (propertyName, adjustmentEntry) =>
-          s"must return Left if $propertyName is None in one of the Repackaged Adjustment Entry" in {
+          s"must return Left if $propertyName is None in one of the Repackaged Adjustment Entry" in new SetUp {
             val userAnswers = fullUserAnswers.addToSeq(AdjustmentEntryListPage, adjustmentEntry).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
@@ -318,7 +315,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           "pureAlcoholVolume" -> fullAdjustmentEntry.copy(pureAlcoholVolume = None),
           "duty"              -> fullAdjustmentEntry.copy(duty = None)
         ).foreach { case (propertyName, adjustmentEntry) =>
-          s"must return Left if $propertyName is None in one of the Adjustment Entry" in {
+          s"must return Left if $propertyName is None in one of the Adjustment Entry" in new SetUp {
             val userAnswers = fullUserAnswers.addToSeq(AdjustmentEntryListPage, adjustmentEntry).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
@@ -332,7 +329,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           }
         }
 
-        "must return Left if OtherMaltedGrains is not populated but the producer answered 'yes' into the GrainsUsed page for otherMaltedGrain" - {
+        "must return Left if OtherMaltedGrains is not populated but the producer answered 'yes' into the GrainsUsed page for otherMaltedGrain" in new SetUp {
           val userAnswers = fullUserAnswers.remove(OtherMaltedGrainsPage).success.value
 
           whenReady(
@@ -357,7 +354,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           DutySuspendedWinePage,
           DutySuspendedOtherFermentedPage
         ).foreach { page: Settable[_] =>
-          s"must return Left if $page is not present" in {
+          s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
@@ -372,7 +369,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         Seq(
           DeclareQuarterlySpiritsPage
         ).foreach { page =>
-          s"must return Left if $page is not present" in {
+          s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
@@ -385,7 +382,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
     }
 
     "Calculations" - {
-      "must return Left if the calculator return an error" - {
+      "must return Left if the calculator return an error" in new SetUp {
         val failingCalculator = mock[AlcoholDutyCalculatorConnector]
 
         val errorMessage = "Error Message"
@@ -394,7 +391,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           Future.failed(new Exception(errorMessage))
         )
 
-        val service = new AdrReturnSubmissionServiceImpl(failingCalculator)
+        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, appConfig)
 
         whenReady(
           service.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
@@ -403,6 +400,24 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         }
 
       }
+    }
+
+    class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+      val additionalConfig             = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+      val application: Application     = applicationBuilder().configure(additionalConfig).build()
+      val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+
+      case object CalculatorMock extends AlcoholDutyCalculatorConnector(appConfig, mock[HttpClient]) {
+        override def calculateTotalAdjustment(duties: Seq[BigDecimal])(implicit
+          hc: HeaderCarrier
+        ): Future[AdjustmentDuty] =
+          Future.successful(AdjustmentDuty(duty = duties.sum))
+      }
+
+      val adrReturnSubmissionService = new AdrReturnSubmissionServiceImpl(CalculatorMock, appConfig)
+
+      val notQuarterlySpiritsReturnPeriod = nonQuarterReturnPeriodGen.sample.value
+      val quarterlySpiritsReturnPeriod    = quarterReturnPeriodGen.sample.value
     }
 
   }
