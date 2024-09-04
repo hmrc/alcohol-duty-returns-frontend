@@ -64,7 +64,7 @@
         @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance == 0) {
-        <p class=@{Constants.headingLCssClass}>@messages("viewPastPayments.zeroBalance.paragraph")</p>
+        @paragraph(messages("viewPastPayments.zeroBalance.paragraph"), Constants.headingLCssClass)
     }
 
 
@@ -92,16 +92,13 @@
     }
 
     @if(unallocatedPaymentsTable.rows.size > 0) {
-
         @govukTable(Table(
             caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
             captionClasses = Constants.tableCaptionMCssClass,
             head = Some(unallocatedPaymentsTable.head),
             rows = unallocatedPaymentsTable.rows.map(_.cells),
         ))
-
-        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"), "govuk-body govuk-!-padding-bottom-3")
-
+        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"), Constants.paddingBottomCssClass)
     }
 
 
@@ -112,11 +109,11 @@
             head = Some(historicPaymentsTable.head),
             rows = historicPaymentsTable.rows.map(_.cells),
         ))
-
         @paragraph(messages("viewPastPayments.historic.paragraph"))
     }
+
     @if(historicPaymentsTable.rows.size == 0) {
-            <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.historic.caption", messages("site.year", year))</p>
+            @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", year)), Constants.headingMCssClass)
             @paragraph(messages("viewPastPayments.historic.noPayments"))
     }
 

@@ -27,7 +27,7 @@ import views.html.returns.ViewPastPaymentsView
 import play.api.libs.json.Json
 import java.time.LocalDate
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import config.Constants.pastPaymentsSessionKey
 
 class ViewPastPaymentsController @Inject() (
