@@ -19,11 +19,11 @@ package models.payments
 import play.api.mvc.Session
 import viewmodels.TableViewModel
 
-case class PastPayments (
-                          outstandingPaymentsTable: TableViewModel,
-                          unallocatedPaymentsTable: TableViewModel,
-                          totalOpenPaymentsAmount: BigDecimal,
-                          historicPaymentsTable: TableViewModel,
-                          year: Int,
-                          session: Session
+case class PastPayments(
+  outstandingPaymentsTable: TableViewModel,
+  unallocatedPaymentsTable: TableViewModel,
+  totalOpenPaymentsAmount: BigDecimal,
+  historicPaymentsTable: TableViewModel,
+  year: Int,
+  session: Session
 )
