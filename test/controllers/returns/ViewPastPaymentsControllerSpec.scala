@@ -32,7 +32,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
   "ViewPastPaymentsController Controller" - {
     "must return OK and the correct view for a GET" in {
-      val viewModelHelper                  = new ViewPastPaymentsViewModel()
+      val viewModelHelper                  = new ViewPastPaymentsViewModel(dateTimeHelper)
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData

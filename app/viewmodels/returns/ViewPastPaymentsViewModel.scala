@@ -18,7 +18,7 @@ package viewmodels.returns
 
 import play.api.Logging
 import play.api.i18n.Messages
-import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableViewModel}
+import viewmodels.{DateTimeHelper, Money, TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 import java.time.{LocalDate, YearMonth}
 import javax.inject.Inject
@@ -31,12 +31,7 @@ import models.{HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDi
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import play.twirl.api.Html
 
-import java.time.format.DateTimeFormatter
-
-class ViewPastPaymentsViewModel @Inject() () extends Logging {
-
-  private val dateMonthYearformatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-  private val monthYearformatter     = DateTimeFormatter.ofPattern("MMMM yyyy")
+class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) extends Logging {
 
   def getOutstandingPaymentsTable(
     outstandingPaymentsData: Seq[OutstandingPayment]
@@ -149,9 +144,10 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     historicPaymentsData: Seq[HistoricPayment]
   )(implicit messages: Messages): Seq[TableRowViewModel] =
     historicPaymentsData.map { historicPaymentsData =>
+      val monthYear = dateTimeHelper.formatMonthYear(historicPaymentsData.period.period)
       TableRowViewModel(
         cells = Seq(
-          TableRow(content = Text(historicPaymentsData.period.period.format(monthYearformatter))),
+          TableRow(content = Text(monthYear)),
           TableRow(content =
             HtmlContent(
               formatHistoricPaymentsDescription(
@@ -186,7 +182,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     }
 
   private def formatDateYearMonth(date: LocalDate): String =
-    date.format(dateMonthYearformatter)
+    dateTimeHelper.formatDateMonthYear(date)
 
   private def formatDescription(
     transactionType: TransactionType,
@@ -203,7 +199,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
       case (_, Some(chargeReference), _)                                         =>
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, None, _)                                                          =>
-        logger.logger.warn("Couldn't fetch chargeReference for outstanding payment")
+        logger.warn("Couldn't fetch chargeReference for outstanding payment")
         (messages(s"viewPastPayments.$transactionType.description"), "")
     }
     Html(s"$description<br>$reference")
@@ -212,15 +208,14 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   private def formatHistoricPaymentsDescription(transactionType: TransactionType, chargeReference: Option[String])(
     implicit messages: Messages
   ): Html = {
-    val (description, reference) = (chargeReference, transactionType) match {
-      case (Some(chargeReference), transactionType) =>
-        (
-          messages(s"viewPastPayments.historic.$transactionType.description"),
-          messages("viewPastPayments.ref", chargeReference)
-        )
-      case (None, _)                                =>
-        logger.logger.warn("Couldn't fetch chargeReference for historc payment")
-        (messages(s"viewPastPayments.historic.$transactionType.description"), "")
+    val (description, reference) = chargeReference.fold {
+      logger.warn("Couldn't fetch chargeReference for historic payment")
+      (messages(s"viewPastPayments.historic.$transactionType.description"), "")
+    } { chargeReference =>
+      (
+        messages(s"viewPastPayments.historic.$transactionType.description"),
+        messages("viewPastPayments.ref", chargeReference)
+      )
     }
     Html(s"$description<br>$reference")
   }

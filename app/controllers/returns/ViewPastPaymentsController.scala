@@ -30,6 +30,7 @@ import java.time.{LocalDate, Year}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import config.Constants.pastPaymentsSessionKey
+import models.payments.PastPayments
 
 class ViewPastPaymentsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -73,9 +74,25 @@ class ViewPastPaymentsController @Inject() (
       (outstandingPaymentsTable, unallocatedPaymentsTable, session, totalOpenPaymentsAmount) <-
         outstandingPaymentsFuture
       (historicPaymentsTable, year)                                                          <- historicPaymentsFuture
-    } yield Ok(
-      view(outstandingPaymentsTable, unallocatedPaymentsTable, totalOpenPaymentsAmount, historicPaymentsTable, year)
-    ).withSession(session)
+    } yield {
+      val pastPaymentsData = PastPayments(
+        outstandingPaymentsTable,
+        unallocatedPaymentsTable,
+        totalOpenPaymentsAmount,
+        historicPaymentsTable,
+        year,
+        session
+      )
+      Ok(
+        view(
+          pastPaymentsData.outstandingPaymentsTable,
+          pastPaymentsData.unallocatedPaymentsTable,
+          pastPaymentsData.totalOpenPaymentsAmount,
+          pastPaymentsData.historicPaymentsTable,
+          pastPaymentsData.year
+        )
+      ).withSession(pastPaymentsData.session)
+    }
 
     openAndHistoricPaymentsFuture.recover { case ex =>
       logger.warn(s"Error fetching payments data for $appaId: ${ex.getMessage}")

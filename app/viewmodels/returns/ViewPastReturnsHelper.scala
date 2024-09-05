@@ -123,7 +123,7 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case Some(returnPeriod) => returnPeriod.period
       case _                  =>
-        logger.logger.warn("Couldn't fetch period from periodKey")
+        logger.warn("Couldn't fetch period from periodKey")
         throw new RuntimeException(
           "Couldn't fetch period from periodKey"
         )
