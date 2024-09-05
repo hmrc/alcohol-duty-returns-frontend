@@ -26,7 +26,7 @@ import viewmodels.returns.ViewPastPaymentsViewModel
 import views.html.returns.ViewPastPaymentsView
 import play.api.libs.json.Json
 
-import java.time.LocalDate
+import java.time.{LocalDate, Year}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import config.Constants.pastPaymentsSessionKey
@@ -62,9 +62,9 @@ class ViewPastPaymentsController @Inject() (
           outstandingPaymentsData.totalOpenPaymentsAmount
         )
       }
-    // hardcoding 2024 until next iteration of past payments
-    val historicPaymentsFuture    =
-      alcoholDutyAccountConnector.historicPayments(appaId, 2024).map { historicPaymentsData =>
+
+    val historicPaymentsFuture =
+      alcoholDutyAccountConnector.historicPayments(appaId, Year.now.getValue).map { historicPaymentsData =>
         val historicPaymentsTable = viewPastPaymentsModel.getHistoricPaymentsTable(historicPaymentsData.payments)
         (historicPaymentsTable, historicPaymentsData.year)
       }
