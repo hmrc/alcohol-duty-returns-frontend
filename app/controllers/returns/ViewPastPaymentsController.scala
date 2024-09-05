@@ -30,8 +30,7 @@ import java.time.{LocalDate, Year}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import config.Constants.pastPaymentsSessionKey
-import models.payments.PastPayments
-
+import models.payments.OutstandingPayments
 class ViewPastPaymentsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
@@ -56,11 +55,11 @@ class ViewPastPaymentsController @Inject() (
 
         val unallocatedPaymentsTable =
           viewPastPaymentsModel.getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
-        (
+        OutstandingPayments(
           outstandingPaymentsTable,
           unallocatedPaymentsTable,
-          updatedSession,
-          outstandingPaymentsData.totalOpenPaymentsAmount
+          outstandingPaymentsData.totalOpenPaymentsAmount,
+          updatedSession
         )
       }
 
@@ -71,28 +70,17 @@ class ViewPastPaymentsController @Inject() (
       }
 
     val openAndHistoricPaymentsFuture = for {
-      (outstandingPaymentsTable, unallocatedPaymentsTable, session, totalOpenPaymentsAmount) <-
-        outstandingPaymentsFuture
-      (historicPaymentsTable, year)                                                          <- historicPaymentsFuture
-    } yield {
-      val pastPaymentsData = PastPayments(
-        outstandingPaymentsTable,
-        unallocatedPaymentsTable,
-        totalOpenPaymentsAmount,
+      pastPaymentsData              <- outstandingPaymentsFuture
+      (historicPaymentsTable, year) <- historicPaymentsFuture
+    } yield Ok(
+      view(
+        pastPaymentsData.outstandingPaymentsTable,
+        pastPaymentsData.unallocatedPaymentsTable,
+        pastPaymentsData.totalOpenPaymentsAmount,
         historicPaymentsTable,
-        year,
-        session
+        year
       )
-      Ok(
-        view(
-          pastPaymentsData.outstandingPaymentsTable,
-          pastPaymentsData.unallocatedPaymentsTable,
-          pastPaymentsData.totalOpenPaymentsAmount,
-          pastPaymentsData.historicPaymentsTable,
-          pastPaymentsData.year
-        )
-      ).withSession(pastPaymentsData.session)
-    }
+    ).withSession(pastPaymentsData.session)
 
     openAndHistoricPaymentsFuture.recover { case ex =>
       logger.warn(s"Error fetching payments data for $appaId: ${ex.getMessage}")
