@@ -74,6 +74,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
 
+  val spiritsAndIngredientsEnabled: Boolean =
+    configuration.get[Boolean]("features.spirits-and-ingredients")
+
   val enrolmentServiceName   = configuration.get[String]("enrolment.serviceName")
   val enrolmentIdentifierKey = configuration.get[String]("enrolment.identifierKey")
 

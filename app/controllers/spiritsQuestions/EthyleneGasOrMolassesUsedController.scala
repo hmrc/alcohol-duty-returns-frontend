@@ -39,6 +39,7 @@ class EthyleneGasOrMolassesUsedController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkSpiritsRegime: CheckSpiritsRegimeAction,
+  checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   formProvider: EthyleneGasOrMolassesUsedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: EthyleneGasOrMolassesUsedView
@@ -49,33 +50,35 @@ class EthyleneGasOrMolassesUsedController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
-      val preparedForm = request.userAnswers.get(EthyleneGasOrMolassesUsedPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(EthyleneGasOrMolassesUsedPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode))
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value => {
-            val (intermediateAnswers, otherIngredientsNowSelected) =
-              handleOtherIngredientsChange(request.userAnswers, value.otherIngredients)
-            for {
-              updatedAnswers <- Future.fromTry(intermediateAnswers.set(EthyleneGasOrMolassesUsedPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(
-              navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers, otherIngredientsNowSelected)
-            )
-          }
-        )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value => {
+              val (intermediateAnswers, otherIngredientsNowSelected) =
+                handleOtherIngredientsChange(request.userAnswers, value.otherIngredients)
+              for {
+                updatedAnswers <- Future.fromTry(intermediateAnswers.set(EthyleneGasOrMolassesUsedPage, value))
+                _              <- cacheConnector.set(updatedAnswers)
+              } yield Redirect(
+                navigator.nextPage(EthyleneGasOrMolassesUsedPage, mode, updatedAnswers, otherIngredientsNowSelected)
+              )
+            }
+          )
+      }
 
   def isNowSelected(oldValue: Boolean, newValue: Boolean) = !oldValue && newValue
 

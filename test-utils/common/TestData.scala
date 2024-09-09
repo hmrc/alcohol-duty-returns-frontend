@@ -64,13 +64,13 @@ trait TestData extends ModelGenerators {
   val periodKeyNov = "24AK"
   val periodKeyDec = "24AL"
 
-  val quarterPeriodKeys    = Set(
+  val quarterReturnPeriods    = Set(
     ReturnPeriod(YearMonth.of(2024, Month.MARCH)),
     ReturnPeriod(YearMonth.of(2024, Month.JUNE)),
     ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
     ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))
   )
-  val nonQuarterPeriodKeys =
+  val nonQuarterReturnPeriods =
     Set(
       ReturnPeriod(YearMonth.of(2024, Month.JANUARY)),
       ReturnPeriod(YearMonth.of(2024, Month.FEBRUARY)),
@@ -82,8 +82,8 @@ trait TestData extends ModelGenerators {
       ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER))
     )
 
-  val nonQuarterReturnPeriodGen = Gen.oneOf(nonQuarterPeriodKeys.toSeq)
-  val quarterReturnPeriodGen    = Gen.oneOf(quarterPeriodKeys.toSeq)
+  val nonQuarterReturnPeriodGen = Gen.oneOf(nonQuarterReturnPeriods.toSeq)
+  val quarterReturnPeriodGen    = Gen.oneOf(quarterReturnPeriods.toSeq)
 
   val returnPeriodMar = ReturnPeriod.fromPeriodKey(periodKeyMar).get
 

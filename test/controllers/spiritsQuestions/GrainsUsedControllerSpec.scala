@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.GrainsUsedFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.GrainsUsedPage
@@ -28,20 +28,13 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.spiritsQuestions.GrainsUsed
+import play.api.Application
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.GrainsUsedView
 
 import scala.concurrent.Future
 
 class GrainsUsedControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val formProvider = new GrainsUsedFormProvider()
-  val form         = formProvider()
-
-  lazy val grainsUsedRoute = routes.GrainsUsedController.onPageLoad(NormalMode).url
-
   val maltedBarleyQuantity     = BigDecimal(100000)
   val wheatQuantity            = BigDecimal(200000)
   val maizeQuantity            = BigDecimal(300000)
@@ -63,11 +56,7 @@ class GrainsUsedControllerSpec extends SpecBase {
   )
 
   "GrainsUsed Controller" - {
-
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request = FakeRequest(GET, grainsUsedRoute)
 
@@ -80,10 +69,9 @@ class GrainsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+    "must populate the view correctly on a GET when the question has previously been answered" in new SetUp(
+      Some(userAnswers)
+    ) {
       running(application) {
         val request = FakeRequest(GET, grainsUsedRoute)
 
@@ -108,13 +96,12 @@ class GrainsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
@@ -142,13 +129,14 @@ class GrainsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when have you used Malted Grain other than Barley question is answered as No" in {
-
+    "must redirect to the next page when have you used Malted Grain other than Barley question is answered as No" in new SetUp(
+      Some(emptyUserAnswers)
+    ) {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
@@ -176,13 +164,14 @@ class GrainsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when have you used Malted Grain other than Barley question was answered Yes previously and is now updated to No" in {
-
+    "must redirect to the next page when have you used Malted Grain other than Barley question was answered Yes previously and is now updated to No" in new SetUp(
+      Some(userAnswers)
+    ) {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
@@ -210,10 +199,7 @@ class GrainsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request =
           FakeRequest(POST, grainsUsedRoute)
@@ -230,10 +216,10 @@ class GrainsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+    "must redirect to Journey Recovery for a GET if the feature toggle is off" in new SetUp(
+      Some(emptyUserAnswers),
+      false
+    ) {
       running(application) {
         val request = FakeRequest(GET, grainsUsedRoute)
 
@@ -244,10 +230,21 @@ class GrainsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request = FakeRequest(GET, grainsUsedRoute)
 
-      val application = applicationBuilder(userAnswers = None).build()
+        val result = route(application, request).value
 
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if the feature toggle is off" in new SetUp(
+      Some(emptyUserAnswers),
+      false
+    ) {
       running(application) {
         val request =
           FakeRequest(POST, grainsUsedRoute)
@@ -266,5 +263,38 @@ class GrainsUsedControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request =
+          FakeRequest(POST, grainsUsedRoute)
+            .withFormUrlEncodedBody(
+              ("maltedBarleyQuantity", maltedBarleyQuantity.toString()),
+              ("wheatQuantity", wheatQuantity.toString()),
+              ("maizeQuantity", maizeQuantity.toString()),
+              ("ryeQuantity", ryeQuantity.toString()),
+              ("unmaltedGrainQuantity", unmaltedGrainQuantity.toString()),
+              ("usedMaltedGrainNotBarley", usedMaltedGrainNotBarley.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+  }
+
+  class SetUp(maybeUserAnswers: Option[UserAnswers], spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+    val additionalConfig         = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+    val application: Application =
+      applicationBuilder(userAnswers = maybeUserAnswers).configure(additionalConfig).build()
+
+    def onwardRoute = Call("GET", "/foo")
+
+    val formProvider = new GrainsUsedFormProvider()
+    val form         = formProvider()
+
+    lazy val grainsUsedRoute = routes.GrainsUsedController.onPageLoad(NormalMode).url
   }
 }

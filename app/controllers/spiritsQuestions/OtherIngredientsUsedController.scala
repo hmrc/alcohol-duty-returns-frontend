@@ -39,6 +39,7 @@ class OtherIngredientsUsedController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkSpiritsRegime: CheckSpiritsRegimeAction,
+  checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   formProvider: OtherIngredientsUsedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: OtherIngredientsUsedView
@@ -49,26 +50,28 @@ class OtherIngredientsUsedController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
-      val preparedForm = request.userAnswers.get(OtherIngredientsUsedPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(OtherIngredientsUsedPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode))
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(OtherIngredientsUsedPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(OtherIngredientsUsedPage, mode, updatedAnswers))
-        )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(OtherIngredientsUsedPage, value))
+                _              <- cacheConnector.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(OtherIngredientsUsedPage, mode, updatedAnswers))
+          )
+      }
 }

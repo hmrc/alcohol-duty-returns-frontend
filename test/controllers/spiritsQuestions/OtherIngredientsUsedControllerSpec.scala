@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
@@ -29,20 +29,13 @@ import connectors.CacheConnector
 import models.UnitsOfMeasure.Tonnes
 import models.spiritsQuestions.OtherIngredientsUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import play.api.Application
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.OtherIngredientsUsedView
 
 import scala.concurrent.Future
 
 class OtherIngredientsUsedControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val formProvider = new OtherIngredientsUsedFormProvider()
-  val form         = formProvider()
-
-  lazy val otherIngredientsUsedRoute = routes.OtherIngredientsUsedController.onPageLoad(NormalMode).url
-
   val otherIngredientsTypes    = "Coco Pops"
   val otherIngredientsUnit     = Tonnes
   val otherIngredientsQuantity = BigDecimal(100000)
@@ -58,11 +51,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
   )
 
   "OtherIngredientsUsed Controller" - {
-
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request = FakeRequest(GET, otherIngredientsUsedRoute)
 
@@ -75,10 +64,9 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+    "must populate the view correctly on a GET when the question has previously been answered" in new SetUp(
+      Some(userAnswers)
+    ) {
       running(application) {
         val request = FakeRequest(GET, otherIngredientsUsedRoute)
 
@@ -94,13 +82,12 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
@@ -125,10 +112,7 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request =
           FakeRequest(POST, otherIngredientsUsedRoute)
@@ -145,10 +129,10 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+    "must redirect to Journey Recovery for a GET if the feature toggle is off" in new SetUp(
+      Some(emptyUserAnswers),
+      false
+    ) {
       running(application) {
         val request = FakeRequest(GET, otherIngredientsUsedRoute)
 
@@ -159,10 +143,21 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request = FakeRequest(GET, otherIngredientsUsedRoute)
 
-      val application = applicationBuilder(userAnswers = None).build()
+        val result = route(application, request).value
 
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if the feature toggle is off" in new SetUp(
+      Some(emptyUserAnswers),
+      false
+    ) {
       running(application) {
         val request =
           FakeRequest(POST, otherIngredientsUsedRoute)
@@ -178,5 +173,35 @@ class OtherIngredientsUsedControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request =
+          FakeRequest(POST, otherIngredientsUsedRoute)
+            .withFormUrlEncodedBody(
+              ("otherIngredientsUsedTypes", otherIngredientsTypes),
+              ("otherIngredientsUsedUnit", otherIngredientsUnit.entryName),
+              ("otherIngredientsUsedQuantity", otherIngredientsQuantity.toString())
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+  }
+
+  class SetUp(maybeUserAnswers: Option[UserAnswers], spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+    val additionalConfig         = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+    val application: Application =
+      applicationBuilder(userAnswers = maybeUserAnswers).configure(additionalConfig).build()
+
+    def onwardRoute = Call("GET", "/foo")
+
+    val formProvider = new OtherIngredientsUsedFormProvider()
+    val form         = formProvider()
+
+    lazy val otherIngredientsUsedRoute = routes.OtherIngredientsUsedController.onPageLoad(NormalMode).url
   }
 }
