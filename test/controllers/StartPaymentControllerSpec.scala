@@ -55,11 +55,11 @@ class StartPaymentControllerSpec extends SpecBase {
 
   val expectedAuditEvent = AuditPaymentStarted(
     appaId = appaId,
-    governmentGatewayId = internalId,
+    credentialID = internalId,
     paymentStartedTime = Instant.now(clock),
     journeyId = startPaymentResponse.journeyId,
     chargeReference = chargeReference,
-    amount = BigInt(1045)
+    amountInPence = BigInt(1045)
   )
 
   "StartPayment Controller return payment" - {

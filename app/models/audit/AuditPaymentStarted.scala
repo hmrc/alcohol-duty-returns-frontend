@@ -23,11 +23,11 @@ import java.time.Instant
 
 case class AuditPaymentStarted(
   appaId: String,
-  governmentGatewayId: String,
+  credentialID: String,
   paymentStartedTime: Instant,
   journeyId: String,
   chargeReference: String,
-  amount: BigInt
+  amountInPence: BigInt
 ) extends AuditEventDetail {
   protected val _auditType = PaymentStarted
 }
