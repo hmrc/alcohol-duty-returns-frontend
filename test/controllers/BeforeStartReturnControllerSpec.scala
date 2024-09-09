@@ -30,7 +30,7 @@ import uk.gov.hmrc.http.HttpResponse
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
-import java.time.{Clock, Instant, ZoneOffset}
+import java.time.{Clock, Instant}
 import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
