@@ -377,6 +377,32 @@ trait TestData extends ModelGenerators {
     BigDecimal(4773.34)
   )
 
+  val emptyOutstandingPaymentData = OpenPayments(
+    outstandingPayments = Seq.empty,
+    unallocatedPayments = Seq.empty,
+    totalOpenPaymentsAmount = BigDecimal(0),
+    totalUnallocatedPayments = BigDecimal(0),
+    totalOutstandingPayments = BigDecimal(0)
+  )
+
+  val historicReturnPayment =
+    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.DECEMBER)), Return, Some(chargeReference), BigDecimal(123.45))
+  val historicLPIPayment    =
+    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER)), LPI, Some(chargeReference), BigDecimal(12.45))
+  val historicRPIPayment    =
+    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.OCTOBER)), RPI, Some(chargeReference), BigDecimal(-123.45))
+  val historicRefundPayment = HistoricPayment(
+    ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
+    Return,
+    Some(chargeReference),
+    BigDecimal(-1236.45)
+  )
+
+  val historicPayments =
+    HistoricPayments(2024, Seq(historicReturnPayment, historicLPIPayment, historicRPIPayment, historicRefundPayment))
+
+  val emptyHistoricPayment = HistoricPayments(2024, Seq.empty)
+
   val currentDate    = LocalDate.now()
   val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
 

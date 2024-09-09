@@ -35,7 +35,7 @@
 )
 
 
-@(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, dutyBalance: BigDecimal)(implicit request: Request[_], messages: Messages)
+@(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, dutyBalance: BigDecimal, historicPaymentsTable: TableViewModel, year: Int)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewPastPayments.title")), fullWidth = true){
 
@@ -46,6 +46,7 @@
             <br>
             <span class=@{Constants.headingLCssClass}>@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
         </p>
+        @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance < 0) {
         <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.youAre")
@@ -60,44 +61,60 @@
                 ) @messages("viewPastPayments.credit.para2")
             </p>
         </p>
+        @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance == 0) {
-      @paragraph(messages("viewPastPayments.zeroBalance.paragraph"))
+        @paragraph(messages("viewPastPayments.zeroBalance.paragraph"), Constants.headingLCssClass)
     }
 
-    @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
 
-    @govukTable(Table(
-        caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
-        captionClasses = Constants.tableCaptionMCssClass,
-        head = Some(outstandingPaymentsTable.head),
-        rows = outstandingPaymentsTable.rows.map(row => {
-            val actions = TableRow(content = HtmlContent(tableRowActionList(
-            id = "outstandingPaymentsId",
-            actions = row.actions.map(action => tableRowAction(
-            id = "",
-            text = action.label,
-            href = action.href,
-            visuallyHiddenContent = action.visuallyHiddenText
-            )
-            ))))
-            row.cells :+ actions
-            }
+
+    @if(outstandingPaymentsTable.rows.size > 0) {
+        @govukTable(Table(
+            caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
+            captionClasses = Constants.tableCaptionMCssClass,
+            head = Some(outstandingPaymentsTable.head),
+            rows = outstandingPaymentsTable.rows.map(row => {
+                val actions = TableRow(content = HtmlContent(tableRowActionList(
+                id = "outstandingPaymentsId",
+                actions = row.actions.map(action => tableRowAction(
+                id = "",
+                text = action.label,
+                href = action.href,
+                visuallyHiddenContent = action.visuallyHiddenText
+                )
+                ))))
+                row.cells :+ actions
+                }
+                )
             )
         )
-    )
+    }
 
     @if(unallocatedPaymentsTable.rows.size > 0) {
-
         @govukTable(Table(
             caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
             captionClasses = Constants.tableCaptionMCssClass,
             head = Some(unallocatedPaymentsTable.head),
             rows = unallocatedPaymentsTable.rows.map(_.cells),
         ))
-
-        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"))
+        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"), Constants.paddingBottomCssClass)
     }
 
+
+    @if(historicPaymentsTable.rows.size > 0) {
+        @govukTable(Table(
+            caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", year))),
+            captionClasses = Constants.tableCaptionMCssClass,
+            head = Some(historicPaymentsTable.head),
+            rows = historicPaymentsTable.rows.map(_.cells),
+        ))
+        @paragraph(messages("viewPastPayments.historic.paragraph"))
+    }
+
+    @if(historicPaymentsTable.rows.size == 0) {
+            @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", year)), Constants.headingMCssClass)
+            @paragraph(messages("viewPastPayments.historic.noPayments"))
+    }
 
 }
