@@ -49,9 +49,9 @@ class BeforeStartReturnController @Inject() (
     with Logging {
 
   def onPageLoad(periodKey: String): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    val appaId                   = request.appaId
-    val governmentGatewayId      = request.userId
-    val governmentGatewayGroupId = request.groupId
+    val appaId       = request.appaId
+    val credentialId = request.userId
+    val groupId      = request.groupId
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case None               =>
         logger.warn("Period key is not valid")
@@ -60,7 +60,7 @@ class BeforeStartReturnController @Inject() (
         val session = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
           case Some(ua) =>
-            auditContinueReturn(ua, periodKey, appaId, governmentGatewayId, governmentGatewayGroupId)
+            auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case None     =>
             Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
@@ -92,8 +92,8 @@ class BeforeStartReturnController @Inject() (
     userAnswers: UserAnswers,
     periodKey: String,
     appaId: String,
-    governmentGatewayId: String,
-    governmentGatewayGroupId: String
+    credentialId: String,
+    groupId: String
   )(implicit
     hc: HeaderCarrier
   ): Unit = {
@@ -101,8 +101,8 @@ class BeforeStartReturnController @Inject() (
     val eventDetail        = AuditContinueReturn(
       appaId = appaId,
       periodKey = periodKey,
-      governmentGatewayId = governmentGatewayId,
-      governmentGatewayGroupId = governmentGatewayGroupId,
+      credentialId = credentialId,
+      groupId = groupId,
       returnContinueTime = returnContinueTime,
       returnStartedTime = userAnswers.lastUpdated,
       returnValidUntilTime = userAnswers.validUntil

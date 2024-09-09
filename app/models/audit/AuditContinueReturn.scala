@@ -24,8 +24,8 @@ import java.time.Instant
 case class AuditContinueReturn(
   appaId: String,
   periodKey: String,
-  governmentGatewayId: String,
-  governmentGatewayGroupId: String,
+  credentialId: String,
+  groupId: String,
   returnContinueTime: Instant,
   returnStartedTime: Instant,
   returnValidUntilTime: Option[Instant]

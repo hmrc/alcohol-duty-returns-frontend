@@ -50,8 +50,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     val expectedAuditEvent = AuditContinueReturn(
       appaId = returnId.appaId,
       periodKey = returnId.periodKey,
-      governmentGatewayId = emptyUserAnswers.internalId,
-      governmentGatewayGroupId = emptyUserAnswers.groupId,
+      credentialId = emptyUserAnswers.internalId,
+      groupId = emptyUserAnswers.groupId,
       returnContinueTime = Instant.now(clock),
       returnStartedTime = Instant.now(clock),
       returnValidUntilTime = Some(Instant.now(clock))
