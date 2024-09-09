@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
-import java.time.Instant
+import java.time.{Clock, Instant}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +40,7 @@ class BeforeStartReturnController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   auditService: AuditService,
+  clock: Clock,
   val controllerComponents: MessagesControllerComponents,
   view: BeforeStartReturnView
 )(implicit ec: ExecutionContext)
@@ -55,10 +56,10 @@ class BeforeStartReturnController @Inject() (
       case Some(returnPeriod) =>
         val session = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
-          case Some(_) =>
-            auditContinueReturn(request.userAnswers, ReturnId(request.appaId, periodKey))
+          case Some(ua) =>
+            auditContinueReturn(ua, ReturnId(request.appaId, periodKey))
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
-          case None    =>
+          case None     =>
             Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
         }
     }
@@ -82,22 +83,23 @@ class BeforeStartReturnController @Inject() (
         }
     }
   }
+  // TODO : change returnStartedTime to start time in future
 
   private def auditContinueReturn(
-    userAnswers: Option[UserAnswers],
+    userAnswers: UserAnswers,
     returnId: ReturnId
   )(implicit
     hc: HeaderCarrier
   ): Unit = {
-    val returnContinueTime = Some(Instant.now)
+    val returnContinueTime = Instant.now(clock)
     val eventDetail        = AuditContinueReturn(
       appaId = returnId.appaId,
       periodKey = returnId.periodKey,
-      governmentGatewayId = userAnswers.map(_.internalId),
-      governmentGatewayGroupId = userAnswers.map(_.groupId),
+      governmentGatewayId = userAnswers.internalId,
+      governmentGatewayGroupId = userAnswers.groupId,
       returnContinueTime = returnContinueTime,
-      returnStartedTime = userAnswers.map(_.lastUpdated),
-      returnValidUntilTime = userAnswers.flatMap(_.validUntil)
+      returnStartedTime = userAnswers.lastUpdated,
+      returnValidUntilTime = userAnswers.validUntil
     )
     auditService.audit(eventDetail)
   }

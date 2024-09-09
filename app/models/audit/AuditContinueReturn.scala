@@ -24,10 +24,10 @@ import java.time.Instant
 case class AuditContinueReturn(
   appaId: String,
   periodKey: String,
-  governmentGatewayId: Option[String],
-  governmentGatewayGroupId: Option[String],
-  returnContinueTime: Option[Instant],
-  returnStartedTime: Option[Instant],
+  governmentGatewayId: String,
+  governmentGatewayGroupId: String,
+  returnContinueTime: Instant,
+  returnStartedTime: Instant,
   returnValidUntilTime: Option[Instant]
 ) extends AuditEventDetail {
   protected val _auditType = ContinueReturn
