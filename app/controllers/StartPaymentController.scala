@@ -32,7 +32,7 @@ import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import java.time.Instant
+import java.time.{Clock, Instant}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,6 +41,7 @@ class StartPaymentController @Inject() (
   appConfig: FrontendAppConfig,
   payApiConnector: PayApiConnector,
   auditService: AuditService,
+  clock: Clock,
   val controllerComponents: MessagesControllerComponents
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -144,7 +145,7 @@ class StartPaymentController @Inject() (
     val eventDetail = AuditPaymentStarted(
       appaId = appaId,
       governmentGatewayId = governmentGatewayId,
-      paymentStartedTime = Instant.now(),
+      paymentStartedTime = Instant.now(clock),
       journeyId = journeyId,
       chargeReference = chargeReference,
       amount = amount

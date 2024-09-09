@@ -26,13 +26,14 @@ import models.audit.AuditPaymentStarted
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.payments.StartPaymentResponse
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.SEE_OTHER
 import play.api.inject.bind
 import play.api.libs.json.Json
 import services.AuditService
 import play.api.test.Helpers._
 
-import java.time.{Instant, LocalDate}
+import java.time.{Clock, Instant, LocalDate}
 
 class StartPaymentControllerSpec extends SpecBase {
 
@@ -52,6 +53,15 @@ class StartPaymentControllerSpec extends SpecBase {
     BigDecimal(10.45)
   )
 
+  val expectedAuditEvent = AuditPaymentStarted(
+    appaId = appaId,
+    governmentGatewayId = internalId,
+    paymentStartedTime = Instant.now(clock),
+    journeyId = startPaymentResponse.journeyId,
+    chargeReference = chargeReference,
+    amount = BigInt(1045)
+  )
+
   "StartPayment Controller return payment" - {
 
     "must redirect to the nextUrl if startPaymentResponse is successful with audit event" in {
@@ -63,7 +73,11 @@ class StartPaymentControllerSpec extends SpecBase {
       )
 
       val application = applicationBuilder()
-        .overrides(bind[PayApiConnector].toInstance(payApiConnector), bind[AuditService].toInstance(mockAuditService))
+        .overrides(
+          bind[PayApiConnector].toInstance(payApiConnector),
+          bind[AuditService].toInstance(mockAuditService),
+          bind(classOf[Clock]).toInstance(clock)
+        )
         .build()
 
       running(application) {
@@ -75,7 +89,7 @@ class StartPaymentControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        verify(mockAuditService).audit(any())(any(), any())
+        verify(mockAuditService).audit(eqTo(expectedAuditEvent))(any(), any())
         redirectLocation(result).value mustBe "/next-url"
       }
     }
@@ -137,7 +151,11 @@ class StartPaymentControllerSpec extends SpecBase {
       )
 
       val application = applicationBuilder()
-        .overrides(bind[PayApiConnector].toInstance(payApiConnector), bind[AuditService].toInstance(mockAuditService))
+        .overrides(
+          bind[PayApiConnector].toInstance(payApiConnector),
+          bind[AuditService].toInstance(mockAuditService),
+          bind(classOf[Clock]).toInstance(clock)
+        )
         .build()
 
       running(application) {
@@ -150,7 +168,7 @@ class StartPaymentControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        verify(mockAuditService).audit(any())(any(), any())
+        verify(mockAuditService).audit(eqTo(expectedAuditEvent))(any(), any())
         redirectLocation(result).value mustBe "/next-url"
       }
     }
