@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.SpiritTypeFormProvider
-import models.{NormalMode, SpiritType}
+import models.{NormalMode, SpiritType, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.SpiritTypePage
@@ -26,26 +26,17 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import play.api.Application
 import views.html.spiritsQuestions.SpiritTypeView
 import uk.gov.hmrc.http.HttpResponse
 
 import scala.concurrent.Future
 
 class SpiritTypeControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  lazy val spiritTypeRoute = routes.SpiritTypeController.onPageLoad(NormalMode).url
-
-  val formProvider = new SpiritTypeFormProvider()
-  val form         = formProvider()
+  val userAnswersPreviouslyAnswered = emptyUserAnswers.set(SpiritTypePage, SpiritType.values.toSet).success.value
 
   "SpiritType Controller" - {
-
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request = FakeRequest(GET, spiritTypeRoute)
 
@@ -59,12 +50,9 @@ class SpiritTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(SpiritTypePage, SpiritType.values.toSet).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+    "must populate the view correctly on a GET when the question has previously been answered" in new SetUp(
+      Some(userAnswersPreviouslyAnswered)
+    ) {
       running(application) {
         val request = FakeRequest(GET, spiritTypeRoute)
 
@@ -80,13 +68,12 @@ class SpiritTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
@@ -107,13 +94,14 @@ class SpiritTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted and Other spirit type is unselected" in {
-
+    "must redirect to the next page when valid data is submitted and Other spirit type is unselected" in new SetUp(
+      Some(emptyUserAnswers)
+    ) {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
@@ -134,8 +122,9 @@ class SpiritTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted and Other spirit type was previously selected and is now unselected" in {
-
+    "must redirect to the next page when valid data is submitted and Other spirit type was previously selected and is now unselected" in new SetUp(
+      Some(emptyUserAnswers)
+    ) {
       val userAnswers = emptyUserAnswers
         .set(pages.spiritsQuestions.SpiritTypePage, Set[SpiritType](SpiritType.Maltspirits, SpiritType.Other))
         .success
@@ -145,7 +134,7 @@ class SpiritTypeControllerSpec extends SpecBase {
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
@@ -166,10 +155,7 @@ class SpiritTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request =
           FakeRequest(POST, spiritTypeRoute)
@@ -186,10 +172,10 @@ class SpiritTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+    "must redirect to Journey Recovery for a GET if the feature toggle is off" in new SetUp(
+      Some(emptyUserAnswers),
+      false
+    ) {
       running(application) {
         val request = FakeRequest(GET, spiritTypeRoute)
 
@@ -200,10 +186,21 @@ class SpiritTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request = FakeRequest(GET, spiritTypeRoute)
 
-      val application = applicationBuilder(userAnswers = None).build()
+        val result = route(application, request).value
 
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if the feature toggle is off" in new SetUp(
+      Some(emptyUserAnswers),
+      false
+    ) {
       running(application) {
         val request =
           FakeRequest(POST, spiritTypeRoute)
@@ -215,5 +212,31 @@ class SpiritTypeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request =
+          FakeRequest(POST, spiritTypeRoute)
+            .withFormUrlEncodedBody(("value[0]", SpiritType.values.head.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+  }
+
+  class SetUp(maybeUserAnswers: Option[UserAnswers], spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+    val additionalConfig         = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+    val application: Application =
+      applicationBuilder(userAnswers = maybeUserAnswers).configure(additionalConfig).build()
+
+    def onwardRoute = Call("GET", "/foo")
+
+    lazy val spiritTypeRoute = routes.SpiritTypeController.onPageLoad(NormalMode).url
+
+    val formProvider = new SpiritTypeFormProvider()
+    val form         = formProvider()
   }
 }

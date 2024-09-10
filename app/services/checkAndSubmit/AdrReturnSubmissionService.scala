@@ -18,6 +18,7 @@ package services.checkAndSubmit
 
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
+import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
@@ -37,7 +38,8 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AdrReturnSubmissionServiceImpl @Inject() (
-  calculatorConnector: AlcoholDutyCalculatorConnector
+  calculatorConnector: AlcoholDutyCalculatorConnector,
+  appConfig: FrontendAppConfig
 )(implicit
   ec: ExecutionContext
 ) extends AdrReturnSubmissionService {
@@ -50,8 +52,11 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       dutyDeclared  <- getDutyDeclared(userAnswers)
       adjustments   <- getAdjustments(userAnswers)
       dutySuspended <- getDutySuspended(userAnswers)
-      spirits       <- if (userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits) getSpirits(userAnswers)
-                       else EitherT.rightT[Future, String](None)
+      spirits       <-
+        if (
+          userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits && appConfig.spiritsAndIngredientsEnabled
+        ) getSpirits(userAnswers)
+        else EitherT.rightT[Future, String](None)
       totals        <- getTotals(userAnswers)
     } yield AdrReturnSubmission(
       dutyDeclared = dutyDeclared,

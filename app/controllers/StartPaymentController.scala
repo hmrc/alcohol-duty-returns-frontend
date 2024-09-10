@@ -21,15 +21,18 @@ import config.FrontendAppConfig
 import connectors.PayApiConnector
 import models.OutstandingPayment
 import controllers.actions.IdentifyWithEnrolmentAction
+import models.audit.AuditPaymentStarted
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import models.payments.StartPaymentRequest
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result, Session}
+import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import java.time.{Clock, Instant}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,6 +40,8 @@ class StartPaymentController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   appConfig: FrontendAppConfig,
   payApiConnector: PayApiConnector,
+  auditService: AuditService,
+  clock: Clock,
   val controllerComponents: MessagesControllerComponents
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -44,18 +49,19 @@ class StartPaymentController @Inject() (
     with Logging {
 
   def initiateAndRedirect(): Action[AnyContent] = identify.async { implicit request =>
-    val returnUrl = appConfig.businessTaxAccountUrl
-    val backUrl   = appConfig.host + controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url
-
+    val returnUrl    = appConfig.businessTaxAccountUrl
+    val backUrl      = appConfig.host + controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url
+    val appaId       = request.appaId
+    val credentialID = request.userId
     getReturnDetails(request.session) match {
       case Some(returnDetails) =>
         val startPaymentRequest = StartPaymentRequest(
           returnDetails,
-          request.appaId,
+          appaId,
           returnUrl,
           backUrl
         )
-        startPayment(startPaymentRequest)
+        startPayment(startPaymentRequest, appaId, credentialID)
       case _                   =>
         logger.warn(
           "Return details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
@@ -65,9 +71,11 @@ class StartPaymentController @Inject() (
   }
 
   def initiateAndRedirectFromPastPayments(index: Int): Action[AnyContent] = identify.async { implicit request =>
-    val url = appConfig.host + controllers.returns.routes.ViewPastPaymentsController.onPageLoad.url
-    getPaymentDetails(request.session, index, request.appaId, url) match {
-      case Some(startPaymentRequest) => startPayment(startPaymentRequest)
+    val url          = appConfig.host + controllers.returns.routes.ViewPastPaymentsController.onPageLoad.url
+    val appaId       = request.appaId
+    val credentialID = request.userId
+    getPaymentDetails(request.session, index, appaId, url) match {
+      case Some(startPaymentRequest) => startPayment(startPaymentRequest, appaId, credentialID)
       case _                         =>
         logger.warn(
           "OutstandingPayment details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
@@ -82,7 +90,9 @@ class StartPaymentController @Inject() (
       .get(adrReturnCreatedDetails)
       .flatMap(returnDetailsString => Json.parse(returnDetailsString).asOpt[AdrReturnCreatedDetails])
 
-  private def startPayment(startPaymentRequest: StartPaymentRequest)(implicit hc: HeaderCarrier): Future[Result] =
+  private def startPayment(startPaymentRequest: StartPaymentRequest, appaId: String, credentialID: String)(implicit
+    hc: HeaderCarrier
+  ): Future[Result] =
     payApiConnector
       .startPayment(startPaymentRequest)
       .foldF(
@@ -90,7 +100,16 @@ class StartPaymentController @Inject() (
           logger.warn("Start payment failed. Redirecting user to Journey Recovery")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         },
-        startPaymentResponse => Future.successful(Redirect(startPaymentResponse.nextUrl))
+        startPaymentResponse => {
+          auditPaymentStarted(
+            appaId,
+            credentialID,
+            startPaymentResponse.journeyId,
+            startPaymentRequest.chargeReferenceNumber,
+            startPaymentRequest.amountInPence
+          )
+          Future.successful(Redirect(startPaymentResponse.nextUrl))
+        }
       )
 
   private def getPaymentDetails(
@@ -113,4 +132,24 @@ class StartPaymentController @Inject() (
           case _                         => None
         }
       }
+
+  private def auditPaymentStarted(
+    appaId: String,
+    credentialID: String,
+    journeyId: String,
+    chargeReference: String,
+    amountInPence: BigInt
+  )(implicit
+    hc: HeaderCarrier
+  ): Unit = {
+    val eventDetail = AuditPaymentStarted(
+      appaId = appaId,
+      credentialID = credentialID,
+      paymentStartedTime = Instant.now(clock),
+      journeyId = journeyId,
+      chargeReference = chargeReference,
+      amountInPence = amountInPence
+    )
+    auditService.audit(eventDetail)
+  }
 }

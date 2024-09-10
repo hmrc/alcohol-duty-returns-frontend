@@ -31,7 +31,7 @@ import java.time.LocalDate
 class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChecks {
   val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = getMessages(application)
-  val viewPastPaymentsViewModel   = new ViewPastPaymentsViewModel()
+  val viewPastPaymentsViewModel   = new ViewPastPaymentsViewModel(dateTimeHelper)
 
   "ViewPastPaymentsViewModel" - {
 
@@ -47,11 +47,31 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       table.rows.size shouldBe openPaymentsData.unallocatedPayments.size
     }
 
-    "must not return a table when the unallocated payments is not present" in {
+    "must return a table with the correct number of rows and head for historic payments" in {
+      val table = viewPastPaymentsViewModel.getHistoricPaymentsTable(historicPayments.payments)
+      table.head.size shouldBe 3
+      table.rows.size shouldBe historicPayments.payments.size
+    }
+
+    "must not return a table when outstanding payments are not present" in {
+      val table =
+        viewPastPaymentsViewModel.getOutstandingPaymentsTable(emptyOutstandingPaymentData.outstandingPayments)
+      table.head.size shouldBe 0
+      table.rows.size shouldBe emptyOutstandingPaymentData.outstandingPayments.size
+    }
+
+    "must not return a table when unallocated payments are not present" in {
       val table =
         viewPastPaymentsViewModel.getUnallocatedPaymentsTable(openPaymentsWithoutUnallocatedData.unallocatedPayments)
       table.head.size shouldBe 0
       table.rows.size shouldBe openPaymentsWithoutUnallocatedData.unallocatedPayments.size
+    }
+
+    "must not return a table when historic payments are not present" in {
+      val table =
+        viewPastPaymentsViewModel.getHistoricPaymentsTable(emptyHistoricPayment.payments)
+      table.head.size shouldBe 0
+      table.rows.size shouldBe emptyHistoricPayment.payments.size
     }
 
     "must return the Due status for an outstanding payment which is Due" in {
@@ -104,6 +124,13 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       }
     }
 
+    "must have the correct pay now action link for Due/Overdue return" in {
+      val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingDuePayment))
+      table.rows.map { case row =>
+        row.actions.head.href shouldBe controllers.routes.StartPaymentController.initiateAndRedirectFromPastPayments(0)
+      }
+    }
+
     "must return a sorted table by due date in descending order for outstanding payments" in {
       val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(
         openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
@@ -126,6 +153,17 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         Text("25 September 2024").asHtml.toString(),
         Text("25 August 2024").asHtml.toString(),
         Text("25 July 2024").asHtml.toString()
+      )
+    }
+
+    "must return a sorted table by return period in descending order for historic payments" in {
+      val table = viewPastPaymentsViewModel.getHistoricPaymentsTable(historicPayments.payments)
+      table.rows.size                                                 shouldBe historicPayments.payments.size
+      table.rows.map(row => row.cells.head.content.asHtml.toString()) shouldBe Seq(
+        Text("December 2024").asHtml.toString(),
+        Text("November 2024").asHtml.toString(),
+        Text("October 2024").asHtml.toString(),
+        Text("September 2024").asHtml.toString()
       )
     }
   }

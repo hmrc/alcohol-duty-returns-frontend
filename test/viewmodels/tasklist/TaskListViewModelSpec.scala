@@ -18,6 +18,7 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import TaskListStatus.Incomplete
+import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Wine}
 import models.AlcoholRegimes
 import play.api.Application
@@ -69,15 +70,34 @@ class TaskListViewModelSpec extends SpecBase {
       result.completedTasks mustBe 4
     }
 
-    quarterPeriodKeys.foreach { periodKey =>
-      s"must return the QS section as the period key $periodKey falls on a quarter and the producer has the regime 'Spirits'" in new SetUp {
+    "must not return the QS section when the feature toggle is off" in new SetUp(false) {
+      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
+      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnCheckAndSubmitSection(0, 3)).thenReturn(cannotStartSection)
+
+      val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodMar)
+
+      result mustBe AlcoholDutyTaskList(
+        Seq(notStartedSection, notStartedSection, inProgressSection, cannotStartSection),
+        validUntilString
+      )
+
+      result.totalTasks mustBe 4
+
+      verify(mockReturnTaskListCreator, never).returnQSSection(emptyUserAnswers)
+    }
+
+    quarterReturnPeriods.foreach { returnPeriod =>
+      s"must return the QS section as the period key $returnPeriod falls on a quarter and the producer has the regime 'Spirits'" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
         when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
         when(mockReturnTaskListCreator.returnCheckAndSubmitSection(1, 4)).thenReturn(cannotStartSection)
 
-        val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKey)
+        val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriod)
 
         result mustBe AlcoholDutyTaskList(
           Seq(notStartedSection, notStartedSection, inProgressSection, completeSection, cannotStartSection),
@@ -85,11 +105,13 @@ class TaskListViewModelSpec extends SpecBase {
         )
 
         result.totalTasks mustBe 5
+
+        verify(mockReturnTaskListCreator, times(1)).returnQSSection(emptyUserAnswers)
       }
     }
 
-    quarterPeriodKeys.foreach { periodKey =>
-      s"must not return the QS section as the period key $periodKey doesn't fall on a quarter" in new SetUp {
+    quarterReturnPeriods.foreach { returnPeriod =>
+      s"must not return the QS section as the period key $returnPeriod doesn't fall on a quarter" in new SetUp {
         val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct)))
         when(mockReturnTaskListCreator.returnSection(userAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswers)).thenReturn(notStartedSection)
@@ -97,7 +119,7 @@ class TaskListViewModelSpec extends SpecBase {
         when(mockReturnTaskListCreator.returnQSSection(userAnswers)).thenReturn(completeSection)
         when(mockReturnTaskListCreator.returnCheckAndSubmitSection(0, 3)).thenReturn(cannotStartSection)
 
-        val result = taskListViewModel.getTaskList(userAnswers, validUntil, periodKey)
+        val result = taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)
 
         result mustBe AlcoholDutyTaskList(
           Seq(notStartedSection, notStartedSection, inProgressSection, cannotStartSection),
@@ -105,10 +127,12 @@ class TaskListViewModelSpec extends SpecBase {
         )
 
         result.totalTasks mustBe 4
+
+        verify(mockReturnTaskListCreator, never).returnQSSection(userAnswers)
       }
     }
 
-    nonQuarterPeriodKeys.foreach { periodKey =>
+    nonQuarterReturnPeriods.foreach { periodKey =>
       s"must not return the QS section as the period key $periodKey fall on a quarter but the producer doesn't have the regime 'Spirits'" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
         when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
@@ -124,13 +148,17 @@ class TaskListViewModelSpec extends SpecBase {
         )
 
         result.totalTasks mustBe 4
+
+        verify(mockReturnTaskListCreator, never).returnQSSection(emptyUserAnswers)
       }
     }
   }
 
-  class SetUp {
-    val application: Application = applicationBuilder().build()
-    implicit val msgs: Messages  = getMessages(application)
+  class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+    val additionalConfig             = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+    val application: Application     = applicationBuilder().configure(additionalConfig).build()
+    val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+    implicit val msgs: Messages      = getMessages(application)
 
     private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
     private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
@@ -150,6 +178,6 @@ class TaskListViewModelSpec extends SpecBase {
     val cannotStartSection = Section("title", cannotStartTaskList, AlcholDutyTaskListItemStatus.notStarted)
 
     val mockReturnTaskListCreator = mock[ReturnTaskListCreator]
-    val taskListViewModel         = new TaskListViewModel(mockReturnTaskListCreator)
+    val taskListViewModel         = new TaskListViewModel(mockReturnTaskListCreator, appConfig)
   }
 }
