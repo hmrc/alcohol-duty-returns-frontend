@@ -59,7 +59,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     )
 
     "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in {
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(Some(emptyUserAnswers)))
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
 
       val application = applicationBuilder()
         .overrides(
@@ -85,7 +85,9 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a GET if the userAnswer does not exist yet" in {
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(None))
+      val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
+      when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Left(mockUpstreamErrorResponse))
 
       val application = applicationBuilder()
         .overrides(

@@ -25,7 +25,7 @@ import models.ReturnPeriod
 import javax.inject.Inject
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.Logging
-import play.api.http.Status.LOCKED
+import play.api.http.Status.{LOCKED, NOT_FOUND}
 import play.api.mvc.{ActionRefiner, Result}
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.http.HeaderCarrier
@@ -53,7 +53,7 @@ class DataRetrievalActionImpl @Inject() (
         cacheConnector
           .get(request.appaId, periodKey)(headerCarrier)
           .map {
-            case Right(ua)                           =>
+            case Right(ua)                              =>
               Right(
                 OptionalDataRequest(
                   request.request,
@@ -61,13 +61,25 @@ class DataRetrievalActionImpl @Inject() (
                   request.groupId,
                   request.userId,
                   ReturnPeriod.fromPeriodKey(periodKey),
-                  ua
+                  Some(ua)
                 )
               )
-            case Left(ex) if ex.statusCode == LOCKED =>
+            case Left(ex) if ex.statusCode == LOCKED    =>
               logger.warn(s"Return ${request.appaId}/$periodKey locked")
               Left(Redirect(routes.ReturnLockedController.onPageLoad()))
-            case _                                   =>
+            case Left(ex) if ex.statusCode == NOT_FOUND =>
+              logger.warn(s"Return ${request.appaId}/$periodKey locked")
+              Right(
+                OptionalDataRequest(
+                  request.request,
+                  request.appaId,
+                  request.groupId,
+                  request.userId,
+                  ReturnPeriod.fromPeriodKey(periodKey),
+                  None
+                )
+              )
+            case _                                      =>
               logger.warn("Data retrieval failed with exception: ")
               Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
           }

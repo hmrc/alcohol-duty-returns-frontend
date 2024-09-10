@@ -33,8 +33,8 @@ class CacheConnector @Inject() (
 
   def get(appaId: String, periodKey: String)(implicit
     hc: HeaderCarrier
-  ): Future[Either[UpstreamErrorResponse, Option[UserAnswers]]] =
-    httpClient.GET[Either[UpstreamErrorResponse, Option[UserAnswers]]](config.adrCacheGetUrl(appaId, periodKey))
+  ): Future[Either[UpstreamErrorResponse, UserAnswers]] =
+    httpClient.GET[Either[UpstreamErrorResponse, UserAnswers]](config.adrCacheGetUrl(appaId, periodKey))
 
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient.PUT(config.adrCacheSetUrl(), userAnswers)(

@@ -42,9 +42,13 @@ class DataRetrievalActionSpec extends SpecBase {
     "when there is no data in the cache" - {
 
       "must set userAnswers to 'None' in the request" in {
+        val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
 
         val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(Right(None))
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
+          Left(mockUpstreamErrorResponse)
+        )
         val action         = new Harness(cacheConnector)
 
         val result = action.actionRefine(IdentifierRequest(FakeRequest(), appaId, groupId, internalId)).futureValue
@@ -61,7 +65,7 @@ class DataRetrievalActionSpec extends SpecBase {
       "must build a userAnswers object and add it to the request" in {
 
         val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(Some(emptyUserAnswers)))
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(emptyUserAnswers))
         val action         = new Harness(cacheConnector)
 
         val result =
@@ -85,7 +89,7 @@ class DataRetrievalActionSpec extends SpecBase {
       "must set userAnswers to 'None' if the session does not contain the period Key" in {
 
         val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(Some(emptyUserAnswers)))
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(emptyUserAnswers))
         val action         = new Harness(cacheConnector)
 
         val result =

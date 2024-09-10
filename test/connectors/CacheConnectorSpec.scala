@@ -39,11 +39,11 @@ class CacheConnectorSpec extends SpecBase {
 
       when {
         connector.httpClient
-          .GET[Either[UpstreamErrorResponse, Option[UserAnswers]]](any(), any(), any())(any(), any(), any())
-      } thenReturn Future.successful(Right(Some(emptyUserAnswers)))
+          .GET[Either[UpstreamErrorResponse, UserAnswers]](any(), any(), any())(any(), any(), any())
+      } thenReturn Future.successful(Right(emptyUserAnswers))
 
       whenReady(connector.get("someref", "somePeriodKey")) {
-        _ mustBe Right(Some(emptyUserAnswers))
+        _ mustBe Right(emptyUserAnswers)
       }
     }
   }
