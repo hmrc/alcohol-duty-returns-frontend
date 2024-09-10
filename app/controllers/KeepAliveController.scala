@@ -16,27 +16,24 @@
 
 package controllers
 
-import controllers.actions.{DataRetrievalAction, IdentifyWithEnrolmentAction}
+import config.Constants.periodKeySessionKey
+import connectors.CacheConnector
+import controllers.actions.IdentifyWithEnrolmentAction
+import models.ReturnId
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class KeepAliveController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   identify: IdentifyWithEnrolmentAction,
-  getData: DataRetrievalAction,
-  sessionRepository: SessionRepository
+  cacheConnector: CacheConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController {
 
-  def keepAlive: Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    request.userAnswers
-      .map { answers =>
-        sessionRepository.keepAlive(answers.returnId).map(_ => Ok)
-      }
-      .getOrElse(Future.successful(Ok))
+  def keepAlive: Action[AnyContent] = identify.async { implicit request =>
+    cacheConnector.keepAlive(ReturnId(request.appaId, request.session(periodKeySessionKey))).map(_ => Ok)
   }
 }

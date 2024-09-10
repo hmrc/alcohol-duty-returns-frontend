@@ -16,9 +16,10 @@
 
 package controllers.checkAndSubmit
 
-import config.Constants.adrReturnCreatedDetails
+import config.Constants.{adrReturnCreatedDetails, periodKeySessionKey}
 import config.FrontendAppConfig
 import controllers.actions._
+import models.ReturnPeriod
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.Logging
 
@@ -43,7 +44,7 @@ class ReturnSubmittedController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = identify { implicit request =>
     val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
 
     request.session.get(adrReturnCreatedDetails) match {
@@ -53,7 +54,8 @@ class ReturnSubmittedController @Inject() (
       case Some(returnCreatedDetails) =>
         Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
           case Some(returnDetails: AdrReturnCreatedDetails) =>
-            val returnPeriod                       = request.returnPeriod.get
+            val periodKey                          = request.session.get(periodKeySessionKey).get
+            val returnPeriod                       = ReturnPeriod.fromPeriodKey(periodKey).get
             val returnPeriodViewModel              = ReturnPeriodViewModel(returnPeriod)
             val periodStartDate                    = returnPeriodViewModel.fromDate
             val periodEndDate                      = returnPeriodViewModel.toDate
@@ -69,7 +71,7 @@ class ReturnSubmittedController @Inject() (
                 periodEndDate,
                 formattedProcessingDate,
                 formattedPaymentDueDate,
-                returnPeriod.toPeriodKey,
+                periodKey,
                 businessTaxAccountUrl
               )
             )

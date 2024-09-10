@@ -84,8 +84,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
-  val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
-
   def adrCacheGetUrl(appaId: String, periodKey: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/cache/get/$appaId/$periodKey"
 
@@ -94,6 +92,12 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrCacheCreateUserAnswersUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/cache/user-answers"
+
+  def adrReleaseLockUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/cache/release-lock/$appaId/$periodKey"
+
+  def adrKeepAliveUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/cache/keep-alive/$appaId/$periodKey"
 
   def adrCacheClearAllUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-all"

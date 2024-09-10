@@ -19,11 +19,15 @@ package controllers.actions
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
 import connectors.CacheConnector
+import controllers.routes
 import models.ReturnPeriod
 
 import javax.inject.Inject
 import models.requests.{IdentifierRequest, OptionalDataRequest}
-import play.api.mvc.ActionTransformer
+import play.api.Logging
+import play.api.http.Status.LOCKED
+import play.api.mvc.{ActionRefiner, Result}
+import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -33,30 +37,42 @@ class DataRetrievalActionImpl @Inject() (
   config: FrontendAppConfig,
   val cacheConnector: CacheConnector
 )(implicit val executionContext: ExecutionContext)
-    extends DataRetrievalAction {
+    extends DataRetrievalAction
+    with Logging {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
+  override protected def refine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = {
 
     val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     request.session.get(periodKeySessionKey) match {
       case None            =>
         Future.successful(
-          OptionalDataRequest(request.request, request.appaId, request.groupId, request.userId, None, None)
+          Right(OptionalDataRequest(request.request, request.appaId, request.groupId, request.userId, None, None))
         )
       case Some(periodKey) =>
-        cacheConnector.get(request.appaId, periodKey)(headerCarrier).map {
-          OptionalDataRequest(
-            request.request,
-            request.appaId,
-            request.groupId,
-            request.userId,
-            ReturnPeriod.fromPeriodKey(periodKey),
-            _
-          )
-        }
+        cacheConnector
+          .get(request.appaId, periodKey)(headerCarrier)
+          .map {
+            case Right(ua)                           =>
+              Right(
+                OptionalDataRequest(
+                  request.request,
+                  request.appaId,
+                  request.groupId,
+                  request.userId,
+                  ReturnPeriod.fromPeriodKey(periodKey),
+                  ua
+                )
+              )
+            case Left(ex) if ex.statusCode == LOCKED =>
+              logger.warn(s"Return ${request.appaId}/$periodKey locked")
+              Left(Redirect(routes.ReturnLockedController.onPageLoad()))
+            case _                                   =>
+              logger.warn("Data retrieval failed with exception: ")
+              Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+          }
     }
   }
 }
 
-trait DataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]
+trait DataRetrievalAction extends ActionRefiner[IdentifierRequest, OptionalDataRequest]

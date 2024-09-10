@@ -18,21 +18,24 @@ package controllers.actions
 
 import models.{ReturnPeriod, UserAnswers}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import play.api.mvc.Result
 
 import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
+  override protected def refine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] =
     Future(
-      OptionalDataRequest(
-        request.request,
-        request.appaId,
-        request.groupId,
-        request.userId,
-        returnPeriod = Some(ReturnPeriod(YearMonth.of(24, 1))),
-        dataToReturn
+      Right(
+        OptionalDataRequest(
+          request.request,
+          request.appaId,
+          request.groupId,
+          request.userId,
+          returnPeriod = Some(ReturnPeriod(YearMonth.of(24, 1))),
+          dataToReturn
+        )
       )
     )
 

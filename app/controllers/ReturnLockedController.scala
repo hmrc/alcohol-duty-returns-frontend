@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,25 @@
  * limitations under the License.
  */
 
-package controllers.auth
+package controllers
 
-import config.Constants.periodKeySessionKey
-import config.FrontendAppConfig
-import connectors.CacheConnector
-import controllers.actions.IdentifyWithEnrolmentAction
-import models.ReturnId
-import play.api.i18n.I18nSupport
+import controllers.actions._
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.ReturnLockedView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 
-class AuthController @Inject() (
+class ReturnLockedController @Inject() (
+  override val messagesApi: MessagesApi,
+  identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
-  config: FrontendAppConfig,
-  cacheConnector: CacheConnector,
-  identify: IdentifyWithEnrolmentAction
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+  view: ReturnLockedView
+) extends FrontendBaseController
     with I18nSupport {
 
-  def signOut(): Action[AnyContent] = identify.async { implicit request =>
-    cacheConnector
-      .releaseLocks(ReturnId(request.appaId, request.session.get(periodKeySessionKey).getOrElse("")))
-      .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+  def onPageLoad(): Action[AnyContent] = identify { implicit request =>
+    Ok(view())
   }
 }

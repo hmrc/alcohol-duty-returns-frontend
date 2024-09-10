@@ -20,9 +20,10 @@ import base.SpecBase
 import connectors.CacheConnector
 import models.ReturnPeriod
 import org.mockito.ArgumentMatchers.any
+import play.api.http.Status.LOCKED
 import play.api.test.Helpers._
 import play.api.inject.bind
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
@@ -33,7 +34,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     val mockCacheConnector = mock[CacheConnector]
 
     "must redirect to the TaskList Page if UserAnswers already exist for a GET" in {
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Some(emptyUserAnswers))
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(Some(emptyUserAnswers)))
 
       val application = applicationBuilder()
         .overrides(
@@ -55,7 +56,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a GET if the userAnswer does not exist yet" in {
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(None)
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(None))
 
       val application = applicationBuilder()
         .overrides(
@@ -90,6 +91,60 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
       running(application) {
         val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(badPeriodKey).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the return locked controller if the return is locked" in {
+      val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
+      when(mockUpstreamErrorResponse.statusCode).thenReturn(LOCKED)
+
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future(
+        Left(mockUpstreamErrorResponse)
+      )
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(
+          GET,
+          controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+        )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.ReturnLockedController.onPageLoad().url
+      }
+    }
+
+    "must redirect to journey recovery controller if the cache connector return a bad request" in {
+      val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
+      when(mockUpstreamErrorResponse.statusCode).thenReturn(BAD_REQUEST)
+
+      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future(
+        Left(mockUpstreamErrorResponse)
+      )
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(
+          GET,
+          controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+        )
 
         val result = route(application, request).value
 

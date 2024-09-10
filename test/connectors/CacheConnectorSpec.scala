@@ -22,7 +22,7 @@ import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
@@ -30,18 +30,20 @@ import scala.concurrent.Future
 class CacheConnectorSpec extends SpecBase {
 
   val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val connector                     = new CacheConnector(config = mockConfig, httpClient = mock[HttpClient])
+  val httpClient: HttpClient        = mock[HttpClient]
+  val connector                     = new CacheConnector(config = mockConfig, httpClient = httpClient)
   val dateVal: LocalDateTime        = LocalDateTime.now
 
   "GET" - {
     "successfully fetch cache" in {
 
       when {
-        connector.httpClient.GET[Option[UserAnswers]](any(), any(), any())(any(), any(), any())
-      } thenReturn Future.successful(Some(emptyUserAnswers))
+        connector.httpClient
+          .GET[Either[UpstreamErrorResponse, Option[UserAnswers]]](any(), any(), any())(any(), any(), any())
+      } thenReturn Future.successful(Right(Some(emptyUserAnswers)))
 
       whenReady(connector.get("someref", "somePeriodKey")) {
-        _ mustBe Some(emptyUserAnswers)
+        _ mustBe Right(Some(emptyUserAnswers))
       }
     }
   }
@@ -71,6 +73,38 @@ class CacheConnectorSpec extends SpecBase {
       connector.set(emptyUserAnswers)
       verify(connector.httpClient, atLeastOnce)
         .PUT(eqTo(putUrl), eqTo(emptyUserAnswers), any())(any(), any(), any(), any())
+    }
+  }
+
+  "releaseLock" - {
+    "should call the release lock endpoint" in {
+      Mockito.reset(httpClient)
+
+      val releaseLockUrl = "/cache/release-lock"
+
+      when(mockConfig.adrReleaseLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
+      when(httpClient.DELETE[HttpResponse](any(), any())(any(), any(), any()))
+        .thenReturn(Future.successful(mock[HttpResponse]))
+
+      whenReady(connector.releaseLocks(returnId)) {
+        _ mustBe ()
+      }
+    }
+  }
+
+  "keepAlive" - {
+    "should call the keep alive endpoint" in {
+      Mockito.reset(httpClient)
+
+      val keepAliveUrl = s"/cache/keep-alive/$appaId/$periodKey"
+      when(mockConfig.adrKeepAliveUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(keepAliveUrl)
+
+      when(httpClient.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
+        .thenReturn(Future.successful(mock[HttpResponse]))
+
+      whenReady(connector.keepAlive(returnId)) { response =>
+        response mustBe a[HttpResponse]
+      }
     }
   }
 }
