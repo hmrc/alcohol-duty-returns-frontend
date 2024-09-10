@@ -16,13 +16,23 @@
 
 package models.audit
 
-import enumeratum._
+import play.api.libs.json.{Json, OFormat}
+import models.audit.AuditType.ContinueReturn
 
-sealed trait AuditType extends EnumEntry
+import java.time.Instant
 
-object AuditType extends Enum[AuditType] {
-  val values = findValues
+case class AuditContinueReturn(
+  appaId: String,
+  periodKey: String,
+  credentialId: String,
+  groupId: String,
+  returnContinueTime: Instant,
+  returnStartedTime: Instant,
+  returnValidUntilTime: Option[Instant]
+) extends AuditEventDetail {
+  protected val _auditType = ContinueReturn
+}
 
-  case object ContinueReturn extends AuditType
-  case object PaymentStarted extends AuditType
+object AuditContinueReturn {
+  implicit val format: OFormat[AuditContinueReturn] = Json.format[AuditContinueReturn]
 }

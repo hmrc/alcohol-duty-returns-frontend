@@ -19,15 +19,19 @@ package controllers
 import config.Constants.periodKeySessionKey
 import connectors.CacheConnector
 import controllers.actions._
-import models.{ReturnId, ReturnPeriod}
+import models.audit.AuditContinueReturn
+import models.{ReturnId, ReturnPeriod, UserAnswers}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.AuditService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
+import java.time.{Clock, Instant}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,6 +39,8 @@ class BeforeStartReturnController @Inject() (
   cacheConnector: CacheConnector,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
+  auditService: AuditService,
+  clock: Clock,
   val controllerComponents: MessagesControllerComponents,
   view: BeforeStartReturnView
 )(implicit ec: ExecutionContext)
@@ -43,6 +49,9 @@ class BeforeStartReturnController @Inject() (
     with Logging {
 
   def onPageLoad(periodKey: String): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+    val appaId       = request.appaId
+    val credentialId = request.userId
+    val groupId      = request.groupId
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case None               =>
         logger.warn("Period key is not valid")
@@ -50,7 +59,9 @@ class BeforeStartReturnController @Inject() (
       case Some(returnPeriod) =>
         val session = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
-          case Right(Some(_))                            => Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+          case Right(Some(ua))                           =>
+            auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
+            Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case Right(None)                               =>
             Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
           case Left(error) if error.statusCode == LOCKED =>
@@ -79,4 +90,28 @@ class BeforeStartReturnController @Inject() (
         }
     }
   }
+  // TODO : change returnStartedTime to start time in future
+
+  private def auditContinueReturn(
+    userAnswers: UserAnswers,
+    periodKey: String,
+    appaId: String,
+    credentialId: String,
+    groupId: String
+  )(implicit
+    hc: HeaderCarrier
+  ): Unit = {
+    val returnContinueTime = Instant.now(clock)
+    val eventDetail        = AuditContinueReturn(
+      appaId = appaId,
+      periodKey = periodKey,
+      credentialId = credentialId,
+      groupId = groupId,
+      returnContinueTime = returnContinueTime,
+      returnStartedTime = userAnswers.lastUpdated,
+      returnValidUntilTime = userAnswers.validUntil
+    )
+    auditService.audit(eventDetail)
+  }
+
 }

@@ -18,27 +18,54 @@ package controllers
 
 import base.SpecBase
 import connectors.CacheConnector
-import models.ReturnPeriod
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.{AlcoholRegimes, ReturnPeriod, UserAnswers}
+import models.audit.AuditContinueReturn
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.LOCKED
 import play.api.test.Helpers._
 import play.api.inject.bind
+import services.AuditService
 import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
+import java.time.{Clock, Instant}
 import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
   "BeforeStartReturn Controller" - {
-    val mockCacheConnector = mock[CacheConnector]
+    val mockCacheConnector             = mock[CacheConnector]
+    val mockAuditService: AuditService = mock[AuditService]
 
-    "must redirect to the TaskList Page if UserAnswers already exist for a GET" in {
+    val emptyUserAnswers: UserAnswers = UserAnswers(
+      returnId,
+      groupId,
+      internalId,
+      regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)),
+      lastUpdated = Instant.now(clock),
+      validUntil = Some(Instant.now(clock))
+    )
+
+    val expectedAuditEvent = AuditContinueReturn(
+      appaId = returnId.appaId,
+      periodKey = returnId.periodKey,
+      credentialId = emptyUserAnswers.internalId,
+      groupId = emptyUserAnswers.groupId,
+      returnContinueTime = Instant.now(clock),
+      returnStartedTime = Instant.now(clock),
+      returnValidUntilTime = Some(Instant.now(clock))
+    )
+
+    "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in {
       when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(Some(emptyUserAnswers)))
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService),
+          bind(classOf[Clock]).toInstance(clock)
         )
         .build()
 
@@ -51,6 +78,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
+
+        verify(mockAuditService).audit(eqTo(expectedAuditEvent))(any(), any())
         redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
       }
     }
