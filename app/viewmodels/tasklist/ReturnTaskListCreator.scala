@@ -153,9 +153,9 @@ class ReturnTaskListCreator @Inject() () {
     createDeclarationTask(
       getDeclarationState,
       "adjustment",
-      controllers.adjustment.routes.AdjustmentListController.onPageLoad().url,
-      controllers.adjustment.routes.AdjustmentListController.onPageLoad().url,
-      controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+      controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url,
+      controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url,
+      controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url
     )
   }
 

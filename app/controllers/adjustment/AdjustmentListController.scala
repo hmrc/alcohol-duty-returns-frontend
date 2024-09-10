@@ -51,45 +51,57 @@ class AdjustmentListController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val duties = request.userAnswers
-      .get(AdjustmentEntryListPage)
-      .getOrElse(Seq.empty)
-      .flatMap(duty => duty.newDuty.orElse(duty.duty))
+  def onPageLoad(pageNumber: Int = 1): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      val duties = request.userAnswers
+        .get(AdjustmentEntryListPage)
+        .getOrElse(Seq.empty)
+        .flatMap(duty => duty.newDuty.orElse(duty.duty))
 
-    val preparedForm = request.userAnswers.get(AdjustmentListPage).fold(form)(form.fill)
+      val preparedForm = request.userAnswers.get(AdjustmentListPage).fold(form)(form.fill)
 
-    alcoholDutyCalculatorConnector
-      .calculateTotalAdjustment(duties)
-      .flatMap { total =>
-        val table = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers, total.duty)
-        for {
-          updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
-          _              <- cacheConnector.set(updatedAnswers)
-        } yield Ok(view(preparedForm, table))
-      }
-      .recover { case _ =>
-        logger.warn("Unable to fetch adjustment total")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      }
+      alcoholDutyCalculatorConnector
+        .calculateTotalAdjustment(duties)
+        .flatMap { total =>
+          val allTableViewModelRows   = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers, total.duty)
+          val rowsPerPage             = 8
+          val totalPages              = (allTableViewModelRows.rows.length + rowsPerPage - 1) / rowsPerPage
+          val paginatedRows           =
+            allTableViewModelRows.rows.slice((pageNumber - 1) * rowsPerPage, pageNumber * rowsPerPage)
+          val paginatedTableViewModel = allTableViewModelRows.copy(rows = paginatedRows)
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
+            _              <- cacheConnector.set(updatedAnswers)
+          } yield Ok(view(preparedForm, paginatedTableViewModel, totalPages, pageNumber))
+        }
+        .recover { case _ =>
+          logger.warn("Unable to fetch adjustment total")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        }
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val (userAnswers, total) =
-      (request.userAnswers, request.userAnswers.get(AdjustmentTotalPage).getOrElse(BigDecimal(0)))
-    val table                = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, table))),
-        value =>
-          for {
-            updatedAnswers                 <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
-            userAnswersWithOverUnderTotals <-
-              adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers, value)
-            _                              <- cacheConnector.set(userAnswersWithOverUnderTotals)
-          } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, userAnswersWithOverUnderTotals))
-      )
+  def onSubmit(pageNumber: Int = 1): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      val (userAnswers, total)    =
+        (request.userAnswers, request.userAnswers.get(AdjustmentTotalPage).getOrElse(BigDecimal(0)))
+      val allTableViewModelRows   = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
+      val rowsPerPage             = 8
+      val totalPages              = (allTableViewModelRows.rows.length + rowsPerPage - 1) / rowsPerPage
+      val paginatedRows           = allTableViewModelRows.rows.slice((pageNumber - 1) * rowsPerPage, pageNumber * rowsPerPage)
+      val paginatedTableViewModel = allTableViewModelRows.copy(rows = paginatedRows)
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, paginatedTableViewModel, totalPages, pageNumber))),
+          value =>
+            for {
+              updatedAnswers                 <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
+              userAnswersWithOverUnderTotals <-
+                adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers, value)
+              _                              <- cacheConnector.set(userAnswersWithOverUnderTotals)
+            } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, userAnswersWithOverUnderTotals))
+        )
   }
 
 }
