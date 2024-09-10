@@ -14,15 +14,26 @@
  * limitations under the License.
  */
 
-package models.audit
+package models
 
-import enumeratum._
+import play.api.libs.json.{Json, OFormat}
 
-sealed trait AuditType extends EnumEntry
+case class HistoricPayment(
+  period: ReturnPeriod,
+  transactionType: TransactionType,
+  chargeReference: Option[String],
+  amountPaid: BigDecimal
+)
 
-object AuditType extends Enum[AuditType] {
-  val values = findValues
+object HistoricPayment {
+  implicit val historicPaymentFormat: OFormat[HistoricPayment] = Json.format[HistoricPayment]
+}
 
-  case object ContinueReturn extends AuditType
-  case object PaymentStarted extends AuditType
+case class HistoricPayments(
+  year: Int,
+  payments: Seq[HistoricPayment]
+)
+
+object HistoricPayments {
+  implicit val historicPaymentsFormat: OFormat[HistoricPayments] = Json.format[HistoricPayments]
 }

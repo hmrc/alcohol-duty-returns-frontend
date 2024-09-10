@@ -17,7 +17,7 @@
 package connectors
 
 import config.FrontendAppConfig
-import models.OpenPayments
+import models.{HistoricPayments, OpenPayments}
 import play.api.Logging
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
@@ -44,4 +44,18 @@ class AlcoholDutyAccountConnector @Inject() (
         case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
         case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
       }
+
+  def historicPayments(appaId: String, year: Int)(implicit hc: HeaderCarrier): Future[HistoricPayments] =
+    httpClient
+      .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetHistoricPaymentsUrl(appaId, year))
+      .flatMap {
+        case Right(response) if response.status == OK =>
+          Try(response.json.as[HistoricPayments]) match {
+            case Success(data)      => Future.successful(data)
+            case Failure(exception) => Future.failed(new Exception(s"Invalid JSON format $exception"))
+          }
+        case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
+        case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
+      }
+
 }
