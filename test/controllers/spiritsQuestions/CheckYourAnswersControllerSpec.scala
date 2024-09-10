@@ -66,12 +66,13 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       .success
       .value
 
-    "must return OK and the correct view for a GET if all necessary questions are answered" in {
+    "must return OK and the correct view for a GET if all necessary questions are answered" in new SetUp {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(completedUserAnswers))
+        .configure(additionalConfig)
         .overrides(
           bind[CacheConnector].toInstance(mockCacheConnector)
         )
@@ -102,7 +103,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
     }
 
-    "must return OK and the correct view for a GET if any optional questions are not answered" in {
+    "must return OK and the correct view for a GET if any optional questions are not answered" in new SetUp {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -119,6 +120,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .configure(additionalConfig)
         .overrides(
           bind[CacheConnector].toInstance(mockCacheConnector)
         )
@@ -147,9 +149,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           getMessages(application)
         ).toString
       }
-
     }
-    "must return OK and the correct view for a GET if multiple Spirit types including Other are checked" in {
+
+    "must return OK and the correct view for a GET if multiple Spirit types including Other are checked" in new SetUp {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -166,6 +168,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .configure(additionalConfig)
         .overrides(
           bind[CacheConnector].toInstance(mockCacheConnector)
         )
@@ -196,11 +199,27 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
 
     }
+
     "must redirect to Journey Recovery for a GET" - {
+      "if the feature toggle is off" in new SetUp(false) {
+        val application = applicationBuilder(Some(completedUserAnswers)).configure(additionalConfig).build()
 
-      "if no existing data is found" in {
+        running(application) {
+          val request =
+            FakeRequest(
+              GET,
+              controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
+            )
 
-        val application = applicationBuilder(Some(emptyUserAnswers)).build()
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+
+      "if no existing data is found" in new SetUp {
+        val application = applicationBuilder(Some(emptyUserAnswers)).configure(additionalConfig).build()
 
         running(application) {
           val request =
@@ -216,5 +235,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         }
       }
     }
+  }
+
+  class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+    val additionalConfig = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
   }
 }

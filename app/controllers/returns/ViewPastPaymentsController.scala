@@ -26,11 +26,11 @@ import viewmodels.returns.ViewPastPaymentsViewModel
 import views.html.returns.ViewPastPaymentsView
 import play.api.libs.json.Json
 
-import java.time.LocalDate
+import java.time.{LocalDate, Year}
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import config.Constants.pastPaymentsSessionKey
-
+import models.payments.OutstandingPayments
 class ViewPastPaymentsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
@@ -44,29 +44,47 @@ class ViewPastPaymentsController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
-    val appaId = request.appaId
-    alcoholDutyAccountConnector
-      .outstandingPayments(appaId)
-      .flatMap { outstandingPaymentsData =>
+    val appaId                    = request.appaId
+    val outstandingPaymentsFuture =
+      alcoholDutyAccountConnector.outstandingPayments(appaId).map { outstandingPaymentsData =>
         val sortedOutstandingPaymentsData =
           outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
-        val outstandingPaymentsTable      =
-          viewPastPaymentsModel.getOutstandingPaymentsTable(
-            sortedOutstandingPaymentsData
-          )
-        val session                       = request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
+        val updatedSession                =
+          request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
+        val outstandingPaymentsTable = viewPastPaymentsModel.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
 
         val unallocatedPaymentsTable =
           viewPastPaymentsModel.getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
-
-        Future.successful(
-          Ok(view(outstandingPaymentsTable, unallocatedPaymentsTable, outstandingPaymentsData.totalOpenPaymentsAmount))
-            .withSession(session)
+        OutstandingPayments(
+          outstandingPaymentsTable,
+          unallocatedPaymentsTable,
+          outstandingPaymentsData.totalOpenPaymentsAmount,
+          updatedSession
         )
       }
-      .recover { case _ =>
-        logger.warn(s"Unable to fetch open payments data for $appaId")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+
+    val historicPaymentsFuture =
+      alcoholDutyAccountConnector.historicPayments(appaId, Year.now.getValue).map { historicPaymentsData =>
+        val historicPaymentsTable = viewPastPaymentsModel.getHistoricPaymentsTable(historicPaymentsData.payments)
+        (historicPaymentsTable, historicPaymentsData.year)
       }
+
+    val openAndHistoricPaymentsFuture = for {
+      pastPaymentsData              <- outstandingPaymentsFuture
+      (historicPaymentsTable, year) <- historicPaymentsFuture
+    } yield Ok(
+      view(
+        pastPaymentsData.outstandingPaymentsTable,
+        pastPaymentsData.unallocatedPaymentsTable,
+        pastPaymentsData.totalOpenPaymentsAmount,
+        historicPaymentsTable,
+        year
+      )
+    ).withSession(pastPaymentsData.session)
+
+    openAndHistoricPaymentsFuture.recover { case ex =>
+      logger.warn(s"Error fetching payments data for $appaId: ${ex.getMessage}")
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 }
