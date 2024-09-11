@@ -15,17 +15,30 @@
  *@
 
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    paragraph: components.Paragraph,
+    link: components.Link
+
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("unauthorised.title")),
+    pageTitle = titleNoForm(messages("unauthorised.title", messages("service.name"))),
     timeout   = false
 ) {
 
     <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
 
-    <p class="govuk-body">@messages("unauthorised.guidance")</p>
+@paragraph(messages("unauthorised.p1"))
+@paragraph(
+    content = HtmlContent(
+        messages("unauthorised.p2.first") +
+        link(
+            id = "sign-in-with-an-organisation-account",
+            text = messages("unauthorised.p2.link.text"),
+            href = messages("unauthorised.p2.link.url"),
+            newTab = true) + " " +
+        messages("unauthorised.p2.second")))
+
 }
