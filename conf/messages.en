@@ -30,7 +30,6 @@ site.currency.2DP = £{0,number,#,##0.00}
 site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
 site.year = {0,number,####}
-site.printThisPage = Print this page
 
 date.day = Day
 date.month = Month
@@ -146,6 +145,7 @@ viewReturn.table.lpa.legend = Litres of pure alcohol (Lpa)
 viewReturn.table.dutyRate.legend = Duty rate (per litre)
 viewReturn.table.dutyValue.legend = Duty value
 viewReturn.table.dutyDue.legend = Duty value
+viewReturn.printYourReturn = Print your return
 
 viewPastPayments.heading = Alcohol Duty payments
 viewPastPayments.title = Alcohol Duty payments
