@@ -14,10 +14,13 @@
  * limitations under the License.
  *@
 
+@import components.{PageHeading, Paragraph, Link}
+
 @this(
     layout: templates.Layout,
-    paragraph: components.Paragraph,
-    link: components.Link
+    paragraph: Paragraph,
+    link: Link,
+    pageHeading: PageHeading
 
 )
 
@@ -28,7 +31,7 @@
     timeout   = false
 ) {
 
-    <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
+@pageHeading(messages("unauthorised.heading"))
 
 @paragraph(messages("unauthorised.p1"))
 @paragraph(
