@@ -87,6 +87,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     .success
     .value
 
+  val pageNumber = 1
+
   lazy val checkYourAnswersRoute = controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url
 
   "CheckYourAnswers Controller" - {
@@ -366,7 +368,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(pageNumber)
+          .url
 
         verify(mockCacheConnector, times(1)).set(any())(any())
       }
@@ -398,7 +402,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(pageNumber)
+          .url
 
         verify(mockCacheConnector, times(1)).set(any())(any())
       }

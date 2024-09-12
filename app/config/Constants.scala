@@ -27,6 +27,8 @@ object Constants {
   val dutyMinimumValue: BigDecimal    = BigDecimal(0.00)
   val dutyMaximumValue: BigDecimal    = BigDecimal(999999999.99)
 
+  val rowsPerPage = 15
+
   val bodyCssClass           = "govuk-body"
   val oneQuarterCssClass     = "govuk-!-width-one-quarter"
   val oneHalfCssClass        = "govuk-!-width-one-half"

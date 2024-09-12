@@ -19,11 +19,11 @@ package viewmodels
 import uk.gov.hmrc.govukfrontend.views.viewmodels.pagination.{Pagination, PaginationItem, PaginationLink}
 
 case class PaginationViewModel(
-                                currentPage: Int,
-                                totalPages: Int,
-                                baseUrl: Int => String
-                              ) {
-  def paginate: Pagination = {
+  currentPage: Int,
+  totalPages: Int,
+  baseUrl: Int => String
+) {
+  def paginate: Pagination =
     Pagination(
       previous = if (currentPage > 1) Some(PaginationLink(href = baseUrl(currentPage - 1))) else None,
       next = if (currentPage < totalPages) Some(PaginationLink(href = baseUrl(currentPage + 1))) else None,
@@ -35,5 +35,6 @@ case class PaginationViewModel(
         )
       })
     )
-  }
 }
+
+case class PaginatedViewModel(totalPages: Int, tableViewModel: TableViewModel)

@@ -16,18 +16,20 @@
 
 package controllers.adjustment
 
+import config.Constants.rowsPerPage
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.AdjustmentNavigator
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
 import views.html.adjustment.AdjustmentListView
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.{AdjustmentListSummaryHelper, AdjustmentOverUnderDeclarationCalculationHelper}
 import play.api.Logging
+import viewmodels.PaginatedViewModel
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -63,16 +65,15 @@ class AdjustmentListController @Inject() (
       alcoholDutyCalculatorConnector
         .calculateTotalAdjustment(duties)
         .flatMap { total =>
-          val allTableViewModelRows   = AdjustmentListSummaryHelper.adjustmentEntryTable(request.userAnswers, total.duty)
-          val rowsPerPage             = 8
-          val totalPages              = (allTableViewModelRows.rows.length + rowsPerPage - 1) / rowsPerPage
-          val paginatedRows           =
-            allTableViewModelRows.rows.slice((pageNumber - 1) * rowsPerPage, pageNumber * rowsPerPage)
-          val paginatedTableViewModel = allTableViewModelRows.copy(rows = paginatedRows)
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Ok(view(preparedForm, paginatedTableViewModel, totalPages, pageNumber))
+          val paginatedViewModel = getPaginatedViewModel(pageNumber, request.userAnswers, total.duty)
+          if (pageNumber < 1 || pageNumber > paginatedViewModel.totalPages) {
+            Future.successful(Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)))
+          } else {
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
+              _              <- cacheConnector.set(updatedAnswers)
+            } yield Ok(view(preparedForm, paginatedViewModel.tableViewModel, paginatedViewModel.totalPages, pageNumber))
+          }
         }
         .recover { case _ =>
           logger.warn("Unable to fetch adjustment total")
@@ -82,18 +83,18 @@ class AdjustmentListController @Inject() (
 
   def onSubmit(pageNumber: Int = 1): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val (userAnswers, total)    =
+      val (userAnswers, total) =
         (request.userAnswers, request.userAnswers.get(AdjustmentTotalPage).getOrElse(BigDecimal(0)))
-      val allTableViewModelRows   = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
-      val rowsPerPage             = 8
-      val totalPages              = (allTableViewModelRows.rows.length + rowsPerPage - 1) / rowsPerPage
-      val paginatedRows           = allTableViewModelRows.rows.slice((pageNumber - 1) * rowsPerPage, pageNumber * rowsPerPage)
-      val paginatedTableViewModel = allTableViewModelRows.copy(rows = paginatedRows)
+      val paginatedViewModel   = getPaginatedViewModel(pageNumber, userAnswers, total)
       form
         .bindFromRequest()
         .fold(
           formWithErrors =>
-            Future.successful(BadRequest(view(formWithErrors, paginatedTableViewModel, totalPages, pageNumber))),
+            Future.successful(
+              BadRequest(
+                view(formWithErrors, paginatedViewModel.tableViewModel, paginatedViewModel.totalPages, pageNumber)
+              )
+            ),
           value =>
             for {
               updatedAnswers                 <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
@@ -102,6 +103,16 @@ class AdjustmentListController @Inject() (
               _                              <- cacheConnector.set(userAnswersWithOverUnderTotals)
             } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, userAnswersWithOverUnderTotals))
         )
+  }
+
+  private def getPaginatedViewModel(pageNumber: Int, userAnswers: UserAnswers, total: BigDecimal)(implicit
+    messages: Messages
+  ): PaginatedViewModel = {
+    val allTableViewModelRows   = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
+    val totalPages              = Math.ceil(allTableViewModelRows.rows.length.toDouble / rowsPerPage).toInt
+    val paginatedRows           = allTableViewModelRows.rows.slice((pageNumber - 1) * rowsPerPage, pageNumber * rowsPerPage)
+    val paginatedTableViewModel = allTableViewModelRows.copy(rows = paginatedRows)
+    PaginatedViewModel(totalPages, paginatedTableViewModel)
   }
 
 }
