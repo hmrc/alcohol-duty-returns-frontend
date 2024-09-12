@@ -76,7 +76,7 @@ signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
 signedOut.guidance = We did not save your answers.
 
-unauthorised.title = Sorry, you cannot access this service with this account – {0} – GOV.UK
+unauthorised.title = Sorry, you cannot access this service with this account
 unauthorised.heading = Sorry, you cannot access this service with this account
 unauthorised.p1 = Manage your alcohol duty is a service for approved businesses, such as limited companies, partnerships and sole traders producing alcoholic products.
 unauthorised.p2.first = To use this service you need to
