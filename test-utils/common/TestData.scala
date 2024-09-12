@@ -64,13 +64,13 @@ trait TestData extends ModelGenerators {
   val periodKeyNov = "24AK"
   val periodKeyDec = "24AL"
 
-  val quarterPeriodKeys    = Set(
+  val quarterReturnPeriods    = Set(
     ReturnPeriod(YearMonth.of(2024, Month.MARCH)),
     ReturnPeriod(YearMonth.of(2024, Month.JUNE)),
     ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
     ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))
   )
-  val nonQuarterPeriodKeys =
+  val nonQuarterReturnPeriods =
     Set(
       ReturnPeriod(YearMonth.of(2024, Month.JANUARY)),
       ReturnPeriod(YearMonth.of(2024, Month.FEBRUARY)),
@@ -82,8 +82,8 @@ trait TestData extends ModelGenerators {
       ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER))
     )
 
-  val nonQuarterReturnPeriodGen = Gen.oneOf(nonQuarterPeriodKeys.toSeq)
-  val quarterReturnPeriodGen    = Gen.oneOf(quarterPeriodKeys.toSeq)
+  val nonQuarterReturnPeriodGen = Gen.oneOf(nonQuarterReturnPeriods.toSeq)
+  val quarterReturnPeriodGen    = Gen.oneOf(quarterReturnPeriods.toSeq)
 
   val returnPeriodMar = ReturnPeriod.fromPeriodKey(periodKeyMar).get
 
@@ -376,6 +376,32 @@ trait TestData extends ModelGenerators {
     None,
     BigDecimal(4773.34)
   )
+
+  val emptyOutstandingPaymentData = OpenPayments(
+    outstandingPayments = Seq.empty,
+    unallocatedPayments = Seq.empty,
+    totalOpenPaymentsAmount = BigDecimal(0),
+    totalUnallocatedPayments = BigDecimal(0),
+    totalOutstandingPayments = BigDecimal(0)
+  )
+
+  val historicReturnPayment =
+    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.DECEMBER)), Return, Some(chargeReference), BigDecimal(123.45))
+  val historicLPIPayment    =
+    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER)), LPI, Some(chargeReference), BigDecimal(12.45))
+  val historicRPIPayment    =
+    HistoricPayment(ReturnPeriod(YearMonth.of(2024, Month.OCTOBER)), RPI, Some(chargeReference), BigDecimal(-123.45))
+  val historicRefundPayment = HistoricPayment(
+    ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
+    Return,
+    Some(chargeReference),
+    BigDecimal(-1236.45)
+  )
+
+  val historicPayments =
+    HistoricPayments(2024, Seq(historicReturnPayment, historicLPIPayment, historicRPIPayment, historicRefundPayment))
+
+  val emptyHistoricPayment = HistoricPayments(2024, Seq.empty)
 
   val currentDate    = LocalDate.now()
   val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)

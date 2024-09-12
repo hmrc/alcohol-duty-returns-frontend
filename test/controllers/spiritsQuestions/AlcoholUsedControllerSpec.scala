@@ -19,11 +19,12 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.CacheConnector
 import forms.spiritsQuestions.AlcoholUsedFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.AlcoholUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.AlcoholUsedPage
+import play.api.Application
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
@@ -34,14 +35,6 @@ import views.html.spiritsQuestions.AlcoholUsedView
 import scala.concurrent.Future
 
 class AlcoholUsedControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val formProvider = new AlcoholUsedFormProvider()
-  val form         = formProvider()
-
-  lazy val alcoholUsedRoute = routes.AlcoholUsedController.onPageLoad(NormalMode).url
-
   val validBeer         = 55.6
   val validWine         = 47.5
   val validCiderOrPerry = 55.6
@@ -59,11 +52,7 @@ class AlcoholUsedControllerSpec extends SpecBase {
   )
 
   "AlcoholUsed Controller" - {
-
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request = FakeRequest(GET, alcoholUsedRoute)
 
@@ -76,10 +65,9 @@ class AlcoholUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+    "must populate the view correctly on a GET when the question has previously been answered" in new SetUp(
+      Some(userAnswers)
+    ) {
       running(application) {
         val request = FakeRequest(GET, alcoholUsedRoute)
 
@@ -98,14 +86,14 @@ class AlcoholUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .configure(additionalConfig)
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
               .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
@@ -130,10 +118,7 @@ class AlcoholUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request =
           FakeRequest(POST, alcoholUsedRoute)
@@ -150,10 +135,7 @@ class AlcoholUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+    "must redirect to Journey Recovery for a GET if the feature toggle is off" in new SetUp(Some(userAnswers), false) {
       running(application) {
         val request = FakeRequest(GET, alcoholUsedRoute)
 
@@ -164,10 +146,18 @@ class AlcoholUsedControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request = FakeRequest(GET, alcoholUsedRoute)
 
-      val application = applicationBuilder(userAnswers = None).build()
+        val result = route(application, request).value
 
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if the feature toggle is off" in new SetUp(Some(userAnswers), false) {
       running(application) {
         val request =
           FakeRequest(POST, alcoholUsedRoute)
@@ -175,7 +165,7 @@ class AlcoholUsedControllerSpec extends SpecBase {
               ("beer", validBeer.toString),
               ("wine", validWine.toString),
               ("madeWine", validMadeWine.toString),
-              ("ciderOrperry", validCiderOrPerry.toString)
+              ("ciderOrPerry", validCiderOrPerry.toString)
             )
 
         val result = route(application, request).value
@@ -184,5 +174,36 @@ class AlcoholUsedControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request =
+          FakeRequest(POST, alcoholUsedRoute)
+            .withFormUrlEncodedBody(
+              ("beer", validBeer.toString),
+              ("wine", validWine.toString),
+              ("madeWine", validMadeWine.toString),
+              ("ciderOrPerry", validCiderOrPerry.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+  }
+
+  class SetUp(maybeUserAnswers: Option[UserAnswers], spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+    val additionalConfig         = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+    val application: Application =
+      applicationBuilder(userAnswers = maybeUserAnswers).configure(additionalConfig).build()
+
+    def onwardRoute = Call("GET", "/foo")
+
+    val formProvider = new AlcoholUsedFormProvider()
+    val form         = formProvider()
+
+    lazy val alcoholUsedRoute = routes.AlcoholUsedController.onPageLoad(NormalMode).url
   }
 }

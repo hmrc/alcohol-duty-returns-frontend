@@ -18,7 +18,7 @@ package controllers.spiritsQuestions
 
 import base.SpecBase
 import forms.spiritsQuestions.WhiskyFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.Whisky
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -28,18 +28,13 @@ import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
+import play.api.Application
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.WhiskyView
 
 import scala.concurrent.Future
 
 class WhiskyControllerSpec extends SpecBase {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  val formProvider = new WhiskyFormProvider()
-  val form         = formProvider()
-
   lazy val whiskyRoute  = routes.WhiskyController.onPageLoad(NormalMode).url
   val validScotchWhisky = 55.6
   val validIrishWhisky  = 47.5
@@ -53,11 +48,7 @@ class WhiskyControllerSpec extends SpecBase {
   )
 
   "Whisky Controller" - {
-
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request = FakeRequest(GET, whiskyRoute)
 
@@ -70,10 +61,9 @@ class WhiskyControllerSpec extends SpecBase {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+    "must populate the view correctly on a GET when the question has previously been answered" in new SetUp(
+      Some(userAnswers)
+    ) {
       running(application) {
         val request = FakeRequest(GET, whiskyRoute)
 
@@ -89,13 +79,12 @@ class WhiskyControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application =
+      override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
@@ -119,10 +108,7 @@ class WhiskyControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must return a Bad Request and errors when invalid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
         val request =
           FakeRequest(POST, whiskyRoute)
@@ -139,10 +125,10 @@ class WhiskyControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
+    "must redirect to Journey Recovery for a GET if the feature toggle is off" in new SetUp(
+      Some(emptyUserAnswers),
+      false
+    ) {
       running(application) {
         val request = FakeRequest(GET, whiskyRoute)
 
@@ -153,10 +139,21 @@ class WhiskyControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request = FakeRequest(GET, whiskyRoute)
 
-      val application = applicationBuilder(userAnswers = None).build()
+        val result = route(application, request).value
 
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if the feature toggle is off" in new SetUp(
+      Some(emptyUserAnswers),
+      false
+    ) {
       running(application) {
         val request =
           FakeRequest(POST, whiskyRoute)
@@ -171,5 +168,32 @@ class WhiskyControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in new SetUp(None) {
+      running(application) {
+        val request =
+          FakeRequest(POST, whiskyRoute)
+            .withFormUrlEncodedBody(
+              ("scotchWhisky", validScotchWhisky.toString),
+              ("irishWhiskey", validIrishWhisky.toString)
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+  }
+
+  class SetUp(maybeUserAnswers: Option[UserAnswers], spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
+    val additionalConfig         = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
+    val application: Application =
+      applicationBuilder(userAnswers = maybeUserAnswers).configure(additionalConfig).build()
+
+    def onwardRoute = Call("GET", "/foo")
+
+    val formProvider = new WhiskyFormProvider()
+    val form         = formProvider()
   }
 }

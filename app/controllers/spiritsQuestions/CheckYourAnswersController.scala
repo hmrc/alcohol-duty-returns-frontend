@@ -16,31 +16,34 @@
 
 package controllers.spiritsQuestions
 import com.google.inject.Inject
-import controllers.actions.{CheckSpiritsRegimeAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import controllers.actions.{CheckSpiritsAndIngredientsToggleAction, CheckSpiritsRegimeAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.spiritsQuestions.CheckYourAnswersSummaryListHelper
 import views.html.spiritsQuestions.CheckYourAnswersView
+
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkSpiritsRegime: CheckSpiritsRegimeAction,
+  checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkSpiritsRegime) {
-    implicit request =>
-      val result = for {
-        spiritsList          <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
-        alcoholList          <- CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers)
-        grainsList           <- CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
-        otherIngredientsList <- CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
-      } yield Ok(view(spiritsList, alcoholList, grainsList, otherIngredientsList))
-      result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-  }
+  def onPageLoad(): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
+      implicit request =>
+        val result = for {
+          spiritsList          <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
+          alcoholList          <- CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers)
+          grainsList           <- CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
+          otherIngredientsList <- CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
+        } yield Ok(view(spiritsList, alcoholList, grainsList, otherIngredientsList))
+        result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+    }
 }

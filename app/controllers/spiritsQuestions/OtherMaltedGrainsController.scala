@@ -40,6 +40,7 @@ class OtherMaltedGrainsController @Inject() (
   requireData: DataRequiredAction,
   formProvider: OtherMaltedGrainsFormProvider,
   checkSpiritsRegime: CheckSpiritsRegimeAction,
+  checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   val controllerComponents: MessagesControllerComponents,
   view: OtherMaltedGrainsView
 )(implicit ec: ExecutionContext)
@@ -49,26 +50,28 @@ class OtherMaltedGrainsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen checkSpiritsRegime) { implicit request =>
-      val preparedForm = request.userAnswers.get(OtherMaltedGrainsPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(OtherMaltedGrainsPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode))
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(OtherMaltedGrainsPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(OtherMaltedGrainsPage, mode, updatedAnswers))
-        )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(OtherMaltedGrainsPage, value))
+                _              <- cacheConnector.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(OtherMaltedGrainsPage, mode, updatedAnswers))
+          )
+      }
 }

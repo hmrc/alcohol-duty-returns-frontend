@@ -16,6 +16,7 @@
 
 package viewmodels.tasklist
 
+import config.FrontendAppConfig
 import models.{ReturnPeriod, UserAnswers}
 import play.api.i18n.Messages
 import viewmodels.govuk.all.FluentInstant
@@ -23,7 +24,7 @@ import viewmodels.govuk.all.FluentInstant
 import java.time.Instant
 import javax.inject.Inject
 
-class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator) {
+class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator, appConfig: FrontendAppConfig) {
   def getTaskList(userAnswers: UserAnswers, validUntil: Instant, returnPeriod: ReturnPeriod)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
@@ -39,7 +40,9 @@ class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator)
       Some(returnTaskListCreator.returnSection(userAnswers)),
       Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
       Some(returnTaskListCreator.returnDSDSection(userAnswers)),
-      if (userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits)
+      if (
+        appConfig.spiritsAndIngredientsEnabled && userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits
+      )
         Some(returnTaskListCreator.returnQSSection(userAnswers))
       else None
     ).flatten

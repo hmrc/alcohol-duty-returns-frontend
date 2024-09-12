@@ -18,6 +18,7 @@ package viewmodels.tasklist
 
 import base.SpecBase
 import TaskListStatus.Incomplete
+import config.FrontendAppConfig
 import models.ReturnPeriod
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.DeclareAdjustmentQuestionPage
@@ -31,15 +32,8 @@ import viewmodels.govuk.all.FluentInstant
 import java.time.Instant
 
 class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
-  val application: Application    = applicationBuilder().build()
-  private val validUntil          = Instant.now(clock)
-  implicit val messages: Messages = getMessages(application)
-  val returnTaskListCreator       = new ReturnTaskListCreator()
-  val taskListViewModel           = new TaskListViewModel(returnTaskListCreator)
-
   "AlcoholDutyTaskListHelper" - {
-    "must return an incomplete task list" in {
-
+    "must return an incomplete task list" in new SetUp {
       val expectedSections = Seq(
         returnTaskListCreator.returnSection(emptyUserAnswers),
         returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
@@ -62,8 +56,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       result.completedTasks mustBe 0
     }
 
-    "must return an incomplete task list when all sections are completed except for check and submit" in {
-
+    "must return an incomplete task list when all sections are completed except for check and submit" in new SetUp {
       val userAnswers = emptyUserAnswers
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
@@ -101,7 +94,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       result.completedTasks mustBe 4
     }
 
-    "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in {
+    "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in new SetUp {
       val expectedSectionsWithQS = Seq(
         returnTaskListCreator.returnSection(emptyUserAnswers),
         returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
@@ -133,5 +126,15 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         }
       }
     }
+  }
+
+  class SetUp {
+    val additionalConfig             = Map("features.spirits-and-ingredients" -> true)
+    val application: Application     = applicationBuilder().configure(additionalConfig).build()
+    val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
+    val validUntil                   = Instant.now(clock)
+    implicit val messages: Messages  = getMessages(application)
+    val returnTaskListCreator        = new ReturnTaskListCreator()
+    val taskListViewModel            = new TaskListViewModel(returnTaskListCreator, appConfig)
   }
 }

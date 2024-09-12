@@ -18,33 +18,33 @@ package viewmodels.returns
 
 import play.api.Logging
 import play.api.i18n.Messages
-import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableViewModel}
+import viewmodels.{DateTimeHelper, Money, TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
-import java.time.LocalDate
+import java.time.{LocalDate, YearMonth}
 import javax.inject.Inject
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, TableRow, Text}
 import config.Constants
 import config.Constants.boldFontCssClass
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
 import models.TransactionType.RPI
-import models.{OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
+import models.{HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import play.twirl.api.Html
 
-import java.time.format.DateTimeFormatter
-
-class ViewPastPaymentsViewModel @Inject() () extends Logging {
-
-  private val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) extends Logging {
 
   def getOutstandingPaymentsTable(
     outstandingPaymentsData: Seq[OutstandingPayment]
   )(implicit messages: Messages): TableViewModel =
-    TableViewModel(
-      head = getOutstandingPaymentsTableHeader(),
-      rows = getOutstandingPaymentsDataTableRows(outstandingPaymentsData),
-      total = None
-    )
+    if (outstandingPaymentsData.nonEmpty) {
+      TableViewModel(
+        head = getOutstandingPaymentsTableHeader(),
+        rows = getOutstandingPaymentsDataTableRows(outstandingPaymentsData),
+        total = None
+      )
+    } else {
+      TableViewModel(head = Seq.empty, Seq.empty, total = None)
+    }
 
   private def getOutstandingPaymentsTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
@@ -93,7 +93,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     val sortedUnallocatedPaymentsData = unallocatedPaymentsData.sortBy(_.paymentDate)(Ordering[LocalDate].reverse)
     if (sortedUnallocatedPaymentsData.nonEmpty) {
       TableViewModel(
-        head = getUnallocatedPaymentsHeader(),
+        head = getHistoricOrUnallocatedPaymentsHeader("unallocated"),
         rows = getUnallocatedPaymentsDataTableRows(sortedUnallocatedPaymentsData),
         total = None
       )
@@ -102,9 +102,9 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     }
   }
 
-  private def getUnallocatedPaymentsHeader()(implicit messages: Messages): Seq[HeadCell] =
+  private def getHistoricOrUnallocatedPaymentsHeader(paymentType: String)(implicit messages: Messages): Seq[HeadCell] =
     Seq(
-      HeadCell(content = Text(messages("viewPastPayments.unallocatedPayments.paymentDate"))),
+      HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
       HeadCell(content = Text(messages("viewPastPayments.description"))),
       HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Constants.textAlignRightCssClass)
     )
@@ -119,6 +119,45 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
           TableRow(content = Text(messages("viewPastPayments.unallocatedPayments.description"))),
           TableRow(
             content = Text(Money.format(unallocatedPaymentData.unallocatedAmount)),
+            classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
+          )
+        )
+      )
+    }
+
+  def getHistoricPaymentsTable(
+    historicPaymentsData: Seq[HistoricPayment]
+  )(implicit messages: Messages): TableViewModel = {
+    val sortedHistoricPaymentsData = historicPaymentsData.sortBy(_.period.period)(Ordering[YearMonth].reverse)
+    if (sortedHistoricPaymentsData.nonEmpty) {
+      TableViewModel(
+        head = getHistoricOrUnallocatedPaymentsHeader("historic"),
+        rows = getHistoricPaymentsDataTableRows(sortedHistoricPaymentsData),
+        total = None
+      )
+    } else {
+      TableViewModel(head = Seq.empty, Seq.empty, total = None)
+    }
+  }
+
+  private def getHistoricPaymentsDataTableRows(
+    historicPaymentsData: Seq[HistoricPayment]
+  )(implicit messages: Messages): Seq[TableRowViewModel] =
+    historicPaymentsData.map { historicPaymentsData =>
+      val monthYear = dateTimeHelper.formatMonthYear(historicPaymentsData.period.period)
+      TableRowViewModel(
+        cells = Seq(
+          TableRow(content = Text(monthYear)),
+          TableRow(content =
+            HtmlContent(
+              formatHistoricPaymentsDescription(
+                historicPaymentsData.transactionType,
+                historicPaymentsData.chargeReference
+              )
+            )
+          ),
+          TableRow(
+            content = Text(Money.format(historicPaymentsData.amountPaid)),
             classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
           )
         )
@@ -143,7 +182,7 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
     }
 
   private def formatDateYearMonth(date: LocalDate): String =
-    date.format(formatter)
+    dateTimeHelper.formatDateMonthYear(date)
 
   private def formatDescription(
     transactionType: TransactionType,
@@ -154,14 +193,29 @@ class ViewPastPaymentsViewModel @Inject() () extends Logging {
   ): Html = {
     val (description, reference) = (remainingAmount, chargeReference, transactionType) match {
       case (_, Some(chargeReference), transactionType) if transactionType == RPI =>
-        (messages(s"viewPastPayments.RPI.description"), messages("viewPastPayments.ref", chargeReference))
+        (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (remainingAmount, Some(chargeReference), _) if remainingAmount < 0    =>
-        (messages(s"viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
+        (messages("viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, Some(chargeReference), _)                                         =>
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, None, _)                                                          =>
-        logger.logger.warn("Couldn't fetch chargeReference for outstanding payment")
+        logger.warn("Couldn't fetch chargeReference for outstanding payment")
         (messages(s"viewPastPayments.$transactionType.description"), "")
+    }
+    Html(s"$description<br>$reference")
+  }
+
+  private def formatHistoricPaymentsDescription(transactionType: TransactionType, chargeReference: Option[String])(
+    implicit messages: Messages
+  ): Html = {
+    val (description, reference) = chargeReference.fold {
+      logger.warn("Couldn't fetch chargeReference for historic payment")
+      (messages(s"viewPastPayments.historic.$transactionType.description"), "")
+    } { chargeReference =>
+      (
+        messages(s"viewPastPayments.historic.$transactionType.description"),
+        messages("viewPastPayments.ref", chargeReference)
+      )
     }
     Html(s"$description<br>$reference")
   }

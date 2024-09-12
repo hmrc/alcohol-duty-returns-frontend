@@ -48,6 +48,8 @@ object Constants {
   val tableCaptionMCssClass    = "govuk-table__caption--m"
   val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"
 
+  val paddingBottomCssClass = "govuk-body govuk-!-padding-bottom-3"
+
   val quarterlySpiritsMonths = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
 
   val pastPaymentsSessionKey: String = "past-payment-amount"
