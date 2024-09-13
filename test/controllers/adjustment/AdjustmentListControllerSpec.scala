@@ -108,14 +108,12 @@ class AdjustmentListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentListView]
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(getMessages(app))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total, pageNumber)(getMessages(app))
 
-        val totalPages = Math.ceil(adjustmentTable.rows.length.toDouble / rowsPerPage).toInt
-
-        val paginatedTableViewModel = adjustmentTable.copy(rows = adjustmentTable.rows.slice(0, rowsPerPage))
+        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, paginatedTableViewModel, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(form, adjustmentTable, totalPages, pageNumber)(
           request,
           getMessages(app)
         ).toString
@@ -146,14 +144,12 @@ class AdjustmentListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total)(getMessages(app))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total, pageNumber)(getMessages(app))
 
-        val totalPages = Math.ceil(adjustmentTable.rows.length.toDouble / rowsPerPage).toInt
-
-        val paginatedTableViewModel = adjustmentTable.copy(rows = adjustmentTable.rows.slice(0, rowsPerPage))
+        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), paginatedTableViewModel, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable, totalPages, pageNumber)(
           request,
           getMessages(app)
         ).toString
@@ -202,14 +198,12 @@ class AdjustmentListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(getMessages(app))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total, pageNumber)(getMessages(app))
 
-        val totalPages = Math.ceil(adjustmentTable.rows.length.toDouble / rowsPerPage).toInt
-
-        val paginatedTableViewModel = adjustmentTable.copy(rows = adjustmentTable.rows.slice(0, rowsPerPage))
+        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, paginatedTableViewModel, totalPages, pageNumber)(
+        contentAsString(result) mustEqual view(boundForm, adjustmentTable, totalPages, pageNumber)(
           request,
           getMessages(app)
         ).toString

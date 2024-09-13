@@ -108,10 +108,9 @@ class AdjustmentListController @Inject() (
   private def getPaginatedViewModel(pageNumber: Int, userAnswers: UserAnswers, total: BigDecimal)(implicit
     messages: Messages
   ): PaginatedViewModel = {
-    val allTableViewModelRows   = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)
-    val totalPages              = Math.ceil(allTableViewModelRows.rows.length.toDouble / rowsPerPage).toInt
-    val paginatedRows           = allTableViewModelRows.rows.slice((pageNumber - 1) * rowsPerPage, pageNumber * rowsPerPage)
-    val paginatedTableViewModel = allTableViewModelRows.copy(rows = paginatedRows)
+    val adjustmentEntries       = userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
+    val totalPages              = Math.ceil(adjustmentEntries.size.toDouble / rowsPerPage).toInt
+    val paginatedTableViewModel = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)
     PaginatedViewModel(totalPages, paginatedTableViewModel)
   }
 

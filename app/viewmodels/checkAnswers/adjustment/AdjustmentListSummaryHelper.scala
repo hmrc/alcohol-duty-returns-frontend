@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.adjustment
 
 import config.Constants
+import config.Constants.rowsPerPage
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
 import pages.adjustment.AdjustmentEntryListPage
@@ -28,9 +29,11 @@ import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableTotal
 
 object AdjustmentListSummaryHelper {
 
-  def adjustmentEntryTable(userAnswers: UserAnswers, total: BigDecimal)(implicit messages: Messages): TableViewModel = {
+  def adjustmentEntryTable(userAnswers: UserAnswers, total: BigDecimal, pageNumber: Int)(implicit
+    messages: Messages
+  ): TableViewModel = {
 
-    val adjustmentEntries: Seq[AdjustmentEntry] = getAdjustmentEntries(userAnswers)
+    val adjustmentEntries: Seq[AdjustmentEntry] = getPaginatedAdjustmentEntries(userAnswers, pageNumber)
     TableViewModel(
       head = Seq(
         HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Constants.oneQuarterCssClass),
@@ -49,8 +52,11 @@ object AdjustmentListSummaryHelper {
     )
   }
 
-  private def getAdjustmentEntries(userAnswers: UserAnswers): Seq[AdjustmentEntry] =
-    userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
+  private def getPaginatedAdjustmentEntries(userAnswers: UserAnswers, pageNumber: Int): Seq[AdjustmentEntry] = {
+    val adjustmentEntries          = userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
+    val paginatedAdjustmentEntries = adjustmentEntries.slice((pageNumber - 1) * rowsPerPage, pageNumber * rowsPerPage)
+    paginatedAdjustmentEntries
+  }
 
   private def getAdjustmentEntryRows(adjustmentEntries: Seq[AdjustmentEntry])(implicit
     messages: Messages
