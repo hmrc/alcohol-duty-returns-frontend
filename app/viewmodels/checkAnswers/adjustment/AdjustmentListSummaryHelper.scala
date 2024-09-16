@@ -53,9 +53,9 @@ object AdjustmentListSummaryHelper {
   }
 
   private def getPaginatedAdjustmentEntries(userAnswers: UserAnswers, pageNumber: Int): Seq[AdjustmentEntry] = {
-    val adjustmentEntries          = userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
-    val fromIndex = (pageNumber - 1) * rowsPerPage
-    val toIndex = pageNumber * rowsPerPage
+    val adjustmentEntries = userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
+    val fromIndex         = (pageNumber - 1) * rowsPerPage
+    val toIndex           = pageNumber * rowsPerPage
     adjustmentEntries.slice(fromIndex, toIndex)
   }
 
