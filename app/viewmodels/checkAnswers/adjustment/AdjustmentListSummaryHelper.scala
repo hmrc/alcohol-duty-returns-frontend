@@ -47,7 +47,7 @@ object AdjustmentListSummaryHelper {
           classes = Constants.oneQuarterCssClass
         )
       ),
-      rows = getAdjustmentEntryRows(adjustmentEntries),
+      rows = getAdjustmentEntryRows(adjustmentEntries, pageNumber),
       total = Some(adjustmentsTotal(total))
     )
   }
@@ -59,14 +59,15 @@ object AdjustmentListSummaryHelper {
     adjustmentEntries.slice(fromIndex, toIndex)
   }
 
-  private def getAdjustmentEntryRows(adjustmentEntries: Seq[AdjustmentEntry])(implicit
+  private def getAdjustmentEntryRows(adjustmentEntries: Seq[AdjustmentEntry], pageNumber: Int)(implicit
     messages: Messages
   ): Seq[TableRowViewModel] =
     adjustmentEntries.zipWithIndex.map { case (adjustmentEntry, index) =>
-      val adjustmentType = adjustmentEntry.adjustmentType.getOrElse(
+      val adjustmentIndex = (pageNumber - 1) * rowsPerPage + index
+      val adjustmentType  = adjustmentEntry.adjustmentType.getOrElse(
         throw new RuntimeException("Couldn't fetch adjustment type value from cache")
       )
-      val dutyValue      = if (adjustmentEntry.newDuty.isDefined) {
+      val dutyValue       = if (adjustmentEntry.newDuty.isDefined) {
         adjustmentEntry.newDuty
       } else {
         adjustmentEntry.duty
@@ -91,12 +92,12 @@ object AdjustmentListSummaryHelper {
         actions = Seq(
           TableRowActionViewModel(
             label = messages("site.change"),
-            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(index)),
+            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(adjustmentIndex)),
             visuallyHiddenText = Some(messages("adjustmentEntryList.change.hidden"))
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
-            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(index: Int),
+            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(adjustmentIndex),
             visuallyHiddenText = Some(messages("adjustmentEntryList.remove.hidden"))
           )
         )
