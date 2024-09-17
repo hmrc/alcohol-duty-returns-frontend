@@ -18,7 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import models.{ReturnId, UserAnswers}
-import play.api.libs.json.Writes
+import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
 
@@ -52,9 +52,9 @@ class CacheConnector @Inject() (
       implicitly
     )
 
-  def releaseLocks(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[Unit] =
+  def releaseLock(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[Unit] =
     httpClient
-      .DELETE(config.adrReleaseLockUrl(returnId.appaId, returnId.periodKey))(
+      .DELETE(config.adrReleaseCacheLockUrl(returnId.appaId, returnId.periodKey))(
         implicitly[HttpReads[HttpResponse]],
         hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
         implicitly
@@ -62,7 +62,8 @@ class CacheConnector @Inject() (
       .map(_ => ())
 
   def keepAlive(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.GET(config.adrKeepAliveUrl(returnId.appaId, returnId.periodKey))(
+    httpClient.PUT(config.adrCacheKeepAliveUrl(returnId.appaId, returnId.periodKey), Json.obj())(
+      implicitly,
       implicitly[HttpReads[HttpResponse]],
       hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
       implicitly

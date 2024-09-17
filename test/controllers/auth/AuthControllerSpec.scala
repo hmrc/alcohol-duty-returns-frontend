@@ -34,7 +34,32 @@ class AuthControllerSpec extends SpecBase {
     "must clear user answers and redirect to sign out, specifying the exit survey as the continue URL" in {
 
       val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.releaseLocks(eqTo(returnId))(any())).thenReturn(Future.successful(()))
+
+      val application =
+        applicationBuilder(None)
+          .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+          .build()
+
+      running(application) {
+
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val request   = FakeRequestWithoutSession(GET, routes.AuthController.signOut().url)
+
+        val result = route(application, request).value
+
+        val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
+        val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual expectedRedirectUrl
+        verify(mockCacheConnector, times(0)).releaseLock(eqTo(returnId))(any())
+      }
+    }
+
+    "must clear user answers, release the lock, and redirect to sign out, specifying the exit survey as the continue URL" in {
+
+      val mockCacheConnector = mock[CacheConnector]
+      when(mockCacheConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(()))
 
       val application =
         applicationBuilder(None)
@@ -53,7 +78,7 @@ class AuthControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockCacheConnector, times(1)).releaseLocks(eqTo(returnId))(any())
+        verify(mockCacheConnector, times(1)).releaseLock(eqTo(returnId))(any())
       }
     }
   }

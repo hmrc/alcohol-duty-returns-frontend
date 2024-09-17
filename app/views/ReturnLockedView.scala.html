@@ -14,19 +14,23 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{PageHeading, Paragraph, SectionHeading}
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
-        pageHeading: PageHeading
+        pageHeading: PageHeading,
+        paragraph: Paragraph
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("returnLocked.title"))) {
 
-    @pageHeading(messages("returnLocked.heading"))
+  @pageHeading(messages("returnLocked.heading"))
+
+  @paragraph(messages("returnLocked.p1"))
+  @paragraph(messages("returnLocked.p2"))
 
 }

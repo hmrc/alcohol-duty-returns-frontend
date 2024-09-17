@@ -21,12 +21,13 @@ import config.FrontendAppConfig
 import connectors.CacheConnector
 import controllers.actions.IdentifyWithEnrolmentAction
 import models.ReturnId
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -35,11 +36,19 @@ class AuthController @Inject() (
   identify: IdentifyWithEnrolmentAction
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
+    with Logging
     with I18nSupport {
 
   def signOut(): Action[AnyContent] = identify.async { implicit request =>
-    cacheConnector
-      .releaseLocks(ReturnId(request.appaId, request.session.get(periodKeySessionKey).getOrElse("")))
-      .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+    request.session.get(periodKeySessionKey) match {
+      case Some(periodKey) =>
+        cacheConnector
+          .releaseLock(ReturnId(request.appaId, periodKey))
+          .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+      case None            =>
+        logger.warn("Period key not found during sign out")
+        Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+    }
+
   }
 }

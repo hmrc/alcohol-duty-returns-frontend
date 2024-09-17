@@ -97,11 +97,11 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCacheCreateUserAnswersUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/cache/user-answers"
 
-  def adrReleaseLockUrl(appaId: String, periodKey: String): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/release-lock/$appaId/$periodKey"
+  def adrReleaseCacheLockUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/cache/lock/$appaId/$periodKey"
 
-  def adrKeepAliveUrl(appaId: String, periodKey: String): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/keep-alive/$appaId/$periodKey"
+  def adrCacheKeepAliveUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/cache/lock/$appaId/$periodKey/ttl"
 
   def adrCacheClearAllUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-all"

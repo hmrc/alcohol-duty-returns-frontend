@@ -22,6 +22,7 @@ import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
+import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import java.time.LocalDateTime
@@ -82,11 +83,11 @@ class CacheConnectorSpec extends SpecBase {
 
       val releaseLockUrl = "/cache/release-lock"
 
-      when(mockConfig.adrReleaseLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
+      when(mockConfig.adrReleaseCacheLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
       when(httpClient.DELETE[HttpResponse](any(), any())(any(), any(), any()))
         .thenReturn(Future.successful(mock[HttpResponse]))
 
-      whenReady(connector.releaseLocks(returnId)) {
+      whenReady(connector.releaseLock(returnId)) {
         _ mustBe ()
       }
     }
@@ -97,9 +98,9 @@ class CacheConnectorSpec extends SpecBase {
       Mockito.reset(httpClient)
 
       val keepAliveUrl = s"/cache/keep-alive/$appaId/$periodKey"
-      when(mockConfig.adrKeepAliveUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(keepAliveUrl)
+      when(mockConfig.adrCacheKeepAliveUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(keepAliveUrl)
 
-      when(httpClient.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
+      when(httpClient.PUT[JsObject, HttpResponse](any(), any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.successful(mock[HttpResponse]))
 
       whenReady(connector.keepAlive(returnId)) { response =>
