@@ -23,6 +23,10 @@ import connectors.CacheConnector
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
+import play.api.http.Status.{LOCKED, SEE_OTHER}
+import play.api.mvc.Result
+import play.api.test.Helpers._
+import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import scala.concurrent.Future
 
@@ -30,7 +34,7 @@ class DataRetrievalActionSpec extends SpecBase {
   val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(mockConfig, cacheConnector) {
-    def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
+    def actionRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
   }
 
   "Data Retrieval Action" - {
@@ -38,14 +42,21 @@ class DataRetrievalActionSpec extends SpecBase {
     "when there is no data in the cache" - {
 
       "must set userAnswers to 'None' in the request" in {
+        val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
 
         val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(None)
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
+          Left(mockUpstreamErrorResponse)
+        )
         val action         = new Harness(cacheConnector)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), appaId, groupId, internalId)).futureValue
+        val result = action.actionRefine(IdentifierRequest(FakeRequest(), appaId, groupId, internalId)).futureValue
 
-        result.userAnswers must not be defined
+        result.isRight mustBe true
+        result.map { dataRetrievalRequest =>
+          dataRetrievalRequest.userAnswers must not be defined
+        }
       }
     }
 
@@ -54,12 +65,12 @@ class DataRetrievalActionSpec extends SpecBase {
       "must build a userAnswers object and add it to the request" in {
 
         val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Some(emptyUserAnswers))
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(emptyUserAnswers))
         val action         = new Harness(cacheConnector)
 
         val result =
           action
-            .callTransform(
+            .actionRefine(
               IdentifierRequest(
                 FakeRequest().withSession((periodKeySessionKey, periodKey)),
                 appaId,
@@ -69,18 +80,21 @@ class DataRetrievalActionSpec extends SpecBase {
             )
             .futureValue
 
-        result.userAnswers mustBe defined
+        result.isRight mustBe true
+        result.map { dataRetrievalRequest =>
+          dataRetrievalRequest.userAnswers mustBe defined
+        }
       }
 
       "must set userAnswers to 'None' if the session does not contain the period Key" in {
 
         val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Some(emptyUserAnswers))
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(emptyUserAnswers))
         val action         = new Harness(cacheConnector)
 
         val result =
           action
-            .callTransform(
+            .actionRefine(
               IdentifierRequest(
                 play.api.test.FakeRequest(),
                 appaId,
@@ -90,7 +104,55 @@ class DataRetrievalActionSpec extends SpecBase {
             )
             .futureValue
 
-        result.userAnswers must not be defined
+        result.isRight mustBe true
+        result.map { dataRetrievalRequest =>
+          dataRetrievalRequest.userAnswers must not be defined
+        }
+      }
+    }
+
+    "when the Cache Connector return an error" - {
+
+      "must redirect to the Return Locked controller if the error status is Locked" in {
+
+        val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(LOCKED)
+
+        val cacheConnector = mock[CacheConnector]
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
+          Left(mockUpstreamErrorResponse)
+        )
+        val action         = new Harness(cacheConnector)
+
+        val result = action.actionRefine(IdentifierRequest(FakeRequest(), appaId, groupId, internalId))
+
+        val redirectResult = result.map {
+          case Left(res) => res
+          case _         => fail()
+        }
+        status(redirectResult) mustBe SEE_OTHER
+        redirectLocation(redirectResult).value mustEqual controllers.routes.ReturnLockedController.onPageLoad().url
+      }
+
+      "must redirect to the Journey Recovery controller if the error status is not Bad Request" in {
+
+        val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(BAD_REQUEST)
+
+        val cacheConnector = mock[CacheConnector]
+        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
+          Left(mockUpstreamErrorResponse)
+        )
+        val action         = new Harness(cacheConnector)
+
+        val result = action.actionRefine(IdentifierRequest(FakeRequest(), appaId, groupId, internalId))
+
+        val redirectResult = result.map {
+          case Left(res) => res
+          case _         => fail()
+        }
+        status(redirectResult) mustBe SEE_OTHER
+        redirectLocation(redirectResult).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

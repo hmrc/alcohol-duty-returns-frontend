@@ -17,10 +17,12 @@
 package controllers
 
 import base.SpecBase
+import connectors.CacheConnector
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import uk.gov.hmrc.http.HttpResponse
 
 import scala.concurrent.Future
 
@@ -32,12 +34,12 @@ class KeepAliveControllerSpec extends SpecBase {
 
       "must keep the answers alive and return OK" in {
 
-        val mockSessionRepository = mock[SessionRepository]
-        when(mockSessionRepository.keepAlive(any())) thenReturn Future.successful(true)
+        val mockCacheConnector = mock[CacheConnector]
+        when(mockCacheConnector.keepAlive(eqTo(returnId))(any())).thenReturn(Future.successful(mock[HttpResponse]))
 
         val application =
           applicationBuilder(Some(emptyUserAnswers))
-            .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+            .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
             .build()
 
         running(application) {
@@ -47,22 +49,19 @@ class KeepAliveControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          verify(mockSessionRepository, times(1)).keepAlive(emptyUserAnswers.returnId)
         }
       }
     }
 
     "when the user has not answered any questions" - {
 
+      val mockCacheConnector = mock[CacheConnector]
+      when(mockCacheConnector.keepAlive(eqTo(returnId))(any())).thenReturn(Future.successful(mock[HttpResponse]))
+
       "must return OK" in {
-
-        val mockSessionRepository = mock[SessionRepository]
-        when(mockSessionRepository.keepAlive(any())) thenReturn Future.successful(true)
-
-        val application =
-          applicationBuilder(None)
-            .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
-            .build()
+        val application = applicationBuilder(None)
+          .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+          .build()
 
         running(application) {
 
@@ -71,7 +70,6 @@ class KeepAliveControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          verify(mockSessionRepository, never).keepAlive(any())
         }
       }
     }

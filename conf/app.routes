@@ -10,13 +10,16 @@ GET         /refresh-session                             controllers.KeepAliveCo
 
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
+GET         /return-locked                               controllers.ReturnLockedController.onPageLoad()
+
 GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad()
 
 GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut()
-GET         /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey()
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
-GET         /no-access                                controllers.UnauthorisedController.onPageLoad
+GET         /no-access                                   controllers.UnauthorisedController.onPageLoad
+
+GET         /business-tax-account-redirect               controllers.BusinessTaxAccountRedirect.onPageLoad()
 
 GET         /enrol/approval-id                           controllers.auth.DoYouHaveAnAppaIdController.onPageLoad()
 POST        /enrol/approval-id                           controllers.auth.DoYouHaveAnAppaIdController.onSubmit(wasReferredFromBTA: Boolean ?= false)

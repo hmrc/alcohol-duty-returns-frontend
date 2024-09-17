@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package controllers.auth
+package controllers
 
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.CacheConnector
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import play.api.inject._
+import play.api.http.Status.SEE_OTHER
+import play.api.inject.bind
 import play.api.test.Helpers._
 
-import java.net.URLEncoder
 import scala.concurrent.Future
 
-class AuthControllerSpec extends SpecBase {
+class BusinessTaxAccountRedirectSpec extends SpecBase {
 
-  "signOut" - {
+  "businessTaxAccount" - {
 
-    "must clear user answers and redirect to sign out, specifying the exit survey as the continue URL" in {
+    "if the period key is not available must redirect to the business tax account page" in {
 
       val mockCacheConnector = mock[CacheConnector]
 
@@ -43,20 +43,17 @@ class AuthControllerSpec extends SpecBase {
       running(application) {
 
         val appConfig = application.injector.instanceOf[FrontendAppConfig]
-        val request   = FakeRequestWithoutSession(GET, routes.AuthController.signOut().url)
+        val request   = FakeRequestWithoutSession(GET, controllers.routes.BusinessTaxAccountRedirect.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
-        val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
-
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual expectedRedirectUrl
+        redirectLocation(result).value mustEqual appConfig.businessTaxAccountUrl
         verify(mockCacheConnector, times(0)).releaseLock(eqTo(returnId))(any())
       }
     }
 
-    "must clear user answers, release the lock, and redirect to sign out, specifying the exit survey as the continue URL" in {
+    "if the period key is retrieved, it must release the lock, and redirect to the business tax account page" in {
 
       val mockCacheConnector = mock[CacheConnector]
       when(mockCacheConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(()))
@@ -69,15 +66,12 @@ class AuthControllerSpec extends SpecBase {
       running(application) {
 
         val appConfig = application.injector.instanceOf[FrontendAppConfig]
-        val request   = FakeRequest(GET, routes.AuthController.signOut().url)
+        val request   = FakeRequest(GET, controllers.routes.BusinessTaxAccountRedirect.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
-        val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
-
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual expectedRedirectUrl
+        redirectLocation(result).value mustEqual appConfig.businessTaxAccountUrl
         verify(mockCacheConnector, times(1)).releaseLock(eqTo(returnId))(any())
       }
     }

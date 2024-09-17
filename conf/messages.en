@@ -72,6 +72,11 @@ journeyRecovery.startAgain.title = Sorry, there is a problem with the service
 journeyRecovery.startAgain.heading = Sorry, there is a problem with the service
 journeyRecovery.startAgain.guidance = [Add content to explain why the user needs to start again.]
 
+returnLocked.title = This return is temporarily locked
+returnLocked.heading = This return is temporarily locked
+returnLocked.p1 = This return has been temporarily locked while it is being edited.
+returnLocked.p2 = Please try again in a few minutes.
+
 signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
 signedOut.guidance = We did not save your answers.

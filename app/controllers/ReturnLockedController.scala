@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,23 @@
 
 package controllers
 
-import config.Constants.periodKeySessionKey
-import connectors.CacheConnector
-import controllers.actions.IdentifyWithEnrolmentAction
-import models.ReturnId
+import controllers.actions._
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.ReturnLockedView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 
-class KeepAliveController @Inject() (
-  val controllerComponents: MessagesControllerComponents,
+class ReturnLockedController @Inject() (
+  override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
-  cacheConnector: CacheConnector
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController {
+  val controllerComponents: MessagesControllerComponents,
+  view: ReturnLockedView
+) extends FrontendBaseController
+    with I18nSupport {
 
-  def keepAlive: Action[AnyContent] = identify.async { implicit request =>
-    cacheConnector.keepAlive(ReturnId(request.appaId, request.session(periodKeySessionKey))).map(_ => Ok)
+  def onPageLoad(): Action[AnyContent] = identify { implicit request =>
+    Ok(view())
   }
 }

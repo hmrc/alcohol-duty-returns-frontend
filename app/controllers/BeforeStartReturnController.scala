@@ -59,11 +59,19 @@ class BeforeStartReturnController @Inject() (
       case Some(returnPeriod) =>
         val session = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
-          case Some(ua) =>
+          case Right(ua)                                    =>
+            logger.info(s"Return $appaId/$periodKey retrieved from cache by the user $credentialId")
             auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
-          case None     =>
+          case Left(error) if error.statusCode == NOT_FOUND =>
+            logger.info(s"Return $appaId/$periodKey not found in cache")
             Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
+          case Left(error) if error.statusCode == LOCKED    =>
+            logger.warn(s"Return ${request.appaId}/$periodKey locked for the user $credentialId")
+            Redirect(controllers.routes.ReturnLockedController.onPageLoad())
+          case _                                            =>
+            logger.warn(s"Error retrieving the return $appaId/$periodKey from the cache for the user $credentialId")
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }
   }
@@ -81,6 +89,7 @@ class BeforeStartReturnController @Inject() (
             logger.warn(s"Unable to create userAnswers: ${response.status} ${response.body}")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           } else {
+            logger.info(s"Return ${request.appaId}/$periodKey created")
             Redirect(controllers.routes.TaskListController.onPageLoad)
           }
         }
