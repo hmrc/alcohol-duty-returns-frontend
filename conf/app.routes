@@ -17,7 +17,9 @@ GET         /check-your-answers                          controllers.CheckYourAn
 GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut()
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
-GET         /no-access                                controllers.UnauthorisedController.onPageLoad
+GET         /no-access                                   controllers.UnauthorisedController.onPageLoad
+
+GET         /business-tax-account                        controllers.BusinessTaxAccountRedirect.onPageLoad()
 
 GET         /enrol/approval-id                           controllers.auth.DoYouHaveAnAppaIdController.onPageLoad()
 POST        /enrol/approval-id                           controllers.auth.DoYouHaveAnAppaIdController.onSubmit(wasReferredFromBTA: Boolean ?= false)
