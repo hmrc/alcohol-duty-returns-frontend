@@ -155,6 +155,7 @@ viewReturn.table.lpa.legend = Litres of pure alcohol (Lpa)
 viewReturn.table.dutyRate.legend = Duty rate (per litre)
 viewReturn.table.dutyValue.legend = Duty value
 viewReturn.table.dutyDue.legend = Duty value
+viewReturn.printYourReturn = Print your return
 
 viewPastPayments.heading = Alcohol Duty payments
 viewPastPayments.title = Alcohol Duty payments
