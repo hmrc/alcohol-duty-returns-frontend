@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, SectionHeading}
+@import components.{PageHeading, Paragraph, PrintPage, SectionHeading}
 @import config.Constants
 @import viewmodels.{TableTotalViewModel, TableViewModel}
 
@@ -25,12 +25,13 @@
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
     paragraph: Paragraph,
-    govukTable: GovukTable
+    govukTable: GovukTable,
+    printPage: PrintPage
 )
 
 @(period: String, submittedAtDate: String, submittedAtTime: String, dutyToDeclare: TableViewModel, adjustments: TableViewModel, totalDue: TableTotalViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("viewReturn.title")), fullWidth = true) {
+@layout(pageTitle = titleNoForm(messages("viewReturn.title")), fullWidth = true, withPrintCss = true) {
 
     @pageHeading(messages("viewReturn.heading"))
 
@@ -75,4 +76,6 @@
         captionClasses = "govuk-table__caption--m",
         head = Some(totalDue.toHeadCells())
     ))
+
+    @printPage("print-past-payments-link", messages("viewReturn.printYourReturn"))
 }
