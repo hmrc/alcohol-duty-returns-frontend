@@ -46,7 +46,7 @@ class AuthController @Inject() (
           .releaseLock(ReturnId(request.appaId, periodKey))
           .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
       case None            =>
-        logger.warn("Period key not found during sign out")
+        logger.info("Period key not found during sign out")
         Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
     }
 
