@@ -19,7 +19,7 @@ package controllers
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
 import connectors.CacheConnector
-import controllers.actions.{DataRetrievalAction, IdentifyWithEnrolmentAction}
+import controllers.actions.IdentifyWithEnrolmentAction
 import models.ReturnId
 import play.api.Logging
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -32,13 +32,12 @@ class BusinessTaxAccountRedirect @Inject() (
   config: FrontendAppConfig,
   identify: IdentifyWithEnrolmentAction,
   cacheConnector: CacheConnector,
-  dataRetrieval: DataRetrievalAction,
   val controllerComponents: MessagesControllerComponents
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen dataRetrieval).async { implicit request =>
+  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case Some(periodKey) =>
         cacheConnector
