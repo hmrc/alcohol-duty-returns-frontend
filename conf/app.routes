@@ -32,7 +32,7 @@ GET         /view-your-return/:periodKey                 controllers.returns.Vie
 
 GET         /view-payments                               controllers.returns.ViewPastPaymentsController.onPageLoad
 
-GET         /task-list/your-alcohol-duty-return          controllers.TaskListController.onPageLoad
+GET         /manage-your-alcohol-duty/complete-your-return          controllers.TaskListController.onPageLoad
 
 GET         /before-you-start-your-return/:periodKey     controllers.BeforeStartReturnController.onPageLoad(periodKey: String)
 POST        /before-you-start-your-return                controllers.BeforeStartReturnController.onSubmit()

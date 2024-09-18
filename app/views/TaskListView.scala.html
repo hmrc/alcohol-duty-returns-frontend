@@ -34,20 +34,14 @@
 
 @heading(messages("taskList.title"))
 
-@subheading(text = messages(s"taskList.status.${taskList.status.messageKey}"), classes = "govuk-heading-s")
-
-@paragraph(messages("taskList.section.completed", taskList.completedTasks, taskList.totalTasks))
-
 @paragraph(messages("taskList.expiry.date", taskList.sessionExpiryDate))
 
-<ol class="govuk-heading-m">
+<ul class="govuk-heading-m">
     @for(section <- taskList.sections) {
-    <li>
         @subheading(section.title, classes = "govuk-heading-m")
         @govukTaskList(section.taskList)
-    </li>
     }
-</ol>
+</ul>
 
 @paragraph( content =
         HtmlContent(
