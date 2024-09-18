@@ -109,7 +109,8 @@ class AdjustmentListController @Inject() (
     messages: Messages
   ): PaginatedViewModel = {
     val adjustmentEntries       = userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
-    val totalPages              = Math.ceil(adjustmentEntries.size.toDouble / rowsPerPage).toInt
+    val totalPages              =
+      if (adjustmentEntries.isEmpty) 1 else Math.ceil(adjustmentEntries.size.toDouble / rowsPerPage).toInt
     val paginatedTableViewModel = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)
     PaginatedViewModel(totalPages, paginatedTableViewModel)
   }
