@@ -289,7 +289,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
         result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
         result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
         )
       }
 
