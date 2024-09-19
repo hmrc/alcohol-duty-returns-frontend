@@ -19,14 +19,15 @@ package connectors
 import base.SpecBase
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, getRequestedFor, postRequestedFor, urlEqualTo}
+import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern
 import config.FrontendAppConfig
 import org.scalatest.concurrent.ScalaFutures
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.http.test.{HttpClientSupport, WireMockSupport}
+import uk.gov.hmrc.http.test.{HttpClientV2Support, WireMockSupport}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-abstract class ConnectorBase extends SpecBase with ScalaFutures with WireMockSupport with HttpClientSupport {
+abstract class ConnectorBase extends SpecBase with ScalaFutures with WireMockSupport with HttpClientV2Support {
   protected val endpointConfigurationPath = "microservice.services"
   protected val endpointName: String
 
@@ -55,9 +56,12 @@ abstract class ConnectorBase extends SpecBase with ScalaFutures with WireMockSup
           .willReturn(aResponse().withStatus(status).withBody(body))
       )
 
-    def stubPost(url: String, status: Int, body: String): Unit =
+    def stubPost(url: String, status: Int, requestBody: String, returnBody: String): Unit =
       wireMockServer.stubFor(
-        WireMock.post(urlEqualTo(stripToPath(url))).willReturn(aResponse().withStatus(status).withBody(body))
+        WireMock
+          .post(urlEqualTo(stripToPath(url)))
+          .withRequestBody(new EqualToJsonPattern(requestBody, true, false))
+          .willReturn(aResponse().withStatus(status).withBody(returnBody))
       )
 
     def verifyGet(url: String): Unit =

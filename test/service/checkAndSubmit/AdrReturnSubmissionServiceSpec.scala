@@ -31,7 +31,8 @@ import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolasse
 import play.api.Application
 import queries.Settable
 import services.checkAndSubmit.AdrReturnSubmissionServiceImpl
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
@@ -407,7 +408,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
       val application: Application     = applicationBuilder().configure(additionalConfig).build()
       val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 
-      case object CalculatorMock extends AlcoholDutyCalculatorConnector(appConfig, mock[HttpClient]) {
+      case object CalculatorMock extends AlcoholDutyCalculatorConnector(appConfig, mock[HttpClientV2]) {
         override def calculateTotalAdjustment(duties: Seq[BigDecimal])(implicit
           hc: HeaderCarrier
         ): Future[AdjustmentDuty] =

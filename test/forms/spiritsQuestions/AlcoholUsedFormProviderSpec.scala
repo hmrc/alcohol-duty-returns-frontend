@@ -19,7 +19,7 @@ package forms.spiritsQuestions
 import forms.behaviours.BigDecimalFieldBehaviours
 import play.api.data.FormError
 
-import scala.collection.compat.immutable.ArraySeq
+import scala.collection.immutable.ArraySeq
 
 class AlcoholUsedFormProviderSpec extends BigDecimalFieldBehaviours {
 

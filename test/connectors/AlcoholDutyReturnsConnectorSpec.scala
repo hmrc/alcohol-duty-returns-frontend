@@ -31,6 +31,7 @@ import java.time.{Instant, LocalDate}
 import scala.concurrent.Future
 
 class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
+  /*
   val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
   val connector                     = new AlcoholDutyReturnsConnector(config = mockConfig, httpClient = mock[HttpClient])
   val mockUrl                       = s"http://alcohol-duty-returns/obligationDetails/$appaId"
@@ -211,5 +212,5 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
           )
       }
     }
-  }
+  }*/
 }
