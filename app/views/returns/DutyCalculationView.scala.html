@@ -47,14 +47,13 @@
 
     @bulletList(Seq(messages("dutyCalculation.list")))
 
-    @subHeading(messages("dutyCalculation.h2"))
 
     @govukTable(Table(
       caption = Some(messages("productList.caption")),
-      captionClasses = "govuk-table__caption--m",
+      captionClasses = "govuk-table__caption--l",
       head = Some(dutyDueViewModel.head),
       rows = dutyDueViewModel.rows.map(row => {
-        val actions = TableRow(content = HtmlContent(tableRowActionList(
+        val actions = TableRow(format = Some("numeric"), content = HtmlContent(tableRowActionList(
           id = "productList",
           actions = row.actions.map(action => tableRowAction(
             id = "",
