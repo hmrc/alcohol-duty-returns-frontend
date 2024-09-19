@@ -33,4 +33,8 @@ class TestOnlyController @Inject() (
     testOnlyConnector.clearAllData().map(httpResponse => Ok(httpResponse.body))
   }
 
+  def clearReturnData(appaId: String, periodKey: String): Action[AnyContent] = Action.async { implicit request =>
+    testOnlyConnector.clearReturnData(appaId, periodKey).map(httpResponse => Ok(httpResponse.body))
+  }
+
 }

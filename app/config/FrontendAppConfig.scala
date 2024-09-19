@@ -105,6 +105,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrCacheClearAllUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-all"
 
+  def adrCacheClearReturnDataUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-return/$appaId/$periodKey"
+
   def adrGetObligationDetailsUrl(appaId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/$appaId"
 

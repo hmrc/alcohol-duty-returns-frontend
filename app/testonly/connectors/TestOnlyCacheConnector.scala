@@ -32,4 +32,9 @@ class TestOnlyCacheConnector @Inject() (
     httpClient.DELETE(
       appConfig.adrCacheClearAllUrl()
     )
+
+  def clearReturnData(appaId: String, periodKey: String)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    httpClient.DELETE(
+      appConfig.adrCacheClearReturnDataUrl(appaId, periodKey)
+    )
 }

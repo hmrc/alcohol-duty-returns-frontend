@@ -1,1 +1,2 @@
-GET         /clear-all        testonly.controllers.TestOnlyController.clearAllData()
+GET         /clear-all                              testonly.controllers.TestOnlyController.clearAllData()
+GET         /clear-return/:appaId/:periodKey        testonly.controllers.TestOnlyController.clearReturnData(appaId: String, periodKey: String)
