@@ -41,10 +41,10 @@ GET         /start                                       controllers.ServiceEntr
 
 # Beginning of product entry sub-journey
 
-GET        /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /do-you-need-to-declare-duty                        controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-do-you-need-to-declare-duty                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /do-you-need-to-declare-alcoholic-products                       controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /do-you-need-to-declare-alcoholic-products                       controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /change-do-you-need-to-declare-alcoholic-products                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-do-you-need-to-declare-alcoholic-products                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /which-types-do-you-need-to-declare                        controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = NormalMode)
 POST       /which-types-do-you-need-to-declare                        controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = NormalMode)

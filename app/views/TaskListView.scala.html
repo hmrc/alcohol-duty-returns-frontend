@@ -36,12 +36,10 @@
 
 @paragraph(messages("taskList.expiry.date", taskList.sessionExpiryDate))
 
-<ul class="govuk-heading-m">
     @for(section <- taskList.sections) {
         @subheading(section.title, classes = "govuk-heading-m")
         @govukTaskList(section.taskList)
     }
-</ul>
 
 @paragraph( content =
         HtmlContent(
