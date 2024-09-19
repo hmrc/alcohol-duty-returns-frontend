@@ -15,7 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading}
-@import viewmodels.TableViewModel
+@import viewmodels.{TableViewModel, PaginationViewModel}
 
 @this(
     layout: templates.Layout,
@@ -27,15 +27,16 @@
     pageHeading: PageHeading,
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
-    tableRowAction: components.TableRowAction
+    tableRowAction: components.TableRowAction,
+    govukPagination: GovukPagination
 )
 
 
-@(form: Form[_], adjustmentTable:TableViewModel)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], adjustmentTable:TableViewModel, totalPages: Int, currentPage: Int)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("adjustmentList.title")), showBackLink = false, fullWidth = true) {
 
-    @formHelper(action = controllers.adjustment.routes.AdjustmentListController.onSubmit(), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.adjustment.routes.AdjustmentListController.onSubmit(currentPage), Symbol("autoComplete") -> "off") {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -65,6 +66,16 @@
         ))
     )
 
+    @if(totalPages > 1) {
+        @govukPagination(
+            PaginationViewModel(
+                currentPage = currentPage,
+                totalPages = totalPages,
+                baseUrl = controllers.adjustment.routes.AdjustmentListController.onPageLoad(_).url
+                    ).paginate
+                )
+    }
+
     @{adjustmentTable.total.map { total =>
         govukTable(Table(
         head = Some(total.toHeadCells())
@@ -79,7 +90,7 @@
     )
 
     @govukButton(
-    ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+        ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
     )
     }
 }

@@ -18,6 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
+import config.Constants.rowsPerPage
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -41,10 +42,10 @@ class AdjustmentListControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new AdjustmentListFormProvider()
-  val form         = formProvider()
-
-  lazy val adjustmentListRoute = controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+  val formProvider             = new AdjustmentListFormProvider()
+  val form                     = formProvider()
+  val pageNumber               = 1
+  lazy val adjustmentListRoute = controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
   val dutyDue                  = BigDecimal(34.2)
   val rate                     = BigDecimal(9.27)
   val pureAlcoholVolume        = BigDecimal(3.69)
@@ -107,10 +108,15 @@ class AdjustmentListControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentListView]
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(getMessages(app))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total, pageNumber)(getMessages(app))
+
+        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, adjustmentTable)(request, getMessages(app)).toString
+        contentAsString(result) mustEqual view(form, adjustmentTable, totalPages, pageNumber)(
+          request,
+          getMessages(app)
+        ).toString
       }
     }
 
@@ -138,10 +144,12 @@ class AdjustmentListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total)(getMessages(app))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(updatedUserAnswers, total, pageNumber)(getMessages(app))
+
+        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable)(
+        contentAsString(result) mustEqual view(form.fill(true), adjustmentTable, totalPages, pageNumber)(
           request,
           getMessages(app)
         ).toString
@@ -190,10 +198,15 @@ class AdjustmentListControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val adjustmentTable: TableViewModel =
-          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total)(getMessages(app))
+          AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswsers, total, pageNumber)(getMessages(app))
+
+        val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, adjustmentTable)(request, getMessages(app)).toString
+        contentAsString(result) mustEqual view(boundForm, adjustmentTable, totalPages, pageNumber)(
+          request,
+          getMessages(app)
+        ).toString
       }
     }
 
@@ -219,6 +232,64 @@ class AdjustmentListControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentListRoute)
             .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to first page of AdjustmentList for a GET if a pageNumber is out of bounds" in {
+      val mockCacheConnector = mock[CacheConnector]
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+      when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
+        AdjustmentDuty(total)
+      )
+
+      val application = applicationBuilder(userAnswers = Some(userAnswsers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val outOfBoundRoute = controllers.adjustment.routes.AdjustmentListController.onPageLoad(999).url
+
+        val request = FakeRequest(GET, outOfBoundRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(1)
+          .url
+      }
+    }
+
+    "must redirect to Journey Recovery if calculator call fails" in {
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+
+      when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.failed(
+        new Exception("Calculation failed")
+      )
+
+      val application = applicationBuilder(userAnswers = Some(userAnswsers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentListRoute)
 
         val result = route(application, request).value
 

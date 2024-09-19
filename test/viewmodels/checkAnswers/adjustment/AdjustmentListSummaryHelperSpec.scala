@@ -68,17 +68,18 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
   val adjustmentEntry2    = adjustmentEntry.copy(pureAlcoholVolume = Some(BigDecimal(10)), newDuty = Some(BigDecimal(10)))
   val adjustmentEntryList = List(adjustmentEntry, adjustmentEntry2)
   val total               = BigDecimal(44.2)
+  val pageNumber          = 1
   "AdjustmentListSummaryHelper" - {
 
     "must return a table with the correct head" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)(getMessages(app))
+      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       table.head.size shouldBe 4
     }
 
     "must return a table with the correct rows" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)(getMessages(app))
+      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       table.rows.size shouldBe adjustmentEntryList.size
       table.rows.zipWithIndex.foreach { case (row, index) =>
         row.actions.head.href shouldBe controllers.adjustment.routes.CheckYourAnswersController
@@ -89,7 +90,7 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
     "must return the correct total" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)(getMessages(app))
+      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       table.total.map(_.total.content).get shouldBe Text(
         Money.format(adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum)(getMessages(app))
       )
@@ -101,7 +102,7 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
       val userAnswers =
         emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList :+ undefinedDutyAdjustmentEntry).success.value
-      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total)(getMessages(app))
+      val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
 
       table.total.map(_.total.content).get shouldBe Text(Money.format(expectedSum)(getMessages(app)))
     }

@@ -34,6 +34,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
   val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = getMessages(application)
   val returnTaskListCreator       = new ReturnTaskListCreator()
+  val pageNumber                  = 1
 
   "on calling returnSection" - {
 
@@ -288,7 +289,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
         result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
         result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+          controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
         )
       }
 
@@ -313,7 +314,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
         result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
         result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
         )
       }
 
@@ -344,7 +345,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
         result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
         )
       }
 
