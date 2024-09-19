@@ -41,18 +41,23 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
       val httpResponse         = HttpResponse(OK, jsonResponse)
 
       when(mockConfig.adrGetOutstandingPaymentsUrl(eqTo(appaId))).thenReturn(mockUrl)
+
       val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
-//        when(.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
+
       when {
         connector.httpClient
           .get(any())(any())
       } thenReturn requestBuilder
-      when(requestBuilder.execute).thenReturn(Future.successful(httpResponse))
+
       whenReady(connector.outstandingPayments(appaId)) { result =>
         result mustBe openPaymentsResponse
-        verify(connector.httpClient, atLeastOnce)
-          .get(url"${eqTo(mockUrl)}")(any())
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
           .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }

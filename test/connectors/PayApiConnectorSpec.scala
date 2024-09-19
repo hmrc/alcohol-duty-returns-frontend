@@ -37,7 +37,7 @@ class PayApiConnectorSpec {
 
   val mockUrl = "/mock-url"
 
-  "startPayment" - {
+//  "startPayment" - {
 //    "successfully retrieve a start payment response"  {
 //      //val connector           = new PayApiConnector(config = config, httpClient = mock[HttpClientV2])
 //      val connector           = app.injector.instanceOf[PayApiConnector]
@@ -80,7 +80,7 @@ class PayApiConnectorSpec {
 ////          )
 //      }
 //    }
-    /*
+  /*
     "fail when an invalid JSON format is returned" in {
       val invalidJsonResponse = Future.successful(Right(HttpResponse(OK, """{ "invalid": "json" }""")))
       when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
@@ -207,8 +207,8 @@ class PayApiConnectorSpec {
 //      }
 //    }
   }
-     */
-  }
+   */
+//  }
 
 //  class SetUp extends ConnectorFixture {
 //    wireMockServer.start()
