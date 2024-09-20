@@ -224,8 +224,8 @@ taskList.section.dutySuspended.needToDeclare.notStarted = Tell us about your dut
 taskList.section.dutySuspended.needToDeclare.no = You told us you do not have any duty suspended deliveries to report
 taskList.section.dutySuspended.needToDeclare.yes = You told us you have duty suspended deliveries to report
 taskList.section.dutySuspended.notStarted = Tell us about your duty suspended deliveries
-taskList.section.dutySuspended.inProgress = Change the entries you've told us about
-taskList.section.dutySuspended.completed = Change the entries you've told us about
+taskList.section.dutySuspended.inProgress = Change the entries you’ve told us about
+taskList.section.dutySuspended.completed = Change the entries you’ve told us about
 
 taskList.section.spirits.heading = Report spirits production in the last three months
 taskList.section.spirits.needToDeclare.notStarted = Have you produced spirits from raw materials?
@@ -241,10 +241,10 @@ taskList.section.adjustment.needToDeclare.notStarted = Do you need to declare an
 taskList.section.adjustment.needToDeclare.yes = You told us you need to declare one or more adjustments
 taskList.section.adjustment.needToDeclare.no = You told us you do not need to declare any adjustments
 taskList.section.adjustment.notStarted = Declare adjustments
-taskList.section.adjustment.completed = Change the entries you’ve told us about
-taskList.section.adjustment.inProgress = Change the entries you’ve told us about
+taskList.section.adjustment.completed = Declare adjustments
+taskList.section.adjustment.inProgress = Declare adjustments
 taskList.section.adjustment.under-declaration = Reason for under-declared alcoholic products
-taskList.section.adjustment.over-declaration = Reason for over-declaration
+taskList.section.adjustment.over-declaration = Reason for over-declared alcoholic products
 
 taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check how much duty is payable and send your return
