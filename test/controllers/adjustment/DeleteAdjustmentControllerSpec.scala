@@ -35,10 +35,10 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DeleteAdjustmentFormProvider()
-  val form         = formProvider()
-  val index        = 0
-
+  val formProvider               = new DeleteAdjustmentFormProvider()
+  val form                       = formProvider()
+  val index                      = 0
+  val pageNumber                 = 1
   lazy val deleteAdjustmentRoute = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(index).url
 
   "DeleteAdjustment Controller" - {
@@ -97,7 +97,9 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(pageNumber)
+          .url
 
         verify(mockCacheConnector, times(1)).set(any())(any())
       }
@@ -120,7 +122,9 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(pageNumber)
+          .url
 
       }
     }
@@ -146,7 +150,9 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
         val result  = route(application, request).value
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(pageNumber)
+          .url
 
         verify(mockCacheConnector, times(1)).set(any())(any())
       }
@@ -173,7 +179,9 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
         val result  = route(application, request).value
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(pageNumber)
+          .url
 
         verify(mockCacheConnector, times(1)).set(any())(any())
       }

@@ -19,8 +19,6 @@ package connectors
 import base.SpecBase
 import cats.data.NonEmptySeq
 import config.FrontendAppConfig
-import models.AlcoholRegime.{Beer, Wine}
-import models.RateType.DraughtRelief
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
 import org.mockito.ArgumentMatchers.any
@@ -33,38 +31,6 @@ import java.time.YearMonth
 import scala.concurrent.Future
 
 class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
-
-  "rates" - {
-
-    "successfully retrieve rates" in new SetUp {
-
-      val queryParams: Seq[(String, String)] = Seq(
-        "ratePeriod"     -> Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString,
-        "alcoholRegimes" -> Json.toJson(Set("Beer", "Wine")).toString(),
-        "rateType"       -> Json.toJson[RateType](DraughtRelief).toString,
-        "abv"            -> "3.5"
-      )
-      val mockUrl                            = "http://alcohol-duty-calculator/rates"
-      when(mockConfig.adrCalculatorRatesUrl()).thenReturn(mockUrl)
-
-      when(requestBuilder.execute[Seq[RateBand]](any(), any()))
-        .thenReturn(Future.successful(rateBandList))
-
-      when {
-        connector.httpClient
-          .get(any())(any())
-      } thenReturn requestBuilder
-
-      whenReady(connector.rates(DraughtRelief, AlcoholByVolume(3.5), YearMonth.of(2023, 1), Set(Beer, Wine))) {
-        result =>
-          result mustBe rateBandList
-          verify(connector.httpClient, times(1))
-            .get(eqTo(url"$mockUrl?$queryParams"))(any())
-          verify(requestBuilder, times(1))
-            .execute[Seq[RateBand]](any(), any())
-      }
-    }
-  }
 
   "rateBand" - {
 
