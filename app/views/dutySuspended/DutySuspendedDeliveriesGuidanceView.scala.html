@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, SectionHeading, Paragraph, NumberedList}
+@import components.{PageHeading, SectionHeading, Paragraph, BulletList}
 
 @this(
         layout: templates.Layout,
@@ -23,7 +23,7 @@
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-        numberedList: NumberedList
+        bulletList: BulletList,
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -44,13 +44,18 @@
 
         @paragraph(messages("dutySuspendedDeliveriesGuidance.p2"))
 
-        @numberedList(Seq(
+        @bulletList(Seq(
             messages("dutySuspendedDeliveriesGuidance.para.list.1"),
             messages("dutySuspendedDeliveriesGuidance.para.list.2"),
-            messages("dutySuspendedDeliveriesGuidance.para.list.3")
         ))
 
         @paragraph(messages("dutySuspendedDeliveriesGuidance.p3"))
+
+        @bulletList(Seq(
+        messages("dutySuspendedDeliveriesGuidance.para.list.3")
+        ))
+
+        @paragraph(messages("dutySuspendedDeliveriesGuidance.p4"))
 
         @govukButton(
             ButtonViewModel("continueButton", messages("site.continue"))
