@@ -172,7 +172,7 @@ class DutyDueForThisReturnHelper @Inject() (
         actions = Seq(
           TableRowActionViewModel(
             label = "Change",
-            href = controllers.adjustment.routes.AdjustmentListController.onPageLoad()
+            href = controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
           )
         )
       )

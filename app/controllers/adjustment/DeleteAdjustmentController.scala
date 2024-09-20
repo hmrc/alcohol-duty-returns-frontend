@@ -63,9 +63,9 @@ class DeleteAdjustmentController @Inject() (
                 userAnswersWithUpdatedOverUnderReason <-
                   adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers)
                 _                                     <- cacheConnector.set(userAnswersWithUpdatedOverUnderReason)
-              } yield Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad())
+              } yield Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1))
             } else {
-              Future.successful(Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad()))
+              Future.successful(Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)))
             }
         )
   }

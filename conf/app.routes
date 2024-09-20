@@ -245,10 +245,10 @@ POST       /new-tax-type-code                  controllers.adjustment.Adjustment
 GET        /change-new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-new-tax-type-code                        controllers.adjustment.AdjustmentRepackagedTaxTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /adjustments-to-previous-returns                        controllers.adjustment.AdjustmentListController.onPageLoad()
-POST       /adjustments-to-previous-returns                        controllers.adjustment.AdjustmentListController.onSubmit()
-GET        /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onPageLoad()
-POST       /change-adjustments-to-previous-returns                  controllers.adjustment.AdjustmentListController.onSubmit()
+GET        /adjustments-to-previous-returns/:pageNumber                        controllers.adjustment.AdjustmentListController.onPageLoad(pageNumber: Int)
+POST       /adjustments-to-previous-returns/:pageNumber                        controllers.adjustment.AdjustmentListController.onSubmit(pageNumber: Int)
+GET        /change-adjustments-to-previous-returns/:pageNumber                  controllers.adjustment.AdjustmentListController.onPageLoad(pageNumber: Int)
+POST       /change-adjustments-to-previous-returns/:pageNumber                  controllers.adjustment.AdjustmentListController.onSubmit(pageNumber: Int)
 
 GET        /adjustment-reason-for-under-declaration                       controllers.adjustment.UnderDeclarationReasonController.onPageLoad(mode: Mode = NormalMode)
 POST       /adjustment-reason-for-under-declaration                        controllers.adjustment.UnderDeclarationReasonController.onSubmit(mode: Mode = NormalMode)
