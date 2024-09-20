@@ -76,11 +76,6 @@ class AlcoholDutyCalculatorConnector @Inject() (
       .withBody(Json.toJson(requestBody))
       .execute[AlcoholDuty]
 
-//  httpClient.POST[TotalDutyCalculationRequest, AlcoholDuty](
-//    url = config.adrCalculatorCalculateTotalDutyUrl(),
-//    body = requestBody
-//  )
-
   def rateBand(taxTypeCode: String, ratePeriod: YearMonth)(implicit
     hc: HeaderCarrier
   ): Future[Option[RateBand]] = {
@@ -103,12 +98,8 @@ class AlcoholDutyCalculatorConnector @Inject() (
       AdjustmentDutyCalculationRequest(adjustmentType, pureAlcoholVolume, rate)
     httpClient
       .post(url"${config.adrCalculatorCalculateAdjustmentDutyUrl()}")
-      .withBody(Json.toJson(body)) //needs execution context?
+      .withBody(Json.toJson(body))
       .execute[AdjustmentDuty]
-//      .POST[AdjustmentDutyCalculationRequest, AdjustmentDuty](
-//        url = config.adrCalculatorCalculateAdjustmentDutyUrl(),
-//        body = body
-//      )
   }
   def calculateRepackagedDutyChange(newDuty: BigDecimal, oldDuty: BigDecimal)(implicit
     hc: HeaderCarrier
@@ -128,9 +119,5 @@ class AlcoholDutyCalculatorConnector @Inject() (
       .post(url"${config.adrCalculatorCalculateTotalAdjustmentUrl()}")
       .withBody(Json.toJson(body))
       .execute[AdjustmentDuty]
-//    httpClient.POST[AdjustmentTotalCalculationRequest, AdjustmentDuty](
-//      url = config.adrCalculatorCalculateTotalAdjustmentUrl(),
-//      body = body
-//    )
   }
 }
