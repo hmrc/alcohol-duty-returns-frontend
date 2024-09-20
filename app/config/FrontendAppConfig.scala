@@ -20,7 +20,6 @@ import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
@@ -56,8 +55,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private val adrCalculatorCalculateTotalAdjustmentUrlPart: String      =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateTotalAdjustmentUrl")
 
-  def feedbackUrl(implicit request: RequestHeader): java.net.URL =
-    url"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
+  def feedbackUrl(implicit request: RequestHeader): String =
+    s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
   val loginUrl: String              = configuration.get[String]("urls.login")
   val loginContinueUrl: String      = configuration.get[String]("urls.loginContinue")
@@ -68,7 +67,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val fromBusinessAccountPath: String = configuration.get[String]("fromBusinessAccountPath")
 
-  private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
+  private val exitSurveyBaseUrl: String = configuration.get[String]("urls.feedbackFrontendBase")
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/alcohol-duty-returns-frontend"
 
   val languageTranslationEnabled: Boolean =

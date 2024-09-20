@@ -67,7 +67,7 @@ class CheckYourAnswersController @Inject() (
           cleanedAnswers <- Future.fromTry(updatedAnswers.remove(CurrentAdjustmentEntryPage))
           _              <- cacheConnector.set(cleanedAnswers)
         } yield Redirect(
-          controllers.adjustment.routes.AdjustmentListController.onPageLoad()
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
         )
       case Some(_)                                             =>
         logger.warn("Adjustment Entry not completed")

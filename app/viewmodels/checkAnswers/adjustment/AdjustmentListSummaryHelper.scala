@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.adjustment
 
 import config.Constants
+import config.Constants.rowsPerPage
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
 import pages.adjustment.AdjustmentEntryListPage
@@ -28,9 +29,11 @@ import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableTotal
 
 object AdjustmentListSummaryHelper {
 
-  def adjustmentEntryTable(userAnswers: UserAnswers, total: BigDecimal)(implicit messages: Messages): TableViewModel = {
+  def adjustmentEntryTable(userAnswers: UserAnswers, total: BigDecimal, pageNumber: Int)(implicit
+    messages: Messages
+  ): TableViewModel = {
 
-    val adjustmentEntries: Seq[AdjustmentEntry] = getAdjustmentEntries(userAnswers)
+    val adjustmentEntries: Seq[AdjustmentEntry] = getPaginatedAdjustmentEntries(userAnswers, pageNumber)
     TableViewModel(
       head = Seq(
         HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Constants.oneQuarterCssClass),
@@ -44,22 +47,27 @@ object AdjustmentListSummaryHelper {
           classes = Constants.oneQuarterCssClass
         )
       ),
-      rows = getAdjustmentEntryRows(adjustmentEntries),
+      rows = getAdjustmentEntryRows(adjustmentEntries, pageNumber),
       total = Some(adjustmentsTotal(total))
     )
   }
 
-  private def getAdjustmentEntries(userAnswers: UserAnswers): Seq[AdjustmentEntry] =
-    userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
+  private def getPaginatedAdjustmentEntries(userAnswers: UserAnswers, pageNumber: Int): Seq[AdjustmentEntry] = {
+    val adjustmentEntries = userAnswers.get(AdjustmentEntryListPage).getOrElse(Seq.empty)
+    val fromIndex         = (pageNumber - 1) * rowsPerPage
+    val toIndex           = pageNumber * rowsPerPage
+    adjustmentEntries.slice(fromIndex, toIndex)
+  }
 
-  private def getAdjustmentEntryRows(adjustmentEntries: Seq[AdjustmentEntry])(implicit
+  private def getAdjustmentEntryRows(adjustmentEntries: Seq[AdjustmentEntry], pageNumber: Int)(implicit
     messages: Messages
   ): Seq[TableRowViewModel] =
     adjustmentEntries.zipWithIndex.map { case (adjustmentEntry, index) =>
-      val adjustmentType = adjustmentEntry.adjustmentType.getOrElse(
+      val adjustmentIndex = (pageNumber - 1) * rowsPerPage + index
+      val adjustmentType  = adjustmentEntry.adjustmentType.getOrElse(
         throw new RuntimeException("Couldn't fetch adjustment type value from cache")
       )
-      val dutyValue      = if (adjustmentEntry.newDuty.isDefined) {
+      val dutyValue       = if (adjustmentEntry.newDuty.isDefined) {
         adjustmentEntry.newDuty
       } else {
         adjustmentEntry.duty
@@ -84,12 +92,12 @@ object AdjustmentListSummaryHelper {
         actions = Seq(
           TableRowActionViewModel(
             label = messages("site.change"),
-            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(index)),
+            href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(adjustmentIndex)),
             visuallyHiddenText = Some(messages("adjustmentEntryList.change.hidden"))
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
-            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(index: Int),
+            href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(adjustmentIndex),
             visuallyHiddenText = Some(messages("adjustmentEntryList.remove.hidden"))
           )
         )
