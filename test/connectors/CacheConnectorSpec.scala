@@ -21,27 +21,26 @@ import config.FrontendAppConfig
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito
-import play.api.libs.json.JsObject
-import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
 
 class CacheConnectorSpec extends SpecBase {
-
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val httpClient: HttpClient        = mock[HttpClient]
-  val connector                     = new CacheConnector(config = mockConfig, httpClient = httpClient)
-  val dateVal: LocalDateTime        = LocalDateTime.now
-
   "GET" - {
-    "successfully fetch cache" in {
+    "successfully fetch cache" in new SetUp {
+      val mockUrl = s"http://alcohol-duty-account/cache/$appaId/$periodKey"
+      when(mockConfig.adrCacheGetUrl(any(), any())).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, UserAnswers]](any(), any()))
+        .thenReturn(Future.successful(Right(emptyUserAnswers)))
 
       when {
         connector.httpClient
-          .GET[Either[UpstreamErrorResponse, UserAnswers]](any(), any(), any())(any(), any(), any())
-      } thenReturn Future.successful(Right(emptyUserAnswers))
+          .get(any())(any())
+      } thenReturn requestBuilder
 
       whenReady(connector.get("someref", "somePeriodKey")) {
         _ mustBe Right(emptyUserAnswers)
@@ -50,62 +49,118 @@ class CacheConnectorSpec extends SpecBase {
   }
 
   "POST" - {
-    "successfully write cache" in {
-      Mockito.reset(connector.httpClient)
-
-      val postUrl = "/cache/user-answers"
+    "successfully write cache" in new SetUp {
+      val postUrl = "http://cache/user-answers"
 
       when(mockConfig.adrCacheCreateUserAnswersUrl()).thenReturn(postUrl)
 
+      when {
+        connector.httpClient
+          .post(eqTo(url"$postUrl"))(any())
+      } thenReturn requestBuilder
+
+      when(requestBuilder.withBody(eqTo(Json.toJson(returnAndUserDetails)))(any(), any(), any()))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(mockHttpResponse))
+
       connector.createUserAnswers(returnAndUserDetails)
       verify(connector.httpClient, atLeastOnce)
-        .POST(eqTo(postUrl), eqTo(returnAndUserDetails), any())(any(), any(), any(), any())
+        .post(eqTo(url"$postUrl"))(any())
     }
   }
 
   "PUT" - {
-    "successfully write cache" in {
-      Mockito.reset(connector.httpClient)
-
-      val putUrl = "/cache/set"
+    "successfully write cache" in new SetUp {
+      val putUrl = "http://cache/set"
 
       when(mockConfig.adrCacheSetUrl()).thenReturn(putUrl)
 
+      when {
+        connector.httpClient
+          .put(eqTo(url"$putUrl"))(any())
+      } thenReturn requestBuilder
+
+      when(requestBuilder.withBody(eqTo(Json.toJson(emptyUserAnswers)))(any(), any(), any()))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(mockHttpResponse))
+
       connector.set(emptyUserAnswers)
+
       verify(connector.httpClient, atLeastOnce)
-        .PUT(eqTo(putUrl), eqTo(emptyUserAnswers), any())(any(), any(), any(), any())
+        .put(eqTo(url"$putUrl"))(any())
     }
   }
 
   "releaseLock" - {
-    "should call the release lock endpoint" in {
-      Mockito.reset(httpClient)
-
-      val releaseLockUrl = "/cache/release-lock"
+    "should call the release lock endpoint" in new SetUp {
+      val releaseLockUrl = "http://cache/release-lock"
 
       when(mockConfig.adrReleaseCacheLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
-      when(httpClient.DELETE[HttpResponse](any(), any())(any(), any(), any()))
-        .thenReturn(Future.successful(mock[HttpResponse]))
+
+      when {
+        connector.httpClient
+          .delete(eqTo(url"$releaseLockUrl"))(any())
+      } thenReturn requestBuilder
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(mockHttpResponse))
 
       whenReady(connector.releaseLock(returnId)) {
         _ mustBe ()
       }
+
+      verify(connector.httpClient, atLeastOnce)
+        .delete(eqTo(url"$releaseLockUrl"))(any())
     }
   }
 
   "keepAlive" - {
-    "should call the keep alive endpoint" in {
-      Mockito.reset(httpClient)
+    "should call the keep alive endpoint" in new SetUp {
+      val keepAliveUrl = s"http://cache/keep-alive/$appaId/$periodKey"
 
-      val keepAliveUrl = s"/cache/keep-alive/$appaId/$periodKey"
       when(mockConfig.adrCacheKeepAliveUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(keepAliveUrl)
 
-      when(httpClient.PUT[JsObject, HttpResponse](any(), any(), any())(any(), any(), any(), any()))
-        .thenReturn(Future.successful(mock[HttpResponse]))
+      when {
+        connector.httpClient
+          .put(eqTo(url"$keepAliveUrl"))(any())
+      } thenReturn requestBuilder
+
+      when(requestBuilder.withBody(eqTo(Json.toJson(emptyUserAnswers)))(any(), any(), any()))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(mockHttpResponse))
 
       whenReady(connector.keepAlive(returnId)) { response =>
-        response mustBe a[HttpResponse]
+        response mustBe mockHttpResponse
       }
+
+      verify(connector.httpClient, atLeastOnce)
+        .put(eqTo(url"$keepAliveUrl"))(any())
     }
+  }
+
+  class SetUp {
+    val mockConfig: FrontendAppConfig  = mock[FrontendAppConfig]
+    val httpClient: HttpClientV2       = mock[HttpClientV2]
+    val connector                      = new CacheConnector(config = mockConfig, httpClient = httpClient)
+    val dateVal: LocalDateTime         = LocalDateTime.now
+    val mockHttpResponse: HttpResponse = mock[HttpResponse]
   }
 }

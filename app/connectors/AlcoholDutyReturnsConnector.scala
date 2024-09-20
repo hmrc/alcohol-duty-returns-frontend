@@ -21,23 +21,26 @@ import config.FrontendAppConfig
 import models.ObligationData
 import models.returns.{AdrReturnCreatedDetails, AdrReturnSubmission, ReturnDetails}
 import play.api.Logging
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 import play.api.http.Status.{CREATED, OK}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
 
 class AlcoholDutyReturnsConnector @Inject() (
   config: FrontendAppConfig,
-  implicit val httpClient: HttpClient
+  implicit val httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances
     with Logging {
 
   def obligationDetails(appaId: String)(implicit hc: HeaderCarrier): Future[Seq[ObligationData]] =
     httpClient
-      .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetObligationDetailsUrl(appaId))
+      .get(url"${config.adrGetObligationDetailsUrl(appaId)}")
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
       .flatMap {
         case Right(response) if response.status == OK =>
           Try(response.json.as[Seq[ObligationData]]) match {
@@ -50,7 +53,8 @@ class AlcoholDutyReturnsConnector @Inject() (
 
   def getReturn(appaId: String, periodKey: String)(implicit hc: HeaderCarrier): Future[ReturnDetails] =
     httpClient
-      .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetReturnsUrl(appaId, periodKey))
+      .get(url"${config.adrGetReturnsUrl(appaId, periodKey)}")
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
       .flatMap {
         case Right(response) if response.status == OK =>
           Try(response.json.as[ReturnDetails]) match {
@@ -66,10 +70,9 @@ class AlcoholDutyReturnsConnector @Inject() (
   ): EitherT[Future, String, AdrReturnCreatedDetails] =
     EitherT {
       httpClient
-        .POST[AdrReturnSubmission, Either[UpstreamErrorResponse, HttpResponse]](
-          url = config.adrSubmitReturnUrl(appaId, periodKey),
-          returnSubmission
-        )
+        .post(url"${config.adrSubmitReturnUrl(appaId, periodKey)}")
+        .withBody(Json.toJson(returnSubmission))
+        .execute[Either[UpstreamErrorResponse, HttpResponse]]
         .map {
           case Right(response) if response.status == CREATED =>
             Try(response.json.as[AdrReturnCreatedDetails]) match {

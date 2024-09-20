@@ -24,124 +24,176 @@ import org.scalatest.RecoverMethods.recoverToExceptionIf
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import scala.concurrent.Future
 
 class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val connector                     = new AlcoholDutyAccountConnector(config = mockConfig, httpClient = mock[HttpClient])
 
   "open payments" - {
     val mockUrl = s"http://alcohol-duty-account/producers/$appaId/payments/open"
-    "successfully retrieve open payments" in {
+    "successfully retrieve open payments" in new SetUp {
       val openPaymentsResponse = openPaymentsData
       val jsonResponse         = Json.toJson(openPaymentsResponse).toString()
-      val httpResponse         = Future.successful(Right(HttpResponse(OK, jsonResponse)))
+      val httpResponse         = HttpResponse(OK, jsonResponse)
 
       when(mockConfig.adrGetOutstandingPaymentsUrl(eqTo(appaId))).thenReturn(mockUrl)
 
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
+
       when {
         connector.httpClient
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      } thenReturn httpResponse
+          .get(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
 
       whenReady(connector.outstandingPayments(appaId)) { result =>
         result mustBe openPaymentsResponse
-        verify(connector.httpClient, atLeastOnce)
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }
 
-    "fail when invalid JSON is returned" in {
-      val invalidJsonResponse = Future.successful(Right(HttpResponse(OK, """{ "invalid": "json" }""")))
+    "fail when invalid JSON is returned" in new SetUp {
+      val invalidJsonResponse = Right(HttpResponse(OK, """{ "invalid": "json" }"""))
       when(mockConfig.adrGetOutstandingPaymentsUrl(appaId)).thenReturn(mockUrl)
-      when(
-        connector.httpClient
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      )
-        .thenReturn(invalidJsonResponse)
-      recoverToExceptionIf[String] {
-        connector.outstandingPayments(appaId)
-      } map { ex =>
-        ex must include("Invalid JSON format")
-        verify(connector.httpClient, atLeastOnce)
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      }
-    }
 
-    "fail when unexpected status code returned" in {
-      val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
-      when(mockConfig.adrGetOutstandingPaymentsUrl(appaId)).thenReturn(mockUrl)
-      when(
-        connector.httpClient
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      )
-        .thenReturn(invalidStatusCodeResponse)
-      recoverToExceptionIf[String] {
-        connector.outstandingPayments(appaId)
-      } map { ex =>
-        ex must include("Unexpected status code: 400")
-        verify(connector.httpClient, atLeastOnce)
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      }
-    }
-  }
-  "historic payments" - {
-    val year    = 2024
-    val mockUrl = s"http://alcohol-duty-account/producers/$appaId/payments/historic/$year"
-    "successfully retrieve historic payments" in {
-      val historicPaymentsResponse = historicPayments
-      val jsonResponse             = Json.toJson(historicPaymentsResponse).toString()
-      val httpResponse             = Future.successful(Right(HttpResponse(OK, jsonResponse)))
-
-      when(mockConfig.adrGetHistoricPaymentsUrl(eqTo(appaId), eqTo(year))).thenReturn(mockUrl)
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(invalidJsonResponse))
 
       when {
         connector.httpClient
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      } thenReturn httpResponse
+          .get(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
 
-      whenReady(connector.historicPayments(appaId, year)) { result =>
-        result mustBe historicPaymentsResponse
-        verify(connector.httpClient, atLeastOnce)
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      }
-    }
-
-    "fail when invalid JSON is returned" in {
-      val invalidJsonResponse = Future.successful(Right(HttpResponse(OK, """{ "invalid": "json" }""")))
-      when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
-      when(
-        connector.httpClient
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      )
-        .thenReturn(invalidJsonResponse)
       recoverToExceptionIf[String] {
-        connector.historicPayments(appaId, year)
+        connector.outstandingPayments(appaId)
       } map { ex =>
         ex must include("Invalid JSON format")
-        verify(connector.httpClient, atLeastOnce)
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }
 
-    "fail when unexpected status code returned" in {
-      val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
-      when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
-      when(
+    "fail when unexpected status code returned" in new SetUp {
+      val invalidStatusCodeResponse = Right(HttpResponse(BAD_REQUEST, ""))
+
+      when(mockConfig.adrGetOutstandingPaymentsUrl(appaId)).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(invalidStatusCodeResponse))
+
+      when {
         connector.httpClient
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
-      )
-        .thenReturn(invalidStatusCodeResponse)
+          .get(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
+
       recoverToExceptionIf[String] {
-        connector.historicPayments(appaId, year)
+        connector.outstandingPayments(appaId)
       } map { ex =>
         ex must include("Unexpected status code: 400")
-        verify(connector.httpClient, atLeastOnce)
-          .GET[Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(any(), any(), any())
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }
   }
 
+  "historic payments" - {
+    val year    = 2024
+    val mockUrl = s"http://alcohol-duty-account/producers/$appaId/payments/historic/$year"
+    "successfully retrieve historic payments" in new SetUp {
+      val historicPaymentsResponse = historicPayments
+      val jsonResponse             = Json.toJson(historicPaymentsResponse).toString()
+      val httpResponse             = Right(HttpResponse(OK, jsonResponse))
+
+      when(mockConfig.adrGetHistoricPaymentsUrl(eqTo(appaId), eqTo(year))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(httpResponse))
+
+      when {
+        connector.httpClient
+          .get(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
+
+      whenReady(connector.historicPayments(appaId, year)) { result =>
+        result mustBe historicPaymentsResponse
+
+        verify(connector.httpClient, atLeastOnce)
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, atLeastOnce)
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when invalid JSON is returned" in new SetUp {
+      val invalidJsonResponse = Right(HttpResponse(OK, """{ "invalid": "json" }"""))
+
+      when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(invalidJsonResponse))
+
+      when {
+        connector.httpClient
+          .get(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
+
+      recoverToExceptionIf[String] {
+        connector.historicPayments(appaId, year)
+      } map { ex =>
+        ex must include("Invalid JSON format")
+
+        verify(connector.httpClient, atLeastOnce)
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, atLeastOnce)
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when unexpected status code returned" in new SetUp {
+      val invalidStatusCodeResponse = Right(HttpResponse(BAD_REQUEST, ""))
+
+      when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(invalidStatusCodeResponse))
+
+      when {
+        connector.httpClient
+          .get(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
+
+      recoverToExceptionIf[String] {
+        connector.historicPayments(appaId, year)
+      } map { ex =>
+        ex must include("Unexpected status code: 400")
+
+        verify(connector.httpClient, atLeastOnce)
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, atLeastOnce)
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+  }
+
+  class SetUp {
+    val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val connector                     = new AlcoholDutyAccountConnector(config = mockConfig, httpClient = mock[HttpClientV2])
+  }
 }

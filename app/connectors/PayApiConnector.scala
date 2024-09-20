@@ -21,7 +21,9 @@ import config.FrontendAppConfig
 import models.payments.{StartPaymentRequest, StartPaymentResponse}
 import play.api.Logging
 import play.api.http.Status.CREATED
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,7 +31,7 @@ import scala.util.{Failure, Success, Try}
 
 class PayApiConnector @Inject() (
   config: FrontendAppConfig,
-  implicit val httpClient: HttpClient
+  implicit val httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances
     with Logging {
@@ -39,10 +41,9 @@ class PayApiConnector @Inject() (
   )(implicit hc: HeaderCarrier): EitherT[Future, String, StartPaymentResponse] =
     EitherT {
       httpClient
-        .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](
-          url = config.startPaymentUrl,
-          startPaymentRequest
-        )
+        .post(url"${config.startPaymentUrl}")
+        .withBody(Json.toJson(startPaymentRequest))
+        .execute[Either[UpstreamErrorResponse, HttpResponse]]
         .map {
           case Right(response) if response.status == CREATED =>
             Try(response.json.as[StartPaymentResponse]) match {

@@ -18,54 +18,49 @@ package connectors
 
 import config.FrontendAppConfig
 import models.{ReturnId, UserAnswers}
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CacheConnector @Inject() (
   config: FrontendAppConfig,
-  implicit val httpClient: HttpClient
+  implicit val httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances {
 
   def get(appaId: String, periodKey: String)(implicit
     hc: HeaderCarrier
   ): Future[Either[UpstreamErrorResponse, UserAnswers]] =
-    httpClient.GET[Either[UpstreamErrorResponse, UserAnswers]](config.adrCacheGetUrl(appaId, periodKey))
+    httpClient.get(url"${config.adrCacheGetUrl(appaId, periodKey)}").execute[Either[UpstreamErrorResponse, UserAnswers]]
 
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.PUT(config.adrCacheSetUrl(), userAnswers)(
-      implicitly[Writes[UserAnswers]],
-      implicitly[HttpReads[HttpResponse]],
-      hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
-      implicitly
-    )
+    httpClient
+      .put(url"${config.adrCacheSetUrl()}")
+      .setHeader("Csrf-Token" -> "nocheck")
+      .withBody(Json.toJson(userAnswers))
+      .execute[HttpResponse]
 
   def createUserAnswers(returnAndUserDetails: ReturnAndUserDetails)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.POST(config.adrCacheCreateUserAnswersUrl(), returnAndUserDetails)(
-      implicitly[Writes[ReturnAndUserDetails]],
-      implicitly[HttpReads[HttpResponse]],
-      hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
-      implicitly
-    )
+    httpClient
+      .post(url"${config.adrCacheCreateUserAnswersUrl()}")
+      .withBody(Json.toJson(returnAndUserDetails))
+      .setHeader("Csrf-Token" -> "nocheck")
+      .execute[HttpResponse]
 
   def releaseLock(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[Unit] =
     httpClient
-      .DELETE(config.adrReleaseCacheLockUrl(returnId.appaId, returnId.periodKey))(
-        implicitly[HttpReads[HttpResponse]],
-        hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
-        implicitly
-      )
+      .delete(url"${config.adrReleaseCacheLockUrl(returnId.appaId, returnId.periodKey)}")
+      .setHeader("Csrf-Token" -> "nocheck")
+      .execute[HttpResponse]
       .map(_ => ())
 
   def keepAlive(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.PUT(config.adrCacheKeepAliveUrl(returnId.appaId, returnId.periodKey), Json.obj())(
-      implicitly,
-      implicitly[HttpReads[HttpResponse]],
-      hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
-      implicitly
-    )
+    httpClient
+      .put(url"${config.adrCacheKeepAliveUrl(returnId.appaId, returnId.periodKey)}")
+      .setHeader("Csrf-Token" -> "nocheck")
+      .execute[HttpResponse]
 }
