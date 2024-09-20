@@ -19,8 +19,6 @@ package connectors
 import base.SpecBase
 import cats.data.NonEmptySeq
 import config.FrontendAppConfig
-import models.AlcoholRegime.{Beer, Wine}
-import models.RateType.DraughtRelief
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
 import org.mockito.ArgumentMatchers
@@ -55,32 +53,6 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
   )
   val rateBandList: Seq[RateBand]   = Seq(rateBand)
   val ratePeriod                    = returnPeriodGen.sample.get
-
-  "rates" - {
-    "successfully retrieve rates" in {
-      when {
-        connector.httpClient.GET[Seq[RateBand]](any(), any(), any())(any(), any(), any())
-      } thenReturn Future.successful(rateBandList)
-
-      whenReady(connector.rates(DraughtRelief, AlcoholByVolume(3.5), YearMonth.of(2023, 1), Set(Beer, Wine))) {
-        result =>
-          result mustBe rateBandList
-          verify(connector.httpClient, atLeastOnce)
-            .GET[Seq[RateBand]](
-              any(),
-              ArgumentMatchers.eq(
-                Seq(
-                  ("ratePeriod", Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString),
-                  ("alcoholRegimes", Json.toJson(Set("Beer", "Wine")).toString()),
-                  ("rateType", Json.toJson[RateType](DraughtRelief).toString),
-                  ("abv", "3.5")
-                )
-              ),
-              any()
-            )(any(), any(), any())
-      }
-    }
-  }
 
   "rateBand" - {
     "successfully retrieve rate band" in {
