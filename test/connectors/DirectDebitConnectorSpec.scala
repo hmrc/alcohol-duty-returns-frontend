@@ -22,23 +22,17 @@ import models.payments.{StartDirectDebitRequest, StartDirectDebitResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.RecoverMethods.recoverToExceptionIf
-import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import scala.concurrent.Future
 
-class DirectDebitConnectorSpec extends SpecBase with ScalaFutures {
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val connector                     = new DirectDebitConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val mockUrl                       = "/mock-url"
-
-  val startDirectDebitRequest =
-    StartDirectDebitRequest("/return/url", "/back/url")
+class DirectDebitConnectorSpec extends SpecBase {
 
   "startPayment" - {
-    "successfully retrieve a start payment response" in {
+    "successfully retrieve a start payment response" in new SetUp {
       val startDirectDebitResponse = StartDirectDebitResponse("/next-url")
       val jsonResponse             = Json.toJson(startDirectDebitResponse).toString()
       val httpResponse             = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
@@ -47,106 +41,120 @@ class DirectDebitConnectorSpec extends SpecBase with ScalaFutures {
 
       when {
         connector.httpClient
-          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
-      } thenReturn httpResponse
+          .post(any())(any())
+      } thenReturn requestBuilder
+
+      when(requestBuilder.withBody(any())(any(), any(), any()))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(httpResponse)
 
       whenReady(connector.startDirectDebit(startDirectDebitRequest).value) { result =>
         result mustBe Right(startDirectDebitResponse)
+
         verify(connector.httpClient, atLeastOnce)
-          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
+          .post(eqTo(url"$mockUrl"))(any())
       }
     }
 
-    "fail when an invalid JSON format is returned" in {
+    "fail when an invalid JSON format is returned" in new SetUp {
       val invalidJsonResponse = Future.successful(Right(HttpResponse(OK, """{ "invalid": "json" }""")))
+
       when(mockConfig.startDirectDebitUrl).thenReturn(mockUrl)
-      when(
+
+      when {
         connector.httpClient
-          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
-      )
+          .post(any())(any())
+      } thenReturn requestBuilder
+
+      when(requestBuilder.withBody(any())(any(), any(), any()))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(invalidJsonResponse)
+
       recoverToExceptionIf[Exception] {
         connector.startDirectDebit(startDirectDebitRequest).value
       } map { ex =>
         ex.getMessage must include("Invalid JSON format")
+
         verify(connector.httpClient, atLeastOnce)
-          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
+          .post(eqTo(url"$mockUrl"))(any())
       }
     }
 
-    "fail when Start Direct Debit returns an error" in {
+    "fail when Start Direct Debit returns an error" in new SetUp {
       val upstreamErrorResponse = Future.successful(Right(HttpResponse(BAD_GATEWAY, "")))
+
       when(mockConfig.startDirectDebitUrl).thenReturn(mockUrl)
-      when(
+
+      when {
         connector.httpClient
-          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
-      )
+          .post(any())(any())
+      } thenReturn requestBuilder
+
+      when(requestBuilder.withBody(any())(any(), any(), any()))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(upstreamErrorResponse)
+
       recoverToExceptionIf[Exception] {
         connector.startDirectDebit(startDirectDebitRequest).value
       } map { ex =>
         ex.getMessage must include("Start Direct Debit failed")
+
         verify(connector.httpClient, atLeastOnce)
-          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
+          .post(eqTo(url"$mockUrl"))(any())
       }
     }
 
-    "fail when an unexpected status code is returned" in {
+    "fail when an unexpected status code is returned" in new SetUp {
       val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
-      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
-      when(
+
+      when(mockConfig.startDirectDebitUrl).thenReturn(mockUrl)
+
+      when {
         connector.httpClient
-          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
-      )
+          .post(any())(any())
+      } thenReturn requestBuilder
+
+      when(requestBuilder.withBody(any())(any(), any(), any()))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(invalidStatusCodeResponse)
+
       recoverToExceptionIf[Exception] {
         connector.startDirectDebit(startDirectDebitRequest).value
       } map { ex =>
         ex.getMessage must include("Unexpected status code: 400")
+
         verify(connector.httpClient, atLeastOnce)
-          .POST[StartDirectDebitRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
+          .post(eqTo(url"$mockUrl"))(any())
       }
     }
   }
 
+  class SetUp {
+    val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val connector                     = new DirectDebitConnector(config = mockConfig, httpClient = mock[HttpClientV2])
+    val mockUrl                       = "http://mock-url"
+
+    val startDirectDebitRequest =
+      StartDirectDebitRequest("/return/url", "/back/url")
+  }
 }
