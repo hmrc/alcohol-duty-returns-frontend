@@ -44,36 +44,18 @@ class CacheConnector @Inject() (
       .withBody(Json.toJson(userAnswers))
       .execute[HttpResponse]
 
-//    httpClient.PUT(config.adrCacheSetUrl(), userAnswers)(
-//      implicitly[Writes[UserAnswers]],
-//      implicitly[HttpReads[HttpResponse]],
-//      hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
-//      implicitly
-//    )
-
   def createUserAnswers(returnAndUserDetails: ReturnAndUserDetails)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
       .post(url"${config.adrCacheCreateUserAnswersUrl()}")
       .withBody(Json.toJson(returnAndUserDetails))
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
-//    httpClient.POST(config.adrCacheCreateUserAnswersUrl(), returnAndUserDetails)( header and everything else okay?
-//      implicitly[Writes[ReturnAndUserDetails]],
-//      implicitly[HttpReads[HttpResponse]],
-//      hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
-//      implicitly
-//    )
 
   def releaseLock(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[Unit] =
     httpClient
       .delete(url"${config.adrReleaseCacheLockUrl(returnId.appaId, returnId.periodKey)}")
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
-//      .DELETE(config.adrReleaseCacheLockUrl(returnId.appaId, returnId.periodKey))(
-//        implicitly[HttpReads[HttpResponse]],
-//        hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
-//        implicitly
-//      )
       .map(_ => ())
 
   def keepAlive(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[HttpResponse] =
@@ -81,10 +63,4 @@ class CacheConnector @Inject() (
       .put(url"${config.adrCacheKeepAliveUrl(returnId.appaId, returnId.periodKey)}")
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
-//      .PUT(config.adrCacheKeepAliveUrl(returnId.appaId, returnId.periodKey), Json.obj())(
-//      implicitly,
-//      implicitly[HttpReads[HttpResponse]],
-//      hc.withExtraHeaders("Csrf-Token" -> "nocheck"),
-//      implicitly
-//    )
 }
