@@ -30,7 +30,7 @@ import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
 import scala.concurrent.Future
 
 class DirectDebitConnectorSpec extends SpecBase with ScalaFutures {
-  /* val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
   val connector                     = new DirectDebitConnector(config = mockConfig, httpClient = mock[HttpClient])
   val mockUrl                       = "/mock-url"
 
@@ -149,5 +149,4 @@ class DirectDebitConnectorSpec extends SpecBase with ScalaFutures {
     }
   }
 
-   */
 }

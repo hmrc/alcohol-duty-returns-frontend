@@ -33,6 +33,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.RequestBuilder
 import uk.gov.hmrc.http.test.{HttpClientV2Support, WireMockSupport}
 import viewmodels.DateTimeHelper
 
@@ -74,4 +75,6 @@ trait SpecBase
 
   implicit val hc: HeaderCarrier    = HeaderCarrier()
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
+  val requestBuilder: RequestBuilder = mock[RequestBuilder]
 }

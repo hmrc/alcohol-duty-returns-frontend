@@ -24,32 +24,37 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HttpClient, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
 
 class CacheConnectorSpec extends SpecBase {
-  /*
+
   val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val httpClient: HttpClient        = mock[HttpClientV2]
+  val httpClient: HttpClientV2      = mock[HttpClientV2]
   val connector                     = new CacheConnector(config = mockConfig, httpClient = httpClient)
   val dateVal: LocalDateTime        = LocalDateTime.now
 
   "GET" - {
     "successfully fetch cache" in {
+      val mockUrl = s"http://alcohol-duty-account/cache/$appaId/$periodKey"
+      when(mockConfig.adrCacheGetUrl(any(), any())).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, UserAnswers]](any(), any()))
+        .thenReturn(Future.successful(Right(emptyUserAnswers)))
 
       when {
         connector.httpClient
-          .GET[Either[UpstreamErrorResponse, UserAnswers]](any(), any(), any())(any(), any(), any())
-      } thenReturn Future.successful(Right(emptyUserAnswers))
+          .get(any())(any())
+      } thenReturn requestBuilder
 
       whenReady(connector.get("someref", "somePeriodKey")) {
         _ mustBe Right(emptyUserAnswers)
       }
     }
   }
-
+  /*
   "POST" - {
     "successfully write cache" in {
       Mockito.reset(connector.httpClient)
@@ -63,21 +68,25 @@ class CacheConnectorSpec extends SpecBase {
         .POST(eqTo(postUrl), eqTo(returnAndUserDetails), any())(any(), any(), any(), any())
     }
   }
-
+   */
   "PUT" - {
     "successfully write cache" in {
       Mockito.reset(connector.httpClient)
 
-      val putUrl = "/cache/set"
-
+      val putUrl   = "/cache/set"
+      val response = HttpResponse(200)
       when(mockConfig.adrCacheSetUrl()).thenReturn(putUrl)
-
-      connector.set(emptyUserAnswers)
+      when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(response))
+      when(connector.httpClient.put(any())(any())).thenReturn(requestBuilder)
+//      connector.set(emptyUserAnswers)
       verify(connector.httpClient, atLeastOnce)
-        .PUT(eqTo(putUrl), eqTo(emptyUserAnswers), any())(any(), any(), any(), any())
+        .put(eqTo(url"$putUrl"))(any())
+      //.PUT(eqTo(putUrl), eqTo(emptyUserAnswers), any())(any(), any(), any(), any())
     }
   }
-
+  /*
   "releaseLock" - {
     "should call the release lock endpoint" in {
       Mockito.reset(httpClient)

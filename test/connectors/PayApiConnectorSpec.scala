@@ -32,55 +32,45 @@ import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import scala.concurrent.Future
 
-class PayApiConnectorSpec {
-  protected val endpointName: String = "pay-api"
-
-  val mockUrl = "/mock-url"
+class PayApiConnectorSpec extends SpecBase with ScalaFutures {
+  /* protected val endpointName: String = "pay-api"
+  val mockConfig: FrontendAppConfig  = mock[FrontendAppConfig]
+  val mockUrl                        = "/mock-url"
+  val connector                      = new PayApiConnector(config = mockConfig, httpClient = mock[HttpClientV2])
+  val startPaymentRequest            =
+    StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
 
   "startPayment" - {
-//    "successfully retrieve a start payment response"  {
-//      //val connector           = new PayApiConnector(config = config, httpClient = mock[HttpClientV2])
-//      val connector           = app.injector.instanceOf[PayApiConnector]
-//      val startPaymentRequest =
-//        StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
+    "successfully retrieve a start payment response" {
+      val startPaymentResponse = StartPaymentResponse("journey-id", "/next-url")
+      val jsonResponse         = Json.toJson(startPaymentResponse).toString()
+      val httpResponse         = HttpResponse(CREATED, jsonResponse)
+
+      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
+
+      when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+
+      when {
+        connector.httpClient
+          .post(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
+
+      whenReady(connector.startPayment(startPaymentRequest).value) { result =>
+        result mustBe startPaymentResponse
+
+        verify(connector.httpClient, times(1))
+          .post(eqTo(url"$mockUrl"))(any())
 //
-//      val startPaymentResponse = StartPaymentResponse("journey-id", "/next-url")
-//      val jsonResponse         = Json.toJson(startPaymentResponse).toString()
-//      val httpResponse         = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
-//
-////      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
-//
-////      stubPost(config.startPaymentUrl, CREATED, Json.toJson(startPaymentRequest).toString(), jsonResponse)
-//      when {
-//        connector.httpClient
-//          .post(any())
-//          .withBody(any())
+//        verify(requestBuilder, atLeastOnce)
 //          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
-////          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-////            any(),
-////            any(),
-////            any(),
-////            any()
-////          )
-//      } thenReturn httpResponse
-//
-//      whenReady(connector.startPayment(startPaymentRequest).value, timeout = Timeout(Span(3, Seconds))) { result =>
-//        result mustBe Right(startPaymentResponse)
-//        verifyPost(config.startPaymentUrl)
-////        verify(connector.httpClient, atLeastOnce)
-////          .post(any())
-////          .withBody(any())
-////          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
-////        verify(connector.httpClient, atLeastOnce)
-////          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-////            any(),
-////            any(),
-////            any(),
-////            any()
-////          )
-//      }
-//    }
-    /*
+      }
+    }
+  }*/
+}
+/*
     "fail when an invalid JSON format is returned" in {
       val invalidJsonResponse = Future.successful(Right(HttpResponse(OK, """{ "invalid": "json" }""")))
       when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
@@ -207,11 +197,9 @@ class PayApiConnectorSpec {
 //      }
 //    }
   }
-     */
-  }
+ */
+// }
 
 //  class SetUp extends ConnectorFixture {
 //    wireMockServer.start()
 //  }
-
-}
