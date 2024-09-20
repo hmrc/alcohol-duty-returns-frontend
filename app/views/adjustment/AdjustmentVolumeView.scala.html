@@ -62,6 +62,7 @@
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            .withHint(Hint(content = messages("adjustmentVolume.totalLitresVolume.hint")))
         )
 
         @govukInput(
@@ -75,6 +76,7 @@
         .asNumeric()
         .withWidth(Fixed10)
         .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+        .withHint(Hint(content = messages("adjustmentVolume.pureAlcoholVolume.hint")))
         )
 
         @govukButton(

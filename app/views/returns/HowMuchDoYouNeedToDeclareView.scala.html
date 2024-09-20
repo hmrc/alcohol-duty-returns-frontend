@@ -58,8 +58,6 @@
           ))
         }
 
-        @paragraph(messages("howMuchDoYouNeedToDeclare.hint"), classes = "govuk-hint")
-
         @if(howMuchDoYouNeedToDeclareHelper.core.nonEmpty) {
           @subHeading(messages(s"howMuchDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
@@ -75,6 +73,7 @@
               .asNumeric()
               .withWidth(Fixed10)
               .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.hint")))
             )
             @govukInput(
               InputViewModel(
@@ -87,6 +86,7 @@
               .asNumeric()
               .withWidth(Fixed10)
               .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.pureAlcohol.hint")))
             )
 
             @govukInput(
