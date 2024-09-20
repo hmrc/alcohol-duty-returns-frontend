@@ -110,14 +110,14 @@ section.return.Wine = Declare wine
 section.return.Spirits = Declare spirits
 section.return.OtherFermentedProduct = Declare other fermented products
 section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits return
-section.adjustment = Adjust a previous return
+section.adjustment = Alcohol Duty Return
 section.adjustment.default = Alcohol Duty adjustment
-section.adjustment.under-declaration = Adjust for under-declared alcohol
+section.adjustment.under-declaration = Adjustment from previous return
 section.adjustment.over-declaration = Adjust for over-declared alcohol
 section.adjustment.spoilt = Adjust for spoilt alcohol
 section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
-section.dutySuspended = Duty suspended alcohol
+section.dutySuspended = Duty suspended alcoholic product deliveries
 section.checkAndSubmit = Submit your return
 
 viewPastReturns.heading = Your Alcohol Duty returns
@@ -702,19 +702,29 @@ deleteProduct.change.hidden = Delete Product
 
 # Beginning of duty suspended deliveries sub-journey
 
-declareDutySuspendedDeliveriesQuestion.title = Do you need to declare alcohol you delivered or received duty suspended?
-declareDutySuspendedDeliveriesQuestion.heading = Do you need to declare alcohol you delivered or received duty suspended?
-declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to declare any Duty Suspended Deliveries
-declareDutySuspendedDeliveriesQuestion.p1 = For example, because you delivered it to a duty suspended warehouse.
+declareDutySuspendedDeliveriesQuestion.title = Do you need to tell us about any duty suspended alcohol?
+declareDutySuspendedDeliveriesQuestion.heading = Do you need to tell us about any duty suspended alcohol?
+declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to tell us about any duty suspended alcohol
+declareDutySuspendedDeliveriesQuestion.p1 = You need to tell us if you delivered alcohol to a duty suspended warehouse or received alcohol in duty suspense.
 declareDutySuspendedDeliveriesQuestion.change.hidden = whether you need to declare alcohol you delivered or received duty suspended
+
+dutySuspendedDeliveriesGuidance.title = Calculate your duty suspended alcohol
+dutySuspendedDeliveriesGuidance.heading = Calculate your duty suspended alcohol
+dutySuspendedDeliveriesGuidance.p1 = You need to tell us the net total volume of duty suspended alcohol you have and the total litres of pure alcohol (LPA).
+dutySuspendedDeliveriesGuidance.p2 = To calculate the net total add together:
+dutySuspendedDeliveriesGuidance.para.list.1 = Quantity exported outside the UK (for example, ship stores)
+dutySuspendedDeliveriesGuidance.para.list.2 = Quantity delivered duty suspended to other UK registered premises and excise warehouses
+dutySuspendedDeliveriesGuidance.p3 = Then subtract:
+dutySuspendedDeliveriesGuidance.para.list.3 = Quantity received under duty suspense from registered premises, excise warehouses and importation
+dutySuspendedDeliveriesGuidance.p4 = Your answers may be positive or negative. They will not change your duty calculation.
 
 dutySuspendedBeer.title = Tell us about your duty suspended beer
 dutySuspendedBeer.heading = Tell us about your duty suspended beer
 dutySuspendedBeer.p1 = You need to tell us about your net quantity of beer that is duty suspended, both as total litres and litres of pure alcohol (LPA).
 dutySuspendedBeer.subheading1 = What is the total net quantity of duty suspended beer?
-dutySuspendedBeer.hint.1 = Enter litres of beer, up to 2 decimal places.
+dutySuspendedBeer.hint.1 = Total litres of beer, up to 2 decimal places.
 dutySuspendedBeer.subheading2 = What is the total net quantity of pure alcohol in your duty suspended beer?
-dutySuspendedBeer.hint.2 = Enter litres of pure alcohol in beer, up to 2 decimal places.
+dutySuspendedBeer.hint.2 = Litres of pure alcohol, up to 4 decimal places.
 dutySuspendedBeer.totalBeer.checkYourAnswersLabel = Total net quantity of duty suspended beer
 dutySuspendedBeer.pureAlcoholInBeer.checkYourAnswersLabel = Total net quantity of pure alcohol in your duty suspended beer
 dutySuspendedBeer.error.totalBeer.required = Enter the volume of beer in litres
@@ -823,15 +833,6 @@ dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric = The v
 dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired = The volume of pure alcohol in other fermented products must be less than 100 million litres
 dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired = The volume of pure alcohol in other fermented products must be must be more than -100 million litres
 dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.decimalPlaces = The volume of pure alcohol in other fermented products must be up to 4 decimal places
-
-dutySuspendedDeliveriesGuidance.title = Tell us about your duty suspended alcohol
-dutySuspendedDeliveriesGuidance.heading = Tell us about your duty suspended alcohol
-dutySuspendedDeliveriesGuidance.p1 = You need to tell us the net total of duty suspended alcohol that you have as both a total volume and total litres of pure alcohol (LPA).
-dutySuspendedDeliveriesGuidance.p2 = To work out the net quantity, add together points 1 and 2 and then subtract point 3.
-dutySuspendedDeliveriesGuidance.para.list.1 = Quantity exported outside the UK (for example, ship stores)
-dutySuspendedDeliveriesGuidance.para.list.2 = Quantity delivered duty suspended to other UK registered premises and excise warehouses
-dutySuspendedDeliveriesGuidance.para.list.3 = Quantity received under duty suspense from registered premises, excise warehouses and importation
-dutySuspendedDeliveriesGuidance.p3 = Your answers will not change your duty calculation.
 
 declareDutySuspendedReceived.title = How much have you received duty suspended?
 declareDutySuspendedReceived.heading = How much have you received duty suspended?
@@ -1184,14 +1185,16 @@ spiritsQuestions.checkYourAnswersLabel.card4 = Other ingredients you’ve used
 
 # Beginning of adjustments sub-journey
 
-declareAdjustmentQuestion.title = Do you need to make an adjustment to a previously submitted return?
-declareAdjustmentQuestion.heading = Do you need to make an adjustment to a previously submitted return?
-declareAdjustmentQuestion.p1 = You should make an adjustment to a previously submitted return if you have done any of the following:
-declareAdjustmentQuestion.para1.list1 = you have under-declared alcohol on a previous return and have not paid enough duty
-declareAdjustmentQuestion.para1.list2 = you have over-declared alcohol on a previous return and paid too much duty
-declareAdjustmentQuestion.para1.list3 = you have paid duty on alcohol and it is now spoilt and cannot be consumed
-declareAdjustmentQuestion.para1.list4 = you have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate
-declareAdjustmentQuestion.para1.list5 = you have paid duty on alcohol and have now exported it
+declareAdjustmentQuestion.title = Do you need to declare an adjustment from a previously submitted return?
+declareAdjustmentQuestion.heading = Do you need to declare an adjustment from a previously submitted return?
+declareAdjustmentQuestion.p1 = You need to tell us about any changes from previous returns if you have done any of the following:
+declareAdjustmentQuestion.para1.list1 = under-declared on alcoholic products on an earlier return and may not have paid enough duty
+declareAdjustmentQuestion.para1.list2 = over-declared alcoholic products on an earlier return and may have paid too much duty
+declareAdjustmentQuestion.p2 = You may be required to provide an explanation if declaring previously under-declared or over-declared alcoholic products.
+declareAdjustmentQuestion.p3 = You can also tell us about any alcoholic products you previously paid duty on and:
+declareAdjustmentQuestion.para1.list3 = have become spoilt and not fit to be consumed
+declareAdjustmentQuestion.para1.list4 = duty was originally paid at a reduced rate (draught relief) however they are no longer eligible for that rate after being repackaged for non-draught sale
+declareAdjustmentQuestion.para1.list5 = have now exported, warehoused for export or completed its planned destruction having previously notifying HMRC
 declareAdjustmentQuestion.checkYourAnswersLabel = declareAdjustmentQuestion
 declareAdjustmentQuestion.error.required = Select yes if you need to tell us about adjustments to any previous returns
 declareAdjustmentQuestion.change.hidden = whether you need to make any adjustments from a previously submitted return
@@ -1199,13 +1202,13 @@ declareAdjustmentQuestion.change.hidden = whether you need to make any adjustmen
 adjustmentType.title = What type of adjustment do you need to make?
 adjustmentType.heading = What type of adjustment do you need to make?
 adjustmentType.under-declaration = Under-declaration
-adjustmentType.under-declaration.hint = You have under-declared alcohol on a previous return and have not paid enough duty.
+adjustmentType.under-declaration.hint = You under-declared alcohol on a previous return and have not paid enough duty.
 adjustmentType.over-declaration = Over-declaration
-adjustmentType.over-declaration.hint = You have over-declared alcohol on a previous return and paid too much duty.
+adjustmentType.over-declaration.hint = 	You over-declared alcohol on a previous return and paid too much duty.
 adjustmentType.spoilt = Spoilt
 adjustmentType.spoilt.hint = You have paid duty on alcohol and it is now spoilt and cannot be consumed.
 adjustmentType.drawback = Drawback
-adjustmentType.drawback.hint = You have paid duty on alcohol and have now exported it.
+adjustmentType.drawback.hint = 	You exported, warehoused for export or completed the planned destruction of alcohol you already paid duty on in an earlier return. You need an approved 'notice of intention to claim drawback' (NOI) before you tell us about it.
 adjustmentType.repackaged-draught-products = Repackaged draught products
 adjustmentType.repackaged-draught-products.hint = You have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate.
 adjustmentType.checkYourAnswersLabel = Adjustment
@@ -1306,12 +1309,12 @@ adjustmentSmallProducerReliefDutyRate.change.hidden = what is your Small Produce
 
 adjustmentDutyDue.title = The duty value for this adjustment is {0}
 adjustmentDutyDue.heading = The duty value for this adjustment is {0}
-adjustmentDutyDue.paragraph1 = This is based on:
+adjustmentDutyDue.paragraph1 = This is because:
 adjustmentDutyDue.subheading1 = {0} litres of pure alcohol (LPA)
-adjustmentDutyDue.paragraph2 = This is based on:
+adjustmentDutyDue.paragraph2 = This is because:
 adjustmentDutyDue.bulletList.1 = you declared {0} litres of pure alcohol (LPA)
 adjustmentDutyDue.bulletList.2 = the duty rate is {0} per litre of pure alcohol
-adjustmentDutyDue.bulletList.3 = the duty to pay is {0}: duty rate multiplied by the litres of pure alcohol
+adjustmentDutyDue.bulletList.3 = the duty is {0} (duty rate multiplied by the litres of pure alcohol)
 adjustmentDutyDue.rate.checkYourAnswersLabel = Duty rate
 adjustmentDutyDue.duty.checkYourAnswersLabel = Duty value
 adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
