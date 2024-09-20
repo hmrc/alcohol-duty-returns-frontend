@@ -24,18 +24,16 @@ import org.scalatest.RecoverMethods.recoverToExceptionIf
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import scala.concurrent.Future
 
 class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val connector                     = new AlcoholDutyAccountConnector(config = mockConfig, httpClient = mock[HttpClientV2])
 
   "open payments" - {
     val mockUrl = s"http://alcohol-duty-account/producers/$appaId/payments/open"
-    "successfully retrieve open payments" in {
+    "successfully retrieve open payments" in new SetUp {
       val openPaymentsResponse = openPaymentsData
       val jsonResponse         = Json.toJson(openPaymentsResponse).toString()
       val httpResponse         = HttpResponse(OK, jsonResponse)
@@ -47,7 +45,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
 
       when {
         connector.httpClient
-          .get(any())(any())
+          .get(eqTo(url"$mockUrl"))(any())
       } thenReturn requestBuilder
 
       whenReady(connector.outstandingPayments(appaId)) { result =>
@@ -60,7 +58,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "fail when invalid JSON is returned" in {
+    "fail when invalid JSON is returned" in new SetUp {
       val invalidJsonResponse = Right(HttpResponse(OK, """{ "invalid": "json" }"""))
       when(mockConfig.adrGetOutstandingPaymentsUrl(appaId)).thenReturn(mockUrl)
 
@@ -69,7 +67,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
 
       when {
         connector.httpClient
-          .get(any())(any())
+          .get(eqTo(url"$mockUrl"))(any())
       } thenReturn requestBuilder
 
       recoverToExceptionIf[String] {
@@ -85,7 +83,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "fail when unexpected status code returned" in {
+    "fail when unexpected status code returned" in new SetUp {
       val invalidStatusCodeResponse = Right(HttpResponse(BAD_REQUEST, ""))
 
       when(mockConfig.adrGetOutstandingPaymentsUrl(appaId)).thenReturn(mockUrl)
@@ -95,7 +93,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
 
       when {
         connector.httpClient
-          .get(any())(any())
+          .get(eqTo(url"$mockUrl"))(any())
       } thenReturn requestBuilder
 
       recoverToExceptionIf[String] {
@@ -115,7 +113,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
   "historic payments" - {
     val year    = 2024
     val mockUrl = s"http://alcohol-duty-account/producers/$appaId/payments/historic/$year"
-    "successfully retrieve historic payments" in {
+    "successfully retrieve historic payments" in new SetUp {
       val historicPaymentsResponse = historicPayments
       val jsonResponse             = Json.toJson(historicPaymentsResponse).toString()
       val httpResponse             = Right(HttpResponse(OK, jsonResponse))
@@ -127,7 +125,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
 
       when {
         connector.httpClient
-          .get(any())(any())
+          .get(eqTo(url"$mockUrl"))(any())
       } thenReturn requestBuilder
 
       whenReady(connector.historicPayments(appaId, year)) { result =>
@@ -141,7 +139,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "fail when invalid JSON is returned" in {
+    "fail when invalid JSON is returned" in new SetUp {
       val invalidJsonResponse = Right(HttpResponse(OK, """{ "invalid": "json" }"""))
 
       when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
@@ -151,7 +149,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
 
       when {
         connector.httpClient
-          .get(any())(any())
+          .get(eqTo(url"$mockUrl"))(any())
       } thenReturn requestBuilder
 
       recoverToExceptionIf[String] {
@@ -167,7 +165,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "fail when unexpected status code returned" in {
+    "fail when unexpected status code returned" in new SetUp {
       val invalidStatusCodeResponse = Right(HttpResponse(BAD_REQUEST, ""))
 
       when(mockConfig.adrGetHistoricPaymentsUrl(appaId, year)).thenReturn(mockUrl)
@@ -177,7 +175,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
 
       when {
         connector.httpClient
-          .get(any())(any())
+          .get(eqTo(url"$mockUrl"))(any())
       } thenReturn requestBuilder
 
       recoverToExceptionIf[String] {
@@ -192,5 +190,10 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
           .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }
+  }
+
+  class SetUp {
+    val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val connector                     = new AlcoholDutyAccountConnector(config = mockConfig, httpClient = mock[HttpClientV2])
   }
 }

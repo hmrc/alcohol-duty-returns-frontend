@@ -34,7 +34,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.RequestBuilder
-import uk.gov.hmrc.http.test.{HttpClientV2Support, WireMockSupport}
 import viewmodels.DateTimeHelper
 
 import scala.concurrent.ExecutionContext

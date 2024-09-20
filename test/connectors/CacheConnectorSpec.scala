@@ -56,7 +56,7 @@ class CacheConnectorSpec extends SpecBase {
 
       when {
         connector.httpClient
-          .post(any())(any())
+          .post(eqTo(url"$postUrl"))(any())
       } thenReturn requestBuilder
 
       when(requestBuilder.withBody(eqTo(Json.toJson(returnAndUserDetails)))(any(), any(), any()))
@@ -82,7 +82,7 @@ class CacheConnectorSpec extends SpecBase {
 
       when {
         connector.httpClient
-          .put(any())(any())
+          .put(eqTo(url"$putUrl"))(any())
       } thenReturn requestBuilder
 
       when(requestBuilder.withBody(eqTo(Json.toJson(emptyUserAnswers)))(any(), any(), any()))
@@ -109,7 +109,7 @@ class CacheConnectorSpec extends SpecBase {
 
       when {
         connector.httpClient
-          .delete(any())(any())
+          .delete(eqTo(url"$releaseLockUrl"))(any())
       } thenReturn requestBuilder
 
       when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
@@ -135,7 +135,7 @@ class CacheConnectorSpec extends SpecBase {
 
       when {
         connector.httpClient
-          .put(any())(any())
+          .put(eqTo(url"$keepAliveUrl"))(any())
       } thenReturn requestBuilder
 
       when(requestBuilder.withBody(eqTo(Json.toJson(emptyUserAnswers)))(any(), any(), any()))
@@ -157,10 +157,10 @@ class CacheConnectorSpec extends SpecBase {
   }
 
   class SetUp {
-    val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-    val httpClient: HttpClientV2      = mock[HttpClientV2]
-    val connector                     = new CacheConnector(config = mockConfig, httpClient = httpClient)
-    val dateVal: LocalDateTime        = LocalDateTime.now
+    val mockConfig: FrontendAppConfig  = mock[FrontendAppConfig]
+    val httpClient: HttpClientV2       = mock[HttpClientV2]
+    val connector                      = new CacheConnector(config = mockConfig, httpClient = httpClient)
+    val dateVal: LocalDateTime         = LocalDateTime.now
     val mockHttpResponse: HttpResponse = mock[HttpResponse]
   }
 }

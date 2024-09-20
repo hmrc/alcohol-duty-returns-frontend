@@ -34,32 +34,9 @@ import scala.concurrent.Future
 
 class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val connector                     = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClientV2])
-  val rateBand                      = RateBand(
-    "310",
-    "some band",
-    RateType.DraughtRelief,
-    Some(BigDecimal(10.99)),
-    Set(
-      RangeDetailsByRegime(
-        AlcoholRegime.Beer,
-        NonEmptySeq.one(
-          ABVRange(
-            AlcoholType.Beer,
-            AlcoholByVolume(0.1),
-            AlcoholByVolume(5.8)
-          )
-        )
-      )
-    )
-  )
-  val rateBandList: Seq[RateBand]   = Seq(rateBand)
-  val ratePeriod                    = returnPeriodGen.sample.get
-
   "rates" - {
 
-    "successfully retrieve rates" in {
+    "successfully retrieve rates" in new SetUp {
 
       val queryParams: Seq[(String, String)] = Seq(
         "ratePeriod"     -> Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString,
@@ -92,10 +69,9 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
   "rateBand" - {
 
     val mockUrl = "http://alcohol-duty-calculator/rate-band"
-    when(mockConfig.adrCalculatorRateBandUrl()).thenReturn(mockUrl)
 
-    "successfully retrieve rate band" in {
-
+    "successfully retrieve rate band" in new SetUp {
+      when(mockConfig.adrCalculatorRateBandUrl()).thenReturn(mockUrl)
       val queryParams = Seq(
         "ratePeriod"  -> Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString,
         "taxTypeCode" -> "310"
@@ -120,8 +96,8 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
       }
     }
 
-    "return None when unable to retrieve rate band" in {
-
+    "return None when unable to retrieve rate band" in new SetUp {
+      when(mockConfig.adrCalculatorRateBandUrl()).thenReturn(mockUrl)
       val queryParams: Seq[(String, String)] = Seq(
         "ratePeriod"  -> Json.toJson(YearMonth.of(2023, 1))(RatePeriod.yearMonthFormat).toString,
         "taxTypeCode" -> "123"
@@ -154,10 +130,9 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     )
 
     val mockUrl = "http://alcohol-duty-calculator/rates"
-    when(mockConfig.adrCalculatorRatesUrl()).thenReturn(mockUrl)
 
-    "successfully retrieve rate band list given a regime" in {
-
+    "successfully retrieve rate band list given a regime" in new SetUp {
+      when(mockConfig.adrCalculatorRatesUrl()).thenReturn(mockUrl)
       when(requestBuilder.execute[Seq[RateBand]](any(), any()))
         .thenReturn(Future.successful(rateBandList))
 
@@ -176,7 +151,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     }
 
     "calculateAdjustmentDuty" - {
-      "successfully retrieve adjustment duty" in {
+      "successfully retrieve adjustment duty" in new SetUp {
 
         val mockUrl = "http://alcohol-duty-calculator/calculate-adjustment-duty"
         when(mockConfig.adrCalculatorCalculateAdjustmentDutyUrl()).thenReturn(mockUrl)
@@ -193,7 +168,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
         when {
           connector.httpClient
-            .post(any())(any())
+            .post(eqTo(url"$mockUrl"))(any())
         } thenReturn requestBuilder
 
         when(requestBuilder.execute[AdjustmentDuty](any(), any()))
@@ -208,7 +183,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     }
 
     "calculateRepackagedDutyChange" - {
-      "successfully retrieve adjustment duty" in {
+      "successfully retrieve adjustment duty" in new SetUp {
 
         val mockUrl = "http://alcohol-duty-calculator/calculate-repackaged-duty-change"
         when(mockConfig.adrCalculatorCalculateRepackagedDutyChangeUrl()).thenReturn(mockUrl)
@@ -225,7 +200,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
         when {
           connector.httpClient
-            .post(any())(any())
+            .post(eqTo(url"$mockUrl"))(any())
         } thenReturn requestBuilder
 
         when(requestBuilder.execute[AdjustmentDuty](any(), any()))
@@ -240,7 +215,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     }
 
     "calculateTotalAdjustment" - {
-      "successfully adjustment duty" in {
+      "successfully adjustment duty" in new SetUp {
 
         val mockUrl = "http://alcohol-duty-calculator/calculate-total-adjustment"
         when(mockConfig.adrCalculatorCalculateTotalAdjustmentUrl()).thenReturn(mockUrl)
@@ -257,7 +232,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
         when {
           connector.httpClient
-            .post(any())(any())
+            .post(eqTo(url"$mockUrl"))(any())
         } thenReturn requestBuilder
 
         whenReady(connector.calculateTotalAdjustment(Seq(BigDecimal(8), BigDecimal(1), BigDecimal(1)))) { result =>
@@ -267,6 +242,29 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         }
       }
     }
-
+  }
+  class SetUp {
+    val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val connector                     = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClientV2])
+    val rateBand                      = RateBand(
+      "310",
+      "some band",
+      RateType.DraughtRelief,
+      Some(BigDecimal(10.99)),
+      Set(
+        RangeDetailsByRegime(
+          AlcoholRegime.Beer,
+          NonEmptySeq.one(
+            ABVRange(
+              AlcoholType.Beer,
+              AlcoholByVolume(0.1),
+              AlcoholByVolume(5.8)
+            )
+          )
+        )
+      )
+    )
+    val rateBandList: Seq[RateBand]   = Seq(rateBand)
+    val ratePeriod                    = returnPeriodGen.sample.get
   }
 }

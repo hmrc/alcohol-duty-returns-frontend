@@ -228,4 +228,5 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
         .post(eqTo(url"$mockUrl"))(any())
     }
   }
+  class SetUp {}
 }
