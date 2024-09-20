@@ -39,11 +39,7 @@ class AlcoholDutyCalculatorConnector @Inject() (
   ): Future[Seq[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(
       "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
-      "alcoholRegimes" -> Json
-        .toJson(
-          approvedAlcoholRegimes.map(Json.toJson[AlcoholRegime](_))
-        )
-        .toString
+      "alcoholRegimes" -> approvedAlcoholRegimes.mkString(",")
     )
     httpClient.GET[Seq[RateBand]](url = config.adrCalculatorRatesUrl(), queryParams = queryParams)
   }
