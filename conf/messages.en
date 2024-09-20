@@ -120,8 +120,8 @@ section.adjustment.repackaged-draught-products = Adjust for repackaged draught p
 section.dutySuspended = Duty suspended alcoholic product deliveries
 section.checkAndSubmit = Send return
 
-viewPastReturns.heading = Your Alcohol Duty returns
-viewPastReturns.title = Your Alcohol Duty returns
+viewPastReturns.heading = Your returns
+viewPastReturns.title = Your returns
 viewPastReturns.outstandingReturns.caption = Outstanding returns
 viewPastReturns.completedReturns.caption = Completed returns
 viewPastReturns.period = Period
@@ -136,8 +136,8 @@ viewPastReturns.status.due = Due
 viewPastReturns.status.overdue = Overdue
 viewPastReturns.status.completed = Completed
 
-viewReturn.heading = Your Alcohol Duty return
-viewReturn.title = Your Alcohol Duty return
+viewReturn.heading = {0} Alcohol Duty Return
+viewReturn.title = {0} Alcohol Duty Return
 viewReturn.submittedAt = Submitted on {0} at {1}
 viewReturn.alcoholDuty.caption = Alcohol declared
 viewReturn.alcoholDuty.total.legend = Total declared duty value
