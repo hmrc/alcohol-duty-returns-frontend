@@ -121,7 +121,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
               ArgumentMatchers.eq(
                 Seq(
                   ("ratePeriod", Json.toJson(returnPeriod.period)(RatePeriod.yearMonthFormat).toString),
-                  ("alcoholRegimes", Json.toJson(AlcoholRegime.values).toString())
+                  ("alcoholRegimes", AlcoholRegime.values.mkString(","))
                 )
               ),
               any()
