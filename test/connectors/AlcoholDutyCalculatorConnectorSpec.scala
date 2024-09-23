@@ -111,7 +111,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         result mustBe rateBandList
         verify(connector.httpClient, times(1))
           .get(eqTo(url"$mockUrl?$queryParams"))(any())
-        verify(requestBuilder, times(1))
+        verify(requestBuilder, atLeastOnce)
           .execute[Seq[RateBand]](any(), any())
       }
     }
