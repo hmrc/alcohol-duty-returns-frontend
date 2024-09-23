@@ -17,19 +17,18 @@
 package testonly.connectors
 
 import config.FrontendAppConfig
-import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TestOnlyCacheConnector @Inject() (
   appConfig: FrontendAppConfig,
-  httpClient: HttpClient
+  httpClient: HttpClientV2
 )(implicit val ec: ExecutionContext) {
 
   def clearAllData()(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.DELETE(
-      appConfig.adrCacheClearAllUrl()
-    )
+    httpClient.delete(url"${appConfig.adrCacheClearAllUrl()}").execute[HttpResponse]
 }

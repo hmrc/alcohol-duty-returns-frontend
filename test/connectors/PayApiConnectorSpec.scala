@@ -25,128 +25,93 @@ import org.scalatest.RecoverMethods.recoverToExceptionIf
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import scala.concurrent.Future
 
 class PayApiConnectorSpec extends SpecBase with ScalaFutures {
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val connector                     = new PayApiConnector(config = mockConfig, httpClient = mock[HttpClient])
-  val mockUrl                       = "/mock-url"
-
-  val startPaymentRequest =
-    StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
 
   "startPayment" - {
-    "successfully retrieve a start payment response" in {
+    "successfully retrieve a start payment response" in new SetUp {
       val startPaymentResponse = StartPaymentResponse("journey-id", "/next-url")
       val jsonResponse         = Json.toJson(startPaymentResponse).toString()
-      val httpResponse         = Future.successful(Right(HttpResponse(CREATED, jsonResponse)))
+      val httpResponse         = HttpResponse(CREATED, jsonResponse)
 
-      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
-
-      when {
-        connector.httpClient
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
-      } thenReturn httpResponse
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
 
       whenReady(connector.startPayment(startPaymentRequest).value) { result =>
         result mustBe Right(startPaymentResponse)
-        verify(connector.httpClient, atLeastOnce)
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
+        verify(connector.httpClient, times(1))
+          .post(eqTo(url"$mockUrl"))(any())
       }
     }
 
-    "fail when an invalid JSON format is returned" in {
-      val invalidJsonResponse = Future.successful(Right(HttpResponse(OK, """{ "invalid": "json" }""")))
-      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
-      when(
-        connector.httpClient
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
-      )
-        .thenReturn(invalidJsonResponse)
+    "fail when an invalid JSON format is returned" in new SetUp {
+      val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidJsonResponse)))
+
       recoverToExceptionIf[Exception] {
         connector.startPayment(startPaymentRequest).value
       } map { ex =>
         ex.getMessage must include("Invalid JSON format")
-        verify(connector.httpClient, atLeastOnce)
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
+        verify(connector.httpClient, times(1))
+          .post(eqTo(url"$mockUrl"))(any())
       }
     }
 
-    "fail when Start Payment returns an error" in {
-      val upstreamErrorResponse = Future.successful(Right(HttpResponse(BAD_GATEWAY, "")))
-      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
-      when(
-        connector.httpClient
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
-      )
-        .thenReturn(upstreamErrorResponse)
+    "fail when Start Payment returns an error" in new SetUp {
+      val upstreamErrorResponse = HttpResponse(BAD_GATEWAY, "")
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(upstreamErrorResponse)))
+
       recoverToExceptionIf[Exception] {
         connector.startPayment(startPaymentRequest).value
       } map { ex =>
         ex.getMessage must include("Start Payment failed")
-        verify(connector.httpClient, atLeastOnce)
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
+        verify(connector.httpClient, times(1))
+          .post(eqTo(url"$mockUrl"))(any())
       }
     }
 
-    "fail when an unexpected status code is returned" in {
-      val invalidStatusCodeResponse = Future.successful(Right(HttpResponse(BAD_REQUEST, "")))
-      when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
-      when(
-        connector.httpClient
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
-      )
-        .thenReturn(invalidStatusCodeResponse)
+    "fail when an unexpected status code is returned" in new SetUp {
+      val invalidStatusCodeResponse = HttpResponse(BAD_REQUEST, "")
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
+
       recoverToExceptionIf[Exception] {
         connector.startPayment(startPaymentRequest).value
       } map { ex =>
         ex.getMessage must include("Unexpected status code: 400")
-        verify(connector.httpClient, atLeastOnce)
-          .POST[StartPaymentRequest, Either[UpstreamErrorResponse, HttpResponse]](eqTo(mockUrl), any(), any())(
-            any(),
-            any(),
-            any(),
-            any()
-          )
+
+        verify(connector.httpClient, times(1))
+          .post(url"$mockUrl")(any())
       }
     }
   }
+  class SetUp {
+    val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val mockUrl                       = "http://pay-api/alcohol-duty/journey/start"
+    when(mockConfig.startPaymentUrl).thenReturn(mockUrl)
+    val connector                     = new PayApiConnector(config = mockConfig, httpClient = mock[HttpClientV2])
+    val startPaymentRequest           =
+      StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
 
+    when(
+      requestBuilder.withBody(
+        eqTo(Json.toJson(startPaymentRequest))
+      )(any(), any(), any())
+    )
+      .thenReturn(requestBuilder)
+
+    when {
+      connector.httpClient
+        .post(eqTo(url"$mockUrl"))(any())
+    } thenReturn requestBuilder
+  }
 }

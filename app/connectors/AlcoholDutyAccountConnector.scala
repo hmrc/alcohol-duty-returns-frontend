@@ -20,7 +20,8 @@ import config.FrontendAppConfig
 import models.{HistoricPayments, OpenPayments}
 import play.api.Logging
 import play.api.http.Status.OK
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -28,13 +29,14 @@ import scala.util.{Failure, Success, Try}
 
 class AlcoholDutyAccountConnector @Inject() (
   config: FrontendAppConfig,
-  implicit val httpClient: HttpClient
+  implicit val httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
     extends HttpReadsInstances
     with Logging {
   def outstandingPayments(appaId: String)(implicit hc: HeaderCarrier): Future[OpenPayments] =
     httpClient
-      .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetOutstandingPaymentsUrl(appaId))
+      .get(url"${config.adrGetOutstandingPaymentsUrl(appaId)}")
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
       .flatMap {
         case Right(response) if response.status == OK =>
           Try(response.json.as[OpenPayments]) match {
@@ -47,7 +49,8 @@ class AlcoholDutyAccountConnector @Inject() (
 
   def historicPayments(appaId: String, year: Int)(implicit hc: HeaderCarrier): Future[HistoricPayments] =
     httpClient
-      .GET[Either[UpstreamErrorResponse, HttpResponse]](url = config.adrGetHistoricPaymentsUrl(appaId, year))
+      .get(url"${config.adrGetHistoricPaymentsUrl(appaId, year)}")
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
       .flatMap {
         case Right(response) if response.status == OK =>
           Try(response.json.as[HistoricPayments]) match {
