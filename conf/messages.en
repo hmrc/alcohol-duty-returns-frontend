@@ -110,13 +110,14 @@ section.return.Wine = Declare wine
 section.return.Spirits = Declare spirits
 section.return.OtherFermentedProduct = Declare other fermented products
 section.alcoholDutyQuarterlySpiritsReturn = Alcohol Duty quarterly spirits return
-section.adjustment = Alcohol Duty Return
+section.adjustment = Adjust a previous return
 section.adjustment.default = Alcohol Duty adjustment
-section.adjustment.under-declaration = Adjustment from previous return
+section.adjustment.under-declaration = Adjustment for under-declared alcohol
 section.adjustment.over-declaration = Adjust for over-declared alcohol
 section.adjustment.spoilt = Adjust for spoilt alcohol
 section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
+section.adjustment.checkAnswers = Adjustment from previous return
 section.dutySuspended = Duty suspended alcoholic product deliveries
 section.checkAndSubmit = Send return
 
@@ -1210,7 +1211,7 @@ adjustmentType.over-declaration.hint = 	You over-declared alcohol on a previous 
 adjustmentType.spoilt = Spoilt
 adjustmentType.spoilt.hint = You have paid duty on alcohol and it is now spoilt and cannot be consumed.
 adjustmentType.drawback = Drawback
-adjustmentType.drawback.hint = 	You exported, warehoused for export or completed the planned destruction of alcohol you already paid duty on in an earlier return. You need an approved 'notice of intention to claim drawback' (NOI) before you tell us about it.
+adjustmentType.drawback.hint = 	You exported, warehoused for export or completed the planned destruction of alcohol you already paid duty on in an earlier return. You need an approved ‘notice of intention to claim drawback’ (NOI) before you tell us about it.
 adjustmentType.repackaged-draught-products = Repackaged draught products
 adjustmentType.repackaged-draught-products.hint = You have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate.
 adjustmentType.checkYourAnswersLabel = Adjustment
@@ -1331,8 +1332,8 @@ adjustmentDutyDue.repackaged.bulletList.6 = the duty to pay is {0}: the new duty
 
 checkYourAnswers.subHeading = Adjustment details
 
-adjustmentList.heading = Adjustments to previous returns
-adjustmentList.title = Adjustments to previous returns
+adjustmentList.heading = Adjustments from previous returns
+adjustmentList.title = Adjustments from previous returns
 adjustmentEntryList.type = Adjustment type
 adjustmentEntryList.description = Description
 adjustmentEntryList.duty = Duty value
