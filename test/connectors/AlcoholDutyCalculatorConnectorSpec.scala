@@ -92,7 +92,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
   "rateBandByRegime" - {
     val queryParams: Seq[(String, String)] = Seq(
       "ratePeriod"     -> Json.toJson(returnPeriod.period)(RatePeriod.yearMonthFormat).toString,
-      "alcoholRegimes" -> Json.toJson(AlcoholRegime.values).toString()
+      "alcoholRegimes" -> AlcoholRegime.values.mkString(",")
     )
 
     val mockUrl = "http://alcohol-duty-calculator/rates"
