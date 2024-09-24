@@ -35,7 +35,6 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
 
   def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
     val sortedObligationData = obligationData.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
-    println(sortedObligationData)
     if (sortedObligationData.nonEmpty) {
       TableViewModel(
         head = getTableHeader(messages),
