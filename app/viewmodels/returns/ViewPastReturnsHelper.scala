@@ -42,7 +42,7 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
         total = None
       )
     } else {
-      TableViewModel(head = Seq.empty, Seq.empty, total = None)
+      TableViewModel.empty()
     }
   }
 

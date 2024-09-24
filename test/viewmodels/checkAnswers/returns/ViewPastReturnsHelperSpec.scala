@@ -43,7 +43,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val obligationData = Seq(obligationDataSingleOpen)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
-      table.rows.map { row =>
+      table.rows.foreach { row =>
         row.actions.head.href shouldBe controllers.routes.BeforeStartReturnController.onPageLoad(periodKeyAug)
       }
     }
@@ -59,7 +59,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val obligationData = Seq(obligationDataSingleFulfilled)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
-      table.rows.map { row =>
+      table.rows.foreach { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text(messages("Completed")), classes = "govuk-tag--green")
         )
@@ -79,7 +79,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val obligationData = Seq(obligationDataSingleOpen)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
-      table.rows.map { row =>
+      table.rows.foreach { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text(messages("Due")), classes = "govuk-tag--blue")
         )
@@ -90,7 +90,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val obligationData = Seq(obligationDataSingleOverDue)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
-      table.rows.map { row =>
+      table.rows.foreach { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text(messages("Overdue")), classes = "govuk-tag--red")
         )

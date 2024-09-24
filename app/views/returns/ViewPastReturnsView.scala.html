@@ -39,7 +39,7 @@
 
         @pageHeading(messages("viewPastReturns.heading"))
 
-        @if(outstandingReturns.rows.size > 0) {
+        @if(outstandingReturns.rows.nonEmpty) {
             @govukTable(Table(
                 caption = Some(messages("viewPastReturns.outstandingReturns.caption")),
                 captionClasses = Constants.tableCaptionMCssClass,
@@ -60,7 +60,7 @@
             )
         }
 
-        @if(completedReturns.rows.size > 0) {
+        @if(completedReturns.rows.nonEmpty) {
             @govukTable(Table(
                 caption = Some(messages("viewPastReturns.completedReturns.caption")),
                 captionClasses = Constants.tableCaptionMCssClass,
