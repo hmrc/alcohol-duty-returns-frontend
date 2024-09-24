@@ -360,7 +360,9 @@ return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught
 return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
 
 return.journey.totalLitres = Total litres of {0}
+return.journey.totalLitres.hint = In litres, to 2 decimal places
 return.journey.pureAlcohol = Litres of pure alcohol
+return.journey.pureAlcohol.hint = In litres, to 4 decimal places
 return.journey.spr.dutyRate = Your Small Producer Relief Duty rate for this {0}
 
 declareAlcoholDutyQuestion.title = Declaring alcoholic products for duty

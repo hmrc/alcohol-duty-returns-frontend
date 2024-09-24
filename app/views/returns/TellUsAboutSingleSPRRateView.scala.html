@@ -49,8 +49,6 @@
 
         @paragraph(messages(s"tellUsAboutSingleSPRRate.p1.$regime"))
 
-        @paragraph(messages("tellUsAboutSingleSPRRate.hint"), classes = "govuk-hint")
-
       @if(categories.smallProducer.nonEmpty) {
         @subHeading(messages(s"tellUsAboutSingleSPRRate.smallProducer.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
         @for((categoryViewModel, index) <- categories.smallProducer.zipWithIndex) {
@@ -65,6 +63,7 @@
             )
             .asNumeric()
             .withWidth(Fixed10)
+            .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
           )
           @govukInput(
@@ -75,6 +74,7 @@
               errorMessageField = form(s"volumesWithRate_${index}_pureAlcohol"),
               value = form(s"volumesWithRate[$index].pureAlcohol").value
             )
+            .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
@@ -118,6 +118,7 @@
               value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
             )
             .asNumeric()
+            .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
           )
@@ -130,6 +131,7 @@
               value = form(s"volumesWithRate[${index + categories.smallProducer.size}].pureAlcohol").value
             )
             .asNumeric()
+            .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
           )
