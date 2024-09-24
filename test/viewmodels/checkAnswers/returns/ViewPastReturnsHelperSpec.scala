@@ -34,7 +34,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   val invalidPeriodKeyData = obligationDataSingleFulfilled.copy(periodKey = invalidPeriodKeyGen.sample.get)
 
   "ViewPastReturnsHelper" - {
-    "must return a table with the correct head" in new SetUp {
+    "must return a table with the correct head size" in new SetUp {
       val table = viewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleOpen))
       table.head.size shouldBe 3
     }
