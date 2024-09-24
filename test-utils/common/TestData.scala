@@ -296,7 +296,14 @@ trait TestData extends ModelGenerators {
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 5, 30), periodKey = "24AD")
   )
 
-  val chargeReference = "XA" + listOfN(10, numChar).sample.get.toString()
+  val obligationDataSingleOverDue = ObligationData(
+    ObligationStatus.Open,
+    LocalDate.of(1900, 8, 1),
+    LocalDate.of(1900, 8, 31),
+    LocalDate.of(1900, 9, 25),
+    periodKeyAug
+  )
+  val chargeReference             = "XA" + listOfN(10, numChar).sample.get.toString()
 
   val outstandingPartialPayment = OutstandingPayment(
     Return,

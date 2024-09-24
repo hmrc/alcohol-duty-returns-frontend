@@ -35,11 +35,16 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
 
   def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
     val sortedObligationData = obligationData.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
-    TableViewModel(
-      head = getTableHeader(messages),
-      rows = getObligationDataTableRows(sortedObligationData),
-      total = None
-    )
+    println(sortedObligationData)
+    if (sortedObligationData.nonEmpty) {
+      TableViewModel(
+        head = getTableHeader(messages),
+        rows = getObligationDataTableRows(sortedObligationData),
+        total = None
+      )
+    } else {
+      TableViewModel(head = Seq.empty, Seq.empty, total = None)
+    }
   }
 
   private def getTableHeader(messages: Messages): Seq[HeadCell] =

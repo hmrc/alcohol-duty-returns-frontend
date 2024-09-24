@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{SectionHeading, PageHeading, Paragraph}
 @import config.Constants
 @import viewmodels.TableViewModel
 
@@ -28,7 +28,8 @@
     pageHeading: PageHeading,
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
-    tableRowAction: components.TableRowAction
+    tableRowAction: components.TableRowAction,
+    paragraph: Paragraph
 )
 
 
@@ -38,42 +39,50 @@
 
         @pageHeading(messages("viewPastReturns.heading"))
 
-        @govukTable(Table(
-            caption = Some(messages("viewPastReturns.outstandingReturns.caption")),
-            captionClasses = Constants.tableCaptionMCssClass,
-            head = Some(outstandingReturns.head),
-            rows = outstandingReturns.rows.map(row => {
-                val actions = TableRow(content = HtmlContent(tableRowActionList(
-                id = "outstandingReturnsId",
-                actions = row.actions.map(action => tableRowAction(
-                    id = "",
-                    text = action.label,
-                    href = action.href,
-                    visuallyHiddenContent = action.visuallyHiddenText
-                    )
-                ))))
-                row.cells :+ actions
-            }
-            ))
-        )
+        @if(outstandingReturns.rows.size > 0) {
+            @govukTable(Table(
+                caption = Some(messages("viewPastReturns.outstandingReturns.caption")),
+                captionClasses = Constants.tableCaptionMCssClass,
+                head = Some(outstandingReturns.head),
+                rows = outstandingReturns.rows.map(row => {
+                    val actions = TableRow(content = HtmlContent(tableRowActionList(
+                    id = "outstandingReturnsId",
+                    actions = row.actions.map(action => tableRowAction(
+                        id = "",
+                        text = action.label,
+                        href = action.href,
+                        visuallyHiddenContent = action.visuallyHiddenText
+                        )
+                    ))))
+                    row.cells :+ actions
+                }
+                ))
+            )
+        }
 
-        @govukTable(Table(
-            caption = Some(messages("viewPastReturns.completedReturns.caption")),
-            captionClasses = Constants.tableCaptionMCssClass,
-            head = Some(completedReturns.head),
-            rows = completedReturns.rows.map(row => {
-                val actions = TableRow(content = HtmlContent(tableRowActionList(
-                id = "completedReturnsId",
-                actions = row.actions.map(action => tableRowAction(
-                    id = "",
-                    text = action.label,
-                    href = action.href,
-                    visuallyHiddenContent = action.visuallyHiddenText
-                    )
-                ))))
-                row.cells :+ actions
-            }
-            ))
-        )
+        @if(completedReturns.rows.size > 0) {
+            @govukTable(Table(
+                caption = Some(messages("viewPastReturns.completedReturns.caption")),
+                captionClasses = Constants.tableCaptionMCssClass,
+                head = Some(completedReturns.head),
+                rows = completedReturns.rows.map(row => {
+                    val actions = TableRow(content = HtmlContent(tableRowActionList(
+                    id = "completedReturnsId",
+                    actions = row.actions.map(action => tableRowAction(
+                        id = "",
+                        text = action.label,
+                        href = action.href,
+                        visuallyHiddenContent = action.visuallyHiddenText
+                        )
+                    ))))
+                    row.cells :+ actions
+                }
+                ))
+            )
+        }
+
+        @if(outstandingReturns.rows.size == 0 && completedReturns.rows.size == 0) {
+            @paragraph(messages("viewPastReturns.noReturns"))
+        }
 
 }

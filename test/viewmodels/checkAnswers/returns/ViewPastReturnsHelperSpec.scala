@@ -48,6 +48,13 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
     }
 
+    "must not return a table when outstanding returns are not present" in new SetUp {
+      val table =
+        viewPastReturnsHelper.getReturnsTable(Seq.empty)
+      table.head.size shouldBe 0
+      table.rows.size shouldBe 0
+    }
+
     "must return the Completed status for a fulfilled obligation" in new SetUp {
       val obligationData = Seq(obligationDataSingleFulfilled)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
@@ -75,6 +82,17 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       table.rows.map { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text(messages("Due")), classes = "govuk-tag--blue")
+        )
+      }
+    }
+
+    "must return the OverDue status an overdue obligation" in new SetUp {
+      val obligationData = Seq(obligationDataSingleOverDue)
+      val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
+      table.rows.size shouldBe obligationData.size
+      table.rows.map { row =>
+        row.cells(1).content.asHtml shouldBe new GovukTag()(
+          Tag(content = Text(messages("Overdue")), classes = "govuk-tag--red")
         )
       }
     }
