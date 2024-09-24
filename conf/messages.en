@@ -1264,7 +1264,6 @@ adjustmentTaxType.checkYourAnswersLabel.abv.interval.DraughtAndSmallProducerReli
 
 adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
-adjustmentVolume.hint = Give your answers as volumes in litres, up to 2 decimal places. For example, 500.50
 adjustmentVolume.checkYourAnswersLabel = Volume
 adjustmentVolume.error.invalid.totalLitresVolume = Litres of {0} must be a number
 adjustmentVolume.error.noValue.totalLitresVolume = Enter the total litres of {0}
