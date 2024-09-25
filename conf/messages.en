@@ -560,7 +560,7 @@ checkYourAnswers.label.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught
 
 deleteMultipleSPREntry.title = Are you sure you want to remove this product?
 deleteMultipleSPREntry.heading = Are you sure you want to remove this product?
-deleteMultipleSPREntry.hint = This will remove this product and its information from the product list.
+deleteMultipleSPREntry.hint = This will remove this product and its information from the return.
 deleteMultipleSPREntry.error.required = Select yes if you want to remove this product
 
 dutyCalculation.title = You will owe £{0,number,#,##0.00}

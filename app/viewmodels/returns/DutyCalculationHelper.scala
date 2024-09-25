@@ -35,11 +35,11 @@ object DutyCalculationHelper {
     createRows(totalDutyCalculationResponse.dutiesByTaxType, userAnswers, regime).map { rows =>
       TableViewModel(
         head = Seq(
-          HeadCell(Text(messages("dutyCalculation.table.description")), format = Some("numeric")),
+          HeadCell(Text(messages("dutyCalculation.table.description"))),
           HeadCell(Text(messages("dutyCalculation.table.litresOfPureAlcohol")), format = Some("numeric")),
           HeadCell(Text(messages("dutyCalculation.table.dutyRate")), format = Some("numeric")),
           HeadCell(Text(messages("dutyCalculation.table.dutyDue")), format = Some("numeric")),
-          HeadCell(Text(messages("dutyCalculation.table.action")), format = Some("numeric"))
+          HeadCell(Text(messages("dutyCalculation.table.action")))
         ),
         rows = rows
       )
@@ -78,7 +78,7 @@ object DutyCalculationHelper {
   ) =
     TableRowViewModel(
       cells = Seq(
-        TableRow(Text(rateBandRecap(rateBand)), format = Some("numeric")),
+        TableRow(Text(rateBandRecap(rateBand))),
         TableRow(Text(messages("site.4DP", totalByTaxType.pureAlcohol)), format = Some("numeric")),
         TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyRate)), format = Some("numeric")),
         TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)), format = Some("numeric"))

@@ -50,7 +50,7 @@
         @govukTable(Table(
           head = Some(sprTable.head),
           rows = sprTable.rows.map(row => {
-            val actionList = TableRow(format = Some("numeric"), content = HtmlContent(tableRowActionList(
+            val actionList = TableRow(content = HtmlContent(tableRowActionList(
               id = "productList",
               actions = row.actions.map(action => tableRowAction(
                 id = "",

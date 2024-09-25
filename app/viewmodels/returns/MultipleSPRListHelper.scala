@@ -36,7 +36,6 @@ object MultipleSPRListHelper {
           TableViewModel(
             head = Seq(
               HeadCell(
-                format = Some("numeric"),
                 content = Text(messages("multipleSPRList.description.label")),
                 classes = "govuk-!-width-half"
               ),
@@ -53,7 +52,6 @@ object MultipleSPRListHelper {
                 content = Text(messages("multipleSPRList.dutyRate.label"))
               ),
               HeadCell(
-                format = Some("numeric"),
                 content = Text(messages("multipleSPRList.action.label")),
                 classes = "govuk-!-width-one-quarter"
               )
@@ -92,7 +90,7 @@ object MultipleSPRListHelper {
     sprList.zipWithIndex.map { case (sprEntry, index) =>
       TableRowViewModel(
         cells = Seq(
-          TableRow(Text(rateBandRecap(sprEntry.rateBand)), format = Some("numeric")),
+          TableRow(Text(rateBandRecap(sprEntry.rateBand))),
           TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres)), format = Some("numeric")),
           TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol)), format = Some("numeric")),
           TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)), format = Some("numeric"))
