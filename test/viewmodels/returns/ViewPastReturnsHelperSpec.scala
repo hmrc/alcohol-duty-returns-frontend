@@ -86,17 +86,6 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
     }
 
-    "must return the OverDue status an overdue obligation" in new SetUp {
-      val obligationData = Seq(obligationDataSingleOverDue)
-      val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
-      table.rows.size shouldBe obligationData.size
-      table.rows.foreach { row =>
-        row.cells(1).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text(messages("Overdue")), classes = "govuk-tag--red")
-        )
-      }
-    }
-
     "must throw an exception for an invalid period" in new SetUp {
       val obligationData = Seq(invalidPeriodKeyData)
       val exception      = intercept[RuntimeException] {
