@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph}
+@import components.{SectionHeading, PageHeading, SubHeading}
 @import config.Constants
 @import viewmodels.TableViewModel
 
@@ -29,7 +29,7 @@
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
-    paragraph: Paragraph
+    subHeading: SubHeading
 )
 
 
@@ -82,7 +82,7 @@
         }
 
         @if(outstandingReturns.rows.size == 0 && completedReturns.rows.size == 0) {
-            @paragraph(messages("viewPastReturns.noReturns"))
+            @subHeading(messages("viewPastReturns.noReturns"))
         }
 
 }

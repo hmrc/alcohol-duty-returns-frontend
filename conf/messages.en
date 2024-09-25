@@ -135,7 +135,7 @@ viewPastReturns.viewReturn.hidden = view return
 viewPastReturns.status.due = Due
 viewPastReturns.status.overdue = Overdue
 viewPastReturns.status.completed = Completed
-viewPastReturns.noReturns = No previous returns
+viewPastReturns.noReturns = No outstanding returns
 
 viewReturn.heading = Your Alcohol Duty return
 viewReturn.title = Your Alcohol Duty return
