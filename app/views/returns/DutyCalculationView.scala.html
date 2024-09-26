@@ -47,9 +47,8 @@
 
     @bulletList(Seq(messages("dutyCalculation.list")))
 
-
+    @pageHeading(messages("productList.caption"))
     @govukTable(Table(
-      caption = Some(messages("productList.caption")),
       captionClasses = "govuk-table__caption--m",
       head = Some(dutyDueViewModel.head),
       rows = dutyDueViewModel.rows.map(row => {

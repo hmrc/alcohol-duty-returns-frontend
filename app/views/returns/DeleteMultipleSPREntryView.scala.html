@@ -27,7 +27,7 @@
 
 @(form: Form[_], regime:AlcoholRegime, index:Int)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("deleteMultipleSPREntry.title"))) {
+@layout(pageTitle = title(form, messages("deleteMultipleSPREntry.title", messages(s"return.regime.$regime")))) {
 
     @formHelper(action = controllers.returns.routes.DeleteMultipleSPREntryController.onSubmit(regime, Some(index)), Symbol("autoComplete") -> "off") {
 
@@ -41,7 +41,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("deleteMultipleSPREntry-yesNoValue"),
-                legend = LegendViewModel(messages("deleteMultipleSPREntry.heading")).asPageHeading()
+                legend = LegendViewModel(messages("deleteMultipleSPREntry.heading", messages(s"return.regime.$regime"))).asPageHeading()
             )
             .withHint(Hint(content = HtmlContent(messages("deleteMultipleSPREntry.hint"))))
         )
