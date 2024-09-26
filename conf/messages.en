@@ -561,7 +561,7 @@ checkYourAnswers.label.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught
 deleteMultipleSPREntry.title = Remove this {0} entry?
 deleteMultipleSPREntry.heading = Remove this {0} entry?
 deleteMultipleSPREntry.hint = This alcoholic product entry will be removed from your return.
-deleteMultipleSPREntry.error.required = Select yes if you want to remove this product
+deleteMultipleSPREntry.error.required = Select yes to remove this entry
 
 dutyCalculation.title = You will owe £{0,number,#,##0.00}
 dutyCalculation.heading = You will owe £{0,number,#,##0.00}
