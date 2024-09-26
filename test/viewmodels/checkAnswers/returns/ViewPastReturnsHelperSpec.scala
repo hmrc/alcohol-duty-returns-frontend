@@ -32,6 +32,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   implicit val messages: Messages = getMessages(application)
 
   val invalidPeriodKeyData = obligationDataSingleFulfilled.copy(periodKey = invalidPeriodKeyGen.sample.get)
+  val today                = LocalDate.now()
 
   "ViewPastReturnsHelper" - {
     "must return a table with the correct head" in new SetUp {
@@ -68,13 +69,24 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
     }
 
-    "must return the Due status an open obligation" in new SetUp {
-      val obligationData = Seq(obligationDataSingleOpen)
+    "must return the Due status for an open obligation and the dueDate is today" in new SetUp {
+      val obligationData = Seq(obligationDataSingleOpenDueToday(today))
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text(messages("Due")), classes = "govuk-tag--blue")
+        )
+      }
+    }
+
+    "must return the Overdue status for an open obligation where the dueDate is before today" in new SetUp {
+      val obligationData = Seq(obligationDataSingleOpenOverDue(today))
+      val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
+      table.rows.size shouldBe obligationData.size
+      table.rows.map { row =>
+        row.cells(1).content.asHtml shouldBe new GovukTag()(
+          Tag(content = Text(messages("Overdue")), classes = "govuk-tag--red")
         )
       }
     }
