@@ -25,6 +25,9 @@ case class TableViewModel(
   total: Option[TableTotalViewModel] = None
 )
 
+object TableViewModel {
+  def empty(): TableViewModel = TableViewModel(Seq.empty, Seq.empty, None)
+}
 case class TableRowViewModel(cells: Seq[TableRow], actions: Seq[TableRowActionViewModel] = Seq.empty)
 
 case class TableTotalViewModel(legend: HeadCell, total: HeadCell) {

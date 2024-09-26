@@ -304,7 +304,7 @@ trait TestData extends ModelGenerators {
       ReturnPeriod(YearMonth.of(today.getYear, today.getMonth)).toPeriodKey
     )
 
-  def obligationDataSingleOpenOverDue(today: LocalDate): ObligationData =
+  def obligationDataSingleOpenOverdue(today: LocalDate): ObligationData =
     ObligationData(
       ObligationStatus.Open,
       today.withDayOfMonth(1),
