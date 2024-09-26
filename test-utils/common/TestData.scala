@@ -289,12 +289,29 @@ trait TestData extends ModelGenerators {
     obligationDataSingleOpen.copy(dueDate = LocalDate.of(2024, 10, 28), periodKey = "24AJ")
   )
 
-  val multipleFulfilledObligations = Seq(
+  val multipleFulfilledObligations                                       = Seq(
     obligationDataSingleFulfilled,
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 6, 30), periodKey = "24AE"),
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 7, 30), periodKey = "24AF"),
     obligationDataSingleFulfilled.copy(dueDate = LocalDate.of(2023, 5, 30), periodKey = "24AD")
   )
+  def obligationDataSingleOpenDueToday(today: LocalDate): ObligationData =
+    ObligationData(
+      ObligationStatus.Open,
+      today.withDayOfMonth(1),
+      today.withDayOfMonth(28),
+      today,
+      ReturnPeriod(YearMonth.of(today.getYear, today.getMonth)).toPeriodKey
+    )
+
+  def obligationDataSingleOpenOverDue(today: LocalDate): ObligationData =
+    ObligationData(
+      ObligationStatus.Open,
+      today.withDayOfMonth(1),
+      today.withDayOfMonth(28),
+      today.minusDays(1),
+      ReturnPeriod(YearMonth.of(today.getYear, today.getMonth)).toPeriodKey
+    )
 
   val chargeReference = "XA" + listOfN(10, numChar).sample.get.toString()
 
