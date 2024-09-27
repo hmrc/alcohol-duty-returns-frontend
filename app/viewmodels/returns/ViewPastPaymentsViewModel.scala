@@ -43,7 +43,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
         total = None
       )
     } else {
-      TableViewModel(head = Seq.empty, Seq.empty, total = None)
+      TableViewModel.empty()
     }
 
   private def getOutstandingPaymentsTableHeader()(implicit messages: Messages): Seq[HeadCell] =
@@ -98,7 +98,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
         total = None
       )
     } else {
-      TableViewModel(head = Seq.empty, Seq.empty, total = None)
+      TableViewModel.empty()
     }
   }
 
@@ -136,7 +136,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
         total = None
       )
     } else {
-      TableViewModel(head = Seq.empty, Seq.empty, total = None)
+      TableViewModel.empty()
     }
   }
 

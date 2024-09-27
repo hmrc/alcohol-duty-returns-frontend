@@ -113,7 +113,7 @@ class ViewReturnControllerSpec extends SpecBase {
       dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
     )
 
-    val tableModel           = TableViewModel(Seq.empty, Seq.empty)
+    val tableModel           = TableViewModel.empty()
     val totalTableModel      = TableTotalViewModel(HeadCell(), HeadCell())
     val mockReturnsConnector = mock[AlcoholDutyReturnsConnector]
     val mockViewModel        = mock[ViewReturnViewModel]

@@ -35,7 +35,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   val today                = LocalDate.now()
 
   "ViewPastReturnsHelper" - {
-    "must return a table with the correct head" in new SetUp {
+    "must return a table with the correct head size" in new SetUp {
       val table = viewPastReturnsHelper.getReturnsTable(Seq(obligationDataSingleOpen))
       table.head.size shouldBe 3
     }
@@ -44,16 +44,23 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val obligationData = Seq(obligationDataSingleOpen)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
-      table.rows.map { row =>
+      table.rows.foreach { row =>
         row.actions.head.href shouldBe controllers.routes.BeforeStartReturnController.onPageLoad(periodKeyAug)
       }
+    }
+
+    "must not return a table when outstanding returns are not present" in new SetUp {
+      val table =
+        viewPastReturnsHelper.getReturnsTable(Seq.empty)
+      table.head.size shouldBe 0
+      table.rows.size shouldBe 0
     }
 
     "must return the Completed status for a fulfilled obligation" in new SetUp {
       val obligationData = Seq(obligationDataSingleFulfilled)
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
-      table.rows.map { row =>
+      table.rows.foreach { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text(messages("Completed")), classes = "govuk-tag--green")
         )
@@ -73,7 +80,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       val obligationData = Seq(obligationDataSingleOpenDueToday(today))
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
-      table.rows.map { row =>
+      table.rows.foreach { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
           Tag(content = Text(messages("Due")), classes = "govuk-tag--blue")
         )
