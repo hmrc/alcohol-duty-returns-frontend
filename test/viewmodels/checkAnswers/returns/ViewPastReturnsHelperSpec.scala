@@ -81,7 +81,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
     }
 
     "must return the Overdue status for an open obligation where the dueDate is before today" in new SetUp {
-      val obligationData = Seq(obligationDataSingleOpenOverDue(today))
+      val obligationData = Seq(obligationDataSingleOpenOverdue(today))
       val table          = viewPastReturnsHelper.getReturnsTable(obligationData)
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>

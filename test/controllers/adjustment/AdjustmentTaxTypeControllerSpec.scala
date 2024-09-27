@@ -241,6 +241,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
       )
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
       val adjustmentEntry = AdjustmentEntry(
         adjustmentType = Some(RepackagedDraughtProducts),
         period = Some(period),
@@ -300,6 +301,51 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery currentAdjustmentEntry returns None" in {
+      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(None)
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+      running(application) {
+
+        val request = FakeRequest(POST, adjustmentTaxTypeRoute)
+          .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery when adjustment period is missing" in {
+      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
+      val userAnswers     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+      val application     =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+      running(application) {
+        val request = FakeRequest(POST, adjustmentTaxTypeRoute)
+          .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
