@@ -20,6 +20,7 @@ import base.SpecBase
 import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
+import models.returns.{AlcoholDuty, DutyByTaxType}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -27,6 +28,7 @@ import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
+
 import java.time.YearMonth
 import scala.concurrent.Future
 
@@ -89,6 +91,57 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
     }
   }
 
+  "calculateTotalDuty" - {
+    "successfully retrieve total duty" in new SetUp {
+      val regime          = regimeGen.sample.value
+      val rateBands       = genListOfRateBandForRegime(regime).sample.value.toSet
+      val volumesAndRates = arbitraryVolumeAndRateByTaxType(
+        rateBands.toSeq
+      ).arbitrary.sample.value
+
+      val dutiesByTaxType = volumesAndRates.map { volumeAndRate =>
+        val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
+        DutyByTaxType(
+          taxType = volumeAndRate.taxType,
+          totalLitres = volumeAndRate.totalLitres,
+          pureAlcohol = volumeAndRate.pureAlcohol,
+          dutyRate = volumeAndRate.dutyRate,
+          dutyDue = totalDuty
+        )
+      }
+
+      val alcoholDuty = AlcoholDuty(
+        dutiesByTaxType = dutiesByTaxType,
+        totalDuty = dutiesByTaxType.map(_.dutyDue).sum
+      )
+
+      val request = TotalDutyCalculationRequest(volumesAndRates)
+      val mockUrl = "http://alcohol-duty-calculator/calculate-total-duty"
+      when(mockConfig.adrCalculatorCalculateTotalDutyUrl()).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[AlcoholDuty](any(), any()))
+        .thenReturn(Future.successful(alcoholDuty))
+
+      when(
+        requestBuilder.withBody(
+          eqTo(Json.toJson(request))
+        )(any(), any(), any())
+      )
+        .thenReturn(requestBuilder)
+
+      when {
+        connector.httpClient
+          .post(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
+
+      whenReady(connector.calculateTotalDuty(request)) { result =>
+        result mustBe alcoholDuty
+        verify(connector.httpClient, atLeastOnce)
+          .post(eqTo(url"$mockUrl"))(any())
+      }
+    }
+  }
+
   "rateBandByRegime" - {
     val queryParams: Seq[(String, String)] = Seq(
       "ratePeriod"     -> Json.toJson(returnPeriod.period)(RatePeriod.yearMonthFormat).toString,
@@ -136,9 +189,6 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
           connector.httpClient
             .post(eqTo(url"$mockUrl"))(any())
         } thenReturn requestBuilder
-
-        when(requestBuilder.execute[AdjustmentDuty](any(), any()))
-          .thenReturn(Future.successful(AdjustmentDuty(1)))
 
         whenReady(connector.calculateAdjustmentDuty(BigDecimal(1), BigDecimal(1), AdjustmentTypes.Spoilt)) { result =>
           result mustBe AdjustmentDuty(BigDecimal(1))

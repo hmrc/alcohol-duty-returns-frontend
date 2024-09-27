@@ -203,30 +203,103 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
         ex must include("Invalid JSON format")
         verify(connector.httpClient, times(1))
           .post(eqTo(url"$mockUrl"))(any())
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when unexpected status code returned" in {
+
+      val invalidStatusCodeResponse = HttpResponse(BAD_REQUEST, "")
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
+
+      when(
+        requestBuilder.withBody(
+          eqTo(Json.toJson(nilReturn))
+        )(any(), any(), any())
+      )
+        .thenReturn(requestBuilder)
+
+      recoverToExceptionIf[String] {
+        connector.submitReturn(appaId, periodKey, nilReturn).value
+      } map { ex =>
+        ex must include("Unexpected status code: 400")
+        verify(connector.httpClient, times(1))
+          .post(eqTo(url"$mockUrl"))(any())
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }
   }
-  "fail when unexpected status code returned" in {
 
-    val invalidStatusCodeResponse = HttpResponse(BAD_REQUEST, "")
+  "getReturn" - {
+    val mockUrl = s"http://alcohol-duty-returns/producers/$appaId/returns/$periodKey"
+    when(mockConfig.adrGetReturnsUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
 
-    when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
-      .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
+    "successfully get a return" in {
+      val adrReturnDetails = exampleReturnDetails(periodKey, Instant.now())
+      val jsonResponse     = Json.toJson(adrReturnDetails).toString()
+      val httpResponse     = HttpResponse(OK, jsonResponse)
 
-    when(
-      requestBuilder.withBody(
-        eqTo(Json.toJson(nilReturn))
-      )(any(), any(), any())
-    )
-      .thenReturn(requestBuilder)
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
 
-    recoverToExceptionIf[String] {
-      connector.submitReturn(appaId, periodKey, nilReturn).value
-    } map { ex =>
-      ex must include("Unexpected status code: 400")
-      verify(connector.httpClient, times(1))
-        .post(eqTo(url"$mockUrl"))(any())
+      when {
+        connector.httpClient
+          .get(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
+
+      whenReady(connector.getReturn(appaId = appaId, periodKey = periodKey)) { result =>
+        result mustBe adrReturnDetails
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+        verify(requestBuilder, atLeastOnce)
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when invalid JSON is returned" in {
+      val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidJsonResponse)))
+
+      when {
+        connector.httpClient
+          .get(eqTo(url"$mockUrl"))(any())
+      } thenReturn requestBuilder
+
+      recoverToExceptionIf[String] {
+        connector.getReturn(appaId = appaId, periodKey = periodKey)
+      } map { ex =>
+        ex must include("Invalid JSON format")
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when unexpected status code returned" in {
+
+      val invalidStatusCodeResponse = HttpResponse(BAD_REQUEST, "")
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
+
+      recoverToExceptionIf[String] {
+        connector.getReturn(appaId, periodKey)
+      } map { ex =>
+        ex must include("Unexpected status code: 400")
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+
     }
   }
-  class SetUp {}
 }
