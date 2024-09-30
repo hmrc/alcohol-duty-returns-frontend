@@ -36,9 +36,9 @@ object DutyCalculationHelper {
       TableViewModel(
         head = Seq(
           HeadCell(Text(messages("dutyCalculation.table.description"))),
-          HeadCell(Text(messages("dutyCalculation.table.litresOfPureAlcohol"))),
-          HeadCell(Text(messages("dutyCalculation.table.dutyRate"))),
-          HeadCell(Text(messages("dutyCalculation.table.dutyDue"))),
+          HeadCell(Text(messages("dutyCalculation.table.litresOfPureAlcohol")), format = Some("numeric")),
+          HeadCell(Text(messages("dutyCalculation.table.dutyRate")), format = Some("numeric")),
+          HeadCell(Text(messages("dutyCalculation.table.dutyDue")), format = Some("numeric")),
           HeadCell(Text(messages("dutyCalculation.table.action")))
         ),
         rows = rows
@@ -79,9 +79,9 @@ object DutyCalculationHelper {
     TableRowViewModel(
       cells = Seq(
         TableRow(Text(rateBandRecap(rateBand))),
-        TableRow(Text(messages("site.4DP", totalByTaxType.pureAlcohol))),
-        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyRate))),
-        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)))
+        TableRow(Text(messages("site.4DP", totalByTaxType.pureAlcohol)), format = Some("numeric")),
+        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyRate)), format = Some("numeric")),
+        TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)), format = Some("numeric"))
       ),
       actions = Seq(
         TableRowActionViewModel(

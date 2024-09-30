@@ -33,7 +33,7 @@
 
 @(form: Form[_], regime:AlcoholRegime, sprTable:TableViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("multipleSPRList.title")), fullWidth = true, showBackLink = false) {
+@layout(pageTitle = title(form, messages(s"multipleSPRList.title", messages(s"alcoholType.$regime"))), fullWidth = true, showBackLink = false) {
 
     @formHelper(action = controllers.returns.routes.MultipleSPRListController.onSubmit(regime), Symbol("autoComplete") -> "off") {
 
@@ -45,11 +45,9 @@
             text = messages(s"section.return.$regime")
         )
 
-        @pageHeading(messages(s"multipleSPRList.heading"))
+        @pageHeading(messages(s"multipleSPRList.heading", messages(s"alcoholType.$regime")))
 
         @govukTable(Table(
-          caption = Some(messages("multipleSPRList.subheading")),
-          captionClasses = "govuk-table__caption--m",
           head = Some(sprTable.head),
           rows = sprTable.rows.map(row => {
             val actionList = TableRow(content = HtmlContent(tableRowActionList(
@@ -61,6 +59,7 @@
                 visuallyHiddenContent = action.visuallyHiddenText
               )
               ))))
+
             row.cells :+ actionList
           }
           ))
