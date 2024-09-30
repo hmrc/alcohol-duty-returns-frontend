@@ -1,0 +1,103 @@
+.js-visible {
+  display: none !important;
+}
+.js-enabled .js-visible {
+  display: inline-block !important;
+}
+
+.govuk-grid-column-two-thirds {
+  min-height: 1px;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+/* Begin print styles */
+ @media print {
+
+   /* Begin govuk-template/resources/public-assets/stylesheets /govuk-template-print.css */
+
+   html {
+     font-size: 62.5%;
+   }
+
+   /* reset everything */
+   * {
+     background: transparent !important;
+     color: black;
+     text-shadow: none;
+     filter: none;
+     -ms-filter: none;
+   }
+
+   body {
+     font-family: "nta", Arial, sans-serif;
+     font-size: 10pt !important;
+     line-height: 1.42857;
+     font-weight: 400;
+     text-transform: none;
+     margin: 0;
+     padding: 0;
+     width: 100%;
+   }
+   @media (max-width: 640px) {
+     body {
+       font-size: 12px;
+       line-height: 1.25;
+     }
+   }
+
+   select {
+     background: white;
+   }
+
+   /* hide the unnecessary page elements */
+   body footer.govuk-footer,
+   .visuallyhidden,
+   #skiplink-container {
+     display: none !important;
+   }
+
+   /* End govuk-template/resources/public-assets/stylesheets /govuk-template-print.css */
+
+   .js-visible, a.govuk-back-link.js-visible {
+     display: none !important;
+   }
+   .js-enabled .js-visible {
+     display: inline-block !important;
+   }
+   .govuk-grid-column-two-thirds {
+     min-height: 1px;
+   }
+
+   .govuk-heading-xl {
+     font-size: 18pt;
+     margin-bottom: 30px;
+   }
+   .govuk-heading-m,
+   .govuk-table__caption--m {
+     font-size: 14pt;
+     line-height: 1.15;
+   }
+   .govuk-body, .govuk-body-m {
+     font-size: 11pt !important;
+   }
+   .govuk-table {
+     font-size: 10pt;
+     line-height: 1.15;
+   }
+  .govuk-table__row td:first-child,
+   .govuk-table__cell.text-align-right {
+       white-space: nowrap;
+   }
+   .govuk-\!-width-one-quarter {
+     width: auto !important;
+   }
+
+   .text-align-right {
+     text-align: right;
+   }
+
+ /* End print styles */
+ }

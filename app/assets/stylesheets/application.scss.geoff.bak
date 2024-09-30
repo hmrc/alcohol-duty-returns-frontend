@@ -1,0 +1,61 @@
+.js-visible {
+  display: none !important;
+}
+.js-enabled .js-visible {
+  display: inline-block !important;
+}
+
+.govuk-grid-column-two-thirds {
+  min-height: 1px;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+/* Begin print styles */
+@media print {
+  header,
+  footer,
+  nav {
+    display: none !important;
+  }
+  h1 {
+    font-size:26px !important;
+  }
+  h2 {
+    font-size:22px !important;
+  }
+  h3 {
+    font-size:20px !important;
+  }
+  caption {
+    font-size:18px !important;
+  }
+  p {
+    font-size:16px !important;
+  }
+  .govuk-table__header {
+    font-size:16px !important;
+  }
+  .govuk-table__cell {
+    font-size:16px !important;
+  }
+  .govuk-table tbody tr:first-child td:nth-child(1) {
+   width:20%!important;
+  }
+  .govuk-table tbody tr:first-child td:nth-child(2) {
+   width:26%!important;
+  }
+  .govuk-table tbody tr:first-child td:nth-child(3) {
+   width:20%!important;
+  }
+  .govuk-table tbody tr:first-child td:nth-child(4) {
+   width:14%!important;
+  }
+  .govuk-table tbody tr:first-child td:nth-child(5) {
+   width:20%!important;
+  }
+
+ /* End print styles */
+ }
