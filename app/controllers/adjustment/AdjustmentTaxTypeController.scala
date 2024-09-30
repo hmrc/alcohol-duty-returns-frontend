@@ -111,7 +111,7 @@ class AdjustmentTaxTypeController @Inject() (
                       case None           =>
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.invalid")
                     }
-                  case _                  =>
+                  case _                                    =>
                     logger.warn("Impossible to retrieve adjustmentType and period in currentAdjustmentEntry")
                     Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
                 }
