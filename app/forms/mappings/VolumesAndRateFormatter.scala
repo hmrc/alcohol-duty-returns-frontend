@@ -16,13 +16,13 @@
 
 package forms.mappings
 
+import config.Constants
 import models.returns.VolumeAndRateByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
 class VolumesAndRateFormatter(
   invalidKey: String,
-  allRequiredKey: String,
   requiredKey: String,
   decimalPlacesKey: String,
   minimumValueKey: String,
@@ -33,51 +33,50 @@ class VolumesAndRateFormatter(
 ) extends Formatter[VolumeAndRateByTaxType]
     with Formatters {
 
-  def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    minimumValue = BigDecimal(0.01),
+    maximumValue = Constants.volumeMaximumValue,
+    minimumValue = Constants.volumeMinimumValue,
     args = args
   )
 
-  def pureAlcoholVolumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def pureAlcoholVolumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    args = args,
-    decimalPlaces = 4,
-    maximumValue = BigDecimal(999999999.9999),
-    minimumValue = BigDecimal(0.0001)
-  )
-
-  def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
-    requiredKey,
-    invalidKey,
-    decimalPlacesKey,
-    minimumValueKey,
-    maximumValueKey,
-    fieldKey,
-    minimumValue = BigDecimal(0.0),
+    decimalPlaces = Constants.lpaMaximumDecimalPlaces,
+    maximumValue = Constants.lpaMaximumValue,
+    minimumValue = Constants.lpaMinimumValue,
     args = args
   )
 
-  val NUMBER_OF_FIELDS        = 4
-  val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol", "dutyRate")
+  private def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+    requiredKey,
+    invalidKey,
+    decimalPlacesKey,
+    minimumValueKey,
+    maximumValueKey,
+    fieldKey,
+    maximumValue = Constants.dutyMaximumValue,
+    minimumValue = Constants.dutyMinimumValue,
+    args = args
+  )
 
-  def requiredFieldFormError(key: String, field: String): FormError =
+  private val NUMBER_OF_FIELDS        = 4
+  private val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol", "dutyRate")
+
+  private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
-  def requiredAllFieldsFormError(key: String): FormError =
-    FormError(nameToId(key), allRequiredKey, args)
-
-  def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
+  private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
     val taxType     = stringFormatter(s"$requiredKey.taxType").bind(s"$key.taxType", data)
     val totalLitres = volumeFormatter("totalLitres").bind(s"$key.totalLitres", data)
     val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
@@ -96,7 +95,7 @@ class VolumesAndRateFormatter(
     }
   }
 
-  def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] =
+  private def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] =
     formatVolume(key, data).fold(
       errors => Left(errors),
       dutyByTaxType =>
