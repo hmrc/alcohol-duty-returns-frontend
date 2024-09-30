@@ -31,11 +31,9 @@
 
 @(period: String, submittedAtDate: String, submittedAtTime: String, dutyToDeclare: TableViewModel, adjustments: TableViewModel, totalDue: TableTotalViewModel)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("viewReturn.title")), fullWidth = true, withPrintCss = true) {
+@layout(pageTitle = titleNoForm(messages(s"viewReturn.title", period)), fullWidth = true, withPrintCss = true) {
 
-    @pageHeading(messages("viewReturn.heading"))
-
-    <h2 class=@{Constants.headingMCssClass}>@period</h2>
+    @pageHeading(messages(s"viewReturn.heading", period))
 
     @paragraph(messages("viewReturn.submittedAt", submittedAtDate, submittedAtTime))
 

@@ -110,8 +110,7 @@ class CheckYourAnswersController @Inject() (
           _                 <- cacheConnector.set(updateUserAnswers)
         } yield Ok(
           view(
-            summaryList,
-            adjustmentType
+            summaryList
           )
         )
       case None                 =>

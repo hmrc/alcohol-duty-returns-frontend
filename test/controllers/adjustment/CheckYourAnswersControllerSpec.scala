@@ -116,7 +116,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list, Spoilt)(request, getMessages(app)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
       }
     }
 
@@ -145,7 +145,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list, Spoilt)(request, getMessages(app)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
       }
     }
 
@@ -179,7 +179,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list, Spoilt)(request, getMessages(app)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
       }
     }
 
@@ -216,7 +216,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
             .get
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(list, Spoilt)(request, getMessages(app)).toString
+          contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
         }
       }
     }
@@ -255,7 +255,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
             .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list, Spoilt)(request, getMessages(app)).toString
+        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
       }
     }
 

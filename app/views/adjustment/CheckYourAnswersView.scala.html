@@ -26,14 +26,14 @@
     subHeading: SubHeading
 )
 
-@(list: SummaryList, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
      @formHelper(action = controllers.adjustment.routes.CheckYourAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
 
          @sectionHeading(
              id = "check-your-answers-section",
-            text = messages(s"section.adjustment.$adjustmentType"),
+             text = messages("section.adjustment.checkAnswers"),
          )
 
          @pageHeading(messages("checkYourAnswers.heading"))

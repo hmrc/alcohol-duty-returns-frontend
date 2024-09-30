@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter
 case class ReturnPeriodViewModel(fromDate: String, toDate: String)
 object ReturnPeriodViewModel {
 
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
+  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel = {
     val yearMonth = returnPeriod.period

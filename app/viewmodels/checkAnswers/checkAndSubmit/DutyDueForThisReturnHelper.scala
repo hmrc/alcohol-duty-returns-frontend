@@ -127,7 +127,7 @@ class DutyDueForThisReturnHelper @Inject() (
         TableRowViewModel(
           cells = Seq(
             TableRow(
-              content = Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"return.regime.$alcoholRegime"))),
+              content = Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"alcoholType.$alcoholRegime"))),
               classes = Constants.boldFontCssClass
             ),
             TableRow(Text(Money.format(alcoholDuty.totalDuty)))

@@ -40,12 +40,15 @@ object MultipleSPRListHelper {
                 classes = "govuk-!-width-half"
               ),
               HeadCell(
+                format = Some("numeric"),
                 content = Text(messages("multipleSPRList.totalLitres.label"))
               ),
               HeadCell(
+                format = Some("numeric"),
                 content = Text(messages("multipleSPRList.pureAlcohol.label"))
               ),
               HeadCell(
+                format = Some("numeric"),
                 content = Text(messages("multipleSPRList.dutyRate.label"))
               ),
               HeadCell(
@@ -88,9 +91,9 @@ object MultipleSPRListHelper {
       TableRowViewModel(
         cells = Seq(
           TableRow(Text(rateBandRecap(sprEntry.rateBand))),
-          TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres))),
-          TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol))),
-          TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)))
+          TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres)), format = Some("numeric")),
+          TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol)), format = Some("numeric")),
+          TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)), format = Some("numeric"))
         ),
         actions = Seq(
           TableRowActionViewModel(

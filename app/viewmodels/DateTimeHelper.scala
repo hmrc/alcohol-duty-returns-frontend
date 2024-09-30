@@ -25,7 +25,7 @@ class DateTimeHelper @Inject() () {
   private val ukTimeZone: ZoneId = TimeZone.getTimeZone("Europe/London").toZoneId
 
   private val monthYearFormatter     = DateTimeFormatter.ofPattern("LLLL yyyy")
-  private val dateMonthYearFormatter = DateTimeFormatter.ofPattern("dd LLLL yyyy")
+  private val dateMonthYearFormatter = DateTimeFormatter.ofPattern("d LLLL yyyy")
   private val hourMinuteFormatter    = DateTimeFormatter.ofPattern("K:mm")
   private val merediemFormat         = DateTimeFormatter.ofPattern("a")
 
