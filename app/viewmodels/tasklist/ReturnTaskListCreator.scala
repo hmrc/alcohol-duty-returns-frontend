@@ -17,7 +17,7 @@
 package viewmodels.tasklist
 
 import models.adjustment.AdjustmentType
-import models.{AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
@@ -106,38 +106,38 @@ class ReturnTaskListCreator @Inject() () {
         )
     }
 
-  private def returnsAlcoholByRegimesTask(userAnswers: UserAnswers)(implicit
+  private def returnsAlcoholByRegimesTask(userAnswers: UserAnswers, alcoholTypes: Set[AlcoholRegime])(implicit
     messages: Messages
   ): Seq[TaskListItem] =
-    for (
-      regime <- AlcoholRegimesViewOrder.regimesInViewOrder(
-                  AlcoholRegimes(userAnswers.get(AlcoholTypePage).getOrElse(Set.empty))
-                )
-    )
-      yield (
-        userAnswers.getByKey(AlcoholDutyPage, regime),
-        userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
-      ) match {
-        case (Some(_), _)    =>
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
-            status = AlcholDutyTaskListItemStatus.completed,
-            href = Some(controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url)
-          )
-        case (None, Some(_)) =>
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
-            status = AlcholDutyTaskListItemStatus.inProgress,
-            href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
-          )
-        case _               =>
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
-            status = AlcholDutyTaskListItemStatus.notStarted,
-            href = Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
-          )
-
-      }
+    AlcoholRegimesViewOrder
+      .regimesInViewOrder(AlcoholRegimes(alcoholTypes))
+      .map(regime =>
+        (
+          userAnswers.getByKey(AlcoholDutyPage, regime),
+          userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
+        ) match {
+          case (Some(_), _)    =>
+            TaskListItem(
+              title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+              status = AlcholDutyTaskListItemStatus.completed,
+              href = Some(controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url)
+            )
+          case (None, Some(_)) =>
+            TaskListItem(
+              title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+              status = AlcholDutyTaskListItemStatus.inProgress,
+              href =
+                Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+            )
+          case _               =>
+            TaskListItem(
+              title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
+              status = AlcholDutyTaskListItemStatus.notStarted,
+              href =
+                Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+            )
+        }
+      )
 
   private def returnAdjustmentJourneyTaskListItem(
     userAnswers: UserAnswers
@@ -162,7 +162,7 @@ class ReturnTaskListCreator @Inject() () {
   private def returnAdjustmentJourneyUnderDeclarationTaskListItem(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): TaskListItem =
-    createTaskListItem(
+    createAdjustmentReasonTaskListItem(
       userAnswers,
       AdjustmentType.Underdeclaration,
       UnderDeclarationReasonPage,
@@ -172,25 +172,26 @@ class ReturnTaskListCreator @Inject() () {
   private def returnAdjustmentJourneyOverDeclarationTaskListItem(userAnswers: UserAnswers)(implicit
     messages: Messages
   ): TaskListItem =
-    createTaskListItem(
+    createAdjustmentReasonTaskListItem(
       userAnswers,
       AdjustmentType.Overdeclaration,
       OverDeclarationReasonPage,
       controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
     )
 
-  private def createTaskListItem(
+  private def createAdjustmentReasonTaskListItem(
     userAnswers: UserAnswers,
     adjustmentType: AdjustmentType,
     reasonPage: QuestionPage[String],
     href: String
   )(implicit messages: Messages): TaskListItem = {
     val title  = TaskListItemTitle(content = Text(messages(s"taskList.section.adjustment.$adjustmentType")))
-    val status = (userAnswers.get(AdjustmentListPage), userAnswers.get(reasonPage)) match {
-      case (Some(false), None)    => AlcholDutyTaskListItemStatus.notStarted
-      case (Some(false), Some(_)) => AlcholDutyTaskListItemStatus.completed
-      case _                      => AlcholDutyTaskListItemStatus.notStarted
-    }
+    val status = userAnswers
+      .get(AdjustmentListPage)
+      .filter(_ == false)
+      .flatMap(_ => userAnswers.get(reasonPage))
+      .fold(AlcholDutyTaskListItemStatus.notStarted)(_ => AlcholDutyTaskListItemStatus.completed)
+
     TaskListItem(
       title = title,
       status = status,
@@ -309,7 +310,7 @@ class ReturnTaskListCreator @Inject() () {
 
   def returnSection(userAnswers: UserAnswers)(implicit messages: Messages): Section = {
     val taskListItems = (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholTypePage)) match {
-      case (Some(true), Some(_)) =>
+      case (Some(true), Some(alcoholType)) =>
         val declareAlcoholQuestionTask =
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
@@ -320,8 +321,8 @@ class ReturnTaskListCreator @Inject() () {
                 .url
             )
           )
-        declareAlcoholQuestionTask +: returnsAlcoholByRegimesTask(userAnswers)
-      case (Some(true), None)    =>
+        declareAlcoholQuestionTask +: returnsAlcoholByRegimesTask(userAnswers, alcoholType)
+      case (Some(true), None)              =>
         Seq(
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
@@ -333,7 +334,7 @@ class ReturnTaskListCreator @Inject() () {
             )
           )
         )
-      case (Some(false), _)      =>
+      case (Some(false), _)                =>
         Seq(
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.no"))),

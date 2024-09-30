@@ -16,6 +16,7 @@
 
 package forms.mappings
 
+import config.Constants
 import models.returns.VolumesByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
@@ -33,43 +34,44 @@ class VolumesFormatter(
 ) extends Formatter[VolumesByTaxType]
     with Formatters {
 
-  def bigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    args
+    maximumValue = Constants.volumeMaximumValue,
+    minimumValue = Constants.volumeMinimumValue,
+    args = args
   )
 
-  def pureAlcoholBigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def pureAlcoholBigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    args,
-    decimalPlaces = 4,
-    maximumValue = BigDecimal(999999999.9999),
-    minimumValue = BigDecimal(0.0001)
+    decimalPlaces = Constants.lpaMaximumDecimalPlaces,
+    maximumValue = Constants.lpaMaximumValue,
+    minimumValue = Constants.lpaMinimumValue,
+    args = args
   )
 
-  val NUMBER_OF_FIELDS = 3
+  private val NUMBER_OF_FIELDS = 3
 
-  val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol")
+  private val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol")
 
-  def requiredFieldFormError(key: String, field: String): FormError =
+  private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
-  def requiredAllFieldsFormError(key: String): FormError =
+  private def requiredAllFieldsFormError(key: String): FormError =
     FormError(key, allRequiredKey, args)
 
-  def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
-
+  private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
     val taxType     = stringFormatter(s"$requiredKey.taxType").bind(s"$key.taxType", data)
-    val totalLitres = bigDecimalFormatter("totalLitres").bind(s"$key.totalLitres", data)
+    val totalLitres = volumeFormatter("totalLitres").bind(s"$key.totalLitres", data)
     val pureAlcohol = pureAlcoholBigDecimalFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
 
     (taxType, totalLitres, pureAlcohol) match {
@@ -84,7 +86,7 @@ class VolumesFormatter(
     }
   }
 
-  def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] =
+  private def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] =
     formatVolume(key, data).fold(
       errors => Left(errors),
       volumesByTaxType =>

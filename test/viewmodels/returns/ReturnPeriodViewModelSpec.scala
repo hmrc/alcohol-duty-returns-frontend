@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import base.SpecBase
 import models.ReturnPeriod

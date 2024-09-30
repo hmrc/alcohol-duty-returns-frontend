@@ -29,7 +29,6 @@ class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
     "volumesWithRate" ->
       volumesWithRate(
         "return.journey.error.invalid",
-        "return.journey.error.allRequired",
         "return.journey.error.noValue",
         "return.journey.error.tooManyDecimalPlaces",
         "return.journey.error.minimumValue",

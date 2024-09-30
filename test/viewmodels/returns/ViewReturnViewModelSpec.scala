@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.returns
+package viewmodels.returns
 
 import base.SpecBase
 import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnTotalDutyDue}
@@ -83,9 +83,15 @@ class ViewReturnViewModelSpec extends SpecBase {
 
     "createTotalDueViewModel" - {
       "should return a model with a total when a total exists" in new SetUp {
-        val totalVieModel = viewModel.createTotalDueViewModel(returnDetails)
+        val totalViewModel = viewModel.createTotalDueViewModel(returnDetails)
 
-        totalVieModel.total.content shouldBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
+        totalViewModel.total.content shouldBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
+      }
+
+      "should return a model with no entries when a nil return" in new SetUp {
+        val totalViewModel = viewModel.createTotalDueViewModel(nilReturn)
+
+        totalViewModel.total.content shouldBe Text(messages("site.nil"))
       }
 
       "should return a model with a total when a total exists even if no declarations" in new SetUp {
