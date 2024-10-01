@@ -16,13 +16,13 @@
 
 package forms.mappings
 
+import config.Constants
 import models.adjustment.AdjustmentVolumeWithSPR
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
 class AdjustmentVolumesAndRateFormatter(
   invalidKey: String,
-  allRequiredKey: String,
   requiredKey: String,
   decimalPlacesKey: String,
   minimumValueKey: String,
@@ -32,51 +32,50 @@ class AdjustmentVolumesAndRateFormatter(
 ) extends Formatter[AdjustmentVolumeWithSPR]
     with Formatters {
 
-  def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    minimumValue = BigDecimal(0.01),
+    maximumValue = Constants.volumeMaximumValue,
+    minimumValue = Constants.volumeMinimumValue,
     args = args
   )
 
-  def pureAlcoholVolumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def pureAlcoholVolumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    args = args,
-    decimalPlaces = 4,
-    maximumValue = BigDecimal(999999999.9999),
-    minimumValue = BigDecimal(0.0001)
-  )
-
-  def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
-    requiredKey,
-    invalidKey,
-    decimalPlacesKey,
-    minimumValueKey,
-    maximumValueKey,
-    fieldKey,
-    minimumValue = BigDecimal(0.00),
+    decimalPlaces = Constants.lpaMaximumDecimalPlaces,
+    maximumValue = Constants.lpaMaximumValue,
+    minimumValue = Constants.lpaMinimumValue,
     args = args
   )
 
-  val NUMBER_OF_FIELDS        = 3
-  val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume", "sprDutyRate")
+  private def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+    requiredKey,
+    invalidKey,
+    decimalPlacesKey,
+    minimumValueKey,
+    maximumValueKey,
+    fieldKey,
+    maximumValue = Constants.dutyMaximumValue,
+    minimumValue = Constants.dutyMinimumValue,
+    args = args
+  )
 
-  def requiredFieldFormError(key: String, field: String): FormError =
+  private val NUMBER_OF_FIELDS        = 3
+  private val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume", "sprDutyRate")
+
+  private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
-  def requiredAllFieldsFormError(key: String): FormError =
-    FormError(nameToId(key), allRequiredKey, args)
-
-  def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
+  private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
     val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
     val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
     val sprDutyRate = dutyRateFormatter("sprDutyRate").bind(s"$key.sprDutyRate", data)
@@ -93,7 +92,7 @@ class AdjustmentVolumesAndRateFormatter(
     }
   }
 
-  def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] =
+  private def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] =
     formatVolume(key, data).fold(
       errors => Left(errors),
       volumes =>

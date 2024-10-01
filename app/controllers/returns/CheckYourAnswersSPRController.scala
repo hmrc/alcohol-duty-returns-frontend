@@ -21,6 +21,7 @@ import controllers.actions._
 import models.returns.VolumeAndRateByTaxType
 import models.{AlcoholRegime, UserAnswers}
 import pages.returns.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage}
+import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -42,12 +43,14 @@ class CheckYourAnswersSPRController @Inject() (
   view: CheckYourAnswersSPRView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       CheckYourAnswersSPRSummaryListHelper.summaryList(regime, request.userAnswers, index) match {
         case None              =>
+          logger.warn("Impossible to retrieve summary list")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(summaryList) =>
           Ok(view(regime, summaryList, index))
@@ -58,6 +61,7 @@ class CheckYourAnswersSPRController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
         case None               =>
+          logger.warn("Impossible to retrieve TellUsAboutMultipleSPRRatePage from userAnswers")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(sprRateEntry) =>
           for {

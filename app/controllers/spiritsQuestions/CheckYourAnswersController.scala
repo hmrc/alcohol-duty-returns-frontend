@@ -17,6 +17,7 @@
 package controllers.spiritsQuestions
 import com.google.inject.Inject
 import controllers.actions.{CheckSpiritsAndIngredientsToggleAction, CheckSpiritsRegimeAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -33,7 +34,8 @@ class CheckYourAnswersController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView
 ) extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
@@ -44,6 +46,9 @@ class CheckYourAnswersController @Inject() (
           grainsList           <- CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
           otherIngredientsList <- CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
         } yield Ok(view(spiritsList, alcoholList, grainsList, otherIngredientsList))
-        result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        result.getOrElse {
+          logger.warn("Impossible to create summary list")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        }
     }
 }

@@ -19,57 +19,59 @@ package models
 import base.SpecBase
 import play.api.libs.json.{JsString, Json}
 
-import java.time.YearMonth
+import java.time.{LocalDate, YearMonth}
 
 class ReturnPeriodSpec extends SpecBase {
   "ReturnPeriod" - {
-    "should convert from period key" - {
-      "returning an error if" - {
-        "the key is more than 4 characters" in {
-          ReturnPeriod.fromPeriodKey("24AC1") mustBe None
-        }
-
-        "the key is less than 4 characters" in {
-          ReturnPeriod.fromPeriodKey("24A") mustBe None
-        }
-
-        "the key is empty" in {
-          ReturnPeriod.fromPeriodKey("") mustBe None
-        }
-
-        "the first character is not a digit" in {
-          ReturnPeriod.fromPeriodKey("/4AC") mustBe None
-          ReturnPeriod.fromPeriodKey(":4AC") mustBe None
-          ReturnPeriod.fromPeriodKey("A4AC") mustBe None
-        }
-
-        "the second character is not a digit" in {
-          ReturnPeriod.fromPeriodKey("2/AC") mustBe None
-          ReturnPeriod.fromPeriodKey("2:AC") mustBe None
-          ReturnPeriod.fromPeriodKey("2AAC") mustBe None
-        }
-
-        "the third character is not an A" in {
-          ReturnPeriod.fromPeriodKey("24BC") mustBe None
-          ReturnPeriod.fromPeriodKey("244C") mustBe None
-          ReturnPeriod.fromPeriodKey("24aC") mustBe None
-        }
-
-        "the fourth character is not a A-L" in {
-          ReturnPeriod.fromPeriodKey("24A@") mustBe None
-          ReturnPeriod.fromPeriodKey("24AM") mustBe None
-          ReturnPeriod.fromPeriodKey("24Aa") mustBe None
-          ReturnPeriod.fromPeriodKey("24A9") mustBe None
-        }
+    "should return an error when" - {
+      "the key is more than 4 characters" in {
+        ReturnPeriod.fromPeriodKey("24AC1") mustBe None
       }
 
-      "return a correct ReturnPeriod when" - {
-        "a valid period key is passed" in {
-          ReturnPeriod.fromPeriodKey("24AA") mustBe Some(ReturnPeriod(YearMonth.of(2024, 1)))
-          ReturnPeriod.fromPeriodKey("24AL") mustBe Some(ReturnPeriod(YearMonth.of(2024, 12)))
-          ReturnPeriod.fromPeriodKey("28AC") mustBe Some(ReturnPeriod(YearMonth.of(2028, 3)))
-        }
+      "the key is less than 4 characters" in {
+        ReturnPeriod.fromPeriodKey("24A") mustBe None
       }
+
+      "the key is empty" in {
+        ReturnPeriod.fromPeriodKey("") mustBe None
+      }
+
+      "the first character is not a digit" in {
+        ReturnPeriod.fromPeriodKey("/4AC") mustBe None
+        ReturnPeriod.fromPeriodKey(":4AC") mustBe None
+        ReturnPeriod.fromPeriodKey("A4AC") mustBe None
+      }
+
+      "the second character is not a digit" in {
+        ReturnPeriod.fromPeriodKey("2/AC") mustBe None
+        ReturnPeriod.fromPeriodKey("2:AC") mustBe None
+        ReturnPeriod.fromPeriodKey("2AAC") mustBe None
+      }
+
+      "the third character is not an A" in {
+        ReturnPeriod.fromPeriodKey("24BC") mustBe None
+        ReturnPeriod.fromPeriodKey("244C") mustBe None
+        ReturnPeriod.fromPeriodKey("24aC") mustBe None
+      }
+
+      "the fourth character is not a A-L" in {
+        ReturnPeriod.fromPeriodKey("24A@") mustBe None
+        ReturnPeriod.fromPeriodKey("24AM") mustBe None
+        ReturnPeriod.fromPeriodKey("24Aa") mustBe None
+        ReturnPeriod.fromPeriodKey("24A9") mustBe None
+      }
+    }
+
+    "return a correct ReturnPeriod when" - {
+      "a valid period key is passed" in {
+        ReturnPeriod.fromPeriodKey("24AA") mustBe Some(ReturnPeriod(YearMonth.of(2024, 1)))
+        ReturnPeriod.fromPeriodKey("24AL") mustBe Some(ReturnPeriod(YearMonth.of(2024, 12)))
+        ReturnPeriod.fromPeriodKey("28AC") mustBe Some(ReturnPeriod(YearMonth.of(2028, 3)))
+      }
+    }
+
+    "create a period key from a LocalDate" in {
+      ReturnPeriod.fromDateInPeriod(LocalDate.of(2024, 12, 1)) mustBe ReturnPeriod(YearMonth.of(2024, 12))
     }
 
     "should parse ReturnPeriod with the right json value" in {
@@ -85,7 +87,7 @@ class ReturnPeriodSpec extends SpecBase {
       result.toPeriodKey mustBe periodKey
     }
 
-    "should throw an Illegal Argument exception when an invalid period key json string is parsed" in {
+    "should throw an IllegalArgumentException when an invalid period key json string is parsed" in {
       val invalidPeriodKey  = invalidPeriodKeyGen.sample.get
       val periodKeyJsString = JsString(invalidPeriodKey)
 
@@ -93,7 +95,32 @@ class ReturnPeriodSpec extends SpecBase {
         periodKeyJsString.as[ReturnPeriod]
       )
 
-      exception mustBe a[IllegalArgumentException]
+      exception mustBe an[IllegalArgumentException]
     }
+
+    "should be able to get the periodKey" in {
+      ReturnPeriod.fromPeriodKey("24AC").get.toPeriodKey mustBe "24AC"
+    }
+
+    "should be able to get the first date of the period" in {
+      ReturnPeriod.fromPeriodKey("24AC").get.periodFromDate() mustBe LocalDate.of(2024, 3, 1)
+    }
+
+    "should be able to get the last date of the period" in {
+      ReturnPeriod.fromPeriodKey("24AC").get.periodToDate() mustBe LocalDate.of(2024, 3, 31)
+    }
+
+    Seq("24AC", "24AF", "24AI", "24AL").foreach { periodKey =>
+      s"$periodKey should have quarterly spirits" in {
+        ReturnPeriod.fromPeriodKey(periodKey).get.hasQuarterlySpirits mustBe true
+      }
+    }
+
+    Seq("24AA", "24AB", "24AD", "24AE", "24AG", "24AH", "24AJ", "24AK").foreach { periodKey =>
+      s"$periodKey should not have quarterly spirits" in {
+        ReturnPeriod.fromPeriodKey(periodKey).get.hasQuarterlySpirits mustBe false
+      }
+    }
+
   }
 }

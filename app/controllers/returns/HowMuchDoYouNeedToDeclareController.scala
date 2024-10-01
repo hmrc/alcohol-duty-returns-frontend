@@ -57,7 +57,9 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData) { implicit request =>
       val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-        case None            => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        case None            =>
+          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
           val categoriesByRateType = CategoriesByRateTypeHelper.rateBandCategories(rateBands)
           val preparedForm         = request.userAnswers.getByKey(HowMuchDoYouNeedToDeclarePage, regime) match {
@@ -73,7 +75,9 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
   def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-        case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case None            =>
+          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
           val howMuchDoYouNeedToDeclareHelper = CategoriesByRateTypeHelper.rateBandCategories(rateBands)
           formProvider(regime)

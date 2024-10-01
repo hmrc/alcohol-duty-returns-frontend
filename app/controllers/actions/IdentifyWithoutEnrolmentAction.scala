@@ -67,10 +67,10 @@ class IdentifyWithoutEnrolmentActionImpl @Inject() (
       block(IdentifierWithoutEnrolmentRequest(request, groupId, internalId))
     } recover {
       case e: AuthorisationException =>
-        logger.debug(s"Got AuthorisationException: $e")
+        logger.debug("Got AuthorisationException:", e)
         handleAuthException(e)
       case e: UnauthorizedException  =>
-        logger.debug(s"Got UnauthorizedException: $e")
+        logger.debug("Got UnauthorizedException:", e)
         Redirect(routes.UnauthorisedController.onPageLoad)
     }
   }

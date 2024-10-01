@@ -18,6 +18,7 @@ package controllers.returns
 
 import controllers.actions._
 import models.AlcoholRegime
+import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,13 +35,16 @@ class CheckYourAnswersController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView
 ) extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       CheckYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
         case Some(summaryList) => Ok(view(regime, summaryList))
-        case None              => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        case None              =>
+          logger.warn("Impossible to retrieve summary list rows")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
   }
 }

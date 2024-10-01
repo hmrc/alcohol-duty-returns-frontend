@@ -18,6 +18,7 @@ package controllers.dutySuspended
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -33,12 +34,15 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
   checkYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper,
   view: CheckYourAnswersDutySuspendedDeliveriesView
 ) extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     checkYourAnswersSummaryListHelper.dutySuspendedDeliveriesSummaryList(request.userAnswers) match {
       case summaryList if summaryList.rows.nonEmpty => Ok(view(summaryList))
-      case _                                        => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      case _                                        =>
+        logger.warn("Impossible to retrieve summary list rows")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

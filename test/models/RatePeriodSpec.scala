@@ -190,6 +190,26 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       result.rate mustBe Some(BigDecimal(9.27))
     }
 
+    "should error if the RateBand json is empty" in {
+      val json =
+        """
+          |      {
+          |        "taxTypeCode": "311",
+          |        "description": "Beer from 1.3% to 3.4%",
+          |        "rateType": "Core",
+          |        "rate": 9.27,
+          |        "rangeDetails": [
+          |          {
+          |            "alcoholRegime":"Beer",
+          |            "abvRanges": []
+          |          }
+          |        ]
+          |      }
+          |""".stripMargin
+
+      a[JsResultException] mustBe thrownBy(Json.parse(json).as[RateBand])
+    }
+
     "serialize RateBand object into Json" in {
       val rateBand = RateBand(
         taxTypeCode = "311",
