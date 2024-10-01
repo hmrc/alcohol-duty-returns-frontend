@@ -17,9 +17,10 @@
 package viewmodels.tasklist
 
 import base.SpecBase
+import models.AlcoholRegime._
 import models.adjustment.AdjustmentEntry
 import models.returns.{AlcoholDuty, DutyByTaxType}
-import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
+import models.{AlcoholRegime, AlcoholRegimes, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended._
@@ -224,7 +225,6 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         }
 
       }
-
     }
   }
 
@@ -568,6 +568,96 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               DutySuspendedOtherFermentedPage.toString -> Json.obj(
                 "totalOtherFermented"         -> validTotal,
                 "pureAlcoholInOtherFermented" -> validPureAlcohol
+              )
+            )
+          )
+          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
+
+        result.completedTask                     shouldBe true
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.dutySuspended.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.dutySuspended.completed")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+        )
+      }
+
+      "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime (Cider, OtherFermentedProduct) questions are answered" in {
+        val validTotal                                              = 42.34
+        val validPureAlcohol                                        = 34.23
+        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes
+          .copy(regimes = AlcoholRegimes(Set(Cider, OtherFermentedProduct)))
+          .copy(data =
+            Json.obj(
+              DutySuspendedCiderPage.toString          -> Json.obj(
+                "totalCider"         -> validTotal,
+                "pureAlcoholInCider" -> validPureAlcohol
+              ),
+              DutySuspendedOtherFermentedPage.toString -> Json.obj(
+                "totalOtherFermented"         -> validTotal,
+                "pureAlcoholInOtherFermented" -> validPureAlcohol
+              )
+            )
+          )
+          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
+
+        result.completedTask                     shouldBe true
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.dutySuspended.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.dutySuspended.completed")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+        )
+      }
+
+      "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime (Beer, Wine, Spirits) questions are answered" in {
+        val validTotal                                              = 42.34
+        val validPureAlcohol                                        = 34.23
+        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes
+          .copy(regimes = AlcoholRegimes(Set(Beer, Wine, Spirits)))
+          .copy(data =
+            Json.obj(
+              DutySuspendedBeerPage.toString    -> Json.obj(
+                "totalBeer"         -> validTotal,
+                "pureAlcoholInBeer" -> validPureAlcohol
+              ),
+              DutySuspendedWinePage.toString    -> Json.obj(
+                "totalWine"         -> validTotal,
+                "pureAlcoholInWine" -> validPureAlcohol
+              ),
+              DutySuspendedSpiritsPage.toString -> Json.obj(
+                "totalSpirits"         -> validTotal,
+                "pureAlcoholInSpirits" -> validPureAlcohol
               )
             )
           )

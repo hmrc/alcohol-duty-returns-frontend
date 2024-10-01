@@ -27,18 +27,14 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
   val navigator = new QuarterlySpiritsQuestionsNavigator
 
   "QuarterlySpiritQuestionsNavigator" - {
-
     "in Normal mode" - {
       "must go from a page that doesn't exist in the route map to the Task List page" in {
-
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.TaskListController.onPageLoad
       }
 
       "the Declare Quarterly Spirits page" - {
-
         "must go to the Declare Spirits Total page if the answer is Yes" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
@@ -47,7 +43,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         }
 
         "must to the Task List page if the answer is No" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
@@ -56,7 +51,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         }
 
         "must go to the Journey Recovery page if there is an issue" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
@@ -67,7 +61,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
       "the Declare Spirits Total page" - {
         "must go to the Declare Whisk(e)y page" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.DeclareSpiritsTotalPage,
             NormalMode,
@@ -78,7 +71,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
       "the Declare Whisk(e)y page" - {
         "must go to the Spirit Type page" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.WhiskyPage,
             NormalMode,
@@ -89,7 +81,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
       "the Spirit Type page" - {
         "must go to the Other Spirit Types page if Other spirits is checked" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
             NormalMode,
@@ -101,7 +92,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         }
 
         "must to the Grains Used List page if the answer if Other spirits is not checked" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
             NormalMode,
@@ -116,7 +106,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         }
 
         "must go to the Journey Recovery page if there is an issue" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
             NormalMode,
@@ -137,7 +126,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
       "the Grains Used page" - {
         "must go to the Other Malted Grains page if Other malted grains is checked" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.GrainsUsedPage,
             NormalMode,
@@ -152,7 +140,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         }
 
         "must to the Alcohol Used page if the answer if Other spirits is not checked" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.GrainsUsedPage,
             NormalMode,
@@ -167,7 +154,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         }
 
         "must go to the Journey Recovery page if there is an issue" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.GrainsUsedPage,
             NormalMode,
@@ -188,7 +174,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
       "the Alcohol Used page" - {
         "must go to Ethylene Gas Or Molasses page" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.AlcoholUsedPage,
             NormalMode,
@@ -199,7 +184,6 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
       "the Ethylene Gas Or Molasses page" - {
         "must go to Other Ingredients Used page if other ingredients question's answer is yes" in {
-
           navigator.nextPage(
             pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
             NormalMode,
@@ -212,8 +196,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
               .value
           ) mustBe controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(NormalMode)
         }
-        "must go to Check your answers page if other ingredients question's answer is no" in {
 
+        "must go to Check your answers page if other ingredients question's answer is no" in {
           navigator.nextPage(
             pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
             NormalMode,
@@ -226,8 +210,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
               .value
           ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
         }
-        "must go to Journey recover page if there is an issue" in {
 
+        "must go to Journey recover page if there is an issue" in {
           navigator.nextPage(
             pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
             NormalMode,
@@ -235,6 +219,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
         }
       }
+
       "the Other Ingredients Used page" - {
         "must go to the Check your answers page" in {
           navigator.nextPage(
@@ -247,14 +232,66 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
     }
 
     "in Check mode" - {
-
       "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
-
         case object UnknownPage extends Page
         navigator.nextPage(
           UnknownPage,
           CheckMode,
           emptyUserAnswers
+        ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from the Spirit Type page to the Other Spirit Types page if the answer has changed" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.SpiritTypePage,
+          CheckMode,
+          emptyUserAnswers,
+          true
+        ) mustBe controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
+      }
+
+      "must go from the Spirit Type page to the Check your answers page if the answer has not changed" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.SpiritTypePage,
+          CheckMode,
+          emptyUserAnswers,
+          false
+        ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from the Grains Used page to the Other Malted Grains page if the answer has changed" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.GrainsUsedPage,
+          CheckMode,
+          emptyUserAnswers,
+          true
+        ) mustBe controllers.spiritsQuestions.routes.OtherMaltedGrainsController.onPageLoad(CheckMode)
+      }
+
+      "must go from the Grains Used page to the Check your answers page if the answer has not changed" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.GrainsUsedPage,
+          CheckMode,
+          emptyUserAnswers,
+          false
+        ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from the Ethylene Gas Or Molasses Used page to the Other Ingredients Used page if the answer has changed" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
+          CheckMode,
+          emptyUserAnswers,
+          true
+        ) mustBe controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(CheckMode)
+      }
+
+      "must go from the Ethylene Gas Or Molasses Used page to the Check your answers page if the answer has not changed" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage,
+          CheckMode,
+          emptyUserAnswers,
+          false
         ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
     }

@@ -19,11 +19,13 @@ package models
 import config.Constants
 import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 
-import java.time.YearMonth
+import java.time.{LocalDate, YearMonth}
 import scala.util.matching.Regex
 
 case class ReturnPeriod(period: YearMonth) {
-  def toPeriodKey = s"${period.getYear - 2000}A${(period.getMonthValue + 64).toChar}"
+  def toPeriodKey                 = s"${period.getYear - 2000}A${(period.getMonthValue + 64).toChar}"
+  def periodFromDate(): LocalDate = period.atDay(1)
+  def periodToDate(): LocalDate   = period.atEndOfMonth()
 
   def hasQuarterlySpirits: Boolean =
     Constants.quarterlySpiritsMonths.contains(period.getMonth)
@@ -40,6 +42,9 @@ object ReturnPeriod {
         Some(ReturnPeriod(YearMonth.of(year, month)))
       case _                      => None
     }
+
+  def fromDateInPeriod(date: LocalDate): ReturnPeriod =
+    ReturnPeriod(YearMonth.from(date))
 
   implicit val format: Format[ReturnPeriod] = new Format[ReturnPeriod] {
     override def reads(json: JsValue): JsResult[ReturnPeriod] =

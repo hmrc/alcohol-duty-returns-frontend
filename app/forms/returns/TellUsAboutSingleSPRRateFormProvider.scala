@@ -30,7 +30,6 @@ class TellUsAboutSingleSPRRateFormProvider @Inject() extends Mappings {
     "volumesWithRate" -> seq(
       volumesWithRate(
         "return.journey.error.invalid",
-        "return.journey.error.allRequired",
         "return.journey.error.noValue",
         "return.journey.error.tooManyDecimalPlaces",
         "return.journey.error.minimumValue",

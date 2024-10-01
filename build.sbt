@@ -33,7 +33,7 @@ lazy val root = Project(appName, file("."))
     ),
     PlayKeys.playDefaultPort := 16000,
     ScoverageKeys.coverageExcludedFiles := scoverageExcludedList.mkString(";"),
-    ScoverageKeys.coverageMinimumStmtTotal := 78,
+    ScoverageKeys.coverageMinimumStmtTotal := 93,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
@@ -89,6 +89,7 @@ lazy val scoverageExcludedList:Seq[String] = Seq(
   ".*components.*",
   ".*Routes.*",
   ".*viewmodels.govuk.*",
+  ".*views.*",
   "testOnly.*",
   ".*testOnly.*",
   ".*TestOnlyController.*",
