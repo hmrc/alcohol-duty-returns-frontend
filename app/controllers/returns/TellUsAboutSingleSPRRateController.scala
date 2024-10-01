@@ -27,6 +27,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
 import models.returns.VolumeAndRateByTaxType
+import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.CategoriesByRateTypeHelper
 import views.html.returns.TellUsAboutSingleSPRRateView
@@ -46,6 +47,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
+    with Logging
     with ReturnController[Seq[VolumeAndRateByTaxType], TellUsAboutSingleSPRRatePage.type] {
 
   val currentPage = TellUsAboutSingleSPRRatePage
@@ -54,7 +56,9 @@ class TellUsAboutSingleSPRRateController @Inject() (
     (identify andThen getData andThen requireData) { implicit request =>
       val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-        case None            => Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        case None            =>
+          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime")
+          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(rateBands) =>
           val preparedForm               = request.userAnswers.getByKey(currentPage, regime) match {
             case None        => form
@@ -68,7 +72,9 @@ class TellUsAboutSingleSPRRateController @Inject() (
   def onSubmit(mode: Mode, regime: AlcoholRegime): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
-        case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case None            =>
+          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
           formProvider(regime)
             .bindFromRequest()

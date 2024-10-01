@@ -65,7 +65,9 @@ class DutyCalculationController @Inject() (
   def onSubmit(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       request.userAnswers.getByKey(DutyCalculationPage, regime) match {
-        case None            => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        case None            =>
+          logger.warn(s"Failed to get DutyCalculationPage from user answers for regime: $regime")
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(totalDuty) =>
           for {
             updatedUserAnswers <- Future.fromTry(request.userAnswers.setByKey(AlcoholDutyPage, regime, totalDuty))

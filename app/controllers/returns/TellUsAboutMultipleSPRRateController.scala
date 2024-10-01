@@ -57,13 +57,17 @@ class TellUsAboutMultipleSPRRateController @Inject() (
         form      <- prepareForm(request.userAnswers, regime, mode, index)
       } yield Ok(view(form, mode, regime, TellUsAboutMultipleSPRRateHelper.radioItems(rateBands), index))
 
-      result.getOrElse(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      result.getOrElse {
+        logger.warn("Error creating the form for TellUsAboutMultipleSPRRate screen")
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      }
     }
 
   def onSubmit(mode: Mode, regime: AlcoholRegime, index: Option[Int]): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
+          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         case Some(rateBands) =>
           formProvider(regime)
