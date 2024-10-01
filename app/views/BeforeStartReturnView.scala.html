@@ -65,7 +65,14 @@
         @if(currentDate == returnDueDate) {
             @govukWarningText(WarningText(
                 iconFallbackText = Some("Warning"),
-                content = Text(messages(s"beforeStartReturn.text.dueWarning")))
+                content = Text(messages("beforeStartReturn.text.dueWarning")))
+            )
+        }
+
+        @if(currentDate < currentDate) {
+            @govukWarningText(WarningText(
+                iconFallbackText = Some("Warning"),
+                content = Text(messages(s"beforeStartReturn.text.dueDateWarning", returnDueDate)))
             )
         }
 
