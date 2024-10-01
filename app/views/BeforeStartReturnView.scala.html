@@ -23,11 +23,12 @@
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
-        paragraph: components.Paragraph
+        paragraph: components.Paragraph,
+        govukWarningText: GovukWarningText
 )
 
 
-@(returnPeriod: ReturnPeriodViewModel)(implicit request: Request[_], messages: Messages)
+@(returnPeriod: ReturnPeriodViewModel, returnDueDate: String, currentDate: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("beforeStartReturn.title"))) {
     @formHelper(action = controllers.routes.BeforeStartReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
@@ -53,6 +54,20 @@
         </ul>
 
         @paragraph(messages("beforeStartReturn.text.guidance4"))
+
+        @if(currentDate > returnDueDate) {
+            @govukWarningText(WarningText(
+                iconFallbackText = Some("Warning"),
+                content = Text(messages(s"beforeStartReturn.text.overdueWarning", returnDueDate)))
+            )
+        }
+
+        @if(currentDate == returnDueDate) {
+            @govukWarningText(WarningText(
+                iconFallbackText = Some("Warning"),
+                content = Text(messages(s"beforeStartReturn.text.dueWarning")))
+            )
+        }
 
         @govukButton(
             ButtonViewModel("continueButton", messages("site.continue"))

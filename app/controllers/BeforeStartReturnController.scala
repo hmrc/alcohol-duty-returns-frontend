@@ -52,12 +52,17 @@ class BeforeStartReturnController @Inject() (
     val appaId       = request.appaId
     val credentialId = request.userId
     val groupId      = request.groupId
+
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case None               =>
         logger.warn("Period key is not valid")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(returnPeriod) =>
-        val session = request.session + (periodKeySessionKey, periodKey)
+        val returnPeriod          = ReturnPeriod.fromPeriodKey(periodKey).get
+        val returnPeriodViewModel = ReturnPeriodViewModel(returnPeriod)
+        val returnDueDate         = returnPeriodViewModel.returnDueDate
+        val currentDate           = Instant.now(clock).toString
+        val session               = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
           case Right(ua)                                    =>
             logger.info(s"Return $appaId/$periodKey retrieved from cache by the user $credentialId")
@@ -65,7 +70,7 @@ class BeforeStartReturnController @Inject() (
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case Left(error) if error.statusCode == NOT_FOUND =>
             logger.info(s"Return $appaId/$periodKey not found in cache")
-            Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
+            Ok(view(ReturnPeriodViewModel(returnPeriod), returnDueDate, currentDate)).withSession(session)
           case Left(error) if error.statusCode == LOCKED    =>
             logger.warn(s"Return ${request.appaId}/$periodKey locked for the user $credentialId")
             Redirect(controllers.routes.ReturnLockedController.onPageLoad())
