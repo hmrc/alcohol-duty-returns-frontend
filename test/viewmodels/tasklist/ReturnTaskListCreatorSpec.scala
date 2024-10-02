@@ -19,10 +19,11 @@ package viewmodels.tasklist
 import base.SpecBase
 import models.AlcoholRegime._
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Underdeclaration
 import models.returns.{AlcoholDuty, DutyByTaxType}
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended._
 import pages.returns.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions._
@@ -293,7 +294,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
       }
 
-      "must have a link to the 'Adjustment List' screen if the user has answered some questions and the task must be in progress" in {
+      "must have a link to the 'Adjustment List' screen if the user has at least one entry in the adjustment list and the task must be in progress" in {
         val result = returnTaskListCreator.returnAdjustmentSection(
           declaredAdjustmentUserAnswer.set(AdjustmentEntryListPage, List(AdjustmentEntry())).success.value
         )
@@ -318,6 +319,31 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
       }
 
+      "must have a link to the 'Adjustment List' screen if the user has answered the adjustment type question and the task must be in progress" in {
+        val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Underdeclaration))
+        val result          = returnTaskListCreator.returnAdjustmentSection(
+          declaredAdjustmentUserAnswer.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+        )
+
+        result.completedTask                     shouldBe false
+        result.taskList.items.size               shouldBe 2
+        result.title                             shouldBe messages("taskList.section.adjustment.heading")
+        result.taskList.items.head.title.content shouldBe Text(
+          messages("taskList.section.adjustment.needToDeclare.yes")
+        )
+        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.href          shouldBe Some(
+          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+        )
+
+        result.taskList.items(1).title.content shouldBe Text(
+          messages("taskList.section.adjustment.inProgress")
+        )
+        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).href          shouldBe Some(
+          controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+        )
+      }
       "must have a link to the 'Adjustment List' screen if the user has answered some questions and the task must be completed" in {
         val result = returnTaskListCreator.returnAdjustmentSection(
           declaredAdjustmentUserAnswer
