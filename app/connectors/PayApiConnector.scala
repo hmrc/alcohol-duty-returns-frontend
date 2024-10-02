@@ -50,14 +50,14 @@ class PayApiConnector @Inject() (
               case Success(data)      => Right[String, StartPaymentResponse](data)
               case Failure(exception) =>
                 logger.warn("Invalid JSON format when starting payment", exception)
-                Left(s"Invalid JSON format  when starting payment. Exception: $exception")
+                Left(s"Invalid JSON format when starting payment. Exception: $exception")
             }
           case Left(errorResponse: UpstreamErrorResponse)    =>
             logger.warn("Start Payment failed with error. Error response", errorResponse)
             Left(s"Start Payment failed with error. Error response: ${errorResponse.message}")
           case Right(otherStatusResponse)                    =>
-            logger.warn(s"Unexpected status code: ${otherStatusResponse.status}")
-            Left(s"Unexpected status code: ${otherStatusResponse.status}")
+            logger.warn(s"Unexpected status code when starting payment: ${otherStatusResponse.status}")
+            Left(s"Unexpected status code when starting payment: ${otherStatusResponse.status}")
         }
     }
 }

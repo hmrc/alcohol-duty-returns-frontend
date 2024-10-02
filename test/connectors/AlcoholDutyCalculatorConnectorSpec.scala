@@ -26,7 +26,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import java.time.YearMonth
@@ -50,10 +50,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(rateBandResponse)))
 
-      when {
-        connector.httpClient
-          .get(any())(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.rateBand("310", YearMonth.of(2023, 1))) { result =>
         result mustBe Some(rateBand)
@@ -76,10 +73,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(rateBandResponse)))
 
-      when {
-        connector.httpClient
-          .get(any())(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.rateBand("123", YearMonth.of(2023, 1))) { result =>
         result mustBe None
@@ -129,10 +123,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
       )
         .thenReturn(requestBuilder)
 
-      when {
-        connector.httpClient
-          .post(eqTo(url"$mockUrl"))(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.calculateTotalDuty(request)) { result =>
         result mustBe alcoholDuty
@@ -155,10 +146,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
       when(requestBuilder.execute[Seq[RateBand]](any(), any()))
         .thenReturn(Future.successful(rateBandList))
 
-      when {
-        connector.httpClient
-          .get(any())(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.rateBandByRegime(ratePeriod = returnPeriod.period, AlcoholRegime.values)) { result =>
         result mustBe rateBandList
@@ -171,7 +159,6 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
     "calculateAdjustmentDuty" - {
       "successfully retrieve adjustment duty" in new SetUp {
-
         val mockUrl = "http://alcohol-duty-calculator/calculate-adjustment-duty"
         when(mockConfig.adrCalculatorCalculateAdjustmentDutyUrl()).thenReturn(mockUrl)
 
@@ -185,10 +172,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         )
           .thenReturn(requestBuilder)
 
-        when {
-          connector.httpClient
-            .post(eqTo(url"$mockUrl"))(any())
-        } thenReturn requestBuilder
+        when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
         whenReady(connector.calculateAdjustmentDuty(BigDecimal(1), BigDecimal(1), AdjustmentTypes.Spoilt)) { result =>
           result mustBe AdjustmentDuty(BigDecimal(1))
@@ -200,7 +184,6 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
     "calculateRepackagedDutyChange" - {
       "successfully retrieve adjustment duty" in new SetUp {
-
         val mockUrl = "http://alcohol-duty-calculator/calculate-repackaged-duty-change"
         when(mockConfig.adrCalculatorCalculateRepackagedDutyChangeUrl()).thenReturn(mockUrl)
 
@@ -214,10 +197,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         )
           .thenReturn(requestBuilder)
 
-        when {
-          connector.httpClient
-            .post(eqTo(url"$mockUrl"))(any())
-        } thenReturn requestBuilder
+        when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
         when(requestBuilder.execute[AdjustmentDuty](any(), any()))
           .thenReturn(Future.successful(AdjustmentDuty(1)))
@@ -232,7 +212,6 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
 
     "calculateTotalAdjustment" - {
       "successfully adjustment duty" in new SetUp {
-
         val mockUrl = "http://alcohol-duty-calculator/calculate-total-adjustment"
         when(mockConfig.adrCalculatorCalculateTotalAdjustmentUrl()).thenReturn(mockUrl)
 
@@ -246,10 +225,7 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         )
           .thenReturn(requestBuilder)
 
-        when {
-          connector.httpClient
-            .post(eqTo(url"$mockUrl"))(any())
-        } thenReturn requestBuilder
+        when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
         whenReady(connector.calculateTotalAdjustment(Seq(BigDecimal(8), BigDecimal(1), BigDecimal(1)))) { result =>
           result mustBe AdjustmentDuty(BigDecimal(10))
@@ -259,10 +235,11 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
       }
     }
   }
+
   class SetUp {
-    val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-    val connector                     = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClientV2])
-    val rateBand                      = RateBand(
+    val mockConfig: FrontendAppConfig  = mock[FrontendAppConfig]
+    val connector                      = new AlcoholDutyCalculatorConnector(config = mockConfig, httpClient = mock[HttpClientV2])
+    val rateBand                       = RateBand(
       "310",
       "some band",
       RateType.DraughtRelief,
@@ -280,7 +257,8 @@ class AlcoholDutyCalculatorConnectorSpec extends SpecBase {
         )
       )
     )
-    val rateBandList: Seq[RateBand]   = Seq(rateBand)
-    val ratePeriod                    = returnPeriodGen.sample.get
+    val rateBandList: Seq[RateBand]    = Seq(rateBand)
+    val ratePeriod                     = returnPeriodGen.sample.get
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }
 }

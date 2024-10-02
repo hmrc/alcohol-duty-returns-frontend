@@ -25,7 +25,7 @@ import org.scalatest.RecoverMethods.recoverToExceptionIf
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import scala.concurrent.Future
@@ -49,51 +49,48 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
     }
 
     "fail when an invalid JSON format is returned" in new SetUp {
-      val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+      val invalidJsonResponse = HttpResponse(CREATED, """{ "invalid": "json" }""")
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(invalidJsonResponse)))
 
-      recoverToExceptionIf[Exception] {
-        connector.startPayment(startPaymentRequest).value
-      } map { ex =>
-        ex.getMessage must include("Invalid JSON format")
+      whenReady(connector.startPayment(startPaymentRequest).value) { result =>
+        result.swap.toOption.get must include("Invalid JSON format")
         verify(connector.httpClient, times(1))
           .post(eqTo(url"$mockUrl"))(any())
       }
     }
 
     "fail when Start Payment returns an error" in new SetUp {
-      val upstreamErrorResponse = HttpResponse(BAD_GATEWAY, "")
+      val upstreamErrorResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
+      )
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
-        .thenReturn(Future.successful(Right(upstreamErrorResponse)))
+        .thenReturn(upstreamErrorResponse)
 
-      recoverToExceptionIf[Exception] {
-        connector.startPayment(startPaymentRequest).value
-      } map { ex =>
-        ex.getMessage must include("Start Payment failed")
+      whenReady(connector.startPayment(startPaymentRequest).value) { result =>
+        result.swap.toOption.get must include("Start Payment failed")
         verify(connector.httpClient, times(1))
           .post(eqTo(url"$mockUrl"))(any())
       }
     }
 
     "fail when an unexpected status code is returned" in new SetUp {
-      val invalidStatusCodeResponse = HttpResponse(BAD_REQUEST, "")
+      val invalidStatusCodeResponse = HttpResponse(OK, "")
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
 
-      recoverToExceptionIf[Exception] {
-        connector.startPayment(startPaymentRequest).value
-      } map { ex =>
-        ex.getMessage must include("Unexpected status code: 400")
+      whenReady(connector.startPayment(startPaymentRequest).value) { result =>
+        result.swap.toOption.get mustBe s"Unexpected status code when starting payment: $OK"
 
         verify(connector.httpClient, times(1))
-          .post(url"$mockUrl")(any())
+          .post(eqTo(url"$mockUrl"))(any())
       }
     }
   }
+
   class SetUp {
     val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
     val mockUrl                       = "http://pay-api/alcohol-duty/journey/start"
@@ -102,6 +99,8 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
     val startPaymentRequest           =
       StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
 
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
+
     when(
       requestBuilder.withBody(
         eqTo(Json.toJson(startPaymentRequest))
@@ -109,9 +108,6 @@ class PayApiConnectorSpec extends SpecBase with ScalaFutures {
     )
       .thenReturn(requestBuilder)
 
-    when {
-      connector.httpClient
-        .post(eqTo(url"$mockUrl"))(any())
-    } thenReturn requestBuilder
+    when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
   }
 }

@@ -23,9 +23,7 @@ import views.html.dutySuspended.DutySuspendedDeliveriesGuidanceView
 class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
 
   "DutySuspendedDeliveriesGuidance Controller" - {
-
     "must return OK and the correct view for a GET" in {
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -40,5 +38,18 @@ class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
       }
     }
 
+    "must return SEE_OTHER for a POST" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.DutySuspendedDeliveriesGuidanceController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[DutySuspendedDeliveriesGuidanceView]
+
+        status(result) mustEqual SEE_OTHER
+      }
+    }
   }
 }

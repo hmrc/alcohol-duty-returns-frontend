@@ -33,7 +33,7 @@ lazy val root = Project(appName, file("."))
     ),
     PlayKeys.playDefaultPort := 16000,
     ScoverageKeys.coverageExcludedFiles := scoverageExcludedList.mkString(";"),
-    ScoverageKeys.coverageMinimumStmtTotal := 93,
+    ScoverageKeys.coverageMinimumStmtTotal := 97,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
@@ -87,11 +87,13 @@ lazy val scoverageExcludedList:Seq[String] = Seq(
   "Reverse.*",
   ".*handlers.*",
   ".*components.*",
+  ".*pages.*",
   ".*Routes.*",
   ".*viewmodels.govuk.*",
   ".*views.*",
   "testOnly.*",
   ".*testOnly.*",
+  ".*TestOnlyCacheConnector.*",
   ".*TestOnlyController.*",
   "testOnlyDoNotUseInAppConf.*"
 )

@@ -82,11 +82,11 @@ class AlcoholDutyReturnsConnector @Inject() (
                 Left(s"Invalid JSON format $exception")
             }
           case Left(errorResponse)                           =>
-            logger.warn(s"Impossible to submit return. Unexpected response: ${errorResponse.message}")
-            Left(s"Impossible to submit return. Unexpected response: ${errorResponse.message}")
+            logger.warn(s"Unable to submit return. Unexpected response: ${errorResponse.message}")
+            Left(s"Unable to submit return. Unexpected response: ${errorResponse.message}")
           case Right(response)                               =>
-            logger.warn(s"Impossible to submit return. Unexpected status code: ${response.status}")
-            Left(s"Impossible to submit return. Unexpected status code: ${response.status}")
+            logger.warn(s"Unable to submit return. Unexpected status code: ${response.status}")
+            Left(s"Unable to submit return. Unexpected status code: ${response.status}")
         }
     }
 }
