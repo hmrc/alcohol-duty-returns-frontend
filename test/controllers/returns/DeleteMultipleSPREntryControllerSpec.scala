@@ -56,13 +56,13 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
   val formProvider = new DeleteMultipleSPREntryFormProvider()
   val form         = formProvider()
 
-  lazy val deleteMultipleSPREntryRoute =
+  lazy val deleteMultipleSPREntryRoute             =
     controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(index)).url
+  lazy val deleteMultipleSPREntryRouteWithoutIndex =
+    controllers.returns.routes.DeleteMultipleSPREntryController.onPageLoad(regime, None).url
 
   "DeleteMultipleSPREntry Controller" - {
-
     "must return OK and the correct view for a GET" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -77,8 +77,20 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Multiple SPR list page when valid data is submitted and the list is not empty" in {
+    "must redirect to the journey recovery page if no index specified for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
+      running(application) {
+        val request = FakeRequest(GET, deleteMultipleSPREntryRouteWithoutIndex)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the Multiple SPR list page when valid data is submitted and the list is not empty" in {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -106,7 +118,6 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
     }
 
     "must redirect to the DoYouHaveMultipleSPRDutyRates page when 'yes' is submitted and the list is empty" in {
-
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -133,7 +144,6 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
     }
 
     "must redirect to the Multiple SPR List page when 'No' is submitted" in {
-
       val application =
         applicationBuilder(userAnswers = Some(userAnswersWithSingleSPREntry)).build()
 
@@ -152,7 +162,6 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -171,8 +180,21 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to the journey recovery page if no index specified for a POST" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
+      running(application) {
+        val request = FakeRequest(POST, deleteMultipleSPREntryRouteWithoutIndex)
+          .withFormUrlEncodedBody(("value", ""))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -186,7 +208,6 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a GET if no index is provided" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       val deleteMultipleSPREntryRoute =
@@ -203,7 +224,6 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
