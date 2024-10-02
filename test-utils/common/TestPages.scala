@@ -20,7 +20,7 @@ import models.AlcoholRegime._
 import models.{AlcoholRegime, RateBand, UserAnswers}
 import models.returns.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 
 import scala.collection.immutable.SortedMap
 
@@ -155,6 +155,9 @@ trait TestPages extends TestData {
     rateBands: Set[RateBand]
   ): UserAnswers =
     userAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands).get
+
+  def doYouHaveMultipleSPRDutyRatesPage(userAnswers: UserAnswers, regime: AlcoholRegime, hasMultiple: Boolean): UserAnswers =
+    userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, hasMultiple).get
 
   def tellUsAboutSingleSPRRatePage(
     userAnswers: UserAnswers,
