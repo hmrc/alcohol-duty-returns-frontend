@@ -156,7 +156,11 @@ trait TestPages extends TestData {
   ): UserAnswers =
     userAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands).get
 
-  def doYouHaveMultipleSPRDutyRatesPage(userAnswers: UserAnswers, regime: AlcoholRegime, hasMultiple: Boolean): UserAnswers =
+  def doYouHaveMultipleSPRDutyRatesPage(
+    userAnswers: UserAnswers,
+    regime: AlcoholRegime,
+    hasMultiple: Boolean
+  ): UserAnswers =
     userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, hasMultiple).get
 
   def tellUsAboutSingleSPRRatePage(
