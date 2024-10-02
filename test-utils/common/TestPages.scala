@@ -212,6 +212,9 @@ trait TestPages extends TestData {
   def dutySuspendedSpiritsPage(userAnswers: UserAnswers, dutySuspendedSpirits: DutySuspendedSpirits): UserAnswers =
     userAnswers.set(DutySuspendedSpiritsPage, dutySuspendedSpirits).get
 
-  def dutySuspendedOtherFermentedPage(userAnswers: UserAnswers, dutySuspendedOtherFermented: DutySuspendedOtherFermented): UserAnswers =
+  def dutySuspendedOtherFermentedPage(
+    userAnswers: UserAnswers,
+    dutySuspendedOtherFermented: DutySuspendedOtherFermented
+  ): UserAnswers =
     userAnswers.set(DutySuspendedOtherFermentedPage, dutySuspendedOtherFermented).get
 }

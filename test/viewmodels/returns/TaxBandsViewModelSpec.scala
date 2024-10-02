@@ -17,11 +17,8 @@
 package viewmodels.returns
 
 import base.SpecBase
-import models.RateBand
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-
-import scala.collection.immutable.SortedSet
 
 class TaxBandsViewModelSpec extends SpecBase {
   "TaxBandsViewModel" - {

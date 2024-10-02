@@ -24,8 +24,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
-import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
-import org.scalatest.RecoverMethods.recoverToExceptionIf
+import play.api.http.Status.{BAD_GATEWAY, CREATED, OK}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
 import java.time.{Instant, LocalDate}

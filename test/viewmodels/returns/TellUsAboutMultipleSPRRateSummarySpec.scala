@@ -20,7 +20,7 @@ import base.SpecBase
 import models.AlcoholRegime.Beer
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Empty, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
   "TellUsAboutMultipleSPRRateSummary" - {
