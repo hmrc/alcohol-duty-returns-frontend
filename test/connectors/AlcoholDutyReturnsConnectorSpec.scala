@@ -24,33 +24,28 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
-import play.api.http.Status.{BAD_REQUEST, CREATED, OK}
+import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
 import org.scalatest.RecoverMethods.recoverToExceptionIf
-import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
 import java.time.{Instant, LocalDate}
 import scala.concurrent.Future
 
 class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
-
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val connector                     = new AlcoholDutyReturnsConnector(config = mockConfig, httpClient = mock[HttpClientV2])
-  val mockUrl                       = s"http://alcohol-duty-returns/obligationDetails/$appaId"
-
   "obligationDetails" - {
-    when(mockConfig.adrGetObligationDetailsUrl(eqTo(appaId))).thenReturn(mockUrl)
-    "successfully retrieve obligation details" in {
+    val mockUrl = s"http://alcohol-duty-returns/obligationDetails/$appaId"
+
+    "successfully retrieve obligation details" in new SetUp {
       val obligationDataResponse = Seq(obligationDataSingleOpen)
       val jsonResponse           = Json.toJson(obligationDataResponse).toString()
       val httpResponse           = HttpResponse(OK, jsonResponse)
 
+      when(mockConfig.adrGetObligationDetailsUrl(eqTo(appaId))).thenReturn(mockUrl)
+
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(httpResponse)))
 
-      when {
-        connector.httpClient
-          .get(any())(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.obligationDetails(appaId)) { result =>
         result mustBe obligationDataResponse
@@ -62,21 +57,19 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "fail when invalid JSON is returned" in {
+    "fail when invalid JSON is returned" in new SetUp {
       val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+
+      when(mockConfig.adrGetObligationDetailsUrl(eqTo(appaId))).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(invalidJsonResponse)))
 
-      when {
-        connector.httpClient
-          .get(any())(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      recoverToExceptionIf[Exception] {
-        connector.obligationDetails(appaId)
-      } map { ex =>
-        ex.getMessage must include("Invalid JSON format")
+      whenReady(connector.obligationDetails(appaId).failed) { e =>
+        e.getMessage must include("Invalid JSON format")
+
         verify(connector.httpClient, times(1))
           .get(eqTo(url"$mockUrl"))(any())
 
@@ -85,21 +78,41 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "fail when unexpected status code returned" in {
-      val invalidStatusCodeResponse = HttpResponse(BAD_REQUEST, "")
+    "fail when an unexpected response is returned" in new SetUp {
+      val upstreamErrorResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
+      )
+
+      when(mockConfig.adrGetObligationDetailsUrl(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(upstreamErrorResponse)
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.obligationDetails(appaId).failed) { e =>
+        e.getMessage must include("Unexpected response")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when unexpected status code returned" in new SetUp {
+      val invalidStatusCodeResponse = HttpResponse(CREATED, "")
+
+      when(mockConfig.adrGetObligationDetailsUrl(eqTo(appaId))).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
 
-      when {
-        connector.httpClient
-          .get(any())(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      recoverToExceptionIf[Exception] {
-        connector.obligationDetails(appaId)
-      } map { ex =>
-        ex.getMessage must include("Unexpected status code: 400")
+      whenReady(connector.obligationDetails(appaId).failed) { e =>
+        e.getMessage mustBe "Unexpected status code: 201"
 
         verify(connector.httpClient, times(1))
           .get(eqTo(url"$mockUrl"))(any())
@@ -112,8 +125,8 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
 
   "submitReturn" - {
     val mockUrl = s"http://alcohol-duty-returns/producers/$appaId/returns/$periodKey"
-    when(mockConfig.adrSubmitReturnUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
-    "successfully submit a return" in {
+
+    "successfully submit a return" in new SetUp {
       val adrReturnCreatedDetails = AdrReturnCreatedDetails(
         processingDate = Instant.now(),
         amount = BigDecimal(1),
@@ -122,6 +135,8 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       )
       val jsonResponse            = Json.toJson(adrReturnCreatedDetails).toString()
       val httpResponse            = HttpResponse(CREATED, jsonResponse)
+
+      when(mockConfig.adrSubmitReturnUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(httpResponse)))
@@ -133,10 +148,7 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       )
         .thenReturn(requestBuilder)
 
-      when {
-        connector.httpClient
-          .post(eqTo(url"$mockUrl"))(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.submitReturn(appaId, periodKey, fullReturn).value) { result =>
         result mustBe Right(adrReturnCreatedDetails)
@@ -145,8 +157,7 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "successfully submit a return and receive nil return response" in {
-
+    "successfully submit a return and receive nil return response" in new SetUp {
       val adrReturnCreatedDetails = AdrReturnCreatedDetails(
         processingDate = Instant.now(),
         amount = BigDecimal(1),
@@ -156,6 +167,8 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       val jsonResponse            = Json.toJson(adrReturnCreatedDetails).toString()
       val httpResponse            = HttpResponse(CREATED, jsonResponse)
 
+      when(mockConfig.adrSubmitReturnUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(httpResponse)))
 
@@ -166,21 +179,19 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       )
         .thenReturn(requestBuilder)
 
-      when {
-        connector.httpClient
-          .post(any())(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
         result mustBe Right(adrReturnCreatedDetails)
         verify(connector.httpClient, atLeastOnce)
           .post(eqTo(url"$mockUrl"))(any())
       }
-
     }
 
-    "fail when invalid JSON is returned" in {
-      val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+    "fail when invalid JSON is returned" in new SetUp {
+      val invalidJsonResponse = HttpResponse(CREATED, """{ "invalid": "json" }""")
+
+      when(mockConfig.adrSubmitReturnUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(invalidJsonResponse)))
@@ -192,25 +203,53 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       )
         .thenReturn(requestBuilder)
 
-      when {
-        connector.httpClient
-          .post(eqTo(url"$mockUrl"))(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
-      recoverToExceptionIf[String] {
-        connector.submitReturn(appaId, periodKey, nilReturn).value
-      } map { ex =>
-        ex must include("Invalid JSON format")
+      whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
+        result.swap.toOption.get must include("Invalid JSON format")
+
         verify(connector.httpClient, times(1))
           .post(eqTo(url"$mockUrl"))(any())
+
         verify(requestBuilder, times(1))
           .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }
 
-    "fail when unexpected status code returned" in {
+    "fail when an unexpected response is returned" in new SetUp {
+      val upstreamErrorResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
+      )
 
-      val invalidStatusCodeResponse = HttpResponse(BAD_REQUEST, "")
+      when(mockConfig.adrSubmitReturnUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(upstreamErrorResponse)
+
+      when(
+        requestBuilder.withBody(
+          eqTo(Json.toJson(nilReturn))
+        )(any(), any(), any())
+      )
+        .thenReturn(requestBuilder)
+
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
+        result.swap.toOption.get must include("Unexpected response")
+
+        verify(connector.httpClient, times(1))
+          .post(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when unexpected status code returned" in new SetUp {
+      val invalidStatusCodeResponse = HttpResponse(OK, "")
+
+      when(mockConfig.adrSubmitReturnUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
@@ -222,12 +261,14 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       )
         .thenReturn(requestBuilder)
 
-      recoverToExceptionIf[String] {
-        connector.submitReturn(appaId, periodKey, nilReturn).value
-      } map { ex =>
-        ex must include("Unexpected status code: 400")
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
+        result.swap.toOption.get must include("Unexpected status code: 200")
+
         verify(connector.httpClient, times(1))
           .post(eqTo(url"$mockUrl"))(any())
+
         verify(requestBuilder, times(1))
           .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
@@ -236,70 +277,100 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
 
   "getReturn" - {
     val mockUrl = s"http://alcohol-duty-returns/producers/$appaId/returns/$periodKey"
-    when(mockConfig.adrGetReturnsUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
 
-    "successfully get a return" in {
+    "successfully get a return" in new SetUp {
       val adrReturnDetails = exampleReturnDetails(periodKey, Instant.now())
       val jsonResponse     = Json.toJson(adrReturnDetails).toString()
       val httpResponse     = HttpResponse(OK, jsonResponse)
 
+      when(mockConfig.adrGetReturnsUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(httpResponse)))
 
-      when {
-        connector.httpClient
-          .get(eqTo(url"$mockUrl"))(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      whenReady(connector.getReturn(appaId = appaId, periodKey = periodKey)) { result =>
+      whenReady(connector.getReturn(appaId, periodKey)) { result =>
         result mustBe adrReturnDetails
+
         verify(connector.httpClient, times(1))
           .get(eqTo(url"$mockUrl"))(any())
+
         verify(requestBuilder, atLeastOnce)
           .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }
 
-    "fail when invalid JSON is returned" in {
+    "fail when invalid JSON is returned" in new SetUp {
       val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+
+      when(mockConfig.adrGetReturnsUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(invalidJsonResponse)))
 
-      when {
-        connector.httpClient
-          .get(eqTo(url"$mockUrl"))(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      recoverToExceptionIf[String] {
-        connector.getReturn(appaId = appaId, periodKey = periodKey)
-      } map { ex =>
-        ex must include("Invalid JSON format")
+      whenReady(connector.getReturn(appaId, periodKey).failed) { e =>
+        e.getMessage must include("Invalid JSON format")
+
         verify(connector.httpClient, times(1))
           .get(eqTo(url"$mockUrl"))(any())
+
         verify(requestBuilder, times(1))
           .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
     }
 
-    "fail when unexpected status code returned" in {
+    "fail when an unexpected response is returned" in new SetUp {
+      val upstreamErrorResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
+      )
 
-      val invalidStatusCodeResponse = HttpResponse(BAD_REQUEST, "")
+      when(mockConfig.adrGetReturnsUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(upstreamErrorResponse)
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getReturn(appaId, periodKey).failed) { e =>
+        e.getMessage must include("Unexpected response")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when unexpected status code returned" in new SetUp {
+      val invalidStatusCodeResponse = HttpResponse(CREATED, "")
+
+      when(mockConfig.adrGetReturnsUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
 
-      recoverToExceptionIf[String] {
-        connector.getReturn(appaId, periodKey)
-      } map { ex =>
-        ex must include("Unexpected status code: 400")
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getReturn(appaId, periodKey).failed) { e =>
+        e.getMessage must include("Unexpected status code: 201")
+
         verify(connector.httpClient, times(1))
           .get(eqTo(url"$mockUrl"))(any())
 
         verify(requestBuilder, times(1))
           .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
       }
-
     }
+  }
+
+  class SetUp {
+    val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val connector                     = new AlcoholDutyReturnsConnector(config = mockConfig, httpClient = mock[HttpClientV2])
+
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }
 }

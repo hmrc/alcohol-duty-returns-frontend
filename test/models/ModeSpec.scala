@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
 
 package models
 
-import play.api.mvc.JavascriptLiteral
+import base.SpecBase
 
-sealed trait Mode
+class ModeSpec extends SpecBase {
+  "Mode" - {
+    "should convert from NormalMode to a string" in {
+      Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
+    }
 
-case object CheckMode extends Mode
-case object NormalMode extends Mode
-
-object Mode {
-
-  implicit val jsLiteral: JavascriptLiteral[Mode] = {
-    case NormalMode => "NormalMode"
-    case CheckMode  => "CheckMode"
+    "should convert from CheckMode to a string" in {
+      Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
+    }
   }
 }
