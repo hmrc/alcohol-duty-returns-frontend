@@ -59,9 +59,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       returnValidUntilTime = Some(Instant.now(clock))
     )
 
-    val currentDate    = LocalDate.now(clock).toString
-    val returnDueMonth = returnPeriod.period.plusMonths(1)
-    val returnDueDate  = ReturnPeriodViewModel.viewDateFormatter.format(returnDueMonth.atDay(15))
+    val currentDate   = LocalDate.now(clock)
+    val returnDueDate = returnPeriod.periodDueDate()
 
     "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in {
       when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))

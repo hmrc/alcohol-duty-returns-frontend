@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
-import java.time.{Clock, Instant}
+import java.time.{Clock, Instant, LocalDate}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,11 +58,9 @@ class BeforeStartReturnController @Inject() (
         logger.warn("Period key is not valid")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(returnPeriod) =>
-        val returnPeriod          = ReturnPeriod.fromPeriodKey(periodKey).get
-        val returnPeriodViewModel = ReturnPeriodViewModel(returnPeriod)
-        val returnDueDate         = returnPeriodViewModel.returnDueDate
-        val currentDate           = Instant.now(clock).toString
-        val session               = request.session + (periodKeySessionKey, periodKey)
+        val returnDueDate = returnPeriod.periodDueDate()
+        val currentDate   = LocalDate.now(clock)
+        val session       = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
           case Right(ua)                                    =>
             logger.info(s"Return $appaId/$periodKey retrieved from cache by the user $credentialId")
