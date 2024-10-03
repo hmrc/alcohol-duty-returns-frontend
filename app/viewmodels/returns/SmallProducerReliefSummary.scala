@@ -47,8 +47,8 @@ object SmallProducerReliefSummary {
       }
     }
 
-  def createSummaryList(regime: AlcoholRegime, titleKey: String, rows: Seq[SummaryListRow], call: String)(implicit
-    messages: Messages
+  private def createSummaryList(regime: AlcoholRegime, titleKey: String, rows: Seq[SummaryListRow], call: String)(
+    implicit messages: Messages
   ): SummaryList =
     SummaryList(
       rows = rows,

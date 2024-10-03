@@ -116,7 +116,7 @@ object TellUsAboutMultipleSPRRateSummary {
       case _                               => Seq.empty
     }
 
-  def actions(elementId: String, regime: AlcoholRegime, hiddenMessage: String, index: Option[Int])(implicit
+  private def actions(elementId: String, regime: AlcoholRegime, hiddenMessage: String, index: Option[Int])(implicit
     messages: Messages
   ): Seq[ActionItem] = Seq(
     ActionItemViewModel(

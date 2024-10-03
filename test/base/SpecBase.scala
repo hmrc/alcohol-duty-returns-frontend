@@ -16,7 +16,7 @@
 
 package base
 
-import common.TestData
+import common.{TestData, TestPages}
 import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
@@ -33,7 +33,6 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.client.RequestBuilder
 import viewmodels.DateTimeHelper
 
 import scala.concurrent.ExecutionContext
@@ -49,7 +48,8 @@ trait SpecBase
     with MockitoSugar
     with IntegrationPatience
     with ModelGenerators
-    with TestData {
+    with TestData
+    with TestPages {
   def getMessages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   val fakeIdentifierUserDetails = FakeIdentifierUserDetails(appaId, groupId, internalId)
@@ -74,6 +74,4 @@ trait SpecBase
 
   implicit val hc: HeaderCarrier    = HeaderCarrier()
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-
-  val requestBuilder: RequestBuilder = mock[RequestBuilder]
 }
