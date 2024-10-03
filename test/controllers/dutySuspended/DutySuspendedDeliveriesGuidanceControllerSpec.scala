@@ -46,8 +46,6 @@ class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[DutySuspendedDeliveriesGuidanceView]
-
         status(result) mustEqual SEE_OTHER
       }
     }

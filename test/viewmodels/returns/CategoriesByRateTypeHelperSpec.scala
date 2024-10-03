@@ -17,9 +17,7 @@
 package viewmodels.returns
 
 import base.SpecBase
-import cats.data.NonEmptySeq
-import models.AlcoholRegime.Beer
-import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
+import models.RateBand
 import play.api.i18n.Messages
 
 import scala.collection.immutable.SortedSet

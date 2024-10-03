@@ -17,9 +17,11 @@
 package common
 
 import models.AlcoholRegime._
+import models.dutySuspended.{DutySuspendedBeer, DutySuspendedCider, DutySuspendedOtherFermented, DutySuspendedSpirits, DutySuspendedWine}
 import models.{AlcoholRegime, RateBand, UserAnswers}
 import models.returns.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
+import pages.dutySuspended.{DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 
 import scala.collection.immutable.SortedMap
@@ -197,4 +199,22 @@ trait TestPages extends TestData {
 
   def specifyAllMultipleSPRListUnsorted(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
     multipleSPRListPage(userAnswers, regime, allVolumeAndRateByTaxTypeUnsorted)
+
+  def dutySuspendedBeerPage(userAnswers: UserAnswers, dutySuspendedBeer: DutySuspendedBeer): UserAnswers =
+    userAnswers.set(DutySuspendedBeerPage, dutySuspendedBeer).get
+
+  def dutySuspendedCiderPage(userAnswers: UserAnswers, dutySuspendedCider: DutySuspendedCider): UserAnswers =
+    userAnswers.set(DutySuspendedCiderPage, dutySuspendedCider).get
+
+  def dutySuspendedWinePage(userAnswers: UserAnswers, dutySuspendedWine: DutySuspendedWine): UserAnswers =
+    userAnswers.set(DutySuspendedWinePage, dutySuspendedWine).get
+
+  def dutySuspendedSpiritsPage(userAnswers: UserAnswers, dutySuspendedSpirits: DutySuspendedSpirits): UserAnswers =
+    userAnswers.set(DutySuspendedSpiritsPage, dutySuspendedSpirits).get
+
+  def dutySuspendedOtherFermentedPage(
+    userAnswers: UserAnswers,
+    dutySuspendedOtherFermented: DutySuspendedOtherFermented
+  ): UserAnswers =
+    userAnswers.set(DutySuspendedOtherFermentedPage, dutySuspendedOtherFermented).get
 }

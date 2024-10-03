@@ -33,7 +33,6 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.client.RequestBuilder
 import viewmodels.DateTimeHelper
 
 import scala.concurrent.ExecutionContext
