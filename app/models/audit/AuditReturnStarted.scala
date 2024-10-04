@@ -16,15 +16,24 @@
 
 package models.audit
 
-import enumeratum._
+import models.ObligationData
+import models.audit.AuditType.ReturnStarted
+import play.api.libs.json.{Json, OFormat}
 
-sealed trait AuditType extends EnumEntry
+import java.time.Instant
 
-object AuditType extends Enum[AuditType] {
-  val values = findValues
+case class AuditReturnStarted(
+  appaId: String,
+  periodKey: String,
+  credentialId: String,
+  groupId: String,
+  obligationData: ObligationData,
+  returnStartedTime: Instant,
+  returnValidUntilTime: Option[Instant]
+) extends AuditEventDetail {
+  protected val _auditType = ReturnStarted
+}
 
-  case object ContinueReturn extends AuditType
-  case object PaymentStarted extends AuditType
-  case object ReturnStarted extends AuditType
-  case object ReturnSubmitted extends AuditType
+object AuditReturnStarted {
+  implicit val format: OFormat[AuditReturnStarted] = Json.format[AuditReturnStarted]
 }

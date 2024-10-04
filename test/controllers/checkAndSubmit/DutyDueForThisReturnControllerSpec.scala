@@ -23,6 +23,7 @@ import models.returns.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import play.api.test.Helpers._
+import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
 import viewmodels.TableViewModel
 import viewmodels.checkAnswers.checkAndSubmit.{DutyDueForThisReturnHelper, DutyDueForThisReturnViewModel}
@@ -87,7 +88,6 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the Check Your Answers page if the submission is successful" in {
-      val adrReturnSubmission     = mock[AdrReturnSubmission]
       val adrReturnCreatedDetails = AdrReturnCreatedDetails(
         processingDate = Instant.now(),
         amount = BigDecimal(1),
@@ -97,19 +97,53 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+      val auditService                = mock[AuditService]
 
-      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.rightT(adrReturnSubmission)
+      when(
+        adrReturnSubmissionService.getDutyDeclared(any())
+      ).thenReturn(
+        EitherT.rightT(fullReturn.dutyDeclared)
       )
 
-      when(alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())).thenReturn(
+      when(
+        adrReturnSubmissionService.getAdjustments(any())
+      ).thenReturn(
+        EitherT.rightT(fullReturn.adjustments)
+      )
+
+      when(
+        adrReturnSubmissionService.getDutySuspended(any())
+      ).thenReturn(
+        EitherT.rightT(fullReturn.dutySuspended)
+      )
+
+      when(
+        adrReturnSubmissionService.getSpirits(any())
+      ).thenReturn(
+        EitherT.rightT(fullReturn.spirits)
+      )
+
+      when(
+        adrReturnSubmissionService.getTotals(any())(any())
+      ).thenReturn(
+        EitherT.rightT(fullReturn.totals)
+      )
+
+      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
+        EitherT.rightT(fullReturn)
+      )
+
+      when(
+        alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
+      ).thenReturn(
         EitherT.rightT(adrReturnCreatedDetails)
       )
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
         .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[AuditService].toInstance(auditService))
         .build()
 
       running(application) {

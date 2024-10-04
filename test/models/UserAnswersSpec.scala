@@ -42,9 +42,9 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
     val internalId: String = "id"
 
     val json          =
-      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":["Spirits","Wine","Cider","OtherFermentedProduct","Beer"],"data":{},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
+      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":["Spirits","Wine","Cider","OtherFermentedProduct","Beer"],"data":{},"startedTime":{"$$date":{"$$numberLong":"1718118467838"}},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
     val noRegimesJson =
-      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":[],"data":{},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
+      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":[],"data":{},"startedTime":{"$$date":{"$$numberLong":"1718118467838"}},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
 
     "should add a value to a set for a given page and get the same value" in {
 
@@ -86,7 +86,12 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
       Json
-        .toJson(userAnswers.copy(lastUpdated = Instant.ofEpochMilli(1718118467838L)))
+        .toJson(
+          userAnswers.copy(
+            startedTime = Instant.ofEpochMilli(1718118467838L),
+            lastUpdated = Instant.ofEpochMilli(1718118467838L)
+          )
+        )
         .toString() mustBe json
     }
 
@@ -94,7 +99,10 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       val userAnswers =
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
-      Json.parse(json).as[UserAnswers] mustBe userAnswers.copy(lastUpdated = Instant.ofEpochMilli(1718118467838L))
+      Json.parse(json).as[UserAnswers] mustBe userAnswers.copy(
+        startedTime = Instant.ofEpochMilli(1718118467838L),
+        lastUpdated = Instant.ofEpochMilli(1718118467838L)
+      )
     }
 
     "should throw an error if no regimes found" in {

@@ -27,7 +27,7 @@ import play.api.http.Status.LOCKED
 import play.api.test.Helpers._
 import play.api.inject.bind
 import services.AuditService
-import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
@@ -44,6 +44,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       groupId,
       internalId,
       regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)),
+      startedTime = Instant.now(clock),
       lastUpdated = Instant.now(clock),
       validUntil = Some(Instant.now(clock))
     )
@@ -185,9 +186,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the TaskList Page when a userAnswers is successfully created for a POST" in {
-      val httpResponse = mock[HttpResponse]
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(httpResponse)
-      when(httpResponse.status).thenReturn(CREATED)
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
 
       val application = applicationBuilder()
         .overrides(
@@ -206,10 +205,9 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in {
-      val httpResponse = mock[HttpResponse]
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(httpResponse)
-      when(httpResponse.status).thenReturn(INTERNAL_SERVER_ERROR)
-      when(httpResponse.body).thenReturn("Computer said No!")
+      val errorResponse = mock[UpstreamErrorResponse]
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Left(errorResponse))
+      when(errorResponse.statusCode).thenReturn(INTERNAL_SERVER_ERROR)
 
       val application = applicationBuilder()
         .overrides(
@@ -228,9 +226,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the journey recovery controller if the period key is not in the session for a POST" in {
-      val httpResponse = mock[HttpResponse]
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(httpResponse)
-      when(httpResponse.status).thenReturn(CREATED)
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
 
       val application = applicationBuilder()
         .overrides(

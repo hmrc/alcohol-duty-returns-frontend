@@ -17,15 +17,20 @@
 package controllers.checkAndSubmit
 
 import config.Constants.adrReturnCreatedDetails
+import config.FrontendAppConfig
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
+import models.{ReturnPeriod, UserAnswers}
+import models.audit.AuditReturnSubmitted
 import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
@@ -34,10 +39,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DutyDueForThisReturnController @Inject() (
   override val messagesApi: MessagesApi,
+  appConfig: FrontendAppConfig,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector,
+  auditService: AuditService,
   adrReturnSubmissionService: AdrReturnSubmissionService,
   val controllerComponents: MessagesControllerComponents,
   dutyDueForThisReturnHelper: DutyDueForThisReturnHelper,
@@ -76,11 +83,26 @@ class DutyDueForThisReturnController @Inject() (
         logger.warn(s"Successfully submitted return: $adrSubmissionCreatedDetails")
         val session =
           request.session + (adrReturnCreatedDetails -> Json.toJson(adrSubmissionCreatedDetails).toString)
+        auditEvent(request.userAnswers, request.returnPeriod)
         Future.successful(
           Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad()).withSession(session)
         )
       }
     )
   }
+
+  def auditEvent(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit hc: HeaderCarrier): Future[Unit] =
+    AuditReturnSubmitted(
+      userAnswers = userAnswers,
+      returnPeriod = returnPeriod,
+      spiritsAndIngredientsEnabled = appConfig.spiritsAndIngredientsEnabled,
+      submissionService = adrReturnSubmissionService
+    ).foldF(
+      error => {
+        logger.warn(s"Unable to generate return submitted audit event. Error: $error")
+        Future.successful(())
+      },
+      event => Future.successful(auditService.audit(event))
+    )
 
 }
