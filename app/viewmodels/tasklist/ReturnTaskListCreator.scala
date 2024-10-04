@@ -155,11 +155,21 @@ class ReturnTaskListCreator @Inject() () {
       }
     }
 
+    val inProgressRoute: String =
+      (
+        userAnswers.get(AdjustmentEntryListPage),
+        userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.adjustmentType)
+      ) match {
+        case (Some(_), None) => controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url
+        case (_, _)          => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
+
+      }
+
     createDeclarationTask(
       getDeclarationState,
       "adjustment",
       controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url,
-      controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url,
+      inProgressRoute,
       controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url
     )
   }
