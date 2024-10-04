@@ -236,6 +236,30 @@ class AdjustmentEntryServiceSpec extends SpecBase {
           "Failed to get rate, neither tax rate nor spr duty rate are defined."
         )
       }
+
+      "if pureAlcoholVolume value is not defined" in {
+        val updatedAdjustmentEntry = AdjustmentEntry(
+          adjustmentType = Some(Underdeclaration)
+        )
+        val userAnswerWithRate     = emptyUserAnswers
+          .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
+          .success
+          .value
+
+        val mockConnector = mock[AlcoholDutyCalculatorConnector]
+        when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
+          .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
+
+        val service = new AdjustmentEntryServiceImpl(mockConnector)
+
+        val exception = intercept[RuntimeException] {
+          service.createAdjustment(userAnswerWithRate).futureValue
+        }
+
+        exception.getLocalizedMessage must include(
+          "Couldn't fetch correct AdjustmentEntry from user answers."
+        )
+      }
     }
 
     "if both TaxType and SmallProducerReliefDuty contain rate for RepackagedDraughtProducts" in {

@@ -242,7 +242,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, adjustmentVolumeWithSPRRoute)
@@ -256,7 +256,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =

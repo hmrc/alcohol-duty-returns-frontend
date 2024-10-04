@@ -17,8 +17,11 @@
 package controllers.dutySuspended
 
 import base.SpecBase
+import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
+import play.api.mvc.Call
 import play.api.test.Helpers._
 import views.html.dutySuspended.DutySuspendedDeliveriesGuidanceView
+import play.api.inject.bind
 
 class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
 
@@ -40,5 +43,26 @@ class DutySuspendedDeliveriesGuidanceControllerSpec extends SpecBase {
       }
     }
 
+    "must redirect to the next page when valid data is submitted" in {
+
+      def onwardRoute = Call("GET", "/foo")
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersWithBeer))
+          .overrides(
+            bind[DeclareDutySuspendedDeliveriesNavigator]
+              .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute))
+          )
+          .build()
+      running(application) {
+        val request =
+          FakeRequest(POST, routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
   }
 }

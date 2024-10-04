@@ -177,22 +177,6 @@ class DeclareDutySuspendedDeliveriesNavigatorSpec extends SpecBase {
           emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad(None)
       }
-
-      "must go from the Declare duty suspended deliveries outside UK page to Declare duty suspended deliveries inside UK page" in {
-        navigator.nextPage(
-          pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage,
-          NormalMode,
-          emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
-      }
-
-      "must go from the Declare duty suspended deliveries inside UK page to Declare duty suspended received page" in {
-        navigator.nextPage(
-          pages.dutySuspended.DutySuspendedDeliveriesPage,
-          NormalMode,
-          emptyUserAnswers
-        ) mustBe controllers.dutySuspended.routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
-      }
     }
 
     "in Check mode" - {

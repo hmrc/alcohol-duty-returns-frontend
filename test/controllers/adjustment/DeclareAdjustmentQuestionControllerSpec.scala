@@ -102,7 +102,7 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Task list  when valid question is answered as No" in {
+    "must redirect to the Task list  when declare adjustment question is answered as No" in {
 
       val mockCacheConnector = mock[CacheConnector]
 

@@ -29,25 +29,21 @@ import javax.inject.{Inject, Singleton}
 class DeclareDutySuspendedDeliveriesNavigator @Inject() () extends BaseNavigator {
 
   override val normalRoutes: Page => UserAnswers => Call = {
-    case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage  =>
+    case pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage =>
       declareDutySuspendedDeliveriesQuestionPageRoute
-    case pages.dutySuspended.DutySuspendedGuidancePage                   =>
+    case pages.dutySuspended.DutySuspendedGuidancePage                  =>
       userAnswers => nextRegimePage(userAnswers, None, NormalMode)
-    case pages.dutySuspended.DutySuspendedBeerPage                       =>
+    case pages.dutySuspended.DutySuspendedBeerPage                      =>
       userAnswers => nextRegimePage(userAnswers, Some(Beer), NormalMode)
-    case pages.dutySuspended.DutySuspendedCiderPage                      =>
+    case pages.dutySuspended.DutySuspendedCiderPage                     =>
       userAnswers => nextRegimePage(userAnswers, Some(Cider), NormalMode)
-    case pages.dutySuspended.DutySuspendedWinePage                       =>
+    case pages.dutySuspended.DutySuspendedWinePage                      =>
       userAnswers => nextRegimePage(userAnswers, Some(Wine), NormalMode)
-    case pages.dutySuspended.DutySuspendedSpiritsPage                    =>
+    case pages.dutySuspended.DutySuspendedSpiritsPage                   =>
       userAnswers => nextRegimePage(userAnswers, Some(Spirits), NormalMode)
-    case pages.dutySuspended.DeclareDutySuspendedDeliveriesOutsideUkPage =>
-      _ => controllers.dutySuspended.routes.DutySuspendedDeliveriesController.onPageLoad(NormalMode)
-    case pages.dutySuspended.DutySuspendedDeliveriesPage                 =>
-      _ => controllers.dutySuspended.routes.DeclareDutySuspendedReceivedController.onPageLoad(NormalMode)
-    case pages.dutySuspended.DutySuspendedOtherFermentedPage             =>
+    case pages.dutySuspended.DutySuspendedOtherFermentedPage            =>
       _ => controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
-    case _                                                               =>
+    case _                                                              =>
       _ => routes.TaskListController.onPageLoad
   }
 

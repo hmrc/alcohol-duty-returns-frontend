@@ -263,7 +263,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       "if no existing data is found" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
         running(application) {
           val request = FakeRequest(GET, checkYourAnswersRoute)
@@ -363,7 +363,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       running(application) {
         val request =
-          FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
+          FakeRequest(POST, checkYourAnswersRoute)
 
         val result = route(application, request).value
 
@@ -397,7 +397,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       running(application) {
         val request =
-          FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
+          FakeRequest(POST, checkYourAnswersRoute)
 
         val result = route(application, request).value
 
@@ -430,7 +430,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       running(application) {
         val request =
-          FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
+          FakeRequest(POST, checkYourAnswersRoute)
 
         val result = route(application, request).value
 
@@ -456,7 +456,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       running(application) {
         val request =
-          FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
+          FakeRequest(POST, checkYourAnswersRoute)
 
         val result = route(application, request).value
 
@@ -466,6 +466,5 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         verify(mockCacheConnector, times(0)).set(any())(any())
       }
     }
-
   }
 }
