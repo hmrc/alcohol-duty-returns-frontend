@@ -17,9 +17,7 @@
 package viewmodels.returns
 
 import base.SpecBase
-import cats.data.NonEmptySeq
-import models.AlcoholRegime.Beer
-import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
+import models.RateBand
 import play.api.i18n.Messages
 
 import scala.collection.immutable.SortedSet
@@ -109,81 +107,6 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     val application                 = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
 
-    val coreRateBand                          = RateBand(
-      "123",
-      "core description",
-      RateType.Core,
-      Some(BigDecimal(1.1)),
-      Set(
-        RangeDetailsByRegime(
-          Beer,
-          NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
-        )
-      )
-    )
-    val coreRateBand2                         = RateBand(
-      "124",
-      "core description",
-      RateType.Core,
-      Some(BigDecimal(1.1)),
-      Set(
-        RangeDetailsByRegime(
-          Beer,
-          NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
-        )
-      )
-    )
-    val coreRateBand3                         = RateBand(
-      "125",
-      "core description",
-      RateType.Core,
-      Some(BigDecimal(1.1)),
-      Set(
-        RangeDetailsByRegime(
-          Beer,
-          NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
-        )
-      )
-    )
-    val draughtReliefRateBand                 = RateBand(
-      "124",
-      "draught relief description",
-      RateType.DraughtRelief,
-      Some(BigDecimal(2.1)),
-      Set(
-        RangeDetailsByRegime(
-          Beer,
-          NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(2)), AlcoholByVolume(BigDecimal(3))))
-        )
-      )
-    )
-    val smallProducerReliefRateBand           = RateBand(
-      "125",
-      "small producer relief description",
-      RateType.SmallProducerRelief,
-      Some(BigDecimal(3.1)),
-      Set(
-        RangeDetailsByRegime(
-          Beer,
-          NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(3)), AlcoholByVolume(BigDecimal(4))))
-        )
-      )
-    )
-    val draughtAndSmallProducerReliefRateBand = RateBand(
-      "126",
-      "draught and small producer relief description",
-      RateType.DraughtAndSmallProducerRelief,
-      Some(BigDecimal(4.1)),
-      Set(
-        RangeDetailsByRegime(
-          Beer,
-          NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(4)), AlcoholByVolume(BigDecimal(5))))
-        )
-      )
-    )
-
-    val allRateBands               =
-      Set(coreRateBand, draughtReliefRateBand, smallProducerReliefRateBand, draughtAndSmallProducerReliefRateBand)
     val threeCoreRandBandsReversed = SortedSet(coreRateBand, coreRateBand2, coreRateBand3)((x: RateBand, y: RateBand) =>
       y.taxTypeCode(2) - x.taxTypeCode(2)
     )

@@ -73,13 +73,15 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
     rateBand = Some(rateBand)
   )
   val userAnswers                       = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswersWithoutRegimes         =
+    emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(rateBand = None)).success.value
+  val userAnswersWithoutAdjustmentType  =
+    emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(adjustmentType = None)).success.value
 
   val rateBandContent = "Beer between 0.1% and 5.8% ABV (tax type code 310)"
 
   "AdjustmentVolumeWithSPR Controller" - {
-
     "must return OK and the correct view for a GET" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -98,7 +100,6 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
       val updatedAdjustmentEntry =
         adjustmentEntry.copy(
           totalLitresVolume = Some(validTotalLitres),
@@ -131,8 +132,33 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to journey recovery page if unable to get regimes for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutRegimes)).build()
 
+      running(application) {
+        val request = FakeRequest(GET, adjustmentVolumeWithSPRRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to journey recovery page if unable to get CurrentAdjustmentEntryPage for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutAdjustmentType)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentVolumeWithSPRRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted" in {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -206,8 +232,52 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must redirect to the journey recovery page if unable to get regimes when data is submitted" in {
+      val userAnswers =
+        emptyUserAnswers
+          .set(
+            CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              totalLitresVolume = Some(validTotalLitres),
+              pureAlcoholVolume = Some(validPureAlcohol),
+              sprDutyRate = Some(validSPRDutyRate),
+              adjustmentType = Some(Spoilt),
+              period = Some(period),
+              rateBand = None
+            )
+          )
+          .success
+          .value
 
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentVolumeWithSPRRoute)
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", validTotalLitres.toString()),
+              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.sprDutyRate", validSPRDutyRate.toString())
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must return a Bad Request and errors when invalid data is submitted" in {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -240,8 +310,26 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to journey recovery page when invalid data is submitted and unable to get the adjustment type" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutAdjustmentType)).build()
 
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentVolumeWithSPRRoute)
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", "invalid value"),
+              ("volumes.pureAlcoholVolume", "invalid value"),
+              ("volumes.sprDutyRate", "invalid value")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -255,7 +343,6 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {

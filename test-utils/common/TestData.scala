@@ -916,4 +916,139 @@ trait TestData extends ModelGenerators {
     repackagedDuty = None,
     newDuty = None
   )
+
+  val coreRateBand: RateBand = RateBand(
+    "123",
+    "core description",
+    RateType.Core,
+    Some(BigDecimal(1.1)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
+      )
+    )
+  )
+
+  val coreRateBand2: RateBand = RateBand(
+    "124",
+    "core description",
+    RateType.Core,
+    Some(BigDecimal(1.1)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
+      )
+    )
+  )
+
+  val coreRateBand3: RateBand = RateBand(
+    "125",
+    "core description",
+    RateType.Core,
+    Some(BigDecimal(1.1)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
+      )
+    )
+  )
+
+  val draughtReliefRateBand: RateBand = RateBand(
+    "124",
+    "draught relief description",
+    RateType.DraughtRelief,
+    Some(BigDecimal(2.1)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(2)), AlcoholByVolume(BigDecimal(3))))
+      )
+    )
+  )
+
+  val smallProducerReliefRateBand: RateBand = RateBand(
+    "125",
+    "small producer relief description",
+    RateType.SmallProducerRelief,
+    Some(BigDecimal(3.1)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(3)), AlcoholByVolume(BigDecimal(4))))
+      )
+    )
+  )
+
+  val smallProducerReliefRateBand2: RateBand = RateBand(
+    "127",
+    "small producer relief description",
+    RateType.SmallProducerRelief,
+    Some(BigDecimal(6.5)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(6)), AlcoholByVolume(BigDecimal(7))))
+      )
+    )
+  )
+
+  val draughtAndSmallProducerReliefRateBand: RateBand = RateBand(
+    "126",
+    "draught and small producer relief description",
+    RateType.DraughtAndSmallProducerRelief,
+    Some(BigDecimal(4.1)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(4)), AlcoholByVolume(BigDecimal(5))))
+      )
+    )
+  )
+
+  val draughtAndSmallProducerReliefRateBand2: RateBand = RateBand(
+    "128",
+    "draught and small producer relief description",
+    RateType.DraughtAndSmallProducerRelief,
+    Some(BigDecimal(1.3)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(BigDecimal(1)), AlcoholByVolume(BigDecimal(2))))
+      )
+    )
+  )
+
+  val allRateBands: Set[RateBand] =
+    Set(coreRateBand, draughtReliefRateBand, smallProducerReliefRateBand, draughtAndSmallProducerReliefRateBand)
+
+  val volumeAndRateByTaxType1 = VolumeAndRateByTaxType(
+    taxType = "124",
+    totalLitres = BigDecimal(100),
+    pureAlcohol = BigDecimal(2.5),
+    dutyRate = BigDecimal(1.26)
+  )
+  val volumeAndRateByTaxType2 = VolumeAndRateByTaxType(
+    taxType = "125",
+    totalLitres = BigDecimal(1000),
+    pureAlcohol = BigDecimal(3.5),
+    dutyRate = BigDecimal(1.46)
+  )
+  val volumeAndRateByTaxType3 = VolumeAndRateByTaxType(
+    taxType = "126",
+    totalLitres = BigDecimal(10000),
+    pureAlcohol = BigDecimal(4.5),
+    dutyRate = BigDecimal(1.66)
+  )
+  val volumeAndRateByTaxType4 = VolumeAndRateByTaxType(
+    taxType = "126",
+    totalLitres = BigDecimal(20000),
+    pureAlcohol = BigDecimal(4.8),
+    dutyRate = BigDecimal(1.66)
+  )
+
+  val allVolumeAndRateByTaxType =
+    Seq(volumeAndRateByTaxType1, volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
 }
