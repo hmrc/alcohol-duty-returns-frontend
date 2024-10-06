@@ -50,6 +50,15 @@ class RichJsValueSpec
 
       value.set(JsPath, Json.obj()) mustEqual JsError("path cannot be empty")
     }
+//
+//    "must return an error if recursive search is used" in {
+//
+//      val value = Json.obj("key" -> Json.obj("nestedKey" -> "value"))
+//
+//      val recursivePath = JsPath \ "key" \ RecursiveSearch
+//
+//      value.set(recursivePath, JsString("newValue")) mustEqual JsError("recursive search not supported")
+//    }
 
     "must set a value on a JsObject" in {
 
