@@ -10,9 +10,40 @@ Please see this [wiki page](https://github.com/hmrc/hmrc-frontend-scaffold.g8/wi
 
 ## Running the service
 
-> `sbt run`
+1. Make sure you run all the dependant services through the service manager:
+
+    > `sm2 --start ALCOHOL_DUTY_ALL`
+
+2. Stop the frontend microservice from the service manager and run it locally:
+
+    > `sm2 --stop ALCOHOL_DUTY_RETURNS_FRONTEND`
+
+    > `sbt run`
 
 The service runs on port `16000` by default.
+
+## Navigating the service
+
+### Claim enrolment journey
+
+1. Navigate to [http://localhost:16000/manage-alcohol-duty/start](http://localhost:16000/manage-alcohol-duty/start)
+
+2. When redirected to auth-login-stub, change the following:
+   - **Affinity group**: Organisation
+
+### Other journeys/sections
+
+1. Navigate to relevant url:
+    - [Returns journey](http://localhost:16000/manage-alcohol-duty/before-you-start-your-return/24AF)
+    - [View payments screen](http://localhost:16000/manage-alcohol-duty/view-payments)
+    - [View returns screen](http://localhost:16000/manage-alcohol-duty/check-your-returns)
+
+3. When redirected to auth-login-stub, change the following fields: 
+    - **Affinity group**: Organisation
+    - **Enrolments**: Add an enrolment with:
+        - **Enrolment Key**: HMRC-AD-ORG
+        - **Identifier Name**: APPAID
+        - **Identifier Value**: * *Provide from stub data* *
 
 ## Running tests
 
