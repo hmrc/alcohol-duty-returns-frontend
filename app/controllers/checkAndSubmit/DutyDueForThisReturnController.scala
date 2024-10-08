@@ -73,7 +73,7 @@ class DutyDueForThisReturnController @Inject() (
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       },
       adrSubmissionCreatedDetails => {
-        logger.warn(s"Successfully submitted return: $adrSubmissionCreatedDetails")
+        logger.warn(s"Successfully submitted return")
         val session =
           request.session + (adrReturnCreatedDetails -> Json.toJson(adrSubmissionCreatedDetails).toString)
         Future.successful(

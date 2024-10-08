@@ -86,7 +86,7 @@ class BeforeStartReturnController @Inject() (
           ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
         cacheConnector.createUserAnswers(returnAndUserDetails).map { response =>
           if (response.status != CREATED) {
-            logger.warn(s"Unable to create userAnswers: ${response.status} ${response.body}")
+            logger.warn(s"Unable to create userAnswers, response status: ${response.status}")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
           } else {
             logger.info(s"Return ${request.appaId}/$periodKey created")
