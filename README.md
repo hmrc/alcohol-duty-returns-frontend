@@ -10,10 +10,36 @@ Please see this [wiki page](https://github.com/hmrc/hmrc-frontend-scaffold.g8/wi
 
 ## Running the service
 
+Make sure you run all the dependant services through the service manager:
+
+> `sm2 --start ALCOHOL_DUTY_ALL`
+
+Stop the frontend microservice from the service manager and run it locally:
+
+> `sm2 --stop ALCOHOL_DUTY_RETURNS_FRONTEND`
 > `sbt run`
 
 The service runs on port `16000` by default.
 
+## Navigating the service
+
+1. Navigate to [http://localhost:16000/manage-alcohol-duty/start](http://localhost:16000/manage-alcohol-duty/start)
+
+2. When redirected to auth-login-stub, change the following: 
+    - **For returns journey**:
+
+      - Change the affinity group:
+        - **Affinity group**: Organisation
+      - Add enrolment:
+        - **Enrolment Key**: HMRC-AD-ORG
+        - **Identifier Name**: APPAID
+        - **Identifier Value**: * *Provide from stub data* *
+   
+    - **For claim enrolment journey**:
+
+      - Change the affinity group:
+        - **Affinity group**: Organisation
+  
 ## Running tests
 
 ### Unit tests
@@ -34,7 +60,6 @@ To format all the scala files in the project correctly:
 
 To check if there are any scalastyle errors, warnings or infos:
 > `sbt scalastyle`
->
 
 ## All tests and checks
 
