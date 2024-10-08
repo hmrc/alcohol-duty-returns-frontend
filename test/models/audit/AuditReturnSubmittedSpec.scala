@@ -18,12 +18,14 @@ package models.audit
 
 import base.SpecBase
 
+import java.time.Instant
+
 class AuditReturnSubmittedSpec extends SpecBase {
 
   "AuditReturnSubmitted" - {
 
     "should be created from UserAnswers with Spirits" in {
-      val auditEvent = AuditReturnSubmitted(fullUserAnswers, fullReturn)
+      val auditEvent = AuditReturnSubmitted(fullUserAnswers, fullReturn, Instant.now(clock))
 
       auditEvent.prePopulatedData.appaId mustBe fullUserAnswers.returnId.appaId
       auditEvent.prePopulatedData.periodKey mustBe fullUserAnswers.returnId.periodKey

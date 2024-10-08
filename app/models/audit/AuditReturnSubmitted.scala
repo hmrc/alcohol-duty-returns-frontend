@@ -35,12 +35,12 @@ case class PrePopulatedData(
 object PrePopulatedData {
   implicit val format: OFormat[PrePopulatedData] = Json.format[PrePopulatedData]
 
-  def apply(userAnswers: UserAnswers): PrePopulatedData = PrePopulatedData(
+  def apply(userAnswers: UserAnswers, submissionTime: Instant): PrePopulatedData = PrePopulatedData(
     appaId = userAnswers.returnId.appaId,
     periodKey = userAnswers.returnId.periodKey,
     credentialId = userAnswers.internalId,
     groupId = userAnswers.groupId,
-    returnSubmittedTime = Instant.now,
+    returnSubmittedTime = submissionTime,
     alcoholRegimes = userAnswers.regimes.regimes
   )
 
@@ -73,10 +73,11 @@ object AuditReturnSubmitted {
   implicit val format: OFormat[AuditReturnSubmitted] = Json.format[AuditReturnSubmitted]
   def apply(
     userAnswers: UserAnswers,
-    adrReturnSubmission: AdrReturnSubmission
+    adrReturnSubmission: AdrReturnSubmission,
+    submissionTime: Instant
   ): AuditReturnSubmitted                            =
     AuditReturnSubmitted(
-      prePopulatedData = PrePopulatedData(userAnswers),
+      prePopulatedData = PrePopulatedData(userAnswers, submissionTime),
       dutyDeclared = adrReturnSubmission.dutyDeclared.declared,
       dutyDeclaredItems = adrReturnSubmission.dutyDeclared.dutyDeclaredItems,
       overDeclarationDeclared = adrReturnSubmission.adjustments.overDeclarationDeclared,

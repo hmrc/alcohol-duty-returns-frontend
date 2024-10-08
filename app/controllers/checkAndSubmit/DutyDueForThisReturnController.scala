@@ -36,6 +36,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
+import java.time.{Clock, Instant}
 import scala.concurrent.{ExecutionContext, Future}
 
 class DutyDueForThisReturnController @Inject() (
@@ -48,6 +49,7 @@ class DutyDueForThisReturnController @Inject() (
   adrReturnSubmissionService: AdrReturnSubmissionService,
   val controllerComponents: MessagesControllerComponents,
   dutyDueForThisReturnHelper: DutyDueForThisReturnHelper,
+  clock: Clock,
   view: DutyDueForThisReturnView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -93,7 +95,7 @@ class DutyDueForThisReturnController @Inject() (
   private def auditReturnSubmitted(userAnswers: UserAnswers, adrReturnSubmission: AdrReturnSubmission)(implicit
     hc: HeaderCarrier
   ): Unit = {
-    val event = AuditReturnSubmitted(userAnswers, adrReturnSubmission)
+    val event = AuditReturnSubmitted(userAnswers, adrReturnSubmission, Instant.now(clock))
     auditService.audit(event)
   }
 }

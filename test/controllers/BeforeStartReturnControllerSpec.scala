@@ -221,6 +221,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       val userAnswers = emptyUserAnswers.remove(ObligationData).success.value
       when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
 
+      val mockAuditService = mock[AuditService]
+
       val application = applicationBuilder()
         .overrides(
           bind[CacheConnector].toInstance(mockCacheConnector),
@@ -236,6 +238,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
       }
+
+      verify(mockAuditService, times(0)).audit(any())(any(), any())
     }
 
     "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in {
@@ -243,9 +247,12 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Left(errorResponse))
       when(errorResponse.statusCode).thenReturn(INTERNAL_SERVER_ERROR)
 
+      val mockAuditService = mock[AuditService]
+
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService)
         )
         .build()
 
@@ -256,15 +263,20 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockAuditService, times(0)).audit(any())(any(), any())
       }
     }
 
     "must redirect to the journey recovery controller if the period key is not in the session for a POST" in {
       when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
 
+      val mockAuditService = mock[AuditService]
+
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService)
         )
         .build()
 
@@ -275,6 +287,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockAuditService, times(0)).audit(any())(any(), any())
       }
     }
   }
