@@ -16,12 +16,13 @@
 
 package controllers.checkAndSubmit
 
+import cats.data.EitherT
 import config.Constants.adrReturnCreatedDetails
-import config.FrontendAppConfig
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
 import models.UserAnswers
 import models.audit.AuditReturnSubmitted
+import models.returns.AdrReturnSubmission
 import play.api.Logging
 
 import javax.inject.Inject
@@ -39,7 +40,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DutyDueForThisReturnController @Inject() (
   override val messagesApi: MessagesApi,
-  appConfig: FrontendAppConfig,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -72,8 +72,8 @@ class DutyDueForThisReturnController @Inject() (
         adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers, request.returnPeriod)
       adrSubmissionCreatedDetails <-
         alcoholDutyReturnsConnector.submitReturn(request.appaId, request.returnPeriod.toPeriodKey, adrReturnSubmission)
+      _                           <- EitherT.rightT[Future, String](auditReturnSubmitted(request.userAnswers, adrReturnSubmission))
     } yield adrSubmissionCreatedDetails
-
     result.foldF(
       error => {
         logger.warn(error)
@@ -83,8 +83,6 @@ class DutyDueForThisReturnController @Inject() (
         logger.warn(s"Successfully submitted return: $adrSubmissionCreatedDetails")
         val session =
           request.session + (adrReturnCreatedDetails -> Json.toJson(adrSubmissionCreatedDetails).toString)
-
-        auditEvent(request.userAnswers)
         Future.successful(
           Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad()).withSession(session)
         )
@@ -92,17 +90,10 @@ class DutyDueForThisReturnController @Inject() (
     )
   }
 
-  def auditEvent(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[Unit] =
-    AuditReturnSubmitted(
-      userAnswers = userAnswers,
-      spiritsAndIngredientsEnabled = appConfig.spiritsAndIngredientsEnabled,
-      submissionService = adrReturnSubmissionService
-    ).foldF(
-      error => {
-        logger.warn(s"Unable to generate return submitted audit event. Error: $error")
-        Future.successful(())
-      },
-      event => Future.successful(auditService.audit(event))
-    )
-
+  private def auditReturnSubmitted(userAnswers: UserAnswers, adrReturnSubmission: AdrReturnSubmission)(implicit
+    hc: HeaderCarrier
+  ): Unit = {
+    val event = AuditReturnSubmitted(userAnswers, adrReturnSubmission)
+    auditService.audit(event)
+  }
 }

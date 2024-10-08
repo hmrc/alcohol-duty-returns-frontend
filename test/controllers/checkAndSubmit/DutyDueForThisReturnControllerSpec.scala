@@ -18,10 +18,7 @@ package controllers.checkAndSubmit
 
 import base.SpecBase
 import cats.data.EitherT
-import config.Constants.periodKeySessionKey
-import config.FrontendAppConfig
 import connectors.AlcoholDutyReturnsConnector
-import models.{ReturnId, ReturnPeriod}
 import models.returns.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
@@ -90,7 +87,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Check Your Answers page if the submission is successful without spirits" in {
+    "must redirect to the Check Your Answers page if the submission is successful" in {
       val adrReturnCreatedDetails = AdrReturnCreatedDetails(
         processingDate = Instant.now(),
         amount = BigDecimal(1),
@@ -101,40 +98,6 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
       val auditService                = mock[AuditService]
-
-      when(
-        adrReturnSubmissionService.getDutyDeclared(any())
-      ).thenReturn(
-        EitherT.rightT(fullReturn.dutyDeclared)
-      )
-
-      when(
-        adrReturnSubmissionService.getAdjustments(any())
-      ).thenReturn(
-        EitherT.rightT(fullReturn.adjustments)
-      )
-
-      when(
-        adrReturnSubmissionService.getDutySuspended(any())
-      ).thenReturn(
-        EitherT.rightT(fullReturn.dutySuspended)
-      )
-
-      when(
-        adrReturnSubmissionService.getSpirits(any())
-      ).thenReturn(
-        EitherT.rightT(fullReturn.spirits)
-      )
-
-      when(
-        adrReturnSubmissionService.getTotals(any())(any())
-      ).thenReturn(
-        EitherT.rightT(fullReturn.totals)
-      )
-
-      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.rightT(fullReturn)
-      )
 
       when(
         alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
@@ -142,92 +105,27 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         EitherT.rightT(adrReturnCreatedDetails)
       )
 
-      val returnPeriod = nonQuarterReturnPeriodGen.sample.get
-      val userAnswers  =
-        fullUserAnswers.copy(returnId = ReturnId(fullUserAnswers.returnId.appaId, returnPeriod.toPeriodKey))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
-        .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
-        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
-        .overrides(bind[AuditService].toInstance(auditService))
-        .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.checkAndSubmit.routes.ReturnSubmittedController
-          .onPageLoad()
-          .url
-      }
-    }
-
-    "must redirect to the Check Your Answers page if the submission is successful with spirits" in {
-      val adrReturnCreatedDetails = AdrReturnCreatedDetails(
-        processingDate = Instant.now(),
-        amount = BigDecimal(1),
-        chargeReference = Some("1234567890"),
-        paymentDueDate = Some(LocalDate.now())
-      )
-
-      val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
-      val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
-      val auditService                = mock[AuditService]
-      val config                      = mock[FrontendAppConfig]
-
-      when(config.spiritsAndIngredientsEnabled).thenReturn(true)
-
-      when(adrReturnSubmissionService.getDutyDeclared(any()))
-        .thenReturn(EitherT.rightT(fullReturn.dutyDeclared))
-
-      when(adrReturnSubmissionService.getAdjustments(any()))
-        .thenReturn(EitherT.rightT(fullReturn.adjustments))
-
-      when(adrReturnSubmissionService.getDutySuspended(any()))
-        .thenReturn(EitherT.rightT(fullReturn.dutySuspended))
-
-      when(adrReturnSubmissionService.getSpirits(any()))
-        .thenReturn(EitherT.rightT(fullReturn.spirits))
-
-      when(adrReturnSubmissionService.getTotals(any())(any()))
-        .thenReturn(EitherT.rightT(fullReturn.totals))
-
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
         EitherT.rightT(fullReturn)
       )
-
-      when(alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any()))
-        .thenReturn(EitherT.rightT(adrReturnCreatedDetails))
 
       val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
         .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
         .overrides(bind[AuditService].toInstance(auditService))
-        .overrides(bind[FrontendAppConfig].toInstance(config))
         .build()
 
       running(application) {
         val request =
           FakeRequest(POST, controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit().url)
-            .withSession((periodKeySessionKey, fullUserAnswers.returnId.periodKey))
 
         val result = route(application, request).value
-
-        fullUserAnswers.regimes.hasSpirits() mustEqual true
-        ReturnPeriod.fromPeriodKey(fullUserAnswers.returnId.periodKey).get.hasQuarterlySpirits mustEqual true
-        config.spiritsAndIngredientsEnabled mustEqual true
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.checkAndSubmit.routes.ReturnSubmittedController
           .onPageLoad()
           .url
-
-        verify(adrReturnSubmissionService, times(1)).getSpirits(any())
       }
     }
 

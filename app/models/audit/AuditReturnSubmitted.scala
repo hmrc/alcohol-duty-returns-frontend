@@ -16,16 +16,12 @@
 
 package models.audit
 
-import cats.data.EitherT
-import models.{AlcoholRegime, ReturnPeriod, UserAnswers}
+import models.{AlcoholRegime, UserAnswers}
 import models.audit.AuditType.ReturnSubmitted
-import models.returns.{AdrAdjustmentItem, AdrDutyDeclaredItem, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrSpiritsProduced, AdrTotals}
+import models.returns.{AdrAdjustmentItem, AdrDutyDeclaredItem, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpiritsProduced, AdrTotals}
 import play.api.libs.json.{Json, OFormat}
-import services.checkAndSubmit.AdrReturnSubmissionService
-import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
-import scala.concurrent.{ExecutionContext, Future}
 
 case class PrePopulatedData(
   appaId: String,
@@ -75,47 +71,28 @@ case class AuditReturnSubmitted(
 
 object AuditReturnSubmitted {
   implicit val format: OFormat[AuditReturnSubmitted] = Json.format[AuditReturnSubmitted]
-
   def apply(
     userAnswers: UserAnswers,
-    spiritsAndIngredientsEnabled: Boolean,
-    submissionService: AdrReturnSubmissionService
-  )(implicit
-    hc: HeaderCarrier,
-    ec: ExecutionContext
-  ): EitherT[Future, String, AuditReturnSubmitted] =
-    for {
-      dutyDeclared  <- submissionService.getDutyDeclared(userAnswers)
-      returnPeriod  <-
-        EitherT
-          .fromOption[Future](ReturnPeriod.fromPeriodKey(userAnswers.returnId.periodKey), "Return period not defined")
-      spirits       <-
-        if (userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits && spiritsAndIngredientsEnabled) {
-          submissionService.getSpirits(userAnswers)
-        } else {
-          EitherT.rightT[Future, String](None)
-        }
-      adjustments   <- submissionService.getAdjustments(userAnswers)
-      dutySuspended <- submissionService.getDutySuspended(userAnswers)
-      totals        <- submissionService.getTotals(userAnswers)
-    } yield AuditReturnSubmitted(
+    adrReturnSubmission: AdrReturnSubmission
+  ): AuditReturnSubmitted                            =
+    AuditReturnSubmitted(
       prePopulatedData = PrePopulatedData(userAnswers),
-      dutyDeclared = dutyDeclared.declared,
-      dutyDeclaredItems = dutyDeclared.dutyDeclaredItems,
-      overDeclarationDeclared = adjustments.overDeclarationDeclared,
-      overDeclarationProducts = adjustments.overDeclarationProducts,
-      underDeclarationDeclared = adjustments.underDeclarationDeclared,
-      underDeclarationProducts = adjustments.underDeclarationProducts,
-      spoiltProductDeclared = adjustments.spoiltProductDeclared,
-      spoiltProducts = adjustments.spoiltProducts,
-      drawbackDeclared = adjustments.drawbackDeclared,
-      drawbackProducts = adjustments.drawbackProducts,
-      repackagedDraughtDeclared = adjustments.repackagedDraughtDeclared,
-      repackagedDraughtProducts = adjustments.repackagedDraughtProducts,
-      dutySuspendedDeclared = dutySuspended.declared,
-      dutySuspendedProducts = dutySuspended.dutySuspendedProducts,
-      spiritsDeclared = spirits.exists(_.spiritsDeclared),
-      spiritsProduced = spirits.flatMap(_.spiritsProduced),
-      totals = totals
+      dutyDeclared = adrReturnSubmission.dutyDeclared.declared,
+      dutyDeclaredItems = adrReturnSubmission.dutyDeclared.dutyDeclaredItems,
+      overDeclarationDeclared = adrReturnSubmission.adjustments.overDeclarationDeclared,
+      overDeclarationProducts = adrReturnSubmission.adjustments.overDeclarationProducts,
+      underDeclarationDeclared = adrReturnSubmission.adjustments.underDeclarationDeclared,
+      underDeclarationProducts = adrReturnSubmission.adjustments.underDeclarationProducts,
+      spoiltProductDeclared = adrReturnSubmission.adjustments.spoiltProductDeclared,
+      spoiltProducts = adrReturnSubmission.adjustments.spoiltProducts,
+      drawbackDeclared = adrReturnSubmission.adjustments.drawbackDeclared,
+      drawbackProducts = adrReturnSubmission.adjustments.drawbackProducts,
+      repackagedDraughtDeclared = adrReturnSubmission.adjustments.repackagedDraughtDeclared,
+      repackagedDraughtProducts = adrReturnSubmission.adjustments.repackagedDraughtProducts,
+      dutySuspendedDeclared = adrReturnSubmission.dutySuspended.declared,
+      dutySuspendedProducts = adrReturnSubmission.dutySuspended.dutySuspendedProducts,
+      spiritsDeclared = adrReturnSubmission.spirits.exists(_.spiritsDeclared),
+      spiritsProduced = adrReturnSubmission.spirits.flatMap(_.spiritsProduced),
+      totals = adrReturnSubmission.totals
     )
 }

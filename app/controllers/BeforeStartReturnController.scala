@@ -129,7 +129,7 @@ class BeforeStartReturnController @Inject() (
           credentialId = userAnswers.internalId,
           groupId = userAnswers.groupId,
           obligationData = obligationData,
-          returnStartedTime = userAnswers.lastUpdated,
+          returnStartedTime = userAnswers.startedTime,
           returnValidUntilTime = userAnswers.validUntil
         )
         auditService.audit(auditReturnStarted)
