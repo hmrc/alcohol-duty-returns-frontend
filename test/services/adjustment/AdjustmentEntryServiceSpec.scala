@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package service.adjustment
+package services.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
@@ -300,6 +300,32 @@ class AdjustmentEntryServiceSpec extends SpecBase {
       exception.getLocalizedMessage must include(
         "Failed to get rate, neither tax rate nor spr duty rate are defined for repackaged draught products."
       )
+    }
+
+    "for getError default case" in {
+      val adjustmentEntry = AdjustmentEntry(
+        rateBand = Some(rateBand.copy(rate = None)),
+        sprDutyRate = Some(BigDecimal(1))
+      )
+
+      val service = new AdjustmentEntryServiceImpl(mock[AlcoholDutyCalculatorConnector])
+
+      val exception = service.getError(adjustmentEntry)
+
+      exception.getMessage should include("Failed to get rate.")
+    }
+
+    "for getRepackagedError default case" in {
+      val adjustmentEntry = AdjustmentEntry(
+        adjustmentType = Some(Spoilt),
+        repackagedSprDutyRate = Some(BigDecimal(1))
+      )
+
+      val service = new AdjustmentEntryServiceImpl(mock[AlcoholDutyCalculatorConnector])
+
+      val exception = service.getRepackagedError(adjustmentEntry)
+
+      exception.getMessage should include("Failed to get rate for repackaged draught products.")
     }
   }
 }

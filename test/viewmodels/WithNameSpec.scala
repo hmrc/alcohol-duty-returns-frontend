@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package models
+package viewmodels
 
+import models.WithName
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 

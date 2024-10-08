@@ -210,4 +210,36 @@ class MultipleSPRListControllerSpec extends SpecBase {
       }
     }
   }
+
+  "must return an error if tax types in MultipleSPRListPage are not found in rate bands" in {
+
+    val unmatchedRateBand = genRateBandForRegimeWithSPR(regime).sample.value
+    val unmatchedTaxType  = genVolumeAndRateByTaxTypeRateBand(unmatchedRateBand).arbitrary.sample.value
+
+    val rateBands = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
+
+    val incompleteUserAnswers = emptyUserAnswers
+      .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+      .success
+      .value
+      .setByKey(MultipleSPRListPage, regime, Seq(unmatchedTaxType))
+      .success
+      .value
+
+    val application = applicationBuilder(userAnswers = Some(incompleteUserAnswers)).build()
+
+    running(application) {
+      val request = FakeRequest(GET, multipleSPRListRoute)
+
+      val result = route(application, request).value
+
+      val sprTable = MultipleSPRListHelper
+        .sprTableViewModel(incompleteUserAnswers, regime)(getMessages(application))
+
+      sprTable mustBe Left(s"Tax types not found: ${unmatchedTaxType.taxType}")
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+    }
+  }
 }
