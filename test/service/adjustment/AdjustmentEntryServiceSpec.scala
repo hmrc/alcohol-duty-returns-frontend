@@ -64,7 +64,6 @@ class AdjustmentEntryServiceSpec extends SpecBase {
     )
 
     "must create an adjustment entry when TaxType contains rate" in {
-
       val userAnswerWithRate = emptyUserAnswers
         .set(CurrentAdjustmentEntryPage, adjustmentEntry)
         .success
@@ -86,7 +85,6 @@ class AdjustmentEntryServiceSpec extends SpecBase {
     }
 
     "must create an adjustment entry when TaxType does not contain rate but the Small Producer Relief duty rate is present" in {
-
       val updatedAdjustmentEntry = adjustmentEntry.copy(
         adjustmentType = Some(Overdeclaration),
         rateBand = Some(rateBand.copy(rate = None)),
@@ -186,9 +184,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
     }
 
     "must throw an Exception" - {
-
       "if both, TaxType and SmallProducerReliefDuty contain rate" in {
-
         val updatedAdjustmentEntry = adjustmentEntry.copy(
           rateBand = Some(rateBand),
           sprDutyRate = Some(BigDecimal(2))

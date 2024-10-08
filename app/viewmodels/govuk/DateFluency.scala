@@ -110,7 +110,7 @@ trait DateFluency {
     private val UK_TIME_ZONE: ZoneId = TimeZone.getTimeZone("Europe/London").toZoneId
 
     def toLocalDateString()(implicit messages: Messages): String = {
-      val dateFormatter = DateTimeFormatter.ofPattern("dd LLLL yyyy", messages.lang.toLocale)
+      val dateFormatter = DateTimeFormatter.ofPattern("d LLLL yyyy", messages.lang.toLocale)
       dateFormatter.format(instant.atZone(UK_TIME_ZONE).toLocalDate)
     }
   }

@@ -22,7 +22,7 @@ import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import java.time.LocalDateTime
@@ -37,10 +37,7 @@ class CacheConnectorSpec extends SpecBase {
       when(requestBuilder.execute[Either[UpstreamErrorResponse, UserAnswers]](any(), any()))
         .thenReturn(Future.successful(Right(emptyUserAnswers)))
 
-      when {
-        connector.httpClient
-          .get(any())(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.get("someref", "somePeriodKey")) {
         _ mustBe Right(emptyUserAnswers)
@@ -54,10 +51,7 @@ class CacheConnectorSpec extends SpecBase {
 
       when(mockConfig.adrCacheCreateUserAnswersUrl()).thenReturn(postUrl)
 
-      when {
-        connector.httpClient
-          .post(eqTo(url"$postUrl"))(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
       when(requestBuilder.withBody(eqTo(Json.toJson(returnAndUserDetails)))(any(), any(), any()))
         .thenReturn(requestBuilder)
@@ -80,10 +74,7 @@ class CacheConnectorSpec extends SpecBase {
 
       when(mockConfig.adrCacheSetUrl()).thenReturn(putUrl)
 
-      when {
-        connector.httpClient
-          .put(eqTo(url"$putUrl"))(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.put(any())(any())).thenReturn(requestBuilder)
 
       when(requestBuilder.withBody(eqTo(Json.toJson(emptyUserAnswers)))(any(), any(), any()))
         .thenReturn(requestBuilder)
@@ -107,10 +98,7 @@ class CacheConnectorSpec extends SpecBase {
 
       when(mockConfig.adrReleaseCacheLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
 
-      when {
-        connector.httpClient
-          .delete(eqTo(url"$releaseLockUrl"))(any())
-      } thenReturn requestBuilder
+      when(connector.httpClient.delete(any())(any())).thenReturn(requestBuilder)
 
       when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
         .thenReturn(requestBuilder)
@@ -162,5 +150,6 @@ class CacheConnectorSpec extends SpecBase {
     val connector                      = new CacheConnector(config = mockConfig, httpClient = httpClient)
     val dateVal: LocalDateTime         = LocalDateTime.now
     val mockHttpResponse: HttpResponse = mock[HttpResponse]
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }
 }

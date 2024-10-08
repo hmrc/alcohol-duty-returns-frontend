@@ -62,9 +62,12 @@ object MultipleSPRListHelper {
       case Left(e)        => Left(e)
     }
 
-  case class SprDutyRateEntry(dutyByTaxType: VolumeAndRateByTaxType, rateBand: RateBand)
+  private case class SprDutyRateEntry(dutyByTaxType: VolumeAndRateByTaxType, rateBand: RateBand)
 
-  def getSprListEntries(userAnswers: UserAnswers, regime: AlcoholRegime): Either[String, Seq[SprDutyRateEntry]] =
+  private def getSprListEntries(
+    userAnswers: UserAnswers,
+    regime: AlcoholRegime
+  ): Either[String, Seq[SprDutyRateEntry]] =
     (
       userAnswers.getByKey(MultipleSPRListPage, regime),
       userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime)
@@ -84,7 +87,7 @@ object MultipleSPRListHelper {
       case _                                       => Left("Error retrieving SPR entries and rate bands")
     }
 
-  def getSPREntryRows(sprList: Seq[SprDutyRateEntry], regime: AlcoholRegime)(implicit
+  private def getSPREntryRows(sprList: Seq[SprDutyRateEntry], regime: AlcoholRegime)(implicit
     messages: Messages
   ): Seq[TableRowViewModel] =
     sprList.zipWithIndex.map { case (sprEntry, index) =>

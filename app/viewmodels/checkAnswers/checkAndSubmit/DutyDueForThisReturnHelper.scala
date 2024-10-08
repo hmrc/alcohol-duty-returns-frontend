@@ -44,7 +44,7 @@ class DutyDueForThisReturnHelper @Inject() (
 )(implicit executionContext: ExecutionContext)
     extends Logging {
 
-  val dutyDueOrder = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
+  private val dutyDueOrder = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
 
   def getDutyDueViewModel(
     userAnswers: UserAnswers
@@ -63,7 +63,7 @@ class DutyDueForThisReturnHelper @Inject() (
     (userAnswers.get(DeclareAdjustmentQuestionPage), userAnswers.get(AdjustmentTotalPage)) match {
       case (Some(false), _)                    => EitherT.rightT[Future, String](BigDecimal(0))
       case (Some(true), Some(adjustmentTotal)) => EitherT.rightT[Future, String](adjustmentTotal)
-      case (_, _)                              => EitherT.leftT[Future, BigDecimal]("")
+      case (_, _)                              => EitherT.leftT[Future, BigDecimal]("Unable to get adjustment totals when calculating duty due")
     }
 
   private def getDutiesByAlcoholRegime(
@@ -72,11 +72,11 @@ class DutyDueForThisReturnHelper @Inject() (
     (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
       case (Some(false), _)                  => EitherT.rightT(Seq.empty)
       case (Some(true), Some(alcoholDuties)) => EitherT.rightT(alcoholDuties.toSeq.sortBy(dutyDueOrder.indexOf(_)))
-      case (_, _)                            => EitherT.leftT("")
+      case (_, _)                            => EitherT.leftT("Unable to get duties due when calculating duty due")
     }
 
-  def calculateTotal(dutiesByAlcoholRegime: Seq[Tuple2[AlcoholRegime, AlcoholDuty]], adjustment: BigDecimal)(implicit
-    hc: HeaderCarrier
+  private def calculateTotal(dutiesByAlcoholRegime: Seq[Tuple2[AlcoholRegime, AlcoholDuty]], adjustment: BigDecimal)(
+    implicit hc: HeaderCarrier
   ): EitherT[Future, String, BigDecimal] = EitherT {
     calculatorConnector
       .calculateTotalAdjustment(dutiesByAlcoholRegime.map(_._2.totalDuty) :+ adjustment)
@@ -89,7 +89,6 @@ class DutyDueForThisReturnHelper @Inject() (
   private def createTableViewModel(dutiesByRegime: Seq[(AlcoholRegime, AlcoholDuty)], totalAdjustment: BigDecimal)(
     implicit messages: Messages
   ): EitherT[Future, String, TableViewModel] = {
-
     val returnDutiesRow = createReturnRows(dutiesByRegime)
     val adjustmentRow   = createAdjustmentRow(totalAdjustment)
     EitherT.rightT[Future, String](
@@ -143,7 +142,6 @@ class DutyDueForThisReturnHelper @Inject() (
     }
 
   private def createAdjustmentRow(totalAdjustment: BigDecimal)(implicit messages: Messages): TableRowViewModel =
-    // TODO: check if the sum is 0 is still a nil adjustment
     if (totalAdjustment == 0) {
       TableRowViewModel(
         cells = Seq(

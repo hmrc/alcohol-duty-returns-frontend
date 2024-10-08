@@ -47,8 +47,8 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
   val validTotalLitres = BigDecimal(10.23)
   val validPureAlcohol = BigDecimal(9.23)
 
-  lazy val adjustmentVolumeRoute = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode).url
-  val rateBand                   = RateBand(
+  lazy val adjustmentVolumeRoute       = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode).url
+  val rateBand                         = RateBand(
     "310",
     "some band",
     RateType.DraughtRelief,
@@ -66,20 +66,22 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       )
     )
   )
-  val period                     = YearMonth.of(2024, 1)
-  val adjustmentEntry            = AdjustmentEntry(
+  val period                           = YearMonth.of(2024, 1)
+  val adjustmentEntry                  = AdjustmentEntry(
     adjustmentType = Some(Spoilt),
     rateBand = Some(rateBand),
     period = Some(period)
   )
-  val userAnswers                = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswers                      = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswersWithoutRegimes        =
+    emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(rateBand = None)).success.value
+  val userAnswersWithoutAdjustmentType =
+    emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(adjustmentType = None)).success.value
 
   val rateBandContent = "Beer between 0.1% and 5.8% ABV (tax type code 310)"
 
   "AdjustmentVolume Controller" - {
-
     "must return OK and the correct view for a GET" in {
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -98,7 +100,6 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
       val updatedAdjustmentEntry =
         adjustmentEntry.copy(totalLitresVolume = Some(validTotalLitres), pureAlcoholVolume = Some(validPureAlcohol))
 
@@ -127,8 +128,33 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to journey recovery page if unable to get regimes for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutRegimes)).build()
 
+      running(application) {
+        val request = FakeRequest(GET, adjustmentVolumeRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to journey recovery page if unable to get CurrentAdjustmentEntryPage for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutAdjustmentType)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentVolumeRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted" in {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -155,6 +181,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
+
     "must redirect to the next page when the same data is submitted" in {
       val userAnswers =
         emptyUserAnswers
@@ -198,8 +225,50 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
+    "must redirect to journey recovery page if unable to get regimes when data is submitted" in {
+      val userAnswers =
+        emptyUserAnswers
+          .set(
+            CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              totalLitresVolume = Some(validTotalLitres),
+              pureAlcoholVolume = Some(validPureAlcohol),
+              adjustmentType = Some(Spoilt),
+              period = Some(period),
+              rateBand = None
+            )
+          )
+          .success
+          .value
 
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentVolumeRoute)
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", validTotalLitres.toString()),
+              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must return a Bad Request and errors when invalid data is submitted" in {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -225,8 +294,26 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         ).toString
       }
     }
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
+    "must redirect to journey recovery page when invalid data is submitted and unable to get the adjustment type" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutAdjustmentType)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentVolumeRoute)
+            .withFormUrlEncodedBody(
+              ("volumes.totalLitresVolume", "invalid value"),
+              ("volumes.pureAlcoholVolume", "invalid value")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -240,7 +327,6 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
@@ -255,6 +341,5 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
-
   }
 }
