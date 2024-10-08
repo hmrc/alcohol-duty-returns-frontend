@@ -78,7 +78,6 @@ object AuditReturnSubmitted {
 
   def apply(
     userAnswers: UserAnswers,
-    returnPeriod: ReturnPeriod,
     spiritsAndIngredientsEnabled: Boolean,
     submissionService: AdrReturnSubmissionService
   )(implicit
@@ -87,10 +86,15 @@ object AuditReturnSubmitted {
   ): EitherT[Future, String, AuditReturnSubmitted] =
     for {
       dutyDeclared  <- submissionService.getDutyDeclared(userAnswers)
-      spirits       <- if (
-                         userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits && spiritsAndIngredientsEnabled
-                       ) submissionService.getSpirits(userAnswers)
-                       else EitherT.rightT[Future, String](None)
+      returnPeriod  <-
+        EitherT
+          .fromOption[Future](ReturnPeriod.fromPeriodKey(userAnswers.returnId.periodKey), "Return period not defined")
+      spirits       <-
+        if (userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits && spiritsAndIngredientsEnabled) {
+          submissionService.getSpirits(userAnswers)
+        } else {
+          EitherT.rightT[Future, String](None)
+        }
       adjustments   <- submissionService.getAdjustments(userAnswers)
       dutySuspended <- submissionService.getDutySuspended(userAnswers)
       totals        <- submissionService.getTotals(userAnswers)

@@ -95,7 +95,6 @@ class BeforeStartReturnController @Inject() (
         }
     }
   }
-  // TODO : change returnStartedTime to start time in future
 
   private def auditContinueReturn(
     userAnswers: UserAnswers,

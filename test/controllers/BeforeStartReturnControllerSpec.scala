@@ -19,8 +19,8 @@ package controllers
 import base.SpecBase
 import connectors.CacheConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegimes, ReturnPeriod, UserAnswers}
-import models.audit.AuditContinueReturn
+import models.{AlcoholRegimes, ObligationData, ReturnPeriod, UserAnswers}
+import models.audit.{AuditContinueReturn, AuditReturnStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.LOCKED
@@ -49,12 +49,22 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       validUntil = Some(Instant.now(clock))
     )
 
-    val expectedAuditEvent = AuditContinueReturn(
+    val expectedContinueReturnAuditEvent = AuditContinueReturn(
       appaId = returnId.appaId,
       periodKey = returnId.periodKey,
       credentialId = emptyUserAnswers.internalId,
       groupId = emptyUserAnswers.groupId,
       returnContinueTime = Instant.now(clock),
+      returnStartedTime = Instant.now(clock),
+      returnValidUntilTime = Some(Instant.now(clock))
+    )
+
+    val expectedReturnStartedAuditEvent = AuditReturnStarted(
+      appaId = returnId.appaId,
+      periodKey = returnId.periodKey,
+      credentialId = emptyUserAnswers.internalId,
+      groupId = emptyUserAnswers.groupId,
+      obligationData = obligationDataSingleOpen,
       returnStartedTime = Instant.now(clock),
       returnValidUntilTime = Some(Instant.now(clock))
     )
@@ -80,7 +90,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockAuditService).audit(eqTo(expectedAuditEvent))(any(), any())
+        verify(mockAuditService).audit(eqTo(expectedContinueReturnAuditEvent))(any(), any())
         redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
       }
     }
@@ -186,11 +196,35 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the TaskList Page when a userAnswers is successfully created for a POST" in {
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
+      val userAnswers = emptyUserAnswers.set(ObligationData, obligationDataSingleOpen).success.value
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+        verify(mockAuditService).audit(eqTo(expectedReturnStartedAuditEvent))(any(), any())
+      }
+    }
+
+    "must redirect to the TaskList Page when a userAnswers is successfully created for a POST without sending the audit event if the obligation is not available" in {
+      val userAnswers = emptyUserAnswers.remove(ObligationData).success.value
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService)
         )
         .build()
 

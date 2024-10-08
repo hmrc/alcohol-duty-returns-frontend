@@ -20,7 +20,7 @@ import config.Constants.adrReturnCreatedDetails
 import config.FrontendAppConfig
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
-import models.{ReturnPeriod, UserAnswers}
+import models.UserAnswers
 import models.audit.AuditReturnSubmitted
 import play.api.Logging
 
@@ -83,7 +83,8 @@ class DutyDueForThisReturnController @Inject() (
         logger.warn(s"Successfully submitted return: $adrSubmissionCreatedDetails")
         val session =
           request.session + (adrReturnCreatedDetails -> Json.toJson(adrSubmissionCreatedDetails).toString)
-        auditEvent(request.userAnswers, request.returnPeriod)
+
+        auditEvent(request.userAnswers)
         Future.successful(
           Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad()).withSession(session)
         )
@@ -91,10 +92,9 @@ class DutyDueForThisReturnController @Inject() (
     )
   }
 
-  def auditEvent(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit hc: HeaderCarrier): Future[Unit] =
+  def auditEvent(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[Unit] =
     AuditReturnSubmitted(
       userAnswers = userAnswers,
-      returnPeriod = returnPeriod,
       spiritsAndIngredientsEnabled = appConfig.spiritsAndIngredientsEnabled,
       submissionService = adrReturnSubmissionService
     ).foldF(
