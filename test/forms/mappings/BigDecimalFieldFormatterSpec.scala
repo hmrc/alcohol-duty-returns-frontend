@@ -22,12 +22,12 @@ import play.api.data.FormError
 
 class BigDecimalFieldFormatterSpec extends SpecBase with EitherValues {
 
-  val requiredKey = "error.required"
-  val invalidKey = "error.invalid"
+  val requiredKey      = "error.required"
+  val invalidKey       = "error.invalid"
   val decimalPlacesKey = "error.decimalPlaces"
-  val minimumValueKey = "error.minimum"
-  val maximumValueKey = "error.maximum"
-  val fieldKey = "testField"
+  val minimumValueKey  = "error.minimum"
+  val maximumValueKey  = "error.maximum"
+  val fieldKey         = "testField"
 
   val formatter = new BigDecimalFieldFormatter(
     requiredKey,

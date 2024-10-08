@@ -22,7 +22,6 @@ import models.AlcoholRegime
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.returns.WhatDoYouNeedToDeclarePage
-import play.api.libs.json.Json
 
 class DutyCalculationHelperSpec extends SpecBase {
 
@@ -30,7 +29,7 @@ class DutyCalculationHelperSpec extends SpecBase {
     val regime = arbitrary[AlcoholRegime].sample.value
     "should return a TableViewModel with correct rows when user answers are valid" in {
 
-      val rateBands = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
+      val rateBands       = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
       val volumesAndRates = arbitraryVolumeAndRateByTaxType(
         rateBands.toSeq
       ).arbitrary.sample.value
@@ -56,15 +55,13 @@ class DutyCalculationHelperSpec extends SpecBase {
         .success
         .value
 
-
       val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(app))
 
       result.isRight shouldBe true
 
-      result match {
-        case Right(tableViewModel) => tableViewModel.head.size shouldBe 5
-        tableViewModel.rows.size shouldBe 10
-      }
+      val tableViewModel = result.getOrElse(fail("Expected Right(TableViewModel) but got Left"))
+      tableViewModel.head.size shouldBe 5
+      tableViewModel.rows.size shouldBe 10
     }
 
     "should return a Left with error message when no rate bands found" in {
@@ -78,28 +75,29 @@ class DutyCalculationHelperSpec extends SpecBase {
     "should return a Left with error message when no matching rate band for tax type" in {
       val unmatchedRateBand = genRateBandForRegimeWithSPR(regime).sample.value
       val unmatchedTaxType  = genVolumeAndRateByTaxTypeRateBand(unmatchedRateBand).arbitrary.sample.value
-      val rateBands = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
-      val totalDuty = unmatchedTaxType.dutyRate * unmatchedTaxType.pureAlcohol
-      val dutyByTaxType = Seq(DutyByTaxType(
+      val rateBands         = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
+      val totalDuty         = unmatchedTaxType.dutyRate * unmatchedTaxType.pureAlcohol
+      val dutyByTaxType     = Seq(
+        DutyByTaxType(
           taxType = unmatchedTaxType.taxType,
           totalLitres = unmatchedTaxType.totalLitres,
           pureAlcohol = unmatchedTaxType.pureAlcohol,
           dutyRate = unmatchedTaxType.dutyRate,
           dutyDue = totalDuty
-        ))
+        )
+      )
 
       val userAnswers = emptyUserAnswers
         .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
         .success
         .value
 
-      val alcoholDuty = AlcoholDuty(dutyByTaxType,totalDuty)
+      val alcoholDuty = AlcoholDuty(dutyByTaxType, totalDuty)
 
       val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(app))
 
-      result match {
-        case Left(msg) => msg should startWith("No rate band found for taxType:")
-      }
+      val errorMsg = result.left.getOrElse(fail("Expected Left(errorMessage) but got Right"))
+      assert(errorMsg.startsWith("No rate band found for taxType:"))
     }
   }
 }

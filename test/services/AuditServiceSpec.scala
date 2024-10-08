@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.time.Instant
 
-class AuditServiceSpec extends SpecBase{
+class AuditServiceSpec extends SpecBase {
 
   private val mockAuditConnector = mock[AuditConnector]
 

@@ -33,11 +33,11 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
       )
 
       val expectedJson = Json.obj(
-        "adjustmentTypeKey" -> "underdeclaration",
-        "taxType" -> "beer",
+        "adjustmentTypeKey"   -> "underdeclaration",
+        "taxType"             -> "beer",
         "litresOfPureAlcohol" -> 50,
-        "dutyRate" -> 2.5,
-        "dutyValue" -> 125
+        "dutyRate"            -> 2.5,
+        "dutyValue"           -> 125
       )
 
       Json.toJson(adjustmentRow) shouldEqual expectedJson
@@ -45,20 +45,22 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
 
     "should deserialize from JSON correctly" in {
       val json = Json.obj(
-        "adjustmentTypeKey" -> "underdeclaration",
-        "taxType" -> "beer",
+        "adjustmentTypeKey"   -> "underdeclaration",
+        "taxType"             -> "beer",
         "litresOfPureAlcohol" -> 50,
-        "dutyRate" -> 2.5,
-        "dutyValue" -> 125
+        "dutyRate"            -> 2.5,
+        "dutyValue"           -> 125
       )
 
-      json.validate[ReturnAdjustmentsRow] shouldEqual JsSuccess(ReturnAdjustmentsRow(
-        adjustmentTypeKey = "underdeclaration",
-        taxType = "beer",
-        litresOfPureAlcohol = BigDecimal(50),
-        dutyRate = BigDecimal(2.5),
-        dutyValue = BigDecimal(125)
-      ))
+      json.validate[ReturnAdjustmentsRow] shouldEqual JsSuccess(
+        ReturnAdjustmentsRow(
+          adjustmentTypeKey = "underdeclaration",
+          taxType = "beer",
+          litresOfPureAlcohol = BigDecimal(50),
+          dutyRate = BigDecimal(2.5),
+          dutyValue = BigDecimal(125)
+        )
+      )
     }
 
     "should sort adjustments rows correctly by adjustmentTypeKey and then by taxType" in {
@@ -66,7 +68,7 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
       val row2 = ReturnAdjustmentsRow("overdeclaration", "wine", BigDecimal(30), BigDecimal(3.0), BigDecimal(90))
       val row3 = ReturnAdjustmentsRow("spoilt", "spirits", BigDecimal(20), BigDecimal(4.0), BigDecimal(80))
 
-      val rows = Seq(row1, row2, row3)
+      val rows       = Seq(row1, row2, row3)
       val sortedRows = rows.sorted
 
       sortedRows shouldEqual Seq(row1, row2, row3)
