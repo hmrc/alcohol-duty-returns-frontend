@@ -267,6 +267,5 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
         ) must have message "Failed to find rate band for tax type"
       }
     }
-
   }
 }

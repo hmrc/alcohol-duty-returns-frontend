@@ -63,6 +63,24 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       }
     }
 
+    "must return an exception empty dutyByTaxTypes" in {
+      val userAnswers = emptyUserAnswers
+        .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+        .success
+        .value
+        .setByKey(HowMuchDoYouNeedToDeclarePage, regime, Seq.empty)
+        .success
+        .value
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val exception = intercept[IllegalArgumentException] {
+          CheckYourAnswersSummaryListHelper.createSummaryList(regime, userAnswers)(getMessages(application)).get
+        }
+        exception.getMessage.startsWith("Invalid tax type:") mustBe true
+      }
+    }
+
     "must redirect to the Journey Recovery page when there is no data" in {
 
       val application = applicationBuilder(userAnswers = None).build()
