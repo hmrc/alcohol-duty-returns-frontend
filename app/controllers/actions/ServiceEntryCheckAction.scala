@@ -63,12 +63,12 @@ class ServiceEntryCheckActionImpl @Inject() (
             )
           )
         case _                               =>
-          logger.warn(s"ADR Enrolment Identifier not found for user: ${request.userId}")
+          logger.warn(s"ADR Enrolment Identifier not found for user")
           Future.successful(Redirect(controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad()))
       }
     } recover {
       case _: InsufficientEnrolments =>
-        logger.warn(s"Enrolment not found for user: ${request.userId}")
+        logger.warn(s"Enrolment not found for user")
         Redirect(controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad())
       case e                         =>
         logger.warn("Enrolment check error: ", e)
