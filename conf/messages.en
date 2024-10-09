@@ -842,45 +842,6 @@ dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired = 
 dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired = The volume of pure alcohol in other fermented products must be must be more than -100 million litres
 dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.decimalPlaces = The volume of pure alcohol in other fermented products must be up to 4 decimal places
 
-declareDutySuspendedReceived.title = How much have you received duty suspended?
-declareDutySuspendedReceived.heading = How much have you received duty suspended?
-declareDutySuspendedReceived.checkYourAnswersLabel = Amount received duty suspended
-declareDutySuspendedReceived.error.nonNumeric = How much you have received duty suspended must be a number
-declareDutySuspendedReceived.error.required = Enter how much you have received duty suspended
-declareDutySuspendedReceived.error.decimalPlaces = How much you have received duty suspended must be a number to 2 decimal places
-declareDutySuspendedReceived.change.hidden = amount received duty suspended
-declareDutySuspendedReceived.hint = Give your answers in litres, up to 2 decimal places.
-declareDutySuspendedReceived.error.minimumRequired = How much you have received duty suspended must be 0.00 or more
-declareDutySuspendedReceived.error.maximumRequired = How much you have received duty suspended must be 999999999.99 or less
-declareDutySuspendedReceived.p1 = For example, because:
-declareDutySuspendedReceived.p2 = This will not change your duty calculation.
-declareDutySuspendedReceived.para.list.1 = you received it from a UK site that is registered to send it duty suspended
-declareDutySuspendedReceived.para.list.2 = the beer is imported and all duties have already been paid
-
-declareDutySuspendedDeliveriesOutsideUk.title = How much have you delivered duty suspended outside of the UK?
-declareDutySuspendedDeliveriesOutsideUk.heading = How much have you delivered duty suspended outside of the UK?
-declareDutySuspendedDeliveriesOutsideUk.checkYourAnswersLabel = Amount delivered duty suspended outside the UK
-declareDutySuspendedDeliveriesOutsideUk.error.required = Enter how much you have delivered duty suspended
-declareDutySuspendedDeliveriesOutsideUk.error.nonNumeric = How much you have delivered duty suspended must be a number
-declareDutySuspendedDeliveriesOutsideUk.change.hidden = amount delivered duty suspended outside the UK
-declareDutySuspendedDeliveriesOutsideUk.error.minimumRequired = How much you have delivered duty suspended must be 0.00 or more
-declareDutySuspendedDeliveriesOutsideUk.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
-declareDutySuspendedDeliveriesOutsideUk.error.decimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
-declareDutySuspendedDeliveriesOutsideUk.p1 = This includes to sites in EU countries, sites in countries outside of the EU and ship stores. This will not change your duty calculation.
-declareDutySuspendedDeliveriesOutsideUk.hint = Give your answers in litres, up to 2 decimal places.
-
-dutySuspendedDeliveries.title = How much have you delivered duty suspended within the UK?
-dutySuspendedDeliveries.heading = How much have you delivered duty suspended within the UK?
-dutySuspendedDeliveries.p1 = For example, to UK sites that are registered to hold it duty suspended. This will not change your duty calculation.
-dutySuspendedDeliveries.hint = Give your answers in litres, up to 2 decimal places.
-dutySuspendedDeliveries.checkYourAnswersLabel = Amount delivered duty suspended in the UK
-dutySuspendedDeliveries.error.nonNumeric = How much you have delivered duty suspended must be a number
-dutySuspendedDeliveries.error.required = Enter how much you have delivered duty suspended
-dutySuspendedDeliveries.error.minimumRequired = How much you have delivered duty suspended must be 0.00 or more
-dutySuspendedDeliveries.error.maximumRequired = How much you have delivered duty suspended must be 999999999.99 or less
-dutySuspendedDeliveries.error.decimalPlaces = How much you have delivered duty suspended must be a number to 2 decimal places
-dutySuspendedDeliveries.change.hidden = amount delivered duty suspended in the UK
-
 # End of of duty suspended deliveries sub-journey
 
 

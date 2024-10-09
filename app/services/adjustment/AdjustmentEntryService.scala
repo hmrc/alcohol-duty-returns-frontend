@@ -55,7 +55,7 @@ class AdjustmentEntryServiceImpl @Inject() (
       case Some(adjustmentEntry) => adjustmentEntry
       case _                     =>
         logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
-        Future.failed(new Exception(s"Couldn't fetch correct AdjustmentEntry from user answers"))
+        Future.failed(new Exception("Couldn't fetch correct AdjustmentEntry from user answers"))
     }
   }
 
@@ -90,7 +90,7 @@ class AdjustmentEntryServiceImpl @Inject() (
       case _                         => taxDutyFuture
     }
 
-  private def getError(adjustmentEntry: AdjustmentEntry): RuntimeException =
+  private[services] def getError(adjustmentEntry: AdjustmentEntry): RuntimeException =
     (adjustmentEntry.rateBand.flatMap(_.rate), adjustmentEntry.sprDutyRate) match {
       case (Some(_), Some(_)) =>
         new RuntimeException("Failed to get rate, both tax rate and spr duty rate are defined.")
@@ -98,7 +98,7 @@ class AdjustmentEntryServiceImpl @Inject() (
       case (_, _)             => new RuntimeException("Failed to get rate.")
     }
 
-  private def getRepackagedError(adjustmentEntry: AdjustmentEntry): RuntimeException =
+  private[services] def getRepackagedError(adjustmentEntry: AdjustmentEntry): RuntimeException =
     (adjustmentEntry.repackagedRateBand.flatMap(_.rate), adjustmentEntry.repackagedSprDutyRate) match {
       case (Some(_), Some(_)) =>
         new RuntimeException(

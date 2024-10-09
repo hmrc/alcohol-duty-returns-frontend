@@ -110,6 +110,16 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
         result.swap.toOption.get mustBe "Unable to get adjustment totals when calculating duty due"
       }
     }
+
+    "must return an error message when calculator call for adjustment totals fails" in new SetUp {
+      val errorMessage = "Error Message"
+      when(mockCalculatorConnector.calculateTotalAdjustment(any())(any())).thenReturn(
+        Future.failed(new Exception(errorMessage))
+      )
+      val result       =
+        dutyDueForThisReturnHelper.getDutyDueViewModel(fullUserAnswers)(hc, getMessages(app)).value.futureValue
+      result mustBe Left(s"Failed to calculate total duty due: $errorMessage")
+    }
   }
 
   class SetUp {

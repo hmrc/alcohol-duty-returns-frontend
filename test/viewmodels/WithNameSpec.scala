@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package pages.dutySuspended
+package viewmodels
 
-import play.api.libs.json.JsPath
-import pages.QuestionPage
+import models.WithName
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-case object DeclareDutySuspendedReceivedPage extends QuestionPage[BigDecimal] {
+class WithNameSpec extends AnyFreeSpec with Matchers {
 
-  override def path: JsPath = JsPath \ toString
+  object Foo extends WithName("bar")
 
-  override def toString: String = "declareDutySuspendedReceived"
+  ".toString" - {
+
+    "must return the correct string" in {
+      Foo.toString mustEqual "bar"
+    }
+  }
 }

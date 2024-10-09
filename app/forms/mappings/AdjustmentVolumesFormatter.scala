@@ -65,9 +65,6 @@ class AdjustmentVolumesFormatter(
   private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
-  private def requiredAllFieldsFormError(key: String): FormError =
-    FormError(key, allRequiredKey, args)
-
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolume] = {
     val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
     val pureAlcohol = pureAlcoholBigDecimalFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
@@ -105,16 +102,14 @@ class AdjustmentVolumesFormatter(
       .toList
 
     fields.count(_._2.isDefined) match {
-      case NUMBER_OF_FIELDS                             =>
+      case NUMBER_OF_FIELDS =>
         checkValues(key, data)
-      case size if size < NUMBER_OF_FIELDS && size >= 0 =>
+      case _                =>
         Left(
           missingFields.map { field =>
             requiredFieldFormError(key, field)
           }
         )
-      case _                                            =>
-        Left(List(requiredAllFieldsFormError(key)))
     }
   }
 

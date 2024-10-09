@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package service.checkAndSubmit
+package services.checkAndSubmit
 
 import base.SpecBase
 import common.TestData
