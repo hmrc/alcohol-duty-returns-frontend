@@ -25,23 +25,20 @@ import viewmodels.returns.ReturnPeriodViewModel.viewDateFormatter
 import java.time.LocalDate
 
 case class WarningTextViewModel(returnPeriod: ReturnPeriod, currentDate: LocalDate) {
-  private val returnDueDate = returnPeriod.periodDueDate()
-  def getDateValue(implicit messages: Messages): WarningText = {
+  private val returnDueDate                                  = returnPeriod.periodDueDate()
+  def getDateValue(implicit messages: Messages): WarningText =
     if (currentDate.isBefore(returnDueDate)) {
       WarningText(
         iconFallbackText = Some("Warning"),
-        content = Text(messages("beforeStartReturn.text.dueDateWarning", viewDateFormatter.format(returnDueDate))))
+        content = Text(messages("beforeStartReturn.text.dueDateWarning", viewDateFormatter.format(returnDueDate)))
+      )
     } else if (currentDate.isAfter(returnDueDate)) {
       WarningText(
         iconFallbackText = Some("Warning"),
-        content = Text(messages("beforeStartReturn.text.overdueWarning", viewDateFormatter.format(returnDueDate))))
+        content = Text(messages("beforeStartReturn.text.overdueWarning", viewDateFormatter.format(returnDueDate)))
+      )
     } else {
-      WarningText(
-        iconFallbackText = Some("Warning"),
-        content = Text(messages("beforeStartReturn.text.dueWarning")))
+      WarningText(iconFallbackText = Some("Warning"), content = Text(messages("beforeStartReturn.text.dueWarning")))
     }
 
-
-
-  }
 }

@@ -29,77 +29,83 @@ import java.time.LocalDate
 import scala.language.postfixOps
 
 class WarningTextViewModelSpec extends SpecBase {
-"WarningTextViewModel" - {
-  val mockCacheConnector             = mock[CacheConnector]
+  "WarningTextViewModel" - {
+    val mockCacheConnector = mock[CacheConnector]
 
-  "should show the correct message when currentDate is before returnDueDate" in {
-    val currentDate = LocalDate.of(2024, 1, 1)
-    val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
-    val viewModel = WarningTextViewModel(returnPeriod, currentDate)
+    "should show the correct message when currentDate is before returnDueDate" in {
+      val currentDate  = LocalDate.of(2024, 1, 1)
+      val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
+      val viewModel    = WarningTextViewModel(returnPeriod, currentDate)
 
-    val application = applicationBuilder()
-      .overrides(
-        bind[CacheConnector].toInstance(mockCacheConnector)
-      )
-      .build()
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
 
-    running(application) {
-      val messages = getMessages(application)
-      val result = viewModel.getDateValue(messages)
-      result mustBe
-      WarningText(
-        iconFallbackText = Some("Warning"),
-        content = Text(messages(s"beforeStartReturn.text.dueDateWarning", viewDateFormatter.format(returnPeriod.periodDueDate()))),
-        classes = "")
+      running(application) {
+        val messages = getMessages(application)
+        val result   = viewModel.getDateValue(messages)
+        result mustBe
+          WarningText(
+            iconFallbackText = Some("Warning"),
+            content = Text(
+              messages(s"beforeStartReturn.text.dueDateWarning", viewDateFormatter.format(returnPeriod.periodDueDate()))
+            ),
+            classes = ""
+          )
 
+      }
+    }
 
+    "should show the correct message when currentDate is the same as returnDueDate" in {
+      val currentDate  = LocalDate.of(2024, 1, 15)
+      val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
+      val viewModel    = WarningTextViewModel(returnPeriod, currentDate)
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val messages = getMessages(application)
+        val result   = viewModel.getDateValue(messages)
+        result mustBe
+          WarningText(
+            iconFallbackText = Some("Warning"),
+            content = Text(messages("beforeStartReturn.text.dueWarning")),
+            classes = ""
+          )
+
+      }
+    }
+
+    "should show the correct message when currentDate is after returnDueDate" in {
+      val currentDate  = LocalDate.of(2024, 1, 30)
+      val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
+      val viewModel    = WarningTextViewModel(returnPeriod, currentDate)
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val messages = getMessages(application)
+        val result   = viewModel.getDateValue(messages)
+        result mustBe
+          WarningText(
+            iconFallbackText = Some("Warning"),
+            content = Text(
+              messages("beforeStartReturn.text.overdueWarning", viewDateFormatter.format(returnPeriod.periodDueDate()))
+            ),
+            classes = ""
+          )
+
+      }
     }
   }
-
-  "should show the correct message when currentDate is the same as returnDueDate" in {
-    val currentDate = LocalDate.of(2024, 1, 15)
-    val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
-    val viewModel = WarningTextViewModel(returnPeriod, currentDate)
-
-    val application = applicationBuilder()
-      .overrides(
-        bind[CacheConnector].toInstance(mockCacheConnector)
-      )
-      .build()
-
-    running(application) {
-      val messages = getMessages(application)
-      val result = viewModel.getDateValue(messages)
-      result mustBe
-        WarningText(
-          iconFallbackText = Some("Warning"),
-          content = Text(messages("beforeStartReturn.text.dueWarning")),
-          classes = "")
-
-    }
-  }
-
-  "should show the correct message when currentDate is after returnDueDate" in {
-    val currentDate = LocalDate.of(2024, 1, 30)
-    val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
-    val viewModel = WarningTextViewModel(returnPeriod, currentDate)
-
-    val application = applicationBuilder()
-      .overrides(
-        bind[CacheConnector].toInstance(mockCacheConnector)
-      )
-      .build()
-
-    running(application) {
-      val messages = getMessages(application)
-      val result = viewModel.getDateValue(messages)
-      result mustBe
-        WarningText(
-          iconFallbackText = Some("Warning"),
-          content = Text(messages("beforeStartReturn.text.overdueWarning", viewDateFormatter.format(returnPeriod.periodDueDate()))),
-          classes = "")
-
-    }
-  }
-}
 }
