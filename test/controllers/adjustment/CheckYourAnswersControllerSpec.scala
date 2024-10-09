@@ -228,7 +228,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val adjustmentEntry = currentAdjustmentEntry.copy(
-        sprDutyRate = None
+        sprDutyRate = None,
+        repackagedSprDutyRate = None
       )
 
       val userAnswers = completeAdjustmentEntryUserAnswers
@@ -263,7 +264,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       "if no existing data is found" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(Some(emptyUserAnswers)).build()
 
         running(application) {
           val request = FakeRequest(GET, checkYourAnswersRoute)
