@@ -28,6 +28,7 @@ import services.AuditService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.WarningTextViewModel
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
@@ -58,9 +59,9 @@ class BeforeStartReturnController @Inject() (
         logger.warn("Period key is not valid")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(returnPeriod) =>
-        val returnDueDate = returnPeriod.periodDueDate()
-        val currentDate   = LocalDate.now(clock)
-        val session       = request.session + (periodKeySessionKey, periodKey)
+        val currentDate = LocalDate.now(clock)
+        val viewModel   = WarningTextViewModel(returnPeriod, currentDate)
+        val session     = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
           case Right(ua)                                    =>
             logger.info(s"Return $appaId/$periodKey retrieved from cache by the user $credentialId")
@@ -68,7 +69,7 @@ class BeforeStartReturnController @Inject() (
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case Left(error) if error.statusCode == NOT_FOUND =>
             logger.info(s"Return $appaId/$periodKey not found in cache")
-            Ok(view(ReturnPeriodViewModel(returnPeriod), returnDueDate, currentDate)).withSession(session)
+            Ok(view(ReturnPeriodViewModel(returnPeriod), viewModel)).withSession(session)
           case Left(error) if error.statusCode == LOCKED    =>
             logger.warn(s"Return ${request.appaId}/$periodKey locked for the user $credentialId")
             Redirect(controllers.routes.ReturnLockedController.onPageLoad())

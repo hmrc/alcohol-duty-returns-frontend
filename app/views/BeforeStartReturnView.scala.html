@@ -16,6 +16,7 @@
 
 @import components.{SectionHeading, PageHeading}
 @import viewmodels.returns.ReturnPeriodViewModel
+@import viewmodels.WarningTextViewModel
 @import java.time.LocalDate
 
 @this(
@@ -29,7 +30,7 @@
 )
 
 
-@(returnPeriod: ReturnPeriodViewModel, returnDueDate: LocalDate, currentDate: LocalDate)(implicit request: Request[_], messages: Messages)
+@(returnPeriod: ReturnPeriodViewModel, viewModel: WarningTextViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("beforeStartReturn.title"))) {
     @formHelper(action = controllers.routes.BeforeStartReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
@@ -56,26 +57,7 @@
 
         @paragraph(messages("beforeStartReturn.text.guidance4"))
 
-        @if(currentDate.isAfter(returnDueDate)) {
-            @govukWarningText(WarningText(
-                iconFallbackText = Some("Warning"),
-                content = Text(messages(s"beforeStartReturn.text.overdueWarning", returnPeriod.returnDueDate)))
-            )
-        }
-
-        @if(currentDate.isEqual(returnDueDate)) {
-            @govukWarningText(WarningText(
-                iconFallbackText = Some("Warning"),
-                content = Text(messages("beforeStartReturn.text.dueWarning")))
-            )
-        }
-
-        @if(currentDate.isBefore(returnDueDate)) {
-            @govukWarningText(WarningText(
-                iconFallbackText = Some("Warning"),
-                content = Text(messages(s"beforeStartReturn.text.dueDateWarning", returnPeriod.returnDueDate)))
-            )
-        }
+        @govukWarningText(viewModel.getDateValue)
 
         @govukButton(
             ButtonViewModel("continueButton", messages("site.continue"))

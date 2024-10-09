@@ -28,6 +28,7 @@ import play.api.test.Helpers._
 import play.api.inject.bind
 import services.AuditService
 import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
+import viewmodels.WarningTextViewModel
 import viewmodels.returns.ReturnPeriodViewModel
 import viewmodels.returns.ReturnPeriodViewModel.viewDateFormatter
 import views.html.BeforeStartReturnView
@@ -59,8 +60,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       returnValidUntilTime = Some(Instant.now(clock))
     )
 
-    val currentDate   = LocalDate.now(clock)
-    val returnDueDate = returnPeriod.periodDueDate()
+    val currentDate = LocalDate.now(clock)
+    val viewModel   = WarningTextViewModel(returnPeriod, currentDate)
 
     "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in {
       when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
@@ -113,7 +114,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           ReturnPeriodViewModel(ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(returnPeriodViewModel, returnDueDate, currentDate)(
+        contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(
           request,
           getMessages(application)
         ).toString
