@@ -44,12 +44,14 @@ class CacheConnector @Inject() (
       .withBody(Json.toJson(userAnswers))
       .execute[HttpResponse]
 
-  def createUserAnswers(returnAndUserDetails: ReturnAndUserDetails)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+  def createUserAnswers(
+    returnAndUserDetails: ReturnAndUserDetails
+  )(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, UserAnswers]] =
     httpClient
       .post(url"${config.adrCacheCreateUserAnswersUrl()}")
       .withBody(Json.toJson(returnAndUserDetails))
       .setHeader("Csrf-Token" -> "nocheck")
-      .execute[HttpResponse]
+      .execute[Either[UpstreamErrorResponse, UserAnswers]]
 
   def releaseLock(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[Unit] =
     httpClient

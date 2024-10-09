@@ -66,7 +66,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       totals = totals
     )
 
-  private def getDutyDeclared(userAnswers: UserAnswers): EitherT[Future, String, AdrDutyDeclared] =
+  def getDutyDeclared(userAnswers: UserAnswers): EitherT[Future, String, AdrDutyDeclared] =
     for {
       declared          <- getValue(userAnswers, DeclareAlcoholDutyQuestionPage)
       dutyDeclaredItems <-
@@ -96,7 +96,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
         )
     }
 
-  private def getAdjustments(userAnswers: UserAnswers): EitherT[Future, String, AdrAdjustments] =
+  def getAdjustments(userAnswers: UserAnswers): EitherT[Future, String, AdrAdjustments] =
     getValue(userAnswers, DeclareAdjustmentQuestionPage).flatMap { isAnyAdjustmentDeclared =>
       if (isAnyAdjustmentDeclared) {
         getValue(userAnswers, AdjustmentEntryListPage).flatMap(adjustmentEntryList =>
@@ -233,7 +233,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     )
   }.toRight(s"Impossible to create a Repackaged Adjustment item for values: $adjustmentEntry")
 
-  private def getDutySuspended(userAnswers: UserAnswers): EitherT[Future, String, AdrDutySuspended] =
+  def getDutySuspended(userAnswers: UserAnswers): EitherT[Future, String, AdrDutySuspended] =
     getValue(userAnswers, DeclareDutySuspendedDeliveriesQuestionPage).flatMap { hasDeclaredDutySuspended =>
       if (hasDeclaredDutySuspended) {
         getDutySuspendedProducts(userAnswers).map { dutySuspendedProducts =>
@@ -309,7 +309,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       otherFermentedDutySuspended
     )
 
-  private def getSpirits(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrSpirits]] =
+  def getSpirits(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrSpirits]] =
     for {
       declared        <- getValue(userAnswers, DeclareQuarterlySpiritsPage)
       spiritsProduced <- if (declared) getSpiritProduced(userAnswers) else EitherT.rightT[Future, String](None)
@@ -410,7 +410,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       }
     }
 
-  private def getTotals(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): EitherT[Future, String, AdrTotals] =
+  def getTotals(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): EitherT[Future, String, AdrTotals] =
     for {
       hasAlcoholDuty              <- getValue(userAnswers, DeclareAlcoholDutyQuestionPage)
       declaredAlcoholDutyByRegime <- if (hasAlcoholDuty) getValue(userAnswers, AlcoholDutyPage)
@@ -482,4 +482,10 @@ trait AdrReturnSubmissionService {
   def getAdrReturnSubmission(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
     hc: HeaderCarrier
   ): EitherT[Future, String, AdrReturnSubmission]
+
+  def getDutyDeclared(userAnswers: UserAnswers): EitherT[Future, String, AdrDutyDeclared]
+  def getAdjustments(userAnswers: UserAnswers): EitherT[Future, String, AdrAdjustments]
+  def getSpirits(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrSpirits]]
+  def getDutySuspended(userAnswers: UserAnswers): EitherT[Future, String, AdrDutySuspended]
+  def getTotals(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): EitherT[Future, String, AdrTotals]
 }

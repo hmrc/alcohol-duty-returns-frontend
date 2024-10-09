@@ -19,18 +19,17 @@ package controllers
 import base.SpecBase
 import connectors.CacheConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegimes, ReturnPeriod, UserAnswers}
-import models.audit.AuditContinueReturn
+import models.{AlcoholRegimes, ObligationData, ReturnPeriod, UserAnswers}
+import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.LOCKED
 import play.api.test.Helpers._
 import play.api.inject.bind
 import services.AuditService
-import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import viewmodels.WarningTextViewModel
 import viewmodels.returns.ReturnPeriodViewModel
-import viewmodels.returns.ReturnPeriodViewModel.viewDateFormatter
 import views.html.BeforeStartReturnView
 
 import java.time.{Clock, Instant, LocalDate}
@@ -46,16 +45,27 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       groupId,
       internalId,
       regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)),
+      startedTime = Instant.now(clock),
       lastUpdated = Instant.now(clock),
       validUntil = Some(Instant.now(clock))
     )
 
-    val expectedAuditEvent = AuditContinueReturn(
+    val expectedContinueReturnAuditEvent = AuditContinueReturn(
       appaId = returnId.appaId,
       periodKey = returnId.periodKey,
       credentialId = emptyUserAnswers.internalId,
       groupId = emptyUserAnswers.groupId,
       returnContinueTime = Instant.now(clock),
+      returnStartedTime = Instant.now(clock),
+      returnValidUntilTime = Some(Instant.now(clock))
+    )
+
+    val expectedReturnStartedAuditEvent = AuditReturnStarted(
+      appaId = returnId.appaId,
+      periodKey = returnId.periodKey,
+      credentialId = emptyUserAnswers.internalId,
+      groupId = emptyUserAnswers.groupId,
+      obligationData = AuditObligationData(obligationDataSingleOpen),
       returnStartedTime = Instant.now(clock),
       returnValidUntilTime = Some(Instant.now(clock))
     )
@@ -84,7 +94,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockAuditService).audit(eqTo(expectedAuditEvent))(any(), any())
+        verify(mockAuditService).audit(eqTo(expectedContinueReturnAuditEvent))(any(), any())
         redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
       }
     }
@@ -193,13 +203,37 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the TaskList Page when a userAnswers is successfully created for a POST" in {
-      val httpResponse = mock[HttpResponse]
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(httpResponse)
-      when(httpResponse.status).thenReturn(CREATED)
+      val userAnswers = emptyUserAnswers.set(ObligationData, obligationDataSingleOpen).success.value
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+        verify(mockAuditService).audit(eqTo(expectedReturnStartedAuditEvent))(any(), any())
+      }
+    }
+
+    "must redirect to the TaskList Page when a userAnswers is successfully created for a POST without sending the audit event if the obligation is not available" in {
+      val userAnswers = emptyUserAnswers.remove(ObligationData).success.value
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
+
+      val mockAuditService = mock[AuditService]
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService)
         )
         .build()
 
@@ -211,17 +245,21 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
       }
+
+      verify(mockAuditService, times(0)).audit(any())(any(), any())
     }
 
     "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in {
-      val httpResponse = mock[HttpResponse]
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(httpResponse)
-      when(httpResponse.status).thenReturn(INTERNAL_SERVER_ERROR)
-      when(httpResponse.body).thenReturn("Computer said No!")
+      val errorResponse = mock[UpstreamErrorResponse]
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Left(errorResponse))
+      when(errorResponse.statusCode).thenReturn(INTERNAL_SERVER_ERROR)
+
+      val mockAuditService = mock[AuditService]
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService)
         )
         .build()
 
@@ -232,17 +270,20 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockAuditService, times(0)).audit(any())(any(), any())
       }
     }
 
     "must redirect to the journey recovery controller if the period key is not in the session for a POST" in {
-      val httpResponse = mock[HttpResponse]
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(httpResponse)
-      when(httpResponse.status).thenReturn(CREATED)
+      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
+
+      val mockAuditService = mock[AuditService]
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[AuditService].toInstance(mockAuditService)
         )
         .build()
 
@@ -253,6 +294,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockAuditService, times(0)).audit(any())(any(), any())
       }
     }
   }

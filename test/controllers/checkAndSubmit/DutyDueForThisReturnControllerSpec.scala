@@ -19,16 +19,19 @@ package controllers.checkAndSubmit
 import base.SpecBase
 import cats.data.EitherT
 import connectors.AlcoholDutyReturnsConnector
+import models.audit.AuditReturnSubmitted
 import models.returns.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
 import play.api.test.Helpers._
+import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
 import viewmodels.TableViewModel
 import viewmodels.checkAnswers.checkAndSubmit.{DutyDueForThisReturnHelper, DutyDueForThisReturnViewModel}
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
-import java.time.{Instant, LocalDate}
+import java.time.{Clock, Instant, LocalDate}
 
 class DutyDueForThisReturnControllerSpec extends SpecBase {
 
@@ -87,7 +90,6 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the Check Your Answers page if the submission is successful" in {
-      val adrReturnSubmission     = mock[AdrReturnSubmission]
       val adrReturnCreatedDetails = AdrReturnCreatedDetails(
         processingDate = Instant.now(),
         amount = BigDecimal(1),
@@ -97,19 +99,27 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+      val auditService                = mock[AuditService]
+      val submissionTime              = Instant.now(clock)
 
-      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.rightT(adrReturnSubmission)
-      )
+      val expectedAuditEvent = AuditReturnSubmitted(fullUserAnswers, fullReturn, submissionTime)
 
-      when(alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())).thenReturn(
+      when(
+        alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
+      ).thenReturn(
         EitherT.rightT(adrReturnCreatedDetails)
       )
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
+        EitherT.rightT(fullReturn)
+      )
+
+      val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
         .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[AuditService].toInstance(auditService))
+        .overrides(bind[Clock].toInstance(clock))
         .build()
 
       running(application) {
@@ -122,13 +132,15 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.checkAndSubmit.routes.ReturnSubmittedController
           .onPageLoad()
           .url
+
+        verify(auditService, times(1)).audit(eqTo(expectedAuditEvent))(any(), any())
       }
     }
 
     "must redirect to the Journey Recover page if mapping from UserAnswer to AdrReturnSubmission return an error" in {
-
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+      val auditService                = mock[AuditService]
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
         EitherT.leftT("Error message")
@@ -138,6 +150,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
         .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[AuditService].toInstance(auditService))
         .build()
 
       running(application) {
@@ -148,14 +161,15 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        verify(auditService, times(0)).audit(any())(any(), any())
       }
     }
 
     "must redirect to the Journey Recover page if the submission is not successful" in {
-      val adrReturnSubmission = mock[AdrReturnSubmission]
-
+      val adrReturnSubmission         = mock[AdrReturnSubmission]
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+      val auditService                = mock[AuditService]
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
         EitherT.rightT(adrReturnSubmission)
@@ -169,6 +183,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
         .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[AuditService].toInstance(auditService))
         .build()
 
       running(application) {
@@ -179,6 +194,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        verify(auditService, times(0)).audit(any())(any(), any())
       }
     }
 

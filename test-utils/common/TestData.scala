@@ -452,7 +452,11 @@ trait TestData extends ModelGenerators {
     )
   )
 
-  val fullUserAnswers: UserAnswers = emptyUserAnswers.copy(
+  val fullUserAnswers: UserAnswers = UserAnswers(
+    ReturnId(appaId, quarterReturnPeriodGen.sample.get.toPeriodKey),
+    groupId,
+    internalId,
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)),
     data = Json.obj(
       DeclareAlcoholDutyQuestionPage.toString             -> true,
       AlcoholDutyPage.toString                            -> Json.obj(
