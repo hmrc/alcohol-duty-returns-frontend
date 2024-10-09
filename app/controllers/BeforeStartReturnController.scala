@@ -19,7 +19,7 @@ package controllers
 import config.Constants.periodKeySessionKey
 import connectors.CacheConnector
 import controllers.actions._
-import models.audit.{AuditContinueReturn, AuditReturnStarted}
+import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
 import models.{ObligationData, ReturnId, ReturnPeriod, UserAnswers}
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -128,7 +128,7 @@ class BeforeStartReturnController @Inject() (
           periodKey = userAnswers.returnId.periodKey,
           credentialId = userAnswers.internalId,
           groupId = userAnswers.groupId,
-          obligationData = obligationData,
+          obligationData = AuditObligationData(obligationData),
           returnStartedTime = userAnswers.startedTime,
           returnValidUntilTime = userAnswers.validUntil
         )

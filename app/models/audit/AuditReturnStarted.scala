@@ -16,18 +16,37 @@
 
 package models.audit
 
-import models.ObligationData
+import models.{ObligationData, ObligationStatus}
 import models.audit.AuditType.ReturnStarted
 import play.api.libs.json.{Json, OFormat}
 
-import java.time.Instant
+import java.time.{Instant, LocalDate}
+
+case class AuditObligationData(
+  status: ObligationStatus,
+  fromDate: LocalDate,
+  toDate: LocalDate,
+  dueDate: LocalDate
+)
+
+object AuditObligationData {
+  implicit val format: OFormat[AuditObligationData] = Json.format[AuditObligationData]
+
+  def apply(obligationData: ObligationData): AuditObligationData =
+    AuditObligationData(
+      status = obligationData.status,
+      fromDate = obligationData.fromDate,
+      toDate = obligationData.toDate,
+      dueDate = obligationData.dueDate
+    )
+}
 
 case class AuditReturnStarted(
   appaId: String,
   periodKey: String,
   credentialId: String,
   groupId: String,
-  obligationData: ObligationData,
+  obligationData: AuditObligationData,
   returnStartedTime: Instant,
   returnValidUntilTime: Option[Instant]
 ) extends AuditEventDetail {

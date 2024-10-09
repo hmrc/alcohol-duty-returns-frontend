@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.CacheConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegimes, ObligationData, ReturnPeriod, UserAnswers}
-import models.audit.{AuditContinueReturn, AuditReturnStarted}
+import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.LOCKED
@@ -64,7 +64,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       periodKey = returnId.periodKey,
       credentialId = emptyUserAnswers.internalId,
       groupId = emptyUserAnswers.groupId,
-      obligationData = obligationDataSingleOpen,
+      obligationData = AuditObligationData(obligationDataSingleOpen),
       returnStartedTime = Instant.now(clock),
       returnValidUntilTime = Some(Instant.now(clock))
     )
