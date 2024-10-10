@@ -18,19 +18,19 @@ package viewmodels.returns
 
 import models.ReturnPeriod
 
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-case class ReturnPeriodViewModel(fromDate: String, toDate: String)
+case class ReturnPeriodViewModel(fromDate: String, toDate: String, returnDueDate: String)
 object ReturnPeriodViewModel {
 
   val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel = {
-    val yearMonth = returnPeriod.period
+  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel =
     ReturnPeriodViewModel(
-      viewDateFormatter.format(yearMonth.atDay(1)),
-      viewDateFormatter.format(yearMonth.atEndOfMonth)
+      viewDateFormatter.format(returnPeriod.periodFromDate()),
+      viewDateFormatter.format(returnPeriod.periodToDate()),
+      viewDateFormatter.format(returnPeriod.periodDueDate())
     )
-  }
 
 }

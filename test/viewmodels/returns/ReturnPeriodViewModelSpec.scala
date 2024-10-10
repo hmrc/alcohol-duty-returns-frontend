@@ -25,12 +25,14 @@ class ReturnPeriodViewModelSpec extends SpecBase {
 
   "ReturnPeriodViewModelSpec" - {
     "should return a ReturnPeriodViewModel when apply method is called with a valid ReturnPeriod" in {
-      val yearMonth    = arbitraryYearMonth.arbitrary.sample.get
-      val returnPeriod = ReturnPeriod(yearMonth)
-      val result       = ReturnPeriodViewModel(returnPeriod)
+      val yearMonth      = arbitraryYearMonth.arbitrary.sample.get
+      val returnPeriod   = ReturnPeriod(yearMonth)
+      val result         = ReturnPeriodViewModel(returnPeriod)
+      val returnDueMonth = returnPeriod.period.plusMonths(1)
 
-      result.fromDate shouldBe ReturnPeriodViewModel.viewDateFormatter.format(yearMonth.atDay(1))
-      result.toDate   shouldBe ReturnPeriodViewModel.viewDateFormatter.format(yearMonth.atEndOfMonth())
+      result.fromDate      shouldBe ReturnPeriodViewModel.viewDateFormatter.format(yearMonth.atDay(1))
+      result.toDate        shouldBe ReturnPeriodViewModel.viewDateFormatter.format(yearMonth.atEndOfMonth())
+      result.returnDueDate shouldBe ReturnPeriodViewModel.viewDateFormatter.format(returnDueMonth.atDay(15))
     }
   }
 
