@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package service.adjustment
+package services.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
@@ -208,6 +208,26 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         exception.getLocalizedMessage must include("Failed to get rate, both tax rate and spr duty rate are defined.")
       }
 
+      "if pureAlcoholVolume value is not defined" in {
+        val updatedAdjustmentEntry = AdjustmentEntry(
+          adjustmentType = Some(Underdeclaration)
+        )
+        val userAnswerWithRate     = emptyUserAnswers
+          .set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry)
+          .success
+          .value
+        val mockConnector          = mock[AlcoholDutyCalculatorConnector]
+        when(mockConnector.calculateAdjustmentDuty(any(), any(), any())(any()))
+          .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
+        val service                = new AdjustmentEntryServiceImpl(mockConnector)
+        val exception              = intercept[RuntimeException] {
+          service.createAdjustment(userAnswerWithRate).futureValue
+        }
+        exception.getLocalizedMessage must include(
+          "Couldn't fetch correct AdjustmentEntry from user answers."
+        )
+      }
+
       "if neither TaxType or SmallProducerReliefDutyRate contain rate" in {
         val updatedAdjustmentEntry = adjustmentEntry.copy(
           rateBand = Some(rateBand.copy(rate = None)),
@@ -280,6 +300,32 @@ class AdjustmentEntryServiceSpec extends SpecBase {
       exception.getLocalizedMessage must include(
         "Failed to get rate, neither tax rate nor spr duty rate are defined for repackaged draught products."
       )
+    }
+
+    "for getError default case" in {
+      val adjustmentEntry = AdjustmentEntry(
+        rateBand = Some(rateBand.copy(rate = None)),
+        sprDutyRate = Some(BigDecimal(1))
+      )
+
+      val service = new AdjustmentEntryServiceImpl(mock[AlcoholDutyCalculatorConnector])
+
+      val exception = service.getError(adjustmentEntry)
+
+      exception.getMessage should include("Failed to get rate.")
+    }
+
+    "for getRepackagedError default case" in {
+      val adjustmentEntry = AdjustmentEntry(
+        adjustmentType = Some(Spoilt),
+        repackagedSprDutyRate = Some(BigDecimal(1))
+      )
+
+      val service = new AdjustmentEntryServiceImpl(mock[AlcoholDutyCalculatorConnector])
+
+      val exception = service.getRepackagedError(adjustmentEntry)
+
+      exception.getMessage should include("Failed to get rate for repackaged draught products.")
     }
   }
 }

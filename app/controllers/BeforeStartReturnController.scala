@@ -19,8 +19,8 @@ package controllers
 import config.Constants.periodKeySessionKey
 import connectors.CacheConnector
 import controllers.actions._
-import models.audit.AuditContinueReturn
-import models.{ReturnId, ReturnPeriod, UserAnswers}
+import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
+import models.{ObligationData, ReturnId, ReturnPeriod, UserAnswers}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -84,18 +84,17 @@ class BeforeStartReturnController @Inject() (
       case Some(periodKey) =>
         val returnAndUserDetails =
           ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
-        cacheConnector.createUserAnswers(returnAndUserDetails).map { response =>
-          if (response.status != CREATED) {
-            logger.warn(s"Unable to create userAnswers, response status: ${response.status}")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-          } else {
+        cacheConnector.createUserAnswers(returnAndUserDetails).map {
+          case Right(userAnswer) =>
             logger.info(s"Return ${request.appaId}/$periodKey created")
+            auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
-          }
+          case Left(error)       =>
+            logger.warn(s"Unable to create userAnswers:", error)
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }
   }
-  // TODO : change returnStartedTime to start time in future
 
   private def auditContinueReturn(
     userAnswers: UserAnswers,
@@ -113,10 +112,28 @@ class BeforeStartReturnController @Inject() (
       credentialId = credentialId,
       groupId = groupId,
       returnContinueTime = returnContinueTime,
-      returnStartedTime = userAnswers.lastUpdated,
+      returnStartedTime = userAnswers.startedTime,
       returnValidUntilTime = userAnswers.validUntil
     )
     auditService.audit(eventDetail)
   }
+
+  private def auditReturnStarted(
+    userAnswers: UserAnswers
+  )(implicit hc: HeaderCarrier): Unit =
+    userAnswers.get(ObligationData) match {
+      case Some(obligationData) =>
+        val auditReturnStarted = AuditReturnStarted(
+          appaId = userAnswers.returnId.appaId,
+          periodKey = userAnswers.returnId.periodKey,
+          credentialId = userAnswers.internalId,
+          groupId = userAnswers.groupId,
+          obligationData = AuditObligationData(obligationData),
+          returnStartedTime = userAnswers.startedTime,
+          returnValidUntilTime = userAnswers.validUntil
+        )
+        auditService.audit(auditReturnStarted)
+      case None                 => logger.warn("Impossible to create Return Started Audit Event, unable to retrieve obligation data")
+    }
 
 }

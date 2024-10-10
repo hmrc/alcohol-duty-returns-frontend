@@ -35,6 +35,10 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
     override def path: JsPath = JsPath \ toString
   }
 
+  case object TestMapSeqPage extends Gettable[Map[String, Seq[String]]] with Settable[Map[String, Seq[String]]] {
+    override def path: JsPath = JsPath \ toString
+  }
+
   "UserAnswer" - {
     val appaId: String     = appaIdGen.sample.get
     val periodKey: String  = periodKeyGen.sample.get
@@ -42,9 +46,9 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
     val internalId: String = "id"
 
     val json          =
-      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":["Spirits","Wine","Cider","OtherFermentedProduct","Beer"],"data":{},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
+      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":["Spirits","Wine","Cider","OtherFermentedProduct","Beer"],"data":{},"startedTime":{"$$date":{"$$numberLong":"1718118467838"}},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
     val noRegimesJson =
-      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":[],"data":{},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
+      s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":[],"data":{},"startedTime":{"$$date":{"$$numberLong":"1718118467838"}},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
 
     "should add a value to a set for a given page and get the same value" in {
 
@@ -86,7 +90,12 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
       Json
-        .toJson(userAnswers.copy(lastUpdated = Instant.ofEpochMilli(1718118467838L)))
+        .toJson(
+          userAnswers.copy(
+            startedTime = Instant.ofEpochMilli(1718118467838L),
+            lastUpdated = Instant.ofEpochMilli(1718118467838L)
+          )
+        )
         .toString() mustBe json
     }
 
@@ -94,7 +103,10 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       val userAnswers =
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
-      Json.parse(json).as[UserAnswers] mustBe userAnswers.copy(lastUpdated = Instant.ofEpochMilli(1718118467838L))
+      Json.parse(json).as[UserAnswers] mustBe userAnswers.copy(
+        startedTime = Instant.ofEpochMilli(1718118467838L),
+        lastUpdated = Instant.ofEpochMilli(1718118467838L)
+      )
     }
 
     "should throw an error if no regimes found" in {
@@ -138,6 +150,68 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         expectedValue mustBe actualValue
       }
 
+      "should return None when value is not present" in {
+        val userAnswers =
+          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
+
+        val result = userAnswers.get(TestSeqPage)
+        result mustBe None
+      }
+
+      "should add value to existing sequence" in {
+        val userAnswers =
+          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
+            .set(TestSeqPage, Seq("existingValue"))
+            .success
+            .value
+
+        val updatedUserAnswer = userAnswers.addToSeq(TestSeqPage, "newValue") match {
+          case Success(value) => value
+          case _              => fail()
+        }
+
+        updatedUserAnswer.get(TestSeqPage) mustBe Some(Seq("existingValue", "newValue"))
+      }
+
+      "should return None when no value exists at given index" in {
+        val userAnswers =
+          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
+            .set(TestSeqPage, Seq("value1", "value2"))
+            .success
+            .value
+
+        val result = userAnswers.getByIndex(TestSeqPage, 2)
+        result mustBe None
+      }
+    }
+    "should add a value to a sequence by key and append another value" in {
+
+      val userAnswers =
+        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
+
+      val updatedUserAnswer1 = userAnswers.addToSeqByKey(TestMapSeqPage, "1", "value1") match {
+        case Success(value) => value
+        case _              => fail()
+      }
+
+      val actualValue1 = updatedUserAnswer1.getByKeyAndIndex(TestMapSeqPage, "1", 0) match {
+        case Some(value) => value
+        case _           => fail("First value not found")
+      }
+      actualValue1 mustBe "value1"
+
+      val updatedUserAnswer2 = updatedUserAnswer1.addToSeqByKey(TestMapSeqPage, "1", "value2") match {
+        case Success(value) => value
+        case _              => fail()
+      }
+
+      val actualValue2 = updatedUserAnswer2.getByKeyAndIndex(TestMapSeqPage, "1", 1) match {
+        case Some(value) => value
+        case _           => fail("Second value not found")
+      }
+
+      actualValue1 mustBe "value1"
+      actualValue2 mustBe "value2"
     }
   }
 }

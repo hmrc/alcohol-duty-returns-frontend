@@ -25,4 +25,6 @@ object AuditType extends Enum[AuditType] {
 
   case object ContinueReturn extends AuditType
   case object PaymentStarted extends AuditType
+  case object ReturnStarted extends AuditType
+  case object ReturnSubmitted extends AuditType
 }

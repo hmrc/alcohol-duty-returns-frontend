@@ -57,6 +57,13 @@ class EnumerableSpec extends AnyFreeSpec with Matchers with EitherValues with Op
         JsPath -> Seq(JsonValidationError("error.invalid"))
       )
     }
+
+    "must fail for JsNull value" in {
+      val result = Json.fromJson[Foo](JsNull).asEither
+      result.left.value must contain(
+        JsPath -> Seq(JsonValidationError("error.invalid"))
+      )
+    }
   }
 
   ".writes" - {
