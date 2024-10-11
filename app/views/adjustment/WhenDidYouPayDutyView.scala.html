@@ -42,7 +42,7 @@
     @formHelper(action = controllers.adjustment.routes.WhenDidYouPayDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("when-did-you-pay-duty-input" -> "when-did-you-pay-duty-input.month")))
         }
 
         @sectionHeading(
