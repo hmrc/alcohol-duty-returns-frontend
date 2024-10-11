@@ -30,7 +30,7 @@ object DutySuspendedCiderSummary {
     answers.get(DutySuspendedCiderPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedCider.totalCider.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.totalCider.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP.noPadding", answer.totalCider)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedCider.totalCider.change.hidden"))
@@ -42,7 +42,9 @@ object DutySuspendedCiderSummary {
     answers.get(DutySuspendedCiderPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedCider.pureAlcoholInCider.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.pureAlcoholInCider.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(
+          s"${messages("site.4DP.noPadding", answer.pureAlcoholInCider)} ${messages("site.unit.litres")}"
+        ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedCider.pureAlcoholInCider.change.hidden"))

@@ -54,15 +54,15 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
           Text("2.5 litres"),
           Text("£1.26"),
           Empty,
-          Text("1000 litres"),
+          Text("1,000 litres"),
           Text("3.5 litres"),
           Text("£1.46"),
           Empty,
-          Text("10000 litres"),
+          Text("10,000 litres"),
           Text("4.5 litres"),
           Text("£1.66"),
           Empty,
-          Text("20000 litres"),
+          Text("20,000 litres"),
           Text("4.8 litres"),
           Text("£1.66")
         )

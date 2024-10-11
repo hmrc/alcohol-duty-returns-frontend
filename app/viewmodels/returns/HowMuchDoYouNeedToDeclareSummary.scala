@@ -110,11 +110,15 @@ object HowMuchDoYouNeedToDeclareSummary {
             ).withCssClass(Constants.tableRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres"),
-              value = ValueViewModel(s"${dutyByTaxType.totalLitres.toString} ${messages("site.unit.litres")}")
+              value = ValueViewModel(
+                s"${messages("site.2DP.noPadding", dutyByTaxType.totalLitres)} ${messages("site.unit.litres")}"
+              )
             ).withCssClass(Constants.tableRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol"),
-              value = ValueViewModel(s"${dutyByTaxType.pureAlcohol.toString} ${messages("site.unit.litres")}")
+              value = ValueViewModel(
+                s"${messages("site.4DP.noPadding", dutyByTaxType.pureAlcohol)} ${messages("site.unit.litres")}"
+              )
             )
           )
         case _                   => throw new IllegalArgumentException(s"Invalid tax type: ${rateBand.taxTypeCode}")

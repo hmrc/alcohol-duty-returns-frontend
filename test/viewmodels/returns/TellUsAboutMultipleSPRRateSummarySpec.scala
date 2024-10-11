@@ -38,7 +38,7 @@ class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
         Seq(
           Text("Draught beer between 2% and 3% ABV (124)"),
           HtmlContent("100 litres"),
-          HtmlContent("2.5 LPA"),
+          HtmlContent("2.50 LPA"),
           HtmlContent("£1.26 per litre")
         )
     }

@@ -46,10 +46,10 @@ class MultipleSPRListSummarySpec extends SpecBase {
           Text("100 litres"),
           Text("2.5 litres"),
           Empty,
-          Text("1000 litres"),
+          Text("1,000 litres"),
           Text("3.5 litres"),
           Empty,
-          Text("30000 litres"),
+          Text("30,000 litres"),
           Text("9.3 litres")
         )
     }
