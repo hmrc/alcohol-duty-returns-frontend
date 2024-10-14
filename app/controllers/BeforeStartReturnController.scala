@@ -28,7 +28,7 @@ import services.AuditService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.WarningTextViewModel
+import viewmodels.BeforeStartReturnViewModel
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
@@ -60,7 +60,7 @@ class BeforeStartReturnController @Inject() (
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(returnPeriod) =>
         val currentDate = LocalDate.now(clock)
-        val viewModel   = WarningTextViewModel(returnPeriod, currentDate)
+        val viewModel   = BeforeStartReturnViewModel(returnPeriod, currentDate)
         val session     = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
           case Right(ua)                                    =>

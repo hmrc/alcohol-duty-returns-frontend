@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import play.api.inject.bind
 import services.AuditService
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import viewmodels.WarningTextViewModel
+import viewmodels.BeforeStartReturnViewModel
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
@@ -71,7 +71,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     )
 
     val currentDate = LocalDate.now(clock)
-    val viewModel   = WarningTextViewModel(returnPeriod, currentDate)
+    val viewModel   = BeforeStartReturnViewModel(returnPeriod, currentDate)
 
     "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in {
       when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))

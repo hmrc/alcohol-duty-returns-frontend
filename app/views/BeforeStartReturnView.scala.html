@@ -16,7 +16,7 @@
 
 @import components.{SectionHeading, PageHeading}
 @import viewmodels.returns.ReturnPeriodViewModel
-@import viewmodels.WarningTextViewModel
+@import viewmodels.BeforeStartReturnViewModel
 @import java.time.LocalDate
 
 @this(
@@ -30,7 +30,7 @@
 )
 
 
-@(returnPeriod: ReturnPeriodViewModel, viewModel: WarningTextViewModel)(implicit request: Request[_], messages: Messages)
+@(returnPeriod: ReturnPeriodViewModel, viewModel: BeforeStartReturnViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("beforeStartReturn.title"))) {
     @formHelper(action = controllers.routes.BeforeStartReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
@@ -57,7 +57,7 @@
 
         @paragraph(messages("beforeStartReturn.text.guidance4"))
 
-        @govukWarningText(viewModel.getDateValue)
+        @govukWarningText(viewModel.warningText)
 
         @govukButton(
             ButtonViewModel("continueButton", messages("site.continue"))
