@@ -31,8 +31,7 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
 
   "get" - {
     "successfully fetch cache" in new SetUp{
-      val userAnswers = UserAnswers(ReturnId(appaId, periodKey),"abc","xyz",  AlcoholRegimes(Set(Beer)), Json.obj(), Instant.now(clock))
-      val jsonResponse = Json.toJson(userAnswers).toString()
+            val jsonResponse = Json.toJson(userAnswers).toString()
       val mockUrl = s"/alcohol-duty-returns/cache/get/$appaId/$periodKey"
       server.stubFor(
         get(urlMatching(mockUrl))
@@ -51,12 +50,15 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
       server.stubFor(
         post(urlMatching(postUrl))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(returnAndUserDetails))))
-          .willReturn(aResponse().withStatus(CREATED))
+          .willReturn(aResponse().withStatus(CREATED)
+            .withBody(Json.stringify(Json.toJson(userAnswers))))
       )
 
       whenReady(connector.createUserAnswers(returnAndUserDetails)) {
-        result =>
-          result.status mustBe CREATED
+        case Right(userAnswersResponse) =>
+        userAnswersResponse mustBe userAnswers
+        case Left(_) =>
+        fail("Expected Right(UserAnswers), but got Left(UpstreamErrorResponse)")
       }
     }
   }
@@ -108,5 +110,6 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
 
   class SetUp {
     val connector = app.injector.instanceOf[CacheConnector]
+    val userAnswers = UserAnswers(ReturnId(appaId, periodKey),"abc","xyz",  AlcoholRegimes(Set(Beer)), Json.obj(), Instant.now(clock), Instant.now(clock))
   }
 }

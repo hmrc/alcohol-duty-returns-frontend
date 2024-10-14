@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalToJson, get, post, stubFor, urlMatching}
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalToJson, get, post, urlMatching}
 import connectors.AlcoholDutyReturnsConnector
 import models.checkAndSubmit.AdrReturnCreatedDetails
-import models.returns.AdrReturnSubmission
 import org.scalatest.RecoverMethods.recoverToExceptionIf
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.Application
