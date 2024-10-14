@@ -28,10 +28,11 @@ import services.AuditService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.BeforeStartReturnViewModel
 import viewmodels.returns.ReturnPeriodViewModel
 import views.html.BeforeStartReturnView
 
-import java.time.{Clock, Instant}
+import java.time.{Clock, Instant, LocalDate}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -52,12 +53,15 @@ class BeforeStartReturnController @Inject() (
     val appaId       = request.appaId
     val credentialId = request.userId
     val groupId      = request.groupId
+
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case None               =>
         logger.warn("Period key is not valid")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(returnPeriod) =>
-        val session = request.session + (periodKeySessionKey, periodKey)
+        val currentDate = LocalDate.now(clock)
+        val viewModel   = BeforeStartReturnViewModel(returnPeriod, currentDate)
+        val session     = request.session + (periodKeySessionKey, periodKey)
         cacheConnector.get(request.appaId, periodKey).map {
           case Right(ua)                                    =>
             logger.info(s"Return $appaId/$periodKey retrieved from cache by the user")
@@ -65,7 +69,7 @@ class BeforeStartReturnController @Inject() (
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case Left(error) if error.statusCode == NOT_FOUND =>
             logger.info(s"Return $appaId/$periodKey not found in cache")
-            Ok(view(ReturnPeriodViewModel(returnPeriod))).withSession(session)
+            Ok(view(ReturnPeriodViewModel(returnPeriod), viewModel)).withSession(session)
           case Left(error) if error.statusCode == LOCKED    =>
             logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
             Redirect(controllers.routes.ReturnLockedController.onPageLoad())

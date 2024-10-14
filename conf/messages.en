@@ -254,7 +254,7 @@ taskList.section.checkAndSubmit.hint = Complete all tasks
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
-beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty return for {0} to {1}.
+beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty Return for {0} to {1}.
 beforeStartReturn.text.guidance2 = You need to tell us about any alcoholic products for duty in this period. When declaring you will need to tell us the total litres of alcoholic product and the litres of pure alcohol across a range of ABV bands.
 beforeStartReturn.text.guidance3 = You can also use this service to tell us about:
 beforeStartReturn.text.guidance3.usecase1 = alcoholic products not declared in an earlier return
@@ -263,7 +263,9 @@ beforeStartReturn.text.guidance3.usecase3 = spoilt alcoholic products
 beforeStartReturn.text.guidance3.usecase4 = repackaged draught alcoholic products
 beforeStartReturn.text.guidance3.usecase5 = alcoholic products you have exported and need to claim drawback on
 beforeStartReturn.text.guidance4 = After you tell us this information, we will calculate how much duty you owe for this period.
-beforeStartReturn.text.guidance5 = The deadline for completing this return [is/was] [due date/today]
+beforeStartReturn.text.dueWarning = The deadline for completing this return is today
+beforeStartReturn.text.overdueWarning = The deadline for completing this return was {0}
+beforeStartReturn.text.dueDateWarning = The deadline for completing this return is {0}
 
 return.regime.Beer = beer
 return.regime.Cider = cider
