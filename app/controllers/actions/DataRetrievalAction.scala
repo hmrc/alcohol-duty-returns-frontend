@@ -77,7 +77,7 @@ class DataRetrievalActionImpl @Inject() (
                 )
               )
             case Left(ex) if ex.statusCode == LOCKED    =>
-              logger.warn(s"Return ${request.appaId}/$periodKey locked for the user ${request.userId}")
+              logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
               Left(Redirect(routes.ReturnLockedController.onPageLoad()))
             case Left(ex)                               =>
               logger.warn("Data retrieval failed with exception: ", ex)

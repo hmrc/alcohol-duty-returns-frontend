@@ -25,7 +25,6 @@ package object returns {
 
   val sectionPages: Seq[QuestionPage[Map[AlcoholRegime, _]]] = Seq(
     AlcoholTypePage,
-    RateBandsPage,
     WhatDoYouNeedToDeclarePage,
     HowMuchDoYouNeedToDeclarePage,
     DoYouHaveMultipleSPRDutyRatesPage,

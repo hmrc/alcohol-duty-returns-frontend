@@ -16,20 +16,27 @@
 
 package controllers.checkAndSubmit
 
+import cats.data.EitherT
 import config.Constants.adrReturnCreatedDetails
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
+import models.UserAnswers
+import models.audit.AuditReturnSubmitted
+import models.returns.AdrReturnSubmission
 import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
+import java.time.{Clock, Instant}
 import scala.concurrent.{ExecutionContext, Future}
 
 class DutyDueForThisReturnController @Inject() (
@@ -38,9 +45,11 @@ class DutyDueForThisReturnController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector,
+  auditService: AuditService,
   adrReturnSubmissionService: AdrReturnSubmissionService,
   val controllerComponents: MessagesControllerComponents,
   dutyDueForThisReturnHelper: DutyDueForThisReturnHelper,
+  clock: Clock,
   view: DutyDueForThisReturnView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -65,15 +74,15 @@ class DutyDueForThisReturnController @Inject() (
         adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers, request.returnPeriod)
       adrSubmissionCreatedDetails <-
         alcoholDutyReturnsConnector.submitReturn(request.appaId, request.returnPeriod.toPeriodKey, adrReturnSubmission)
+      _                           <- EitherT.rightT[Future, String](auditReturnSubmitted(request.userAnswers, adrReturnSubmission))
     } yield adrSubmissionCreatedDetails
-
     result.foldF(
       error => {
         logger.warn(error)
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       },
       adrSubmissionCreatedDetails => {
-        logger.warn(s"Successfully submitted return: $adrSubmissionCreatedDetails")
+        logger.warn(s"Successfully submitted return")
         val session =
           request.session + (adrReturnCreatedDetails -> Json.toJson(adrSubmissionCreatedDetails).toString)
         Future.successful(
@@ -83,4 +92,10 @@ class DutyDueForThisReturnController @Inject() (
     )
   }
 
+  private def auditReturnSubmitted(userAnswers: UserAnswers, adrReturnSubmission: AdrReturnSubmission)(implicit
+    hc: HeaderCarrier
+  ): Unit = {
+    val event = AuditReturnSubmitted(userAnswers, adrReturnSubmission, Instant.now(clock))
+    auditService.audit(event)
+  }
 }
