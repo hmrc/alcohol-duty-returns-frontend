@@ -19,10 +19,11 @@ import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalTo, equa
 import connectors.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholDutyCalculatorConnector, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.returns.{AlcoholDuty, DutyByTaxType}
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
 import play.api.Application
-import play.api.http.Status.{NOT_FOUND, OK}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.YearMonth
 
@@ -34,40 +35,61 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
     "rateBandByRegime" - {
       "should successfully retrieve rateBandByRegime details" in new SetUp {
         val jsonResponse = Json.toJson(rateBands).toString()
-        server.stubFor(get(urlPathEqualTo("/alcohol-duty-calculator/rates"))
+        server.stubFor(get(urlPathEqualTo(ratesUrl))
           .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024,1))(RatePeriod.yearMonthFormat).toString))
-          .withQueryParam("alcoholRegimes", equalTo("Beer,Cider,Wine,Spirits,OtherFermentedProduct"))
+          .withQueryParam("alcoholRegimes", equalTo(regime.toString))
           .willReturn(aResponse().withBody(jsonResponse)
           .withStatus(OK)))
 
-        val regimes = AlcoholRegime.values
-        whenReady(connector.rateBandByRegime(YearMonth.of(2024, 1), regimes)) { result =>
-                    result mustBe rateBands.toSeq
-                  }
+        whenReady(connector.rateBandByRegime(YearMonth.of(2024, 1), Seq(regime))) { result =>
+          result mustBe rateBands.toSeq
+        }
+      }
+
+      "should fail when upstream service returns an error" in new SetUp {
+        server.stubFor(get(urlPathEqualTo(ratesUrl))
+          .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 1))(RatePeriod.yearMonthFormat).toString))
+          .withQueryParam("alcoholRegimes", equalTo(regime.toString))
+          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR)))
+
+        whenReady(connector.rateBandByRegime(YearMonth.of(2024, 1), Seq(regime)).failed) { ex =>
+          ex mustBe a[UpstreamErrorResponse]
+          ex.asInstanceOf[UpstreamErrorResponse].statusCode mustBe INTERNAL_SERVER_ERROR
+        }
       }
     }
     "rateBand" - {
       "successfully retrieve rate band" in new SetUp{
         val jsonResponse = Json.toJson(rateBand).toString()
-        server.stubFor(get(urlPathEqualTo("/alcohol-duty-calculator/rate-band"))
-          .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 10))(RatePeriod.yearMonthFormat).toString))
+        server.stubFor(get(urlPathEqualTo(rateBandUrl))
+          .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 1))(RatePeriod.yearMonthFormat).toString))
           .withQueryParam("taxTypeCode", equalTo("310"))
           .willReturn(aResponse().withBody(jsonResponse)
             .withStatus(OK)))
 
-        whenReady(connector.rateBand("310", YearMonth.of(2024, 10))) { result =>
+        whenReady(connector.rateBand("310", YearMonth.of(2024, 1))) { result =>
                     result mustBe Some(rateBand)
         }
       }
 
       "return None when rate band not found" in new SetUp{
         server.stubFor(
-          get(urlMatching(s"$url/rate-band"))
-            .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 10))(RatePeriod.yearMonthFormat).toString))
+          get(urlMatching(rateBandUrl))
+            .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 1))(RatePeriod.yearMonthFormat).toString))
             .withQueryParam("taxTypeCode", equalTo("123"))
             .willReturn(aResponse().withStatus(NOT_FOUND))
         )
         whenReady(connector.rateBand("123", ratePeriod.period)) { result =>
+          result mustBe None
+        }
+      }
+
+      "should fail when upstream service returns an error" in new SetUp {
+        server.stubFor(get(urlPathEqualTo(rateBandUrl))
+          .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 10))(RatePeriod.yearMonthFormat).toString))
+          .withQueryParam("taxTypeCode", equalTo("310"))
+          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR)))
+        whenReady(connector.rateBand("310", YearMonth.of(2024, 1))) { result =>
           result mustBe None
         }
       }
@@ -98,12 +120,26 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
 
         val responseJson = Json.toJson(alcoholDuty).toString()
         server.stubFor(
-          post(urlMatching(s"$url/calculate-total-duty"))
+          post(urlMatching(totalDuty))
             .withRequestBody(equalToJson(requestJson))
             .willReturn(aResponse().withBody(responseJson).withStatus(OK))
         )
         whenReady(connector.calculateTotalDuty(TotalDutyCalculationRequest(volumesAndRates))) { result =>
           result mustBe alcoholDuty
+        }
+      }
+
+      "should fail when upstream service returns a bad request" in new SetUp {
+        val volumesAndRates = arbitraryVolumeAndRateByTaxType(
+          rateBands.toSeq
+        ).arbitrary.sample.value
+        val requestJson = Json.toJson(TotalDutyCalculationRequest(volumesAndRates)).toString()
+        server.stubFor(post(urlMatching(totalDuty))
+          .withRequestBody(equalToJson(requestJson))
+          .willReturn(aResponse().withStatus(BAD_REQUEST)))
+        whenReady(connector.calculateTotalDuty(TotalDutyCalculationRequest(volumesAndRates)).failed) { ex =>
+          ex mustBe a[UpstreamErrorResponse]
+          ex.asInstanceOf[UpstreamErrorResponse].statusCode mustBe BAD_REQUEST
         }
       }
     }
@@ -113,12 +149,22 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         val requestJson = Json.toJson(AdjustmentDutyCalculationRequest(AdjustmentTypes.Spoilt, BigDecimal(1), BigDecimal(1))).toString()
         val responseJson = Json.toJson(AdjustmentDuty(BigDecimal(1))).toString()
         server.stubFor(
-          post(urlMatching(s"$url/calculate-adjustment-duty"))
+          post(urlMatching(adjustmentDutyUrl))
             .withRequestBody(equalToJson(requestJson))
             .willReturn(aResponse().withBody(responseJson).withStatus(OK))
         )
         whenReady(connector.calculateAdjustmentDuty(BigDecimal(1), BigDecimal(1), AdjustmentTypes.Spoilt)) { result =>
           result mustBe AdjustmentDuty(BigDecimal(1))
+        }
+      }
+      "should fail when upstream service returns an error" in new SetUp {
+        val requestJson = Json.toJson(AdjustmentDutyCalculationRequest(AdjustmentTypes.Spoilt, BigDecimal(1), BigDecimal(1))).toString()
+        server.stubFor(post(urlMatching(adjustmentDutyUrl))
+          .withRequestBody(equalToJson(requestJson))
+          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR)))
+        whenReady(connector.calculateAdjustmentDuty(BigDecimal(1), BigDecimal(1), AdjustmentTypes.Spoilt).failed) { ex =>
+          ex mustBe a[UpstreamErrorResponse]
+          ex.asInstanceOf[UpstreamErrorResponse].statusCode mustBe INTERNAL_SERVER_ERROR
         }
       }
     }
@@ -128,12 +174,23 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         val requestJson = Json.toJson(RepackagedDutyChangeRequest(BigDecimal(2), BigDecimal(1))).toString()
         val responseJson = Json.toJson(AdjustmentDuty(BigDecimal(1))).toString()
         server.stubFor(
-          post(urlMatching(s"$url/calculate-repackaged-duty-change"))
+          post(urlMatching(repackagedUrl))
             .withRequestBody(equalToJson(requestJson))
             .willReturn(aResponse().withBody(responseJson).withStatus(OK))
         )
         whenReady(connector.calculateRepackagedDutyChange(BigDecimal(2), BigDecimal(1))) { result =>
           result mustBe AdjustmentDuty(BigDecimal(1))
+        }
+      }
+
+      "should fail when upstream service returns an error" in new SetUp {
+        val requestJson = Json.toJson(RepackagedDutyChangeRequest(BigDecimal(2), BigDecimal(1))).toString()
+        server.stubFor(post(urlMatching(repackagedUrl))
+          .withRequestBody(equalToJson(requestJson))
+          .willReturn(aResponse().withStatus(BAD_REQUEST)))
+        whenReady(connector.calculateRepackagedDutyChange(BigDecimal(2), BigDecimal(1)).failed) { ex =>
+          ex mustBe a[UpstreamErrorResponse]
+          ex.asInstanceOf[UpstreamErrorResponse].statusCode mustBe BAD_REQUEST
         }
       }
     }
@@ -143,12 +200,22 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         val requestJson = Json.toJson(AdjustmentTotalCalculationRequest(Seq(BigDecimal(2), BigDecimal(1)))).toString()
         val responseJson = Json.toJson(AdjustmentDuty(BigDecimal(3))).toString()
         server.stubFor(
-          post(urlMatching(s"$url/calculate-total-adjustment"))
+          post(urlMatching(totalAdjustmentUrl))
             .withRequestBody(equalToJson(requestJson))
             .willReturn(aResponse().withBody(responseJson).withStatus(OK))
         )
         whenReady(connector.calculateTotalAdjustment(Seq(BigDecimal(2), BigDecimal(1)))) { result =>
           result mustBe AdjustmentDuty(BigDecimal(3))
+        }
+      }
+      "should fail when upstream service returns an error" in new SetUp {
+        val requestJson = Json.toJson(AdjustmentTotalCalculationRequest(Seq(BigDecimal(2), BigDecimal(1)))).toString()
+        server.stubFor(post(urlMatching(totalAdjustmentUrl))
+          .withRequestBody(equalToJson(requestJson))
+          .willReturn(aResponse().withStatus(BAD_REQUEST)))
+        whenReady(connector.calculateTotalAdjustment(Seq(BigDecimal(2), BigDecimal(1))).failed) { ex =>
+          ex mustBe a[UpstreamErrorResponse]
+          ex.asInstanceOf[UpstreamErrorResponse].statusCode mustBe BAD_REQUEST
         }
       }
     }
@@ -158,6 +225,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
     val connector = app.injector.instanceOf[AlcoholDutyCalculatorConnector]
     val url = "/alcohol-duty-calculator"
     val ratePeriod = returnPeriodGen.sample.get
+    val regime = regimeGen.sample.value
     val rateBand = RateBand(
       "310",
       "some band",
@@ -165,7 +233,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
       Some(BigDecimal(10.99)),
       Set(
         RangeDetailsByRegime(
-          AlcoholRegime.Beer,
+         regime,
           NonEmptySeq.one(
             ABVRange(
               AlcoholType.Beer,
@@ -176,7 +244,12 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         )
       )
     )
-    val regime = regimeGen.sample.value
     val rateBands = genListOfRateBandForRegime(regime).sample.value.toSet
+    val repackagedUrl = s"$url/calculate-repackaged-duty-change"
+    val totalAdjustmentUrl = s"$url/calculate-total-adjustment"
+    val adjustmentDutyUrl = s"$url/calculate-adjustment-duty"
+    val totalDuty = s"$url/calculate-total-duty"
+    val rateBandUrl = s"$url/rate-band"
+    val ratesUrl = s"$url/rates"
   }
 }

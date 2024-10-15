@@ -47,7 +47,6 @@ trait ISpecBase
     with IntegrationPatience
     with ModelGenerators
     with TestData {
-  def getMessages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   val fakeIdentifierUserDetails = FakeIdentifierUserDetails(appaId, groupId, internalId)
 
@@ -61,13 +60,6 @@ trait ISpecBase
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[ServiceEntryCheckAction].to[FakeServiceEntryCheckAction]
       )
-  def FakeRequest()                                                                                  = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
-  def FakeRequest(verb: String, route: String)                                                       =
-    play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
-  def FakeRequestWithoutSession()                                                                    = play.api.test.FakeRequest()
-  def FakeRequestWithoutSession(verb: String, route: String)                                         = play.api.test.FakeRequest(verb, route)
-
-  val dateTimeHelper = new DateTimeHelper()
 
   implicit val hc: HeaderCarrier    = HeaderCarrier()
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global

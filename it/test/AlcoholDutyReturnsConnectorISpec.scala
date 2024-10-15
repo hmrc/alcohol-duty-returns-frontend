@@ -30,13 +30,11 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
 
   "AlcoholDutyReturnsConnector" - {
     "obligationDetails" - {
-      val url = s"/alcohol-duty-returns/obligationDetails/$appaId"
-
       "should successfully retrieve obligation details" in new SetUp {
         val obligationDataResponse = Seq(obligationDataSingleOpen)
         val jsonResponse = Json.toJson(obligationDataResponse).toString()
 
-        server.stubFor(get(urlMatching(url))
+        server.stubFor(get(urlMatching(obligationDeatilsUrl))
           .willReturn(aResponse()
             .withStatus(OK)
             .withBody(jsonResponse)))
@@ -48,7 +46,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
 
       "should fail when invalid JSON is returned" in new SetUp {
         val invalidJsonResponse = """{ "invalid": "json" }"""
-        server.stubFor(get(urlMatching(url))
+        server.stubFor(get(urlMatching(obligationDeatilsUrl))
           .willReturn(aResponse()
             .withStatus(OK)
             .withBody(invalidJsonResponse)))
@@ -59,7 +57,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
       }
 
       "should fail when an unexpected response is returned" in new SetUp {
-        server.stubFor(get(urlMatching(url))
+        server.stubFor(get(urlMatching(obligationDeatilsUrl))
           .willReturn(aResponse()
             .withStatus(BAD_GATEWAY)))
 
@@ -68,8 +66,8 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when an unexpected  status code is returned" in new SetUp {
-        server.stubFor(get(urlMatching(url))
+      "should fail when an unexpected status code is returned" in new SetUp {
+        server.stubFor(get(urlMatching(obligationDeatilsUrl))
           .willReturn(aResponse()
             .withStatus(CREATED)))
 
@@ -78,9 +76,8 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
     }
-    val url = s"/alcohol-duty-returns/producers/$appaId/returns/$periodKey"
-    "submitReturn" - {
 
+    "submitReturn" - {
       "should successfully submit a return" in new SetUp {
         val adrReturnCreatedDetails = AdrReturnCreatedDetails(
                 processingDate = Instant.now(clock),
@@ -91,7 +88,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
         val jsonResponse = Json.toJson(adrReturnCreatedDetails).toString()
 
         server.stubFor(
-          post(urlMatching(url))
+          post(urlMatching(submitReturnUrl))
             .willReturn(aResponse()
               .withStatus(CREATED)
               .withBody(jsonResponse)))
@@ -111,7 +108,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
       "should fail when invalid JSON is returned" in new SetUp {
         val invalidJsonResponse = """{ "invalid": "json" }"""
         server.stubFor(
-          post(urlMatching(url))
+          post(urlMatching(submitReturnUrl))
             .willReturn(aResponse()
               .withStatus(CREATED)
               .withBody(invalidJsonResponse)
@@ -126,7 +123,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
       "fail when submit return returns an error" in new SetUp {
 
         server.stubFor(
-          post(urlMatching(url))
+          post(urlMatching(submitReturnUrl))
             .withRequestBody(equalToJson(Json.stringify(Json.toJson(nilReturn))))
             .willReturn(aResponse().withBody("upstreamErrorResponse").withStatus(BAD_GATEWAY))
         )
@@ -140,7 +137,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
 
       "fail when an unexpected status code is returned" in new SetUp {
         server.stubFor(
-          post(urlMatching(url))
+          post(urlMatching(submitReturnUrl))
             .withRequestBody(equalToJson(Json.stringify(Json.toJson(nilReturn))))
             .willReturn(aResponse().withBody("invalidStatusCodeResponse").withStatus(BAD_REQUEST))
         )
@@ -157,7 +154,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
         val adrReturnDetails = exampleReturnDetails(periodKey, Instant.now(clock))
         val jsonResponse = Json.toJson(adrReturnDetails).toString()
 
-        server.stubFor(get(urlMatching(url))
+        server.stubFor(get(urlMatching(submitReturnUrl))
           .willReturn(aResponse()
             .withStatus(OK)
             .withBody(jsonResponse)))
@@ -168,7 +165,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
       }
 
       "should fail when invalid JSON is returned" in new SetUp{
-        server.stubFor(get(urlMatching(url))
+        server.stubFor(get(urlMatching(submitReturnUrl))
           .willReturn(aResponse()
             .withStatus(OK)
             .withBody("""{ "invalid": "json" }""")))
@@ -179,7 +176,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
       }
 
       "should fail when an unexpected response is returned" in new SetUp {
-        server.stubFor(get(urlMatching(url))
+        server.stubFor(get(urlMatching(submitReturnUrl))
           .willReturn(aResponse()
             .withStatus(BAD_GATEWAY)))
 
@@ -189,7 +186,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
       }
 
       "should fail when an unexpected  status code is returned" in new SetUp {
-        server.stubFor(get(urlMatching(url))
+        server.stubFor(get(urlMatching(submitReturnUrl))
           .willReturn(aResponse()
             .withStatus(CREATED)))
 
@@ -202,6 +199,8 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
 
   class SetUp {
     val connector = app.injector.instanceOf[AlcoholDutyReturnsConnector]
+    val obligationDeatilsUrl = s"/alcohol-duty-returns/obligationDetails/$appaId"
+    val submitReturnUrl = s"/alcohol-duty-returns/producers/$appaId/returns/$periodKey"
   }
 }
 

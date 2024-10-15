@@ -21,8 +21,10 @@ import config.FrontendAppConfig
 import connectors.CacheConnector
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
+import play.api.http.Status.OK
 import play.api.inject._
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HttpResponse
 
 import java.net.URLEncoder
 import scala.concurrent.Future
@@ -59,7 +61,7 @@ class AuthControllerSpec extends SpecBase {
     "must clear user answers, release the lock, and redirect to sign out, specifying the exit survey as the continue URL" in {
 
       val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(()))
+      when(mockCacheConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(HttpResponse(OK)))
 
       val application =
         applicationBuilder(None)
