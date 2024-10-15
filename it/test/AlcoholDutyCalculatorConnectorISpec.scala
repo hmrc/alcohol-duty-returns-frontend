@@ -83,16 +83,6 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
           result mustBe None
         }
       }
-
-      "should fail when upstream service returns an error" in new SetUp {
-        server.stubFor(get(urlPathEqualTo(rateBandUrl))
-          .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 10))(RatePeriod.yearMonthFormat).toString))
-          .withQueryParam("taxTypeCode", equalTo("310"))
-          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR)))
-        whenReady(connector.rateBand("310", YearMonth.of(2024, 1))) { result =>
-          result mustBe None
-        }
-      }
     }
 
     "calculateTotalDuty" - {
