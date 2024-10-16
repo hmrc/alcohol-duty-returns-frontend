@@ -53,12 +53,11 @@ class CacheConnector @Inject() (
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[Either[UpstreamErrorResponse, UserAnswers]]
 
-  def releaseLock(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[Unit] =
+  def releaseLock(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
       .delete(url"${config.adrReleaseCacheLockUrl(returnId.appaId, returnId.periodKey)}")
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
-      .map(_ => ())
 
   def keepAlive(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient

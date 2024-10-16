@@ -106,8 +106,8 @@ class CacheConnectorSpec extends SpecBase {
       when(requestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(Future.successful(mockHttpResponse))
 
-      whenReady(connector.releaseLock(returnId)) {
-        _ mustBe ()
+      whenReady(connector.releaseLock(returnId)) { response =>
+        response mustBe mockHttpResponse
       }
 
       verify(connector.httpClient, atLeastOnce)
