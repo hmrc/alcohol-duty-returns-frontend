@@ -18,7 +18,6 @@ package viewmodels.returns
 
 import models.ReturnPeriod
 
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 case class ReturnPeriodViewModel(fromDate: String, toDate: String, returnDueDate: String)
