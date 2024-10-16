@@ -127,10 +127,10 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
 
     "successfully submit a return" in new SetUp {
       val adrReturnCreatedDetails = AdrReturnCreatedDetails(
-        processingDate = Instant.now(),
+        processingDate = Instant.now(clock),
         amount = BigDecimal(1),
         chargeReference = Some("1234567890"),
-        paymentDueDate = Some(LocalDate.now())
+        paymentDueDate = Some(LocalDate.now(clock))
       )
       val jsonResponse            = Json.toJson(adrReturnCreatedDetails).toString()
       val httpResponse            = HttpResponse(CREATED, jsonResponse)
@@ -278,7 +278,7 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
     val mockUrl = s"http://alcohol-duty-returns/producers/$appaId/returns/$periodKey"
 
     "successfully get a return" in new SetUp {
-      val adrReturnDetails = exampleReturnDetails(periodKey, Instant.now())
+      val adrReturnDetails = exampleReturnDetails(periodKey, Instant.now(clock))
       val jsonResponse     = Json.toJson(adrReturnDetails).toString()
       val httpResponse     = HttpResponse(OK, jsonResponse)
 

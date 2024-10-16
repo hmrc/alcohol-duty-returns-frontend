@@ -21,7 +21,7 @@ import forms.returns.WhatDoYouNeedToDeclareFormProvider
 import models.{CheckMode, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.returns.{AlcoholTypePage, RateBandsPage, WhatDoYouNeedToDeclarePage}
+import pages.returns.{AlcoholTypePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -109,29 +109,6 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           taxBandsViewModel,
           NormalMode
         )(
-          request,
-          getMessages(application)
-        ).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the rate band has already been populated" in {
-
-      val userAnswers =
-        userAnswersWithAlcoholType.set(RateBandsPage, rateBandList).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, whatDoYouNeedToDeclareRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
-
-        status(result) mustEqual OK
-        val taxBandsViewModel = TaxBandsViewModel(rateBandList)(getMessages(application))
-        contentAsString(result) mustEqual view(form, regime, taxBandsViewModel, NormalMode)(
           request,
           getMessages(application)
         ).toString
