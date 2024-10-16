@@ -21,9 +21,10 @@ import config.FrontendAppConfig
 import connectors.CacheConnector
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import play.api.http.Status.SEE_OTHER
+import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.inject.bind
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HttpResponse
 
 import scala.concurrent.Future
 
@@ -56,7 +57,7 @@ class BusinessTaxAccountRedirectSpec extends SpecBase {
     "if the period key is retrieved, it must release the lock, and redirect to the business tax account page" in {
 
       val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(()))
+      when(mockCacheConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(HttpResponse(OK)))
 
       val application =
         applicationBuilder(None)

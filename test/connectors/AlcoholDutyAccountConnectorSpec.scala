@@ -33,9 +33,8 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
   "open payments" - {
     val mockUrl = s"http://alcohol-duty-account/producers/$appaId/payments/open"
     "successfully retrieve open payments" in new SetUp {
-      val openPaymentsResponse = openPaymentsData
-      val jsonResponse         = Json.toJson(openPaymentsResponse).toString()
-      val httpResponse         = HttpResponse(OK, jsonResponse)
+      val jsonResponse = Json.toJson(openPaymentsData).toString()
+      val httpResponse = HttpResponse(OK, jsonResponse)
 
       when(mockConfig.adrGetOutstandingPaymentsUrl(eqTo(appaId))).thenReturn(mockUrl)
 
@@ -45,7 +44,7 @@ class AlcoholDutyAccountConnectorSpec extends SpecBase with ScalaFutures {
       when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.outstandingPayments(appaId)) { result =>
-        result mustBe openPaymentsResponse
+        result mustBe openPaymentsData
         verify(connector.httpClient, times(1))
           .get(eqTo(url"$mockUrl"))(any())
 
