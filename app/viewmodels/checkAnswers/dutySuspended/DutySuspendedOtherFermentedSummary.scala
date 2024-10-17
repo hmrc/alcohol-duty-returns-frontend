@@ -30,7 +30,9 @@ object DutySuspendedOtherFermentedSummary {
     answers.get(DutySuspendedOtherFermentedPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedOtherFermented.totalOtherFermented.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.totalOtherFermented.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(
+          s"${messages("site.2DP", answer.totalOtherFermented)} ${messages("site.unit.litres")}"
+        ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.totalOtherFermented.change.hidden"))
@@ -42,7 +44,9 @@ object DutySuspendedOtherFermentedSummary {
     answers.get(DutySuspendedOtherFermentedPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedOtherFermented.pureAlcoholInOtherFermented.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.pureAlcoholInOtherFermented.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(
+          s"${messages("site.4DP", answer.pureAlcoholInOtherFermented)} ${messages("site.unit.litres")}"
+        ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedOtherFermented.pureAlcoholInOtherFermented.change.hidden"))

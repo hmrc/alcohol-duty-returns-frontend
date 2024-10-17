@@ -30,7 +30,7 @@ object DutySuspendedBeerSummary {
     answers.get(DutySuspendedBeerPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedBeer.totalBeer.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.totalBeer.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.totalBeer)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedBeerController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedBeer.totalBeer.change.hidden"))
@@ -43,7 +43,9 @@ object DutySuspendedBeerSummary {
     answers.get(DutySuspendedBeerPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedBeer.pureAlcoholInBeer.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.pureAlcoholInBeer.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(
+          s"${messages("site.4DP", answer.pureAlcoholInBeer)} ${messages("site.unit.litres")}"
+        ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedBeerController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedBeer.pureAlcoholInBeer.change.hidden"))
