@@ -63,18 +63,21 @@ object AdjustmentListSummaryHelper {
     messages: Messages
   ): Seq[TableRowViewModel] =
     adjustmentEntries.zipWithIndex.map { case (adjustmentEntry, index) =>
-      val adjustmentIndex = (pageNumber - 1) * rowsPerPage + index
-      val adjustmentType  = adjustmentEntry.adjustmentType.getOrElse(
+      val adjustmentIndex     = (pageNumber - 1) * rowsPerPage + index
+      val adjustmentType      = adjustmentEntry.adjustmentType.getOrElse(
         throw new RuntimeException("Couldn't fetch adjustment type value from cache")
       )
-      val dutyValue       = if (adjustmentEntry.newDuty.isDefined) {
+      val adjustmentTypeLabel = messages(s"adjustmentType.checkYourAnswersLabel.$adjustmentType")
+      val dutyValue           = if (adjustmentEntry.newDuty.isDefined) {
         adjustmentEntry.newDuty
       } else {
         adjustmentEntry.duty
       }
+      val formattedDutyValue  =
+        Money.format(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache")))
       TableRowViewModel(
         cells = Seq(
-          TableRow(Text(messages(s"adjustmentType.checkYourAnswersLabel.$adjustmentType"))),
+          TableRow(Text(adjustmentTypeLabel)),
           TableRow(
             Text(
               rateBandRecap(
@@ -83,9 +86,7 @@ object AdjustmentListSummaryHelper {
             )
           ),
           TableRow(
-            content = Text(
-              Money.format(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache")))
-            ),
+            content = Text(formattedDutyValue),
             classes = Constants.textAlignRightCssClass
           )
         ),
@@ -93,12 +94,20 @@ object AdjustmentListSummaryHelper {
           TableRowActionViewModel(
             label = messages("site.change"),
             href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(adjustmentIndex)),
-            visuallyHiddenText = Some(messages("adjustmentEntryList.change.hidden"))
+            visuallyHiddenText = Some(
+              messages(
+                "adjustmentEntryList.change.hidden",
+                adjustmentTypeLabel,
+                formattedDutyValue
+              )
+            )
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
             href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(adjustmentIndex),
-            visuallyHiddenText = Some(messages("adjustmentEntryList.remove.hidden"))
+            visuallyHiddenText = Some(
+              messages("adjustmentEntryList.remove.hidden", adjustmentTypeLabel, formattedDutyValue)
+            )
           )
         )
       )
