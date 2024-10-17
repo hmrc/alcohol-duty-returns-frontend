@@ -56,7 +56,7 @@ class BigDecimalFieldFormatterSpec extends SpecBase with EitherValues {
     }
 
     "must return an error when value is below the minimum" in {
-      val result = formatter.bind("field", Map("field" -> "0.009"))
+      val result = formatter.bind("field", Map("field" -> "0.00"))
       result.left.value mustEqual Seq(FormError("field", s"$minimumValueKey.$fieldKey"))
     }
 

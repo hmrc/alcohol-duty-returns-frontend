@@ -26,7 +26,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
 import viewmodels.returns.ReturnPeriodViewModel.viewDateFormatter
 
 import java.time.LocalDate
-import scala.language.postfixOps
 
 class BeforeStartReturnViewModelSpec extends SpecBase {
   "WarningTextViewModel" - {

@@ -15,7 +15,6 @@
  */
 
 import common.TestData
-import config.Constants.periodKeySessionKey
 import controllers.actions._
 import generators.ModelGenerators
 import models.UserAnswers
@@ -25,13 +24,10 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results
 import uk.gov.hmrc.http.HeaderCarrier
-import viewmodels.DateTimeHelper
 
 import scala.concurrent.ExecutionContext
 

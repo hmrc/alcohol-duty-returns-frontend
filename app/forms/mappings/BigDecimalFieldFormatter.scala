@@ -50,14 +50,14 @@ class BigDecimalFieldFormatter(
           .left
           .map(_ => Seq(FormError(nameToId(key), s"$invalidKey.$fieldKey", args)))
           .flatMap {
-            case res if res < minimumValue                    =>
-              Left(Seq(FormError(nameToId(key), s"$minimumValueKey.$fieldKey", args)))
-            case res if res > maximumValue                    =>
-              Left(Seq(FormError(nameToId(key), s"$maximumValueKey.$fieldKey", args)))
-            case res if res.toString().matches(decimalRegexp) =>
-              Right(res)
-            case _                                            =>
+            case res if !res.toString().matches(decimalRegexp) =>
               Left(Seq(FormError(nameToId(key), s"$decimalPlacesKey.$fieldKey", args)))
+            case res if res < minimumValue                     =>
+              Left(Seq(FormError(nameToId(key), s"$minimumValueKey.$fieldKey", args)))
+            case res if res > maximumValue                     =>
+              Left(Seq(FormError(nameToId(key), s"$maximumValueKey.$fieldKey", args)))
+            case res                                           =>
+              Right(res)
           }
       }
 
