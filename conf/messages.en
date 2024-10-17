@@ -94,7 +94,7 @@ unauthorised.p2.second =  and be enrolled in the service.
 
 doYouHaveAnAppaId.title = Do you have an Alcoholic Products Producer approval ID?
 doYouHaveAnAppaId.heading = Do you have an Alcoholic Products Producer approval ID?
-doYouHaveAnAppaId.hint = This is 15-digits, for example XMADP0123456789
+doYouHaveAnAppaId.hint = This is 15 characters, for example XMADP0123456789
 doYouHaveAnAppaId.error.required = Select yes if you have an Alcoholic Products Producer approval ID
 
 noAppaId.title = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
