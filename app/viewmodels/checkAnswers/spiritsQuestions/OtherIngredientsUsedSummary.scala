@@ -31,7 +31,7 @@ object OtherIngredientsUsedSummary {
       SummaryListRowViewModel(
         key = answer.otherIngredientsUsedTypes,
         value = ValueViewModel(
-          s" ${messages("site.2DP.noPadding", answer.otherIngredientsUsedQuantity)} ${answer.otherIngredientsUsedUnit.toString.toLowerCase}"
+          s" ${messages("site.2DP", answer.otherIngredientsUsedQuantity)} ${answer.otherIngredientsUsedUnit.toString.toLowerCase}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.OtherIngredientsUsedController.onPageLoad(CheckMode).url)

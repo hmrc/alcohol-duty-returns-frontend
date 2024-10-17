@@ -50,20 +50,20 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
       rows.map(_.value.content) mustBe
         Seq(
           Empty,
-          Text("100 litres"),
-          Text("2.5 litres"),
+          Text("100.00 litres"),
+          Text("2.5000 litres"),
           Text("£1.26"),
           Empty,
-          Text("1,000 litres"),
-          Text("3.5 litres"),
+          Text("1,000.00 litres"),
+          Text("3.5000 litres"),
           Text("£1.46"),
           Empty,
-          Text("10,000 litres"),
-          Text("4.5 litres"),
+          Text("10,000.00 litres"),
+          Text("4.5000 litres"),
           Text("£1.66"),
           Empty,
-          Text("20,000 litres"),
-          Text("4.8 litres"),
+          Text("20,000.00 litres"),
+          Text("4.8000 litres"),
           Text("£1.66")
         )
     }

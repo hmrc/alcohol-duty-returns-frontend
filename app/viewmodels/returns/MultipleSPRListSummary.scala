@@ -58,11 +58,11 @@ object MultipleSPRListSummary {
       ).withCssClass(Constants.tableRowNoBorderCssClass),
       SummaryListRowViewModel(
         key = messages("checkYourAnswersLabel.row.totalLitres"),
-        value = ValueViewModel(s"${messages("site.2DP.noPadding", totalLitres)} ${messages("site.unit.litres")}")
+        value = ValueViewModel(s"${messages("site.2DP", totalLitres)} ${messages("site.unit.litres")}")
       ).withCssClass(Constants.tableRowNoBorderCssClass),
       SummaryListRowViewModel(
         key = messages("checkYourAnswersLabel.row.pureAlcohol"),
-        value = ValueViewModel(s"${messages("site.2DP.noPadding", pureAlcohol)} ${messages("site.unit.litres")}")
+        value = ValueViewModel(s"${messages("site.4DP", pureAlcohol)} ${messages("site.unit.litres")}")
       )
     )
 }

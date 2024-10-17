@@ -29,7 +29,7 @@ object AlcoholUsedSummary {
     answers.get(AlcoholUsedPage).map { answer =>
       SummaryListRowViewModel(
         key = "alcoholUsed.beer.checkYourAnswersLabel",
-        value = ValueViewModel(s"${messages("site.2DP.noPadding", answer.beer)} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.beer)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("alcoholUsed.beer.change.hidden"))
@@ -40,7 +40,7 @@ object AlcoholUsedSummary {
     answers.get(AlcoholUsedPage).map { answer =>
       SummaryListRowViewModel(
         key = "alcoholUsed.wine.checkYourAnswersLabel",
-        value = ValueViewModel(s"${messages("site.2DP.noPadding", answer.wine)} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.wine)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("alcoholUsed.wine.change.hidden"))
@@ -52,7 +52,7 @@ object AlcoholUsedSummary {
     answers.get(AlcoholUsedPage).map { answer =>
       SummaryListRowViewModel(
         key = "alcoholUsed.madeWine.checkYourAnswersLabel",
-        value = ValueViewModel(s"${messages("site.2DP.noPadding", answer.madeWine)} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.madeWine)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("alcoholUsed.madeWine.change.hidden"))
@@ -64,8 +64,7 @@ object AlcoholUsedSummary {
     answers.get(AlcoholUsedPage).map { answer =>
       SummaryListRowViewModel(
         key = "alcoholUsed.ciderOrPerry.checkYourAnswersLabel",
-        value =
-          ValueViewModel(s"${messages("site.2DP.noPadding", answer.ciderOrPerry)} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.ciderOrPerry)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AlcoholUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("alcoholUsed.ciderOrPerry.change.hidden"))

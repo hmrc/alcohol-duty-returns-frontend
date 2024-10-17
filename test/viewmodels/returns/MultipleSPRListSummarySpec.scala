@@ -43,14 +43,14 @@ class MultipleSPRListSummarySpec extends SpecBase {
       rows.map(_.value.content) mustBe
         Seq(
           Empty,
-          Text("100 litres"),
-          Text("2.5 litres"),
+          Text("100.00 litres"),
+          Text("2.5000 litres"),
           Empty,
-          Text("1,000 litres"),
-          Text("3.5 litres"),
+          Text("1,000.00 litres"),
+          Text("3.5000 litres"),
           Empty,
-          Text("30,000 litres"),
-          Text("9.3 litres")
+          Text("30,000.00 litres"),
+          Text("9.3000 litres")
         )
     }
 

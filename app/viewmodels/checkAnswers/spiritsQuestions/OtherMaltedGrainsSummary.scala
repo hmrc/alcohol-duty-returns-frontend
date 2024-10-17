@@ -31,7 +31,7 @@ object OtherMaltedGrainsSummary {
       SummaryListRowViewModel(
         key = answer.otherMaltedGrainsTypes,
         value = ValueViewModel(
-          s"${messages("site.2DP.noPadding", answer.otherMaltedGrainsQuantity)} ${messages("site.unit.tonnes")}"
+          s"${messages("site.2DP", answer.otherMaltedGrainsQuantity)} ${messages("site.unit.tonnes")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.OtherMaltedGrainsController.onPageLoad(CheckMode).url)

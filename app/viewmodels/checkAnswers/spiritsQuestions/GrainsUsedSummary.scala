@@ -31,7 +31,7 @@ object GrainsUsedSummary {
       SummaryListRowViewModel(
         key = "grainsUsed.maltedBarleyQuantity.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.2DP.noPadding", answer.maltedBarleyQuantity)} ${messages("site.unit.tonnes")}"
+          s"${messages("site.2DP", answer.maltedBarleyQuantity)} ${messages("site.unit.tonnes")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
@@ -43,8 +43,7 @@ object GrainsUsedSummary {
     answers.get(GrainsUsedPage).map { answer =>
       SummaryListRowViewModel(
         key = "grainsUsed.wheatQuantity.checkYourAnswersLabel",
-        value =
-          ValueViewModel(s"${messages("site.2DP.noPadding", answer.wheatQuantity)} ${messages("site.unit.tonnes")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.wheatQuantity)} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("grainsUsed.wheatQuantity.change.hidden"))
@@ -56,8 +55,7 @@ object GrainsUsedSummary {
     answers.get(GrainsUsedPage).map { answer =>
       SummaryListRowViewModel(
         key = "grainsUsed.maizeQuantity.checkYourAnswersLabel",
-        value =
-          ValueViewModel(s"${messages("site.2DP.noPadding", answer.maizeQuantity)} ${messages("site.unit.tonnes")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.maizeQuantity)} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("grainsUsed.maizeQuantity.change.hidden"))
@@ -69,8 +67,7 @@ object GrainsUsedSummary {
     answers.get(GrainsUsedPage).map { answer =>
       SummaryListRowViewModel(
         key = "grainsUsed.ryeQuantity.checkYourAnswersLabel",
-        value =
-          ValueViewModel(s"${messages("site.2DP.noPadding", answer.ryeQuantity)} ${messages("site.unit.tonnes")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.ryeQuantity)} ${messages("site.unit.tonnes")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("grainsUsed.ryeQuantity.change.hidden"))
@@ -83,7 +80,7 @@ object GrainsUsedSummary {
       SummaryListRowViewModel(
         key = "grainsUsed.unmaltedGrainQuantity.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.2DP.noPadding", answer.unmaltedGrainQuantity)} ${messages("site.unit.tonnes")}"
+          s"${messages("site.2DP", answer.unmaltedGrainQuantity)} ${messages("site.unit.tonnes")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.GrainsUsedController.onPageLoad(CheckMode).url)

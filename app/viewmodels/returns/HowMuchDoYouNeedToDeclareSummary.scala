@@ -111,13 +111,13 @@ object HowMuchDoYouNeedToDeclareSummary {
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres"),
               value = ValueViewModel(
-                s"${messages("site.2DP.noPadding", dutyByTaxType.totalLitres)} ${messages("site.unit.litres")}"
+                s"${messages("site.2DP", dutyByTaxType.totalLitres)} ${messages("site.unit.litres")}"
               )
             ).withCssClass(Constants.tableRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol"),
               value = ValueViewModel(
-                s"${messages("site.4DP.noPadding", dutyByTaxType.pureAlcohol)} ${messages("site.unit.litres")}"
+                s"${messages("site.4DP", dutyByTaxType.pureAlcohol)} ${messages("site.unit.litres")}"
               )
             )
           )
