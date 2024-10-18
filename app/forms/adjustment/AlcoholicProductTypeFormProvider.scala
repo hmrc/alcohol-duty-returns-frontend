@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package viewmodels.returns
+package forms.adjustment
 
-import models.ReturnPeriod
+import javax.inject.Inject
+import forms.mappings.Mappings
+import models.AlcoholRegime
+import play.api.data.Form
+import models.adjustment.AlcoholicProductType
 
-import java.time.format.DateTimeFormatter
+class AlcoholicProductTypeFormProvider @Inject() extends Mappings {
 
-case class ReturnPeriodViewModel(fromDate: String, toDate: String, returnDueDate: String)
-object ReturnPeriodViewModel {
-
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel =
-    ReturnPeriodViewModel(
-      viewDateFormatter.format(returnPeriod.periodFromDate()),
-      viewDateFormatter.format(returnPeriod.periodToDate()),
-      viewDateFormatter.format(returnPeriod.periodDueDate())
+  def apply(): Form[String] =
+    Form(
+      "alcoholic-product-type-value" -> text("alcoholicProductType.error.required")
     )
-
 }

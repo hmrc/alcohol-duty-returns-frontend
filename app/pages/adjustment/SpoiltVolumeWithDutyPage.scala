@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package viewmodels.returns
+package pages.adjustment
 
-import models.ReturnPeriod
+import models.adjustment.SpoiltVolumeWithDuty
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-import java.time.format.DateTimeFormatter
+case object SpoiltVolumeWithDutyPage extends QuestionPage[SpoiltVolumeWithDuty] {
 
-case class ReturnPeriodViewModel(fromDate: String, toDate: String, returnDueDate: String)
-object ReturnPeriodViewModel {
+  override def path: JsPath = JsPath \ toString
 
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel =
-    ReturnPeriodViewModel(
-      viewDateFormatter.format(returnPeriod.periodFromDate()),
-      viewDateFormatter.format(returnPeriod.periodToDate()),
-      viewDateFormatter.format(returnPeriod.periodDueDate())
-    )
-
+  override def toString: String = "spoiltVolumeWithDuty"
 }

@@ -18,34 +18,34 @@ package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
 import models.adjustment.AdjustmentEntry
-import models.CheckMode
-import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
+import models.{CheckMode, UserAnswers}
+import pages.adjustment.AlcoholicProductTypePage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import viewmodels.returns.RateBandHelper.rateBandRecap
 
-object AdjustmentTaxTypeSummary {
+object AlcoholicProductTypeSummary  {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    adjustmentEntry.adjustmentType match {
-      case Some(Spoilt)         => None
-      case Some(adjustmentType) =>
-        val label = adjustmentType match {
-          case RepackagedDraughtProducts => "adjustmentTaxType.repackaged.checkYourAnswersLabel"
-          case _                         => "adjustmentTaxType.checkYourAnswersLabel"
-        }
-        adjustmentEntry.rateBand.map { rateBand =>
-          SummaryListRowViewModel(
-            key = label,
-            value = ValueViewModel(rateBandRecap(rateBand)),
-            actions = Seq(
-              ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
-                .withVisuallyHiddenText(messages("adjustmentTaxType.change.hidden"))
-            )
+    adjustmentEntry.spoiltRegime.map {
+      spoiltRegime =>
+
+        val value = ValueViewModel(
+          HtmlContent(
+            HtmlFormat.escape(messages(s"alcoholType.$spoiltRegime"))
           )
-        }
-      case _                    => None
+        )
+
+        SummaryListRowViewModel(
+          key     = "alcoholicProductType.checkYourAnswersLabel",
+          value   = value,
+          actions = Seq(
+            ActionItemViewModel("site.change", routes.AlcoholicProductTypeController.onPageLoad(CheckMode).url)
+              .withVisuallyHiddenText(messages("alcoholicProductType.change.hidden"))
+          )
+        )
     }
 }

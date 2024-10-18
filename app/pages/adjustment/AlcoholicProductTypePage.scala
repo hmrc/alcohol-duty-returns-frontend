@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package viewmodels.returns
+package pages.adjustment
 
-import models.ReturnPeriod
+import models.AlcoholRegime
+import models.adjustment.AlcoholicProductType
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-import java.time.format.DateTimeFormatter
+case object AlcoholicProductTypePage extends QuestionPage[AlcoholRegime] {
 
-case class ReturnPeriodViewModel(fromDate: String, toDate: String, returnDueDate: String)
-object ReturnPeriodViewModel {
+  override def path: JsPath = JsPath \ toString
 
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel =
-    ReturnPeriodViewModel(
-      viewDateFormatter.format(returnPeriod.periodFromDate()),
-      viewDateFormatter.format(returnPeriod.periodToDate()),
-      viewDateFormatter.format(returnPeriod.periodDueDate())
-    )
-
+  override def toString: String = "alcoholicProductType"
 }

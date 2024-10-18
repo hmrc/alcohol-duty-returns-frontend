@@ -16,7 +16,9 @@
 
 package viewmodels.checkAnswers.adjustment
 
+import models.CheckMode
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.Money
@@ -25,11 +27,23 @@ import viewmodels.implicits._
 
 object AdjustmentDutyDueSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
+    val action    = adjustmentEntry.adjustmentType match {
+      case Some(Spoilt) =>
+        Seq(
+          ActionItemViewModel(
+            "site.change",
+            controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(CheckMode).url
+          )
+            .withVisuallyHiddenText(messages("spoiltVolumeWithDuty.change.hidden"))
+        )
+      case _            => Seq.empty
+    }
     val dutyValue = adjustmentEntry.newDuty.orElse(adjustmentEntry.duty)
     dutyValue.map(duty =>
       SummaryListRowViewModel(
         key = "adjustmentDutyDue.duty.checkYourAnswersLabel",
-        value = ValueViewModel(Money.format(duty))
+        value = ValueViewModel(Money.format(duty)),
+        actions = action
       )
     )
   }

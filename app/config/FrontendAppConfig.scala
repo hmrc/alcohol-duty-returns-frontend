@@ -143,4 +143,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def startDirectDebitUrl: String =
     servicesConfig.baseUrl("direct-debit") + configuration.get[String]("microservice.services.direct-debit.url")
 
+  val spoiltBeerTaxTypeCode: String                   = configuration.get[String]("spoilt.beer")
+  val spoiltCiderTaxTypeCode: String                  = configuration.get[String]("spoilt.cider")
+  val spoiltWineTaxTypeCode: String                   = configuration.get[String]("spoilt.wine")
+  val spoiltSpiritsTaxTypeCode: String                = configuration.get[String]("spoilt.spirits")
+  val spoiltOtherFermentedProductsTaxTypeCode: String = configuration.get[String]("spoilt.otherFermentedProducts")
+  val spoiltRate: BigDecimal                          = BigDecimal(configuration.get[String]("spoilt.rate"))
 }

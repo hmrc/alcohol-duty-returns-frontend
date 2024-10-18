@@ -220,6 +220,11 @@ POST       /adjustment-volume-with-spr                        controllers.adjust
 GET        /change-adjustment-volume-with-spr                 controllers.adjustment.AdjustmentVolumeWithSPRController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-adjustment-volume-with-spr                 controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = CheckMode)
 
+GET        /spoilt-alcohol                        controllers.adjustment.SpoiltVolumeWithDutyController.onPageLoad(mode: Mode = NormalMode)
+POST       /spoilt-alcohol                        controllers.adjustment.SpoiltVolumeWithDutyController.onSubmit(mode: Mode = NormalMode)
+GET        /change-spoilt-alcohol                 controllers.adjustment.SpoiltVolumeWithDutyController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-spoilt-alcohol                 controllers.adjustment.SpoiltVolumeWithDutyController.onSubmit(mode: Mode = CheckMode)
+
 GET        /adjustment-duty-value                      controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
 
 GET        /adjustment-check-your-answers                       controllers.adjustment.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
@@ -259,3 +264,7 @@ GET        /start-payment                controllers.StartPaymentController.init
 GET        /start-direct-debit                controllers.StartDirectDebitController.initiateAndRedirect()
 GET        /start-payment/:index                              controllers.StartPaymentController.initiateAndRedirectFromPastPayments(index: Int)
 # End of check and submit sub-journey
+GET        /spoilt-alcohol-type                        controllers.adjustment.AlcoholicProductTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /spoilt-alcohol-type                        controllers.adjustment.AlcoholicProductTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /change-spoilt-alcohol-type                  controllers.adjustment.AlcoholicProductTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-spoilt-alcohol-type                  controllers.adjustment.AlcoholicProductTypeController.onSubmit(mode: Mode = CheckMode)

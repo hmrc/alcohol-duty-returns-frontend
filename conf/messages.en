@@ -1377,3 +1377,33 @@ returnSubmitted.direct.debit.setupLink.text = Set up a direct debit
 returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcohol Duty account. If you do not claim it back then it will be used toward any duty due from your next return.
 
 # End of Check and submit sub-journey
+alcoholicProductType.title = Which alcoholic product is spoilt?
+alcoholicProductType.heading = Which alcoholic product is spoilt?
+alcoholicProductType.beer = Beer
+alcoholicProductType.cider = Cider
+alcoholicProductType.checkYourAnswersLabel = Description
+alcoholicProductType.error.required = Select the type of alcoholic product you are declaring spoilt
+alcoholicProductType.change.hidden = AlcoholicProductType
+alcoholicProductType.paragraph = Choose a type of alcoholic product to declare. You will be able to declare others afterwards.
+
+spoiltVolumeWithDuty.title = Tell us about your spoilt {0}
+spoiltVolumeWithDuty.heading = Tell us about your spoilt {0}
+spoiltVolumeWithDuty.totalLitresVolume.heading = Total litres of spoilt {0}
+spoiltVolumeWithDuty.pureAlcoholVolume.heading = Litres of pure alcohol
+spoiltVolumeWithDuty.spoiltDuty.heading = How much duty was paid?
+spoiltVolumeWithDuty.error.noValue.totalLitresVolume = Enter the total litres of spoilt {0}
+spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume = Enter the litres of pure alcohol in spoilt {0}
+spoiltVolumeWithDuty.error.noValue.sprDutyRate = Enter the amount of duty paid
+spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Litres of spoilt {0} must be a number
+spoiltVolumeWithDuty.error.invalid.pureAlcoholVolume = Litres of pure alcohol must be a number to 2 decimal places
+spoiltVolumeWithDuty.error.invalid.sprDutyRate = The amount of duty paid must be a number
+spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Litres of spoilt {0} must be less than 100 million
+spoiltVolumeWithDuty.error.maximumValue.pureAlcoholVolume = Litres of pure alcohol must be less than 100 million
+spoiltVolumeWithDuty.error.maximumValue.sprDutyRate = The amount of duty paid must be less than £100 million
+spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Litres of spoilt {0} must be more than 0.00
+spoiltVolumeWithDuty.error.minimumValue.pureAlcoholVolume = Litres of pure alcohol must be more than 0.00
+spoiltVolumeWithDuty.error.minimumValue.sprDutyRate = The amount of duty paid must be more than £0.00
+spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume = Litres of spoilt {0} must be a number to 2 decimal places
+spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume = Litres of pure alcohol must be a number to 2 decimal places
+spoiltVolumeWithDuty.error.decimalPlaces.sprDutyRate = The amount of duty paid must include pounds and pence
+spoiltVolumeWithDuty.change.hidden = duty value

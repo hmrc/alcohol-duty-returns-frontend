@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.adjustment
 
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 import models.{CheckMode, YearMonthModelFormatter}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -28,24 +29,29 @@ import viewmodels.implicits._
 object WhenDidYouPayDutySummary extends YearMonthModelFormatter {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    adjustmentEntry.period.map { period =>
-      val month            = period.getMonth.toString
-      val capitalizedMonth = s"${month.charAt(0).toUpper}${month.substring(1).toLowerCase}"
-      val value            =
-        HtmlFormat.escape(capitalizedMonth).toString + " " + HtmlFormat
-          .escape(period.getYear.toString)
-          .toString
+    (adjustmentEntry.period, adjustmentEntry.adjustmentType) match {
+      case (Some(period), Some(adjustmentType)) if !adjustmentType.equals(Spoilt) =>
+        val month            = period.getMonth.toString
+        val capitalizedMonth = s"${month.charAt(0).toUpper}${month.substring(1).toLowerCase}"
+        val value            =
+          HtmlFormat.escape(capitalizedMonth).toString + " " + HtmlFormat
+            .escape(period.getYear.toString)
+            .toString
 
-      SummaryListRowViewModel(
-        key = "whenDidYouPayDuty.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode).url
+        Some(
+          SummaryListRowViewModel(
+            key = "whenDidYouPayDuty.checkYourAnswersLabel",
+            value = ValueViewModel(HtmlContent(value)),
+            actions = Seq(
+              ActionItemViewModel(
+                "site.change",
+                controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode).url
+              )
+                .withVisuallyHiddenText(messages("whenDidYouPayDuty.change.hidden"))
+            )
           )
-            .withVisuallyHiddenText(messages("whenDidYouPayDuty.change.hidden"))
         )
-      )
+      case (Some(_), Some(_))                                                     => None
     }
+
 }

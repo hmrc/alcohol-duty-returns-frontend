@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package viewmodels.returns
+package models.adjustment
 
-import models.ReturnPeriod
+import play.api.libs.json._
 
-import java.time.format.DateTimeFormatter
+case class SpoiltVolumeWithDuty(
+  totalLitresVolume: BigDecimal,
+  pureAlcoholVolume: BigDecimal,
+  duty: BigDecimal
+)
 
-case class ReturnPeriodViewModel(fromDate: String, toDate: String, returnDueDate: String)
-object ReturnPeriodViewModel {
-
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel =
-    ReturnPeriodViewModel(
-      viewDateFormatter.format(returnPeriod.periodFromDate()),
-      viewDateFormatter.format(returnPeriod.periodToDate()),
-      viewDateFormatter.format(returnPeriod.periodDueDate())
-    )
-
+object SpoiltVolumeWithDuty {
+  implicit val format: OFormat[SpoiltVolumeWithDuty] = Json.format[SpoiltVolumeWithDuty]
 }
