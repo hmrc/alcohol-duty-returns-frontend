@@ -80,7 +80,8 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
         TableRowActionViewModel(
           label = messages("viewPastReturns.viewReturn"),
           href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey),
-          visuallyHiddenText = Some(messages("viewPastReturns.viewReturn.hidden"))
+          visuallyHiddenText =
+            Some(messages("viewPastReturns.viewReturn.hidden", formatYearMonth(getPeriod(periodKey))))
         )
       )
     } else {
@@ -88,7 +89,8 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
         TableRowActionViewModel(
           label = messages("viewPastReturns.submitReturn"),
           href = controllers.routes.BeforeStartReturnController.onPageLoad(obligationData.periodKey),
-          visuallyHiddenText = Some(messages("viewPastReturns.submitReturn.hidden"))
+          visuallyHiddenText =
+            Some(messages("viewPastReturns.submitReturn.hidden", formatYearMonth(getPeriod(periodKey))))
         )
       )
     }
