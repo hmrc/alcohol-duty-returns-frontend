@@ -44,8 +44,8 @@ class ViewReturnControllerSpec extends SpecBase {
       running(application) {
         implicit val messages = getMessages(application)
 
-        when(mockViewModel.createAlcoholDeclaredViewModel(returnDetails)).thenReturn(tableModel)
-        when(mockViewModel.createAdjustmentsViewModel(returnDetails)).thenReturn(tableModel)
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())).thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())).thenReturn(tableModel)
         when(mockViewModel.createTotalDueViewModel(returnDetails)).thenReturn(totalTableModel)
 
         val request = FakeRequest(GET, returns.routes.ViewReturnController.onPageLoad(periodKey).url)
