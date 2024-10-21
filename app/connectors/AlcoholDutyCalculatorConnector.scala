@@ -75,7 +75,7 @@ class AlcoholDutyCalculatorConnector @Inject() (
       .get(url"${config.adrCalculatorRateBandsUrl()}?$queryParams")
       .execute[Either[UpstreamErrorResponse, HttpResponse]]
       .map({
-        case Right(response) if response.status == OK => response.json.as[Map[(YearMonth, String), RateBand]]
+        case Right(response) if response.status == OK => response.json.as[Seq[((YearMonth, String), RateBand)]].toMap
         case _                                        => Map.empty
       })
   }

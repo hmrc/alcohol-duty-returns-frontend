@@ -28,7 +28,6 @@ import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.YearMonth
 
-
 class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper {
   override def fakeApplication(): Application = applicationBuilder(None).configure("microservice.services.alcohol-duty-calculator.port" -> server.port()).build()
 
