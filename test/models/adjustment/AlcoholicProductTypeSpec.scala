@@ -16,10 +16,11 @@ class AlcoholicProductTypeSpec extends AnyFreeSpec with Matchers with ScalaCheck
 
       val gen = Gen.oneOf(AlcoholicProductType.values.toSeq)
 
-      forAll(gen) {
-        alcoholicProductType =>
-
-          JsString(alcoholicProductType.toString).validate[AlcoholicProductType].asOpt.value mustEqual alcoholicProductType
+      forAll(gen) { alcoholicProductType =>
+        JsString(alcoholicProductType.toString)
+          .validate[AlcoholicProductType]
+          .asOpt
+          .value mustEqual alcoholicProductType
       }
     }
 
@@ -27,10 +28,8 @@ class AlcoholicProductTypeSpec extends AnyFreeSpec with Matchers with ScalaCheck
 
       val gen = arbitrary[String] suchThat (!AlcoholicProductType.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[AlcoholicProductType] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[AlcoholicProductType] mustEqual JsError("error.invalid")
       }
     }
 
@@ -38,10 +37,8 @@ class AlcoholicProductTypeSpec extends AnyFreeSpec with Matchers with ScalaCheck
 
       val gen = Gen.oneOf(AlcoholicProductType.values.toSeq)
 
-      forAll(gen) {
-        alcoholicProductType =>
-
-          Json.toJson(alcoholicProductType) mustEqual JsString(alcoholicProductType.toString)
+      forAll(gen) { alcoholicProductType =>
+        Json.toJson(alcoholicProductType) mustEqual JsString(alcoholicProductType.toString)
       }
     }
   }

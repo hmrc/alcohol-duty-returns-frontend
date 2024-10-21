@@ -23,7 +23,7 @@ import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
 import models.requests.DataRequest
 import models.{AlcoholRegime, Mode}
 import navigation.AdjustmentNavigator
-import pages.adjustment.{SpoiltVolumeWithDutyPage, CurrentAdjustmentEntryPage}
+import pages.adjustment.{CurrentAdjustmentEntryPage, SpoiltVolumeWithDutyPage}
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,7 +34,7 @@ import views.html.adjustment.SpoiltVolumeWithDutyView
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class SpoiltVolumeWithDutyController @Inject()(
+class SpoiltVolumeWithDutyController @Inject() (
   override val messagesApi: MessagesApi,
   cacheConnector: CacheConnector,
   navigator: AdjustmentNavigator,
@@ -53,19 +53,24 @@ class SpoiltVolumeWithDutyController @Inject()(
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, _, _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
         rateBand.rangeDetails.map(_.alcoholRegime).headOption
-      case _                                                                      => None
+      case _                                                                         => None
     }
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     getRegime match {
       case Some(regime) =>
         val form = formProvider(regime)
-        request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-
-          case Some(
-                AdjustmentEntry(
+        request.userAnswers
+          .get(CurrentAdjustmentEntryPage)
+          .fold {
+            logger.warn(
+              "Couldn't fetch the rateBand, totalLitres, pureAlcohol and duty in AdjustmentEntry from user answers"
+            )
+            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          } {
+            case AdjustmentEntry(
                   _,
-                  Some(adjustmentType),
+                  _,
                   _,
                   _,
                   _,
@@ -77,29 +82,17 @@ class SpoiltVolumeWithDutyController @Inject()(
                   Some(duty),
                   _,
                   _
+                ) =>
+              Ok(
+                view(
+                  form.fill(AdjustmentVolumeWithSPR(totalLitres, pureAlcohol, duty)),
+                  mode,
+                  regime
                 )
-              ) =>
-            Ok(
-              view(
-                form.fill(AdjustmentVolumeWithSPR(totalLitres, pureAlcohol, duty)),
-                mode,
-                regime
               )
-            )
-          case Some(AdjustmentEntry(_, _, _, _, _, _, _, _, _, _, _, _, _)) =>
-            Ok(
-              view(
-                form,
-                mode,
-                regime
-              )
-            )
-          case _                                                                                         =>
-            logger.warn(
-              "Couldn't fetch the adjustmentType, rateBand, totalLitres, pureAlcohol and sprDutyRate in AdjustmentEntry from user answers"
-            )
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-        }
+            case _ =>
+              Ok(view(form, mode, regime))
+          }
       case _            =>
         logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
@@ -118,6 +111,7 @@ class SpoiltVolumeWithDutyController @Inject()(
               value => {
                 val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
                 val (updatedAdjustment, hasChanged) = updateSpoiltVolumeAndDuty(adjustment, value)
+                val spoiltDuty                      = getSignedSpoiltDuty(value)
                 for {
                   updatedAnswers <- Future.fromTry(
                                       request.userAnswers.set(
@@ -125,7 +119,7 @@ class SpoiltVolumeWithDutyController @Inject()(
                                         updatedAdjustment.copy(
                                           totalLitresVolume = Some(value.totalLitresVolume),
                                           pureAlcoholVolume = Some(value.pureAlcoholVolume),
-                                          duty = Some(value.sprDutyRate)
+                                          duty = Some(spoiltDuty)
                                         )
                                       )
                                     )
@@ -138,6 +132,12 @@ class SpoiltVolumeWithDutyController @Inject()(
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       }
   }
+
+  private def getSignedSpoiltDuty(value: AdjustmentVolumeWithSPR): BigDecimal =
+    if (value.sprDutyRate > 0)
+      value.sprDutyRate * -1
+    else
+      value.sprDutyRate
 
   private def handleFormErrors(mode: Mode, formWithErrors: Form[AdjustmentVolumeWithSPR], regime: AlcoholRegime)(
     implicit request: DataRequest[_]
@@ -153,7 +153,7 @@ class SpoiltVolumeWithDutyController @Inject()(
             )
           )
         )
-      case _                                                                                         =>
+      case _                                                            =>
         logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }

@@ -27,25 +27,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AlcoholicProductTypeSummary  {
+object AlcoholicProductTypeSummary {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
-    adjustmentEntry.spoiltRegime.map {
-      spoiltRegime =>
-
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"alcoholType.$spoiltRegime"))
-          )
+    adjustmentEntry.spoiltRegime.map { spoiltRegime =>
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"alcoholType.$spoiltRegime"))
         )
+      )
 
-        SummaryListRowViewModel(
-          key     = "alcoholicProductType.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.AlcoholicProductTypeController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("alcoholicProductType.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "alcoholicProductType.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AlcoholicProductTypeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("alcoholicProductType.change.hidden"))
         )
+      )
     }
 }

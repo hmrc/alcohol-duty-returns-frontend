@@ -40,13 +40,9 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
       _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
-      userAnswers =>
-        println("it's here5")
-        adjustmentVolumePageRoute(userAnswers)
+      userAnswers => adjustmentVolumePageRoute(userAnswers)
     case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
-      userAnswers =>
-        println("it's here6")
-        adjustmentVolumePageRoute(userAnswers)
+      userAnswers => adjustmentVolumePageRoute(userAnswers)
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           => userAnswers => repackagedTaxTypeRoute(userAnswers)
@@ -65,6 +61,11 @@ class AdjustmentNavigator @Inject() () {
       userAnswers =>
         hasChanged =>
           if (hasChanged) adjustmentTypeRoute(userAnswers, CheckMode)
+          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    case pages.adjustment.AlcoholicProductTypePage                  =>
+      _ =>
+        hasChanged =>
+          if (hasChanged) controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.WhenDidYouPayDutyPage                     =>
       _ =>
@@ -99,7 +100,6 @@ class AdjustmentNavigator @Inject() () {
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ =>
         hasChanged =>
-          println("it's here2")
           if (hasChanged) controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case _                                                          => _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
@@ -135,7 +135,6 @@ class AdjustmentNavigator @Inject() () {
       case Some(RepackagedDraughtProducts) =>
         controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(mode)
       case _                               =>
-        println("it's here3")
         controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
   }
@@ -151,7 +150,6 @@ class AdjustmentNavigator @Inject() () {
       case Some(SmallProducerRelief)           =>
         controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode)
       case _                                   =>
-        println("it's here4")
         controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
   }
@@ -179,8 +177,8 @@ class AdjustmentNavigator @Inject() () {
       case Some(Spoilt) if userAnswers.regimes.regimes.size > 1 =>
         controllers.adjustment.routes.AlcoholicProductTypeController.onPageLoad(mode)
       case Some(Spoilt)                                         =>
-        controllers.adjustment.routes.AdjustmentTypeController
-          .onPageLoad(mode) //.TaskListController.onPageLoad // change to spoilt details page
+        controllers.adjustment.routes.SpoiltVolumeWithDutyController
+          .onPageLoad(mode)
       case _                                                    =>
         controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(mode)
     }

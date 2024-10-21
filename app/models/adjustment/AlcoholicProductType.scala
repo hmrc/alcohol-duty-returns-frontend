@@ -25,34 +25,15 @@ import viewmodels.AlcoholRegimesViewOrder.regimesInViewOrder
 sealed trait AlcoholicProductType
 
 object AlcoholicProductType {
-//extends Enumerable.Implicits
-//  case object Beer extends WithName("beer") with AlcoholicProductType
-//  case object Cider extends WithName("cider") with AlcoholicProductType
-//
-//  val values: Seq[AlcoholicProductType] = Seq(
-//    Beer, Cider
-//  )
-//
-//  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-//    case (value, index) =>
-//      RadioItem(
-//        content = Text(messages(s"alcoholicProductType.${value.toString}")),
-//        value   = Some(value.toString),
-//        id      = Some(s"value_$index")
-//      )
-//  }
 
   def radioOptions(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[RadioItem] = {
     val orderedRegimes = regimesInViewOrder(regimes)
-    orderedRegimes.zipWithIndex.map { case (value, index) =>
+    orderedRegimes.zipWithIndex.map { case (value, _) =>
       RadioItem(
-        content = Text(messages(s"alcoholType.${value.toString}")),
+        content = Text(messages(s"alcoholType.$value")),
         value = Some(value.toString),
         id = Some(value.toString)
       )
     }
   }
-//
-//  implicit val enumerable: Enumerable[AlcoholicProductType] =
-//    Enumerable(values.map(v => v.toString -> v): _*)
 }

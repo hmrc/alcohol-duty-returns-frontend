@@ -1379,8 +1379,6 @@ returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcoh
 # End of Check and submit sub-journey
 alcoholicProductType.title = Which alcoholic product is spoilt?
 alcoholicProductType.heading = Which alcoholic product is spoilt?
-alcoholicProductType.beer = Beer
-alcoholicProductType.cider = Cider
 alcoholicProductType.checkYourAnswersLabel = Description
 alcoholicProductType.error.required = Select the type of alcoholic product you are declaring spoilt
 alcoholicProductType.change.hidden = AlcoholicProductType

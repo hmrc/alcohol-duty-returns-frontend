@@ -16,88 +16,104 @@
 
 package controllers.adjustment
 
-import cats.data.NonEmptySeq
-import config.FrontendAppConfig
 import controllers.actions._
 import forms.adjustment.AlcoholicProductTypeFormProvider
 
 import javax.inject.Inject
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, Mode, RangeDetailsByRegime, RateBand}
+import models.{AlcoholRegime, Mode}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AlcoholicProductTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.AlcoholRegime.{Beer, Cider, Spirits, Wine}
-import models.RateType.Core
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.adjustment.AlcoholicProductTypeHelper
 import views.html.adjustment.AlcoholicProductTypeView
 
 import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
-class AlcoholicProductTypeController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       cacheConnector: CacheConnector,
-                                       navigator: AdjustmentNavigator,
-                                       identify: IdentifyWithEnrolmentAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       formProvider: AlcoholicProductTypeFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: AlcoholicProductTypeView,
-                                       appConfig: FrontendAppConfig
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+class AlcoholicProductTypeController @Inject() (
+  override val messagesApi: MessagesApi,
+  cacheConnector: CacheConnector,
+  navigator: AdjustmentNavigator,
+  identify: IdentifyWithEnrolmentAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: AlcoholicProductTypeFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: AlcoholicProductTypeView,
+  helper: AlcoholicProductTypeHelper
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport
+    with Logging {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val spoiltRegimeOpt = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.spoiltRegime)
-      val preparedForm = spoiltRegimeOpt match {
-        case None => form
-        case Some(value) => form.fill(value.toString)
-      }
-
-      Ok(view(preparedForm, mode, request.userAnswers.regimes))
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val spoiltRegimeOpt = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.spoiltRegime)
+    val preparedForm    = spoiltRegimeOpt match {
+      case None        => form
+      case Some(value) => form.fill(value.toString)
+    }
+    Ok(view(preparedForm, mode, request.userAnswers.regimes))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode, request.userAnswers.regimes))),
-
-        value =>{
-          val regime : AlcoholRegime = AlcoholRegime.fromString(value).getOrElse(Beer)//change
-          val rateBand = createRateBandFromSelectedOption(regime)
-          val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-          for {
-            //updatedAnswers <- Future.fromTry(request.userAnswers.set(AlcoholicProductTypePage, regime))
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment.copy(spoiltRegime = Some(regime), rateBand = Some(rateBand), period = Some(YearMonth.of(2024, 1)))))//change to the correct period
-            _              <- cacheConnector.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(AlcoholicProductTypePage, mode, updatedAnswers))
-        }
-      )
-
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.userAnswers.regimes))),
+          value =>
+            AlcoholRegime.fromString(value) match {
+              case Some(regime) =>
+                val rateBand                        = helper.createRateBandFromRegime(regime)
+                val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+                val (updatedAdjustment, hasChanged) = updateAlcoholicProductType(adjustment, regime)
+                println(hasChanged)
+                for {
+                  updatedAnswers <- Future.fromTry(
+                                      request.userAnswers.set(
+                                        CurrentAdjustmentEntryPage,
+                                        updatedAdjustment.copy(
+                                          spoiltRegime = Some(regime),
+                                          rateBand = Some(rateBand),
+                                          period = Some(YearMonth.of(2024, 1))
+                                        )
+                                      )
+                                    ) //change to the correct period
+                  _              <- cacheConnector.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(AlcoholicProductTypePage, mode, updatedAnswers, hasChanged))
+              case _            =>
+                logger.warn("Couldn't retrieve regime")
+                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+            }
+        )
   }
 
-  private def createRateBandFromSelectedOption(regime : AlcoholRegime): RateBand = {
-
-    val (taxTypeCode, description, alcoholType) = regime match {
-      case Beer => (appConfig.spoiltBeerTaxTypeCode,"Beer", AlcoholType.Beer)
-      case Cider => (appConfig.spoiltCiderTaxTypeCode, "Cider",AlcoholType.Cider)
-      case Wine => (appConfig.spoiltWineTaxTypeCode, "Wine", AlcoholType.Wine)
-      case Spirits => (appConfig.spoiltSpiritsTaxTypeCode, "Spirits", AlcoholType.Spirits)
-      case _ => (appConfig.spoiltOtherFermentedProductsTaxTypeCode, "Other fertmented products", AlcoholType.OtherFermentedProduct)
+  def updateAlcoholicProductType(
+    adjustmentEntry: AdjustmentEntry,
+    currentValue: AlcoholRegime
+  ): (AdjustmentEntry, Boolean) =
+    adjustmentEntry.spoiltRegime match {
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case _                                                    =>
+        (
+          adjustmentEntry.copy(
+            totalLitresVolume = None,
+            pureAlcoholVolume = None,
+            sprDutyRate = None,
+            duty = None,
+            repackagedRateBand = None,
+            repackagedDuty = None,
+            repackagedSprDutyRate = None,
+            newDuty = None
+          ),
+          true
+        )
     }
-
-    val rate : BigDecimal = appConfig.spoiltRate
-
-    RateBand(taxTypeCode,description,Core,Some(rate),Set(RangeDetailsByRegime(regime, NonEmptySeq.one(ABVRange(alcoholType,AlcoholByVolume(0),AlcoholByVolume(0))))))
-    //fetch description from messages, confirm rateType, and other rateband details
-  }
 }

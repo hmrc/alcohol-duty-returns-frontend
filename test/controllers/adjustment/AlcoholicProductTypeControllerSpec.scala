@@ -4,7 +4,7 @@ import base.SpecBase
 import forms.adjustment.AlcoholicProductTypeFormProvider
 import models.NormalMode
 import models.adjustment.AlcoholicProductType
-import navigation.{FakeAdjustmentNavigator, AdjustmentNavigator}
+import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -18,14 +18,14 @@ import views.html.adjustment.AlcoholicProductTypeView
 
 import scala.concurrent.Future
 
-class AlcoholicProductTypeControllerSpec extends SpecBase{
+class AlcoholicProductTypeControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
   lazy val alcoholicProductTypeRoute = routes.AlcoholicProductTypeController.onPageLoad(NormalMode).url
 
   val formProvider = new AlcoholicProductTypeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   "AlcoholicProductType Controller" - {
 
@@ -59,7 +59,10 @@ class AlcoholicProductTypeControllerSpec extends SpecBase{
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(AlcoholicProductType.values.head), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(AlcoholicProductType.values.head), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

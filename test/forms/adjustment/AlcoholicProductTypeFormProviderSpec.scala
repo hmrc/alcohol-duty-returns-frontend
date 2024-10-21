@@ -10,13 +10,13 @@ class AlcoholicProductTypeFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "alcoholic-product-type-value"
+    val fieldName   = "alcoholic-product-type-value"
     val requiredKey = "alcoholicProductType.error.required"
 
     behave like optionsField[AlcoholicProductType](
       form,
       fieldName,
-      validValues  = AlcoholicProductType.values,
+      validValues = AlcoholicProductType.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 
