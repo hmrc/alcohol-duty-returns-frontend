@@ -61,7 +61,10 @@ object TellUsAboutMultipleSPRRateSummary {
                 ),
                 value = ValueViewModel(
                   HtmlContent(
-                    messages("tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.value", answer.totalLitres)
+                    messages(
+                      "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.value",
+                      messages("site.2DP", answer.totalLitres)
+                    )
                   )
                 ),
                 actions = actions(

@@ -41,11 +41,15 @@ object TellUsAboutSingleSPRRateSummary {
         ).withCssClass("govuk-summary-list__row--no-border"),
         SummaryListRowViewModel(
           key = messages("checkYourAnswersLabel.row.totalLitres"),
-          value = ValueViewModel(s"${dutyByTaxType.totalLitres.toString} ${messages("site.unit.litres")}")
+          value = ValueViewModel(
+            s"${messages("site.2DP", dutyByTaxType.totalLitres)} ${messages("site.unit.litres")}"
+          )
         ).withCssClass("govuk-summary-list__row--no-border"),
         SummaryListRowViewModel(
           key = messages("checkYourAnswersLabel.row.pureAlcohol"),
-          value = ValueViewModel(s"${dutyByTaxType.pureAlcohol.toString} ${messages("site.unit.litres")}")
+          value = ValueViewModel(
+            s"${messages("site.4DP", dutyByTaxType.pureAlcohol)} ${messages("site.unit.litres")}"
+          )
         ).withCssClass("govuk-summary-list__row--no-border"),
         SummaryListRowViewModel(
           key = messages("checkYourAnswersLabel.row.dutyRate"),
