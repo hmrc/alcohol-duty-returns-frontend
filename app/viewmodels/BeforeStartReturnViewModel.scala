@@ -21,7 +21,7 @@ import play.api.i18n.Messages
 
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
-import viewmodels.returns.ReturnPeriodViewModel.viewDateFormatter
+import ReturnPeriodViewModel.viewDateFormatter
 
 import java.time.LocalDate
 

@@ -19,7 +19,7 @@ package forms.returns
 import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
 import generators.ModelGenerators
-import models.returns.VolumesByTaxType
+import models.declareDuty.VolumesByTaxType
 import play.api.data.FormError
 import play.api.i18n.Messages
 

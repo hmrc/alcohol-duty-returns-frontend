@@ -26,7 +26,7 @@ import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, GrainsUsed}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
 import pages.dutySuspended._
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
+import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage}
 import play.api.Application
 import queries.Settable

@@ -21,7 +21,7 @@ import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.returns.AdrUnitOfMeasure.Tonnes
-import models.returns._
+import models.declareDuty._
 import models._
 import org.scalacheck.Gen
 import pages.adjustment._
@@ -29,10 +29,9 @@ import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.libs.json.Json
 import org.scalacheck.Gen.{listOfN, numChar}
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
+import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import models.TransactionType.{LPI, RPI, Return}
-import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
-import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
+import models.returns._
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}

@@ -21,7 +21,7 @@ import forms.mappings.Mappings
 import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms._
-import models.returns.VolumeAndRateByTaxType
+import models.declareDuty.VolumeAndRateByTaxType
 import play.api.i18n.Messages
 
 class TellUsAboutSingleSPRRateFormProvider @Inject() extends Mappings {

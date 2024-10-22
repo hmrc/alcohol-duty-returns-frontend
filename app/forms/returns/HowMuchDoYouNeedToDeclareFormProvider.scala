@@ -21,7 +21,7 @@ import forms.mappings.Mappings
 import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms._
-import models.returns.VolumesByTaxType
+import models.declareDuty.VolumesByTaxType
 import play.api.i18n.Messages
 
 class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {

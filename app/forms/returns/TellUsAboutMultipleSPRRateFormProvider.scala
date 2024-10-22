@@ -20,7 +20,7 @@ import javax.inject.Inject
 import forms.mappings.Mappings
 import models.AlcoholRegime
 import play.api.data.Form
-import models.returns.VolumeAndRateByTaxType
+import models.declareDuty.VolumeAndRateByTaxType
 import play.api.i18n.Messages
 
 class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
