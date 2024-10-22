@@ -71,7 +71,7 @@ class StartPaymentController @Inject() (
   }
 
   def initiateAndRedirectFromPastPayments(index: Int): Action[AnyContent] = identify.async { implicit request =>
-    val url          = appConfig.host + controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url
+    val url          = appConfig.businessTaxAccountUrl
     val appaId       = request.appaId
     val credentialID = request.userId
     getPaymentDetails(request.session, index, appaId, url) match {
