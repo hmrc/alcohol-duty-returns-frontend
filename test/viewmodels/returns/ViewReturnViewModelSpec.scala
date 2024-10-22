@@ -17,7 +17,7 @@
 package viewmodels.returns
 
 import base.SpecBase
-import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnTotalDutyDue}
+import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnDetails, ReturnTotalDutyDue}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.Application
 import play.api.i18n.Messages
@@ -134,6 +134,45 @@ class ViewReturnViewModelSpec extends SpecBase {
 
         adjustmentsViewModel.rows.size                  shouldBe 1
         adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
+      }
+    }
+
+    "createNetDutySuspensionViewModel" - {
+      "should return a model with data when duty suspension is declared" in new SetUp {
+        val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(returnDetails)
+
+        netDutySuspensionViewModel.head.size shouldBe 3
+        netDutySuspensionViewModel.rows.size shouldBe 5
+        netDutySuspensionViewModel.rows.foreach { row =>
+          row.cells.size shouldBe 3
+        }
+      }
+
+      "should return a model without the rows not present in the return details" in new SetUp {
+        val returnDetailsWithoutCider: ReturnDetails = returnDetails
+          .copy(netDutySuspension =
+            Some(
+              returnDetails.netDutySuspension.get.copy(
+                totalLtsCider = None,
+                totalLtsPureAlcoholCider = None
+              )
+            )
+          )
+
+        val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(returnDetailsWithoutCider)
+
+        netDutySuspensionViewModel.head.size shouldBe 3
+        netDutySuspensionViewModel.rows.size shouldBe 4
+
+      }
+
+      "should return a model with the right label when nothing declared" in new SetUp {
+        val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(nilReturn)
+
+        netDutySuspensionViewModel.rows.size                    shouldBe 1
+        netDutySuspensionViewModel.rows.head.cells.head.content shouldBe Text(
+          messages("viewReturn.netDutySuspension.noneDeclared")
+        )
       }
     }
   }
