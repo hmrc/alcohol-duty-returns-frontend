@@ -19,7 +19,7 @@ package controllers.adjustment
 import connectors.CacheConnector
 import controllers.actions._
 import forms.adjustment.SpoiltVolumeWithDutyFormProvider
-import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
+import models.adjustment.{AdjustmentEntry, SpoiltVolumeWithDuty}
 import models.requests.DataRequest
 import models.{AlcoholRegime, Mode}
 import navigation.AdjustmentNavigator
@@ -83,9 +83,10 @@ class SpoiltVolumeWithDutyController @Inject() (
                   _,
                   _
                 ) =>
+              val spoiltDuty = positiveDuty(duty)
               Ok(
                 view(
-                  form.fill(AdjustmentVolumeWithSPR(totalLitres, pureAlcohol, duty)),
+                  form.fill(SpoiltVolumeWithDuty(totalLitres, pureAlcohol, spoiltDuty)),
                   mode,
                   regime
                 )
@@ -111,7 +112,7 @@ class SpoiltVolumeWithDutyController @Inject() (
               value => {
                 val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
                 val (updatedAdjustment, hasChanged) = updateSpoiltVolumeAndDuty(adjustment, value)
-                val spoiltDuty                      = getSignedSpoiltDuty(value)
+                val spoiltDuty                      = negativeDuty(value.duty)
                 for {
                   updatedAnswers <- Future.fromTry(
                                       request.userAnswers.set(
@@ -133,14 +134,20 @@ class SpoiltVolumeWithDutyController @Inject() (
       }
   }
 
-  private def getSignedSpoiltDuty(value: AdjustmentVolumeWithSPR): BigDecimal =
-    if (value.sprDutyRate > 0)
-      value.sprDutyRate * -1
+  private def negativeDuty(value: BigDecimal): BigDecimal =
+    if (value > 0)
+      value * -1
     else
-      value.sprDutyRate
+      value
 
-  private def handleFormErrors(mode: Mode, formWithErrors: Form[AdjustmentVolumeWithSPR], regime: AlcoholRegime)(
-    implicit request: DataRequest[_]
+  private def positiveDuty(value: BigDecimal): BigDecimal =
+    if (value < 0)
+      value * -1
+    else
+      value
+
+  private def handleFormErrors(mode: Mode, formWithErrors: Form[SpoiltVolumeWithDuty], regime: AlcoholRegime)(implicit
+    request: DataRequest[_]
   ): Future[Result] =
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, _, _, _, _, _, _, _, _, _, _, _, _)) =>
@@ -160,16 +167,15 @@ class SpoiltVolumeWithDutyController @Inject() (
 
   def updateSpoiltVolumeAndDuty(
     adjustmentEntry: AdjustmentEntry,
-    currentValue: AdjustmentVolumeWithSPR
+    currentValue: SpoiltVolumeWithDuty
   ): (AdjustmentEntry, Boolean) =
     (adjustmentEntry.totalLitresVolume, adjustmentEntry.pureAlcoholVolume, adjustmentEntry.duty) match {
       case (Some(existingTotalLitres), Some(existingPureAlcohol), Some(existingDuty))
-          if currentValue.totalLitresVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol && currentValue.sprDutyRate == existingDuty =>
+          if currentValue.totalLitresVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol && currentValue.duty == existingDuty =>
         (adjustmentEntry, false)
       case _ =>
         (
           adjustmentEntry.copy(
-            duty = None,
             repackagedRateBand = None,
             repackagedDuty = None,
             repackagedSprDutyRate = None,

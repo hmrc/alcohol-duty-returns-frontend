@@ -40,7 +40,7 @@
         }
 
         @sectionHeading(
-            id = "how-much-do-you-need-to-adjust-section",
+            id = "spoilt-volume-with-duty-section",
             text = messages("section.adjustment.spoilt"),
         )
 
@@ -78,10 +78,10 @@
         @govukInput(
             InputViewModel(
             field = form("volumes"),
-            key="sprDutyRate",
+            key="duty",
             label = LabelViewModel(messages("spoiltVolumeWithDuty.spoiltDuty.heading")),
-            errorMessageField = form(s"volumes_sprDutyRate"),
-            value = form(s"volumes.sprDutyRate").value
+            errorMessageField = form(s"volumes_duty"),
+            value = form(s"volumes.duty").value
             )
             .asNumeric()
             .withWidth(Fixed10)

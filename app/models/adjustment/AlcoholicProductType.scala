@@ -16,7 +16,7 @@
 
 package models.adjustment
 
-import models.{AlcoholRegimes, Enumerable, WithName}
+import models.AlcoholRegimes
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem

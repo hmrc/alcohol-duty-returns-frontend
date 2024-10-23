@@ -20,7 +20,7 @@ import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, Smal
 import models._
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import pages._
-import pages.adjustment.{AdjustmentTypePage, DeclareAdjustmentQuestionPage}
+import pages.adjustment.DeclareAdjustmentQuestionPage
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}

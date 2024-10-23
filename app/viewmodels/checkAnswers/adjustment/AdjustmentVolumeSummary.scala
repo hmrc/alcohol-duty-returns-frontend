@@ -34,10 +34,11 @@ object AdjustmentVolumeSummary {
       pureAlcohol <- adjustmentEntry.pureAlcoholVolume
       regime      <- adjustmentEntry.rateBand.map(_.rangeDetails.map(_.alcoholRegime).head)
     } yield {
-      val route =
-        if (adjustmentEntry.sprDutyRate.isDefined) {
-          routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url
-        } else { routes.AdjustmentVolumeController.onPageLoad(CheckMode).url }
+      val route = if (adjustmentEntry.spoiltRegime.isDefined) {
+        routes.SpoiltVolumeWithDutyController.onPageLoad(CheckMode).url
+      } else if (adjustmentEntry.sprDutyRate.isDefined) {
+        routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url
+      } else { routes.AdjustmentVolumeController.onPageLoad(CheckMode).url }
       val value = HtmlFormat.escape(totalLitres.toString()).toString + " " + messages(
         "adjustmentVolume.totalLitres",
         messages(s"return.regime.$regime")

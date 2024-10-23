@@ -17,7 +17,6 @@
 package pages.adjustment
 
 import models.AlcoholRegime
-import models.adjustment.AlcoholicProductType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 

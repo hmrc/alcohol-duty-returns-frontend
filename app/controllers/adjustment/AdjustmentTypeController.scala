@@ -110,14 +110,15 @@ class AdjustmentTypeController @Inject() (
     userAnswer: UserAnswers
   )(implicit messages: Messages): Try[UserAnswers] =
     if (userAnswer.regimes.regimes.size == 1) {
-      val adjustment = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-      val rateBand   = helper.createRateBandFromRegime(userAnswer.regimes.regimes.head)
+      val adjustment       = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+      val rateBand         = helper.createRateBandFromRegime(userAnswer.regimes.regimes.head)
+      val currentYearMonth = YearMonth.now()
       userAnswer.set(
         CurrentAdjustmentEntryPage,
         adjustment.copy(
           spoiltRegime = userAnswer.regimes.regimes.headOption,
           rateBand = Some(rateBand),
-          period = Some(YearMonth.of(2024, 1))
+          period = Some(currentYearMonth.withMonth(1))
         )
       )
     } else {

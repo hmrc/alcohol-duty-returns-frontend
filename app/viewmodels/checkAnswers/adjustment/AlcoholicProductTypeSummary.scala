@@ -18,8 +18,7 @@ package viewmodels.checkAnswers.adjustment
 
 import controllers.adjustment.routes
 import models.adjustment.AdjustmentEntry
-import models.{CheckMode, UserAnswers}
-import pages.adjustment.AlcoholicProductTypePage
+import models.CheckMode
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent

@@ -28,11 +28,6 @@ import java.time.YearMonth
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryAlcoholicProductType: Arbitrary[adjustment.AlcoholicProductType] =
-    Arbitrary {
-      Gen.oneOf(adjustment.AlcoholicProductType.values.toSeq)
-    }
-
   implicit lazy val arbitraryAdjustmentVolumeWithSpr: Arbitrary[adjustment.AdjustmentVolumeWithSPR] =
     Arbitrary {
       for {

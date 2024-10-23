@@ -157,6 +157,10 @@ class ViewReturnViewModel @Inject() () {
     returnAdjustments: Seq[ReturnAdjustmentsRow]
   )(implicit messages: Messages): Seq[TableRowViewModel] =
     returnAdjustments.map { returnAdjustmentsRow =>
+      val description =
+        if (
+          returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)
+        ) {} //fetch the code david did and only show the first word from what was returned
       TableRowViewModel(
         cells = Seq(
           TableRow(content = Text(messages(s"viewReturn.adjustments.type.${returnAdjustmentsRow.adjustmentTypeKey}"))),

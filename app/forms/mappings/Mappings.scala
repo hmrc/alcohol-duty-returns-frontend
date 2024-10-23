@@ -170,24 +170,24 @@ trait Mappings extends Formatters with Constraints {
       )
     )
 
-//  protected def spoiltVolumesWithDuty(
-//    invalidKey: String,
-//    requiredKey: String,
-//    decimalPlacesKey: String,
-//    minimumValueKey: String,
-//    maximumValueKey: String,
-//    inconsistentKey: String,
-//    args: Seq[String] = Seq.empty
-//  ): FieldMapping[SpoiltVolumeWithDuty] =
-//    of(
-//      new AdjustmentVolumesAndRateFormatter(
-//        invalidKey,
-//        requiredKey,
-//        decimalPlacesKey,
-//        minimumValueKey,
-//        maximumValueKey,
-//        inconsistentKey,
-//        args
-//      )
-//    )
+  protected def spoiltVolumesWithDuty(
+    invalidKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    inconsistentKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[SpoiltVolumeWithDuty] =
+    of(
+      new SpoiltVolumesAndDutyFormatter(
+        invalidKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        inconsistentKey,
+        args
+      )
+    )
 }

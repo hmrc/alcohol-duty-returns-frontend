@@ -29,6 +29,7 @@ object Constants {
   val lpaMaximumValue: BigDecimal     = BigDecimal(999999999.9999)
   val dutyMinimumValue: BigDecimal    = BigDecimal(0.00)
   val dutyMaximumValue: BigDecimal    = BigDecimal(999999999.99)
+  val dutyDueMaximumValue: BigDecimal = BigDecimal(99999999999.99)
 
   val rowsPerPage = 15
 

@@ -1405,3 +1405,4 @@ spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume = Litres of spoilt {0
 spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume = Litres of pure alcohol must be a number to 2 decimal places
 spoiltVolumeWithDuty.error.decimalPlaces.sprDutyRate = The amount of duty paid must include pounds and pence
 spoiltVolumeWithDuty.change.hidden = duty value
+spoiltVolumeWithDuty.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}

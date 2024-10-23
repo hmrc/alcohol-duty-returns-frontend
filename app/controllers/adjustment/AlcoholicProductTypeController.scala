@@ -74,7 +74,7 @@ class AlcoholicProductTypeController @Inject() (
                 val rateBand                        = helper.createRateBandFromRegime(regime)
                 val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
                 val (updatedAdjustment, hasChanged) = updateAlcoholicProductType(adjustment, regime)
-                println(hasChanged)
+                val currentYearMonth                = YearMonth.now()
                 for {
                   updatedAnswers <- Future.fromTry(
                                       request.userAnswers.set(
@@ -82,10 +82,10 @@ class AlcoholicProductTypeController @Inject() (
                                         updatedAdjustment.copy(
                                           spoiltRegime = Some(regime),
                                           rateBand = Some(rateBand),
-                                          period = Some(YearMonth.of(2024, 1))
+                                          period = Some(currentYearMonth.minusMonths(1))
                                         )
                                       )
-                                    ) //change to the correct period
+                                    )
                   _              <- cacheConnector.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(AlcoholicProductTypePage, mode, updatedAnswers, hasChanged))
               case _            =>

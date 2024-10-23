@@ -20,6 +20,7 @@ import base.SpecBase
 import cats.data.NonEmptySeq
 import connectors.CacheConnector
 import generators.ModelGenerators
+import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
@@ -66,6 +67,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
   val currentAdjustmentEntry = AdjustmentEntry(
     adjustmentType = Some(Spoilt),
+    spoiltRegime = Some(Beer),
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(totalLitresVolume),
     sprDutyRate = Some(rate),
@@ -293,10 +295,10 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         }
       }
 
-      "if all necessary questions are answered are not answered" in {
+      "if all necessary questions are not answered" in {
         val incompleteUserAnswers1 =
           completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(period = None))
+            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(rateBand = None, sprDutyRate = None))
             .success
             .value
         val incompleteUserAnswers2 =
@@ -319,19 +321,13 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
             .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(duty = None))
             .success
             .value
-        val incompleteUserAnswers6 =
-          completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(rateBand = None, sprDutyRate = None))
-            .success
-            .value
 
         val incompleteUserAnswersList = Seq(
           incompleteUserAnswers1,
           incompleteUserAnswers2,
           incompleteUserAnswers3,
           incompleteUserAnswers4,
-          incompleteUserAnswers5,
-          incompleteUserAnswers6
+          incompleteUserAnswers5
         )
 
         incompleteUserAnswersList.foreach { (incompleteUserAnswers: UserAnswers) =>

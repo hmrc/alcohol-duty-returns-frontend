@@ -18,7 +18,7 @@ package forms.adjustment
 
 import forms.mappings.Mappings
 import models.AlcoholRegime
-import models.adjustment.AdjustmentVolumeWithSPR
+import models.adjustment.SpoiltVolumeWithDuty
 import play.api.data.Form
 import play.api.i18n.Messages
 
@@ -26,9 +26,9 @@ import javax.inject.Inject
 
 class SpoiltVolumeWithDutyFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[AdjustmentVolumeWithSPR] =
+  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[SpoiltVolumeWithDuty] =
     Form(
-      "volumes" -> adjustmentVolumesWithRate(
+      "volumes" -> spoiltVolumesWithDuty(
         "spoiltVolumeWithDuty.error.invalid",
         "spoiltVolumeWithDuty.error.noValue",
         "spoiltVolumeWithDuty.error.decimalPlaces",

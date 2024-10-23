@@ -51,7 +51,7 @@ object WhenDidYouPayDutySummary extends YearMonthModelFormatter {
             )
           )
         )
-      case (Some(_), Some(_))                                                     => None
+      case (_, _)                                                                 => None
     }
 
 }
