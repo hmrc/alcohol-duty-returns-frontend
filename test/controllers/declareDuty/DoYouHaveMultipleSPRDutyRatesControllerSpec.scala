@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import forms.returns.DoYouHaveMultipleSPRDutyRatesFormProvider
+import forms.declareDuty.DoYouHaveMultipleSPRDutyRatesFormProvider
 import models.{CheckMode, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any

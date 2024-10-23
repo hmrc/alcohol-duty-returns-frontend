@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import forms.returns.AlcoholTypeFormProvider
+import forms.declareDuty.AlcoholTypeFormProvider
 import models.{AlcoholRegime, AlcoholRegimes, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any

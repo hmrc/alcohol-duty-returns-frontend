@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package forms.returns
+package forms.declareDuty
 
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class MultipleSPRListFormProviderSpec extends BooleanFieldBehaviours {
+class DoYouHaveMultipleSPRDutyRatesFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "multipleSPRList.error.required"
+  val requiredKey = "doYouHaveMultipleSPRDutyRates.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new MultipleSPRListFormProvider()()
+  val form = new DoYouHaveMultipleSPRDutyRatesFormProvider()()
 
   ".value" - {
 
-    val fieldName = "multipleSPRList-yesNoValue"
+    val fieldName = "doYouHaveMultipleSPRDutyRates-yesNoValue"
 
     behave like booleanField(
       form,

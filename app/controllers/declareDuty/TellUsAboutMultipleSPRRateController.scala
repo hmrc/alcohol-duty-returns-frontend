@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import controllers.actions._
-import forms.returns.TellUsAboutMultipleSPRRateFormProvider
+import forms.declareDuty.TellUsAboutMultipleSPRRateFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegime, CheckMode, Mode, NormalMode, UserAnswers}

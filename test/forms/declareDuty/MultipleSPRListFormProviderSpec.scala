@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package forms.returns
+package forms.declareDuty
 
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class DeleteMultipleSPREntryFormProviderSpec extends BooleanFieldBehaviours {
+class MultipleSPRListFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "deleteMultipleSPREntry.error.required"
+  val requiredKey = "multipleSPRList.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new DeleteMultipleSPREntryFormProvider()()
+  val form = new MultipleSPRListFormProvider()()
 
   ".value" - {
 
-    val fieldName = "deleteMultipleSPREntry-yesNoValue"
+    val fieldName = "multipleSPRList-yesNoValue"
 
     behave like booleanField(
       form,

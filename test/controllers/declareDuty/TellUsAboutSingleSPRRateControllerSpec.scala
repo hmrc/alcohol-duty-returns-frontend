@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import forms.returns.TellUsAboutSingleSPRRateFormProvider
+import forms.declareDuty.TellUsAboutSingleSPRRateFormProvider
 import models.{AlcoholRegime, NormalMode, RateBand}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any

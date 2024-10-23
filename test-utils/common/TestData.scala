@@ -20,7 +20,7 @@ import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
-import models.returns.AdrUnitOfMeasure.Tonnes
+import models.checkAndSubmit.AdrUnitOfMeasure.Tonnes
 import models.declareDuty._
 import models._
 import org.scalacheck.Gen
@@ -31,6 +31,7 @@ import play.api.libs.json.Json
 import org.scalacheck.Gen.{listOfN, numChar}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import models.TransactionType.{LPI, RPI, Return}
+import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrOtherIngredient, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
 import models.returns._
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 

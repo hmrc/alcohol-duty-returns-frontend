@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package forms.returns
+package forms.declareDuty
 
 import javax.inject.Inject
 import forms.mappings.Mappings
+import models.AlcoholRegime
 import play.api.data.Form
 import play.api.data.Forms.set
 
-class AlcoholTypeFormProvider @Inject() extends Mappings {
+class WhatDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Set[String]] =
+  def apply(regime: AlcoholRegime): Form[Set[String]] =
     Form(
-      "value" -> set(text("alcoholType.error.required")).verifying(nonEmptySet("alcoholType.error.required"))
+      "rateBand" -> set(text(s"whatDoYouNeedToDeclare.error.required.${regime.toString}"))
+        .verifying(nonEmptySet(s"whatDoYouNeedToDeclare.error.required.${regime.toString}"))
     )
 }

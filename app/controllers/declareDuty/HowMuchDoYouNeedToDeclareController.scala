@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import controllers.actions._
-import forms.returns.HowMuchDoYouNeedToDeclareFormProvider
+import forms.declareDuty.HowMuchDoYouNeedToDeclareFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegime, Mode, RateBand}

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package forms.returns
+package forms.declareDuty
 
 import javax.inject.Inject
 
 import forms.mappings.Mappings
 import play.api.data.Form
 
-class DoYouHaveMultipleSPRDutyRatesFormProvider @Inject() extends Mappings {
+class DeleteMultipleSPREntryFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
-      "doYouHaveMultipleSPRDutyRates-yesNoValue" -> boolean("doYouHaveMultipleSPRDutyRates.error.required")
+      "deleteMultipleSPREntry-yesNoValue" -> boolean("deleteMultipleSPREntry.error.required")
     )
 }

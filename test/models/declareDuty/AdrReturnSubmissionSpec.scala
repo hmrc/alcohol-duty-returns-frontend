@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package forms.returns
+package models.declareDuty
 
-import forms.behaviours.CheckboxFieldBehaviours
+import base.SpecBase
+import models.UnitsOfMeasure
+import models.checkAndSubmit.AdrUnitOfMeasure
 
-class AlcoholTypeFormProviderSpec extends CheckboxFieldBehaviours {
-
-  val form = new AlcoholTypeFormProvider()()
-
-  ".value" - {
-
-    val fieldName   = "value"
-    val requiredKey = "alcoholType.error.required"
-
-    behave like mandatoryCheckboxField(
-      form,
-      fieldName,
-      requiredKey
-    )
+class AdrReturnSubmissionSpec extends SpecBase {
+  "AdrUnitOfMeasure" - {
+    "should construct from UnitsOfMeasure to AdrUnitOfMeasure" in {
+      AdrUnitOfMeasure(UnitsOfMeasure.Tonnes) mustBe AdrUnitOfMeasure.Tonnes
+      AdrUnitOfMeasure(UnitsOfMeasure.Litres) mustBe AdrUnitOfMeasure.Litres
+    }
   }
+
 }

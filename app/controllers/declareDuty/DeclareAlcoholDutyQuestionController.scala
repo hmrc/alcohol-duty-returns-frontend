@@ -18,7 +18,7 @@ package controllers.declareDuty
 
 import connectors.CacheConnector
 import controllers.actions._
-import forms.returns.DeclareAlcoholDutyQuestionFormProvider
+import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegime, Mode, UserAnswers}
 import navigation.ReturnsNavigator

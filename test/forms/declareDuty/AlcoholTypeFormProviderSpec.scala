@@ -14,32 +14,23 @@
  * limitations under the License.
  */
 
-package forms.returns
+package forms.declareDuty
 
-import forms.behaviours.BooleanFieldBehaviours
-import play.api.data.FormError
+import forms.behaviours.CheckboxFieldBehaviours
 
-class DoYouHaveMultipleSPRDutyRatesFormProviderSpec extends BooleanFieldBehaviours {
+class AlcoholTypeFormProviderSpec extends CheckboxFieldBehaviours {
 
-  val requiredKey = "doYouHaveMultipleSPRDutyRates.error.required"
-  val invalidKey  = "error.boolean"
-
-  val form = new DoYouHaveMultipleSPRDutyRatesFormProvider()()
+  val form = new AlcoholTypeFormProvider()()
 
   ".value" - {
 
-    val fieldName = "doYouHaveMultipleSPRDutyRates-yesNoValue"
+    val fieldName   = "value"
+    val requiredKey = "alcoholType.error.required"
 
-    behave like booleanField(
+    behave like mandatoryCheckboxField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
-    )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredKey
     )
   }
 }

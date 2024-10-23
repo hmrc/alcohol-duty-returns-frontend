@@ -21,7 +21,7 @@ import common.TestData
 import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.AdjustmentDuty
-import models.returns.{AdrAdjustments, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsProduced, AdrTotals}
+import models.checkAndSubmit.{AdrAdjustments, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsProduced, AdrTotals}
 import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, GrainsUsed}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}

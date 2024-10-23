@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package forms.returns
+package forms.declareDuty
 
 import forms.behaviours.CheckboxFieldBehaviours
 import generators.ModelGenerators

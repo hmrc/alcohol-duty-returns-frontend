@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import forms.returns.HowMuchDoYouNeedToDeclareFormProvider
+import forms.declareDuty.HowMuchDoYouNeedToDeclareFormProvider
 import models.{AlcoholRegime, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any

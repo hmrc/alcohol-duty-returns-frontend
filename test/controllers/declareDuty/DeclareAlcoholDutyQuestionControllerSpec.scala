@@ -18,7 +18,7 @@ package controllers.declareDuty
 
 import base.SpecBase
 import connectors.CacheConnector
-import forms.returns.DeclareAlcoholDutyQuestionFormProvider
+import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.Beer
 import models.{AlcoholRegimes, NormalMode}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}

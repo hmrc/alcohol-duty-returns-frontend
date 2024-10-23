@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import controllers.actions._
-import forms.returns.DeleteMultipleSPREntryFormProvider
+import forms.declareDuty.DeleteMultipleSPREntryFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegime, NormalMode}

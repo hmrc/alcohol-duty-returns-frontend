@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package models.checkAndSubmit
+package forms.declareDuty
 
-import play.api.libs.json.{Json, OFormat}
+import javax.inject.Inject
+import forms.mappings.Mappings
+import play.api.data.Form
+import play.api.data.Forms.set
 
-import java.time.{Instant, LocalDate}
+class AlcoholTypeFormProvider @Inject() extends Mappings {
 
-case class AdrReturnCreatedDetails(
-  processingDate: Instant,
-  amount: BigDecimal,
-  chargeReference: Option[String],
-  paymentDueDate: Option[LocalDate]
-)
-
-object AdrReturnCreatedDetails {
-  implicit val format: OFormat[AdrReturnCreatedDetails] = Json.format[AdrReturnCreatedDetails]
+  def apply(): Form[Set[String]] =
+    Form(
+      "value" -> set(text("alcoholType.error.required")).verifying(nonEmptySet("alcoholType.error.required"))
+    )
 }

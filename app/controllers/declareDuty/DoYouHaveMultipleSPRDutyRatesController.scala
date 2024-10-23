@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import controllers.actions._
-import forms.returns.DoYouHaveMultipleSPRDutyRatesFormProvider
+import forms.declareDuty.DoYouHaveMultipleSPRDutyRatesFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegime, Mode}

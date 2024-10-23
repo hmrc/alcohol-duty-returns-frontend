@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import controllers.actions._
-import forms.returns.TellUsAboutSingleSPRRateFormProvider
+import forms.declareDuty.TellUsAboutSingleSPRRateFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegime, Mode}

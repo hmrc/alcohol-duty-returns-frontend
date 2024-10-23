@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.returns
+package models.checkAndSubmit
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import models.{SpiritType, UnitsOfMeasure}

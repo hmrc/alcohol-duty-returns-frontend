@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import forms.returns.DeleteMultipleSPREntryFormProvider
+import forms.declareDuty.DeleteMultipleSPREntryFormProvider
 import org.mockito.ArgumentMatchers.any
 import pages.declareDuty.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind

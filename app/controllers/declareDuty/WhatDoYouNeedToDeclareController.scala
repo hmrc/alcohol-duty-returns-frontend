@@ -18,7 +18,7 @@ package controllers.declareDuty
 
 import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
-import forms.returns.WhatDoYouNeedToDeclareFormProvider
+import forms.declareDuty.WhatDoYouNeedToDeclareFormProvider
 import models.requests.DataRequest
 import models.{AlcoholRegime, Mode, RateBand, ReturnPeriod, UserAnswers}
 import navigation.ReturnsNavigator

@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import controllers.actions._
-import forms.returns.AlcoholTypeFormProvider
+import forms.declareDuty.AlcoholTypeFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegime, Mode, UserAnswers}

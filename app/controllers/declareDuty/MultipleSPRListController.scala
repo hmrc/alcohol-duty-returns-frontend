@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import controllers.actions._
-import forms.returns.MultipleSPRListFormProvider
+import forms.declareDuty.MultipleSPRListFormProvider
 
 import javax.inject.Inject
 import models.{AlcoholRegime, NormalMode}
