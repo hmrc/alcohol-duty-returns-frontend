@@ -148,7 +148,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         }
       }
 
-      "should return a model without the rows not present in the return details" in new SetUp {
+      "should return a model excluding the alcohol types not declared in the return" in new SetUp {
         val returnDetailsWithoutCider: ReturnDetails = returnDetails
           .copy(netDutySuspension =
             Some(
