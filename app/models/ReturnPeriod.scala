@@ -38,11 +38,14 @@ object ReturnPeriod {
   def fromPeriodKey(periodKey: String): Option[ReturnPeriod] =
     periodKey match {
       case returnPeriodPattern(_) =>
-        val year  = periodKey.substring(0, 2).toInt + 2000
-        val month = periodKey.charAt(3) - 'A' + 1
+        val year: Int  = periodKey.substring(0, 2).toInt + 2000
+        val month: Int = convertMonthCharToInt(periodKey)
         Some(ReturnPeriod(YearMonth.of(year, month)))
       case _                      => None
     }
+
+  private def convertMonthCharToInt(periodKey: String) =
+    periodKey.charAt(3) - 'A' + 1
 
   def fromPeriodKeyOrThrow(periodKey: String): ReturnPeriod =
     fromPeriodKey(periodKey).getOrElse(throw new IllegalArgumentException(s"Bad periodKey $periodKey"))

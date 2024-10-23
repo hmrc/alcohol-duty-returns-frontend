@@ -136,6 +136,15 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
   )
 
+  def exampleRateBands(periodKey: String): Map[(YearMonth, String), RateBand] = {
+    val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).period
+    Map(
+      (periodDate, "341") -> coreRateBand,
+      (periodDate, "321") -> coreRateBand2,
+      (periodDate, "321") -> coreRateBand3
+    )
+  }
+
   def exampleReturnDetails(periodKey: String, now: Instant): ReturnDetails = {
     val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).periodFromDate()
 

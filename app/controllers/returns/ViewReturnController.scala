@@ -73,7 +73,7 @@ class ViewReturnController @Inject() (
         val submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
         val submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
         val submittedTime          = dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
-        val submittedTimeStr       = dateTimeHelper.formatHourMinuteMerediem(submittedTime)
+        val submittedTimeStr       = dateTimeHelper.formatHourMinuteMeridiem(submittedTime)
 
         Ok(
           view(

@@ -22,7 +22,6 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import viewmodels.returns.ViewReturnViewModel
 
 import java.time.Instant
 
@@ -31,11 +30,16 @@ class ViewReturnViewModelSpec extends SpecBase {
   "ViewReturnViewModelSpec" - {
     "createAlcoholDeclaredViewModel" - {
       "should return a model with data when alcohol declared" in new SetUp {
-        val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(returnDetails, null)
+        val alcoholDeclaredViewModel =
+          viewModel.createAlcoholDeclaredViewModel(returnDetails, exampleRateBands(periodKey))
 
-        alcoholDeclaredViewModel.rows.size               shouldBe returnDetails.alcoholDeclared.alcoholDeclaredDetails.get.size
-        alcoholDeclaredViewModel.total.get.total.content shouldBe Text(
+        alcoholDeclaredViewModel.rows.size                    shouldBe returnDetails.alcoholDeclared.alcoholDeclaredDetails.get.size
+        alcoholDeclaredViewModel.total.get.total.content      shouldBe Text(
           messages("site.currency.2DP", returnDetails.alcoholDeclared.total)
+        )
+        alcoholDeclaredViewModel.rows.head.cells.head.content shouldBe Text("311")
+        alcoholDeclaredViewModel.rows(3).cells.head.content   shouldBe Text(
+          "Non-draught beer between 1% and 2% ABV (123)"
         )
       }
 
@@ -56,14 +60,17 @@ class ViewReturnViewModelSpec extends SpecBase {
 
     "createAdjustmentsViewModel" - {
       "should return a model with data when adjustments declared" in new SetUp {
-        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, null)
-
-        adjustmentsViewModel.rows.size shouldBe returnDetails.adjustments.adjustmentDetails.get.size
+        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey2))
 
         val minus: Char = 0x2212
+
+        adjustmentsViewModel.rows.size               shouldBe 4
         adjustmentsViewModel.total.get.total.content shouldBe Text(
           s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
         )
+
+        adjustmentsViewModel.rows.head.cells(1).content shouldBe Text("321")
+        adjustmentsViewModel.rows(3).cells(1).content   shouldBe Text("Non-draught beer between 1% and 2% ABV (125)")
       }
 
       "should return a model with no entries when a nil return" in new SetUp {
@@ -143,6 +150,7 @@ class ViewReturnViewModelSpec extends SpecBase {
     implicit val messages: Messages = getMessages(application)
 
     val periodKey     = periodKeyApr
+    val periodKey2    = periodKeyJan
     val nonZeroAmount = BigDecimal("12345.67")
 
     val viewModel          = new ViewReturnViewModel()

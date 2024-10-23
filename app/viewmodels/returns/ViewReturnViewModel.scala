@@ -17,8 +17,8 @@
 package viewmodels.returns
 
 import config.Constants
-import models.{RateBand, RatePeriod, ReturnPeriod}
-import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails}
+import models.returns._
+import models.{RateBand, ReturnPeriod}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
@@ -75,17 +75,14 @@ class ViewReturnViewModel @Inject() () {
     alcoholDeclaredDetails: Seq[ReturnAlcoholDeclaredRow],
     ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
   )(implicit messages: Messages): Seq[TableRowViewModel] = {
-    val maybeRatePeriod = ReturnPeriod.fromPeriodKey(periodKey).map(_.period)
+    val maybeRatePeriod: Option[YearMonth] = ReturnPeriod.fromPeriodKey(periodKey).map(_.period)
     alcoholDeclaredDetails.map { alcoholDeclaredDetailsRow =>
-      val taxType = alcoholDeclaredDetailsRow.taxType
+      val taxType: String = alcoholDeclaredDetailsRow.taxType
       TableRowViewModel(
         cells = Seq(
           TableRow(content =
             Text(
-              maybeRatePeriod
-                .flatMap(ratePeriodsAndTaxCodesToRateBands.get(_, taxType))
-                .map(rateBandRecap(_))
-                .getOrElse(taxType)
+              getDescriptionOrBestEffort(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
             )
           ),
           TableRow(content =
@@ -106,6 +103,16 @@ class ViewReturnViewModel @Inject() () {
       )
     }
   }
+
+  private def getDescriptionOrBestEffort(
+    ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand],
+    maybeRatePeriod: Option[YearMonth],
+    taxType: String
+  )(implicit messages: Messages): String =
+    maybeRatePeriod
+      .flatMap(ratePeriodsAndTaxCodesToRateBands.get(_: YearMonth, taxType))
+      .map(rateBandRecap(_))
+      .getOrElse(taxType)
 
   private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel] =
     Seq(
@@ -187,10 +194,7 @@ class ViewReturnViewModel @Inject() () {
           TableRow(content = Text(messages(s"viewReturn.adjustments.type.${returnAdjustmentsRow.adjustmentTypeKey}"))),
           TableRow(content =
             Text(
-              maybeRatePeriod
-                .flatMap(ratePeriodsAndTaxCodesToRateBands.get(_, taxType))
-                .map(rateBandRecap(_))
-                .getOrElse(taxType)
+              getDescriptionOrBestEffort(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
             )
           ),
           TableRow(content =
