@@ -44,14 +44,14 @@ class ViewReturnViewModelSpec extends SpecBase {
       }
 
       "should return a model with no entries when a nil return" in new SetUp {
-        val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(nilReturn, null)
+        val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(nilReturn, emptyRateBands)
 
         alcoholDeclaredViewModel.rows.size                  shouldBe 1
         alcoholDeclaredViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
 
       "should return a model with no entries when a nil return with empty sections" in new SetUp {
-        val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(emptyReturnDetails, null)
+        val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(emptyReturnDetails, emptyRateBands)
 
         alcoholDeclaredViewModel.rows.size                  shouldBe 1
         alcoholDeclaredViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
@@ -74,14 +74,14 @@ class ViewReturnViewModelSpec extends SpecBase {
       }
 
       "should return a model with no entries when a nil return" in new SetUp {
-        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, null)
+        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, emptyRateBands)
 
         adjustmentsViewModel.rows.size                  shouldBe 1
         adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
 
       "should return a model with no entries when a nil return with empty sections" in new SetUp {
-        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails, null)
+        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails, emptyRateBands)
 
         adjustmentsViewModel.rows.size                  shouldBe 1
         adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
@@ -130,14 +130,14 @@ class ViewReturnViewModelSpec extends SpecBase {
       }
 
       "should return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {
-        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, null)
+        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, emptyRateBands)
 
         adjustmentsViewModel.rows.size                  shouldBe 1
         adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))
       }
 
       "should return a model with no entries when a nil return with empty sections (nothing declared, no total)" in new SetUp {
-        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails, null)
+        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails, emptyRateBands)
 
         adjustmentsViewModel.rows.size                  shouldBe 1
         adjustmentsViewModel.rows.head.cells(1).content shouldBe Text(messages("site.nil"))

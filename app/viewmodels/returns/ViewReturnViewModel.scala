@@ -82,7 +82,7 @@ class ViewReturnViewModel @Inject() () {
         cells = Seq(
           TableRow(content =
             Text(
-              getDescriptionOrBestEffort(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
+              getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
             )
           ),
           TableRow(content =
@@ -104,7 +104,7 @@ class ViewReturnViewModel @Inject() () {
     }
   }
 
-  private def getDescriptionOrBestEffort(
+  private def getDescriptionOrFallbackToTaxTypeCode(
     ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand],
     maybeRatePeriod: Option[YearMonth],
     taxType: String
@@ -194,7 +194,7 @@ class ViewReturnViewModel @Inject() () {
           TableRow(content = Text(messages(s"viewReturn.adjustments.type.${returnAdjustmentsRow.adjustmentTypeKey}"))),
           TableRow(content =
             Text(
-              getDescriptionOrBestEffort(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
+              getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
             )
           ),
           TableRow(content =

@@ -140,10 +140,13 @@ trait TestData extends ModelGenerators {
     val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).period
     Map(
       (periodDate, "341") -> coreRateBand,
-      (periodDate, "321") -> coreRateBand2,
+      (periodDate, "331") -> coreRateBand2,
       (periodDate, "321") -> coreRateBand3
     )
   }
+
+  val emptyRateBands: Map[(YearMonth, String), RateBand] =
+    Map.empty[(YearMonth, String), RateBand]
 
   def exampleReturnDetails(periodKey: String, now: Instant): ReturnDetails = {
     val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).periodFromDate()
