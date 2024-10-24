@@ -19,14 +19,14 @@ import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalTo, equa
 import connectors.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholDutyCalculatorConnector, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.returns.{AlcoholDuty, DutyByTaxType}
-import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
+import models.RatePeriod._
 import play.api.Application
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.YearMonth
-
 
 class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper {
   override def fakeApplication(): Application = applicationBuilder(None).configure("microservice.services.alcohol-duty-calculator.port" -> server.port()).build()
@@ -36,38 +36,39 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
       "should successfully retrieve rateBandByRegime details" in new SetUp {
         val jsonResponse = Json.toJson(rateBands).toString()
         server.stubFor(get(urlPathEqualTo(ratesUrl))
-          .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024,1))(RatePeriod.yearMonthFormat).toString))
+          .withQueryParam("ratePeriod", equalTo(Json.toJson(ratePeriod).toString))
           .withQueryParam("alcoholRegimes", equalTo(regime.toString))
           .willReturn(aResponse().withBody(jsonResponse)
           .withStatus(OK)))
 
-        whenReady(connector.rateBandByRegime(YearMonth.of(2024, 1), Seq(regime))) { result =>
+        whenReady(connector.rateBandByRegime(ratePeriod, Seq(regime))) { result =>
           result mustBe rateBands.toSeq
         }
       }
 
       "should fail when upstream service returns an error" in new SetUp {
         server.stubFor(get(urlPathEqualTo(ratesUrl))
-          .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 1))(RatePeriod.yearMonthFormat).toString))
+          .withQueryParam("ratePeriod", equalTo(Json.toJson(ratePeriod).toString))
           .withQueryParam("alcoholRegimes", equalTo(regime.toString))
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR)))
 
-        whenReady(connector.rateBandByRegime(YearMonth.of(2024, 1), Seq(regime)).failed) { ex =>
+        whenReady(connector.rateBandByRegime(ratePeriod, Seq(regime)).failed) { ex =>
           ex mustBe a[UpstreamErrorResponse]
           ex.asInstanceOf[UpstreamErrorResponse].statusCode mustBe INTERNAL_SERVER_ERROR
         }
       }
     }
+
     "rateBand" - {
       "successfully retrieve rate band" in new SetUp{
         val jsonResponse = Json.toJson(rateBand).toString()
         server.stubFor(get(urlPathEqualTo(rateBandUrl))
-          .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 1))(RatePeriod.yearMonthFormat).toString))
-          .withQueryParam("taxTypeCode", equalTo("310"))
+          .withQueryParam("ratePeriod", equalTo(Json.toJson(ratePeriod).toString))
+          .withQueryParam("taxTypeCode", equalTo(taxTypeCode))
           .willReturn(aResponse().withBody(jsonResponse)
             .withStatus(OK)))
 
-        whenReady(connector.rateBand("310", YearMonth.of(2024, 1))) { result =>
+        whenReady(connector.rateBand(taxTypeCode, ratePeriod)) { result =>
                     result mustBe Some(rateBand)
         }
       }
@@ -75,12 +76,39 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
       "return None when rate band not found" in new SetUp{
         server.stubFor(
           get(urlMatching(rateBandUrl))
-            .withQueryParam("ratePeriod", equalTo(Json.toJson(YearMonth.of(2024, 1))(RatePeriod.yearMonthFormat).toString))
-            .withQueryParam("taxTypeCode", equalTo("123"))
+            .withQueryParam("ratePeriod", equalTo(Json.toJson(ratePeriod).toString))
+            .withQueryParam("taxTypeCode", equalTo(taxTypeCode))
             .willReturn(aResponse().withStatus(NOT_FOUND))
         )
-        whenReady(connector.rateBand("123", ratePeriod.period)) { result =>
+        whenReady(connector.rateBand(taxTypeCode, ratePeriod)) { result =>
           result mustBe None
+        }
+      }
+    }
+
+    "rateBands" - {
+      "successfully retrieve rates band" in new SetUp{
+        val jsonResponse = Json.toJson(periodTaxTypeCodeToRateBands).toString()
+        server.stubFor(get(urlPathEqualTo(rateBandsUrl))
+          .withQueryParam("ratePeriods", equalTo(Seq(Json.toJson(ratePeriod).toString, Json.toJson(ratePeriod2).toString).mkString(",")))
+          .withQueryParam("taxTypeCodes", equalTo(s"$taxTypeCode,$taxTypeCode2"))
+          .willReturn(aResponse().withBody(jsonResponse)
+            .withStatus(OK)))
+
+        whenReady(connector.rateBands(Seq((ratePeriod, taxTypeCode), (ratePeriod2, taxTypeCode2)))) { result =>
+          result mustBe periodTaxTypeCodeToRateBands
+        }
+      }
+
+      "return an empty map when a bad request" in new SetUp{
+        server.stubFor(
+          get(urlMatching(rateBandsUrl))
+            .withQueryParam("ratePeriods", equalTo(Seq(Json.toJson(ratePeriod).toString, Json.toJson(ratePeriod2).toString).mkString(",")))
+            .withQueryParam("taxTypeCodes", equalTo(s"$taxTypeCode,$taxTypeCode2"))
+            .willReturn(aResponse().withStatus(BAD_REQUEST))
+        )
+        whenReady(connector.rateBands(Seq((ratePeriod, taxTypeCode), (ratePeriod2, taxTypeCode2)))) { result =>
+          result mustBe Map.empty
         }
       }
     }
@@ -214,10 +242,15 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
   class SetUp {
     val connector = app.injector.instanceOf[AlcoholDutyCalculatorConnector]
     val url = "/alcohol-duty-calculator"
-    val ratePeriod = returnPeriodGen.sample.get
     val regime = regimeGen.sample.value
+
+    val ratePeriod = YearMonth.of(2024, 1)
+    val ratePeriod2 = YearMonth.of(2024, 2)
+    val taxTypeCode = "310"
+    val taxTypeCode2 = "311"
+
     val rateBand = RateBand(
-      "310",
+      taxTypeCode,
       "some band",
       RateType.DraughtRelief,
       Some(BigDecimal(10.99)),
@@ -234,12 +267,35 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         )
       )
     )
+
+    val rateBand2 = RateBand(
+      taxTypeCode2,
+      "some band2",
+      RateType.Core,
+      Some(BigDecimal(20.99)),
+      Set(
+        RangeDetailsByRegime(
+          regime,
+          NonEmptySeq.one(
+            ABVRange(
+              AlcoholType.Beer,
+              AlcoholByVolume(2.1),
+              AlcoholByVolume(5.8)
+            )
+          )
+        )
+      )
+    )
+
+    val periodTaxTypeCodeToRateBands = Map((ratePeriod, taxTypeCode) -> rateBand, (ratePeriod2, taxTypeCode2) -> rateBand2)
+
     val rateBands = genListOfRateBandForRegime(regime).sample.value.toSet
     val repackagedUrl = s"$url/calculate-repackaged-duty-change"
     val totalAdjustmentUrl = s"$url/calculate-total-adjustment"
     val adjustmentDutyUrl = s"$url/calculate-adjustment-duty"
     val totalDuty = s"$url/calculate-total-duty"
     val rateBandUrl = s"$url/rate-band"
+    val rateBandsUrl = s"$url/rate-bands"
     val ratesUrl = s"$url/rates"
   }
 }

@@ -108,7 +108,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when an unexpected  status code is returned" in new SetUp {
+      "should fail when an unexpected status code is returned" in new SetUp {
         server.stubFor(get(urlMatching(historicUrl))
           .willReturn(aResponse()
             .withStatus(CREATED)))
