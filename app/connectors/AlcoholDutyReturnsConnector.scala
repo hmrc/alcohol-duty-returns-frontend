@@ -19,7 +19,8 @@ package connectors
 import cats.data.EitherT
 import config.FrontendAppConfig
 import models.ObligationData
-import models.returns.{AdrReturnCreatedDetails, AdrReturnSubmission, ReturnDetails}
+import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
+import models.returns.{ReturnDetails}
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 

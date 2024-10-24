@@ -20,7 +20,7 @@ import base.SpecBase
 import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
-import models.returns.{AlcoholDuty, DutyByTaxType}
+import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo

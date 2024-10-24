@@ -22,7 +22,7 @@ import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
 import models.UserAnswers
 import models.audit.AuditReturnSubmitted
-import models.returns.AdrReturnSubmission
+import models.checkAndSubmit.AdrReturnSubmission
 import play.api.Logging
 
 import javax.inject.Inject

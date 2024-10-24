@@ -1,0 +1,73 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import viewmodels.TableViewModel
+@import components.{BulletList, SectionHeading, PageHeading, Paragraph, SubHeading}
+
+@this(
+        bulletList:BulletList,
+        formHelper: FormWithCSRF,
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        paragraph: Paragraph,
+        sectionHeading: SectionHeading,
+        subHeading: SubHeading,
+        pageHeading: PageHeading,
+        govukTable: GovukTable,
+        tableRowActionList: components.TableRowActionList,
+        tableRowAction: components.TableRowAction
+)
+
+@(regime: AlcoholRegime, dutyDueViewModel: TableViewModel, totalDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("dutyCalculation.title", totalDuty))) {
+
+  @formHelper(action = controllers.declareDuty.routes.DutyCalculationController.onSubmit(regime), Symbol("autoComplete") -> "off") {
+    @sectionHeading(
+      id = "dutyCalculation-section",
+      text = messages(s"section.return.$regime")
+    )
+
+    @pageHeading(messages("dutyCalculation.heading", totalDuty))
+
+    @paragraph(messages("dutyCalculation.paragraph"))
+
+    @bulletList(Seq(messages("dutyCalculation.list")))
+
+    @govukTable(Table(
+      caption = Some(messages("productList.caption")),
+      captionClasses = "govuk-table__caption--l",
+      head = Some(dutyDueViewModel.head),
+      rows = dutyDueViewModel.rows.map(row => {
+        val actions = TableRow(format = Some("numeric"), content = HtmlContent(tableRowActionList(
+          id = "productList",
+          actions = row.actions.map(action => tableRowAction(
+            id = "",
+            text = action.label,
+            href = action.href,
+            visuallyHiddenContent = action.visuallyHiddenText
+          )
+          ))))
+        row.cells :+ actions
+      }
+      ))
+    )
+
+    @govukButton(
+      ButtonViewModel("continueButton", messages("site.continue"))
+    )
+  }
+}

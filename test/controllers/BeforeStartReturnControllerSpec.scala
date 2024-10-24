@@ -28,8 +28,7 @@ import play.api.test.Helpers._
 import play.api.inject.bind
 import services.AuditService
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import viewmodels.BeforeStartReturnViewModel
-import viewmodels.returns.ReturnPeriodViewModel
+import viewmodels.{BeforeStartReturnViewModel, ReturnPeriodViewModel}
 import views.html.BeforeStartReturnView
 
 import java.time.{Clock, Instant, LocalDate}

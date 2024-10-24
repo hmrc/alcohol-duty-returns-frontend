@@ -23,7 +23,7 @@ import play.api.inject.bind
 import play.api.test.Helpers.running
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
-import viewmodels.returns.ReturnPeriodViewModel.viewDateFormatter
+import ReturnPeriodViewModel.viewDateFormatter
 
 import java.time.LocalDate
 

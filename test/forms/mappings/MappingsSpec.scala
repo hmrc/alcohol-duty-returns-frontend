@@ -20,7 +20,7 @@ import base.SpecBase
 import play.api.data.{Form, FormError}
 import models.Enumerable
 import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR}
-import models.returns.{VolumeAndRateByTaxType, VolumesByTaxType}
+import models.declareDuty.{VolumeAndRateByTaxType, VolumesByTaxType}
 
 import java.time.YearMonth
 

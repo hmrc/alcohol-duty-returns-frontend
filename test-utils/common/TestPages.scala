@@ -19,10 +19,10 @@ package common
 import models.AlcoholRegime._
 import models.dutySuspended.{DutySuspendedBeer, DutySuspendedCider, DutySuspendedOtherFermented, DutySuspendedSpirits, DutySuspendedWine}
 import models.{AlcoholRegime, RateBand, UserAnswers}
-import models.returns.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
+import models.declareDuty.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
 import pages.dutySuspended.{DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 
 import scala.collection.immutable.SortedMap
 

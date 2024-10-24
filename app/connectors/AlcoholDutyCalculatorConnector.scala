@@ -18,7 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
-import models.returns.AlcoholDuty
+import models.declareDuty.AlcoholDuty
 import models.{AlcoholRegime, RateBand, RatePeriod}
 import play.api.http.Status.OK
 import play.api.libs.json.Json

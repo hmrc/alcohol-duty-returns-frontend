@@ -20,12 +20,12 @@ import base.SpecBase
 import models.AlcoholRegime._
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Underdeclaration
-import models.returns.{AlcoholDuty, DutyByTaxType}
+import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, NormalMode, UserAnswers}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended._
-import pages.returns.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions._
 import play.api.Application
 import play.api.i18n.Messages
@@ -51,7 +51,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       )
       result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
       result.taskList.items.head.href          shouldBe Some(
-        controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
+        controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
       )
     }
 
@@ -70,7 +70,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       )
       result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
       result.taskList.items.head.href          shouldBe Some(
-        controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
       )
     }
 
@@ -90,7 +90,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       )
       result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.inProgress
       result.taskList.items.head.href          shouldBe Some(
-        controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
       )
 
     }
@@ -115,7 +115,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
         result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
-          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
         AlcoholRegime.values.foreach(regime =>
@@ -124,7 +124,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             case Some(task) =>
               task.status shouldBe AlcholDutyTaskListItemStatus.notStarted
               task.href   shouldBe Some(
-                controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+                controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
               )
             case None       => fail(s"Task for regime $regime not found")
           }
@@ -173,7 +173,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
         result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
-          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
         result.taskList.items
@@ -181,7 +181,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           case Some(task) =>
             task.status shouldBe AlcholDutyTaskListItemStatus.completed
             task.href   shouldBe Some(
-              controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url
+              controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url
             )
           case None       => fail(s"Task for regime $regime not found")
         }
@@ -212,7 +212,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         )
         result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
-          controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
 
         result.taskList.items
@@ -220,7 +220,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           case Some(task) =>
             task.status shouldBe AlcholDutyTaskListItemStatus.inProgress
             task.href   shouldBe Some(
-              controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+              controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
             )
           case None       => fail(s"Task for regime $regime not found")
         }

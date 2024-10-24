@@ -22,7 +22,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
 import enumeratum.scalacheck._
-import models.returns.{DutyByTaxType, VolumeAndRateByTaxType}
+import models.declareDuty.{DutyByTaxType, VolumeAndRateByTaxType}
 
 import java.time.YearMonth
 
