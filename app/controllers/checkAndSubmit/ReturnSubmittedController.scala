@@ -36,7 +36,6 @@ class ReturnSubmittedController @Inject() (
   appConfig: FrontendAppConfig,
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
-  getData: DataRetrievalAction,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnSubmittedView,
   dateTimeHelper: DateTimeHelper
