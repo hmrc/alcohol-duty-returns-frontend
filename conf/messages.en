@@ -322,19 +322,19 @@ return.journey.error.noValue.taxType = Select the type of {0}
 
 return.journey.error.noValue.totalLitres = Enter the total litres of {0}
 return.journey.error.invalid.totalLitres = Litres of {0} must be a number
-return.journey.error.maximumValue.totalLitres = Litres of {0} must be 99.99 million or less
-return.journey.error.minimumValue.totalLitres = Litres of {0} must be 0.01 or more
+return.journey.error.maximumValue.totalLitres = Litres of {0} must be less than 100 million
+return.journey.error.minimumValue.totalLitres = Litres of {0} must be more than 0.00
 return.journey.error.tooManyDecimalPlaces.totalLitres = Litres of {0} must be a number to 2 decimal places
 
 return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in {0}
 return.journey.error.invalid.pureAlcohol = Litres of pure alcohol must be a number
-return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol must be 99.9999 million or less
-return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol must be 0.0001 or more
+return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol must be less than 100 million
+return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol must be more than 0.00
 return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol must be a number to 4 decimal places
 
 return.journey.error.noValue.dutyRate = Enter your Small Producer Relief duty rate
 return.journey.error.invalid.dutyRate = Your Small Producer Relief duty rate must be a number
-return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
+return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate must be less than £100 million
 return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
 return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 
