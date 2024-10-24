@@ -156,11 +156,14 @@ viewReturn.dutyDue.caption = Total
 viewReturn.dutyDue.total.legend = Total duty value
 viewReturn.table.adjustmentType.legend = Adjustment
 viewReturn.table.description.legend = Description
+viewReturn.table.totalVolume.legend = Total volume (litres)
 viewReturn.table.lpa.legend = Litres of pure alcohol (LPA)
 viewReturn.table.dutyRate.legend = Duty rate (per litre)
 viewReturn.table.dutyValue.legend = Duty value
 viewReturn.table.dutyDue.legend = Duty value
 viewReturn.printYourReturn = Print your return
+viewReturn.netDutySuspension.caption = Duty suspended deliveries
+viewReturn.netDutySuspension.noneDeclared = Nothing declared
 
 viewPastPayments.heading = Alcohol Duty payments
 viewPastPayments.title = Alcohol Duty payments

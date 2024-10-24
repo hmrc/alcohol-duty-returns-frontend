@@ -234,7 +234,21 @@ trait TestData extends ModelGenerators {
         ),
         total = BigDecimal("-19434")
       ),
-      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("55815"))
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("55815")),
+      netDutySuspension = Some(
+        ReturnNetDutySuspension(
+          totalLtsBeer = Some(BigDecimal("0.15")),
+          totalLtsCider = Some(BigDecimal("0.38")),
+          totalLtsSpirit = Some(BigDecimal("0.02")),
+          totalLtsWine = Some(BigDecimal("0.44")),
+          totalLtsOtherFermented = Some(BigDecimal("0.02")),
+          totalLtsPureAlcoholBeer = Some(BigDecimal("0.4248")),
+          totalLtsPureAlcoholCider = Some(BigDecimal("0.0379")),
+          totalLtsPureAlcoholSpirit = Some(BigDecimal("0.2492")),
+          totalLtsPureAlcoholWine = Some(BigDecimal("0.5965")),
+          totalLtsPureAlcoholOtherFermented = Some(BigDecimal("0.1894"))
+        )
+      )
     )
 
   def nilReturnDetails(periodKey: String, now: Instant): ReturnDetails =
@@ -248,7 +262,8 @@ trait TestData extends ModelGenerators {
         adjustmentDetails = None,
         total = BigDecimal("0")
       ),
-      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0"))
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0")),
+      netDutySuspension = None
     )
 
   def nilReturnDetailsWithEmptySections(periodKey: String, now: Instant): ReturnDetails =
@@ -262,7 +277,8 @@ trait TestData extends ModelGenerators {
         adjustmentDetails = Some(Seq.empty),
         total = BigDecimal("0")
       ),
-      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0"))
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0")),
+      netDutySuspension = None
     )
 
   val obligationDataSingleOpen = ObligationData(
