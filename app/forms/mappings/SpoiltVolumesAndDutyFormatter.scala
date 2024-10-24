@@ -21,16 +21,16 @@ import models.adjustment.SpoiltVolumeWithDuty
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
-class SpoiltVolumesAndDutyFormatter (
-                                      invalidKey: String,
-                                      requiredKey: String,
-                                      decimalPlacesKey: String,
-                                      minimumValueKey: String,
-                                      maximumValueKey: String,
-                                      inconsistentKey: String,
-                                      args: Seq[String]
-                                    ) extends Formatter[SpoiltVolumeWithDuty]
-  with Formatters {
+class SpoiltVolumesAndDutyFormatter(
+  invalidKey: String,
+  requiredKey: String,
+  decimalPlacesKey: String,
+  minimumValueKey: String,
+  maximumValueKey: String,
+  inconsistentKey: String,
+  args: Seq[String]
+) extends Formatter[SpoiltVolumeWithDuty]
+    with Formatters {
 
   private def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
@@ -78,12 +78,12 @@ class SpoiltVolumesAndDutyFormatter (
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], SpoiltVolumeWithDuty] = {
     val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
     val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
-    val duty = dutyRateFormatter("duty").bind(s"$key.duty", data)
+    val duty        = dutyRateFormatter("duty").bind(s"$key.duty", data)
 
     (totalLitres, pureAlcohol, duty) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue), Right(duty)) =>
         Right(SpoiltVolumeWithDuty(totalLitresValue, pureAlcoholValue, duty))
-      case (totalLitresError, pureAlcoholError, duty)                 =>
+      case (totalLitresError, pureAlcoholError, duty)                      =>
         Left(
           totalLitresError.left.getOrElse(Seq.empty)
             ++ pureAlcoholError.left.getOrElse(Seq.empty)
@@ -129,6 +129,6 @@ class SpoiltVolumesAndDutyFormatter (
     Map(
       s"$key.totalLitresVolume" -> value.totalLitresVolume.toString,
       s"$key.pureAlcoholVolume" -> value.pureAlcoholVolume.toString,
-      s"$key.duty"       -> value.duty.toString
+      s"$key.duty"              -> value.duty.toString
     )
 }

@@ -32,9 +32,11 @@ object AdjustmentTaxTypeSummary {
     adjustmentEntry.adjustmentType match {
       case Some(Spoilt)         => None
       case Some(adjustmentType) =>
-        val label = adjustmentType match {
-          case RepackagedDraughtProducts => "adjustmentTaxType.repackaged.checkYourAnswersLabel"
-          case _                         => "adjustmentTaxType.checkYourAnswersLabel"
+        val (label, hiddenText) = adjustmentType match {
+          case RepackagedDraughtProducts =>
+            ("adjustmentTaxType.repackaged.checkYourAnswersLabel", "adjustmentTaxType.repackaged.change.hidden")
+          case _                         =>
+            ("adjustmentTaxType.checkYourAnswersLabel", "adjustmentTaxType.change.hidden")
         }
         adjustmentEntry.rateBand.map { rateBand =>
           SummaryListRowViewModel(
@@ -42,7 +44,7 @@ object AdjustmentTaxTypeSummary {
             value = ValueViewModel(rateBandRecap(rateBand)),
             actions = Seq(
               ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
-                .withVisuallyHiddenText(messages("adjustmentTaxType.change.hidden"))
+                .withVisuallyHiddenText(messages(hiddenText))
             )
           )
         }

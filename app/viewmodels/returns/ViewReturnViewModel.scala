@@ -17,22 +17,29 @@
 package viewmodels.returns
 
 import config.Constants
-import models.returns.{ReturnAdjustments, ReturnAdjustmentsRow, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails}
+import models.returns._
+import models.{RateBand, ReturnPeriod}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
+import viewmodels.returns.RateBandHelper.rateBandRecap
 import viewmodels.{Money, TableRowViewModel, TableTotalViewModel, TableViewModel}
 
+import java.time.YearMonth
 import javax.inject.Inject
 
 class ViewReturnViewModel @Inject() () {
-  def createAlcoholDeclaredViewModel(returnDetails: ReturnDetails)(implicit messages: Messages): TableViewModel = {
+  def createAlcoholDeclaredViewModel(
+    returnDetails: ReturnDetails,
+    ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
+  )(implicit messages: Messages): TableViewModel = {
     val rows = returnDetails.alcoholDeclared.alcoholDeclaredDetails.toSeq.flatten
 
     if (rows.nonEmpty) {
       TableViewModel(
         head = alcoholDeclaredTableHeader(),
-        rows = alcoholDeclaredRows(rows.sorted),
+        rows =
+          alcoholDeclaredRows(returnDetails.identification.periodKey, rows.sorted, ratePeriodsAndTaxCodesToRateBands),
         total = Some(dutyToDeclareTotal(returnDetails.alcoholDeclared))
       )
     } else {
@@ -64,12 +71,20 @@ class ViewReturnViewModel @Inject() () {
     )
 
   private def alcoholDeclaredRows(
-    alcoholDeclaredDetails: Seq[ReturnAlcoholDeclaredRow]
-  )(implicit messages: Messages): Seq[TableRowViewModel] =
+    periodKey: String,
+    alcoholDeclaredDetails: Seq[ReturnAlcoholDeclaredRow],
+    ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
+  )(implicit messages: Messages): Seq[TableRowViewModel] = {
+    val maybeRatePeriod: Option[YearMonth] = ReturnPeriod.fromPeriodKey(periodKey).map(_.period)
     alcoholDeclaredDetails.map { alcoholDeclaredDetailsRow =>
+      val taxType: String = alcoholDeclaredDetailsRow.taxType
       TableRowViewModel(
         cells = Seq(
-          TableRow(content = Text(alcoholDeclaredDetailsRow.taxType)),
+          TableRow(content =
+            Text(
+              getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
+            )
+          ),
           TableRow(content =
             Text(
               s"${messages("site.4DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
@@ -87,6 +102,27 @@ class ViewReturnViewModel @Inject() () {
         )
       )
     }
+  }
+
+  private def getDescriptionOrFallbackToTaxTypeCode(
+    ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand],
+    maybeRatePeriod: Option[YearMonth],
+    taxType: String
+  )(implicit messages: Messages): String =
+    maybeRatePeriod
+      .flatMap(ratePeriodsAndTaxCodesToRateBands.get(_: YearMonth, taxType))
+      .map(rateBandRecap(_))
+      .getOrElse(taxType)
+
+  private def getRegimeFromRateBand(
+    ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand],
+    maybeRatePeriod: Option[YearMonth],
+    taxType: String
+  ): String =
+    maybeRatePeriod
+      .flatMap(ratePeriodsAndTaxCodesToRateBands.get(_: YearMonth, taxType))
+      .flatMap(_.rangeDetails.headOption.map(_.alcoholRegime.toString))
+      .getOrElse(taxType)
 
   private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel] =
     Seq(
@@ -112,13 +148,16 @@ class ViewReturnViewModel @Inject() () {
       )
     )
 
-  def createAdjustmentsViewModel(returnDetails: ReturnDetails)(implicit messages: Messages): TableViewModel = {
+  def createAdjustmentsViewModel(
+    returnDetails: ReturnDetails,
+    ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
+  )(implicit messages: Messages): TableViewModel = {
     val rows = returnDetails.adjustments.adjustmentDetails.toSeq.flatten
 
     if (rows.nonEmpty) {
       TableViewModel(
         head = adjustmentsTableHeader(),
-        rows = adjustmentRows(rows.sorted),
+        rows = adjustmentRows(rows.sorted, ratePeriodsAndTaxCodesToRateBands),
         total = Some(adjustmentsTotal(returnDetails.adjustments))
       )
 
@@ -154,17 +193,26 @@ class ViewReturnViewModel @Inject() () {
     )
 
   private def adjustmentRows(
-    returnAdjustments: Seq[ReturnAdjustmentsRow]
+    returnAdjustments: Seq[ReturnAdjustmentsRow],
+    ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
   )(implicit messages: Messages): Seq[TableRowViewModel] =
     returnAdjustments.map { returnAdjustmentsRow =>
-      val description =
-        if (
-          returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)
-        ) {} //fetch the code david did and only show the first word from what was returned
+      val maybeRatePeriod = ReturnPeriod.fromPeriodKey(returnAdjustmentsRow.returnPeriodAffected).map(_.period)
+      val taxType         = returnAdjustmentsRow.taxType
+      val description     = if (returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)) {
+        val regime = getRegimeFromRateBand(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
+        messages(s"alcoholType.$regime")
+      } else {
+        getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
+      }
       TableRowViewModel(
         cells = Seq(
           TableRow(content = Text(messages(s"viewReturn.adjustments.type.${returnAdjustmentsRow.adjustmentTypeKey}"))),
-          TableRow(content = Text(returnAdjustmentsRow.taxType)),
+          TableRow(content =
+            Text(
+              description
+            )
+          ),
           TableRow(content =
             Text(
               s"${messages("site.4DP", returnAdjustmentsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"

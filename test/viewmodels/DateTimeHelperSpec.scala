@@ -42,7 +42,7 @@ class DateTimeHelperSpec extends SpecBase {
     }
 
     "format a LocalTime to the format 'hour:minuteam/pm'" in {
-      new DateTimeHelper().formatHourMinuteMerediem(
+      new DateTimeHelper().formatHourMinuteMeridiem(
         LocalTime.now(clock)
       ) mustBe "3:07pm"
     }

@@ -38,7 +38,9 @@ object ReturnDetailsIdentification {
     Json.format[ReturnDetailsIdentification]
 }
 
-case class ReturnAlcoholDeclared(alcoholDeclaredDetails: Option[Seq[ReturnAlcoholDeclaredRow]], total: BigDecimal)
+case class ReturnAlcoholDeclared(alcoholDeclaredDetails: Option[Seq[ReturnAlcoholDeclaredRow]], total: BigDecimal) {
+  def taxCodes: Seq[String] = alcoholDeclaredDetails.fold[Seq[String]](Seq.empty)(_.map(_.taxType))
+}
 
 object ReturnAlcoholDeclared {
   implicit val returnAlcoholDeclaredFormat: OFormat[ReturnAlcoholDeclared] = Json.format[ReturnAlcoholDeclared]
@@ -59,7 +61,11 @@ object ReturnAlcoholDeclaredRow {
     (row1: ReturnAlcoholDeclaredRow, row2: ReturnAlcoholDeclaredRow) => row1.taxType.compareTo(row2.taxType)
 }
 
-case class ReturnAdjustments(adjustmentDetails: Option[Seq[ReturnAdjustmentsRow]], total: BigDecimal)
+case class ReturnAdjustments(adjustmentDetails: Option[Seq[ReturnAdjustmentsRow]], total: BigDecimal) {
+  def returnPeriodsAndTaxCodes: Seq[(String, String)] = adjustmentDetails.fold[Seq[(String, String)]](Seq.empty)(
+    _.map(adjustmentRow => (adjustmentRow.returnPeriodAffected, adjustmentRow.taxType))
+  )
+}
 
 object ReturnAdjustments {
   val underDeclaredKey     = "underdeclaration"
@@ -73,6 +79,7 @@ object ReturnAdjustments {
 
 case class ReturnAdjustmentsRow(
   adjustmentTypeKey: String,
+  returnPeriodAffected: String,
   taxType: String,
   litresOfPureAlcohol: BigDecimal,
   dutyRate: BigDecimal,
