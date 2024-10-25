@@ -16,7 +16,7 @@
 
 package connectors
 
-import models.returns.VolumeAndRateByTaxType
+import models.declareDuty.VolumeAndRateByTaxType
 import models.adjustment.AdjustmentTypes
 import play.api.libs.json.{Json, OFormat}
 
