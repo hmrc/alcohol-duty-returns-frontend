@@ -58,6 +58,7 @@ class ViewReturnController @Inject() (
             val dutyToDeclareViewModel = viewModel.createAlcoholDeclaredViewModel(returnDetails)
             val adjustmentsViewModel   = viewModel.createAdjustmentsViewModel(returnDetails)
             val totalDueViewModel      = viewModel.createTotalDueViewModel(returnDetails)
+            val netDutySuspension      = viewModel.createNetDutySuspensionViewModel(returnDetails)
             val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriod.period)
             val submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
             val submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
@@ -71,7 +72,8 @@ class ViewReturnController @Inject() (
                 submittedTimeStr,
                 dutyToDeclareViewModel,
                 adjustmentsViewModel,
-                totalDueViewModel
+                totalDueViewModel,
+                netDutySuspension
               )
             )
           }
