@@ -16,7 +16,7 @@
 
 package forms.mappings
 
-import models.returns.{VolumeAndRateByTaxType, VolumesByTaxType}
+import models.declareDuty.{VolumeAndRateByTaxType, VolumesByTaxType}
 
 import java.time.{LocalDate, YearMonth}
 import play.api.data.FieldMapping

@@ -78,12 +78,12 @@
                 link(
                     id = "direct-debit-start",
                     text = messages("returnSubmitted.direct.debit.setupOrManageLink.text"),
-                    href = controllers.routes.StartDirectDebitController.initiateAndRedirect().url
+                    href = controllers.payments.routes.StartDirectDebitController.initiateAndRedirect().url
         )))
 
 
         @govukButton(
-            ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.routes.StartPaymentController.initiateAndRedirect().url)
+            ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
         )
 
         @paragraph( content =

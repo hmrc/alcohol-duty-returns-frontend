@@ -28,8 +28,7 @@ import services.AuditService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.BeforeStartReturnViewModel
-import viewmodels.returns.ReturnPeriodViewModel
+import viewmodels.{BeforeStartReturnViewModel, ReturnPeriodViewModel}
 import views.html.BeforeStartReturnView
 
 import java.time.{Clock, Instant, LocalDate}
