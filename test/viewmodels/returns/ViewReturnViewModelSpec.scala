@@ -73,6 +73,23 @@ class ViewReturnViewModelSpec extends SpecBase {
         adjustmentsViewModel.rows(3).cells(1).content   shouldBe Text("Non-draught beer between 1% and 2% ABV (125)")
       }
 
+      "should return a model with data when a spoilt adjustment declared" in new SetUp {
+        val returnDetailWithSpoilt = returnWithSpoiltAdjustment(periodKey, Instant.now(clock))
+        val adjustmentsViewModel   = viewModel.createAdjustmentsViewModel(
+          returnDetailWithSpoilt,
+          exampleRateBands(periodKey2)
+        )
+
+        val minus: Char = 0x2212
+
+        adjustmentsViewModel.rows.size               shouldBe 1
+        adjustmentsViewModel.total.get.total.content shouldBe Text(
+          s"$minus${messages("site.currency.2DP", returnDetailWithSpoilt.adjustments.total.abs)}"
+        )
+
+        adjustmentsViewModel.rows.head.cells(1).content shouldBe Text("alcoholType.125")
+      }
+
       "should return a model with no entries when a nil return" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, emptyRateBands)
 

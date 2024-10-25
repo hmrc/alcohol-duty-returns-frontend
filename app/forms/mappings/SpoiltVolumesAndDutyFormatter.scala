@@ -40,7 +40,7 @@ class SpoiltVolumesAndDutyFormatter(
     maximumValueKey,
     fieldKey,
     maximumValue = Constants.volumeMaximumValue,
-    minimumValue = Constants.volumeMinimumValue,
+    minimumValue = Constants.volumeAndDutyMinimumValue,
     args = args
   )
 
@@ -65,7 +65,7 @@ class SpoiltVolumesAndDutyFormatter(
     maximumValueKey,
     fieldKey,
     maximumValue = Constants.dutyDueMaximumValue,
-    minimumValue = Constants.dutyMinimumValue,
+    minimumValue = Constants.volumeAndDutyMinimumValue,
     args = args
   )
 

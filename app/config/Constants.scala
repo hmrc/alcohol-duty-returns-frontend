@@ -19,17 +19,17 @@ package config
 import java.time.Month._
 
 object Constants {
-  val adrReturnCreatedDetails: String = "return-created-details"
-  val periodKeySessionKey: String     = "period-key"
-  val maximumDecimalPlaces: Int       = 2
-  val volumeMinimumValue: BigDecimal  = BigDecimal(0.01)
-  val volumeMaximumValue: BigDecimal  = BigDecimal(999999999.99)
-  val lpaMaximumDecimalPlaces: Int    = 4
-  val lpaMinimumValue: BigDecimal     = BigDecimal(0.0001)
-  val lpaMaximumValue: BigDecimal     = BigDecimal(999999999.9999)
-  val dutyMinimumValue: BigDecimal    = BigDecimal(0.00)
-  val dutyMaximumValue: BigDecimal    = BigDecimal(999999999.99)
-  val dutyDueMaximumValue: BigDecimal = BigDecimal(99999999999.99)
+  val adrReturnCreatedDetails: String       = "return-created-details"
+  val periodKeySessionKey: String           = "period-key"
+  val maximumDecimalPlaces: Int             = 2
+  val volumeAndDutyMinimumValue: BigDecimal = BigDecimal(0.01)
+  val volumeMaximumValue: BigDecimal        = BigDecimal(999999999.99)
+  val lpaMaximumDecimalPlaces: Int          = 4
+  val lpaMinimumValue: BigDecimal           = BigDecimal(0.0001)
+  val lpaMaximumValue: BigDecimal           = BigDecimal(999999999.9999)
+  val dutyMinimumValue: BigDecimal          = BigDecimal(0.00)
+  val dutyMaximumValue: BigDecimal          = BigDecimal(999999999.99)
+  val dutyDueMaximumValue: BigDecimal       = BigDecimal(99999999999.99)
 
   val rowsPerPage = 15
 

@@ -232,7 +232,7 @@ trait TestData extends ModelGenerators {
               dutyValue = BigDecimal("3151.50")
             ),
             ReturnAdjustmentsRow(
-              adjustmentTypeKey = ReturnAdjustments.spoiltKey,
+              adjustmentTypeKey = ReturnAdjustments.overDeclaredKey,
               returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(2, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(1150),
@@ -240,7 +240,7 @@ trait TestData extends ModelGenerators {
               dutyValue = BigDecimal("-24161.50")
             ),
             ReturnAdjustmentsRow(
-              adjustmentTypeKey = ReturnAdjustments.spoiltKey,
+              adjustmentTypeKey = ReturnAdjustments.drawbackKey,
               returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(3, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(75),
@@ -290,6 +290,33 @@ trait TestData extends ModelGenerators {
       ),
       totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0"))
     )
+
+  def returnWithSpoiltAdjustment(periodKey: String, now: Instant): ReturnDetails = {
+    val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).periodFromDate()
+    ReturnDetails(
+      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      alcoholDeclared = ReturnAlcoholDeclared(
+        alcoholDeclaredDetails = Some(Seq.empty),
+        total = BigDecimal(0)
+      ),
+      adjustments = ReturnAdjustments(
+        adjustmentDetails = Some(
+          Seq(
+            ReturnAdjustmentsRow(
+              adjustmentTypeKey = ReturnAdjustments.spoiltKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(3, periodDate)).toPeriodKey,
+              taxType = "125",
+              litresOfPureAlcohol = BigDecimal(150),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("-3151.50")
+            )
+          )
+        ),
+        total = BigDecimal("-3151.50")
+      ),
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("-3151.50"))
+    )
+  }
 
   val obligationDataSingleOpen = ObligationData(
     ObligationStatus.Open,

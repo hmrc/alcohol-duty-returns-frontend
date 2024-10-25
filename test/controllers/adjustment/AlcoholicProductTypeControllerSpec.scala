@@ -28,6 +28,7 @@ import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AlcoholicProductTypeView
 
@@ -98,6 +99,43 @@ class AlcoholicProductTypeControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, alcoholicProductTypeRoute)
+            .withFormUrlEncodedBody(("alcoholic-product-type-value", alcoholType))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when the same data is submitted" in {
+      val userAnswers =
+        emptyUserAnswers
+          .set(
+            CurrentAdjustmentEntryPage,
+            AdjustmentEntry(
+              spoiltRegime = Some(Beer),
+              adjustmentType = Some(Spoilt)
+            )
+          )
+          .success
+          .value
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

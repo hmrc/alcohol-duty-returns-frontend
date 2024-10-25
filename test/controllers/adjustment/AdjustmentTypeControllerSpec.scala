@@ -176,7 +176,7 @@ class AdjustmentTypeControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, adjustmentTypeRoute)
-            .withFormUrlEncodedBody(("adjustment-type-value", "true"))
+            .withFormUrlEncodedBody(("adjustment-type-value", Spoilt.toString))
 
         val result = route(application, request).value
 
