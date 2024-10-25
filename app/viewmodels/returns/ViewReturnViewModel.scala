@@ -231,7 +231,7 @@ class ViewReturnViewModel @Inject() () {
         )
       case None                    =>
         TableViewModel(
-          head = Seq.empty,
+          head = noneDeclareDutySuspensionHeader(),
           rows = noneDeclaredDutySuspension()
         )
     }
@@ -287,7 +287,7 @@ class ViewReturnViewModel @Inject() () {
     messageKey: String,
     totalLitres: Option[BigDecimal],
     litresOfPureAlcohol: Option[BigDecimal]
-  )(implicit messages: Messages): Option[TableRowViewModel]             =
+  )(implicit messages: Messages): Option[TableRowViewModel] =
     for {
       total <- totalLitres
       lpa   <- litresOfPureAlcohol
@@ -307,11 +307,18 @@ class ViewReturnViewModel @Inject() () {
         )
       )
     )
+
   private def noneDeclaredDutySuspension()(implicit messages: Messages) = Seq(
     TableRowViewModel(
       cells = Seq(
         TableRow(content = Text(messages("viewReturn.netDutySuspension.noneDeclared")))
       )
+    )
+  )
+
+  private def noneDeclareDutySuspensionHeader()(implicit messages: Messages): Seq[HeadCell] = Seq(
+    HeadCell(
+      content = Text(messages("viewReturn.table.description.legend"))
     )
   )
 }
