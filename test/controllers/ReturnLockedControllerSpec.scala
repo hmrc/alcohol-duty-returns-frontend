@@ -17,10 +17,12 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import play.api.test.Helpers._
 import views.html.ReturnLockedView
 
 class ReturnLockedControllerSpec extends SpecBase {
+  val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
 
   "ReturnLocked Controller" - {
 
@@ -36,7 +38,10 @@ class ReturnLockedControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[ReturnLockedView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(appConfig.businessTaxAccountUrl)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
   }

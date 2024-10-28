@@ -17,7 +17,7 @@
 package forms.mappings
 
 import config.Constants
-import models.returns.VolumeAndRateByTaxType
+import models.declareDuty.VolumeAndRateByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
 

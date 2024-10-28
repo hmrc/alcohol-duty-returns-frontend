@@ -18,7 +18,6 @@ package controllers.returns
 
 import base.SpecBase
 import connectors.AlcoholDutyReturnsConnector
-import controllers.returns
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
@@ -47,8 +46,9 @@ class ViewReturnControllerSpec extends SpecBase {
         when(mockViewModel.createAlcoholDeclaredViewModel(returnDetails)).thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(returnDetails)).thenReturn(tableModel)
         when(mockViewModel.createTotalDueViewModel(returnDetails)).thenReturn(totalTableModel)
+        when(mockViewModel.createNetDutySuspensionViewModel(returnDetails)).thenReturn(tableModel)
 
-        val request = FakeRequest(GET, returns.routes.ViewReturnController.onPageLoad(periodKey).url)
+        val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
         val result  = route(application, request).value
 
         val view = application.injector.instanceOf[ViewReturnView]
@@ -60,7 +60,8 @@ class ViewReturnControllerSpec extends SpecBase {
           submittedAtTimeStr,
           tableModel,
           tableModel,
-          totalTableModel
+          totalTableModel,
+          tableModel
         )(
           request,
           messages
@@ -76,7 +77,7 @@ class ViewReturnControllerSpec extends SpecBase {
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
         .build()
       running(application) {
-        val request = FakeRequest(GET, returns.routes.ViewReturnController.onPageLoad(periodKey).url)
+        val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
@@ -92,7 +93,7 @@ class ViewReturnControllerSpec extends SpecBase {
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
         .build()
       running(application) {
-        val request = FakeRequest(GET, returns.routes.ViewReturnController.onPageLoad(periodKey).url)
+        val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER

@@ -30,7 +30,7 @@ GET         /check-your-returns                          controllers.returns.Vie
 
 GET         /view-your-return/:periodKey                 controllers.returns.ViewReturnController.onPageLoad(periodKey: String)
 
-GET         /view-payments                               controllers.returns.ViewPastPaymentsController.onPageLoad
+GET         /view-payments                               controllers.payments.ViewPastPaymentsController.onPageLoad
 
 GET         /complete-return/task-list          controllers.TaskListController.onPageLoad
 
@@ -40,54 +40,54 @@ POST        /before-you-start-your-return                controllers.BeforeStart
 GET         /start                                       controllers.ServiceEntryController.onPageLoad
 
 # Beginning of product entry sub-journey
-GET        /complete-return/alcoholic-products/do-you-need-to-declare                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/alcoholic-products/do-you-need-to-declare                        controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/alcoholic-products/change-if-you-need-to-declare                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/alcoholic-products/change-if-you-need-to-declare                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/alcoholic-products/do-you-need-to-declare                        controllers.declareDuty.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/alcoholic-products/do-you-need-to-declare                        controllers.declareDuty.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/alcoholic-products/change-if-you-need-to-declare                  controllers.declareDuty.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/alcoholic-products/change-if-you-need-to-declare                  controllers.declareDuty.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/alcoholic-products/alcoholic-products-to-include                        controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/alcoholic-products/alcoholic-products-to-include                        controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/alcoholic-products/change-alcoholic-products-to-include                  controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/alcoholic-products/change-alcoholic-products-to-include                  controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/alcoholic-products/alcoholic-products-to-include                        controllers.declareDuty.AlcoholTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/alcoholic-products/alcoholic-products-to-include                        controllers.declareDuty.AlcoholTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/alcoholic-products/change-alcoholic-products-to-include                  controllers.declareDuty.AlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/alcoholic-products/change-alcoholic-products-to-include                  controllers.declareDuty.AlcoholTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/alcoholic-products/:regime/declare/products-to-include                controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/declare/products-to-include                controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
-GET        /complete-return/alcoholic-products/:regime/change/products-to-include         controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/change/products-to-include         controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/products-to-include                controllers.declareDuty.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/products-to-include                controllers.declareDuty.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/change/products-to-include         controllers.declareDuty.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/change/products-to-include         controllers.declareDuty.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
-GET        /complete-return/alcoholic-products/:regime/declare/volumes                       controllers.returns.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/declare/volumes                           controllers.returns.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
-GET        /complete-return/alcoholic-products/:regime/change/volumes                     controllers.returns.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/change/volumes                     controllers.returns.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/volumes                       controllers.declareDuty.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/volumes                           controllers.declareDuty.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/change/volumes                     controllers.declareDuty.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/change/volumes                     controllers.declareDuty.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
-GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates                        controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates                        controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
-GET        /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates                  controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates                  controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates                        controllers.declareDuty.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates                        controllers.declareDuty.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates                  controllers.declareDuty.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates                  controllers.declareDuty.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
-GET        /complete-return/alcoholic-products/:regime/declare/spr/eligible-volumes                        controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/declare/spr/eligible-volumes                        controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
-GET        /complete-return/alcoholic-products/:regime/change/spr/eligible-volumes                 controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/change/spr/eligible-volumes                  controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/spr/eligible-volumes                        controllers.declareDuty.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/spr/eligible-volumes                        controllers.declareDuty.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/change/spr/eligible-volumes                 controllers.declareDuty.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/change/spr/eligible-volumes                  controllers.declareDuty.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
-GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volume                         controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
-POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volume                         controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
-GET        /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates/eligible-volume                   controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime, index:Option[Int] ?= None)
-POST       /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates/eligible-volume                   controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volume                         controllers.declareDuty.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volume                         controllers.declareDuty.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+GET        /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates/eligible-volume                   controllers.declareDuty.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime, index:Option[Int] ?= None)
+POST       /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates/eligible-volume                   controllers.declareDuty.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime, index:Option[Int] ?= None)
 
-GET        /complete-return/alcoholic-products/:regime/declare/spr/check-your-answers                       controllers.returns.CheckYourAnswersSPRController.onPageLoad(regime:AlcoholRegime, index:Option[Int] ?= None)
-POST       /complete-return/alcoholic-products/:regime/declare/spr/check-your-answers                      controllers.returns.CheckYourAnswersSPRController.onSubmit(regime:AlcoholRegime, index:Option[Int] ?= None)
+GET        /complete-return/alcoholic-products/:regime/declare/spr/check-your-answers                       controllers.declareDuty.CheckYourAnswersSPRController.onPageLoad(regime:AlcoholRegime, index:Option[Int] ?= None)
+POST       /complete-return/alcoholic-products/:regime/declare/spr/check-your-answers                      controllers.declareDuty.CheckYourAnswersSPRController.onSubmit(regime:AlcoholRegime, index:Option[Int] ?= None)
 
-GET        /complete-return/alcoholic-products/:regime/declare/check-your-answers                     controllers.returns.CheckYourAnswersController.onPageLoad(regime:AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/check-your-answers                     controllers.declareDuty.CheckYourAnswersController.onPageLoad(regime:AlcoholRegime)
 
-GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volumes                       controllers.returns.MultipleSPRListController.onPageLoad(regime:AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volumes                        controllers.returns.MultipleSPRListController.onSubmit(regime:AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volumes                       controllers.declareDuty.MultipleSPRListController.onPageLoad(regime:AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volumes                        controllers.declareDuty.MultipleSPRListController.onSubmit(regime:AlcoholRegime)
 
-GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/remove-volume                       controllers.returns.DeleteMultipleSPREntryController.onPageLoad(regime:AlcoholRegime, index:Option[Int] ?= None)
-POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/remove-volume                      controllers.returns.DeleteMultipleSPREntryController.onSubmit(regime:AlcoholRegime, index:Option[Int] ?= None)
+GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/remove-volume                       controllers.declareDuty.DeleteMultipleSPREntryController.onPageLoad(regime:AlcoholRegime, index:Option[Int] ?= None)
+POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/remove-volume                      controllers.declareDuty.DeleteMultipleSPREntryController.onSubmit(regime:AlcoholRegime, index:Option[Int] ?= None)
 
-GET        /complete-return/alcoholic-products/:regime/declare/duty-due                                  controllers.returns.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/declare/duty-due                                  controllers.returns.DutyCalculationController.onSubmit(regime:AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/duty-due                                  controllers.declareDuty.DutyCalculationController.onPageLoad(regime:AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/duty-due                                  controllers.declareDuty.DutyCalculationController.onSubmit(regime:AlcoholRegime)
 # End of product entry sub-journey
 
 # Beginning of adjustments sub-journey
@@ -254,7 +254,7 @@ POST       /complete-return/check-return                      controllers.checkA
 
 GET        /complete-return/return-sent                    controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
 
-GET        /start-payment                controllers.StartPaymentController.initiateAndRedirect()
-GET        /start-direct-debit                controllers.StartDirectDebitController.initiateAndRedirect()
-GET        /start-payment/:index                              controllers.StartPaymentController.initiateAndRedirectFromPastPayments(index: Int)
+GET        /start-payment                controllers.payments.StartPaymentController.initiateAndRedirect()
+GET        /start-direct-debit                controllers.payments.StartDirectDebitController.initiateAndRedirect()
+GET        /start-payment/:index                              controllers.payments.StartPaymentController.initiateAndRedirectFromPastPayments(index: Int)
 # End of check and submit sub-journey

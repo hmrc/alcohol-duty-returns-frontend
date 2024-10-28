@@ -14,17 +14,18 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, SectionHeading}
+@import components.{Link, PageHeading, Paragraph, SectionHeading}
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
-        paragraph: Paragraph
+        paragraph: Paragraph,
+        link: Link
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("returnLocked.title"))) {
 
@@ -33,4 +34,13 @@
   @paragraph(messages("returnLocked.p1"))
   @paragraph(messages("returnLocked.p2"))
 
+  @paragraph( content =
+    HtmlContent(
+      link(
+        id = "business-tax-account-link",
+        text = messages("site.returnToBusinessAccount"),
+        href = businessTaxAccountUrl
+      )
+    )
+  )
 }
