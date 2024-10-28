@@ -20,7 +20,7 @@ import base.SpecBase
 import cats.data.EitherT
 import connectors.AlcoholDutyReturnsConnector
 import models.audit.AuditReturnSubmitted
-import models.returns.{AdrReturnCreatedDetails, AdrReturnSubmission}
+import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind

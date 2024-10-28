@@ -20,10 +20,11 @@ import cats.data.EitherT
 import config.Constants
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.returns.{AdrDutySuspended, AlcoholDuty}
+import models.checkAndSubmit.AdrDutySuspended
+import models.declareDuty.AlcoholDuty
 import models.{AlcoholRegime, NormalMode, UserAnswers}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
+import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 import play.api.i18n.Messages
 import services.checkAndSubmit.AdrReturnSubmissionService
@@ -133,7 +134,7 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             TableRowActionViewModel(
               label = "Change",
-              href = controllers.returns.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
+              href = controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
             )
           )
         )
@@ -151,7 +152,7 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             TableRowActionViewModel(
               label = "Change",
-              href = controllers.returns.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
+              href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
             )
           )
         )

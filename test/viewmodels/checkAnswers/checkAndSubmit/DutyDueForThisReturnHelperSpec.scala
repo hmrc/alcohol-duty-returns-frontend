@@ -21,7 +21,7 @@ import cats.data.EitherT
 import connectors.AlcoholDutyCalculatorConnector
 import models.{NormalMode, UserAnswers}
 import models.adjustment.AdjustmentDuty
-import models.returns.{AdrDutySuspended, AdrDutySuspendedProduct}
+import models.checkAndSubmit.{AdrDutySuspended, AdrDutySuspendedProduct}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
