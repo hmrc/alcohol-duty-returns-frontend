@@ -40,20 +40,20 @@ POST        /before-you-start-your-return                controllers.BeforeStart
 GET         /start                                       controllers.ServiceEntryController.onPageLoad
 
 # Beginning of product entry sub-journey
-GET        /complete-return/alcoholic-products/declare/do-you-need-to-declare                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/alcoholic-products/declare/do-you-need-to-declare                        controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/alcoholic-products/change/do-you-need-to-declare                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/alcoholic-products/change/do-you-need-to-declare                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/alcoholic-products/do-you-need-to-declare                        controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/alcoholic-products/do-you-need-to-declare                        controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/alcoholic-products/change-if-you-need-to-declare                  controllers.returns.DeclareAlcoholDutyQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/alcoholic-products/change-if-you-need-to-declare                  controllers.returns.DeclareAlcoholDutyQuestionController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/alcoholic-products/declare/alcoholic-products-to-include                        controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/alcoholic-products/declare/alcoholic-products-to-include                        controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/alcoholic-products/change/alcoholic-products-to-include                  controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/alcoholic-products/change/alcoholic-products-to-include                  controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/alcoholic-products/alcoholic-products-to-include                        controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/alcoholic-products/alcoholic-products-to-include                        controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/alcoholic-products/change-alcoholic-products-to-include                  controllers.returns.AlcoholTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/alcoholic-products/change-alcoholic-products-to-include                  controllers.returns.AlcoholTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/alcoholic-products/:regime/declare/alcoholic-products-to-include/what-do-you-need-to-declare                controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/declare/alcoholic-products-to-include/what-do-you-need-to-declare                controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
-GET        /complete-return/alcoholic-products/:regime/change/alcoholic-products-to-include/what-do-you-need-to-declare         controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/change/alcoholic-products-to-include/what-do-you-need-to-declare         controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/products-to-include                controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/products-to-include                controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/change/products-to-include         controllers.returns.WhatDoYouNeedToDeclareController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/change/products-to-include         controllers.returns.WhatDoYouNeedToDeclareController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
 GET        /complete-return/alcoholic-products/:regime/declare/volumes                       controllers.returns.HowMuchDoYouNeedToDeclareController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
 POST       /complete-return/alcoholic-products/:regime/declare/volumes                           controllers.returns.HowMuchDoYouNeedToDeclareController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
@@ -65,10 +65,10 @@ POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty
 GET        /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates                  controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
 POST       /complete-return/alcoholic-products/:regime/change/spr/multiple-duty-rates                  controllers.returns.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
-GET        /complete-return/alcoholic-products/:regime/declare/eligible-volumes                        controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/declare/eligible-volumes                        controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
-GET        /complete-return/alcoholic-products/:regime/change/eligible-volumes                 controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
-POST       /complete-return/alcoholic-products/:regime/change/eligible-volumes                  controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/declare/spr/eligible-volumes                        controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/declare/spr/eligible-volumes                        controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime)
+GET        /complete-return/alcoholic-products/:regime/change/spr/eligible-volumes                 controllers.returns.TellUsAboutSingleSPRRateController.onPageLoad(mode: Mode = CheckMode, regime: AlcoholRegime)
+POST       /complete-return/alcoholic-products/:regime/change/spr/eligible-volumes                  controllers.returns.TellUsAboutSingleSPRRateController.onSubmit(mode: Mode = CheckMode, regime: AlcoholRegime)
 
 GET        /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volume                         controllers.returns.TellUsAboutMultipleSPRRateController.onPageLoad(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
 POST       /complete-return/alcoholic-products/:regime/declare/spr/multiple-duty-rates/eligible-volume                         controllers.returns.TellUsAboutMultipleSPRRateController.onSubmit(mode: Mode = NormalMode, regime: AlcoholRegime, index:Option[Int] ?= None)
@@ -91,10 +91,10 @@ POST       /complete-return/alcoholic-products/:regime/declare/duty-due         
 # End of product entry sub-journey
 
 # Beginning of adjustments sub-journey
-GET        /complete-return/adjustments/declare/do-you-need-to-declare                       controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/adjustments/declare/do-you-need-to-declare                     controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/adjustments/change/do-you-need-to-declare               controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/adjustments/change/do-you-need-to-declare               controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/adjustments/do-you-need-to-declare                       controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/adjustments/do-you-need-to-declare                     controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/adjustments/change-if-you-need-to-declare               controllers.adjustment.DeclareAdjustmentQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/change-if-you-need-to-declare               controllers.adjustment.DeclareAdjustmentQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/adjustments/adjustment/declare/type                        controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/adjustments/adjustment/declare/type                        controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = NormalMode)
@@ -111,10 +111,10 @@ POST       /complete-return/adjustments/adjustment/declare/tax-type-code        
 GET        /complete-return/adjustments/adjustment/change/tax-type-code                       controllers.adjustment.AdjustmentTaxTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /complete-return/adjustments/adjustment/change/tax-type-code                        controllers.adjustment.AdjustmentTaxTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/adjustments/adjustment/declare/spr/new-spr-duty-rate                controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/adjustments/adjustment/declare/spr/new-spr-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/adjustments/adjustment/change/spr/new-spr-duty-rate                       controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/adjustments/adjustment/change/spr/new-spr-duty-rate                       controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/adjustments/adjustment/declare/repackaged/new-spr-duty-rate                controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/adjustments/adjustment/declare/repackaged/new-spr-duty-rate                  controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/adjustments/adjustment/change/repackaged/new-spr-duty-rate                       controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/adjustment/change/repackaged/new-spr-duty-rate                       controllers.adjustment.AdjustmentSmallProducerReliefDutyRateController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/adjustments/adjustment/declare/volume                 controllers.adjustment.AdjustmentVolumeController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/adjustments/adjustment/declare/volume                controllers.adjustment.AdjustmentVolumeController.onSubmit(mode: Mode = NormalMode)
@@ -157,10 +157,10 @@ POST       /complete-return/adjustments/adjustment/declare/remove-adjustment    
 
 # Beginning of duty suspended deliveries sub-journey
 
-GET        /complete-return/duty-suspended-deliveries/report/do-you-need-to-report                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/duty-suspended-deliveries/report/do-you-need-to-report                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/duty-suspended-deliveries/change/do-you-need-to-report                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/duty-suspended-deliveries/change/do-you-need-to-report                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/duty-suspended-deliveries/do-you-need-to-report                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/duty-suspended-deliveries/do-you-need-to-report                        controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/duty-suspended-deliveries/change-if-you-need-to-report                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/duty-suspended-deliveries/change-if-you-need-to-report                  controllers.dutySuspended.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/duty-suspended-deliveries/report/calculating-volumes                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onPageLoad()
 POST       /complete-return/duty-suspended-deliveries/report/calculating-volumes                       controllers.dutySuspended.DutySuspendedDeliveriesGuidanceController.onSubmit()
@@ -197,23 +197,23 @@ GET        /complete-return/duty-suspended-deliveries/check-your-answers        
 
 GET        /complete-return/report-previous-quarter-spirits-production/have-you-made-spirits                        controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/report-previous-quarter-spirits-production/have-you-made-spirits                        controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/report-previous-quarter-spirits-production/change-have-you-made-spirits                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/report-previous-quarter-spirits-production/change-have-you-made-spirits                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/report-previous-quarter-spirits-production/change-if-you-have-made-spirits                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/report-previous-quarter-spirits-production/change-if-you-have-made-spirits                  controllers.spiritsQuestions.DeclareQuarterlySpiritsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/report-previous-quarter-spirits-production/total-volume                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/report-previous-quarter-spirits-production/total-volume                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/report-previous-quarter-spirits-production/change-total-volume                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/report-previous-quarter-spirits-production/change-total-volume                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/report-previous-quarter-spirits-production/report/total-volume                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/report-previous-quarter-spirits-production/report/total-volume                  controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/report-previous-quarter-spirits-production/change/total-volume                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/report-previous-quarter-spirits-production/change/total-volume                        controllers.spiritsQuestions.DeclareSpiritsTotalController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/report-previous-quarter-spirits-production/volume-of-scotch-whisky-and-irish-whiskey                        controllers.spiritsQuestions.WhiskyController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/report-previous-quarter-spirits-production/volume-of-scotch-whisky-and-irish-whiskey                        controllers.spiritsQuestions.WhiskyController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/report-previous-quarter-spirits-production/change-volume-of-scotch-whisky-and-irish-whiskey                  controllers.spiritsQuestions.WhiskyController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/report-previous-quarter-spirits-production/change-volume-of-scotch-whisky-and-irish-whiskey                  controllers.spiritsQuestions.WhiskyController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/report-previous-quarter-spirits-production/report/scotch-whisky-and-irish-whiskey-volumes                        controllers.spiritsQuestions.WhiskyController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/report-previous-quarter-spirits-production/report/scotch-whisky-and-irish-whiskey-volumes                        controllers.spiritsQuestions.WhiskyController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/report-previous-quarter-spirits-production/change/scotch-whisky-and-irish-whiskey-volumes                  controllers.spiritsQuestions.WhiskyController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/report-previous-quarter-spirits-production/change/scotch-whisky-and-irish-whiskey-volumes                  controllers.spiritsQuestions.WhiskyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/report-previous-quarter-spirits-production/spirits-made                        controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/report-previous-quarter-spirits-production/spirits-made                        controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/report-previous-quarter-spirits-production/change-spirits-made                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/report-previous-quarter-spirits-production/change-spirits-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/report-previous-quarter-spirits-production/report/spirits-made                        controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/report-previous-quarter-spirits-production/report/spirits-made                        controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/report-previous-quarter-spirits-production/change/spirits-made                  controllers.spiritsQuestions.SpiritTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/report-previous-quarter-spirits-production/change/spirits-made                  controllers.spiritsQuestions.SpiritTypeController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/report-previous-quarter-spirits-production/tell-us-about-the-other-spirits-you-have-produced                        controllers.spiritsQuestions.OtherSpiritsProducedController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/report-previous-quarter-spirits-production/tell-us-about-the-other-spirits-you-have-produced                        controllers.spiritsQuestions.OtherSpiritsProducedController.onSubmit(mode: Mode = NormalMode)
