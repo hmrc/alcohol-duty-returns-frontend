@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -25,6 +26,7 @@ import views.html.ReturnLockedView
 import javax.inject.Inject
 
 class ReturnLockedController @Inject() (
+  appConfig: FrontendAppConfig,
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
@@ -33,6 +35,8 @@ class ReturnLockedController @Inject() (
     with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = identify { implicit request =>
-    Ok(view())
+    val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
+
+    Ok(view(businessTaxAccountUrl))
   }
 }

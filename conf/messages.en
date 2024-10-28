@@ -77,7 +77,7 @@ journeyRecovery.startAgain.guidance.p2 = We saved your answers. They will be ava
 
 returnLocked.title = This return is temporarily locked
 returnLocked.heading = This return is temporarily locked
-returnLocked.p1 = This return has been temporarily locked while it is being edited.
+returnLocked.p1 = This return has been temporarily locked because someone else is editing it.
 returnLocked.p2 = Please try again in a few minutes.
 
 signedOut.title = For your security, we signed you out
