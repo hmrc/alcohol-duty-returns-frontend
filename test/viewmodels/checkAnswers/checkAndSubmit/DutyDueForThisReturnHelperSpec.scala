@@ -17,11 +17,17 @@
 package viewmodels.checkAnswers.checkAndSubmit
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.AlcoholDutyCalculatorConnector
+import models.{NormalMode, UserAnswers}
 import models.adjustment.AdjustmentDuty
+import models.returns.{AdrDutySuspended, AdrDutySuspendedProduct}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
+import play.api.mvc.Call
+import services.checkAndSubmit.AdrReturnSubmissionService
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 
 import scala.concurrent.Future
 
@@ -38,6 +44,8 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(totalDutiesAndAdjustments))(any))
         .thenReturn(Future.successful(totalDuty))
+
+      when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers).value) { result =>
         result.toOption.get.totalDue mustBe totalDuty.duty
@@ -56,6 +64,8 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(totalDutiesNoAdjustments))(any))
         .thenReturn(Future.successful(totalDutyWithoutAdjustments))
+
+      when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers).value) { result =>
         result.toOption.get.totalDue mustBe totalDutyWithoutAdjustments.duty
@@ -77,11 +87,73 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
         .thenReturn(Future.successful(totalAdjustments))
 
+      when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(emptyDutySuspendedSuccessModel)
+
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers).value) { result =>
         result.toOption.get.totalDue mustBe totalAdjustments.duty
         result.toOption.get.dutiesBreakdownTable.rows.map(
           _.cells(1).content.toString.filter(c => c.isDigit || c == '.')
         ) mustBe "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
+      }
+    }
+
+    "should return a You've Also Answered Table View Model" - {
+      "with the correct label, declared content and redirect to the 'Duty suspended deliveries check answers' page" in new SetUp {
+        val userAnswers: UserAnswers = declareAdjustmentTotalPage(
+          declareAdjustmentQuestionPage(
+            declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
+            true
+          ),
+          adjustmentTotal
+        )
+
+        val expectedRedirectUrl: Call =
+          controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
+
+        when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
+          .thenReturn(Future.successful(totalAdjustments))
+
+        when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(dutySuspendedDeclaredModel)
+
+        val result = dutyDueForThisReturnHelper
+          .getDutyDueViewModel(userAnswers)
+          .value
+          .futureValue
+          .toOption
+          .get
+          .youveAlsoDeclaredTable
+
+        result.rows.head.actions.head.href mustBe expectedRedirectUrl
+        result.rows.head.cells(1).content mustBe Text("Declared")
+      }
+
+      "with the correct label, nothing to declare content, and redirect to the 'Do you have any duty suspended deliveries to declare?' page" in new SetUp {
+        val userAnswers: UserAnswers = declareAdjustmentTotalPage(
+          declareAdjustmentQuestionPage(
+            declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
+            true
+          ),
+          adjustmentTotal
+        )
+
+        val expectedRedirectUrl: Call =
+          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode)
+
+        when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
+          .thenReturn(Future.successful(totalAdjustments))
+
+        when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(dutySuspendedNotDeclaredModel)
+
+        val result = dutyDueForThisReturnHelper
+          .getDutyDueViewModel(userAnswers)
+          .value
+          .futureValue
+          .toOption
+          .get
+          .youveAlsoDeclaredTable
+
+        result.rows.head.actions.head.href mustBe expectedRedirectUrl
+        result.rows.head.cells(1).content mustBe Text("Nothing to declare")
       }
     }
 
@@ -134,11 +206,22 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
     val totalDutiesAndAdjustments =
       totalDuties :+ adjustmentTotal
 
-    val totalDutyWithoutAdjustments = AdjustmentDuty(totalDuties.sum)
-    val totalAdjustments            = AdjustmentDuty(adjustmentsNoDuties.sum)
-    val totalDuty                   = AdjustmentDuty(totalDutiesAndAdjustments.sum)
+    val emptyDutySuspendedSuccessModel: EitherT[Future, String, AdrDutySuspended] = EitherT.rightT[Future, String](
+      AdrDutySuspended(declared = false, dutySuspendedProducts = Seq.empty[AdrDutySuspendedProduct])
+    )
+    val dutySuspendedDeclaredModel: EitherT[Future, String, AdrDutySuspended]     = EitherT.rightT[Future, String](
+      AdrDutySuspended(declared = true, dutySuspendedProducts = Seq.empty[AdrDutySuspendedProduct])
+    )
+    val dutySuspendedNotDeclaredModel: EitherT[Future, String, AdrDutySuspended]  = EitherT.rightT[Future, String](
+      AdrDutySuspended(declared = false, dutySuspendedProducts = Seq.empty[AdrDutySuspendedProduct])
+    )
+    val totalDutyWithoutAdjustments                                               = AdjustmentDuty(totalDuties.sum)
+    val totalAdjustments                                                          = AdjustmentDuty(adjustmentsNoDuties.sum)
+    val totalDuty                                                                 = AdjustmentDuty(totalDutiesAndAdjustments.sum)
 
-    val mockCalculatorConnector    = mock[AlcoholDutyCalculatorConnector]
-    val dutyDueForThisReturnHelper = new DutyDueForThisReturnHelper(mockCalculatorConnector)
+    val mockCalculatorConnector        = mock[AlcoholDutyCalculatorConnector]
+    val mockAdrReturnSubmissionService = mock[AdrReturnSubmissionService]
+    val dutyDueForThisReturnHelper     =
+      new DutyDueForThisReturnHelper(mockCalculatorConnector, mockAdrReturnSubmissionService)
   }
 }

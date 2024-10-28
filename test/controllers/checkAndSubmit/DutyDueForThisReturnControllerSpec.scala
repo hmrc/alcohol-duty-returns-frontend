@@ -35,11 +35,19 @@ import java.time.{Clock, Instant, LocalDate}
 
 class DutyDueForThisReturnControllerSpec extends SpecBase {
 
+  val emptyDutiesBreakdownTable: TableViewModel = TableViewModel(
+    head = Seq.empty,
+    rows = Seq.empty
+  )
+
+  val emptyYouveAlsoDeclaredTable: TableViewModel = TableViewModel(
+    head = Seq.empty,
+    rows = Seq.empty
+  )
+
   val viewModel = DutyDueForThisReturnViewModel(
-    dutiesBreakdownTable = TableViewModel(
-      head = Seq.empty,
-      rows = Seq.empty
-    ),
+    dutiesBreakdownTable = emptyDutiesBreakdownTable,
+    youveAlsoDeclaredTable = emptyYouveAlsoDeclaredTable,
     totalDue = BigDecimal(1)
   )
 
