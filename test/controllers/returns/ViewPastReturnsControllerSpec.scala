@@ -18,7 +18,6 @@ package controllers.returns
 
 import base.SpecBase
 import connectors.AlcoholDutyReturnsConnector
-import controllers.returns
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import play.api.test.Helpers._
@@ -39,7 +38,7 @@ class ViewPastReturnsControllerSpec extends SpecBase {
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector))
         .build()
       running(application) {
-        val request = FakeRequest(GET, returns.routes.ViewPastReturnsController.onPageLoad.url)
+        val request = FakeRequest(GET, controllers.returns.routes.ViewPastReturnsController.onPageLoad.url)
         val result  = route(application, request).value
 
         val view = application.injector.instanceOf[ViewPastReturnsView]
@@ -63,7 +62,7 @@ class ViewPastReturnsControllerSpec extends SpecBase {
         when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.failed(
           new Exception("test Exception")
         )
-        val request = FakeRequest(GET, returns.routes.ViewPastReturnsController.onPageLoad.url)
+        val request = FakeRequest(GET, controllers.returns.routes.ViewPastReturnsController.onPageLoad.url)
 
         val result = route(application, request).value
 

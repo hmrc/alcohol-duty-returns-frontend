@@ -18,7 +18,7 @@ package models.audit
 
 import models.{AlcoholRegime, UserAnswers}
 import models.audit.AuditType.ReturnSubmitted
-import models.returns.{AdrAdjustmentItem, AdrDutyDeclaredItem, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpiritsProduced, AdrTotals}
+import models.checkAndSubmit.{AdrAdjustmentItem, AdrDutyDeclaredItem, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpiritsProduced, AdrTotals}
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.Instant

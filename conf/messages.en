@@ -156,11 +156,14 @@ viewReturn.dutyDue.caption = Total
 viewReturn.dutyDue.total.legend = Total duty value
 viewReturn.table.adjustmentType.legend = Adjustment
 viewReturn.table.description.legend = Description
+viewReturn.table.totalVolume.legend = Total volume (litres)
 viewReturn.table.lpa.legend = Litres of pure alcohol (LPA)
 viewReturn.table.dutyRate.legend = Duty rate (per litre)
 viewReturn.table.dutyValue.legend = Duty value
 viewReturn.table.dutyDue.legend = Duty value
 viewReturn.printYourReturn = Print your return
+viewReturn.netDutySuspension.caption = Duty suspended deliveries
+viewReturn.netDutySuspension.noneDeclared = Nothing declared
 
 viewPastPayments.heading = Alcohol Duty payments
 viewPastPayments.title = Alcohol Duty payments
@@ -322,19 +325,19 @@ return.journey.error.noValue.taxType = Select the type of {0}
 
 return.journey.error.noValue.totalLitres = Enter the total litres of {0}
 return.journey.error.invalid.totalLitres = Litres of {0} must be a number
-return.journey.error.maximumValue.totalLitres = Litres of {0} must be 99.99 million or less
-return.journey.error.minimumValue.totalLitres = Litres of {0} must be 0.01 or more
+return.journey.error.maximumValue.totalLitres = Litres of {0} must be less than 100 million
+return.journey.error.minimumValue.totalLitres = Litres of {0} must be more than 0.00
 return.journey.error.tooManyDecimalPlaces.totalLitres = Litres of {0} must be a number to 2 decimal places
 
 return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in {0}
 return.journey.error.invalid.pureAlcohol = Litres of pure alcohol must be a number
-return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol must be 99.9999 million or less
-return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol must be 0.0001 or more
+return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol must be less than 100 million
+return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol must be more than 0.00
 return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol must be a number to 4 decimal places
 
 return.journey.error.noValue.dutyRate = Enter your Small Producer Relief duty rate
 return.journey.error.invalid.dutyRate = Your Small Producer Relief duty rate must be a number
-return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate must be £99.99 million or less
+return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate must be less than £100 million
 return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
 return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 
@@ -515,11 +518,6 @@ tellUsAboutMultipleSPRRate.pureAlcohol.hint = In litres, up to 4 decimal places
 tellUsAboutMultipleSPRRate.hint.currency = Include pounds and pence
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel = TellUsAboutMultipleSPRRate
 
-tellUsAboutMultipleSPRRate.error.taxType.Beer.required = Select the type of beer to declare
-tellUsAboutMultipleSPRRate.error.taxType.Cider.required = Select the type of cider to declare
-tellUsAboutMultipleSPRRate.error.taxType.Spirits.required = Select the type of spirits to declare
-tellUsAboutMultipleSPRRate.error.taxType.Wine.required = Select the type of wine to declare
-tellUsAboutMultipleSPRRate.error.taxType.OtherFermentedProduct.required = Select the type of other fermented product to declare
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief
 
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType = Description
@@ -805,8 +803,6 @@ dutySuspendedSpirits.pureAlcoholInSpirits.checkYourAnswersLabel = Total net quan
 dutySuspendedSpirits.hint.2 = In litres, up to 4 decimal places
 dutySuspendedSpirits.error.totalSpirits.required = Enter the volume of spirits in litres
 dutySuspendedSpirits.error.pureAlcoholInSpirits.required = Enter the volume of pure alcohol in spirits in litres
-dutySuspendedSpirits.error.totalSpirits.length = totalSpirits must be 999999999.99 characters or less
-dutySuspendedSpirits.error.pureAlcoholInSpirits.length = pureAlcoholInSpirits must be 999999999.99 characters or less
 dutySuspendedSpirits.totalSpirits.change.hidden = total net quantity of duty suspended spirits
 dutySuspendedSpirits.pureAlcoholInSpirits.change.hidden = total net quantity of pure alcohol in these spirits
 dutySuspendedSpirits.error.totalSpirits.nonNumeric = The volume of spirits must be a number
@@ -1262,7 +1258,6 @@ adjustmentRepackagedTaxType.heading = What is the tax type code for the newly re
 adjustmentRepackagedTaxType.checkYourAnswersLabel = New tax type
 adjustmentRepackagedTaxType.error.invalid = Enter a valid tax type code
 adjustmentRepackagedTaxType.error.required = Enter the new tax type code
-adjustmentRepackagedTaxType.error.outOfRange = AdjustmentRepackagedTaxType must be between {0} and {1}
 adjustmentRepackagedTaxType.error.nonDraught = Tax type code must be the non-draught tax type code
 adjustmentRepackagedTaxType.change.hidden = new tax type
 adjustmentRepackagedTaxType.hint = A non-draught 3 digit tax type code
