@@ -196,7 +196,7 @@ class AlcoholicProductTypeControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, alcoholicProductTypeRoute)
-            .withFormUrlEncodedBody(("value", alcoholType))
+            .withFormUrlEncodedBody(("alcoholic-product-type-value", alcoholType))
 
         val result = route(application, request).value
 
@@ -205,5 +205,27 @@ class AlcoholicProductTypeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must redirect to Journey Recovery for a POST if an invalid regime is submitted" in {
+      val userAnswers        =
+        emptyUserAnswers.set(CurrentAdjustmentEntryPage, AdjustmentEntry(spoiltRegime = Some(Beer))).success.value
+      val mockCacheConnector = mock[CacheConnector]
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application        = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+      running(application) {
+        val request =
+          FakeRequest(POST, alcoholicProductTypeRoute)
+            .withFormUrlEncodedBody(("alcoholic-product-type-value", "invalidRegime"))
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
   }
 }

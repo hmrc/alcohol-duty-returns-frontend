@@ -22,7 +22,7 @@ import connectors.CacheConnector
 import generators.ModelGenerators
 import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment._
@@ -70,16 +70,22 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     spoiltRegime = Some(Beer),
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(totalLitresVolume),
-    sprDutyRate = Some(rate),
     rateBand = Some(rateBand),
-    repackagedRateBand = Some(rateBand),
-    repackagedSprDutyRate = Some(rate),
     period = Some(YearMonth.of(24, 1)),
     duty = Some(duty)
   )
 
   val savedAdjustmentEntry =
     currentAdjustmentEntry.copy(pureAlcoholVolume = Some(BigDecimal(10)), totalLitresVolume = Some(BigDecimal(11)))
+
+  val repackagedAdjustmentEntry =
+    currentAdjustmentEntry.copy(
+      adjustmentType = Some(Overdeclaration),
+      spoiltRegime = None,
+      sprDutyRate = Some(rate),
+      repackagedRateBand = Some(rateBand),
+      repackagedSprDutyRate = Some(rate)
+    )
 
   val completeAdjustmentEntryUserAnswers: UserAnswers = emptyUserAnswers
     .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry)
@@ -96,6 +102,38 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   "CheckYourAnswers Controller" - {
 
     "must return OK and the correct view for a GET if all necessary questions are answered" in {
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val userAnswers = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, repackagedAdjustmentEntry)
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, checkYourAnswersRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+
+        val list = CheckYourAnswersSummaryListHelper
+          .currentAdjustmentEntrySummaryList(repackagedAdjustmentEntry)(getMessages(app))
+          .get
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET if all necessary questions are answered for a spoilt adjustment" in {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])

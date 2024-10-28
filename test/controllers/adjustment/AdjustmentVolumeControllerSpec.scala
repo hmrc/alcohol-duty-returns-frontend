@@ -29,7 +29,7 @@ import play.api.test.Helpers._
 import connectors.CacheConnector
 import models.AlcoholRegime.Beer
 import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
-import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.AdjustmentType.Underdeclaration
 import play.api.i18n.Messages
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentVolumeView
@@ -68,7 +68,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
   )
   val period                           = YearMonth.of(2024, 1)
   val adjustmentEntry                  = AdjustmentEntry(
-    adjustmentType = Some(Spoilt),
+    adjustmentType = Some(Underdeclaration),
     rateBand = Some(rateBand),
     period = Some(period)
   )
@@ -92,7 +92,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AdjustmentVolumeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, Spoilt, regime, rateBandContent)(
+        contentAsString(result) mustEqual view(form, NormalMode, Underdeclaration, regime, rateBandContent)(
           request,
           getMessages(app)
         ).toString
@@ -118,7 +118,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(
           form.fill(AdjustmentVolume(validTotalLitres, validPureAlcohol)),
           NormalMode,
-          Spoilt,
+          Underdeclaration,
           regime,
           rateBandContent
         )(
@@ -190,7 +190,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
             AdjustmentEntry(
               totalLitresVolume = Some(validTotalLitres),
               pureAlcoholVolume = Some(validPureAlcohol),
-              adjustmentType = Some(Spoilt),
+              adjustmentType = Some(Underdeclaration),
               period = Some(period),
               rateBand = Some(rateBand)
             )
@@ -233,7 +233,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
             AdjustmentEntry(
               totalLitresVolume = Some(validTotalLitres),
               pureAlcoholVolume = Some(validPureAlcohol),
-              adjustmentType = Some(Spoilt),
+              adjustmentType = Some(Underdeclaration),
               period = Some(period),
               rateBand = None
             )
@@ -288,7 +288,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt, regime, rateBandContent)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, Underdeclaration, regime, rateBandContent)(
           request,
           getMessages(app)
         ).toString

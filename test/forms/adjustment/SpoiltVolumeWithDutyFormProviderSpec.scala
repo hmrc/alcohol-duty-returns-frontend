@@ -31,7 +31,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
 
   val validTotalLitres = BigDecimal(10.23)
   val validPureAlcohol = BigDecimal(9.23)
-  val validDuty = BigDecimal(2)
+  val validDuty        = BigDecimal(2)
 
   val adjustmentEntry = AdjustmentEntry(
     totalLitresVolume = Some(validTotalLitres),
@@ -47,7 +47,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
       val data = Map(
         "volumes.totalLitresVolume" -> validTotalLitres.toString(),
         "volumes.pureAlcoholVolume" -> validPureAlcohol.toString(),
-        "volumes.duty"       -> validDuty.toString()
+        "volumes.duty"              -> validDuty.toString()
       )
       form.bind(data).value.value mustBe SpoiltVolumeWithDuty(validTotalLitres, validPureAlcohol, validDuty)
     }
@@ -57,7 +57,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
       form.fill(data).data must contain theSameElementsAs Map(
         "volumes.totalLitresVolume" -> validTotalLitres.toString(),
         "volumes.pureAlcoholVolume" -> validPureAlcohol.toString(),
-        "volumes.duty"       -> validDuty.toString()
+        "volumes.duty"              -> validDuty.toString()
       )
     }
 
@@ -74,7 +74,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
       val data = Map(
         "volumes.totalLitresVolume" -> "",
         "volumes.pureAlcoholVolume" -> "",
-        "volumes.duty"       -> ""
+        "volumes.duty"              -> ""
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.noValue.totalLitresVolume", Seq("")),
@@ -87,7 +87,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
       val data = Map(
         "volumes.totalLitresVolume" -> "1.112",
         "volumes.pureAlcoholVolume" -> "1.11234",
-        "volumes.duty"       -> "1.112"
+        "volumes.duty"              -> "1.112"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", s"spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume", Seq("")),
@@ -100,7 +100,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
       val data = Map(
         "volumes.totalLitresVolume" -> "invalid",
         "volumes.pureAlcoholVolume" -> "invalid",
-        "volumes.duty"       -> "invalid"
+        "volumes.duty"              -> "invalid"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.invalid.totalLitresVolume", List("")),
@@ -113,7 +113,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
       val data = Map(
         "volumes.totalLitresVolume" -> "0",
         "volumes.pureAlcoholVolume" -> "0",
-        "volumes.duty"       -> "0"
+        "volumes.duty"              -> "0"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume", List("")),
@@ -126,7 +126,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
       val data = Map(
         "volumes.totalLitresVolume" -> "100000000000",
         "volumes.pureAlcoholVolume" -> "100000000000",
-        "volumes.duty"       -> "100000000000"
+        "volumes.duty"              -> "100000000000"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume", List("")),
@@ -139,7 +139,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
       val data = Map(
         "volumes.totalLitresVolume" -> "1",
         "volumes.pureAlcoholVolume" -> "2",
-        "volumes.duty"       -> "0.01"
+        "volumes.duty"              -> "0.01"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_pureAlcoholVolume", "spoiltVolumeWithDuty.error.lessThanExpected", List(""))

@@ -16,7 +16,7 @@
 
 @import components.{SectionHeading, PageHeading, Paragraph}
 @import models.AlcoholRegimes
-@import models.adjustment.AlcoholicProductType
+@import viewmodels.checkAnswers.adjustment.AlcoholicProductTypeHelper
 
 @this(
     layout: templates.Layout,
@@ -26,7 +26,8 @@
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     paragraph: Paragraph,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    helper: AlcoholicProductTypeHelper
 )
 
 @(form: Form[_], mode: Mode, regimes: AlcoholRegimes)(implicit request: Request[_], messages: Messages)
@@ -36,7 +37,7 @@
     @formHelper(action = controllers.adjustment.routes.AlcoholicProductTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("alcoholic-product-type-value" -> AlcoholicProductType.radioOptions(regimes).headOption.flatMap(_.id).getOrElse(""))))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("alcoholic-product-type-value" -> helper.radioOptions(regimes).headOption.flatMap(_.id).getOrElse(""))))
         }
 
         @sectionHeading(
@@ -52,7 +53,7 @@
             RadiosViewModel(
                 field  = form("alcoholic-product-type-value"),
                 legend = LegendViewModel(messages("alcoholicProductType.heading")).asVisuallyHidden(),
-                items  = AlcoholicProductType.radioOptions(regimes)
+                items  = helper.radioOptions(regimes)
             )
         )
 

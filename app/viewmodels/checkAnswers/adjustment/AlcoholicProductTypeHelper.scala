@@ -20,14 +20,21 @@ import cats.data.NonEmptySeq
 import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.RateType.Core
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholRegimes, AlcoholType, RangeDetailsByRegime, RateBand}
+import org.apache.pekko.event.Logging
+import play.api.Logging
 import play.api.i18n.Messages
+import play.api.mvc.Results.Redirect
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import viewmodels.AlcoholRegimesViewOrder.regimesInViewOrder
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class AlcoholicProductTypeHelper @Inject() (
   appConfig: FrontendAppConfig
-) {
+) extends Logging {
   def createRateBandFromRegime(regime: AlcoholRegime)(implicit messages: Messages): RateBand = {
 
     val (taxTypeCode, alcoholType) = regime match {
@@ -37,9 +44,6 @@ class AlcoholicProductTypeHelper @Inject() (
       case Spirits               => (appConfig.spoiltSpiritsTaxTypeCode, AlcoholType.Spirits)
       case OtherFermentedProduct =>
         (appConfig.spoiltOtherFermentedProductsTaxTypeCode, AlcoholType.OtherFermentedProduct)
-      //      case _                     => Need this?
-      //        logger.warn("Couldn't match regime value selected on Alcoholic Product Type Screen")
-      //        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
     val rate: BigDecimal = appConfig.spoiltRate
@@ -53,6 +57,16 @@ class AlcoholicProductTypeHelper @Inject() (
         RangeDetailsByRegime(regime, NonEmptySeq.one(ABVRange(alcoholType, AlcoholByVolume(0), AlcoholByVolume(100))))
       )
     )
-    //confirm rateType, and other rateband details Rate Type AlcoholByVolume
+  }
+
+  def radioOptions(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[RadioItem] = {
+    val orderedRegimes = regimesInViewOrder(regimes)
+    orderedRegimes.zipWithIndex.map { case (value, _) =>
+      RadioItem(
+        content = Text(messages(s"alcoholType.$value")),
+        value = Some(value.toString),
+        id = Some(value.toString)
+      )
+    }
   }
 }

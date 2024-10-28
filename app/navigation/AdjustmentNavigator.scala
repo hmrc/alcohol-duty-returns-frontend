@@ -78,10 +78,7 @@ class AdjustmentNavigator @Inject() () {
           if (hasChanged) adjustmentTaxTypePageRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
-      _ =>
-        hasChanged =>
-          if (hasChanged) controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
-          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+      _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
       userAnswers =>
         hasChanged =>

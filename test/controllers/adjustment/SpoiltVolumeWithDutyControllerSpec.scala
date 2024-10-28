@@ -44,12 +44,12 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
   val validTotalLitres = BigDecimal(10.23)
   val validPureAlcohol = BigDecimal(9.23)
-  val validDuty = BigDecimal(2)
+  val validDuty        = BigDecimal(2)
   val period           = YearMonth.of(2024, 1)
 
   lazy val spoiltVolumeWithDutyRoute =
     controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode).url
-  val rateBand                          = RateBand(
+  val rateBand                       = RateBand(
     "310",
     "some band",
     RateType.DraughtRelief,
@@ -67,15 +67,15 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
       )
     )
   )
-  val adjustmentEntry                   = AdjustmentEntry(
+  val adjustmentEntry                = AdjustmentEntry(
     adjustmentType = Some(Spoilt),
     period = Some(period),
     rateBand = Some(rateBand)
   )
-  val userAnswers                       = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-  val userAnswersWithoutRegimes         =
+  val userAnswers                    = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswersWithoutRegimes      =
     emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(rateBand = None)).success.value
-  val rateBandContent = "Beer between 0.1% and 5.8% ABV (tax type code 310)"
+  val rateBandContent                = "Beer between 0.1% and 5.8% ABV (tax type code 310)"
 
   "SpoiltVolumeWithDuty Controller" - {
     "must return OK and the correct view for a GET" in {
@@ -193,7 +193,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
@@ -276,7 +276,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
           Map(
             "volumes.totalLitresVolume" -> "invalid value",
             "volumes.pureAlcoholVolume" -> "invalid value",
-            "volumes.duty"       -> "invalid value"
+            "volumes.duty"              -> "invalid value"
           )
         )
 
@@ -300,6 +300,16 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to journey recovery page if CurrentAdjustmentEntryPage returns None on a GET" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      running(application) {
+        val request = FakeRequest(GET, spoiltVolumeWithDutyRoute)
+        val result  = route(application, request).value
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }

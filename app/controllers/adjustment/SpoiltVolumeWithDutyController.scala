@@ -25,9 +25,8 @@ import models.{AlcoholRegime, Mode}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{CurrentAdjustmentEntryPage, SpoiltVolumeWithDutyPage}
 import play.api.Logging
-import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.SpoiltVolumeWithDutyView
 
@@ -61,14 +60,14 @@ class SpoiltVolumeWithDutyController @Inject() (
       case Some(regime) =>
         val form = formProvider(regime)
         request.userAnswers
-          .get(CurrentAdjustmentEntryPage)
-          .fold {
+          .get(CurrentAdjustmentEntryPage) match {
+          case None =>
             logger.warn(
-              "Couldn't fetch the rateBand, totalLitres, pureAlcohol and duty in AdjustmentEntry from user answers"
+              "Couldn't fetch CurrentAdjustmentEntryPage from user answers"
             )
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-          } {
-            case AdjustmentEntry(
+          case Some(
+                AdjustmentEntry(
                   _,
                   _,
                   _,
@@ -82,18 +81,19 @@ class SpoiltVolumeWithDutyController @Inject() (
                   Some(duty),
                   _,
                   _
-                ) =>
-              val spoiltDuty = positiveDuty(duty)
-              Ok(
-                view(
-                  form.fill(SpoiltVolumeWithDuty(totalLitres, pureAlcohol, spoiltDuty)),
-                  mode,
-                  regime
                 )
+              ) =>
+            val spoiltDuty = positiveDuty(duty)
+            Ok(
+              view(
+                form.fill(SpoiltVolumeWithDuty(totalLitres, pureAlcohol, spoiltDuty)),
+                mode,
+                regime
               )
-            case _ =>
-              Ok(view(form, mode, regime))
-          }
+            )
+          case _    =>
+            Ok(view(form, mode, regime))
+        }
       case _            =>
         logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
@@ -108,16 +108,18 @@ class SpoiltVolumeWithDutyController @Inject() (
           form
             .bindFromRequest()
             .fold(
-              formWithErrors => handleFormErrors(mode, formWithErrors, regime),
+              formWithErrors =>
+                Future.successful(
+                  BadRequest(view(formWithErrors, mode, regime))
+                ),
               value => {
-                val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-                val (updatedAdjustment, hasChanged) = updateSpoiltVolumeAndDuty(adjustment, value)
-                val spoiltDuty                      = negativeDuty(value.duty)
+                val adjustment = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+                val spoiltDuty = negativeDuty(value.duty)
                 for {
                   updatedAnswers <- Future.fromTry(
                                       request.userAnswers.set(
                                         CurrentAdjustmentEntryPage,
-                                        updatedAdjustment.copy(
+                                        adjustment.copy(
                                           totalLitresVolume = Some(value.totalLitresVolume),
                                           pureAlcoholVolume = Some(value.pureAlcoholVolume),
                                           duty = Some(spoiltDuty)
@@ -125,7 +127,7 @@ class SpoiltVolumeWithDutyController @Inject() (
                                       )
                                     )
                   _              <- cacheConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(SpoiltVolumeWithDutyPage, mode, updatedAnswers, hasChanged))
+                } yield Redirect(navigator.nextPage(SpoiltVolumeWithDutyPage, mode, updatedAnswers))
               }
             )
         case _            =>
@@ -135,54 +137,9 @@ class SpoiltVolumeWithDutyController @Inject() (
   }
 
   private def negativeDuty(value: BigDecimal): BigDecimal =
-    if (value > 0)
-      value * -1
-    else
-      value
+    -value.abs
 
   private def positiveDuty(value: BigDecimal): BigDecimal =
-    if (value < 0)
-      value * -1
-    else
-      value
-
-  private def handleFormErrors(mode: Mode, formWithErrors: Form[SpoiltVolumeWithDuty], regime: AlcoholRegime)(implicit
-    request: DataRequest[_]
-  ): Future[Result] =
-    request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case Some(AdjustmentEntry(_, _, _, _, _, _, _, _, _, _, _, _, _)) =>
-        Future.successful(
-          BadRequest(
-            view(
-              formWithErrors,
-              mode,
-              regime
-            )
-          )
-        )
-      case _                                                            =>
-        logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-    }
-
-  def updateSpoiltVolumeAndDuty(
-    adjustmentEntry: AdjustmentEntry,
-    currentValue: SpoiltVolumeWithDuty
-  ): (AdjustmentEntry, Boolean) =
-    (adjustmentEntry.totalLitresVolume, adjustmentEntry.pureAlcoholVolume, adjustmentEntry.duty) match {
-      case (Some(existingTotalLitres), Some(existingPureAlcohol), Some(existingDuty))
-          if currentValue.totalLitresVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol && currentValue.duty == existingDuty =>
-        (adjustmentEntry, false)
-      case _ =>
-        (
-          adjustmentEntry.copy(
-            repackagedRateBand = None,
-            repackagedDuty = None,
-            repackagedSprDutyRate = None,
-            newDuty = None
-          ),
-          true
-        )
-    }
+    value.abs
 
 }
