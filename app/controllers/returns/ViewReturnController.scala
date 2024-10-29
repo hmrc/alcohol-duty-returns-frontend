@@ -69,6 +69,7 @@ class ViewReturnController @Inject() (
         val adjustmentsViewModel   =
           viewModel.createAdjustmentsViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
         val totalDueViewModel      = viewModel.createTotalDueViewModel(returnDetails)
+        val netDutySuspension      = viewModel.createNetDutySuspensionViewModel(returnDetails)
         val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriod.period)
         val submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
         val submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
@@ -82,7 +83,8 @@ class ViewReturnController @Inject() (
             submittedTimeStr,
             dutyToDeclareViewModel,
             adjustmentsViewModel,
-            totalDueViewModel
+            totalDueViewModel,
+            netDutySuspension
           )
         )
       })

@@ -20,8 +20,8 @@ import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
-import models.returns.AdrUnitOfMeasure.Tonnes
-import models.returns._
+import models.checkAndSubmit.AdrUnitOfMeasure.Tonnes
+import models.declareDuty._
 import models._
 import org.scalacheck.Gen
 import pages.adjustment._
@@ -29,10 +29,11 @@ import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.libs.json.Json
 import org.scalacheck.Gen.{listOfN, numChar}
-import pages.returns.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
+import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import models.TransactionType.{LPI, RPI, Return}
-import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
 import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
+import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrOtherIngredient, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
+import models.returns._
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
@@ -259,7 +260,21 @@ trait TestData extends ModelGenerators {
         ),
         total = BigDecimal("-19434")
       ),
-      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("55815"))
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("55815")),
+      netDutySuspension = Some(
+        ReturnNetDutySuspension(
+          totalLtsBeer = Some(BigDecimal("0.15")),
+          totalLtsCider = Some(BigDecimal("0.38")),
+          totalLtsSpirit = Some(BigDecimal("0.02")),
+          totalLtsWine = Some(BigDecimal("0.44")),
+          totalLtsOtherFermented = Some(BigDecimal("0.02")),
+          totalLtsPureAlcoholBeer = Some(BigDecimal("0.4248")),
+          totalLtsPureAlcoholCider = Some(BigDecimal("0.0379")),
+          totalLtsPureAlcoholSpirit = Some(BigDecimal("0.2492")),
+          totalLtsPureAlcoholWine = Some(BigDecimal("0.5965")),
+          totalLtsPureAlcoholOtherFermented = Some(BigDecimal("0.1894"))
+        )
+      )
     )
   }
 
@@ -274,7 +289,8 @@ trait TestData extends ModelGenerators {
         adjustmentDetails = None,
         total = BigDecimal("0")
       ),
-      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0"))
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0")),
+      netDutySuspension = None
     )
 
   def nilReturnDetailsWithEmptySections(periodKey: String, now: Instant): ReturnDetails =
@@ -288,7 +304,8 @@ trait TestData extends ModelGenerators {
         adjustmentDetails = Some(Seq.empty),
         total = BigDecimal("0")
       ),
-      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0"))
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0")),
+      netDutySuspension = None
     )
 
   val obligationDataSingleOpen = ObligationData(

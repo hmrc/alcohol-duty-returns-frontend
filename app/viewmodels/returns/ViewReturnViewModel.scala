@@ -22,7 +22,7 @@ import models.{RateBand, ReturnPeriod}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
-import viewmodels.returns.RateBandHelper.rateBandRecap
+import viewmodels.declareDuty.RateBandHelper.rateBandRecap
 import viewmodels.{Money, TableRowViewModel, TableTotalViewModel, TableViewModel}
 
 import java.time.YearMonth
@@ -110,7 +110,7 @@ class ViewReturnViewModel @Inject() () {
     taxType: String
   )(implicit messages: Messages): String =
     maybeRatePeriod
-      .flatMap(ratePeriodsAndTaxCodesToRateBands.get(_: YearMonth, taxType))
+      .flatMap(ratePeriod => ratePeriodsAndTaxCodesToRateBands.get((ratePeriod, taxType)))
       .map(rateBandRecap(_))
       .getOrElse(taxType)
 
@@ -255,4 +255,106 @@ class ViewReturnViewModel @Inject() () {
       HeadCell(content = content, classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}")
     )
   }
+
+  def createNetDutySuspensionViewModel(
+    returnDetails: ReturnDetails
+  )(implicit messages: Messages): TableViewModel =
+    returnDetails.netDutySuspension match {
+      case Some(netDutySuspension) =>
+        TableViewModel(
+          head = netDutySuspensionTableHeader(),
+          rows = netDutySuspensionRows(netDutySuspension)
+        )
+      case None                    =>
+        TableViewModel(
+          head = noneDeclareDutySuspensionHeader(),
+          rows = noneDeclaredDutySuspension()
+        )
+    }
+
+  private def netDutySuspensionTableHeader()(implicit messages: Messages): Seq[HeadCell] =
+    Seq(
+      HeadCell(
+        content = Text(messages("viewReturn.table.description.legend")),
+        classes = Constants.oneHalfCssClass
+      ),
+      HeadCell(
+        content = Text(messages("viewReturn.table.totalVolume.legend")),
+        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+      ),
+      HeadCell(
+        content = Text(messages("viewReturn.table.lpa.legend")),
+        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+      )
+    )
+
+  private def netDutySuspensionRows(netDutySuspension: ReturnNetDutySuspension)(implicit
+    messages: Messages
+  ): Seq[TableRowViewModel] =
+    Seq(
+      netDutySuspensionCell(
+        "return.regime.Beer",
+        netDutySuspension.totalLtsBeer,
+        netDutySuspension.totalLtsPureAlcoholBeer
+      ),
+      netDutySuspensionCell(
+        "return.regime.Cider",
+        netDutySuspension.totalLtsCider,
+        netDutySuspension.totalLtsPureAlcoholCider
+      ),
+      netDutySuspensionCell(
+        "return.regime.Spirits",
+        netDutySuspension.totalLtsSpirit,
+        netDutySuspension.totalLtsPureAlcoholSpirit
+      ),
+      netDutySuspensionCell(
+        "return.regime.Wine",
+        netDutySuspension.totalLtsWine,
+        netDutySuspension.totalLtsPureAlcoholWine
+      ),
+      netDutySuspensionCell(
+        "return.regime.OtherFermentedProduct",
+        netDutySuspension.totalLtsOtherFermented,
+        netDutySuspension.totalLtsPureAlcoholOtherFermented
+      )
+    ).flatten
+
+  private def netDutySuspensionCell(
+    messageKey: String,
+    totalLitres: Option[BigDecimal],
+    litresOfPureAlcohol: Option[BigDecimal]
+  )(implicit messages: Messages): Option[TableRowViewModel] =
+    for {
+      total <- totalLitres
+      lpa   <- litresOfPureAlcohol
+    } yield TableRowViewModel(
+      cells = Seq(
+        TableRow(
+          content = Text(messages(messageKey).capitalize),
+          classes = Constants.oneHalfCssClass
+        ),
+        TableRow(
+          content = Text(messages("site.2DP", total)),
+          classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        ),
+        TableRow(
+          content = Text(messages("site.4DP", lpa)),
+          classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        )
+      )
+    )
+
+  private def noneDeclaredDutySuspension()(implicit messages: Messages) = Seq(
+    TableRowViewModel(
+      cells = Seq(
+        TableRow(content = Text(messages("viewReturn.netDutySuspension.noneDeclared")))
+      )
+    )
+  )
+
+  private def noneDeclareDutySuspensionHeader()(implicit messages: Messages): Seq[HeadCell] = Seq(
+    HeadCell(
+      content = Text(messages("viewReturn.table.description.legend"))
+    )
+  )
 }

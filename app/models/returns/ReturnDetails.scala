@@ -24,7 +24,8 @@ case class ReturnDetails(
   identification: ReturnDetailsIdentification,
   alcoholDeclared: ReturnAlcoholDeclared,
   adjustments: ReturnAdjustments,
-  totalDutyDue: ReturnTotalDutyDue
+  totalDutyDue: ReturnTotalDutyDue,
+  netDutySuspension: Option[ReturnNetDutySuspension]
 )
 
 object ReturnDetails {
@@ -115,4 +116,21 @@ case class ReturnTotalDutyDue(totalDue: BigDecimal)
 
 object ReturnTotalDutyDue {
   implicit val returnTotalDutyDueFormat: OFormat[ReturnTotalDutyDue] = Json.format[ReturnTotalDutyDue]
+}
+
+case class ReturnNetDutySuspension(
+  totalLtsBeer: Option[BigDecimal],
+  totalLtsWine: Option[BigDecimal],
+  totalLtsCider: Option[BigDecimal],
+  totalLtsSpirit: Option[BigDecimal],
+  totalLtsOtherFermented: Option[BigDecimal],
+  totalLtsPureAlcoholBeer: Option[BigDecimal],
+  totalLtsPureAlcoholWine: Option[BigDecimal],
+  totalLtsPureAlcoholCider: Option[BigDecimal],
+  totalLtsPureAlcoholSpirit: Option[BigDecimal],
+  totalLtsPureAlcoholOtherFermented: Option[BigDecimal]
+)
+
+object ReturnNetDutySuspension {
+  implicit val returnTotalDutyDueFormat: OFormat[ReturnNetDutySuspension] = Json.format[ReturnNetDutySuspension]
 }

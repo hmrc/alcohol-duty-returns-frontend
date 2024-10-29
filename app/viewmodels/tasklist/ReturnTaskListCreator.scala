@@ -21,7 +21,7 @@ import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, Spiri
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.returns.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
 import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, TaskList}
@@ -120,21 +120,21 @@ class ReturnTaskListCreator @Inject() () {
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
               status = AlcholDutyTaskListItemStatus.completed,
-              href = Some(controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime).url)
+              href = Some(controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
             )
           case (None, Some(_)) =>
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
               status = AlcholDutyTaskListItemStatus.inProgress,
               href =
-                Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+                Some(controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
             )
           case _               =>
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
               status = AlcholDutyTaskListItemStatus.notStarted,
               href =
-                Some(controllers.returns.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
+                Some(controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
             )
         }
       )
@@ -331,7 +331,7 @@ class ReturnTaskListCreator @Inject() () {
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
             status = AlcholDutyTaskListItemStatus.completed,
             href = Some(
-              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
                 .onPageLoad(CheckMode)
                 .url
             )
@@ -343,7 +343,7 @@ class ReturnTaskListCreator @Inject() () {
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
             status = AlcholDutyTaskListItemStatus.inProgress,
             href = Some(
-              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
                 .onPageLoad(CheckMode)
                 .url
             )
@@ -355,7 +355,7 @@ class ReturnTaskListCreator @Inject() () {
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.no"))),
             status = AlcholDutyTaskListItemStatus.completed,
             href = Some(
-              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
                 .onPageLoad(CheckMode)
                 .url
             )
@@ -368,7 +368,7 @@ class ReturnTaskListCreator @Inject() () {
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.notStarted"))),
             status = AlcholDutyTaskListItemStatus.notStarted,
             href = Some(
-              controllers.returns.routes.DeclareAlcoholDutyQuestionController
+              controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
                 .onPageLoad(NormalMode)
                 .url
             )

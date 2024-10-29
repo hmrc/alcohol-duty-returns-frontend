@@ -22,7 +22,7 @@ import models.AlcoholRegime.Beer
 import models.{AlcoholRegimes, CheckMode, NormalMode}
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages.Page
-import pages.returns.DeclareAlcoholDutyQuestionPage
+import pages.declareDuty.DeclareAlcoholDutyQuestionPage
 
 class ReturnsNavigatorSpec extends SpecBase {
 
@@ -44,17 +44,17 @@ class ReturnsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             DeclareAlcoholDutyQuestionPage,
             NormalMode,
-            emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
-          ) mustBe controllers.returns.routes.AlcoholTypeController.onPageLoad(NormalMode)
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true).success.value
+          ) mustBe controllers.declareDuty.routes.AlcoholTypeController.onPageLoad(NormalMode)
         }
 
         "must go from the Alcohol to declare to the task list page if the user has only 1 approval" in {
           navigator.nextPage(
-            pages.returns.DeclareAlcoholDutyQuestionPage,
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
             emptyUserAnswers
               .copy(regimes = AlcoholRegimes(Set(Beer)))
-              .set(pages.returns.DeclareAlcoholDutyQuestionPage, true)
+              .set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true)
               .success
               .value
           ) mustBe routes.TaskListController.onPageLoad
@@ -62,15 +62,15 @@ class ReturnsNavigatorSpec extends SpecBase {
 
         "must go from the Alcohol to declare to the task list page if the answer is No" in {
           navigator.nextPage(
-            pages.returns.DeclareAlcoholDutyQuestionPage,
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
-            emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, false).success.value
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, false).success.value
           ) mustBe routes.TaskListController.onPageLoad
         }
 
         "must go from the Alcohol to declare to the Journey recovery page if the answer is missing" in {
           navigator.nextPage(
-            pages.returns.DeclareAlcoholDutyQuestionPage,
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
             emptyUserAnswers
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
@@ -93,14 +93,14 @@ class ReturnsNavigatorSpec extends SpecBase {
           val rateBandDraughtRelief = rateBands.last.copy(rateType = DraughtRelief)
 
           navigator.nextPageWithRegime(
-            pages.returns.WhatDoYouNeedToDeclarePage,
+            pages.declareDuty.WhatDoYouNeedToDeclarePage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.WhatDoYouNeedToDeclarePage, regime, Set(rateBandCore, rateBandDraughtRelief))
+              .setByKey(pages.declareDuty.WhatDoYouNeedToDeclarePage, regime, Set(rateBandCore, rateBandDraughtRelief))
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the WhatDoYouNeedToDeclare page to the DoYouHaveMultipleSPRDutyRates page if the user selected any 'SmallProducerRelief' or 'DraughtAndSmallProducerRelief' entries" in {
@@ -108,19 +108,19 @@ class ReturnsNavigatorSpec extends SpecBase {
           val rateBandDraughtAndSPR = rateBands.last.copy(rateType = DraughtAndSmallProducerRelief)
 
           navigator.nextPageWithRegime(
-            pages.returns.WhatDoYouNeedToDeclarePage,
+            pages.declareDuty.WhatDoYouNeedToDeclarePage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.WhatDoYouNeedToDeclarePage, regime, Set(rateBandSPR, rateBandDraughtAndSPR))
+              .setByKey(pages.declareDuty.WhatDoYouNeedToDeclarePage, regime, Set(rateBandSPR, rateBandDraughtAndSPR))
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the WhatDoYouNeedToDeclare page to the Task List page if the user hasn't selected any entries" in {
           navigator.nextPageWithRegime(
-            pages.returns.WhatDoYouNeedToDeclarePage,
+            pages.declareDuty.WhatDoYouNeedToDeclarePage,
             NormalMode,
             emptyUserAnswers,
             regime
@@ -132,14 +132,14 @@ class ReturnsNavigatorSpec extends SpecBase {
           val rateBandDraughtAndSPR = rateBands.last.copy(rateType = DraughtAndSmallProducerRelief)
 
           navigator.nextPageWithRegime(
-            pages.returns.HowMuchDoYouNeedToDeclarePage,
+            pages.declareDuty.HowMuchDoYouNeedToDeclarePage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.WhatDoYouNeedToDeclarePage, regime, Set(rateBandSPR, rateBandDraughtAndSPR))
+              .setByKey(pages.declareDuty.WhatDoYouNeedToDeclarePage, regime, Set(rateBandSPR, rateBandDraughtAndSPR))
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the HowMuchDoYouNeedToDeclare page to the Check Your Answer page if the user did not select any 'SmallProducerRelief' or 'DraughtAndSmallProducerRelief' entries" in {
@@ -147,19 +147,19 @@ class ReturnsNavigatorSpec extends SpecBase {
           val rateBandDraughtRelief = rateBands.last.copy(rateType = DraughtRelief)
 
           navigator.nextPageWithRegime(
-            pages.returns.HowMuchDoYouNeedToDeclarePage,
+            pages.declareDuty.HowMuchDoYouNeedToDeclarePage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.WhatDoYouNeedToDeclarePage, regime, Set(rateBandCore, rateBandDraughtRelief))
+              .setByKey(pages.declareDuty.WhatDoYouNeedToDeclarePage, regime, Set(rateBandCore, rateBandDraughtRelief))
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the HowMuchDoYouNeedToDeclare page to the Task List page if the user hasn't selected any entries" in {
           navigator.nextPageWithRegime(
-            pages.returns.HowMuchDoYouNeedToDeclarePage,
+            pages.declareDuty.HowMuchDoYouNeedToDeclarePage,
             NormalMode,
             emptyUserAnswers,
             regime
@@ -168,48 +168,48 @@ class ReturnsNavigatorSpec extends SpecBase {
 
         "must go from the DoYouHaveMultipleSPRDutyRates page to the TellUsAboutMultipleSPRRate page if the user selected 'Yes' and the Multiple SPR list is empty" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouHaveMultipleSPRDutyRatesPage,
+            pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.DoYouHaveMultipleSPRDutyRatesPage, regime, true)
+              .setByKey(pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage, regime, true)
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the DoYouHaveMultipleSPRDutyRates page to the TellUsAboutSingleSPRRate page if the user selected 'No'" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouHaveMultipleSPRDutyRatesPage,
+            pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.DoYouHaveMultipleSPRDutyRatesPage, regime, false)
+              .setByKey(pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage, regime, false)
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the DoYouHaveMultipleSPRDutyRates page to the MultipleSPRList page if the user selected 'Yes' and the Multiple SPR list is not empty" in {
           val volumeAndRateByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
 
           navigator.nextPageWithRegime(
-            pages.returns.DoYouHaveMultipleSPRDutyRatesPage,
+            pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.DoYouHaveMultipleSPRDutyRatesPage, regime, true)
+              .setByKey(pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage, regime, true)
               .success
               .value
-              .setByKey(pages.returns.MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType))
+              .setByKey(pages.declareDuty.MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType))
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime)
         }
 
         "must go from the DoYouHaveMultipleSPRDutyRates page to the Task List page if the user hasn't selected any entries" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouHaveMultipleSPRDutyRatesPage,
+            pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage,
             NormalMode,
             emptyUserAnswers,
             regime
@@ -218,72 +218,72 @@ class ReturnsNavigatorSpec extends SpecBase {
 
         "must go from the TellUsAboutMultipleSPRRate page to the CheckYourAnswersSPR page if hasAnswerChanged variable is true and an index is provided" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutMultipleSPRRatePage,
+            pages.declareDuty.TellUsAboutMultipleSPRRatePage,
             NormalMode,
             emptyUserAnswers,
             regime,
             hasAnswerChanged = true,
             index = Some(0)
-          ) mustBe controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime, index = Some(0))
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersSPRController.onPageLoad(regime, index = Some(0))
         }
 
         "must go from the TellUsAboutMultipleSPRRate page to the CheckYourAnswersSPR page if no index is selected" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutMultipleSPRRatePage,
+            pages.declareDuty.TellUsAboutMultipleSPRRatePage,
             NormalMode,
             emptyUserAnswers,
             regime,
             index = None
-          ) mustBe controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersSPRController.onPageLoad(regime)
         }
 
         "must go from the TellUsAboutMultipleSPRRate page to the MultipleSPRList page if no index is provided" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutMultipleSPRRatePage,
+            pages.declareDuty.TellUsAboutMultipleSPRRatePage,
             NormalMode,
             emptyUserAnswers,
             regime,
             index = Some(0)
-          ) mustBe controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime)
         }
 
         "must go from the TellUsAboutSingleSPRRate page to the CheckYourAnswers page if no index is provided" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutSingleSPRRatePage,
+            pages.declareDuty.TellUsAboutSingleSPRRatePage,
             NormalMode,
             emptyUserAnswers,
             regime,
             index = Some(0)
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the DoYouWantToAddMultipleSPRToList page to the TellUsAboutMultipleSPRRate page if the user has selected 'true'" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouWantToAddMultipleSPRToListPage,
+            pages.declareDuty.DoYouWantToAddMultipleSPRToListPage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.DoYouWantToAddMultipleSPRToListPage, regime, true)
+              .setByKey(pages.declareDuty.DoYouWantToAddMultipleSPRToListPage, regime, true)
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
+          ) mustBe controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime)
         }
 
         "must go from the DoYouWantToAddMultipleSPRToList page to the CheckYourAnswers page if the user has selected 'false'" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouWantToAddMultipleSPRToListPage,
+            pages.declareDuty.DoYouWantToAddMultipleSPRToListPage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.DoYouWantToAddMultipleSPRToListPage, regime, false)
+              .setByKey(pages.declareDuty.DoYouWantToAddMultipleSPRToListPage, regime, false)
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the DoYouWantToAddMultipleSPRToList page to the TaskList page if the user hasn't selected any entries" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouWantToAddMultipleSPRToListPage,
+            pages.declareDuty.DoYouWantToAddMultipleSPRToListPage,
             NormalMode,
             emptyUserAnswers,
             regime
@@ -294,26 +294,26 @@ class ReturnsNavigatorSpec extends SpecBase {
           val volumeAndRateByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
 
           navigator.nextPageWithRegime(
-            pages.returns.DeleteMultipleSPREntryPage,
+            pages.declareDuty.DeleteMultipleSPREntryPage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType))
+              .setByKey(pages.declareDuty.MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType))
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime)
         }
 
         "must go from the DeleteMultipleSPREntry page to the DoYouHaveMultipleSPRDutyRates page if the list is empty" in {
           navigator.nextPageWithRegime(
-            pages.returns.DeleteMultipleSPREntryPage,
+            pages.declareDuty.DeleteMultipleSPREntryPage,
             NormalMode,
             emptyUserAnswers
-              .setByKey(pages.returns.MultipleSPRListPage, regime, Seq.empty)
+              .setByKey(pages.declareDuty.MultipleSPRListPage, regime, Seq.empty)
               .success
               .value,
             regime
-          ) mustBe controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
         }
       }
     }
@@ -330,25 +330,25 @@ class ReturnsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             DeclareAlcoholDutyQuestionPage,
             CheckMode,
-            emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, true).success.value
-          ) mustBe controllers.returns.routes.AlcoholTypeController.onPageLoad(CheckMode)
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true).success.value
+          ) mustBe controllers.declareDuty.routes.AlcoholTypeController.onPageLoad(CheckMode)
         }
 
         "must go from the DeclareAlcoholDutyQuestion page to the Task List page when answer is No" in {
           navigator.nextPage(
             DeclareAlcoholDutyQuestionPage,
             CheckMode,
-            emptyUserAnswers.set(pages.returns.DeclareAlcoholDutyQuestionPage, false).success.value
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, false).success.value
           ) mustBe routes.TaskListController.onPageLoad
         }
 
         "must go from the Alcohol to declare to the task list page if the user has only 1 approval in CheckMode" in {
           navigator.nextPage(
-            pages.returns.DeclareAlcoholDutyQuestionPage,
+            pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             CheckMode,
             emptyUserAnswers
               .copy(regimes = AlcoholRegimes(Set(Beer)))
-              .set(pages.returns.DeclareAlcoholDutyQuestionPage, true)
+              .set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true)
               .success
               .value
           ) mustBe routes.TaskListController.onPageLoad
@@ -372,15 +372,15 @@ class ReturnsNavigatorSpec extends SpecBase {
           val rateBandDraughtRelief = rateBands.last.copy(rateType = DraughtRelief)
 
           navigator.nextPageWithRegime(
-            pages.returns.WhatDoYouNeedToDeclarePage,
+            pages.declareDuty.WhatDoYouNeedToDeclarePage,
             CheckMode,
             emptyUserAnswers
-              .setByKey(pages.returns.WhatDoYouNeedToDeclarePage, regime, Set(rateBandCore, rateBandDraughtRelief))
+              .setByKey(pages.declareDuty.WhatDoYouNeedToDeclarePage, regime, Set(rateBandCore, rateBandDraughtRelief))
               .success
               .value,
             regime,
             hasAnswerChanged = true
-          ) mustBe controllers.returns.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.HowMuchDoYouNeedToDeclareController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the WhatDoYouNeedToDeclare page to the DoYouHaveMultipleSPRDutyRates page if the user has changed answers selected any 'SmallProducerRelief' or 'DraughtAndSmallProducerRelief' entries" in {
@@ -388,88 +388,88 @@ class ReturnsNavigatorSpec extends SpecBase {
           val rateBandDraughtAndSPR = rateBands.last.copy(rateType = DraughtAndSmallProducerRelief)
 
           navigator.nextPageWithRegime(
-            pages.returns.WhatDoYouNeedToDeclarePage,
+            pages.declareDuty.WhatDoYouNeedToDeclarePage,
             CheckMode,
             emptyUserAnswers
-              .setByKey(pages.returns.WhatDoYouNeedToDeclarePage, regime, Set(rateBandSPR, rateBandDraughtAndSPR))
+              .setByKey(pages.declareDuty.WhatDoYouNeedToDeclarePage, regime, Set(rateBandSPR, rateBandDraughtAndSPR))
               .success
               .value,
             regime,
             hasAnswerChanged = true
-          ) mustBe controllers.returns.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.DoYouHaveMultipleSPRDutyRatesController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the WhatDoYouNeedToDeclare page to the Check Your Answers page if the user did not change answers" in {
           navigator.nextPageWithRegime(
-            pages.returns.WhatDoYouNeedToDeclarePage,
+            pages.declareDuty.WhatDoYouNeedToDeclarePage,
             CheckMode,
             emptyUserAnswers,
             regime
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the HowMuchDoYouNeedToDeclare page to the Check Your Answers if the user has changed answers" in {
           navigator.nextPageWithRegime(
-            pages.returns.HowMuchDoYouNeedToDeclarePage,
+            pages.declareDuty.HowMuchDoYouNeedToDeclarePage,
             CheckMode,
             emptyUserAnswers,
             regime,
             hasAnswerChanged = true
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the HowMuchDoYouNeedToDeclare page to the Check Your Answers if the user did not change answers" in {
           navigator.nextPageWithRegime(
-            pages.returns.HowMuchDoYouNeedToDeclarePage,
+            pages.declareDuty.HowMuchDoYouNeedToDeclarePage,
             CheckMode,
             emptyUserAnswers,
             regime
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the TellUsAboutSingleSPRRate page to the Check Your Answers if the user has changed answers" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutSingleSPRRatePage,
+            pages.declareDuty.TellUsAboutSingleSPRRatePage,
             CheckMode,
             emptyUserAnswers,
             regime,
             hasAnswerChanged = true
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the TellUsAboutSingleSPRRate page to the Check Your Answers if the user did not change answers" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutSingleSPRRatePage,
+            pages.declareDuty.TellUsAboutSingleSPRRatePage,
             CheckMode,
             emptyUserAnswers,
             regime
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the DoYouHaveMultipleSPRDutyRates page to the TellUsAboutMultipleSPRRate page if the user has changed the answer and selected 'Yes' and the Multiple SPR list is empty" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouHaveMultipleSPRDutyRatesPage,
+            pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage,
             CheckMode,
             emptyUserAnswers
-              .setByKey(pages.returns.DoYouHaveMultipleSPRDutyRatesPage, regime, true)
+              .setByKey(pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage, regime, true)
               .success
               .value,
             regime,
             hasAnswerChanged = true
-          ) mustBe controllers.returns.routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the DoYouHaveMultipleSPRDutyRates page to the TellUsAboutSingleSPRRate page if the user has changed the answer and selected 'No'" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouHaveMultipleSPRDutyRatesPage,
+            pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage,
             CheckMode,
             emptyUserAnswers
-              .setByKey(pages.returns.DoYouHaveMultipleSPRDutyRatesPage, regime, false)
+              .setByKey(pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage, regime, false)
               .success
               .value,
             regime,
             hasAnswerChanged = true
-          ) mustBe controllers.returns.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
+          ) mustBe controllers.declareDuty.routes.TellUsAboutSingleSPRRateController.onPageLoad(NormalMode, regime)
         }
 
         "must go from the DoYouHaveMultipleSPRDutyRates page to the MultipleSPRList page if the user has change answer and selected 'Yes' and the Multiple SPR list is not empty" in {
@@ -477,58 +477,58 @@ class ReturnsNavigatorSpec extends SpecBase {
           val volumeAndRateByTaxType = genVolumeAndRateByTaxTypeRateBand(rateBands.head).arbitrary.sample.value
 
           navigator.nextPageWithRegime(
-            pages.returns.DoYouHaveMultipleSPRDutyRatesPage,
+            pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage,
             CheckMode,
             emptyUserAnswers
-              .setByKey(pages.returns.DoYouHaveMultipleSPRDutyRatesPage, regime, true)
+              .setByKey(pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage, regime, true)
               .success
               .value
-              .setByKey(pages.returns.MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType))
+              .setByKey(pages.declareDuty.MultipleSPRListPage, regime, Seq(volumeAndRateByTaxType))
               .success
               .value,
             regime,
             hasAnswerChanged = true
-          ) mustBe controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime)
         }
 
         "must go from the DoYouHaveMultipleSPRDutyRates page to the Check Your Answers page if the user not change the answer" in {
           navigator.nextPageWithRegime(
-            pages.returns.DoYouHaveMultipleSPRDutyRatesPage,
+            pages.declareDuty.DoYouHaveMultipleSPRDutyRatesPage,
             CheckMode,
             emptyUserAnswers,
             regime
-          ) mustBe controllers.returns.routes.CheckYourAnswersController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime)
         }
 
         "must go from the TellUsAboutMultipleSPRRate page to the CheckYourAnswersSPR page if hasAnswerChanged variable is true and an index is provided" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutMultipleSPRRatePage,
+            pages.declareDuty.TellUsAboutMultipleSPRRatePage,
             CheckMode,
             emptyUserAnswers,
             regime,
             hasAnswerChanged = true,
             index = Some(0)
-          ) mustBe controllers.returns.routes.CheckYourAnswersSPRController.onPageLoad(regime, index = Some(0))
+          ) mustBe controllers.declareDuty.routes.CheckYourAnswersSPRController.onPageLoad(regime, index = Some(0))
         }
 
         "must go from the TellUsAboutMultipleSPRRate page to the CheckYourAnswers page if no index is selected" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutMultipleSPRRatePage,
+            pages.declareDuty.TellUsAboutMultipleSPRRatePage,
             CheckMode,
             emptyUserAnswers,
             regime,
             index = None
-          ) mustBe controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime)
         }
 
         "must go from the TellUsAboutMultipleSPRRate page to the MultipleSPRList page if no index is provided" in {
           navigator.nextPageWithRegime(
-            pages.returns.TellUsAboutMultipleSPRRatePage,
+            pages.declareDuty.TellUsAboutMultipleSPRRatePage,
             CheckMode,
             emptyUserAnswers,
             regime,
             index = Some(0)
-          ) mustBe controllers.returns.routes.MultipleSPRListController.onPageLoad(regime)
+          ) mustBe controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime)
         }
       }
     }
