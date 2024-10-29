@@ -36,17 +36,6 @@
     @formHelper(action = controllers.auth.routes.NoAppaIdController.onSubmit(wasReferredFromBTA), Symbol("autoComplete") -> "off") {
         @pageHeading(messages("noAppaId.heading"))
 
-        @paragraph(messages("noAppaId.text"))
-
-        <p class="govuk-body">
-            @link(
-                id = "register-for-alcohol-duty",
-                text = messages("noAppaId.link.text"),
-                href = appConfig.appaIdRegisterUrl,
-                newTab = true
-            )
-        </p>
-
         @if(wasReferredFromBTA) {
             @govukButton(
                 ButtonViewModel("return-to-business-account",messages("site.returnToBusinessAccount"))
