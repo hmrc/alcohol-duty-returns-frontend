@@ -24,7 +24,7 @@ import navigation.QuarterlySpiritsQuestionsNavigator
 import pages.spiritsQuestions.WhiskyPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.WhiskyView
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class WhiskyController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: QuarterlySpiritsQuestionsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -69,7 +69,7 @@ class WhiskyController @Inject() (
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(WhiskyPage, value))
-                _              <- cacheConnector.set(updatedAnswers)
+                _              <- userAnswersConnector.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(WhiskyPage, mode, updatedAnswers))
           )
       }

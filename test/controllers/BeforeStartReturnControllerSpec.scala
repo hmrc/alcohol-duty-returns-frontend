@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegimes, ObligationData, ReturnPeriod, UserAnswers}
 import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
@@ -36,7 +36,7 @@ import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
   "BeforeStartReturn Controller" - {
-    val mockCacheConnector             = mock[CacheConnector]
+    val mockUserAnswersConnector       = mock[UserAnswersConnector]
     val mockAuditService: AuditService = mock[AuditService]
 
     val emptyUserAnswers: UserAnswers = UserAnswers(
@@ -73,11 +73,11 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     val viewModel   = BeforeStartReturnViewModel(returnPeriod, currentDate)
 
     "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in {
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
+      when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
           bind[AuditService].toInstance(mockAuditService),
           bind(classOf[Clock]).toInstance(clock)
         )
@@ -101,11 +101,13 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET if the userAnswer does not exist yet" in {
       val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
       when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future.successful(Left(mockUpstreamErrorResponse))
+      when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(
+        Left(mockUpstreamErrorResponse)
+      )
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -133,7 +135,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     "must redirect to the journey recovery controller if a bad period key is supplied" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -151,13 +153,13 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
       when(mockUpstreamErrorResponse.statusCode).thenReturn(LOCKED)
 
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future(
+      when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future(
         Left(mockUpstreamErrorResponse)
       )
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -178,13 +180,13 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
       when(mockUpstreamErrorResponse.statusCode).thenReturn(BAD_REQUEST)
 
-      when(mockCacheConnector.get(any(), any())(any())) thenReturn Future(
+      when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future(
         Left(mockUpstreamErrorResponse)
       )
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -203,11 +205,11 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
     "must redirect to the TaskList Page when a userAnswers is successfully created for a POST" in {
       val userAnswers = emptyUserAnswers.set(ObligationData, obligationDataSingleOpen).success.value
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
+      when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
           bind[AuditService].toInstance(mockAuditService)
         )
         .build()
@@ -225,13 +227,13 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
     "must redirect to the TaskList Page when a userAnswers is successfully created for a POST without sending the audit event if the obligation is not available" in {
       val userAnswers = emptyUserAnswers.remove(ObligationData).success.value
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
+      when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
 
       val mockAuditService = mock[AuditService]
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
           bind[AuditService].toInstance(mockAuditService)
         )
         .build()
@@ -250,14 +252,14 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
     "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in {
       val errorResponse = mock[UpstreamErrorResponse]
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Left(errorResponse))
+      when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Left(errorResponse))
       when(errorResponse.statusCode).thenReturn(INTERNAL_SERVER_ERROR)
 
       val mockAuditService = mock[AuditService]
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
           bind[AuditService].toInstance(mockAuditService)
         )
         .build()
@@ -275,13 +277,15 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     }
 
     "must redirect to the journey recovery controller if the period key is not in the session for a POST" in {
-      when(mockCacheConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
+      when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(
+        Right(emptyUserAnswers)
+      )
 
       val mockAuditService = mock[AuditService]
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
           bind[AuditService].toInstance(mockAuditService)
         )
         .build()

@@ -26,7 +26,7 @@ import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, Adjustment
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
 import models.adjustment.AdjustmentType.Spoilt
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
@@ -87,8 +87,8 @@ class AdjustmentListControllerSpec extends SpecBase {
   "AdjustmentList Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val mockCacheConnector                 = mock[CacheConnector]
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val mockUserAnswersConnector           = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
         AdjustmentDuty(total)
@@ -96,7 +96,7 @@ class AdjustmentListControllerSpec extends SpecBase {
       val application                        = applicationBuilder(userAnswers = Some(userAnswsers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -121,8 +121,8 @@ class AdjustmentListControllerSpec extends SpecBase {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val mockCacheConnector                 = mock[CacheConnector]
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val mockUserAnswersConnector           = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       val updatedUserAnswers                 =
         userAnswsers.set(AdjustmentListPage, true).success.value.set(AdjustmentTotalPage, total).success.value
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
@@ -132,7 +132,7 @@ class AdjustmentListControllerSpec extends SpecBase {
       val application                        = applicationBuilder(userAnswers = Some(updatedUserAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -158,15 +158,15 @@ class AdjustmentListControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -241,8 +241,8 @@ class AdjustmentListControllerSpec extends SpecBase {
     }
 
     "must redirect to first page of AdjustmentList for a GET if a pageNumber is out of bounds" in {
-      val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
       when(mockAlcoholDutyCalculatorConnector.calculateTotalAdjustment(any())(any())) thenReturn Future.successful(
@@ -252,7 +252,7 @@ class AdjustmentListControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswsers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -271,9 +271,9 @@ class AdjustmentListControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery if calculator call fails" in {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
 
@@ -284,7 +284,7 @@ class AdjustmentListControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswsers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 

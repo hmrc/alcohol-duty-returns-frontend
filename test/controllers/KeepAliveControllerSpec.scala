@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
@@ -34,12 +34,13 @@ class KeepAliveControllerSpec extends SpecBase {
 
       "must keep the answers alive and return OK" in {
 
-        val mockCacheConnector = mock[CacheConnector]
-        when(mockCacheConnector.keepAlive(eqTo(returnId))(any())).thenReturn(Future.successful(mock[HttpResponse]))
+        val mockUserAnswersConnector = mock[UserAnswersConnector]
+        when(mockUserAnswersConnector.keepAlive(eqTo(returnId))(any()))
+          .thenReturn(Future.successful(mock[HttpResponse]))
 
         val application =
           applicationBuilder(Some(emptyUserAnswers))
-            .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+            .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
             .build()
 
         running(application) {
@@ -55,12 +56,12 @@ class KeepAliveControllerSpec extends SpecBase {
 
     "when the user has not answered any questions" - {
 
-      val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.keepAlive(eqTo(returnId))(any())).thenReturn(Future.successful(mock[HttpResponse]))
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.keepAlive(eqTo(returnId))(any())).thenReturn(Future.successful(mock[HttpResponse]))
 
       "must return OK" in {
         val application = applicationBuilder(None)
-          .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+          .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
           .build()
 
         running(application) {

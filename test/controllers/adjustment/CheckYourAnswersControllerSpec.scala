@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import generators.ModelGenerators
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
@@ -94,13 +94,13 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
   "CheckYourAnswers Controller" - {
 
     "must return OK and the correct view for a GET if all necessary questions are answered" in {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(completeAdjustmentEntryUserAnswers))
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -122,13 +122,13 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     "must return OK and load the saved adjustment entry from the cache if index is defined" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(completeAdjustmentEntryUserAnswers))
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -150,9 +150,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     }
 
     "must return OK and load the saved adjustment entry from the cache if index is defined inside the current adjustment entry" in {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val userAnswers =
         completeAdjustmentEntryUserAnswers
@@ -162,7 +162,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -185,9 +185,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     "must return OK and the correct view for a GET if any optional questions are not answered" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       Seq(
         currentAdjustmentEntry.copy(repackagedRateBand = None),
@@ -200,7 +200,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -223,9 +223,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     "must return OK and the correct view for a GET if all necessary questions are answered, the TaxType contains a rate and SPR duty relief is absent" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val adjustmentEntry = currentAdjustmentEntry.copy(
         sprDutyRate = None,
@@ -239,7 +239,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -351,14 +351,14 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(completeAdjustmentEntryUserAnswers))
           .overrides(
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -373,7 +373,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .onPageLoad(pageNumber)
           .url
 
-        verify(mockCacheConnector, times(1)).set(any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
       }
     }
 
@@ -385,14 +385,14 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .success
           .value
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -407,15 +407,15 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           .onPageLoad(pageNumber)
           .url
 
-        verify(mockCacheConnector, times(1)).set(any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
       }
     }
 
     "must redirect to the Journey Recovery page when uncompleted data is submitted" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val incompleteAdjustmentEntryUserAnswers: UserAnswers = emptyUserAnswers
         .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(adjustmentType = None))
@@ -425,7 +425,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       val application =
         applicationBuilder(userAnswers = Some(incompleteAdjustmentEntryUserAnswers))
           .overrides(
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -438,20 +438,20 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-        verify(mockCacheConnector, times(0)).set(any())(any())
+        verify(mockUserAnswersConnector, times(0)).set(any())(any())
       }
     }
 
     "must redirect to the Journey Recovery page when adjustment entry is absent" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -464,7 +464,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-        verify(mockCacheConnector, times(0)).set(any())(any())
+        verify(mockUserAnswersConnector, times(0)).set(any())(any())
       }
     }
 

@@ -19,7 +19,7 @@ package controllers.actions
 import base.SpecBase
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -33,7 +33,8 @@ import scala.concurrent.Future
 class DataRetrievalActionSpec extends SpecBase {
   val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
-  class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(mockConfig, cacheConnector) {
+  class Harness(userAnswersConnector: UserAnswersConnector)
+      extends DataRetrievalActionImpl(mockConfig, userAnswersConnector) {
     def actionRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
   }
 
@@ -45,11 +46,11 @@ class DataRetrievalActionSpec extends SpecBase {
         val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
         when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
 
-        val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
+        val userAnswersConnector = mock[UserAnswersConnector]
+        when(userAnswersConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
           Left(mockUpstreamErrorResponse)
         )
-        val action         = new Harness(cacheConnector)
+        val action               = new Harness(userAnswersConnector)
 
         val result = action.actionRefine(IdentifierRequest(FakeRequest(), appaId, groupId, internalId)).futureValue
 
@@ -64,9 +65,9 @@ class DataRetrievalActionSpec extends SpecBase {
 
       "must build a userAnswers object and add it to the request" in {
 
-        val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(emptyUserAnswers))
-        val action         = new Harness(cacheConnector)
+        val userAnswersConnector = mock[UserAnswersConnector]
+        when(userAnswersConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(emptyUserAnswers))
+        val action               = new Harness(userAnswersConnector)
 
         val result =
           action
@@ -88,9 +89,9 @@ class DataRetrievalActionSpec extends SpecBase {
 
       "must set userAnswers to 'None' if the session does not contain the period Key" in {
 
-        val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(emptyUserAnswers))
-        val action         = new Harness(cacheConnector)
+        val userAnswersConnector = mock[UserAnswersConnector]
+        when(userAnswersConnector.get(eqTo(appaId), eqTo(periodKey))(any)) thenReturn Future(Right(emptyUserAnswers))
+        val action               = new Harness(userAnswersConnector)
 
         val result =
           action
@@ -118,11 +119,11 @@ class DataRetrievalActionSpec extends SpecBase {
         val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
         when(mockUpstreamErrorResponse.statusCode).thenReturn(LOCKED)
 
-        val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
+        val userAnswersConnector = mock[UserAnswersConnector]
+        when(userAnswersConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
           Left(mockUpstreamErrorResponse)
         )
-        val action         = new Harness(cacheConnector)
+        val action               = new Harness(userAnswersConnector)
 
         val result = action.actionRefine(IdentifierRequest(FakeRequest(), appaId, groupId, internalId))
 
@@ -139,11 +140,11 @@ class DataRetrievalActionSpec extends SpecBase {
         val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
         when(mockUpstreamErrorResponse.statusCode).thenReturn(BAD_REQUEST)
 
-        val cacheConnector = mock[CacheConnector]
-        when(cacheConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
+        val userAnswersConnector = mock[UserAnswersConnector]
+        when(userAnswersConnector.get(eqTo(appaId), eqTo(periodKey))(any())) thenReturn Future(
           Left(mockUpstreamErrorResponse)
         )
-        val action         = new Harness(cacheConnector)
+        val action               = new Harness(userAnswersConnector)
 
         val result = action.actionRefine(IdentifierRequest(FakeRequest(), appaId, groupId, internalId))
 

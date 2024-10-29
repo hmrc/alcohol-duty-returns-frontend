@@ -8,16 +8,16 @@ import navigation.$section;format="cap"$Navigator
 import pages.$section$.$className$Page
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.$section$.$className$View
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class $className$Controller @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        cacheConnector: CacheConnector,
-                                        navigator: $section;format="cap"$Navigator,
+                                       override val messagesApi: MessagesApi,
+                                       userAnswersConnector: UserAnswersConnector,
+                                       navigator: $section;format="cap"$Navigator,
                                         identify: IdentifyWithEnrolmentAction,
                                         getData: DataRetrievalAction,
                                         requireData: DataRequiredAction,
@@ -49,7 +49,7 @@ class $className$Controller @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set($className$Page, value))
-            _              <- cacheConnector.set(updatedAnswers)
+            _              <- userAnswersConnector.set(updatedAnswers)
           } yield Redirect(navigator.nextPage($className$Page, mode, updatedAnswers))
       )
   }

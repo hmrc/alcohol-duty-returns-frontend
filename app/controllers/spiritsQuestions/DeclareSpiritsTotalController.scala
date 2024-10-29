@@ -16,7 +16,7 @@
 
 package controllers.spiritsQuestions
 
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.spiritsQuestions.DeclareSpiritsTotalFormProvider
 import javax.inject.Inject
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DeclareSpiritsTotalController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: QuarterlySpiritsQuestionsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -70,7 +70,7 @@ class DeclareSpiritsTotalController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DeclareSpiritsTotalPage, value))
-                _              <- cacheConnector.set(updatedAnswers)
+                _              <- userAnswersConnector.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(DeclareSpiritsTotalPage, mode, updatedAnswers))
           )
       }

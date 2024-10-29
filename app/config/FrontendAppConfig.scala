@@ -87,23 +87,20 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
-  def adrCacheGetUrl(appaId: String, periodKey: String): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/get/$appaId/$periodKey"
+  def adrUserAnswersGetUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/user-answers/$appaId/$periodKey"
 
-  def adrCacheSetUrl(): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/set"
+  def adrUserAnswersUrl(): String =
+    s"$adrReturnsHost/alcohol-duty-returns/user-answers"
 
-  def adrCacheCreateUserAnswersUrl(): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/user-answers"
+  def adrReleaseUserAnswersLockUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/user-answers/lock/$appaId/$periodKey"
 
-  def adrReleaseCacheLockUrl(appaId: String, periodKey: String): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/lock/$appaId/$periodKey"
+  def adrUserAnswersLockKeepAliveUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/user-answers/lock/$appaId/$periodKey/ttl"
 
-  def adrCacheKeepAliveUrl(appaId: String, periodKey: String): String =
-    s"$adrReturnsHost/alcohol-duty-returns/cache/lock/$appaId/$periodKey/ttl"
-
-  def adrCacheClearAllUrl(): String =
-    s"$adrReturnsHost/alcohol-duty-returns/test-only/cache/clear-all"
+  def adrUserAnswersClearAllUrl(): String =
+    s"$adrReturnsHost/alcohol-duty-returns/test-only/user-answers/clear-all"
 
   def adrGetObligationDetailsUrl(appaId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/$appaId"

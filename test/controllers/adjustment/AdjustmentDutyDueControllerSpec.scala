@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentDutyDueView
@@ -73,8 +73,8 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
       period = Some(YearMonth.of(24, 1))
     )
 
-    val mockCacheConnector = mock[CacheConnector]
-    when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+    val mockUserAnswersConnector = mock[UserAnswersConnector]
+    when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
     "must return OK and the correct view for a GET" in {
 
@@ -84,7 +84,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
           bind[AdjustmentEntryService].toInstance(adjustmentEntryService),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -144,7 +144,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
           applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .overrides(
               bind[AdjustmentEntryService].toInstance(adjustmentEntryService),
-              bind[CacheConnector].toInstance(mockCacheConnector)
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
             )
             .build()
 

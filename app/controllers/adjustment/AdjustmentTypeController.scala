@@ -25,7 +25,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.AdjustmentTypeView
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentTypeController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -73,7 +73,7 @@ class AdjustmentTypeController @Inject() (
                   request.userAnswers
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(adjustmentType = Some(value)))
                 )
-              _              <- cacheConnector.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(AdjustmentTypePage, mode, updatedAnswers, hasChanged))
           }
         )

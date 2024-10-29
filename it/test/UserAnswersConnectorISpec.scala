@@ -15,7 +15,7 @@
  */
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, delete, equalToJson, get, post, put, urlMatching}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.AlcoholRegime.Beer
 import models.{AlcoholRegimes, ReturnId, UserAnswers}
 import play.api.Application
@@ -24,16 +24,16 @@ import play.api.libs.json.Json
 
 import java.time.Instant
 
-class CacheConnectorISpec extends ISpecBase with WireMockHelper {
+class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
   override def fakeApplication(): Application = applicationBuilder(None).configure("microservice.services.alcohol-duty-returns.port" -> server.port()).build()
 
-"CacheConnector" - {
+"UserAnswersConnector" - {
 
   "get" - {
     "successfully fetch cache" in new SetUp {
       val jsonResponse = Json.toJson(userAnswers).toString()
       server.stubFor(
-        get(urlMatching(cacheGetUrl))
+        get(urlMatching(userAnswersGetUrl))
           .willReturn(aResponse().withStatus(OK).withBody(jsonResponse))
       )
 
@@ -43,7 +43,7 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
     }
     "return an error when the upstream service returns an error" in new SetUp {
       server.stubFor(
-        get(urlMatching(cacheGetUrl))
+        get(urlMatching(userAnswersGetUrl))
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
@@ -57,7 +57,7 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
   "createUserAnswers" - {
     "successfully write cache" in new SetUp {
       server.stubFor(
-        post(urlMatching(createUserAnswersUrl))
+        post(urlMatching(userAnswersUrl))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(returnAndUserDetails))))
           .willReturn(aResponse().withStatus(CREATED)
             .withBody(Json.stringify(Json.toJson(userAnswers))))
@@ -73,7 +73,7 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
 
     "fail to write cache when the service returns an error" in new SetUp {
       server.stubFor(
-        post(urlMatching(createUserAnswersUrl))
+        post(urlMatching(userAnswersUrl))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(returnAndUserDetails))))
           .willReturn(aResponse().withStatus(BAD_REQUEST))
       )
@@ -89,7 +89,7 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
    "set" - {
      "successfully write cache" in new SetUp{
        server.stubFor(
-         put(urlMatching(cacheSetUrl))
+         put(urlMatching(userAnswersUrl))
            .withRequestBody(equalToJson(Json.stringify(Json.toJson(emptyUserAnswers))))
            .willReturn(aResponse().withStatus(OK))
        )
@@ -102,7 +102,7 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
 
      "fail to write cache when the service returns an error" in new SetUp {
        server.stubFor(
-         put(urlMatching(cacheSetUrl))
+         put(urlMatching(userAnswersUrl))
            .withRequestBody(equalToJson(Json.stringify(Json.toJson(emptyUserAnswers))))
            .willReturn(aResponse().withStatus(SERVICE_UNAVAILABLE))
        )
@@ -163,12 +163,11 @@ class CacheConnectorISpec extends ISpecBase with WireMockHelper {
   }
 
   class SetUp {
-    val connector = app.injector.instanceOf[CacheConnector]
+    val connector = app.injector.instanceOf[UserAnswersConnector]
     val userAnswers = UserAnswers(ReturnId(appaId, periodKey),"abc","xyz",  AlcoholRegimes(Set(Beer)), Json.obj(), Instant.now(clock), Instant.now(clock))
-    val cacheGetUrl = s"/alcohol-duty-returns/cache/get/$appaId/$periodKey"
-    val cacheSetUrl = "/alcohol-duty-returns/cache/set"
-    val createUserAnswersUrl = "/alcohol-duty-returns/cache/user-answers"
-    val releaseLockUrl = s"/alcohol-duty-returns/cache/lock/$appaId/$periodKey"
-    val keepAliveUrl = s"/alcohol-duty-returns/cache/lock/${returnId.appaId}/${returnId.periodKey}/ttl"
+    val userAnswersGetUrl = s"/alcohol-duty-returns/user-answers/$appaId/$periodKey"
+    val userAnswersUrl = "/alcohol-duty-returns/user-answers"
+    val releaseLockUrl = s"/alcohol-duty-returns/user-answers/lock/$appaId/$periodKey"
+    val keepAliveUrl = s"/alcohol-duty-returns/user-answers/lock/${returnId.appaId}/${returnId.periodKey}/ttl"
   }
 }
