@@ -81,7 +81,9 @@ object AdjustmentListSummaryHelper {
           TableRow(
             Text(
               rateBandRecap(
-                adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from user answers"))
+                adjustmentEntry.rateBand.getOrElse(
+                  throw new RuntimeException("Couldn't fetch rateBand from user answers")
+                )
               )
             )
           ),
