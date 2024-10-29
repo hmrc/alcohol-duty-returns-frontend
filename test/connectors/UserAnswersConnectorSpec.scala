@@ -30,8 +30,8 @@ import scala.concurrent.Future
 
 class UserAnswersConnectorSpec extends SpecBase {
   "GET" - {
-    "successfully fetch cache" in new SetUp {
-      val mockUrl = s"http://alcohol-duty-account/cache/$appaId/$periodKey"
+    "successfully fetch user answers" in new SetUp {
+      val mockUrl = s"http://alcohol-duty-account/user-answers/$appaId/$periodKey"
       when(mockConfig.adrUserAnswersGetUrl(any(), any())).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, UserAnswers]](any(), any()))
@@ -46,8 +46,8 @@ class UserAnswersConnectorSpec extends SpecBase {
   }
 
   "POST" - {
-    "successfully write cache" in new SetUp {
-      val postUrl = "http://cache/user-answers"
+    "successfully write user answers" in new SetUp {
+      val postUrl = "http://user-answers"
 
       when(mockConfig.adrUserAnswersUrl()).thenReturn(postUrl)
 
@@ -69,8 +69,8 @@ class UserAnswersConnectorSpec extends SpecBase {
   }
 
   "PUT" - {
-    "successfully write cache" in new SetUp {
-      val putUrl = "http://cache/set"
+    "successfully write user answers" in new SetUp {
+      val putUrl = "http://user-answers"
 
       when(mockConfig.adrUserAnswersUrl()).thenReturn(putUrl)
 
@@ -94,7 +94,7 @@ class UserAnswersConnectorSpec extends SpecBase {
 
   "releaseLock" - {
     "should call the release lock endpoint" in new SetUp {
-      val releaseLockUrl = "http://cache/release-lock"
+      val releaseLockUrl = "http://user-answers/release-lock"
 
       when(mockConfig.adrReleaseUserAnswersLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
 
@@ -117,7 +117,7 @@ class UserAnswersConnectorSpec extends SpecBase {
 
   "keepAlive" - {
     "should call the keep alive endpoint" in new SetUp {
-      val keepAliveUrl = s"http://cache/keep-alive/$appaId/$periodKey"
+      val keepAliveUrl = s"http://user-answers/keep-alive/$appaId/$periodKey"
 
       when(mockConfig.adrUserAnswersLockKeepAliveUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(keepAliveUrl)
 

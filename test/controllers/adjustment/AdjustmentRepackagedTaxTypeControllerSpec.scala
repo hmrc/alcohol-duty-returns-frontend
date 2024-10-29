@@ -282,7 +282,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must update cache and redirect on valid rate band response" in {
+    "must update user answers and redirect on valid rate band response" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
         Some(rateBand)

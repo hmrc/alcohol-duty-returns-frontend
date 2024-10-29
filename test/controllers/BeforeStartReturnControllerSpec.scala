@@ -176,7 +176,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to journey recovery controller if the cache connector return a bad request" in {
+    "must redirect to journey recovery controller if the user answers connector return a bad request" in {
       val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
       when(mockUpstreamErrorResponse.statusCode).thenReturn(BAD_REQUEST)
 

@@ -30,7 +30,7 @@ object AdjustmentTaxTypeSummary {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
     val adjustmentType      = adjustmentEntry.adjustmentType.getOrElse(
-      throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+      throw new RuntimeException("Couldn't fetch adjustment type value from user answers")
     )
     val (label, hiddenText) = if (adjustmentType.equals(RepackagedDraughtProducts)) {
       ("adjustmentTaxType.repackaged.checkYourAnswersLabel", "adjustmentTaxType.repackaged.change.hidden")

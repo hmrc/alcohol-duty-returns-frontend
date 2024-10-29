@@ -120,7 +120,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
     }
 
-    "must return OK and load the saved adjustment entry from the cache if index is defined" in {
+    "must return OK and load the saved adjustment entry from the user answers if index is defined" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
@@ -149,7 +149,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
     }
 
-    "must return OK and load the saved adjustment entry from the cache if index is defined inside the current adjustment entry" in {
+    "must return OK and load the saved adjustment entry from the user answers if index is defined inside the current adjustment entry" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])

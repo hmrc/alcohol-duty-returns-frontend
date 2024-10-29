@@ -30,7 +30,7 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
 "UserAnswersConnector" - {
 
   "get" - {
-    "successfully fetch cache" in new SetUp {
+    "successfully fetch user answers" in new SetUp {
       val jsonResponse = Json.toJson(userAnswers).toString()
       server.stubFor(
         get(urlMatching(userAnswersGetUrl))
@@ -55,7 +55,7 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
   }
 
   "createUserAnswers" - {
-    "successfully write cache" in new SetUp {
+    "successfully write user answers" in new SetUp {
       server.stubFor(
         post(urlMatching(userAnswersUrl))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(returnAndUserDetails))))
@@ -71,7 +71,7 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
       }
     }
 
-    "fail to write cache when the service returns an error" in new SetUp {
+    "fail to write user answers when the service returns an error" in new SetUp {
       server.stubFor(
         post(urlMatching(userAnswersUrl))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(returnAndUserDetails))))
@@ -87,7 +87,7 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
 
 
    "set" - {
-     "successfully write cache" in new SetUp{
+     "successfully write user answers" in new SetUp{
        server.stubFor(
          put(urlMatching(userAnswersUrl))
            .withRequestBody(equalToJson(Json.stringify(Json.toJson(emptyUserAnswers))))
@@ -100,7 +100,7 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
        }
      }
 
-     "fail to write cache when the service returns an error" in new SetUp {
+     "fail to write user answers when the service returns an error" in new SetUp {
        server.stubFor(
          put(urlMatching(userAnswersUrl))
            .withRequestBody(equalToJson(Json.stringify(Json.toJson(emptyUserAnswers))))

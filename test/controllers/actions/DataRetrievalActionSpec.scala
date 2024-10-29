@@ -40,7 +40,7 @@ class DataRetrievalActionSpec extends SpecBase {
 
   "Data Retrieval Action" - {
 
-    "when there is no data in the cache" - {
+    "when there is no data in the user answers" - {
 
       "must set userAnswers to 'None' in the request" in {
         val mockUpstreamErrorResponse = mock[UpstreamErrorResponse]
@@ -61,7 +61,7 @@ class DataRetrievalActionSpec extends SpecBase {
       }
     }
 
-    "when there is data in the cache" - {
+    "when there is data in the user answers" - {
 
       "must build a userAnswers object and add it to the request" in {
 

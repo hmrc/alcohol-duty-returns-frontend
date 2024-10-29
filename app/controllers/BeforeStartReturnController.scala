@@ -63,17 +63,17 @@ class BeforeStartReturnController @Inject() (
         val session     = request.session + (periodKeySessionKey, periodKey)
         userAnswersConnector.get(request.appaId, periodKey).map {
           case Right(ua)                                    =>
-            logger.info(s"Return $appaId/$periodKey retrieved from cache by the user")
+            logger.info(s"Return $appaId/$periodKey retrieved by the user")
             auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case Left(error) if error.statusCode == NOT_FOUND =>
-            logger.info(s"Return $appaId/$periodKey not found in cache")
+            logger.info(s"Return $appaId/$periodKey not found")
             Ok(view(ReturnPeriodViewModel(returnPeriod), viewModel)).withSession(session)
           case Left(error) if error.statusCode == LOCKED    =>
             logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
             Redirect(controllers.routes.ReturnLockedController.onPageLoad())
           case _                                            =>
-            logger.warn(s"Error retrieving the return $appaId/$periodKey from the cache for the user")
+            logger.warn(s"Error retrieving the return $appaId/$periodKey for the user")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }
