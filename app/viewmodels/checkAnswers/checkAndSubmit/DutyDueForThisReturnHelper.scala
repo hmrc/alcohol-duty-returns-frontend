@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
-import config.Constants
+import config.Constants.{boldFontCssClass, summaryListKey, summaryListValue}
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.checkAndSubmit.AdrDutySuspended
@@ -127,7 +127,7 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.table.nil.label")),
-              classes = Constants.boldFontCssClass
+              classes = boldFontCssClass
             ),
             TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
           ),
@@ -145,7 +145,7 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"alcoholType.$alcoholRegime"))),
-              classes = Constants.boldFontCssClass
+              classes = boldFontCssClass
             ),
             TableRow(Text(Money.format(alcoholDuty.totalDuty)))
           ),
@@ -168,11 +168,11 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
-              classes = Constants.boldFontCssClass + " " + "govuk-summary-list__key"
+              classes = s"$boldFontCssClass $summaryListKey"
             ),
             TableRow(
               Text(messages("dutyDueForThisReturn.dutySuspended.declared")),
-              classes = "govuk-summary-list__value"
+              classes = summaryListValue
             )
           ),
           actions = Seq(
@@ -190,11 +190,11 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
-              classes = Constants.boldFontCssClass + " " + "govuk-summary-list__key"
+              classes = s"$boldFontCssClass $summaryListKey"
             ),
             TableRow(
               Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare")),
-              classes = "govuk-summary-list__value"
+              classes = summaryListValue
             )
           ),
           actions = Seq(
@@ -214,11 +214,11 @@ class DutyDueForThisReturnHelper @Inject() (
         cells = Seq(
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-            classes = Constants.boldFontCssClass + " " + "govuk-summary-list__key"
+            classes = s"$boldFontCssClass $summaryListKey"
           ),
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.nil.value")),
-            classes = "govuk-summary-list__value"
+            classes = summaryListValue
           )
         ),
         actions = Seq(
@@ -233,11 +233,11 @@ class DutyDueForThisReturnHelper @Inject() (
         cells = Seq(
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-            classes = Constants.boldFontCssClass + " " + "govuk-summary-list__key"
+            classes = s"$boldFontCssClass $summaryListKey"
           ),
           TableRow(
             Text(Money.format(totalAdjustment)),
-            classes = "govuk-summary-list__value"
+            classes = summaryListValue
           )
         ),
         actions = Seq(

@@ -17,6 +17,7 @@
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
 @import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnViewModel
 @import viewmodels.Money
+@import config.Constants.summaryListAction
 
 @this(
         layout: templates.Layout,
@@ -34,6 +35,7 @@
 
 @(dutyDueViewModel: DutyDueForThisReturnViewModel)(implicit request: Request[_], messages: Messages)
 
+@import config.Constants.textAlignRightCssClass
 @titleMessage = @{
   if (dutyDueViewModel.totalDue == 0) {
     messages("dutyDueForThisReturn.nil.title")
@@ -91,7 +93,7 @@
       head = Some(dutyDueViewModel.dutiesBreakdownTable.head),
       rows = dutyDueViewModel.dutiesBreakdownTable.rows.map(row => {
         val actions = TableRow(
-            classes = "govuk-summary-list__actions text-align-right",
+            classes = s"$summaryListAction $textAlignRightCssClass",
             content = HtmlContent(tableRowActionList(
               id = "productList",
                 actions = row.actions.map(action => tableRowAction(
@@ -113,7 +115,7 @@
       head = Some(dutyDueViewModel.dutiesBreakdownTable.head),
       rows = dutyDueViewModel.youveAlsoDeclaredTable.rows.map(row => {
         val actions = TableRow(
-            classes = "govuk-summary-list__actions text-align-right",
+            classes = s"$summaryListAction $textAlignRightCssClass",
             content = HtmlContent(tableRowActionList(
               id = "declarationList",
                 actions = row.actions.map(action => tableRowAction(
