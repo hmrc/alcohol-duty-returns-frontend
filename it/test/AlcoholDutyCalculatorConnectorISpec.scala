@@ -18,7 +18,7 @@ import cats.data.NonEmptySeq
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalTo, equalToJson, get, post, urlMatching, urlPathEqualTo}
 import connectors.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AlcoholDutyCalculatorConnector, RepackagedDutyChangeRequest, TotalDutyCalculationRequest}
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
-import models.returns.{AlcoholDuty, DutyByTaxType}
+import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import models.RatePeriod._
 import play.api.Application

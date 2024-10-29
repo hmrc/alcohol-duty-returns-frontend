@@ -39,10 +39,10 @@ object AdjustmentVolumeSummary {
       } else if (adjustmentEntry.sprDutyRate.isDefined) {
         routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url
       } else { routes.AdjustmentVolumeController.onPageLoad(CheckMode).url }
-      val value = HtmlFormat.escape(totalLitres.toString()).toString + " " + messages(
+      val value = HtmlFormat.escape(messages("site.2DP", totalLitres)).toString + " " + messages(
         "adjustmentVolume.totalLitres",
         messages(s"return.regime.$regime")
-      ) + "<br/>" + HtmlFormat.escape(pureAlcohol.toString()).toString + " " + messages(
+      ) + "<br/>" + HtmlFormat.escape(messages("site.4DP", pureAlcohol)).toString + " " + messages(
         "adjustmentVolume.pureAlcohol"
       )
 

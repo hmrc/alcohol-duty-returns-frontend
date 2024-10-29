@@ -30,7 +30,9 @@ object OtherMaltedGrainsSummary {
     answers.get(OtherMaltedGrainsPage).map { answer =>
       SummaryListRowViewModel(
         key = answer.otherMaltedGrainsTypes,
-        value = ValueViewModel(s"${answer.otherMaltedGrainsQuantity.toString} ${messages("site.unit.tonnes")}"),
+        value = ValueViewModel(
+          s"${messages("site.2DP", answer.otherMaltedGrainsQuantity)} ${messages("site.unit.tonnes")}"
+        ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.OtherMaltedGrainsController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden"))

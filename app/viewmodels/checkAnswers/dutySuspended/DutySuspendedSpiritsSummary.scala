@@ -30,7 +30,7 @@ object DutySuspendedSpiritsSummary {
     answers.get(DutySuspendedSpiritsPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedSpirits.totalSpirits.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.totalSpirits.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.totalSpirits)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedSpirits.totalSpirits.change.hidden"))
@@ -42,7 +42,9 @@ object DutySuspendedSpiritsSummary {
     answers.get(DutySuspendedSpiritsPage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedSpirits.pureAlcoholInSpirits.checkYourAnswersLabel",
-        value = ValueViewModel(s"${answer.pureAlcoholInSpirits.toString} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(
+          s"${messages("site.4DP", answer.pureAlcoholInSpirits)} ${messages("site.unit.litres")}"
+        ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedSpirits.pureAlcoholInSpirits.change.hidden"))
