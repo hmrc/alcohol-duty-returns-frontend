@@ -110,7 +110,7 @@ class ViewReturnViewModel @Inject() () {
     taxType: String
   )(implicit messages: Messages): String =
     maybeRatePeriod
-      .flatMap(ratePeriodsAndTaxCodesToRateBands.get(_: YearMonth, taxType))
+      .flatMap(ratePeriod => ratePeriodsAndTaxCodesToRateBands.get((ratePeriod, taxType)))
       .map(rateBandRecap(_))
       .getOrElse(taxType)
 
@@ -120,7 +120,7 @@ class ViewReturnViewModel @Inject() () {
     taxType: String
   ): String =
     maybeRatePeriod
-      .flatMap(ratePeriodsAndTaxCodesToRateBands.get(_: YearMonth, taxType))
+      .flatMap(ratePeriod => ratePeriodsAndTaxCodesToRateBands.get((ratePeriod, taxType)))
       .flatMap(_.rangeDetails.headOption.map(_.alcoholRegime.toString))
       .getOrElse(taxType)
 
