@@ -330,5 +330,23 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "must use an empty AdjustmentEntry as a fallback if CurrentAdjustmentEntryPage returns None for POST" in {
+      val application        = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val mockCacheConnector = mock[CacheConnector]
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      running(application) {
+        val request = FakeRequest(POST, spoiltVolumeWithDutyRoute)
+          .withFormUrlEncodedBody(
+            ("volumes.totalLitresVolume", validTotalLitres.toString()),
+            ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+            ("volumes.duty", validDuty.toString())
+          )
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
   }
 }

@@ -22,7 +22,7 @@ import connectors.CacheConnector
 import generators.ModelGenerators
 import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
+import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt, Underdeclaration}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment._
@@ -82,10 +82,21 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     currentAdjustmentEntry.copy(
       adjustmentType = Some(Overdeclaration),
       spoiltRegime = None,
-      sprDutyRate = Some(rate),
       repackagedRateBand = Some(rateBand),
       repackagedSprDutyRate = Some(rate)
     )
+
+  val repackagedAdjustmentEntryWithSPR =
+    currentAdjustmentEntry.copy(
+      adjustmentType = Some(Overdeclaration),
+      sprDutyRate = Some(rate),
+      spoiltRegime = None,
+      repackagedRateBand = Some(rateBand),
+      repackagedSprDutyRate = Some(rate)
+    )
+
+  val underdeclaredAdjustmentEntry =
+    currentAdjustmentEntry.copy(spoiltRegime = None, adjustmentType = Some(Underdeclaration), sprDutyRate = Some(rate))
 
   val completeAdjustmentEntryUserAnswers: UserAnswers = emptyUserAnswers
     .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry)
@@ -106,57 +117,56 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers1 = emptyUserAnswers
         .set(CurrentAdjustmentEntryPage, repackagedAdjustmentEntry)
         .success
         .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
-        )
-        .build()
+      val userAnswers2 = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry)
+        .success
+        .value
 
-      running(application) {
-        val request = FakeRequest(GET, checkYourAnswersRoute)
+      val userAnswers3 = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, repackagedAdjustmentEntryWithSPR)
+        .success
+        .value
 
-        val result = route(application, request).value
+      val userAnswers4 = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, underdeclaredAdjustmentEntry)
+        .success
+        .value
 
-        val view = application.injector.instanceOf[CheckYourAnswersView]
+      val completeUserAnswersList = Seq(
+        userAnswers1,
+        userAnswers2,
+        userAnswers3,
+        userAnswers4
+      )
 
-        val list = CheckYourAnswersSummaryListHelper
-          .currentAdjustmentEntrySummaryList(repackagedAdjustmentEntry)(getMessages(app))
-          .get
+      completeUserAnswersList.foreach { (completeUserAnswers: UserAnswers) =>
+        val application = applicationBuilder(Some(completeUserAnswers))
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
-      }
-    }
+        running(application) {
+          val request = FakeRequest(GET, checkYourAnswersRoute)
 
-    "must return OK and the correct view for a GET if all necessary questions are answered for a spoilt adjustment" in {
-      val mockCacheConnector = mock[CacheConnector]
+          val result = route(application, request).value
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+          val view = application.injector.instanceOf[CheckYourAnswersView]
 
-      val application = applicationBuilder(userAnswers = Some(completeAdjustmentEntryUserAnswers))
-        .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
-        )
-        .build()
+          val list = CheckYourAnswersSummaryListHelper
+            .currentAdjustmentEntrySummaryList(completeUserAnswers.get(CurrentAdjustmentEntryPage).get)(
+              getMessages(app)
+            )
+            .get
 
-      running(application) {
-        val request = FakeRequest(GET, checkYourAnswersRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[CheckYourAnswersView]
-
-        val list = CheckYourAnswersSummaryListHelper
-          .currentAdjustmentEntrySummaryList(currentAdjustmentEntry)(getMessages(app))
-          .get
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
+        }
       }
     }
 

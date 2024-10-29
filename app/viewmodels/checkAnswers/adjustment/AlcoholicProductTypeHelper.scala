@@ -21,16 +21,13 @@ import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.RateType.Core
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholRegimes, AlcoholType, RangeDetailsByRegime, RateBand}
-import org.apache.pekko.event.Logging
 import play.api.Logging
 import play.api.i18n.Messages
-import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import viewmodels.AlcoholRegimesViewOrder.regimesInViewOrder
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
 class AlcoholicProductTypeHelper @Inject() (
   appConfig: FrontendAppConfig

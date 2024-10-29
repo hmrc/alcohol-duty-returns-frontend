@@ -148,7 +148,7 @@ class AdjustmentTypeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when valid data is submitted and user is approved for a single regime" in {
+    "must redirect to the next page when valid data is submitted and user is approved for a single regime when the same data is submitted" in {
 
       val userAnswers = emptyUserAnswers
         .copy(regimes = AlcoholRegimes(Set(Beer)))
@@ -169,6 +169,34 @@ class AdjustmentTypeControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, false)),
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentTypeRoute)
+            .withFormUrlEncodedBody(("adjustment-type-value", Spoilt.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted and user is approved for a single regime when CurrentAdjustmentEntryPage is empty" in {
+
+      val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
+
+      val mockCacheConnector = mock[CacheConnector]
+
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()

@@ -442,6 +442,14 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode)
     }
 
+    "must go from the Spoilt Volume page to the CYA page" in {
+      navigator.nextPage(
+        pages.adjustment.SpoiltVolumeWithDutyPage,
+        CheckMode,
+        emptyUserAnswers
+      ) mustBe
+        controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    }
     "must go from the Adjustment Tax Type page to CYA page if RateType is SmallProducerRelief if the answer is the same" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentTaxTypePage,
