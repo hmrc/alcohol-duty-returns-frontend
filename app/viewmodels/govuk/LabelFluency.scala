@@ -16,6 +16,7 @@
 
 package viewmodels.govuk
 
+import config.Constants.visuallyHiddenCssClass
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import viewmodels.LabelSize
@@ -30,7 +31,7 @@ trait LabelFluency {
       Label(content = content)
 
     def apply(visibleText: String, hiddenText: String): Label = {
-      val content = HtmlContent(s"$visibleText <span class='govuk-visually-hidden'>$hiddenText</span>")
+      val content = HtmlContent(s"$visibleText <span class=$visuallyHiddenCssClass>$hiddenText</span>")
       Label(content = content)
     }
 

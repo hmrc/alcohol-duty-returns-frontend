@@ -77,7 +77,7 @@ class AdjustmentTypeController @Inject() (
                   request.userAnswers
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(adjustmentType = Some(value)))
                 )
-              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(updatedAnswers))
+              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswers(updatedAnswers))
               _                             <- cacheConnector.set(singleRegimeUpdatedUserAnswer)
             } yield Redirect(navigator.nextPage(AdjustmentTypePage, mode, singleRegimeUpdatedUserAnswer, hasChanged))
           }
@@ -106,7 +106,7 @@ class AdjustmentTypeController @Inject() (
         )
     }
 
-  private def checkIfOneRegimeAndUpdateUserAnswer(
+  private def checkIfOneRegimeAndUpdateUserAnswers(
     userAnswer: UserAnswers
   )(implicit messages: Messages): Try[UserAnswers] =
     if (userAnswer.regimes.regimes.size == 1) {
