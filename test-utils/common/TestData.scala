@@ -31,6 +31,7 @@ import play.api.libs.json.Json
 import org.scalacheck.Gen.{listOfN, numChar}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import models.TransactionType.{LPI, RPI, Return}
+import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
 import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrOtherIngredient, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
 import models.returns._
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
@@ -63,6 +64,13 @@ trait TestData extends ModelGenerators {
   val periodKeyOct = "24AJ"
   val periodKeyNov = "24AK"
   val periodKeyDec = "24AL"
+
+  private val adrPeriodStartDay = 1
+
+  private def periodFrom(monthsInThePast: Int, date: LocalDate): LocalDate = {
+    val newDate = date.minusMonths(monthsInThePast)
+    newDate.withDayOfMonth(adrPeriodStartDay)
+  }
 
   val quarterReturnPeriods    = Set(
     ReturnPeriod(YearMonth.of(2024, Month.MARCH)),
@@ -129,7 +137,21 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
   )
 
-  def exampleReturnDetails(periodKey: String, now: Instant): ReturnDetails =
+  def exampleRateBands(periodKey: String): Map[(YearMonth, String), RateBand] = {
+    val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).period
+    Map(
+      (periodDate, "341") -> coreRateBand,
+      (periodDate, "331") -> coreRateBand2,
+      (periodDate, "321") -> coreRateBand3
+    )
+  }
+
+  val emptyRateBands: Map[(YearMonth, String), RateBand] =
+    Map.empty[(YearMonth, String), RateBand]
+
+  def exampleReturnDetails(periodKey: String, now: Instant): ReturnDetails = {
+    val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).periodFromDate()
+
     ReturnDetails(
       identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
       alcoholDeclared = ReturnAlcoholDeclared(
@@ -204,6 +226,7 @@ trait TestData extends ModelGenerators {
           Seq(
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.underDeclaredKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(1, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(150),
               dutyRate = BigDecimal("21.01"),
@@ -211,6 +234,7 @@ trait TestData extends ModelGenerators {
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.spoiltKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(2, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(1150),
               dutyRate = BigDecimal("21.01"),
@@ -218,6 +242,7 @@ trait TestData extends ModelGenerators {
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.spoiltKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(3, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(75),
               dutyRate = BigDecimal("21.01"),
@@ -225,6 +250,7 @@ trait TestData extends ModelGenerators {
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.repackagedDraughtKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(4, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(150),
               dutyRate = BigDecimal("21.01"),
@@ -250,6 +276,7 @@ trait TestData extends ModelGenerators {
         )
       )
     )
+  }
 
   def nilReturnDetails(periodKey: String, now: Instant): ReturnDetails =
     ReturnDetails(
