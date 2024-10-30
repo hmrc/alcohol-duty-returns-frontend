@@ -47,6 +47,10 @@ class ViewReturnControllerSpec extends SpecBase {
         implicit val messages = getMessages(application)
 
         when(mockViewModel.createTotalDueViewModel(returnDetails)).thenReturn(totalTableModel)
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
         when(mockViewModel.createNetDutySuspensionViewModel(returnDetails)).thenReturn(tableModel)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)

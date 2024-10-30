@@ -31,10 +31,10 @@ import play.api.libs.json.Json
 import org.scalacheck.Gen.{listOfN, numChar}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import models.TransactionType.{LPI, RPI, Return}
+import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
 import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrOtherIngredient, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
 import models.returns._
 import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
-import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
 import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
