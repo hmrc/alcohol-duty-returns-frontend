@@ -27,21 +27,21 @@ class DateTimeHelper @Inject() () {
   private val monthYearFormatter     = DateTimeFormatter.ofPattern("LLLL yyyy")
   private val dateMonthYearFormatter = DateTimeFormatter.ofPattern("d LLLL yyyy")
   private val hourMinuteFormatter    = DateTimeFormatter.ofPattern("K:mm")
-  private val merediemFormat         = DateTimeFormatter.ofPattern("a")
+  private val meridiemFormat         = DateTimeFormatter.ofPattern("a")
 
   def instantToLocalDate(instant: Instant): LocalDate = LocalDate.ofInstant(instant, ukTimeZone)
   def instantToLocalTime(instant: Instant): LocalTime = LocalTime.ofInstant(instant, ukTimeZone)
 
   /** *
-    * ante/post merediem (am/pm) is locale specific, thus convert to lowercase
+    * ante/post meridiem (am/pm) is locale specific, thus convert to lowercase
     */
   def formatDateMonthYear(localDate: LocalDate): String =
     dateMonthYearFormatter.format(localDate)
 
-  def formatHourMinuteMerediem(localTime: LocalTime): String = {
+  def formatHourMinuteMeridiem(localTime: LocalTime): String = {
     val formattedTime = hourMinuteFormatter.format(localTime)
-    val merediem      = merediemFormat.format(localTime).toLowerCase()
-    s"$formattedTime$merediem"
+    val meridiem      = meridiemFormat.format(localTime).toLowerCase()
+    s"$formattedTime$meridiem"
   }
 
   def formatMonthYear(yearMonth: YearMonth): String = monthYearFormatter.format(yearMonth)

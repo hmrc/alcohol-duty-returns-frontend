@@ -19,7 +19,8 @@ package connectors
 import config.FrontendAppConfig
 import models.adjustment.{AdjustmentDuty, AdjustmentTypes}
 import models.declareDuty.AlcoholDuty
-import models.{AlcoholRegime, RateBand, RatePeriod}
+import models.{AlcoholRegime, RateBand}
+import models.RatePeriod._
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -39,25 +40,17 @@ class AlcoholDutyCalculatorConnector @Inject() (
     hc: HeaderCarrier
   ): Future[Seq[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(
-      "ratePeriod"     -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
+      "ratePeriod"     -> Json.toJson(ratePeriod).toString,
       "alcoholRegimes" -> approvedAlcoholRegimes.mkString(",")
     )
     httpClient.get(url"${config.adrCalculatorRatesUrl()}?$queryParams").execute[Seq[RateBand]]
   }
 
-  def calculateTotalDuty(requestBody: TotalDutyCalculationRequest)(implicit
-    hc: HeaderCarrier
-  ): Future[AlcoholDuty] =
-    httpClient
-      .post(url"${config.adrCalculatorCalculateTotalDutyUrl()}")
-      .withBody(Json.toJson(requestBody))
-      .execute[AlcoholDuty]
-
   def rateBand(taxTypeCode: String, ratePeriod: YearMonth)(implicit
     hc: HeaderCarrier
   ): Future[Option[RateBand]] = {
     val queryParams: Seq[(String, String)] = Seq(
-      "ratePeriod"  -> Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString,
+      "ratePeriod"  -> Json.toJson(ratePeriod).toString,
       "taxTypeCode" -> taxTypeCode
     )
     httpClient
@@ -68,6 +61,33 @@ class AlcoholDutyCalculatorConnector @Inject() (
         case _                                        => None
       })
   }
+
+  def rateBands(ratePeriodsAndTaxCodes: Seq[(YearMonth, String)])(implicit
+    hc: HeaderCarrier
+  ): Future[Map[(YearMonth, String), RateBand]] = {
+    val queryParams: Seq[(String, String)] = Seq(
+      "ratePeriods"  -> ratePeriodsAndTaxCodes
+        .map { case (ratePeriod, _) => Json.toJson(ratePeriod).toString }
+        .mkString(","),
+      "taxTypeCodes" -> ratePeriodsAndTaxCodes.map { case (_, taxTypeCode) => taxTypeCode }.mkString(",")
+    )
+    httpClient
+      .get(url"${config.adrCalculatorRateBandsUrl()}?$queryParams")
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
+      .map({
+        case Right(response) if response.status == OK => response.json.as[Seq[((YearMonth, String), RateBand)]].toMap
+        case _                                        => Map.empty
+      })
+  }
+
+  def calculateTotalDuty(requestBody: TotalDutyCalculationRequest)(implicit
+    hc: HeaderCarrier
+  ): Future[AlcoholDuty] =
+    httpClient
+      .post(url"${config.adrCalculatorCalculateTotalDutyUrl()}")
+      .withBody(Json.toJson(requestBody))
+      .execute[AlcoholDuty]
+
   def calculateAdjustmentDuty(pureAlcoholVolume: BigDecimal, rate: BigDecimal, adjustmentType: AdjustmentTypes)(implicit
     hc: HeaderCarrier
   ): Future[AdjustmentDuty] = {
@@ -78,6 +98,7 @@ class AlcoholDutyCalculatorConnector @Inject() (
       .withBody(Json.toJson(body))
       .execute[AdjustmentDuty]
   }
+
   def calculateRepackagedDutyChange(newDuty: BigDecimal, oldDuty: BigDecimal)(implicit
     hc: HeaderCarrier
   ): Future[AdjustmentDuty] = {

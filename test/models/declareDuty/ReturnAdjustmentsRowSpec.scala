@@ -27,18 +27,20 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
     "should serialize to JSON correctly" in {
       val adjustmentRow = ReturnAdjustmentsRow(
         adjustmentTypeKey = "underdeclaration",
-        taxType = "beer",
+        returnPeriodAffected = periodKey,
+        taxType = "311",
         litresOfPureAlcohol = BigDecimal(50),
         dutyRate = BigDecimal(2.5),
         dutyValue = BigDecimal(125)
       )
 
       val expectedJson = Json.obj(
-        "adjustmentTypeKey"   -> "underdeclaration",
-        "taxType"             -> "beer",
-        "litresOfPureAlcohol" -> 50,
-        "dutyRate"            -> 2.5,
-        "dutyValue"           -> 125
+        "adjustmentTypeKey"    -> "underdeclaration",
+        "returnPeriodAffected" -> periodKey,
+        "taxType"              -> "311",
+        "litresOfPureAlcohol"  -> 50,
+        "dutyRate"             -> 2.5,
+        "dutyValue"            -> 125
       )
 
       Json.toJson(adjustmentRow) shouldEqual expectedJson
@@ -46,17 +48,19 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
 
     "should deserialize from JSON correctly" in {
       val json = Json.obj(
-        "adjustmentTypeKey"   -> "underdeclaration",
-        "taxType"             -> "beer",
-        "litresOfPureAlcohol" -> 50,
-        "dutyRate"            -> 2.5,
-        "dutyValue"           -> 125
+        "adjustmentTypeKey"    -> "underdeclaration",
+        "returnPeriodAffected" -> periodKey,
+        "taxType"              -> "311",
+        "litresOfPureAlcohol"  -> 50,
+        "dutyRate"             -> 2.5,
+        "dutyValue"            -> 125
       )
 
       json.validate[ReturnAdjustmentsRow] shouldEqual JsSuccess(
         ReturnAdjustmentsRow(
           adjustmentTypeKey = "underdeclaration",
-          taxType = "beer",
+          returnPeriodAffected = periodKey,
+          taxType = "311",
           litresOfPureAlcohol = BigDecimal(50),
           dutyRate = BigDecimal(2.5),
           dutyValue = BigDecimal(125)
@@ -65,9 +69,11 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
     }
 
     "should sort adjustments rows correctly by adjustmentTypeKey and then by taxType" in {
-      val row1 = ReturnAdjustmentsRow("underdeclaration", "beer", BigDecimal(50), BigDecimal(2.5), BigDecimal(125))
-      val row2 = ReturnAdjustmentsRow("overdeclaration", "wine", BigDecimal(30), BigDecimal(3.0), BigDecimal(90))
-      val row3 = ReturnAdjustmentsRow("spoilt", "spirits", BigDecimal(20), BigDecimal(4.0), BigDecimal(80))
+      val row1 =
+        ReturnAdjustmentsRow("underdeclaration", periodKeyJan, "311", BigDecimal(50), BigDecimal(2.5), BigDecimal(125))
+      val row2 =
+        ReturnAdjustmentsRow("overdeclaration", periodKeyFeb, "312", BigDecimal(30), BigDecimal(3.0), BigDecimal(90))
+      val row3 = ReturnAdjustmentsRow("spoilt", periodKeyMar, "313", BigDecimal(20), BigDecimal(4.0), BigDecimal(80))
 
       val rows       = Seq(row1, row2, row3)
       val sortedRows = rows.sorted
