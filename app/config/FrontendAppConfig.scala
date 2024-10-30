@@ -17,6 +17,7 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
+import models.AlcoholRegime
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
@@ -149,11 +150,17 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def startDirectDebitUrl: String =
     servicesConfig.baseUrl("direct-debit") + configuration.get[String]("microservice.services.direct-debit.url")
 
-  val spoiltBeerTaxTypeCode: String                   = configuration.get[String]("spoilt-defaults.beer")
-  val spoiltCiderTaxTypeCode: String                  = configuration.get[String]("spoilt-defaults.cider")
-  val spoiltWineTaxTypeCode: String                   = configuration.get[String]("spoilt-defaults.wine")
-  val spoiltSpiritsTaxTypeCode: String                = configuration.get[String]("spoilt-defaults.spirits")
-  val spoiltOtherFermentedProductsTaxTypeCode: String =
-    configuration.get[String]("spoilt-defaults.otherFermentedProducts")
-  val spoiltRate: BigDecimal                          = BigDecimal(configuration.get[String]("spoilt-defaults.rate"))
+  val spoiltRate: BigDecimal = BigDecimal(configuration.get[String]("spoilt-defaults.Rate"))
+
+  private val spoiltDefaults: Map[String, String] = configuration
+    .get[Map[String, String]]("spoilt-defaults")
+
+  private val spoiltReverseLookup: Map[String, String]                = spoiltDefaults.map(_.swap)
+  def getRegimeNameByTaxTypeCode(taxTypeCode: String): Option[String] = spoiltReverseLookup.get(taxTypeCode)
+  def getTaxTypeCodeByRegime(regime: AlcoholRegime): String           = spoiltDefaults.getOrElse(
+    regime.toString,
+    throw new RuntimeException(
+      s"Couldn't fetch spoilt tax type code for $regime regime"
+    )
+  )
 }

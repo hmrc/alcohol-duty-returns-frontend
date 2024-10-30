@@ -34,19 +34,18 @@ class AlcoholicProductTypeHelper @Inject() (
 ) extends Logging {
   def createRateBandFromRegime(regime: AlcoholRegime)(implicit messages: Messages): RateBand = {
 
-    val (taxTypeCode, alcoholType) = regime match {
-      case Beer                  => (appConfig.spoiltBeerTaxTypeCode, AlcoholType.Beer)
-      case Cider                 => (appConfig.spoiltCiderTaxTypeCode, AlcoholType.Cider)
-      case Wine                  => (appConfig.spoiltWineTaxTypeCode, AlcoholType.Wine)
-      case Spirits               => (appConfig.spoiltSpiritsTaxTypeCode, AlcoholType.Spirits)
-      case OtherFermentedProduct =>
-        (appConfig.spoiltOtherFermentedProductsTaxTypeCode, AlcoholType.OtherFermentedProduct)
+    val alcoholType = regime match {
+      case Beer                  => AlcoholType.Beer
+      case Cider                 => AlcoholType.Cider
+      case Wine                  => AlcoholType.Wine
+      case Spirits               => AlcoholType.Spirits
+      case OtherFermentedProduct => AlcoholType.OtherFermentedProduct
     }
 
     val rate: BigDecimal = appConfig.spoiltRate
 
     RateBand(
-      taxTypeCode,
+      appConfig.getTaxTypeCodeByRegime(regime),
       messages(s"alcoholType.$regime"),
       Core,
       Some(rate),

@@ -26,7 +26,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.CacheConnector
-import models.AlcoholRegime.Beer
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
@@ -94,24 +94,33 @@ class AlcoholicProductTypeControllerSpec extends SpecBase {
       val mockCacheConnector = mock[CacheConnector]
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val regimes = Seq(
+        Beer.toString,
+        Cider.toString,
+        Wine.toString,
+        Spirits.toString,
+        OtherFermentedProduct.toString
+      )
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
-          )
-          .build()
+      regimes.foreach { regime =>
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
+              bind[CacheConnector].toInstance(mockCacheConnector)
+            )
+            .build()
 
-      running(application) {
-        val request =
-          FakeRequest(POST, alcoholicProductTypeRoute)
-            .withFormUrlEncodedBody(("alcoholic-product-type-value", alcoholType))
+        running(application) {
+          val request =
+            FakeRequest(POST, alcoholicProductTypeRoute)
+              .withFormUrlEncodedBody(("alcoholic-product-type-value", regime))
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
       }
     }
 

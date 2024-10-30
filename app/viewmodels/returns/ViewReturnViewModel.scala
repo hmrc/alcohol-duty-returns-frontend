@@ -16,7 +16,7 @@
 
 package viewmodels.returns
 
-import config.Constants
+import config.{Constants, FrontendAppConfig}
 import models.returns._
 import models.{RateBand, ReturnPeriod}
 import play.api.i18n.Messages
@@ -28,7 +28,7 @@ import viewmodels.{Money, TableRowViewModel, TableTotalViewModel, TableViewModel
 import java.time.YearMonth
 import javax.inject.Inject
 
-class ViewReturnViewModel @Inject() () {
+class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   def createAlcoholDeclaredViewModel(
     returnDetails: ReturnDetails,
     ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
@@ -114,16 +114,6 @@ class ViewReturnViewModel @Inject() () {
       .map(rateBandRecap(_))
       .getOrElse(taxType)
 
-  private def getRegimeFromRateBand(
-    ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand],
-    maybeRatePeriod: Option[YearMonth],
-    taxType: String
-  ): String =
-    maybeRatePeriod
-      .flatMap(ratePeriod => ratePeriodsAndTaxCodesToRateBands.get((ratePeriod, taxType)))
-      .flatMap(_.rangeDetails.headOption.map(_.alcoholRegime.toString))
-      .getOrElse(taxType)
-
   private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel] =
     Seq(
       TableRowViewModel(cells =
@@ -200,8 +190,10 @@ class ViewReturnViewModel @Inject() () {
       val maybeRatePeriod = ReturnPeriod.fromPeriodKey(returnAdjustmentsRow.returnPeriodAffected).map(_.period)
       val taxType         = returnAdjustmentsRow.taxType
       val description     = if (returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)) {
-        val regime = getRegimeFromRateBand(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
-        messages(s"alcoholType.$regime")
+        appConfig.getRegimeNameByTaxTypeCode(taxType) match {
+          case Some(regime) => messages(s"alcoholType.$regime")
+          case _            => taxType
+        }
       } else {
         getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
       }

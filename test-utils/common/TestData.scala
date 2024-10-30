@@ -323,7 +323,15 @@ trait TestData extends ModelGenerators {
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.spoiltKey,
               returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(3, periodDate)).toPeriodKey,
-              taxType = "125",
+              taxType = "333",
+              litresOfPureAlcohol = BigDecimal(150),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("-3151.50")
+            ),
+            ReturnAdjustmentsRow(
+              adjustmentTypeKey = ReturnAdjustments.spoiltKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(1, periodDate)).toPeriodKey,
+              taxType = "123",
               litresOfPureAlcohol = BigDecimal(150),
               dutyRate = BigDecimal("21.01"),
               dutyValue = BigDecimal("-3151.50")
@@ -332,7 +340,7 @@ trait TestData extends ModelGenerators {
         ),
         total = BigDecimal("-3151.50")
       ),
-      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("-3151.50")),
+      totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("-6303.00")),
       netDutySuspension = None
     )
   }
