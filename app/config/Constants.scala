@@ -32,12 +32,13 @@ object Constants {
 
   val rowsPerPage = 15
 
-  val bodyCssClass           = "govuk-body"
-  val oneQuarterCssClass     = "govuk-!-width-one-quarter"
-  val oneHalfCssClass        = "govuk-!-width-one-half"
-  val threeQuartersCssClass  = "govuk-!-width-three-quarters"
-  val textAlignRightCssClass = "text-align-right"
-  val boldFontCssClass       = "govuk-!-font-weight-bold"
+  val bodyCssClass               = "govuk-body"
+  val oneQuarterCssClass         = "govuk-!-width-one-quarter"
+  val oneHalfCssClass            = "govuk-!-width-one-half"
+  val threeQuartersCssClass      = "govuk-!-width-three-quarters"
+  val textAlignRightCssClass     = "text-align-right"
+  val textAlignRightWrapCssClass = "text-align-right-wrap"
+  val boldFontCssClass           = "govuk-!-font-weight-bold"
 
   val blueTagCssClass   = "govuk-tag--blue"
   val greenTagCssClass  = "govuk-tag--green"

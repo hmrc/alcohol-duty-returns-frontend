@@ -50,14 +50,14 @@ class ViewReturnViewModel @Inject() () {
   private def alcoholDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(content = Text(messages("viewReturn.table.description.legend"))),
-      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.textAlignRightCssClass),
+      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.textAlignRightWrapCssClass),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyRate.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = Constants.textAlignRightWrapCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyDue.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = Constants.textAlignRightWrapCssClass
       )
     )
 
@@ -156,14 +156,14 @@ class ViewReturnViewModel @Inject() () {
     Seq(
       HeadCell(content = Text(messages("viewReturn.table.adjustmentType.legend"))),
       HeadCell(content = Text(messages("viewReturn.table.description.legend"))),
-      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.textAlignRightCssClass),
+      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.textAlignRightWrapCssClass),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyRate.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = Constants.textAlignRightWrapCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyValue.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = Constants.textAlignRightWrapCssClass
       )
     )
 
@@ -174,7 +174,7 @@ class ViewReturnViewModel @Inject() () {
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyValue.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = Constants.textAlignRightWrapCssClass
       )
     )
 
@@ -271,11 +271,11 @@ class ViewReturnViewModel @Inject() () {
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.totalVolume.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = Constants.textAlignRightWrapCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.lpa.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = Constants.textAlignRightWrapCssClass
       )
     )
 
