@@ -68,7 +68,7 @@ class ViewReturnViewModel @Inject() () {
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyDue.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
       )
     )
 
@@ -87,15 +87,15 @@ class ViewReturnViewModel @Inject() () {
           ),
           TableRow(
             content = Text(messages("site.4DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)),
-            classes = Constants.textAlignRightCssClass
+            classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
           ),
           TableRow(
             content = Text(s"${Money.format(alcoholDeclaredDetailsRow.dutyRate)}"),
-            classes = Constants.textAlignRightCssClass
+            classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
           ),
           TableRow(
             content = Text(Money.format(alcoholDeclaredDetailsRow.dutyValue)),
-            classes = Constants.textAlignRightCssClass
+            classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
           )
         )
       )
@@ -117,7 +117,10 @@ class ViewReturnViewModel @Inject() () {
       TableRowViewModel(cells =
         Seq(
           TableRow(content = Text(messages("viewReturn.alcoholDuty.noneDeclared"))),
-          TableRow(content = Text(messages("site.nil")), classes = Constants.textAlignRightCssClass)
+          TableRow(
+            content = Text(messages("site.nil")),
+            classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
+          )
         )
       )
     )
@@ -131,7 +134,7 @@ class ViewReturnViewModel @Inject() () {
       ),
       HeadCell(
         content = Text(Money.format(alcoholDeclared.total)),
-        classes = Constants.textAlignRightCssClass
+        classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
       )
     )
 
@@ -174,7 +177,7 @@ class ViewReturnViewModel @Inject() () {
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyValue.legend")),
-        classes = Constants.textAlignRightWrapCssClass
+        classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
       )
     )
 
@@ -193,15 +196,15 @@ class ViewReturnViewModel @Inject() () {
           ),
           TableRow(
             content = Text(messages("site.4DP", returnAdjustmentsRow.litresOfPureAlcohol)),
-            classes = Constants.textAlignRightCssClass
+            classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
           ),
           TableRow(
             content = Text(Money.format(returnAdjustmentsRow.dutyRate)),
-            classes = Constants.textAlignRightCssClass
+            classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
           ),
           TableRow(
             content = Text(Money.format(returnAdjustmentsRow.dutyValue)),
-            classes = Constants.textAlignRightCssClass
+            classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
           )
         )
       )
@@ -224,7 +227,7 @@ class ViewReturnViewModel @Inject() () {
       ),
       HeadCell(
         content = Text(Money.format(adjustments.total)),
-        classes = Constants.textAlignRightCssClass
+        classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
       )
     )
 
@@ -244,7 +247,7 @@ class ViewReturnViewModel @Inject() () {
       HeadCell(
         content = Text(messages("viewReturn.dutyDue.total.legend"))
       ),
-      HeadCell(content = content, classes = Constants.textAlignRightCssClass)
+      HeadCell(content = content, classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric")
     )
   }
 
@@ -325,11 +328,11 @@ class ViewReturnViewModel @Inject() () {
         ),
         TableRow(
           content = Text(messages("site.2DP", total)),
-          classes = Constants.textAlignRightCssClass
+          classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
         ),
         TableRow(
           content = Text(messages("site.4DP", lpa)),
-          classes = Constants.textAlignRightCssClass
+          classes = s"${Constants.textAlignRightCssClass} govuk-table__cell--numeric"
         )
       )
     )
