@@ -39,7 +39,7 @@ object Constants {
   val textAlignRightCssClass     = "text-align-right"
   val textAlignRightWrapCssClass = "text-align-right-wrap"
   val boldFontCssClass           = "govuk-!-font-weight-bold"
-  val numericCellClass           = "${Constants.numericCellClass}"
+  val numericCellClass           = "govuk-table__cell--numeric"
 
   val blueTagCssClass   = "govuk-tag--blue"
   val greenTagCssClass  = "govuk-tag--green"
