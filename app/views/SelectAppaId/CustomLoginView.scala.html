@@ -1,0 +1,41 @@
+@import components.{SectionHeading, PageHeading}
+@import models.SelectAppaId.CustomLogin
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukCheckboxes: GovukCheckboxes,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("customLogin.title"))) {
+
+    @formHelper(action = controllers.SelectAppaId.routes.CustomLoginController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+        }
+
+        @sectionHeading(
+            id = "customLogin-section",
+            text = messages("section.sectionName"),
+        )
+
+        @govukCheckboxes(
+            CheckboxesViewModel(
+                form   = form,
+                name   = "value",
+                legend = LegendViewModel(messages("customLogin.heading")).asPageHeading(),
+                items  = CustomLogin.checkboxItems
+            )
+        )
+
+        @govukButton(
+            ButtonViewModel("saveAndContinueButton",messages("site.continue"))
+        )
+    }
+}
