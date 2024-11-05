@@ -49,24 +49,26 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
 
   private def alcoholDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
-      HeadCell(content = Text(messages("viewReturn.table.description.legend")), classes = Constants.oneQuarterCssClass),
-      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.oneQuarterCssClass),
-      HeadCell(content = Text(messages("viewReturn.table.dutyRate.legend")), classes = Constants.oneQuarterCssClass),
+      HeadCell(content = Text(messages("viewReturn.table.description.legend"))),
+      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.textAlignRightWrapCssClass),
+      HeadCell(
+        content = Text(messages("viewReturn.table.dutyRate.legend")),
+        classes = Constants.textAlignRightWrapCssClass
+      ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyDue.legend")),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = Constants.textAlignRightWrapCssClass
       )
     )
 
   private def noAlcoholDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(
-        content = Text(messages("viewReturn.table.description.legend")),
-        classes = Constants.threeQuartersCssClass
+        content = Text(messages("viewReturn.table.description.legend"))
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyDue.legend")),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
       )
     )
 
@@ -81,23 +83,19 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       TableRowViewModel(
         cells = Seq(
           TableRow(content =
-            Text(
-              getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
-            )
+            Text(getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType))
           ),
-          TableRow(content =
-            Text(
-              s"${messages("site.4DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
-            )
+          TableRow(
+            content = Text(messages("site.4DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)),
+            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
           ),
-          TableRow(content =
-            Text(
-              s"${Money.format(alcoholDeclaredDetailsRow.dutyRate)} ${messages("site.unit.per.litre")}"
-            )
+          TableRow(
+            content = Text(s"${Money.format(alcoholDeclaredDetailsRow.dutyRate)}"),
+            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
           ),
           TableRow(
             content = Text(Money.format(alcoholDeclaredDetailsRow.dutyValue)),
-            classes = Constants.textAlignRightCssClass
+            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
           )
         )
       )
@@ -119,7 +117,10 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       TableRowViewModel(cells =
         Seq(
           TableRow(content = Text(messages("viewReturn.alcoholDuty.noneDeclared"))),
-          TableRow(content = Text(messages("site.nil")), classes = Constants.textAlignRightCssClass)
+          TableRow(
+            content = Text(messages("site.nil")),
+            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+          )
         )
       )
     )
@@ -129,12 +130,11 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   ): TableTotalViewModel =
     TableTotalViewModel(
       HeadCell(
-        content = Text(messages("viewReturn.alcoholDuty.total.legend")),
-        classes = Constants.threeQuartersCssClass
+        content = Text(messages("viewReturn.alcoholDuty.total.legend"))
       ),
       HeadCell(
         content = Text(Money.format(alcoholDeclared.total)),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
       )
     )
 
@@ -150,7 +150,6 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         rows = adjustmentRows(rows.sorted, ratePeriodsAndTaxCodesToRateBands),
         total = Some(adjustmentsTotal(returnDetails.adjustments))
       )
-
     } else {
       TableViewModel(head = noAdjustmentsTableHeader(), rows = nilAdjustmentsRow(), total = None)
     }
@@ -158,27 +157,27 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
 
   private def adjustmentsTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
-      HeadCell(
-        content = Text(messages("viewReturn.table.adjustmentType.legend"))
-      ),
+      HeadCell(content = Text(messages("viewReturn.table.adjustmentType.legend"))),
       HeadCell(content = Text(messages("viewReturn.table.description.legend"))),
-      HeadCell(content = Text(messages("viewReturn.table.lpa.legend"))),
-      HeadCell(content = Text(messages("viewReturn.table.dutyRate.legend"))),
+      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.textAlignRightWrapCssClass),
+      HeadCell(
+        content = Text(messages("viewReturn.table.dutyRate.legend")),
+        classes = Constants.textAlignRightWrapCssClass
+      ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyValue.legend")),
-        classes = Constants.textAlignRightCssClass
+        classes = Constants.textAlignRightWrapCssClass
       )
     )
 
   private def noAdjustmentsTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(
-        content = Text(messages("viewReturn.table.description.legend")),
-        classes = Constants.threeQuartersCssClass
+        content = Text(messages("viewReturn.table.description.legend"))
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyValue.legend")),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
       )
     )
 
@@ -205,17 +204,17 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
               description
             )
           ),
-          TableRow(content =
-            Text(
-              s"${messages("site.4DP", returnAdjustmentsRow.litresOfPureAlcohol)} ${messages("site.unit.litre.unit")}"
-            )
+          TableRow(
+            content = Text(messages("site.4DP", returnAdjustmentsRow.litresOfPureAlcohol)),
+            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
           ),
-          TableRow(content =
-            Text(s"${Money.format(returnAdjustmentsRow.dutyRate)} ${messages("site.unit.per.litre")}")
+          TableRow(
+            content = Text(Money.format(returnAdjustmentsRow.dutyRate)),
+            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
           ),
           TableRow(
             content = Text(Money.format(returnAdjustmentsRow.dutyValue)),
-            classes = Constants.textAlignRightCssClass
+            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
           )
         )
       )
@@ -234,12 +233,11 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   private def adjustmentsTotal(adjustments: ReturnAdjustments)(implicit messages: Messages): TableTotalViewModel =
     TableTotalViewModel(
       HeadCell(
-        content = Text(messages("viewReturn.adjustments.total.legend")),
-        classes = Constants.threeQuartersCssClass
+        content = Text(messages("viewReturn.adjustments.total.legend"))
       ),
       HeadCell(
         content = Text(Money.format(adjustments.total)),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
       )
     )
 
@@ -257,10 +255,9 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
 
     TableTotalViewModel(
       HeadCell(
-        content = Text(messages("viewReturn.dutyDue.total.legend")),
-        classes = Constants.threeQuartersCssClass
+        content = Text(messages("viewReturn.dutyDue.total.legend"))
       ),
-      HeadCell(content = content, classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}")
+      HeadCell(content = content, classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}")
     )
   }
 
@@ -283,16 +280,15 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   private def netDutySuspensionTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(
-        content = Text(messages("viewReturn.table.description.legend")),
-        classes = Constants.oneHalfCssClass
+        content = Text(messages("viewReturn.table.description.legend"))
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.totalVolume.legend")),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = Constants.textAlignRightWrapCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.lpa.legend")),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = Constants.textAlignRightWrapCssClass
       )
     )
 
@@ -338,16 +334,15 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
     } yield TableRowViewModel(
       cells = Seq(
         TableRow(
-          content = Text(messages(messageKey).capitalize),
-          classes = Constants.oneHalfCssClass
+          content = Text(messages(messageKey).capitalize)
         ),
         TableRow(
           content = Text(messages("site.2DP", total)),
-          classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+          classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
         ),
         TableRow(
           content = Text(messages("site.4DP", lpa)),
-          classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+          classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
         )
       )
     )
