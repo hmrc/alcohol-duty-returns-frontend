@@ -16,7 +16,7 @@
 
 package viewmodels.returns
 
-import config.Constants
+import config.{Constants, FrontendAppConfig}
 import models.returns._
 import models.{RateBand, ReturnPeriod}
 import play.api.i18n.Messages
@@ -28,7 +28,7 @@ import viewmodels.{Money, TableRowViewModel, TableTotalViewModel, TableViewModel
 import java.time.YearMonth
 import javax.inject.Inject
 
-class ViewReturnViewModel @Inject() () {
+class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   def createAlcoholDeclaredViewModel(
     returnDetails: ReturnDetails,
     ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
@@ -189,12 +189,20 @@ class ViewReturnViewModel @Inject() () {
     returnAdjustments.map { returnAdjustmentsRow =>
       val maybeRatePeriod = ReturnPeriod.fromPeriodKey(returnAdjustmentsRow.returnPeriodAffected).map(_.period)
       val taxType         = returnAdjustmentsRow.taxType
+      val description     = if (returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)) {
+        appConfig.getRegimeNameByTaxTypeCode(taxType) match {
+          case Some(regime) => messages(s"alcoholType.$regime")
+          case _            => taxType
+        }
+      } else {
+        getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
+      }
       TableRowViewModel(
         cells = Seq(
           TableRow(content = Text(messages(s"viewReturn.adjustments.type.${returnAdjustmentsRow.adjustmentTypeKey}"))),
           TableRow(content =
             Text(
-              getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
+              description
             )
           ),
           TableRow(content =

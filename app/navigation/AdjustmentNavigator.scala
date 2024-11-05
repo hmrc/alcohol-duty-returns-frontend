@@ -18,7 +18,7 @@ package navigation
 import controllers._
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import models._
-import models.adjustment.AdjustmentType.RepackagedDraughtProducts
+import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import pages._
 import pages.adjustment.DeclareAdjustmentQuestionPage
 import play.api.mvc.Call
@@ -31,12 +31,18 @@ class AdjustmentNavigator @Inject() () {
   private val normalRoutes: Page => UserAnswers => Call = {
     case pages.adjustment.DeclareAdjustmentQuestionPage             => declareAdjustmentQuestionRoute
     case pages.adjustment.AdjustmentTypePage                        =>
-      _ => controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
+      userAnswers => adjustmentTypeRoute(userAnswers, NormalMode)
+    case pages.adjustment.AlcoholicProductTypePage                  =>
+      _ => controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
     case pages.adjustment.WhenDidYouPayDutyPage                     =>
       _ => controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
     case pages.adjustment.AdjustmentTaxTypePage                     => userAnswers => adjustmentTaxTypePageRoute(userAnswers)
-    case pages.adjustment.AdjustmentVolumePage                      => userAnswers => adjustmentVolumePageRoute(userAnswers)
-    case pages.adjustment.AdjustmentVolumeWithSPRPage               => userAnswers => adjustmentVolumePageRoute(userAnswers)
+    case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
+      _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    case pages.adjustment.AdjustmentVolumePage                      =>
+      userAnswers => adjustmentVolumePageRoute(userAnswers)
+    case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
+      userAnswers => adjustmentVolumePageRoute(userAnswers)
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           => userAnswers => repackagedTaxTypeRoute(userAnswers)
@@ -52,9 +58,14 @@ class AdjustmentNavigator @Inject() () {
           if (hasChanged) declareAdjustmentQuestionRoute(userAnswers)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentTypePage                        =>
+      userAnswers =>
+        hasChanged =>
+          if (hasChanged) adjustmentTypeRoute(userAnswers, CheckMode)
+          else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    case pages.adjustment.AlcoholicProductTypePage                  =>
       _ =>
         hasChanged =>
-          if (hasChanged) controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode)
+          if (hasChanged) controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.WhenDidYouPayDutyPage                     =>
       _ =>
@@ -66,6 +77,8 @@ class AdjustmentNavigator @Inject() () {
         hasChanged =>
           if (hasChanged) adjustmentTaxTypePageRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
+      _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
       userAnswers =>
         hasChanged =>
@@ -118,7 +131,8 @@ class AdjustmentNavigator @Inject() () {
     adjustmentTypeOpt match {
       case Some(RepackagedDraughtProducts) =>
         controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(mode)
-      case _                               => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+      case _                               =>
+        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
   }
 
@@ -132,7 +146,8 @@ class AdjustmentNavigator @Inject() () {
         controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode)
       case Some(SmallProducerRelief)           =>
         controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(mode)
-      case _                                   => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+      case _                                   =>
+        controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
   }
 
@@ -149,4 +164,20 @@ class AdjustmentNavigator @Inject() () {
       case Some(false) => routes.TaskListController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
     }
+
+  private def adjustmentTypeRoute(userAnswers: UserAnswers, mode: Mode): Call = {
+    val adjustmentTypeOpt = for {
+      adjustment     <- userAnswers.get(pages.adjustment.CurrentAdjustmentEntryPage)
+      adjustmentType <- adjustment.adjustmentType
+    } yield adjustmentType
+    adjustmentTypeOpt match {
+      case Some(Spoilt) if userAnswers.regimes.regimes.size > 1 =>
+        controllers.adjustment.routes.AlcoholicProductTypeController.onPageLoad(mode)
+      case Some(Spoilt)                                         =>
+        controllers.adjustment.routes.SpoiltVolumeWithDutyController
+          .onPageLoad(mode)
+      case _                                                    =>
+        controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(mode)
+    }
+  }
 }

@@ -18,7 +18,6 @@ package controllers.actions
 
 import base.SpecBase
 import config.Constants.periodKeySessionKey
-import config.FrontendAppConfig
 import connectors.CacheConnector
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any

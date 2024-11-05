@@ -22,7 +22,7 @@ import java.time.{LocalDate, YearMonth}
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
 import models.Enumerable
-import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR}
+import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR, SpoiltVolumeWithDuty}
 
 trait Mappings extends Formatters with Constraints {
 
@@ -166,6 +166,27 @@ trait Mappings extends Formatters with Constraints {
         maximumValueKey,
         moreOrEqualKey,
         lessOrEqualKey,
+        args
+      )
+    )
+
+  protected def spoiltVolumesWithDuty(
+    invalidKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    inconsistentKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[SpoiltVolumeWithDuty] =
+    of(
+      new SpoiltVolumesAndDutyFormatter(
+        invalidKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        inconsistentKey,
         args
       )
     )
