@@ -16,7 +16,8 @@
 
 package viewmodels.govuk
 
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
+import config.Constants.visuallyHiddenCssClass
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import viewmodels.LabelSize
 
@@ -28,6 +29,12 @@ trait LabelFluency {
 
     def apply(content: Content): Label =
       Label(content = content)
+
+    def apply(visibleText: String, hiddenText: String): Label = {
+      val content = HtmlContent(s"$visibleText <span class=$visuallyHiddenCssClass>$hiddenText</span>")
+      Label(content = content)
+    }
+
   }
 
   implicit class FluentLabel(label: Label) {
@@ -51,5 +58,12 @@ trait LabelFluency {
 
     def asVisuallyHidden(): Label =
       withCssClass("govuk-visually-hidden")
+
+    def withHiddenText(visibleText: String, hiddenText: String): Label =
+      label.copy(content =
+        HtmlContent(
+          s"$visibleText <span class='govuk-visually-hidden'>$hiddenText</span>"
+        )
+      )
   }
 }

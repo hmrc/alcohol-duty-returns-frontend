@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.adjustment
 import controllers.adjustment.routes
 import models.adjustment.AdjustmentEntry
 import models.CheckMode
-import models.adjustment.AdjustmentType.RepackagedDraughtProducts
+import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -28,24 +28,26 @@ import viewmodels.declareDuty.RateBandHelper.rateBandRecap
 
 object AdjustmentTaxTypeSummary {
 
-  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
-    val adjustmentType      = adjustmentEntry.adjustmentType.getOrElse(
-      throw new RuntimeException("Couldn't fetch adjustment type value from cache")
-    )
-    val (label, hiddenText) = if (adjustmentType.equals(RepackagedDraughtProducts)) {
-      ("adjustmentTaxType.repackaged.checkYourAnswersLabel", "adjustmentTaxType.repackaged.change.hidden")
-    } else {
-      ("adjustmentTaxType.checkYourAnswersLabel", "adjustmentTaxType.change.hidden")
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    adjustmentEntry.adjustmentType match {
+      case Some(Spoilt)         => None
+      case Some(adjustmentType) =>
+        val (label, hiddenText) = adjustmentType match {
+          case RepackagedDraughtProducts =>
+            ("adjustmentTaxType.repackaged.checkYourAnswersLabel", "adjustmentTaxType.repackaged.change.hidden")
+          case _                         =>
+            ("adjustmentTaxType.checkYourAnswersLabel", "adjustmentTaxType.change.hidden")
+        }
+        adjustmentEntry.rateBand.map { rateBand =>
+          SummaryListRowViewModel(
+            key = label,
+            value = ValueViewModel(rateBandRecap(rateBand)),
+            actions = Seq(
+              ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
+                .withVisuallyHiddenText(messages(hiddenText))
+            )
+          )
+        }
+      case _                    => None
     }
-    adjustmentEntry.rateBand.map { rateBand =>
-      SummaryListRowViewModel(
-        key = label,
-        value = ValueViewModel(rateBandRecap(rateBand)),
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages(hiddenText))
-        )
-      )
-    }
-  }
 }

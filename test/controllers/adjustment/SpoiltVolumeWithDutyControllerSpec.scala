@@ -18,44 +18,45 @@ package controllers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
-import forms.adjustment.AdjustmentVolumeFormProvider
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
+import connectors.CacheConnector
+import forms.adjustment.SpoiltVolumeWithDutyFormProvider
+import models.AlcoholRegime.Beer
+import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.{AdjustmentEntry, SpoiltVolumeWithDuty}
+import models.{ABVRange, AlcoholByVolume, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
-import models.AlcoholRegime.Beer
-import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
-import models.adjustment.AdjustmentType.Underdeclaration
-import play.api.i18n.Messages
 import uk.gov.hmrc.http.HttpResponse
-import views.html.adjustment.AdjustmentVolumeView
+import views.html.adjustment.SpoiltVolumeWithDutyView
 
 import java.time.YearMonth
 import scala.concurrent.Future
 
-class AdjustmentVolumeControllerSpec extends SpecBase {
-  val formProvider = new AdjustmentVolumeFormProvider()
+class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
+  val formProvider = new SpoiltVolumeWithDutyFormProvider()
   val regime       = Beer
-  val messages     = mock[Messages]
-  val form         = formProvider(regime)(messages)
+  val form         = formProvider(regime)(getMessages(app))
   def onwardRoute  = Call("GET", "/foo")
 
   val validTotalLitres = BigDecimal(10.23)
   val validPureAlcohol = BigDecimal(9.23)
+  val validDuty        = BigDecimal(2)
+  val period           = YearMonth.of(2024, 1)
 
-  lazy val adjustmentVolumeRoute       = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode).url
-  val rateBand                         = RateBand(
+  lazy val spoiltVolumeWithDutyRoute =
+    controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode).url
+  val rateBand                       = RateBand(
     "310",
     "some band",
     RateType.DraughtRelief,
     Some(BigDecimal(10.99)),
     Set(
       RangeDetailsByRegime(
-        AlcoholRegime.Beer,
+        regime,
         NonEmptySeq.one(
           ABVRange(
             AlcoholType.Beer,
@@ -66,33 +67,29 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       )
     )
   )
-  val period                           = YearMonth.of(2024, 1)
-  val adjustmentEntry                  = AdjustmentEntry(
-    adjustmentType = Some(Underdeclaration),
-    rateBand = Some(rateBand),
-    period = Some(period)
+  val adjustmentEntry                = AdjustmentEntry(
+    adjustmentType = Some(Spoilt),
+    period = Some(period),
+    rateBand = Some(rateBand)
   )
-  val userAnswers                      = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-  val userAnswersWithoutRegimes        =
+  val userAnswers                    = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+  val userAnswersWithoutRegimes      =
     emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(rateBand = None)).success.value
-  val userAnswersWithoutAdjustmentType =
-    emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(adjustmentType = None)).success.value
+  val rateBandContent                = "Beer between 0.1% and 5.8% ABV (tax type code 310)"
 
-  val rateBandContent = "Beer between 0.1% and 5.8% ABV (tax type code 310)"
-
-  "AdjustmentVolume Controller" - {
+  "SpoiltVolumeWithDuty Controller" - {
     "must return OK and the correct view for a GET" in {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, adjustmentVolumeRoute)
+        val request = FakeRequest(GET, spoiltVolumeWithDutyRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[AdjustmentVolumeView]
+        val view = application.injector.instanceOf[SpoiltVolumeWithDutyView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, Underdeclaration, regime, rateBandContent)(
+        contentAsString(result) mustEqual view(form, NormalMode, regime)(
           request,
           getMessages(app)
         ).toString
@@ -101,26 +98,28 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
       val updatedAdjustmentEntry =
-        adjustmentEntry.copy(totalLitresVolume = Some(validTotalLitres), pureAlcoholVolume = Some(validPureAlcohol))
+        adjustmentEntry.copy(
+          totalLitresVolume = Some(validTotalLitres),
+          pureAlcoholVolume = Some(validPureAlcohol),
+          duty = Some(validDuty)
+        )
 
       val previousUserAnswers = userAnswers.set(CurrentAdjustmentEntryPage, updatedAdjustmentEntry).success.value
 
       val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, adjustmentVolumeRoute)
+        val request = FakeRequest(GET, spoiltVolumeWithDutyRoute)
 
-        val view = application.injector.instanceOf[AdjustmentVolumeView]
+        val view = application.injector.instanceOf[SpoiltVolumeWithDutyView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(AdjustmentVolume(validTotalLitres, validPureAlcohol)),
+          form.fill(SpoiltVolumeWithDuty(validTotalLitres, validPureAlcohol, validDuty)),
           NormalMode,
-          Underdeclaration,
-          regime,
-          rateBandContent
+          regime
         )(
           request,
           getMessages(app)
@@ -132,20 +131,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswersWithoutRegimes)).build()
 
       running(application) {
-        val request = FakeRequest(GET, adjustmentVolumeRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to journey recovery page if unable to get CurrentAdjustmentEntryPage for a GET" in {
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutAdjustmentType)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, adjustmentVolumeRoute)
+        val request = FakeRequest(GET, spoiltVolumeWithDutyRoute)
 
         val result = route(application, request).value
 
@@ -169,10 +155,11 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, adjustmentVolumeRoute)
+          FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
               ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.duty", validDuty.toString())
             )
 
         val result = route(application, request).value
@@ -190,7 +177,8 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
             AdjustmentEntry(
               totalLitresVolume = Some(validTotalLitres),
               pureAlcoholVolume = Some(validPureAlcohol),
-              adjustmentType = Some(Underdeclaration),
+              duty = Some(validDuty),
+              adjustmentType = Some(Spoilt),
               period = Some(period),
               rateBand = Some(rateBand)
             )
@@ -205,17 +193,18 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[CacheConnector].toInstance(mockCacheConnector)
           )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, adjustmentVolumeRoute)
+          FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
               ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.duty", validDuty.toString())
             )
 
         val result = route(application, request).value
@@ -225,7 +214,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to journey recovery page if unable to get regimes when data is submitted" in {
+    "must redirect to the journey recovery page if unable to get regimes when data is submitted" in {
       val userAnswers =
         emptyUserAnswers
           .set(
@@ -233,7 +222,8 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
             AdjustmentEntry(
               totalLitresVolume = Some(validTotalLitres),
               pureAlcoholVolume = Some(validPureAlcohol),
-              adjustmentType = Some(Underdeclaration),
+              duty = Some(validDuty),
+              adjustmentType = Some(Spoilt),
               period = Some(period),
               rateBand = None
             )
@@ -255,10 +245,11 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, adjustmentVolumeRoute)
+          FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
               ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.duty", validDuty.toString())
             )
 
         val result = route(application, request).value
@@ -274,37 +265,38 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       running(application) {
         val form    = formProvider(regime)(getMessages(app))
         val request =
-          FakeRequest(POST, adjustmentVolumeRoute)
+          FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
               ("volumes.totalLitresVolume", "invalid value"),
-              ("volumes.pureAlcoholVolume", "invalid value")
+              ("volumes.pureAlcoholVolume", "invalid value"),
+              ("volumes.duty", "invalid value")
             )
 
-        val boundForm =
-          form.bind(Map("volumes.totalLitresVolume" -> "invalid value", "volumes.pureAlcoholVolume" -> "invalid value"))
+        val boundForm = form.bind(
+          Map(
+            "volumes.totalLitresVolume" -> "invalid value",
+            "volumes.pureAlcoholVolume" -> "invalid value",
+            "volumes.duty"              -> "invalid value"
+          )
+        )
 
-        val view      = application.injector.instanceOf[AdjustmentVolumeView]
+        val view = application.injector.instanceOf[SpoiltVolumeWithDutyView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, Underdeclaration, regime, rateBandContent)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, regime)(
           request,
           getMessages(app)
         ).toString
       }
     }
 
-    "must redirect to journey recovery page when invalid data is submitted and unable to get the adjustment type" in {
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithoutAdjustmentType)).build()
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request =
-          FakeRequest(POST, adjustmentVolumeRoute)
-            .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", "invalid value"),
-              ("volumes.pureAlcoholVolume", "invalid value")
-            )
+        val request = FakeRequest(GET, spoiltVolumeWithDutyRoute)
 
         val result = route(application, request).value
 
@@ -313,14 +305,11 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-      val application = applicationBuilder(userAnswers = None).build()
-
+    "must redirect to journey recovery page if CurrentAdjustmentEntryPage returns None on a GET" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
       running(application) {
-        val request = FakeRequest(GET, adjustmentVolumeRoute)
-
-        val result = route(application, request).value
-
+        val request = FakeRequest(GET, spoiltVolumeWithDutyRoute)
+        val result  = route(application, request).value
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
@@ -331,13 +320,31 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
 
       running(application) {
         val request =
-          FakeRequest(POST, adjustmentVolumeRoute)
+          FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(("field1", "value 1"), ("field2", "value 2"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
 
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must use an empty AdjustmentEntry as a fallback if CurrentAdjustmentEntryPage returns None for POST" in {
+      val application        = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val mockCacheConnector = mock[CacheConnector]
+      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      running(application) {
+        val request = FakeRequest(POST, spoiltVolumeWithDutyRoute)
+          .withFormUrlEncodedBody(
+            ("volumes.totalLitresVolume", validTotalLitres.toString()),
+            ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+            ("volumes.duty", validDuty.toString())
+          )
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

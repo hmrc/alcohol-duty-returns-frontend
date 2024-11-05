@@ -16,8 +16,8 @@
 
 package models.adjustment
 
-import models.adjustment.AdjustmentType.RepackagedDraughtProducts
-import models.{RateBand, YearMonthModelFormatter}
+import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
+import models.{AlcoholRegime, RateBand, YearMonthModelFormatter}
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.YearMonth
@@ -26,6 +26,7 @@ case class AdjustmentEntry(
   index: Option[Int] = None,
   adjustmentType: Option[AdjustmentType] = None,
   period: Option[YearMonth] = None,
+  spoiltRegime: Option[AlcoholRegime] = None,
   rateBand: Option[RateBand] = None,
   totalLitresVolume: Option[BigDecimal] = None,
   pureAlcoholVolume: Option[BigDecimal] = None,
@@ -40,13 +41,19 @@ case class AdjustmentEntry(
     adjustmentType.isDefined && period.isDefined && rateBand.isDefined &&
       totalLitresVolume.isDefined && pureAlcoholVolume.isDefined && duty.isDefined && (rateBand
         .flatMap(_.rate)
-        .isDefined || sprDutyRate.isDefined) && repackagedCheck
+        .isDefined || sprDutyRate.isDefined) && repackagedCheck && spoiltCheck
 
   private def repackagedCheck: Boolean = {
     val isRepackagedAdjustment = adjustmentType.isDefined && adjustmentType.get.equals(RepackagedDraughtProducts)
 
     !isRepackagedAdjustment || (repackagedRateBand.isDefined &&
       (repackagedRateBand.flatMap(_.rate).isDefined || repackagedSprDutyRate.isDefined) && repackagedDuty.isDefined)
+  }
+
+  private def spoiltCheck: Boolean = {
+    val isSpoiltAdjustment = adjustmentType.isDefined && adjustmentType.get.equals(Spoilt)
+
+    !isSpoiltAdjustment || spoiltRegime.isDefined
   }
 
   def rate: Option[BigDecimal] =
