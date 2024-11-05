@@ -17,11 +17,11 @@
 package forms.mappings
 
 import config.Constants
-import models.adjustment.AdjustmentVolumeWithSPR
+import models.adjustment.SpoiltVolumeWithDuty
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
-class AdjustmentVolumesAndRateFormatter(
+class SpoiltVolumesAndDutyFormatter(
   invalidKey: String,
   requiredKey: String,
   decimalPlacesKey: String,
@@ -29,7 +29,7 @@ class AdjustmentVolumesAndRateFormatter(
   maximumValueKey: String,
   inconsistentKey: String,
   args: Seq[String]
-) extends Formatter[AdjustmentVolumeWithSPR]
+) extends Formatter[SpoiltVolumeWithDuty]
     with Formatters {
 
   private def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
@@ -64,35 +64,35 @@ class AdjustmentVolumesAndRateFormatter(
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    maximumValue = Constants.dutyMaximumValue,
-    minimumValue = Constants.dutyMinimumValue,
+    maximumValue = Constants.dutyDueMaximumValue,
+    minimumValue = Constants.volumeAndDutyMinimumValue,
     args = args
   )
 
   private val NUMBER_OF_FIELDS        = 3
-  private val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume", "sprDutyRate")
+  private val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume", "duty")
 
   private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
-  private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
+  private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], SpoiltVolumeWithDuty] = {
     val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
     val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
-    val sprDutyRate = dutyRateFormatter("sprDutyRate").bind(s"$key.sprDutyRate", data)
+    val duty        = dutyRateFormatter("duty").bind(s"$key.duty", data)
 
-    (totalLitres, pureAlcohol, sprDutyRate) match {
-      case (Right(totalLitresValue), Right(pureAlcoholValue), Right(sprDutyRate)) =>
-        Right(AdjustmentVolumeWithSPR(totalLitresValue, pureAlcoholValue, sprDutyRate))
-      case (totalLitresError, pureAlcoholError, sprDutyRateError)                 =>
+    (totalLitres, pureAlcohol, duty) match {
+      case (Right(totalLitresValue), Right(pureAlcoholValue), Right(duty)) =>
+        Right(SpoiltVolumeWithDuty(totalLitresValue, pureAlcoholValue, duty))
+      case (totalLitresError, pureAlcoholError, duty)                      =>
         Left(
           totalLitresError.left.getOrElse(Seq.empty)
             ++ pureAlcoholError.left.getOrElse(Seq.empty)
-            ++ sprDutyRateError.left.getOrElse(Seq.empty)
+            ++ duty.left.getOrElse(Seq.empty)
         )
     }
   }
 
-  private def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] =
+  private def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], SpoiltVolumeWithDuty] =
     formatVolume(key, data).fold(
       errors => Left(errors),
       volumes =>
@@ -103,7 +103,7 @@ class AdjustmentVolumesAndRateFormatter(
         }
     )
 
-  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
+  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], SpoiltVolumeWithDuty] = {
     val fields = fieldKeys.map { field =>
       field -> data.get(s"$key.$field").filter(_.nonEmpty)
     }.toMap
@@ -125,11 +125,10 @@ class AdjustmentVolumesAndRateFormatter(
     }
   }
 
-  override def unbind(key: String, value: AdjustmentVolumeWithSPR): Map[String, String] =
+  override def unbind(key: String, value: SpoiltVolumeWithDuty): Map[String, String] =
     Map(
       s"$key.totalLitresVolume" -> value.totalLitresVolume.toString,
       s"$key.pureAlcoholVolume" -> value.pureAlcoholVolume.toString,
-      s"$key.sprDutyRate"       -> value.sprDutyRate.toString
+      s"$key.duty"              -> value.duty.toString
     )
-
 }

@@ -19,6 +19,7 @@ package models.adjustment
 import base.SpecBase
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
+import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
@@ -48,6 +49,7 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
   )
   val adjustmentEntry = AdjustmentEntry(
     adjustmentType = Some(Spoilt),
+    spoiltRegime = Some(Beer),
     period = Some(YearMonth.of(24, 1)),
     rateBand = Some(rateBand),
     pureAlcoholVolume = Some(BigDecimal(1)),

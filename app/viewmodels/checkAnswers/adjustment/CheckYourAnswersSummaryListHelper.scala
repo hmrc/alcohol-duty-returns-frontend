@@ -26,18 +26,21 @@ object CheckYourAnswersSummaryListHelper {
   def currentAdjustmentEntrySummaryList(
     adjustmentEntry: AdjustmentEntry
   )(implicit messages: Messages): Option[SummaryList] = {
-    val newTaxType  = getOptionalRow(AdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry))
-    val sprDutyRate = getOptionalRow(AdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry))
+
+    val newTaxType        = getOptionalRow(AdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry))
+    val sprDutyRate       = getOptionalRow(AdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry))
+    val returnPeriod      = getOptionalRow(WhenDidYouPayDutySummary.row(adjustmentEntry))
+    val spoiltAlcoholType = getOptionalRow(AlcoholicProductTypeSummary.row(adjustmentEntry))
+    val taxType           = getOptionalRow(AdjustmentTaxTypeSummary.row(adjustmentEntry))
     for {
       adjustmentType <- AdjustmentTypeSummary.row(adjustmentEntry)
-      returnPeriod   <- WhenDidYouPayDutySummary.row(adjustmentEntry)
-      taxType        <- AdjustmentTaxTypeSummary.row(adjustmentEntry)
       volume         <- AdjustmentVolumeSummary.row(adjustmentEntry)
       duty           <- AdjustmentDutyDueSummary.row(adjustmentEntry)
     } yield SummaryListViewModel(
       rows = Seq(adjustmentType) ++
-        Seq(returnPeriod) ++
-        Seq(taxType) ++
+        spoiltAlcoholType ++
+        returnPeriod ++
+        taxType ++
         newTaxType ++
         sprDutyRate ++
         Seq(volume) ++

@@ -17,6 +17,7 @@
 package viewmodels.returns
 
 import base.SpecBase
+import config.FrontendAppConfig
 import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnDetails, ReturnTotalDutyDue}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.Application
@@ -62,8 +63,6 @@ class ViewReturnViewModelSpec extends SpecBase {
       "should return a model with data when adjustments declared" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey2))
 
-        val minus: Char = 0x2212
-
         adjustmentsViewModel.rows.size               shouldBe 4
         adjustmentsViewModel.total.get.total.content shouldBe Text(
           s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
@@ -71,6 +70,22 @@ class ViewReturnViewModelSpec extends SpecBase {
 
         adjustmentsViewModel.rows.head.cells(1).content shouldBe Text("321")
         adjustmentsViewModel.rows(3).cells(1).content   shouldBe Text("Non-draught beer between 1% and 2% ABV (125)")
+      }
+
+      "should return a model with data when a spoilt adjustment declared" in new SetUp {
+        when(appConfig.getRegimeNameByTaxTypeCode("333")).thenReturn(Some("Wine"))
+        val returnDetailWithSpoilt = returnWithSpoiltAdjustment(periodKey, Instant.now(clock))
+        val adjustmentsViewModel   = viewModel.createAdjustmentsViewModel(
+          returnDetailWithSpoilt,
+          exampleRateBands(periodKey2)
+        )
+
+        adjustmentsViewModel.rows.size                  shouldBe 2
+        adjustmentsViewModel.total.get.total.content    shouldBe Text(
+          s"$minus${messages("site.currency.2DP", returnDetailWithSpoilt.adjustments.total.abs)}"
+        )
+        adjustmentsViewModel.rows.head.cells(1).content shouldBe Text("123")
+        adjustmentsViewModel.rows(1).cells(1).content   shouldBe Text("Wine")
       }
 
       "should return a model with no entries when a nil return" in new SetUp {
@@ -185,17 +200,17 @@ class ViewReturnViewModelSpec extends SpecBase {
   }
 
   class SetUp {
-    val application: Application    = applicationBuilder().build()
-    implicit val messages: Messages = getMessages(application)
-
-    val periodKey     = periodKeyApr
-    val periodKey2    = periodKeyJan
-    val nonZeroAmount = BigDecimal("12345.67")
-
-    val viewModel          = new ViewReturnViewModel()
-    val returnDetails      = exampleReturnDetails(periodKey, Instant.now(clock))
-    val nilReturn          = nilReturnDetails(periodKey, Instant.now(clock))
-    val emptyReturnDetails = nilReturnDetailsWithEmptySections(periodKey, Instant.now(clock))
+    val application: Application     = applicationBuilder().build()
+    implicit val messages: Messages  = getMessages(application)
+    val minus: Char                  = 0x2212
+    val periodKey                    = periodKeyApr
+    val periodKey2                   = periodKeyJan
+    val nonZeroAmount                = BigDecimal("12345.67")
+    val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val viewModel                    = new ViewReturnViewModel(appConfig)
+    val returnDetails                = exampleReturnDetails(periodKey, Instant.now(clock))
+    val nilReturn                    = nilReturnDetails(periodKey, Instant.now(clock))
+    val emptyReturnDetails           = nilReturnDetailsWithEmptySections(periodKey, Instant.now(clock))
   }
 
 }
