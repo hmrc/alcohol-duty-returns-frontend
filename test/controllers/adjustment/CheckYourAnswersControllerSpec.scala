@@ -20,8 +20,9 @@ import base.SpecBase
 import cats.data.NonEmptySeq
 import connectors.CacheConnector
 import generators.ModelGenerators
+import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt, Underdeclaration}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment._
@@ -66,18 +67,36 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
   val currentAdjustmentEntry = AdjustmentEntry(
     adjustmentType = Some(Spoilt),
+    spoiltRegime = Some(Beer),
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(totalLitresVolume),
-    sprDutyRate = Some(rate),
     rateBand = Some(rateBand),
-    repackagedRateBand = Some(rateBand),
-    repackagedSprDutyRate = Some(rate),
     period = Some(YearMonth.of(24, 1)),
     duty = Some(duty)
   )
 
   val savedAdjustmentEntry =
     currentAdjustmentEntry.copy(pureAlcoholVolume = Some(BigDecimal(10)), totalLitresVolume = Some(BigDecimal(11)))
+
+  val repackagedAdjustmentEntry =
+    currentAdjustmentEntry.copy(
+      adjustmentType = Some(Overdeclaration),
+      spoiltRegime = None,
+      repackagedRateBand = Some(rateBand),
+      repackagedSprDutyRate = Some(rate)
+    )
+
+  val repackagedAdjustmentEntryWithSPR =
+    currentAdjustmentEntry.copy(
+      adjustmentType = Some(Overdeclaration),
+      sprDutyRate = Some(rate),
+      spoiltRegime = None,
+      repackagedRateBand = Some(rateBand),
+      repackagedSprDutyRate = Some(rate)
+    )
+
+  val underdeclaredAdjustmentEntry =
+    currentAdjustmentEntry.copy(spoiltRegime = None, adjustmentType = Some(Underdeclaration), sprDutyRate = Some(rate))
 
   val completeAdjustmentEntryUserAnswers: UserAnswers = emptyUserAnswers
     .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry)
@@ -98,25 +117,56 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-      val application = applicationBuilder(userAnswers = Some(completeAdjustmentEntryUserAnswers))
-        .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
-        )
-        .build()
+      val userAnswers1 = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, repackagedAdjustmentEntry)
+        .success
+        .value
 
-      running(application) {
-        val request = FakeRequest(GET, checkYourAnswersRoute)
+      val userAnswers2 = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry)
+        .success
+        .value
 
-        val result = route(application, request).value
+      val userAnswers3 = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, repackagedAdjustmentEntryWithSPR)
+        .success
+        .value
 
-        val view = application.injector.instanceOf[CheckYourAnswersView]
+      val userAnswers4 = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, underdeclaredAdjustmentEntry)
+        .success
+        .value
 
-        val list = CheckYourAnswersSummaryListHelper
-          .currentAdjustmentEntrySummaryList(currentAdjustmentEntry)(getMessages(app))
-          .get
+      val completeUserAnswersList = Seq(
+        userAnswers1,
+        userAnswers2,
+        userAnswers3,
+        userAnswers4
+      )
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
+      completeUserAnswersList.foreach { (completeUserAnswers: UserAnswers) =>
+        val application = applicationBuilder(Some(completeUserAnswers))
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, checkYourAnswersRoute)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[CheckYourAnswersView]
+
+          val list = CheckYourAnswersSummaryListHelper
+            .currentAdjustmentEntrySummaryList(completeUserAnswers.get(CurrentAdjustmentEntryPage).get)(
+              getMessages(app)
+            )
+            .get
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
+        }
       }
     }
 
@@ -293,10 +343,10 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         }
       }
 
-      "if all necessary questions are answered are not answered" in {
+      "if all necessary questions are not answered" in {
         val incompleteUserAnswers1 =
           completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(period = None))
+            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(rateBand = None, sprDutyRate = None))
             .success
             .value
         val incompleteUserAnswers2 =
@@ -319,19 +369,13 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
             .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(duty = None))
             .success
             .value
-        val incompleteUserAnswers6 =
-          completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(rateBand = None, sprDutyRate = None))
-            .success
-            .value
 
         val incompleteUserAnswersList = Seq(
           incompleteUserAnswers1,
           incompleteUserAnswers2,
           incompleteUserAnswers3,
           incompleteUserAnswers4,
-          incompleteUserAnswers5,
-          incompleteUserAnswers6
+          incompleteUserAnswers5
         )
 
         incompleteUserAnswersList.foreach { (incompleteUserAnswers: UserAnswers) =>

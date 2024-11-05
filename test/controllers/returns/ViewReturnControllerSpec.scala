@@ -52,6 +52,10 @@ class ViewReturnControllerSpec extends SpecBase {
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createNetDutySuspensionViewModel(returnDetails)).thenReturn(tableModel)
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
 
         val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
         val result  = route(application, request).value

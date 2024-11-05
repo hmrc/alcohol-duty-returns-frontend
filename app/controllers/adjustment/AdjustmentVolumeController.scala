@@ -53,9 +53,9 @@ class AdjustmentVolumeController @Inject() (
 
   private def getRegime(implicit request: DataRequest[_]): Option[AlcoholRegime] =
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case Some(AdjustmentEntry(_, _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+      case Some(AdjustmentEntry(_, _, _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
         rateBand.rangeDetails.map(_.alcoholRegime).headOption
-      case _                                                                      => None
+      case _                                                                         => None
     }
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
@@ -67,6 +67,7 @@ class AdjustmentVolumeController @Inject() (
                 AdjustmentEntry(
                   _,
                   Some(adjustmentType),
+                  _,
                   _,
                   Some(rateBand),
                   Some(totalLitresVolume),
@@ -88,7 +89,7 @@ class AdjustmentVolumeController @Inject() (
                 rateBandContent(rateBand)
               )
             )
-          case Some(AdjustmentEntry(_, Some(adjustmentType), _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+          case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
             Ok(
               view(
                 form,
@@ -98,7 +99,7 @@ class AdjustmentVolumeController @Inject() (
                 rateBandContent(rateBand)
               )
             )
-          case _                                                                                         =>
+          case _                                                                                            =>
             logger.warn(
               "Couldn't fetch the adjustmentType, rateBand, totalLitresVolume and pureAlcoholVolume in AdjustmentEntry from user answers"
             )
@@ -147,7 +148,7 @@ class AdjustmentVolumeController @Inject() (
     request: DataRequest[_]
   ): Future[Result] =
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case Some(AdjustmentEntry(_, Some(adjustmentType), _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
         Future.successful(
           BadRequest(
             view(
@@ -159,7 +160,7 @@ class AdjustmentVolumeController @Inject() (
             )
           )
         )
-      case _                                                                                         =>
+      case _                                                                                            =>
         logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }

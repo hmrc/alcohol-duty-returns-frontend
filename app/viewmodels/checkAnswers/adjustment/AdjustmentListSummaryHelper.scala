@@ -20,6 +20,7 @@ import config.Constants
 import config.Constants.rowsPerPage
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 import pages.adjustment.AdjustmentEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
@@ -75,16 +76,19 @@ object AdjustmentListSummaryHelper {
       }
       val formattedDutyValue  =
         Money.format(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache")))
+      val description         = (adjustmentType, adjustmentEntry.spoiltRegime) match {
+        case (Spoilt, Some(spoiltRegime)) => Text(messages(s"alcoholType.$spoiltRegime"))
+        case _                            =>
+          Text(
+            rateBandRecap(
+              adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
+            )
+          )
+      }
       TableRowViewModel(
         cells = Seq(
           TableRow(Text(adjustmentTypeLabel)),
-          TableRow(
-            Text(
-              rateBandRecap(
-                adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
-              )
-            )
-          ),
+          TableRow(description),
           TableRow(
             content = Text(formattedDutyValue),
             classes = Constants.textAlignRightCssClass
