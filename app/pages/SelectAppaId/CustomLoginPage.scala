@@ -1,6 +1,6 @@
 package pages.SelectAppaId
 
-import models.SelectAppaId.CustomLogin
+import models.CustomLogin
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 

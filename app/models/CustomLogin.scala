@@ -1,6 +1,5 @@
-package models.SelectAppaId
+package models
 
-import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -10,8 +9,8 @@ sealed trait CustomLogin
 
 object CustomLogin extends Enumerable.Implicits {
 
-  case object 1 extends WithName("1") with CustomLogin
-  case object 2 extends WithName("2") with CustomLogin
+  case object he extends WithName("1") with CustomLogin
+  case object she extends WithName("2") with CustomLogin
 
   val values: Seq[CustomLogin] = Seq(
     1,
