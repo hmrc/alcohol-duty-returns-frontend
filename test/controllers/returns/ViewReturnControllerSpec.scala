@@ -17,7 +17,7 @@
 package controllers.returns
 
 import base.SpecBase
-import connectors.AlcoholDutyReturnsConnector
+import connectors.{AlcoholDutyCalculatorConnector, AlcoholDutyReturnsConnector}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
@@ -35,18 +35,27 @@ class ViewReturnControllerSpec extends SpecBase {
     "should return a view if able to fetch the return" in new SetUp {
       when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKey))(any))
         .thenReturn(Future.successful(returnDetails))
+      when(mockCalculatorConnector.rateBands(any())(any))
+        .thenReturn(Future.successful(rateBands))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
+        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockCalculatorConnector))
         .overrides(bind[ViewReturnViewModel].toInstance(mockViewModel))
         .build()
       running(application) {
         implicit val messages = getMessages(application)
 
-        when(mockViewModel.createAlcoholDeclaredViewModel(returnDetails)).thenReturn(tableModel)
-        when(mockViewModel.createAdjustmentsViewModel(returnDetails)).thenReturn(tableModel)
         when(mockViewModel.createTotalDueViewModel(returnDetails)).thenReturn(totalTableModel)
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
         when(mockViewModel.createNetDutySuspensionViewModel(returnDetails)).thenReturn(tableModel)
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
 
         val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
         val result  = route(application, request).value
@@ -88,9 +97,12 @@ class ViewReturnControllerSpec extends SpecBase {
     "should redirect to the journey recovery page if unable to parse the returned period key" in new SetUp {
       when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKey))(any))
         .thenReturn(Future.successful(returnDetailsWithBadPeriodKey))
+      when(mockCalculatorConnector.rateBands(any())(any))
+        .thenReturn(Future.successful(rateBands))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
+        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockCalculatorConnector))
         .build()
       running(application) {
         val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
@@ -105,18 +117,21 @@ class ViewReturnControllerSpec extends SpecBase {
   class SetUp {
     val periodKey                     = periodKeyMar
     val returnDetails                 = exampleReturnDetails(periodKey, Instant.now(clock))
-    val returnDetailsWithBadPeriodKey = exampleReturnDetails(badPeriodKey, Instant.now(clock))
+    val returnDetailsWithBadPeriodKey =
+      returnDetails.copy(identification = returnDetails.identification.copy(periodKey = badPeriodKey))
     val returnPeriodStr               = dateTimeHelper.formatMonthYear(returnPeriodMar.period)
     val submittedAtDateStr            = dateTimeHelper.formatDateMonthYear(
       dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
     )
-    val submittedAtTimeStr            = dateTimeHelper.formatHourMinuteMerediem(
+    val submittedAtTimeStr            = dateTimeHelper.formatHourMinuteMeridiem(
       dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
     )
+    val rateBands                     = exampleRateBands(periodKey)
 
-    val tableModel           = TableViewModel.empty()
-    val totalTableModel      = TableTotalViewModel(HeadCell(), HeadCell())
-    val mockReturnsConnector = mock[AlcoholDutyReturnsConnector]
-    val mockViewModel        = mock[ViewReturnViewModel]
+    val tableModel              = TableViewModel.empty()
+    val totalTableModel         = TableTotalViewModel(HeadCell(), HeadCell())
+    val mockReturnsConnector    = mock[AlcoholDutyReturnsConnector]
+    val mockCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+    val mockViewModel           = mock[ViewReturnViewModel]
   }
 }

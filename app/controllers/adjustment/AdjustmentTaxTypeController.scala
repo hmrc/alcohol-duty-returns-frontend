@@ -58,7 +58,7 @@ class AdjustmentTaxTypeController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case Some(AdjustmentEntry(_, Some(adjustmentType), _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
         Ok(
           view(
             form.fill(
@@ -68,7 +68,7 @@ class AdjustmentTaxTypeController @Inject() (
             adjustmentType
           )
         )
-      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _))              =>
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _))              =>
         Ok(
           view(
             form,
@@ -76,7 +76,7 @@ class AdjustmentTaxTypeController @Inject() (
             adjustmentType
           )
         )
-      case _                                                                                         =>
+      case _                                                                                            =>
         logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
@@ -131,7 +131,7 @@ class AdjustmentTaxTypeController @Inject() (
     request: Request[_]
   ): Future[Result] =
     userAnswers.get(CurrentAdjustmentEntryPage) match {
-      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _)) =>
+      case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _)) =>
         Future.successful(
           BadRequest(
             view(
@@ -141,7 +141,7 @@ class AdjustmentTaxTypeController @Inject() (
             )
           )
         )
-      case _                                                                            =>
+      case _                                                                               =>
         logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }

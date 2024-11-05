@@ -16,35 +16,33 @@
 
 package viewmodels.checkAnswers.adjustment
 
-import models.CheckMode
+import controllers.adjustment.routes
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.Spoilt
+import models.CheckMode
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.Money
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdjustmentDutyDueSummary {
-  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
-    val action    = adjustmentEntry.adjustmentType match {
-      case Some(Spoilt) =>
-        Seq(
-          ActionItemViewModel(
-            "site.change",
-            controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(CheckMode).url
-          )
-            .withVisuallyHiddenText(messages("spoiltVolumeWithDuty.change.hidden"))
+object AlcoholicProductTypeSummary {
+
+  def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
+    adjustmentEntry.spoiltRegime.map { spoiltRegime =>
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"alcoholType.$spoiltRegime"))
         )
-      case _            => Seq.empty
-    }
-    val dutyValue = adjustmentEntry.newDuty.orElse(adjustmentEntry.duty)
-    dutyValue.map(duty =>
-      SummaryListRowViewModel(
-        key = "adjustmentDutyDue.duty.checkYourAnswersLabel",
-        value = ValueViewModel(Money.format(duty)),
-        actions = action
       )
-    )
-  }
+
+      SummaryListRowViewModel(
+        key = "alcoholicProductType.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AlcoholicProductTypeController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("alcoholicProductType.change.hidden"))
+        )
+      )
+    }
 }

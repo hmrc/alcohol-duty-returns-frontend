@@ -112,7 +112,7 @@ class DataRetrievalActionSpec extends SpecBase {
       }
     }
 
-    "when the Cache Connector return an error" - {
+    "when the User Answer Connector return an error" - {
 
       "must redirect to the Return Locked controller if the error status is Locked" in {
 

@@ -27,6 +27,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
+import models.AlcoholRegime.Beer
 import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
 import models.adjustment.AdjustmentType.Spoilt
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
@@ -76,6 +77,7 @@ class AdjustmentListControllerSpec extends SpecBase {
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(volume),
     rateBand = Some(rateBand),
+    spoiltRegime = Some(Beer),
     duty = Some(dutyDue),
     adjustmentType = Some(Spoilt),
     period = Some(YearMonth.of(24, 1))

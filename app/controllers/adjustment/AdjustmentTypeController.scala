@@ -20,17 +20,20 @@ import controllers.actions._
 import forms.adjustment.AdjustmentTypeFormProvider
 
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentTypePage, CurrentAdjustmentEntryPage}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.adjustment.AlcoholicProductTypeHelper
 import views.html.adjustment.AdjustmentTypeView
 
+import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class AdjustmentTypeController @Inject() (
   override val messagesApi: MessagesApi,
@@ -41,7 +44,8 @@ class AdjustmentTypeController @Inject() (
   requireData: DataRequiredAction,
   formProvider: AdjustmentTypeFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: AdjustmentTypeView
+  view: AdjustmentTypeView,
+  helper: AlcoholicProductTypeHelper
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -68,13 +72,14 @@ class AdjustmentTypeController @Inject() (
             val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
             val (updatedAdjustment, hasChanged) = updateAdjustmentType(adjustment, value)
             for {
-              updatedAnswers <-
+              updatedAnswers                <-
                 Future.fromTry(
                   request.userAnswers
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(adjustmentType = Some(value)))
                 )
-              _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AdjustmentTypePage, mode, updatedAnswers, hasChanged))
+              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswers(updatedAnswers))
+              _                             <- userAnswersConnector.set(singleRegimeUpdatedUserAnswer)
+            } yield Redirect(navigator.nextPage(AdjustmentTypePage, mode, singleRegimeUpdatedUserAnswer, hasChanged))
           }
         )
   }
@@ -87,6 +92,7 @@ class AdjustmentTypeController @Inject() (
           adjustmentEntry.copy(
             period = None,
             rateBand = None,
+            spoiltRegime = None,
             totalLitresVolume = None,
             pureAlcoholVolume = None,
             sprDutyRate = None,
@@ -98,6 +104,25 @@ class AdjustmentTypeController @Inject() (
           ),
           true
         )
+    }
+
+  private def checkIfOneRegimeAndUpdateUserAnswers(
+    userAnswer: UserAnswers
+  )(implicit messages: Messages): Try[UserAnswers] =
+    if (userAnswer.regimes.regimes.size == 1) {
+      val adjustment       = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+      val rateBand         = helper.createRateBandFromRegime(userAnswer.regimes.regimes.head)
+      val currentYearMonth = YearMonth.now()
+      userAnswer.set(
+        CurrentAdjustmentEntryPage,
+        adjustment.copy(
+          spoiltRegime = userAnswer.regimes.regimes.headOption,
+          rateBand = Some(rateBand),
+          period = Some(currentYearMonth.withMonth(1))
+        )
+      )
+    } else {
+      Try(userAnswer)
     }
 
 }

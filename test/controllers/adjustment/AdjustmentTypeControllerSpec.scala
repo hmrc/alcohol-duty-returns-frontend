@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.AdjustmentTypeFormProvider
-import models.NormalMode
+import models.{AlcoholRegimes, NormalMode}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -27,6 +27,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentTypeView
@@ -131,6 +132,71 @@ class AdjustmentTypeControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentTypeRoute)
+            .withFormUrlEncodedBody(("adjustment-type-value", Spoilt.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted and user is approved for a single regime when the same data is submitted" in {
+
+      val userAnswers = emptyUserAnswers
+        .copy(regimes = AlcoholRegimes(Set(Beer)))
+        .set(
+          CurrentAdjustmentEntryPage,
+          AdjustmentEntry(
+            adjustmentType = Some(Spoilt)
+          )
+        )
+        .success
+        .value
+
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, false)),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentTypeRoute)
+            .withFormUrlEncodedBody(("adjustment-type-value", Spoilt.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted and user is approved for a single regime when CurrentAdjustmentEntryPage is empty" in {
+
+      val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
+
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()

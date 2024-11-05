@@ -101,22 +101,14 @@ class CheckYourAnswersController @Inject() (
     summaryList: SummaryList
   )(implicit
     request: Request[_]
-  ): Future[Result] = {
-    val adjustmentTypeOpt = adjustmentEntry.adjustmentType
-    adjustmentTypeOpt match {
-      case Some(adjustmentType) =>
-        for {
-          updateUserAnswers <- Future.fromTry(userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry))
-          _                 <- userAnswersConnector.set(updateUserAnswers)
-        } yield Ok(
-          view(
-            summaryList
-          )
-        )
-      case None                 =>
-        logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-    }
-  }
+  ): Future[Result] =
+    for {
+      updateUserAnswers <- Future.fromTry(userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry))
+      _                 <- userAnswersConnector.set(updateUserAnswers)
+    } yield Ok(
+      view(
+        summaryList
+      )
+    )
 
 }
