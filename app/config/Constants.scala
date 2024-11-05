@@ -39,11 +39,10 @@ object Constants {
   val textAlignRightCssClass = "text-align-right"
   val boldFontCssClass       = "govuk-!-font-weight-bold"
 
-  val blueTagCssClass   = "govuk-tag--blue"
-  val greenTagCssClass  = "govuk-tag--green"
-  val redTagCssClass    = "govuk-tag--red"
-  val yellowTagCssClass = "govuk-tag--yellow"
-  val greyTagCssClass   = "govuk-tag--grey"
+  val blueTagCssClass  = "govuk-tag--blue"
+  val greenTagCssClass = "govuk-tag--green"
+  val redTagCssClass   = "govuk-tag--red"
+  val greyTagCssClass  = "govuk-tag--grey"
 
   val headingMCssClass = "govuk-heading-m"
   val headingLCssClass = "govuk-heading-l"

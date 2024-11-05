@@ -31,9 +31,7 @@ import uk.gov.hmrc.http.UpstreamErrorResponse
 import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase {
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
-
-  class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(mockConfig, cacheConnector) {
+  class Harness(cacheConnector: CacheConnector) extends DataRetrievalActionImpl(cacheConnector) {
     def actionRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
   }
 
