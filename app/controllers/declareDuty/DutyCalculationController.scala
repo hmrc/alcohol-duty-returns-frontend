@@ -16,10 +16,10 @@
 
 package controllers.declareDuty
 
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector, TotalDutyCalculationRequest}
+import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
 import controllers.actions._
 import models.declareDuty.VolumeAndRateByTaxType
-import models.{AlcoholRegime, UserAnswers}
+import models.{AlcoholRegime, TotalDutyCalculationRequest, UserAnswers}
 import pages.QuestionPage
 import pages.declareDuty.{AlcoholDutyPage, DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
 import play.api.Logging
