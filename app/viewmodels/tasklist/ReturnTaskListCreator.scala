@@ -16,6 +16,7 @@
 
 package viewmodels.tasklist
 
+import config.Constants
 import models.adjustment.AdjustmentType
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
 import pages.QuestionPage
@@ -63,8 +64,11 @@ class ReturnTaskListCreator @Inject() () {
       case None =>
         Seq(
           TaskListItem(
-            title =
-              TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.notStarted"))),
+            title = TaskListItemTitle(
+              content = Text(messages(s"taskList.section.$sectionName.needToDeclare.notStarted")),
+              classes = Constants.twoThirdsCssClass
+            ),
+            hint = addHintForSpiritsJourney(sectionName),
             status = AlcholDutyTaskListItemStatus.notStarted,
             href = Some(declarationController(NormalMode))
           )
@@ -77,6 +81,15 @@ class ReturnTaskListCreator @Inject() () {
       statusCompleted = AlcholDutyTaskListItemStatus.completed
     )
   }
+
+  private def addHintForSpiritsJourney(sectionName: String)(implicit
+    messages: Messages
+  ): Option[Hint] =
+    sectionName match {
+      case "spirits" =>
+        Some(Hint(content = Text(messages("taskList.section.spirits.hint")), classes = Constants.twoThirdsCssClass))
+      case _         => None
+    }
 
   private def createDeclarationTask(
     getDeclarationState: () => DeclarationState,
