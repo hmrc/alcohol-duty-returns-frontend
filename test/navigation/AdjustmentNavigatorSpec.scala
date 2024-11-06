@@ -19,6 +19,7 @@ package navigation
 import base.SpecBase
 import cats.data.NonEmptySeq
 import controllers._
+import models.AlcoholRegime.{Beer, Cider}
 import models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import pages._
 import models._
@@ -86,6 +87,32 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
+      "must go from the Adjustment Type Page to the Alcoholic Product Type page if user has more than 1 approval" in {
+        navigator.nextPage(
+          pages.adjustment.AdjustmentTypePage,
+          NormalMode,
+          emptyUserAnswers
+            .copy(regimes = AlcoholRegimes(Set(Beer, Cider)))
+            .set(pages.adjustment.CurrentAdjustmentEntryPage, AdjustmentEntry(adjustmentType = Some(Spoilt)))
+            .success
+            .value
+        ) mustBe
+          controllers.adjustment.routes.AlcoholicProductTypeController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Adjustment Type Page to the Spoilt Volume With Duty page if user has only 1 approval" in {
+        navigator.nextPage(
+          pages.adjustment.AdjustmentTypePage,
+          NormalMode,
+          emptyUserAnswers
+            .copy(regimes = AlcoholRegimes(Set(Beer)))
+            .set(pages.adjustment.CurrentAdjustmentEntryPage, AdjustmentEntry(adjustmentType = Some(Spoilt)))
+            .success
+            .value
+        ) mustBe
+          controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
+      }
+
       "must go from the Adjustment Type Page to the When Did You Pay Duty page" in {
         navigator.nextPage(
           pages.adjustment.AdjustmentTypePage,
@@ -93,6 +120,15 @@ class AdjustmentNavigatorSpec extends SpecBase {
           emptyUserAnswers
         ) mustBe
           controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Alcoholic Product Type Page to the Spoilt Volume page" in {
+        navigator.nextPage(
+          pages.adjustment.AlcoholicProductTypePage,
+          NormalMode,
+          emptyUserAnswers
+        ) mustBe
+          controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
       }
 
       "must go from the When Did You Pay Duty Page to Adjustment Tax Type page" in {
@@ -238,6 +274,15 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
 
+      "must go from the Spoilt Volume page to the CYA page" in {
+        navigator.nextPage(
+          pages.adjustment.SpoiltVolumeWithDutyPage,
+          NormalMode,
+          emptyUserAnswers
+        ) mustBe
+          controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+      }
+
       "must go from the AdjustmentListPage to the task list page if the answer is No" in {
         navigator.nextPage(
           AdjustmentListPage,
@@ -246,7 +291,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe routes.TaskListController.onPageLoad
       }
 
-      "must go from the AdjustmentListPage to the task list page if the answer is Yes" in {
+      "must go from the AdjustmentListPage to the adjustment type page if the answer is Yes" in {
         navigator.nextPage(
           AdjustmentListPage,
           NormalMode,
@@ -305,6 +350,26 @@ class AdjustmentNavigatorSpec extends SpecBase {
     "must go from the Adjustment Type Page to the CYA page if answer is the same" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentTypePage,
+        CheckMode,
+        emptyUserAnswers,
+        false
+      ) mustBe
+        controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    }
+
+    "must go from the Alcoholic Product Type Page to the Spoilt Volume page if answer has changed" in {
+      navigator.nextPage(
+        pages.adjustment.AlcoholicProductTypePage,
+        CheckMode,
+        emptyUserAnswers,
+        true
+      ) mustBe
+        controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
+    }
+
+    "must go from the Alcoholic Product Type Page to the CYA page if answer is the same" in {
+      navigator.nextPage(
+        pages.adjustment.AlcoholicProductTypePage,
         CheckMode,
         emptyUserAnswers,
         false
@@ -377,6 +442,14 @@ class AdjustmentNavigatorSpec extends SpecBase {
       ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode)
     }
 
+    "must go from the Spoilt Volume page to the CYA page" in {
+      navigator.nextPage(
+        pages.adjustment.SpoiltVolumeWithDutyPage,
+        CheckMode,
+        emptyUserAnswers
+      ) mustBe
+        controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
+    }
     "must go from the Adjustment Tax Type page to CYA page if RateType is SmallProducerRelief if the answer is the same" in {
       navigator.nextPage(
         pages.adjustment.AdjustmentTaxTypePage,

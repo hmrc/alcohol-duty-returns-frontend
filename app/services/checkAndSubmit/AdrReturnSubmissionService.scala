@@ -252,63 +252,83 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     userAnswers: UserAnswers
   ): EitherT[Future, String, Seq[AdrDutySuspendedProduct]] =
     for {
-      beerDutySuspended           <- getValue(userAnswers, DutySuspendedBeerPage)
-                                       .map(dutySuspendedBeer =>
-                                         AdrDutySuspendedProduct(
-                                           regime = AdrDutySuspendedAlcoholRegime.Beer,
-                                           suspendedQuantity = AdrAlcoholQuantity(
-                                             dutySuspendedBeer.totalBeer,
-                                             dutySuspendedBeer.pureAlcoholInBeer
+      beerDutySuspended           <- if (userAnswers.regimes.hasBeer()) {
+                                       getValue(userAnswers, DutySuspendedBeerPage)
+                                         .map(dutySuspendedBeer =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.Beer,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 dutySuspendedBeer.totalBeer,
+                                                 dutySuspendedBeer.pureAlcoholInBeer
+                                               )
+                                             )
                                            )
                                          )
-                                       )
-      ciderDutySuspended          <- getValue(userAnswers, DutySuspendedCiderPage)
-                                       .map(dutySuspendedCider =>
-                                         AdrDutySuspendedProduct(
-                                           regime = AdrDutySuspendedAlcoholRegime.Cider,
-                                           suspendedQuantity = AdrAlcoholQuantity(
-                                             dutySuspendedCider.totalCider,
-                                             dutySuspendedCider.pureAlcoholInCider
+                                     } else EitherT.rightT[Future, String](None)
+      ciderDutySuspended          <- if (userAnswers.regimes.hasCider())
+                                       getValue(userAnswers, DutySuspendedCiderPage)
+                                         .map(dutySuspendedCider =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.Cider,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 dutySuspendedCider.totalCider,
+                                                 dutySuspendedCider.pureAlcoholInCider
+                                               )
+                                             )
                                            )
                                          )
-                                       )
-      spiritsDutySuspended        <- getValue(userAnswers, DutySuspendedSpiritsPage)
-                                       .map(dutySuspendedSpirits =>
-                                         AdrDutySuspendedProduct(
-                                           regime = AdrDutySuspendedAlcoholRegime.Spirits,
-                                           suspendedQuantity = AdrAlcoholQuantity(
-                                             dutySuspendedSpirits.totalSpirits,
-                                             dutySuspendedSpirits.pureAlcoholInSpirits
+                                     else EitherT.rightT[Future, String](None)
+      spiritsDutySuspended        <- if (userAnswers.regimes.hasSpirits())
+                                       getValue(userAnswers, DutySuspendedSpiritsPage)
+                                         .map(dutySuspendedSpirits =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.Spirits,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 dutySuspendedSpirits.totalSpirits,
+                                                 dutySuspendedSpirits.pureAlcoholInSpirits
+                                               )
+                                             )
                                            )
                                          )
-                                       )
-      wineDutySuspended           <- getValue(userAnswers, DutySuspendedWinePage)
-                                       .map(dutySuspendedWine =>
-                                         AdrDutySuspendedProduct(
-                                           regime = AdrDutySuspendedAlcoholRegime.Wine,
-                                           suspendedQuantity = AdrAlcoholQuantity(
-                                             dutySuspendedWine.totalWine,
-                                             dutySuspendedWine.pureAlcoholInWine
+                                     else EitherT.rightT[Future, String](None)
+      wineDutySuspended           <- if (userAnswers.regimes.hasWine())
+                                       getValue(userAnswers, DutySuspendedWinePage)
+                                         .map(dutySuspendedWine =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.Wine,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 dutySuspendedWine.totalWine,
+                                                 dutySuspendedWine.pureAlcoholInWine
+                                               )
+                                             )
                                            )
                                          )
-                                       )
-      otherFermentedDutySuspended <- getValue(userAnswers, DutySuspendedOtherFermentedPage)
-                                       .map(dutySuspendedOtherFermentedProducts =>
-                                         AdrDutySuspendedProduct(
-                                           regime = AdrDutySuspendedAlcoholRegime.OtherFermentedProduct,
-                                           suspendedQuantity = AdrAlcoholQuantity(
-                                             dutySuspendedOtherFermentedProducts.totalOtherFermented,
-                                             dutySuspendedOtherFermentedProducts.pureAlcoholInOtherFermented
+                                     else EitherT.rightT[Future, String](None)
+      otherFermentedDutySuspended <- if (userAnswers.regimes.hasOtherFermentedProduct())
+                                       getValue(userAnswers, DutySuspendedOtherFermentedPage)
+                                         .map(dutySuspendedOtherFermentedProducts =>
+                                           Some(
+                                             AdrDutySuspendedProduct(
+                                               regime = AdrDutySuspendedAlcoholRegime.OtherFermentedProduct,
+                                               suspendedQuantity = AdrAlcoholQuantity(
+                                                 dutySuspendedOtherFermentedProducts.totalOtherFermented,
+                                                 dutySuspendedOtherFermentedProducts.pureAlcoholInOtherFermented
+                                               )
+                                             )
                                            )
                                          )
-                                       )
+                                     else EitherT.rightT[Future, String](None)
     } yield Seq(
       beerDutySuspended,
       ciderDutySuspended,
       spiritsDutySuspended,
       wineDutySuspended,
       otherFermentedDutySuspended
-    )
+    ).flatten
 
   def getSpirits(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrSpirits]] =
     for {

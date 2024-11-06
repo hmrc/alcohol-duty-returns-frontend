@@ -106,6 +106,16 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
 
       table.total.map(_.total.content).get shouldBe Text(Money.format(expectedSum)(getMessages(app)))
     }
+
+    "must throw an exception if adjustment type is missing" in {
+      val adjustmentEntryWithoutType     = adjustmentEntry.copy(adjustmentType = None)
+      val adjustmentEntryListMissingType = List(adjustmentEntryWithoutType)
+      val userAnswers                    = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryListMissingType).success.value
+      val exception                      = intercept[RuntimeException] {
+        AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
+      }
+      exception.getMessage shouldBe "Couldn't fetch adjustment type value from cache"
+    }
   }
 
 }
