@@ -1381,6 +1381,12 @@ dutyDueForThisReturn.table.adjustmentDue = Adjustments to previous returns
 dutyDueForThisReturn.h4 = Declaration
 dutyDueForThisReturn.p3 = By sending this return, I agree that the information I have given is complete and correct.
 
+dutyDueForThisReturn.youveAlsoAnswered = You’ve also answered
+dutyDueForThisReturn.youveAlsoAnswered.p = The below answers will not affect how much you owe.
+dutyDueForThisReturn.dutySuspended.alcohol = Duty suspended alcohol
+dutyDueForThisReturn.dutySuspended.declared = Declared
+dutyDueForThisReturn.dutySuspended.nothingToDeclare = Nothing to declare
+
 returnSubmitted.title = Return sent
 returnSubmitted.heading = Return sent
 returnSubmitted.panel.body.reference = Your return reference is {0}

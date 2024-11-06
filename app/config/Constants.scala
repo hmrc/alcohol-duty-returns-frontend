@@ -51,6 +51,10 @@ object Constants {
   val headingMCssClass = "govuk-heading-m"
   val headingLCssClass = "govuk-heading-l"
 
+  val summaryListKey    = "govuk-summary-list__key"
+  val summaryListValue  = "govuk-summary-list__value"
+  val summaryListAction = "govuk-summary-list__actions"
+
   val tableCaptionMCssClass    = "govuk-table__caption--m"
   val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"
 
