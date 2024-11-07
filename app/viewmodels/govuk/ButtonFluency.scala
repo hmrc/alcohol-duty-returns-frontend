@@ -16,6 +16,7 @@
 
 package viewmodels.govuk
 
+import config.Constants.Css
 import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 
@@ -66,9 +67,9 @@ trait ButtonFluency {
       button.copy(isStartButton = true)
 
     def asSecondaryButton(): Button =
-      withCssClass("govuk-button--secondary")
+      withCssClass(Css.secondaryButtonCssClass)
 
     def asWarningButton(): Button =
-      withCssClass("govuk-button--warning")
+      withCssClass(Css.warningButtonCssClass)
   }
 }

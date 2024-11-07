@@ -16,7 +16,9 @@
 
 package forms.adjustment
 
+import config.Constants
 import forms.mappings.Mappings
+
 import javax.inject.Inject
 import play.api.data.Form
 
@@ -29,6 +31,6 @@ class AdjustmentRepackagedTaxTypeFormProvider @Inject() extends Mappings {
         "adjustmentRepackagedTaxType.error.invalid",
         "adjustmentRepackagedTaxType.error.invalid"
       )
-        .verifying(inRange(100, 999, "adjustmentRepackagedTaxType.error.invalid"))
+        .verifying(inRange(Constants.minTaxType, Constants.maxTaxType, "adjustmentRepackagedTaxType.error.invalid"))
     )
 }

@@ -14,13 +14,15 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
-@(id:String, actions:Seq[Html], classes: String = "govuk-link govuk-link--no-visited-state")
+@(id:String, actions:Seq[Html], classes: String = "${Css.linkCssClass} ${Css.linkNoVisitedStateCssClass}")
 
-<ul class="govuk-summary-list__actions-list">
+<ul class="@Css.summaryListActionsListCssClass">
     @for(action <- actions) {
-        <li class="govuk-summary-list__actions-list-item">
+        <li class="@Css.summaryListActionsListItemCssClass">
             @action
         </li>
     }

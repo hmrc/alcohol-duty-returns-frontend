@@ -14,8 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading}
+@import config.Constants.Css
+@import viewmodels.InputWidth._
 
 @this(
     layout: templates.Layout,
@@ -68,7 +69,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("otherIngredients"),
-                legend = LegendViewModel(messages("ethyleneGasOrMolassesUsed.question")).withCssClass("govuk-fieldset__legend--l")
+                legend = LegendViewModel(messages("ethyleneGasOrMolassesUsed.question")).withCssClass(Css.fieldsetLegendLCssClass)
             )
         )
 

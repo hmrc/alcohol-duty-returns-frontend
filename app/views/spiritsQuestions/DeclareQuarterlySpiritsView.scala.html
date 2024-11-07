@@ -15,6 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph, BulletList}
+@import config.Constants.Css
 
 @this(
     layout: templates.Layout,
@@ -83,7 +84,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("declareQuarterlySpirits-yesNoValue"),
-                legend = LegendViewModel(messages("declareQuarterlySpirits.question")).withCssClass("govuk-fieldset__legend--l")
+                legend = LegendViewModel(messages("declareQuarterlySpirits.question")).withCssClass(Css.fieldsetLegendLCssClass)
             )
         )
 

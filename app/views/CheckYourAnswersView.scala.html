@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this(
     layout: templates.Layout,
     govukSummaryList: GovukSummaryList
@@ -23,7 +25,7 @@
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
+    <h1 class="@Css.headingXLCssClass">@messages("checkYourAnswers.heading")</h1>
 
     @govukSummaryList(list)
 }

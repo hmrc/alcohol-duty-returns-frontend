@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading}
+@import config.Constants
 @import forms.adjustment.UnderDeclarationReasonFormProvider
+@import viewmodels.InputWidth._
 
 @this(
     layout: templates.Layout,
@@ -49,7 +50,7 @@
                 label = LabelViewModel(messages("underDeclarationReason.heading")).asPageHeading()
             )
             .withWidth(TwoThirds)
-            .withMaxLength(UnderDeclarationReasonFormProvider.underDeclarationReasonLength)
+            .withMaxLength(Constants.overUnderDeclarationReasonLength)
         )
 
         @govukButton(

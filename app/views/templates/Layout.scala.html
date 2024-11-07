@@ -15,9 +15,10 @@
  *@
 
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
-@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
+@import config.Constants.Css
 @import templates.FullWidthMainContent
+@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import views.html.helper.CSPNonce
 
 @this(
@@ -69,14 +70,14 @@
 
 @beforeContent = {
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+<div class="@Css.gridRowCssClass">
+    <div class="@Css.gridColumnTwoThirds">
         @if(showBackLink) {
             @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
         }
     </div>
 
-    <div class="govuk-grid-column-one-third">
+    <div class="@Css.gridColumnOneThird">
         @if(appConfig.languageTranslationEnabled) {
             @hmrcLanguageSelect(LanguageSelect(
                 if (messages.lang.code == "cy") Cy else En,
@@ -91,7 +92,7 @@
 @content = {
     @contentBlock
 
-    <div class="govuk-!-margin-top-8">
+    <div class="@Css.marginTop8CssClass">
         @hmrcReportTechnicalIssueHelper()
     </div>
 

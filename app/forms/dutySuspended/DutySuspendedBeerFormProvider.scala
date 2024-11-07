@@ -16,33 +16,42 @@
 
 package forms.dutySuspended
 
-import javax.inject.Inject
+import config.Constants
 
+import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
 import models.dutySuspended.DutySuspendedBeer
 
 class DutySuspendedBeerFormProvider @Inject() extends Mappings {
-
   def apply(): Form[DutySuspendedBeer] = Form(
     mapping(
       "totalBeer"         -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "dutySuspendedBeer.error.totalBeer.required",
         "dutySuspendedBeer.error.totalBeer.nonNumeric",
         "dutySuspendedBeer.error.totalBeer.decimalPlaces"
-      ).verifying(minimumValue(BigDecimal(-999999999.99), "dutySuspendedBeer.error.totalBeer.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedBeer.error.totalBeer.maximumRequired")),
+      ).verifying(
+        minimumValue(Constants.dutySuspendedVolumeMinimumValue, "dutySuspendedBeer.error.totalBeer.minimumRequired")
+      ).verifying(
+        maximumValue(Constants.dutySuspendedVolumeMaximumValue, "dutySuspendedBeer.error.totalBeer.maximumRequired")
+      ),
       "pureAlcoholInBeer" -> bigDecimal(
-        4,
+        Constants.lpaMaximumDecimalPlaces,
         "dutySuspendedBeer.error.pureAlcoholInBeer.required",
         "dutySuspendedBeer.error.pureAlcoholInBeer.nonNumeric",
         "dutySuspendedBeer.error.pureAlcoholInBeer.decimalPlaces"
       ).verifying(
-        minimumValue(BigDecimal(-999999999.9999), "dutySuspendedBeer.error.pureAlcoholInBeer.minimumRequired")
+        minimumValue(
+          Constants.dutySuspendedLpaMinimumValue,
+          "dutySuspendedBeer.error.pureAlcoholInBeer.minimumRequired"
+        )
       ).verifying(
-        maximumValue(BigDecimal(999999999.9999), "dutySuspendedBeer.error.pureAlcoholInBeer.maximumRequired")
+        maximumValue(
+          Constants.dutySuspendedLpaMaximumValue,
+          "dutySuspendedBeer.error.pureAlcoholInBeer.maximumRequired"
+        )
       )
     )(DutySuspendedBeer.apply)(DutySuspendedBeer.unapply)
   )

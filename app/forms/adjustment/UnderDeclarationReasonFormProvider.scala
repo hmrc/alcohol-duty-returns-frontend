@@ -16,7 +16,7 @@
 
 package forms.adjustment
 
-import forms.adjustment.UnderDeclarationReasonFormProvider.underDeclarationReasonLength
+import config.Constants
 
 import javax.inject.Inject
 import forms.mappings.Mappings
@@ -27,10 +27,6 @@ class UnderDeclarationReasonFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "under-declaration-reason-input" -> text("underDeclarationReason.error.required")
-        .verifying(maxLength(underDeclarationReasonLength, "underDeclarationReason.error.length"))
+        .verifying(maxLength(Constants.overUnderDeclarationReasonLength, "underDeclarationReason.error.length"))
     )
-}
-
-object UnderDeclarationReasonFormProvider {
-  val underDeclarationReasonLength = 250
 }

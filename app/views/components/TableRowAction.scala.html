@@ -14,11 +14,13 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
-@(id: String, text: String, href: Call, visuallyHiddenContent:Option[String] = None, classes: String = "govuk-link govuk-link--no-visited-state")
+@(id: String, text: String, href: Call, visuallyHiddenContent:Option[String] = None, classes: String = "${Css.linkCssClass} ${Css.linkNoVisitedStateCssClass}")
 <a id="@id" href="@href">
     @text
-    <span class="govuk-visually-hidden">@visuallyHiddenContent</span>
+    <span class="@Css.visuallyHiddenCssClass">@visuallyHiddenContent</span>
 </a>
 

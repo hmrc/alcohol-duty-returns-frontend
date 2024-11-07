@@ -14,8 +14,10 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
-@(id: String, text: String, classes: String = "govuk-link govuk-link--no-visited-state hmrc-!-js-visible govuk-!-display-none-print")
+@(id: String, text: String, classes: String = "${Css.linkCssClass} ${Css.linkNoVisitedStateCssClass} ${Css.jsVisibleCssClass} ${Css.displayNonePrintCssClass}")
 
 <a href="#" class="@classes" data-module="hmrc-print-link" id="@id">@text</a>

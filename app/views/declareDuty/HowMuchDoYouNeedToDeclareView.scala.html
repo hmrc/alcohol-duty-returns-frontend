@@ -14,10 +14,11 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import config.Constants.Css
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import viewmodels.declareDuty.CategoriesByRateTypeViewModel
+@import viewmodels.InputWidth._
 
 @this(
     layout: templates.Layout,
@@ -54,14 +55,14 @@
         @if(howMuchDoYouNeedToDeclareHelper.draughtAndSmallProducer.nonEmpty || howMuchDoYouNeedToDeclareHelper.smallProducer.nonEmpty) {
           @govukWarningText(WarningText(
               iconFallbackText = Some("Warning"),
-              content = Text(messages(s"howMuchDoYouNeedToDeclare.warning", messages(s"return.regime.$regime")))
+              content = Text(messages("howMuchDoYouNeedToDeclare.warning", messages(s"return.regime.$regime")))
           ))
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.core.nonEmpty) {
-          @subHeading(messages(s"howMuchDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
+          @subHeading(messages("howMuchDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
-            @subHeading(quantityViewModel.category, classes = "govuk-heading-s")
+            @subHeading(quantityViewModel.category, classes = Css.headingSCssClass)
             @govukInput(
               InputViewModel(
                 field = form(s"volumes[$index]"),
@@ -102,9 +103,9 @@
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.draught.nonEmpty) {
-          @subHeading(messages(s"howMuchDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
+          @subHeading(messages("howMuchDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
-            @subHeading(quantityViewModel.category, classes = "govuk-heading-s")
+            @subHeading(quantityViewModel.category, classes = Css.headingSCssClass)
             @govukInput(
               InputViewModel(
                 field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),

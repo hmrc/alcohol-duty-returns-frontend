@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.adjustment
 
-import config.Constants
+import config.Constants.Css
 import config.Constants.rowsPerPage
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
@@ -36,15 +36,15 @@ object AdjustmentListSummaryHelper {
     val adjustmentEntries: Seq[AdjustmentEntry] = getPaginatedAdjustmentEntries(userAnswers, pageNumber)
     TableViewModel(
       head = Seq(
-        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Constants.oneQuarterCssClass),
-        HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = Constants.oneQuarterCssClass),
+        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Css.oneQuarterCssClass),
+        HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = Css.oneQuarterCssClass),
         HeadCell(
           content = Text(messages("adjustmentEntryList.duty")),
-          classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+          classes = s"${Css.oneQuarterCssClass} ${Css.textAlignRightCssClass}"
         ),
         HeadCell(
           content = Text(messages("adjustmentEntryList.action")),
-          classes = Constants.oneQuarterCssClass
+          classes = Css.oneQuarterCssClass
         )
       ),
       rows = getAdjustmentEntryRows(adjustmentEntries, pageNumber),
@@ -87,7 +87,7 @@ object AdjustmentListSummaryHelper {
           ),
           TableRow(
             content = Text(formattedDutyValue),
-            classes = Constants.textAlignRightCssClass
+            classes = Css.textAlignRightCssClass
           )
         ),
         actions = Seq(
@@ -119,11 +119,11 @@ object AdjustmentListSummaryHelper {
     TableTotalViewModel(
       HeadCell(
         content = Text(messages("adjustmentList.total")),
-        classes = Constants.threeQuartersCssClass
+        classes = Css.threeQuartersCssClass
       ),
       HeadCell(
         content = Text(Money.format(total)),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = s"${Css.oneQuarterCssClass} ${Css.textAlignRightCssClass}"
       )
     )
 

@@ -16,40 +16,46 @@
 
 package forms.dutySuspended
 
-import javax.inject.Inject
+import config.Constants
 
+import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
 import models.dutySuspended.DutySuspendedOtherFermented
 
 class DutySuspendedOtherFermentedFormProvider @Inject() extends Mappings {
-
   def apply(): Form[DutySuspendedOtherFermented] = Form(
     mapping(
       "totalOtherFermented"         -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "dutySuspendedOtherFermented.error.totalOtherFermented.required",
         "dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric",
         "dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces"
       ).verifying(
-        minimumValue(BigDecimal(-999999999.99), "dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired")
+        minimumValue(
+          Constants.dutySuspendedVolumeMinimumValue,
+          "dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired"
+        )
       ).verifying(
-        maximumValue(BigDecimal(999999999.99), "dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired")
+        maximumValue(
+          Constants.dutySuspendedVolumeMaximumValue,
+          "dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired"
+        )
       ),
       "pureAlcoholInOtherFermented" -> bigDecimal(
-        4,
+        Constants.lpaMaximumDecimalPlaces,
         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required",
         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric",
         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.decimalPlaces"
       ).verifying(
         minimumValue(
-          BigDecimal(-999999999.9999),
+          Constants.dutySuspendedLpaMinimumValue,
           "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired"
         )
       ).verifying(
         maximumValue(
-          BigDecimal(999999999.9999),
+          Constants.dutySuspendedLpaMaximumValue,
           "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired"
         )
       )

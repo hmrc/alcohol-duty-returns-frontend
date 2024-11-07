@@ -14,8 +14,10 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
 @(isVisible: Boolean = false)
 
-<hr class="govuk-section-break govuk-section-break--l @if(isVisible){ govuk-section-break--visible } ">
+<hr class="@Css.sectionBreakCssClass @Css.sectionBreakLCssClass @if(isVisible){ @Css.sectionBreakVisibleCssClass } ">

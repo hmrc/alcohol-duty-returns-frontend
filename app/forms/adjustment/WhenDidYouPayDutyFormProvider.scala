@@ -16,6 +16,8 @@
 
 package forms.adjustment
 
+import config.Constants
+
 import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
@@ -31,6 +33,9 @@ class WhenDidYouPayDutyFormProvider @Inject() extends Mappings {
       "whenDidYouPayDuty.date.error.invalidYear"
     )
       .verifying("whenDidYouPayDuty.date.error.invalid.future", value => value.isBefore(YearMonth.now()))
-      .verifying("whenDidYouPayDuty.date.error.invalid.past", value => value.isAfter(YearMonth.of(2023, 7)))
+      .verifying(
+        "whenDidYouPayDuty.date.error.invalid.past",
+        value => value.isAfter(YearMonth.of(Constants.adjustmentTooEarlyYear, Constants.adjustmentTooEarlyMonth))
+      )
   )
 }

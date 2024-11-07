@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
-import config.Constants
+import config.Constants.Css
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.declareDuty.AlcoholDuty
@@ -109,13 +109,13 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.table.nil.label")),
-              classes = Constants.boldFontCssClass
+              classes = Css.boldFontCssClass
             ),
             TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
           ),
           actions = Seq(
             TableRowActionViewModel(
-              label = "Change",
+              label = messages("site.change"),
               href = controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
             )
           )
@@ -127,13 +127,13 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"alcoholType.$alcoholRegime"))),
-              classes = Constants.boldFontCssClass
+              classes = Css.boldFontCssClass
             ),
             TableRow(Text(Money.format(alcoholDuty.totalDuty)))
           ),
           actions = Seq(
             TableRowActionViewModel(
-              label = "Change",
+              label = messages("site.change"),
               href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
             )
           )
@@ -147,13 +147,13 @@ class DutyDueForThisReturnHelper @Inject() (
         cells = Seq(
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-            classes = Constants.boldFontCssClass
+            classes = Css.boldFontCssClass
           ),
           TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
         ),
         actions = Seq(
           TableRowActionViewModel(
-            label = "Change",
+            label = messages("site.change"),
             href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
           )
         )
@@ -163,13 +163,13 @@ class DutyDueForThisReturnHelper @Inject() (
         cells = Seq(
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-            classes = Constants.boldFontCssClass
+            classes = Css.boldFontCssClass
           ),
           TableRow(Text(Money.format(totalAdjustment)))
         ),
         actions = Seq(
           TableRowActionViewModel(
-            label = "Change",
+            label = messages("site.change"),
             href = controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
           )
         )

@@ -23,6 +23,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import RateBandHelper.rateBandRecap
+import config.Constants.{Css, Format}
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
 object MultipleSPRListHelper {
@@ -36,24 +37,23 @@ object MultipleSPRListHelper {
           TableViewModel(
             head = Seq(
               HeadCell(
-                content = Text(messages("multipleSPRList.description.label")),
-                classes = "govuk-!-width-half"
+                content = Text(messages("multipleSPRList.description.label"))
               ),
               HeadCell(
-                format = Some("numeric"),
+                format = Some(Format.numeric),
                 content = Text(messages("multipleSPRList.totalLitres.label"))
               ),
               HeadCell(
-                format = Some("numeric"),
+                format = Some(Format.numeric),
                 content = Text(messages("multipleSPRList.pureAlcohol.label"))
               ),
               HeadCell(
-                format = Some("numeric"),
+                format = Some(Format.numeric),
                 content = Text(messages("multipleSPRList.dutyRate.label"))
               ),
               HeadCell(
                 content = Text(messages("multipleSPRList.action.label")),
-                classes = "govuk-!-width-one-quarter"
+                classes = Css.oneQuarterCssClass
               )
             ),
             rows = getSPREntryRows(sprList, regime)
@@ -94,9 +94,9 @@ object MultipleSPRListHelper {
       TableRowViewModel(
         cells = Seq(
           TableRow(Text(rateBandRecap(sprEntry.rateBand))),
-          TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres)), format = Some("numeric")),
-          TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol)), format = Some("numeric")),
-          TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)), format = Some("numeric"))
+          TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres)), format = Some(Format.numeric)),
+          TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol)), format = Some(Format.numeric)),
+          TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)), format = Some(Format.numeric))
         ),
         actions = Seq(
           TableRowActionViewModel(

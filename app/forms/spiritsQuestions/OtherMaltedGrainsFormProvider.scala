@@ -16,34 +16,31 @@
 
 package forms.spiritsQuestions
 
-import javax.inject.Inject
+import config.Constants
 
+import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
 import models.spiritsQuestions.OtherMaltedGrains
 
 class OtherMaltedGrainsFormProvider @Inject() extends Mappings {
-  import OtherMaltedGrainsFormProvider._
-
   def apply(): Form[OtherMaltedGrains] = Form(
     mapping(
       "otherMaltedGrainsTypes"    -> text("otherMaltedGrains.error.otherMaltedGrainsTypes.required")
-        .verifying(maxLength(typesMaxLength, "otherMaltedGrains.error.otherMaltedGrainsTypes.length")),
+        .verifying(
+          maxLength(Constants.otherMaltedGrainsTypeMaxLength, "otherMaltedGrains.error.otherMaltedGrainsTypes.length")
+        ),
       "otherMaltedGrainsQuantity" -> bigDecimal(
-        quantityMaxDecimalPlaces,
+        Constants.maximumDecimalPlaces,
         "otherMaltedGrains.error.otherMaltedGrainsQuantity.required",
         "otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric",
         "otherMaltedGrains.error.otherMaltedGrainsQuantity.decimalPlaces"
-      ).verifying(minimumValue(quantityMinValue, "otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired"))
-        .verifying(maximumValue(quantityMaxValue, "otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired"))
+      ).verifying(
+        minimumValue(Constants.volumeMinimumValue, "otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired")
+      ).verifying(
+        maximumValue(Constants.volumeMaximumValue, "otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired")
+      )
     )(OtherMaltedGrains.apply)(OtherMaltedGrains.unapply)
   )
-}
-
-object OtherMaltedGrainsFormProvider {
-  val typesMaxLength           = 120
-  val quantityMaxDecimalPlaces = 2
-  val quantityMinValue         = BigDecimal(0.01)
-  val quantityMaxValue         = BigDecimal(999999999.99)
 }
