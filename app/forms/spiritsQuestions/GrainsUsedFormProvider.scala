@@ -33,37 +33,41 @@ class GrainsUsedFormProvider @Inject() extends Mappings {
         "grainsUsed.error.maltedBarleyQuantity.nonNumeric",
         "grainsUsed.error.maltedBarleyQuantity.decimalPlaces"
       ).verifying(
-        minimumValue(Constants.volumeMinimumValueIncZero, "grainsUsed.error.maltedBarleyQuantity.minimumRequired")
-      ).verifying(maximumValue(Constants.volumeMaximumValue, "grainsUsed.error.maltedBarleyQuantity.maximumRequired")),
+        minimumValue(Constants.quantityMinimumValueIncZero, "grainsUsed.error.maltedBarleyQuantity.minimumRequired")
+      ).verifying(
+        maximumValue(Constants.quantityMaximumValue, "grainsUsed.error.maltedBarleyQuantity.maximumRequired")
+      ),
       "wheatQuantity"            -> bigDecimal(
         Constants.maximumDecimalPlaces,
         "grainsUsed.error.wheatQuantity.required",
         "grainsUsed.error.wheatQuantity.nonNumeric",
         "grainsUsed.error.wheatQuantity.decimalPlaces"
-      ).verifying(minimumValue(Constants.volumeMinimumValueIncZero, "grainsUsed.error.wheatQuantity.minimumRequired"))
-        .verifying(maximumValue(Constants.volumeMaximumValue, "grainsUsed.error.wheatQuantity.maximumRequired")),
+      ).verifying(minimumValue(Constants.quantityMinimumValueIncZero, "grainsUsed.error.wheatQuantity.minimumRequired"))
+        .verifying(maximumValue(Constants.quantityMaximumValue, "grainsUsed.error.wheatQuantity.maximumRequired")),
       "maizeQuantity"            -> bigDecimal(
         Constants.maximumDecimalPlaces,
         "grainsUsed.error.maizeQuantity.required",
         "grainsUsed.error.maizeQuantity.nonNumeric",
         "grainsUsed.error.maizeQuantity.decimalPlaces"
-      ).verifying(minimumValue(Constants.volumeMinimumValueIncZero, "grainsUsed.error.maizeQuantity.minimumRequired"))
-        .verifying(maximumValue(Constants.volumeMaximumValue, "grainsUsed.error.maizeQuantity.maximumRequired")),
+      ).verifying(minimumValue(Constants.quantityMinimumValueIncZero, "grainsUsed.error.maizeQuantity.minimumRequired"))
+        .verifying(maximumValue(Constants.quantityMaximumValue, "grainsUsed.error.maizeQuantity.maximumRequired")),
       "ryeQuantity"              -> bigDecimal(
         Constants.maximumDecimalPlaces,
         "grainsUsed.error.ryeQuantity.required",
         "grainsUsed.error.ryeQuantity.nonNumeric",
         "grainsUsed.error.ryeQuantity.decimalPlaces"
-      ).verifying(minimumValue(Constants.volumeMinimumValueIncZero, "grainsUsed.error.ryeQuantity.minimumRequired"))
-        .verifying(maximumValue(Constants.volumeMaximumValue, "grainsUsed.error.ryeQuantity.maximumRequired")),
+      ).verifying(minimumValue(Constants.quantityMinimumValueIncZero, "grainsUsed.error.ryeQuantity.minimumRequired"))
+        .verifying(maximumValue(Constants.quantityMaximumValue, "grainsUsed.error.ryeQuantity.maximumRequired")),
       "unmaltedGrainQuantity"    -> bigDecimal(
         Constants.maximumDecimalPlaces,
         "grainsUsed.error.unmaltedGrainQuantity.required",
         "grainsUsed.error.unmaltedGrainQuantity.nonNumeric",
         "grainsUsed.error.unmaltedGrainQuantity.decimalPlaces"
       ).verifying(
-        minimumValue(Constants.volumeMinimumValueIncZero, "grainsUsed.error.unmaltedGrainQuantity.minimumRequired")
-      ).verifying(maximumValue(Constants.volumeMaximumValue, "grainsUsed.error.unmaltedGrainQuantity.maximumRequired")),
+        minimumValue(Constants.quantityMinimumValueIncZero, "grainsUsed.error.unmaltedGrainQuantity.minimumRequired")
+      ).verifying(
+        maximumValue(Constants.quantityMaximumValue, "grainsUsed.error.unmaltedGrainQuantity.maximumRequired")
+      ),
       "usedMaltedGrainNotBarley" -> boolean("grainsUsed.error.usedMaltedGrainNotBarley.required")
     )(GrainsUsed.apply)(GrainsUsed.unapply)
   )

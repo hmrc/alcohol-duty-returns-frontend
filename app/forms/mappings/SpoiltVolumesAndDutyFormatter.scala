@@ -64,8 +64,8 @@ class SpoiltVolumesAndDutyFormatter(
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    maximumValue = Constants.spoiltDutyRateMaximumValue,
-    minimumValue = Constants.spoiltDutyRateMinimumValue,
+    maximumValue = Constants.spoiltDutyMaximumValue,
+    minimumValue = Constants.spoiltDutyMinimumValue,
     args = args
   )
 

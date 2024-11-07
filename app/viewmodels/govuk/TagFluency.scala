@@ -47,6 +47,9 @@ trait TagFluency {
     def turquoise(): Tag =
       withCssClass(Css.turquoiseCssClass)
 
+    def lightBlue(): Tag =
+      withCssClass(Css.lightBlueTagCssClass)
+
     def blue(): Tag =
       withCssClass(Css.blueTagCssClass)
 

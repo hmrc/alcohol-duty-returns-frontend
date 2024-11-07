@@ -30,7 +30,7 @@ object AlcholDutyTaskListItemStatus {
     tag = Some(Tag(content = Text(messages("taskList.section.status.notStarted")), classes = Css.blueTagCssClass))
   )
   def inProgress(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
-    tag = Some(Tag(content = Text(messages("taskList.section.status.inProgress")), classes = Css.blueTagCssClass))
+    tag = Some(Tag(content = Text(messages("taskList.section.status.inProgress")), classes = Css.lightBlueTagCssClass))
   )
   def cannotStart(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
     tag = Some(Tag(content = Text(messages("taskList.section.status.cannotStart")), classes = Css.greyTagCssClass))

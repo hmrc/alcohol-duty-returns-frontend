@@ -43,12 +43,12 @@ class OtherIngredientsUsedFormProvider @Inject() extends Mappings {
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.decimalPlaces"
       ).verifying(
         minimumValue(
-          Constants.volumeMinimumValue,
+          Constants.quantityMinimumValue,
           "otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired"
         )
       ).verifying(
         maximumValue(
-          Constants.volumeMaximumValue,
+          Constants.quantityMaximumValue,
           "otherIngredientsUsed.error.otherIngredientsUsedQuantity.maximumRequired"
         )
       )

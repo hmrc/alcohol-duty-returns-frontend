@@ -27,6 +27,9 @@ object Constants {
   val volumeMinimumValueIncZero: BigDecimal       = BigDecimal(0.00)
   val volumeMinimumValue: BigDecimal              = BigDecimal(0.01)
   val volumeMaximumValue: BigDecimal              = BigDecimal(999999999.99)
+  val quantityMinimumValueIncZero: BigDecimal     = BigDecimal(0.00)
+  val quantityMinimumValue: BigDecimal            = BigDecimal(0.01)
+  val quantityMaximumValue: BigDecimal            = BigDecimal(999999999.99)
   val dutySuspendedVolumeMinimumValue: BigDecimal = BigDecimal(-999999999.99)
   val dutySuspendedVolumeMaximumValue: BigDecimal = BigDecimal(999999999.99)
   val lpaMaximumDecimalPlaces: Int                = 4
@@ -37,8 +40,8 @@ object Constants {
   val dutyMaximumDecimalPlaces: Int               = 2
   val dutyMinimumValue: BigDecimal                = BigDecimal(0.00)
   val dutyMaximumValue: BigDecimal                = BigDecimal(999999999.99)
-  val spoiltDutyRateMinimumValue: BigDecimal      = BigDecimal(0.01)
-  val spoiltDutyRateMaximumValue: BigDecimal      = BigDecimal(99999999999.99)
+  val spoiltDutyMinimumValue: BigDecimal          = BigDecimal(0.01)
+  val spoiltDutyMaximumValue: BigDecimal          = BigDecimal(99999999999.99)
 
   val overUnderDeclarationThreshold: BigDecimal = BigDecimal(1000) // When a reason is required
   val overUnderDeclarationReasonLength: Int     = 250
@@ -66,8 +69,7 @@ object Constants {
 
     val hintCssClass = "govuk-hint"
 
-    val linkCssClass               = "govuk-link"
-    val linkNoVisitedStateCssClass = "govuk-link--no-visited-state"
+    val linkNoVisitedStateCssClass = "govuk-link govuk-link--no-visited-state"
 
     val sectionBreakCssClass        = "govuk-section-break"
     val sectionBreakLCssClass       = "govuk-section-break--l"
@@ -85,15 +87,16 @@ object Constants {
 
     val boldFontCssClass = "govuk-!-font-weight-bold"
 
-    val blueTagCssClass   = "govuk-tag--blue"
-    val greenTagCssClass  = "govuk-tag--green"
-    val redTagCssClass    = "govuk-tag--red"
-    val yellowTagCssClass = "govuk-tag--yellow"
-    val greyTagCssClass   = "govuk-tag--grey"
-    val turquoiseCssClass = "govuk-tag--turquoise"
-    val purpleCssClass    = "govuk-tag--purple"
-    val pinkCssClass      = "govuk-tag--pink"
-    val orangeCssClass    = "govuk-tag--orange"
+    val lightBlueTagCssClass = "govuk-tag--light-blue"
+    val blueTagCssClass      = "govuk-tag--blue"
+    val greenTagCssClass     = "govuk-tag--green"
+    val redTagCssClass       = "govuk-tag--red"
+    val yellowTagCssClass    = "govuk-tag--yellow"
+    val greyTagCssClass      = "govuk-tag--grey"
+    val turquoiseCssClass    = "govuk-tag--turquoise"
+    val purpleCssClass       = "govuk-tag--purple"
+    val pinkCssClass         = "govuk-tag--pink"
+    val orangeCssClass       = "govuk-tag--orange"
 
     val headingXLCssClass = "govuk-heading-xl"
     val headingLCssClass  = "govuk-heading-l"
