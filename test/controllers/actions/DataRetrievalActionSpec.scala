@@ -18,7 +18,6 @@ package controllers.actions
 
 import base.SpecBase
 import config.Constants.periodKeySessionKey
-import config.FrontendAppConfig
 import connectors.UserAnswersConnector
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
@@ -31,10 +30,8 @@ import uk.gov.hmrc.http.UpstreamErrorResponse
 import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase {
-  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
-  class Harness(userAnswersConnector: UserAnswersConnector)
-      extends DataRetrievalActionImpl(mockConfig, userAnswersConnector) {
+  class Harness(userAnswersConnector: UserAnswersConnector) extends DataRetrievalActionImpl(userAnswersConnector) {
     def actionRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
   }
 
