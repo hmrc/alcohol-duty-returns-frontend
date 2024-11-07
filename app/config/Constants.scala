@@ -37,6 +37,8 @@ object Constants {
   val dutyMaximumDecimalPlaces: Int               = 2
   val dutyMinimumValue: BigDecimal                = BigDecimal(0.00)
   val dutyMaximumValue: BigDecimal                = BigDecimal(999999999.99)
+  val spoiltDutyRateMinimumValue: BigDecimal      = BigDecimal(0.01)
+  val spoiltDutyRateMaximumValue: BigDecimal      = BigDecimal(99999999999.99)
 
   val overUnderDeclarationThreshold: BigDecimal = BigDecimal(1000) // When a reason is required
   val overUnderDeclarationReasonLength: Int     = 250
@@ -78,8 +80,10 @@ object Constants {
     val oneThirdCssClass      = "govuk-!-width-one-third"
     val twoThirdsCssClass     = "govuk-!-width-two-thirds"
 
-    val textAlignRightCssClass = "text-align-right"
-    val boldFontCssClass       = "govuk-!-font-weight-bold"
+    val textAlignRightCssClass     = "text-align-right"
+    val textAlignRightWrapCssClass = "text-align-right-wrap"
+
+    val boldFontCssClass = "govuk-!-font-weight-bold"
 
     val blueTagCssClass   = "govuk-tag--blue"
     val greenTagCssClass  = "govuk-tag--green"
@@ -117,8 +121,15 @@ object Constants {
     val gridColumnTwoThirds    = "govuk-grid-column-two-thirds"
     val gridColumnFullCssClass = "govuk-grid-column-full"
 
-    val summaryListNoBorderCssClass    = "govuk-summary-list--no-border"
-    val summaryListRowNoBorderCssClass = "govuk-summary-list__row--no-border"
+    val numericCellClass = "govuk-table__cell--numeric"
+
+    val summaryListNoBorderCssClass        = "govuk-summary-list--no-border"
+    val summaryListRowNoBorderCssClass     = "govuk-summary-list__row--no-border"
+    val summaryListKeyCssClass             = "govuk-summary-list__key"
+    val summaryListValueCssClass           = "govuk-summary-list__value"
+    val summaryListActionsCssClass         = "govuk-summary-list__actions"
+    val summaryListActionsListCssClass     = "govuk-summary-list__actions-list"
+    val summaryListActionsListItemCssClass = "govuk-summary-list__actions-list-item"
 
     val marginTop0CssClass    = "govuk-!-margin-top-0"
     val marginTop8CssClass    = "govuk-!-margin-top-8"
@@ -141,9 +152,6 @@ object Constants {
 
     val numberListCssClass = "govuk-list govuk-list--number"
     val bulletListCssClass = "govuk-list govuk-list--bullet"
-
-    val summaryListActionsListCssClass     = "govuk-summary-list__actions-list"
-    val summaryListActionsListItemCssClass = "govuk-summary-list__actions-list-item"
 
     val visuallyHiddenCssClass = "govuk-visually-hidden"
 

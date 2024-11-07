@@ -20,12 +20,14 @@ import cats.data.EitherT
 import config.Constants.Css
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.checkAndSubmit.AdrDutySuspended
 import models.declareDuty.AlcoholDuty
 import models.{AlcoholRegime, NormalMode, UserAnswers}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
 import play.api.i18n.Messages
+import services.checkAndSubmit.AdrReturnSubmissionService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,11 +38,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 case class DutyDueForThisReturnViewModel(
   dutiesBreakdownTable: TableViewModel,
+  youveAlsoDeclaredTable: TableViewModel,
   totalDue: BigDecimal
 )
 
 class DutyDueForThisReturnHelper @Inject() (
-  calculatorConnector: AlcoholDutyCalculatorConnector
+  calculatorConnector: AlcoholDutyCalculatorConnector,
+  adrReturnSubmissionService: AdrReturnSubmissionService
 )(implicit executionContext: ExecutionContext)
     extends Logging {
 
@@ -50,12 +54,15 @@ class DutyDueForThisReturnHelper @Inject() (
     userAnswers: UserAnswers
   )(implicit hc: HeaderCarrier, messages: Messages): EitherT[Future, String, DutyDueForThisReturnViewModel] =
     for {
-      dutiesByRegime  <- getDutiesByAlcoholRegime(userAnswers)
-      totalAdjustment <- getTotalAdjustment(userAnswers)
-      total           <- calculateTotal(dutiesByRegime, totalAdjustment)
-      tableViewModel  <- createTableViewModel(dutiesByRegime, totalAdjustment)
+      dutiesByRegime             <- getDutiesByAlcoholRegime(userAnswers)
+      totalAdjustment            <- getTotalAdjustment(userAnswers)
+      total                      <- calculateTotal(dutiesByRegime, totalAdjustment)
+      dutiesBreakdownViewModel   <- createTableViewModel(dutiesByRegime, totalAdjustment)
+      dutySuspended              <- adrReturnSubmissionService.getDutySuspended(userAnswers)
+      youveAlsoAnsweredViewModel <- createYouveAlsoAnsweredTableViewModel(dutySuspended)
     } yield DutyDueForThisReturnViewModel(
-      tableViewModel,
+      dutiesBreakdownViewModel,
+      youveAlsoAnsweredViewModel,
       total
     )
 
@@ -97,7 +104,18 @@ class DutyDueForThisReturnHelper @Inject() (
         rows = returnDutiesRow :+ adjustmentRow
       )
     )
+  }
 
+  private def createYouveAlsoAnsweredTableViewModel(dutySuspended: AdrDutySuspended)(implicit
+    messages: Messages
+  ): EitherT[Future, String, TableViewModel] = {
+    val returnDutiesRow = createDutySuspendedRow(dutySuspended.declared)
+    EitherT.rightT[Future, String](
+      TableViewModel(
+        head = Seq.empty,
+        rows = returnDutiesRow
+      )
+    )
   }
 
   private def createReturnRows(
@@ -141,15 +159,67 @@ class DutyDueForThisReturnHelper @Inject() (
       }
     }
 
+  private def createDutySuspendedRow(
+    hasDutySuspendedDeclaration: Boolean
+  )(implicit messages: Messages): Seq[TableRowViewModel] =
+    if (hasDutySuspendedDeclaration) {
+      Seq(
+        TableRowViewModel(
+          cells = Seq(
+            TableRow(
+              content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
+              classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
+            ),
+            TableRow(
+              Text(messages("dutyDueForThisReturn.dutySuspended.declared")),
+              classes = Css.summaryListValueCssClass
+            )
+          ),
+          actions = Seq(
+            TableRowActionViewModel(
+              label = "Change",
+              href = controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController
+                .onPageLoad()
+            )
+          )
+        )
+      )
+    } else {
+      Seq(
+        TableRowViewModel(
+          cells = Seq(
+            TableRow(
+              content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
+              classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
+            ),
+            TableRow(
+              Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare")),
+              classes = Css.summaryListValueCssClass
+            )
+          ),
+          actions = Seq(
+            TableRowActionViewModel(
+              label = "Change",
+              href =
+                controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode)
+            )
+          )
+        )
+      )
+    }
+
   private def createAdjustmentRow(totalAdjustment: BigDecimal)(implicit messages: Messages): TableRowViewModel =
     if (totalAdjustment == 0) {
       TableRowViewModel(
         cells = Seq(
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-            classes = Css.boldFontCssClass
+            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
           ),
-          TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
+          TableRow(
+            content = Text(messages("dutyDueForThisReturn.table.nil.value")),
+            classes = Css.summaryListValueCssClass
+          )
         ),
         actions = Seq(
           TableRowActionViewModel(
@@ -163,9 +233,12 @@ class DutyDueForThisReturnHelper @Inject() (
         cells = Seq(
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-            classes = Css.boldFontCssClass
+            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
           ),
-          TableRow(Text(Money.format(totalAdjustment)))
+          TableRow(
+            Text(Money.format(totalAdjustment)),
+            classes = Css.summaryListValueCssClass
+          )
         ),
         actions = Seq(
           TableRowActionViewModel(

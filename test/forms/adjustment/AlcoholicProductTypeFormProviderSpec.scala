@@ -1,5 +1,5 @@
-@*
- * Copyright 2023 HM Revenue & Customs
+/*
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,20 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.Constants.Css
+package forms.adjustment
 
-@this(
-    layout: templates.Layout,
-    govukSummaryList: GovukSummaryList
-)
+import forms.behaviours.OptionFieldBehaviours
+import play.api.data.FormError
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+class AlcoholicProductTypeFormProviderSpec extends OptionFieldBehaviours {
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+  val form = new AlcoholicProductTypeFormProvider()()
 
-    <h1 class="@Css.headingXLCssClass">@messages("checkYourAnswers.heading")</h1>
+  ".value" - {
 
-    @govukSummaryList(list)
+    val fieldName   = "alcoholic-product-type-value"
+    val requiredKey = "alcoholicProductType.error.required"
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

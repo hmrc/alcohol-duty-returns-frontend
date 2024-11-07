@@ -17,7 +17,6 @@
 package controllers.actions
 
 import config.Constants.periodKeySessionKey
-import config.FrontendAppConfig
 import connectors.CacheConnector
 import controllers.routes
 import models.ReturnPeriod
@@ -34,7 +33,6 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject() (
-  config: FrontendAppConfig,
   val cacheConnector: CacheConnector
 )(implicit val executionContext: ExecutionContext)
     extends DataRetrievalAction

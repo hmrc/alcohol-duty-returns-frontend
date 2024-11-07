@@ -12,8 +12,6 @@ GET         /there-is-a-problem                          controllers.JourneyReco
 
 GET         /return-locked                               controllers.ReturnLockedController.onPageLoad()
 
-GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad()
-
 GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut()
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
@@ -101,6 +99,11 @@ POST       /complete-return/adjustments/adjustment/declare/type                 
 GET        /complete-return/adjustments/adjustment/change/type                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /complete-return/adjustments/adjustment/change/type                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
 
+GET        /complete-return/adjustments/adjustment/declare/spoilt-product/alcohol-type                        controllers.adjustment.AlcoholicProductTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/adjustments/adjustment/declare/spoilt-product/alcohol-type                       controllers.adjustment.AlcoholicProductTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type                  controllers.adjustment.AlcoholicProductTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type                  controllers.adjustment.AlcoholicProductTypeController.onSubmit(mode: Mode = CheckMode)
+
 GET        /complete-return/adjustments/adjustment/declare/return-period                        controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/adjustments/adjustment/declare/return-period                        controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = NormalMode)
 GET        /complete-return/adjustments/adjustment/change/return-period                  controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = CheckMode)
@@ -127,6 +130,11 @@ GET        /complete-return/adjustments/adjustment/change/spr/eligible-volume   
 POST       /complete-return/adjustments/adjustment/change/spr/eligible-volume                 controllers.adjustment.AdjustmentVolumeWithSPRController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/adjustments/adjustment/declare/duty-value                      controllers.adjustment.AdjustmentDutyDueController.onPageLoad()
+
+GET        /complete-return/adjustments/adjustment/declare/spoilt-product/volume                        controllers.adjustment.SpoiltVolumeWithDutyController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/adjustments/adjustment/declare/spoilt-product/volume                        controllers.adjustment.SpoiltVolumeWithDutyController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/adjustments/adjustment/change/spoilt-product/volume                 controllers.adjustment.SpoiltVolumeWithDutyController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/adjustment/change/spoilt-product/volume                 controllers.adjustment.SpoiltVolumeWithDutyController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/adjustments/adjustment/declare/check-your-answers                       controllers.adjustment.CheckYourAnswersController.onPageLoad(index:Option[Int] ?= None)
 POST       /complete-return/adjustments/adjustment/declare/check-your-answers                       controllers.adjustment.CheckYourAnswersController.onSubmit()

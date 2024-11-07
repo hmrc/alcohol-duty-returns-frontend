@@ -19,12 +19,13 @@ package controllers.adjustment
 import base.SpecBase
 import cats.data.NonEmptySeq
 import connectors.CacheConnector
+import models.AlcoholRegime.Beer
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentDutyDueView
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import services.adjustment.AdjustmentEntryService
@@ -64,12 +65,22 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
       )
     )
 
+    val spoiltAdjustmentEntry = AdjustmentEntry(
+      pureAlcoholVolume = Some(pureAlcoholVolume),
+      totalLitresVolume = Some(volume),
+      rateBand = Some(rateBand),
+      duty = Some(dutyDue),
+      spoiltRegime = Some(Beer),
+      adjustmentType = Some(Spoilt),
+      period = Some(YearMonth.of(24, 1))
+    )
+
     val adjustmentEntry = AdjustmentEntry(
       pureAlcoholVolume = Some(pureAlcoholVolume),
       totalLitresVolume = Some(volume),
       rateBand = Some(rateBand),
       duty = Some(dutyDue),
-      adjustmentType = Some(Spoilt),
+      adjustmentType = Some(Overdeclaration),
       period = Some(YearMonth.of(24, 1))
     )
 
@@ -80,6 +91,43 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
       val adjustmentEntryService = mock[AdjustmentEntryService]
       when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[AdjustmentEntryService].toInstance(adjustmentEntryService),
+          bind[CacheConnector].toInstance(mockCacheConnector)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, adjustmentDutyDueRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[AdjustmentDutyDueView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          Overdeclaration,
+          volume,
+          dutyDue,
+          pureAlcoholVolume,
+          taxCode,
+          rate,
+          repackagedRate,
+          repackagedDuty,
+          newDuty
+        )(
+          request,
+          getMessages(application)
+        ).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET for a spoilt adjustment" in {
+
+      val adjustmentEntryService = mock[AdjustmentEntryService]
+      when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(spoiltAdjustmentEntry)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
@@ -112,6 +160,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
         ).toString
       }
     }
+
     "must redirect to Journey Recovery if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()

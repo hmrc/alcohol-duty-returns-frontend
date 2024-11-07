@@ -91,15 +91,38 @@
       captionClasses = Css.tableCaptionMCssClass,
       head = Some(dutyDueViewModel.dutiesBreakdownTable.head),
       rows = dutyDueViewModel.dutiesBreakdownTable.rows.map(row => {
-        val actions = TableRow(content = HtmlContent(tableRowActionList(
-          id = "productList",
-          actions = row.actions.map(action => tableRowAction(
-            id = "",
-            text = action.label,
-            href = action.href,
-            visuallyHiddenContent = action.visuallyHiddenText
-          )
-          ))))
+        val actions = TableRow(
+            classes = s"${Css.summaryListActionsCssClass} ${Css.textAlignRightCssClass}",
+            content = HtmlContent(tableRowActionList(
+              id = "productList",
+                actions = row.actions.map(action => tableRowAction(
+                  id = "",
+                  text = action.label,
+                  href = action.href,
+                  visuallyHiddenContent = action.visuallyHiddenText,
+              )))))
+            row.cells :+ actions
+          }
+          ))
+    )
+
+    @subHeading(messages("dutyDueForThisReturn.youveAlsoAnswered"), classes = Css.headingMCssClass)
+    @paragraph(messages("dutyDueForThisReturn.youveAlsoAnswered.p"))
+
+    @govukTable(Table(
+      caption = None,
+      head = Some(dutyDueViewModel.dutiesBreakdownTable.head),
+      rows = dutyDueViewModel.youveAlsoDeclaredTable.rows.map(row => {
+        val actions = TableRow(
+            classes = s"${Css.summaryListActionsCssClass} ${Css.textAlignRightCssClass}",
+            content = HtmlContent(tableRowActionList(
+              id = "declarationList",
+                actions = row.actions.map(action => tableRowAction(
+                  id = "",
+                  text = action.label,
+                  href = action.href,
+                  visuallyHiddenContent = action.visuallyHiddenText,
+              )))))
         row.cells :+ actions
       }
       ))

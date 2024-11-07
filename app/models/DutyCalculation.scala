@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package connectors
+package models
 
-import models.declareDuty.VolumeAndRateByTaxType
 import models.adjustment.AdjustmentTypes
+import models.declareDuty.VolumeAndRateByTaxType
 import play.api.libs.json.{Json, OFormat}
 
 case class TotalDutyCalculationRequest(

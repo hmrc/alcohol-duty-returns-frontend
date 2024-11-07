@@ -20,6 +20,8 @@ import base.SpecBase
 import common.TestData
 import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
+import models.{AlcoholRegime, AlcoholRegimes}
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.AdjustmentDuty
 import models.checkAndSubmit.{AdrAdjustments, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsProduced, AdrTotals}
 import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, GrainsUsed}
@@ -30,7 +32,6 @@ import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage}
 import play.api.Application
 import queries.Settable
-import services.checkAndSubmit.AdrReturnSubmissionServiceImpl
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -354,13 +355,42 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           DutySuspendedSpiritsPage,
           DutySuspendedWinePage,
           DutySuspendedOtherFermentedPage
-        ).foreach { page: Settable[_] =>
+        ).foreach { (page: Settable[_]) =>
           s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
             whenReady(
               adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
             ) { result =>
               result mustBe Left(s"Value not found for page: $page")
+            }
+          }
+        }
+
+        val dutySuspendedPages: Seq[(AlcoholRegime, Settable[_])] = Seq(
+          Beer                  -> DutySuspendedBeerPage,
+          Cider                 -> DutySuspendedCiderPage,
+          Spirits               -> DutySuspendedSpiritsPage,
+          Wine                  -> DutySuspendedWinePage,
+          OtherFermentedProduct -> DutySuspendedOtherFermentedPage
+        )
+
+        dutySuspendedPages.foreach { case (regime, page) =>
+          s"must return Right if the user doesn't have $regime as a regime and $page is not present " in new SetUp {
+            val filteredRegimes = AlcoholRegime.values.filter(_ != regime).toSet
+            val userAnswers     = fullUserAnswers
+              .copy(regimes = AlcoholRegimes(filteredRegimes))
+              .remove(page)
+              .success
+              .value
+
+            whenReady(
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+            ) { result =>
+              result.isRight mustBe true
+              result.map { res =>
+                res.dutySuspended.declared mustBe true
+                res.dutySuspended.dutySuspendedProducts.size mustBe 4
+              }
             }
           }
         }
