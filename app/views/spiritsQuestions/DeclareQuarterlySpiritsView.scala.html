@@ -37,19 +37,15 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
+
         @sectionHeading(
             id = "declare-quarterly-spirits-section",
-            text = messages("section.alcoholDutyReturn"),
+            text = messages("declareQuarterlySpirits.caption"),
         )
 
         @pageHeading(messages("declareQuarterlySpirits.heading"))
 
         @paragraph(messages("declareQuarterlySpirits.paragraph1"))
-
-        @bulletList(Seq(
-        messages("declareQuarterlySpirits.paragraph1.bulletList.1"),
-        messages("declareQuarterlySpirits.paragraph1.bulletList.2"),
-        ))
 
         @paragraph(messages("declareQuarterlySpirits.paragraph2"))
 
@@ -62,23 +58,11 @@
 
         @paragraph(messages("declareQuarterlySpirits.paragraph3"))
 
-        @bulletList(Seq(
-        messages("declareQuarterlySpirits.paragraph3.bulletList.1"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.2"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.3"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.4"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.5"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.6"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.7"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.8"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.9"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.10"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.11"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.12"),
-        messages("declareQuarterlySpirits.paragraph3.bulletList.13"),
-        ))
-
         @paragraph(messages("declareQuarterlySpirits.paragraph4"))
+
+        @paragraph(messages("declareQuarterlySpirits.paragraph5"))
+
+        <br>
 
         @govukRadios(
             RadiosViewModel.yesNo(
