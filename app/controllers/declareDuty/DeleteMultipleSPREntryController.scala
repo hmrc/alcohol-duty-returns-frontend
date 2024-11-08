@@ -24,7 +24,7 @@ import models.{AlcoholRegime, NormalMode}
 import pages.declareDuty.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import navigation.ReturnsNavigator
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DeleteMultipleSPREntryController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   navigator: ReturnsNavigator,
@@ -75,7 +75,7 @@ class DeleteMultipleSPREntryController @Inject() (
                   for {
                     updatedAnswers <-
                       Future.fromTry(request.userAnswers.removeByKeyAndIndex(MultipleSPRListPage, regime, index))
-                    _              <- cacheConnector.set(updatedAnswers)
+                    _              <- userAnswersConnector.set(updatedAnswers)
                   } yield Redirect(
                     navigator.nextPageWithRegime(DeleteMultipleSPREntryPage, NormalMode, updatedAnswers, regime)
                   )

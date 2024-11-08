@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.declareDuty.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
@@ -100,14 +100,14 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
     "must redirect to the MultipleSPRList page if there is data for a POST" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -128,14 +128,14 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
       val index = Some(0)
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 

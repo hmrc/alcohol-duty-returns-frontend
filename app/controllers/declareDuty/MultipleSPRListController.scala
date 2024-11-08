@@ -25,7 +25,7 @@ import navigation.ReturnsNavigator
 import pages.declareDuty.DoYouWantToAddMultipleSPRToListPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.declareDuty.MultipleSPRListHelper
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class MultipleSPRListController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: ReturnsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -87,7 +87,7 @@ class MultipleSPRListController @Inject() (
             for {
               updatedAnswers <-
                 Future.fromTry(request.userAnswers.setByKey(DoYouWantToAddMultipleSPRToListPage, regime, value))
-              _              <- cacheConnector.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(
               navigator.nextPageWithRegime(DoYouWantToAddMultipleSPRToListPage, NormalMode, updatedAnswers, regime)
             )
