@@ -16,7 +16,7 @@
 
 package controllers.declareDuty
 
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
@@ -34,7 +34,7 @@ import scala.util.Try
 
 class DeclareAlcoholDutyQuestionController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: ReturnsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -72,7 +72,7 @@ class DeclareAlcoholDutyQuestionController @Inject() (
               updatedAnswers                <- Future.fromTry(request.userAnswers.set(DeclareAlcoholDutyQuestionPage, value))
               singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(updatedAnswers))
               filterUserAnswer              <- Future.fromTry(filterAlcoholDutyQuestionAnswer(singleRegimeUpdatedUserAnswer, value))
-              _                             <- cacheConnector.set(filterUserAnswer)
+              _                             <- userAnswersConnector.set(filterUserAnswer)
             } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer))
         )
   }

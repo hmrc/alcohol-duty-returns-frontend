@@ -25,7 +25,7 @@ import pages.declareDuty.{AlcoholTypePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.TaxBandsViewModel
 import views.html.declareDuty.WhatDoYouNeedToDeclareView
@@ -50,8 +50,8 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
     rateBandList
   )
 
-  val mockCacheConnector = mock[CacheConnector]
-  when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+  val mockUserAnswersConnector = mock[UserAnswersConnector]
+  when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
   val userAnswersWithAlcoholType = emptyUserAnswers.set(AlcoholTypePage, emptyUserAnswers.regimes.regimes).success.value
 
@@ -62,7 +62,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -90,7 +90,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -122,7 +122,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -151,7 +151,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -182,7 +182,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = false)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -204,7 +204,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -235,7 +235,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 

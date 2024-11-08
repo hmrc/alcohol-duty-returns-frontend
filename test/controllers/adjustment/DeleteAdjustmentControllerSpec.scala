@@ -24,7 +24,7 @@ import pages.adjustment.{DeleteAdjustmentPage, OverDeclarationTotalPage, UnderDe
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.adjustment.AdjustmentOverUnderDeclarationCalculationHelper
 import views.html.adjustment.DeleteAdjustmentView
@@ -77,15 +77,15 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
     }
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -101,7 +101,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
           .onPageLoad(pageNumber)
           .url
 
-        verify(mockCacheConnector, times(1)).set(any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
       }
     }
 
@@ -130,18 +130,18 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
     }
 
     "must not clear if total UnderDeclaration is above threshold" in {
-      val mockCacheConnector = mock[CacheConnector]
-      val mockHelper         = mock[AdjustmentOverUnderDeclarationCalculationHelper]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockHelper               = mock[AdjustmentOverUnderDeclarationCalculationHelper]
       when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
         emptyUserAnswers
           .set(UnderDeclarationTotalPage, BigDecimal(1500))
           .success
           .value
       )
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val application        = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application              = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
           bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
         )
         .build()
@@ -154,23 +154,23 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
           .onPageLoad(pageNumber)
           .url
 
-        verify(mockCacheConnector, times(1)).set(any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
       }
     }
 
     "must clear if total UnderDeclaration is not defined or is below threshold" in {
-      val mockCacheConnector = mock[CacheConnector]
-      val mockHelper         = mock[AdjustmentOverUnderDeclarationCalculationHelper]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockHelper               = mock[AdjustmentOverUnderDeclarationCalculationHelper]
       when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
         emptyUserAnswers
           .set(OverDeclarationTotalPage, BigDecimal(1500))
           .success
           .value
       )
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val application        = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application              = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
           bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
         )
         .build()
@@ -183,7 +183,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
           .onPageLoad(pageNumber)
           .url
 
-        verify(mockCacheConnector, times(1)).set(any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
       }
     }
 

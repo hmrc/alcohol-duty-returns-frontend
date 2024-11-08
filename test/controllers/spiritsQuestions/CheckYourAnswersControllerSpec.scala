@@ -17,7 +17,7 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import generators.ModelGenerators
 import models.UnitsOfMeasure.Tonnes
 import models.spiritsQuestions.{AlcoholUsed, EthyleneGasOrMolassesUsed, GrainsUsed, OtherIngredientsUsed, OtherMaltedGrains, Whisky}
@@ -67,14 +67,14 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       .value
 
     "must return OK and the correct view for a GET if all necessary questions are answered" in new SetUp {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(completedUserAnswers))
         .configure(additionalConfig)
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -104,9 +104,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     }
 
     "must return OK and the correct view for a GET if any optional questions are not answered" in new SetUp {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val userAnswers = completedUserAnswers
         .remove(List(OtherMaltedGrainsPage, OtherSpiritsProducedPage, OtherIngredientsUsedPage, SpiritTypePage))
@@ -122,7 +122,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .configure(additionalConfig)
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -152,9 +152,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
     }
 
     "must return OK and the correct view for a GET if multiple Spirit types including Other are checked" in new SetUp {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val userAnswers = completedUserAnswers
         .set(
@@ -170,7 +170,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .configure(additionalConfig)
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 

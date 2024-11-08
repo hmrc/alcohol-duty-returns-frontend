@@ -27,7 +27,7 @@ import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import play.api.Application
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.EthyleneGasOrMolassesUsedView
@@ -85,16 +85,16 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
               .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -117,16 +117,16 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase {
     "must redirect to the next page when other ingredients question is answered as No" in new SetUp(
       Some(emptyUserAnswers)
     ) {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
               .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = false)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -149,16 +149,16 @@ class EthyleneGasOrMolassesUsedControllerSpec extends SpecBase {
     "must redirect to the next page when other ingredients question was answered Yes previously and is now updated to No" in new SetUp(
       Some(userAnswers)
     ) {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       override val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
               .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = false)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 

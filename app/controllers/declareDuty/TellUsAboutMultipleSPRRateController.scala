@@ -25,7 +25,7 @@ import navigation.ReturnsNavigator
 import pages.declareDuty.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.declareDuty.VolumeAndRateByTaxType
 import play.api.Logging
 import play.api.data.Form
@@ -37,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TellUsAboutMultipleSPRRateController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: ReturnsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -90,7 +90,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
                 for {
                   updatedAnswers <-
                     Future.fromTry(request.userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, value))
-                  _              <- cacheConnector.set(updatedAnswers)
+                  _              <- userAnswersConnector.set(updatedAnswers)
                 } yield Redirect(
                   navigator
                     .nextPageWithRegime(TellUsAboutMultipleSPRRatePage, mode, updatedAnswers, regime, hasChanged, index)

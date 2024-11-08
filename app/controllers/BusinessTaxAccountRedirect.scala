@@ -18,7 +18,7 @@ package controllers
 
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions.IdentifyWithEnrolmentAction
 import models.ReturnId
 import play.api.Logging
@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class BusinessTaxAccountRedirect @Inject() (
   config: FrontendAppConfig,
   identify: IdentifyWithEnrolmentAction,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   val controllerComponents: MessagesControllerComponents
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -40,7 +40,7 @@ class BusinessTaxAccountRedirect @Inject() (
   def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case Some(periodKey) =>
-        cacheConnector
+        userAnswersConnector
           .releaseLock(ReturnId(request.appaId, periodKey))
           .map(_ => Redirect(config.businessTaxAccountUrl))
       case None            =>

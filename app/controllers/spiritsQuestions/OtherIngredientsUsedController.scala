@@ -24,7 +24,7 @@ import models.Mode
 import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import navigation.QuarterlySpiritsQuestionsNavigator
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.OtherIngredientsUsedView
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class OtherIngredientsUsedController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: QuarterlySpiritsQuestionsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -70,7 +70,7 @@ class OtherIngredientsUsedController @Inject() (
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(OtherIngredientsUsedPage, value))
-                _              <- cacheConnector.set(updatedAnswers)
+                _              <- userAnswersConnector.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(OtherIngredientsUsedPage, mode, updatedAnswers))
           )
       }

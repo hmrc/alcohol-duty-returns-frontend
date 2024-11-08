@@ -25,7 +25,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.{AlcoholicProductTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -37,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AlcoholicProductTypeController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -86,7 +86,7 @@ class AlcoholicProductTypeController @Inject() (
                                         )
                                       )
                                     )
-                  _              <- cacheConnector.set(updatedAnswers)
+                  _              <- userAnswersConnector.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(AlcoholicProductTypePage, mode, updatedAnswers, hasChanged))
               case _            =>
                 logger.warn("Couldn't retrieve regime")

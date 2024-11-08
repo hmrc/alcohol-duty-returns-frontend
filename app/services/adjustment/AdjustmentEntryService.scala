@@ -80,7 +80,7 @@ class AdjustmentEntryServiceImpl @Inject() (
             alcoholDutyCalculatorConnector.calculateRepackagedDutyChange(
               repackagedTaxDuty.duty,
               updatedAdjustment.duty.getOrElse(
-                throw new RuntimeException("Couldn't fetch adjustment duty from cache")
+                throw new RuntimeException("Couldn't fetch adjustment duty from user answers")
               )
             )
         } yield updatedAdjustment.copy(

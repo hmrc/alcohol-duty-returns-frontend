@@ -16,7 +16,7 @@
 
 package controllers.adjustment
 
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.adjustment.AdjustmentVolumeFormProvider
 
@@ -38,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentVolumeController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -134,7 +134,7 @@ class AdjustmentVolumeController @Inject() (
                         )
                       )
                     )
-                  _              <- cacheConnector.set(updatedAnswers)
+                  _              <- userAnswersConnector.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers, hasChanged))
               }
             )
