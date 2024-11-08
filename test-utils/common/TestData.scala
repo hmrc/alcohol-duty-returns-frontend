@@ -131,7 +131,7 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(OtherFermentedProduct))
   )
   val userAnswersWithoutOtherFermentedProduct: UserAnswers = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(Set(Beer, Spirits))
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits))
   )
 
   val userAnswersWithAllRegimes: UserAnswers = emptyUserAnswers.copy(
