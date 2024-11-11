@@ -25,7 +25,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.{CurrentAdjustmentEntryPage, WhenDidYouPayDutyPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class WhenDidYouPayDutyController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -107,7 +107,7 @@ class WhenDidYouPayDutyController @Inject() (
                   request.userAnswers
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(period = Some(value)))
                 )
-              _              <- cacheConnector.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(WhenDidYouPayDutyPage, mode, updatedAnswers, hasChanged))
           }
         )

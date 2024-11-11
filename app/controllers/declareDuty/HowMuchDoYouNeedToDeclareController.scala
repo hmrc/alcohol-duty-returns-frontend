@@ -25,7 +25,7 @@ import navigation.ReturnsNavigator
 import pages.declareDuty.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.declareDuty.{VolumeAndRateByTaxType, VolumesByTaxType}
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -37,7 +37,7 @@ import scala.util.{Failure, Success, Try}
 
 class HowMuchDoYouNeedToDeclareController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: ReturnsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -93,7 +93,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
                       request.userAnswers.setByKey(HowMuchDoYouNeedToDeclarePage, regime, volumesAndRateByTaxTypes)
                     )
                   hasChanged                = hasValueChanged(volumesAndRateByTaxTypes, regime)
-                  _                        <- cacheConnector.set(updatedAnswers)
+                  _                        <- userAnswersConnector.set(updatedAnswers)
                 } yield Redirect(
                   navigator.nextPageWithRegime(
                     HowMuchDoYouNeedToDeclarePage,

@@ -24,11 +24,11 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TestOnlyCacheConnector @Inject() (
+class TestOnlyUserAnswersConnector @Inject() (
   appConfig: FrontendAppConfig,
   httpClient: HttpClientV2
 )(implicit val ec: ExecutionContext) {
 
   def clearAllData()(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.delete(url"${appConfig.adrCacheClearAllUrl()}").execute[HttpResponse]
+    httpClient.delete(url"${appConfig.adrUserAnswersClearAllUrl()}").execute[HttpResponse]
 }

@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import config.FrontendAppConfig
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.{OK, SEE_OTHER}
@@ -34,11 +34,11 @@ class BusinessTaxAccountRedirectSpec extends SpecBase {
 
     "if the period key is not available must redirect to the business tax account page" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       val application =
         applicationBuilder(None)
-          .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+          .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
           .build()
 
       running(application) {
@@ -50,18 +50,18 @@ class BusinessTaxAccountRedirectSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual appConfig.businessTaxAccountUrl
-        verify(mockCacheConnector, times(0)).releaseLock(eqTo(returnId))(any())
+        verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
       }
     }
 
     "if the period key is retrieved, it must release the lock, and redirect to the business tax account page" in {
 
-      val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(HttpResponse(OK)))
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(HttpResponse(OK)))
 
       val application =
         applicationBuilder(None)
-          .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+          .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
           .build()
 
       running(application) {
@@ -73,7 +73,7 @@ class BusinessTaxAccountRedirectSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual appConfig.businessTaxAccountUrl
-        verify(mockCacheConnector, times(1)).releaseLock(eqTo(returnId))(any())
+        verify(mockUserAnswersConnector, times(1)).releaseLock(eqTo(returnId))(any())
       }
     }
   }

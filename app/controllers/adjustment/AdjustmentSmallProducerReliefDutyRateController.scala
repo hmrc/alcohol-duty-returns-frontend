@@ -25,7 +25,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentSmallProducerReliefDutyRatePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentSmallProducerReliefDutyRateController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -104,7 +104,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
                   request.userAnswers
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(repackagedSprDutyRate = Some(value)))
                 )
-              _              <- cacheConnector.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(
               navigator.nextPage(AdjustmentSmallProducerReliefDutyRatePage, mode, updatedAnswers, hasChanged)
             )

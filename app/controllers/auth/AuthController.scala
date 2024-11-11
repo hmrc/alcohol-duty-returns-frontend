@@ -18,7 +18,7 @@ package controllers.auth
 
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions.IdentifyWithEnrolmentAction
 import models.ReturnId
 import play.api.Logging
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   config: FrontendAppConfig,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   identify: IdentifyWithEnrolmentAction
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -42,7 +42,7 @@ class AuthController @Inject() (
   def signOut(): Action[AnyContent] = identify.async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case Some(periodKey) =>
-        cacheConnector
+        userAnswersConnector
           .releaseLock(ReturnId(request.appaId, periodKey))
           .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
       case None            =>

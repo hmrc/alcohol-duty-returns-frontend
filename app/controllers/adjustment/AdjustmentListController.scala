@@ -17,7 +17,7 @@
 package controllers.adjustment
 
 import config.Constants.rowsPerPage
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.AdjustmentNavigator
@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentListController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -71,7 +71,7 @@ class AdjustmentListController @Inject() (
           } else {
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
-              _              <- cacheConnector.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Ok(view(preparedForm, paginatedViewModel.tableViewModel, paginatedViewModel.totalPages, pageNumber))
           }
         }
@@ -100,7 +100,7 @@ class AdjustmentListController @Inject() (
               updatedAnswers                 <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
               userAnswersWithOverUnderTotals <-
                 adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers, value)
-              _                              <- cacheConnector.set(userAnswersWithOverUnderTotals)
+              _                              <- userAnswersConnector.set(userAnswersWithOverUnderTotals)
             } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, userAnswersWithOverUnderTotals))
         )
   }

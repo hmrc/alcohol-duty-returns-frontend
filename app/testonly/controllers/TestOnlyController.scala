@@ -17,7 +17,7 @@
 package testonly.controllers
 
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import testonly.connectors.TestOnlyCacheConnector
+import testonly.connectors.TestOnlyUserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
@@ -25,7 +25,7 @@ import scala.concurrent.ExecutionContext
 
 class TestOnlyController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  testOnlyConnector: TestOnlyCacheConnector
+  testOnlyConnector: TestOnlyUserAnswersConnector
 )(implicit val ec: ExecutionContext)
     extends FrontendBaseController {
 

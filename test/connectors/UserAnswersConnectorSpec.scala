@@ -28,11 +28,11 @@ import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 import java.time.LocalDateTime
 import scala.concurrent.Future
 
-class CacheConnectorSpec extends SpecBase {
+class UserAnswersConnectorSpec extends SpecBase {
   "GET" - {
-    "successfully fetch cache" in new SetUp {
-      val mockUrl = s"http://alcohol-duty-account/cache/$appaId/$periodKey"
-      when(mockConfig.adrCacheGetUrl(any(), any())).thenReturn(mockUrl)
+    "successfully fetch user answers" in new SetUp {
+      val mockUrl = s"http://alcohol-duty-account/user-answers/$appaId/$periodKey"
+      when(mockConfig.adrUserAnswersGetUrl(any(), any())).thenReturn(mockUrl)
 
       when(requestBuilder.execute[Either[UpstreamErrorResponse, UserAnswers]](any(), any()))
         .thenReturn(Future.successful(Right(emptyUserAnswers)))
@@ -46,10 +46,10 @@ class CacheConnectorSpec extends SpecBase {
   }
 
   "POST" - {
-    "successfully write cache" in new SetUp {
-      val postUrl = "http://cache/user-answers"
+    "successfully write user answers" in new SetUp {
+      val postUrl = "http://user-answers"
 
-      when(mockConfig.adrCacheCreateUserAnswersUrl()).thenReturn(postUrl)
+      when(mockConfig.adrUserAnswersUrl()).thenReturn(postUrl)
 
       when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
@@ -69,10 +69,10 @@ class CacheConnectorSpec extends SpecBase {
   }
 
   "PUT" - {
-    "successfully write cache" in new SetUp {
-      val putUrl = "http://cache/set"
+    "successfully write user answers" in new SetUp {
+      val putUrl = "http://user-answers"
 
-      when(mockConfig.adrCacheSetUrl()).thenReturn(putUrl)
+      when(mockConfig.adrUserAnswersUrl()).thenReturn(putUrl)
 
       when(connector.httpClient.put(any())(any())).thenReturn(requestBuilder)
 
@@ -94,9 +94,9 @@ class CacheConnectorSpec extends SpecBase {
 
   "releaseLock" - {
     "should call the release lock endpoint" in new SetUp {
-      val releaseLockUrl = "http://cache/release-lock"
+      val releaseLockUrl = "http://user-answers/release-lock"
 
-      when(mockConfig.adrReleaseCacheLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
+      when(mockConfig.adrReleaseUserAnswersLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
 
       when(connector.httpClient.delete(any())(any())).thenReturn(requestBuilder)
 
@@ -117,9 +117,9 @@ class CacheConnectorSpec extends SpecBase {
 
   "keepAlive" - {
     "should call the keep alive endpoint" in new SetUp {
-      val keepAliveUrl = s"http://cache/keep-alive/$appaId/$periodKey"
+      val keepAliveUrl = s"http://user-answers/keep-alive/$appaId/$periodKey"
 
-      when(mockConfig.adrCacheKeepAliveUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(keepAliveUrl)
+      when(mockConfig.adrUserAnswersLockKeepAliveUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(keepAliveUrl)
 
       when {
         connector.httpClient
@@ -147,7 +147,7 @@ class CacheConnectorSpec extends SpecBase {
   class SetUp {
     val mockConfig: FrontendAppConfig  = mock[FrontendAppConfig]
     val httpClient: HttpClientV2       = mock[HttpClientV2]
-    val connector                      = new CacheConnector(config = mockConfig, httpClient = httpClient)
+    val connector                      = new UserAnswersConnector(config = mockConfig, httpClient = httpClient)
     val dateVal: LocalDateTime         = LocalDateTime.now
     val mockHttpResponse: HttpResponse = mock[HttpResponse]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]

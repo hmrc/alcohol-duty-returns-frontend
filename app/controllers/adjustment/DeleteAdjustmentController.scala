@@ -16,7 +16,7 @@
 
 package controllers.adjustment
 
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import forms.adjustment.DeleteAdjustmentFormProvider
 import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage}
@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DeleteAdjustmentController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -62,7 +62,7 @@ class DeleteAdjustmentController @Inject() (
                 updatedAnswers                        <- Future.fromTry(request.userAnswers.removeBySeqIndex(AdjustmentEntryListPage, index))
                 userAnswersWithUpdatedOverUnderReason <-
                   adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers)
-                _                                     <- cacheConnector.set(userAnswersWithUpdatedOverUnderReason)
+                _                                     <- userAnswersConnector.set(userAnswersWithUpdatedOverUnderReason)
               } yield Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1))
             } else {
               Future.successful(Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)))
