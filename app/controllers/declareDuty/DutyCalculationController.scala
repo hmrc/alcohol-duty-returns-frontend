@@ -16,10 +16,10 @@
 
 package controllers.declareDuty
 
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector, TotalDutyCalculationRequest}
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import controllers.actions._
 import models.declareDuty.VolumeAndRateByTaxType
-import models.{AlcoholRegime, UserAnswers}
+import models.{AlcoholRegime, TotalDutyCalculationRequest, UserAnswers}
 import pages.QuestionPage
 import pages.declareDuty.{AlcoholDutyPage, DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutSingleSPRRatePage}
 import play.api.Logging
@@ -38,7 +38,7 @@ class DutyCalculationController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   calculatorConnector: AlcoholDutyCalculatorConnector,
   val controllerComponents: MessagesControllerComponents,
   view: DutyCalculationView
@@ -53,7 +53,7 @@ class DutyCalculationController @Inject() (
       for {
         totalDuty          <- calculatorConnector.calculateTotalDuty(totalDutyCalculatorRequest)
         updatedUserAnswers <- Future.fromTry(request.userAnswers.setByKey(DutyCalculationPage, regime, totalDuty))
-        _                  <- cacheConnector.set(updatedUserAnswers)
+        _                  <- userAnswersConnector.set(updatedUserAnswers)
       } yield DutyCalculationHelper.dutyDueTableViewModel(totalDuty, request.userAnswers, regime) match {
         case Left(errorMessage)      =>
           logger.warn(s"Failed to create duty due table view model: $errorMessage")
@@ -71,7 +71,7 @@ class DutyCalculationController @Inject() (
         case Some(totalDuty) =>
           for {
             updatedUserAnswers <- Future.fromTry(request.userAnswers.setByKey(AlcoholDutyPage, regime, totalDuty))
-            _                  <- cacheConnector.set(updatedUserAnswers)
+            _                  <- userAnswersConnector.set(updatedUserAnswers)
           } yield Redirect(controllers.routes.TaskListController.onPageLoad)
       }
   }

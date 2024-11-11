@@ -16,7 +16,7 @@
 
 package controllers.declareDuty
 
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions._
 import models.declareDuty.VolumeAndRateByTaxType
 import models.{AlcoholRegime, UserAnswers}
@@ -35,7 +35,7 @@ import scala.util.Try
 
 class CheckYourAnswersSPRController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -67,7 +67,7 @@ class CheckYourAnswersSPRController @Inject() (
           for {
             updatedUserAnswers <- Future.fromTry(updateUserAnswer(request.userAnswers, regime, sprRateEntry, index))
             cleanedUserAnswers <- Future.fromTry(updatedUserAnswers.removeByKey(TellUsAboutMultipleSPRRatePage, regime))
-            _                  <- cacheConnector.set(cleanedUserAnswers)
+            _                  <- userAnswersConnector.set(cleanedUserAnswers)
           } yield Redirect(controllers.declareDuty.routes.MultipleSPRListController.onPageLoad(regime))
       }
     }

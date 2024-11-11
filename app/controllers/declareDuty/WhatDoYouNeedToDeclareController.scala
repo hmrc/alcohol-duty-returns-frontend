@@ -16,7 +16,7 @@
 
 package controllers.declareDuty
 
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import controllers.actions._
 import forms.declareDuty.WhatDoYouNeedToDeclareFormProvider
 import models.requests.DataRequest
@@ -38,7 +38,7 @@ import scala.util.Try
 
 class WhatDoYouNeedToDeclareController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   calculatorConnector: AlcoholDutyCalculatorConnector,
   navigator: ReturnsNavigator,
   identify: IdentifyWithEnrolmentAction,
@@ -85,7 +85,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
                   updatedAnswers            <- Future.fromTry(request.userAnswers.setByKey(currentPage, regime, selectedRateBands))
                   (pagesToClear, hasChanged) = changedValue(selectedRateBands, regime)
                   clearedAnswers            <- Future.fromTry(updatedAnswers.removePagesByKey(pagesToClear, regime))
-                  _                         <- cacheConnector.set(clearedAnswers)
+                  _                         <- userAnswersConnector.set(clearedAnswers)
                 } yield Redirect(
                   navigator
                     .nextPageWithRegime(currentPage, mode, updatedAnswers, regime, hasChanged)

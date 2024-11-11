@@ -17,7 +17,7 @@
 package controllers
 
 import config.Constants.periodKeySessionKey
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions.IdentifyWithEnrolmentAction
 import models.ReturnId
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -29,11 +29,11 @@ import scala.concurrent.ExecutionContext
 class KeepAliveController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   identify: IdentifyWithEnrolmentAction,
-  cacheConnector: CacheConnector
+  userAnswersConnector: UserAnswersConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController {
 
   def keepAlive: Action[AnyContent] = identify.async { implicit request =>
-    cacheConnector.keepAlive(ReturnId(request.appaId, request.session(periodKeySessionKey))).map(_ => Ok)
+    userAnswersConnector.keepAlive(ReturnId(request.appaId, request.session(periodKeySessionKey))).map(_ => Ok)
   }
 }

@@ -17,8 +17,7 @@
 package controllers.actions
 
 import config.Constants.periodKeySessionKey
-import config.FrontendAppConfig
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.routes
 import models.ReturnPeriod
 
@@ -34,8 +33,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject() (
-  config: FrontendAppConfig,
-  val cacheConnector: CacheConnector
+  val userAnswersConnector: UserAnswersConnector
 )(implicit val executionContext: ExecutionContext)
     extends DataRetrievalAction
     with Logging {
@@ -50,7 +48,7 @@ class DataRetrievalActionImpl @Inject() (
           Right(OptionalDataRequest(request.request, request.appaId, request.groupId, request.userId, None, None))
         )
       case Some(periodKey) =>
-        cacheConnector
+        userAnswersConnector
           .get(request.appaId, periodKey)(headerCarrier)
           .map {
             case Right(ua)                              =>

@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.Beer
 import models.{AlcoholRegimes, NormalMode}
@@ -83,15 +83,15 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -109,16 +109,16 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted and user is approved for a single regime" in {
 
-      val userAnswers        = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
-      val mockCacheConnector = mock[CacheConnector]
+      val userAnswers              = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -136,15 +136,15 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
     "must redirect to the index page when valid question is answered as No" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 

@@ -25,7 +25,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentVolumeWithSPRPage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
 import models.requests.DataRequest
 import play.api.Logging
@@ -38,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentVolumeWithSPRController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -136,7 +136,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
                                         )
                                       )
                                     )
-                  _              <- cacheConnector.set(updatedAnswers)
+                  _              <- userAnswersConnector.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(AdjustmentVolumeWithSPRPage, mode, updatedAnswers, hasChanged))
               }
             )

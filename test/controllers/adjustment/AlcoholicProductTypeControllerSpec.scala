@@ -25,7 +25,7 @@ import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
@@ -91,9 +91,9 @@ class AlcoholicProductTypeControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       val regimes = Seq(
         Beer.toString,
         Cider.toString,
@@ -107,7 +107,7 @@ class AlcoholicProductTypeControllerSpec extends SpecBase {
           applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .overrides(
               bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
-              bind[CacheConnector].toInstance(mockCacheConnector)
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
             )
             .build()
 
@@ -137,15 +137,15 @@ class AlcoholicProductTypeControllerSpec extends SpecBase {
           .success
           .value
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -216,14 +216,14 @@ class AlcoholicProductTypeControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery for a POST if an invalid regime is submitted" in {
-      val userAnswers        =
+      val userAnswers              =
         emptyUserAnswers.set(CurrentAdjustmentEntryPage, AdjustmentEntry(spoiltRegime = Some(Beer))).success.value
-      val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val application        = applicationBuilder(userAnswers = Some(userAnswers))
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application              = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
       running(application) {

@@ -25,7 +25,7 @@ import navigation.QuarterlySpiritsQuestionsNavigator
 import pages.spiritsQuestions.{GrainsUsedPage, OtherMaltedGrainsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.GrainsUsedView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GrainsUsedController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: QuarterlySpiritsQuestionsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -72,7 +72,7 @@ class GrainsUsedController @Inject() (
                 handleOtherMaltedGrainsChange(request.userAnswers, value.usedMaltedGrainNotBarley)
               for {
                 updatedAnswers <- Future.fromTry(intermediateAnswers.set(GrainsUsedPage, value))
-                _              <- cacheConnector.set(updatedAnswers)
+                _              <- userAnswersConnector.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(GrainsUsedPage, mode, updatedAnswers, maltedGrainNotBarleyNowSelected)
               )

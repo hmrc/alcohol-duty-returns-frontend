@@ -22,7 +22,7 @@ import org.mockito.ArgumentMatchers.any
 import pages.declareDuty.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.test.Helpers._
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.NormalMode
 import uk.gov.hmrc.http.HttpResponse
 import views.html.declareDuty.DeleteMultipleSPREntryView
@@ -91,14 +91,14 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
     }
 
     "must redirect to the Multiple SPR list page when valid data is submitted and the list is not empty" in {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -118,14 +118,14 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
     }
 
     "must redirect to the DoYouHaveMultipleSPRDutyRates page when 'yes' is submitted and the list is empty" in {
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersWithSingleSPREntry))
           .overrides(
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
