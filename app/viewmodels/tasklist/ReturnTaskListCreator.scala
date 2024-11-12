@@ -266,7 +266,7 @@ class ReturnTaskListCreator @Inject() () {
       val spiritsType         = userAnswers
         .get(SpiritTypePage)
         .fold(false)(spiritsTypePage =>
-          !spiritsTypePage.contains(SpiritType.Other) || userAnswers.get(OtherSpiritsProducedPage).isDefined
+          !spiritsTypePage.spiritTypes.contains(SpiritType.Other) || userAnswers.get(OtherSpiritsProducedPage).isDefined
         )
       val grainsUsed          = userAnswers
         .get(GrainsUsedPage)

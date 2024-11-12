@@ -30,7 +30,7 @@ object SpiritTypeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(SpiritTypePage).flatMap { answers =>
-      val rowValue = answers.collect {
+      val rowValue = answers.spiritTypes.collect {
         case answer if answer != SpiritType.Other => HtmlFormat.escape(messages(s"spiritType.$answer")).toString
       }
       if (rowValue.isEmpty)

@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package pages.spiritsQuestions
+package models.spiritsQuestions
 
 import models.SpiritType
-import models.SpiritType.Other
-import models.spiritsQuestions.SpiritTypePageAnswers
-import play.api.libs.json.JsPath
-import pages.QuestionPage
+import play.api.libs.json._
 
-case object SpiritTypePage extends QuestionPage[SpiritTypePageAnswers] {
+case class SpiritTypePageAnswers(spiritTypes: Set[SpiritType], maybeOtherSpiritTypes: Option[String])
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "spiritType"
-
-  def hasMadeOtherSpirits(spiritsType: Set[SpiritType]): Boolean = spiritsType.contains(Other)
+object SpiritTypePageAnswers {
+  implicit val format: OFormat[SpiritTypePageAnswers] = Json.format[SpiritTypePageAnswers]
 }

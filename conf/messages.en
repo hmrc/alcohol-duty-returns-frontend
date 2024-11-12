@@ -911,8 +911,12 @@ spiritType.other = Other
 spiritType.checkYourAnswersLabel = Type of spirits
 spiritType.other.checkYourAnswersLabel = Other spirits produced
 spiritType.error.required = Select the spirits you have made this quarter
+spiritType.error.other.required = Enter the other spirits you have made
+spiritType.error.other.length = Other spirits you have made must be 120 characters or less
+spiritType.other.error.permitted-chars = Other spirits you have made must be letters, numbers and spaces
+spiritType.other.input.label = Which spirits have you made?
 spiritType.change.hidden = which of these spirits you have made
-spiritType.hint = Select all that apply in the past quarter.
+spiritType.hint = Select all you have made in the past 3 months.
 
 maltedBarleyUsed.title = How much malted barley have you used?
 maltedBarleyUsed.heading = How much malted barley have you used?

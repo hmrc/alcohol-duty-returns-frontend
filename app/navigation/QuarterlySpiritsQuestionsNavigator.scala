@@ -70,11 +70,11 @@ class QuarterlySpiritsQuestionsNavigator @Inject() {
 
   private def spiritTypesRoute(userAnswers: UserAnswers): Call =
     userAnswers.get(SpiritTypePage) match {
-      case Some(spiritsType) if SpiritTypePage.hasMadeOtherSpirits(spiritsType) =>
+      case Some(spiritsType) if SpiritTypePage.hasMadeOtherSpirits(spiritsType.spiritTypes) =>
         controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(NormalMode)
-      case Some(_)                                                              =>
+      case Some(_)                                                                          =>
         controllers.spiritsQuestions.routes.GrainsUsedController.onPageLoad(NormalMode)
-      case _                                                                    => routes.JourneyRecoveryController.onPageLoad()
+      case _                                                                                => routes.JourneyRecoveryController.onPageLoad()
     }
 
   private def grainsUsedRoute(userAnswers: UserAnswers): Call =

@@ -384,7 +384,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     )
 
   def getTypeOfSpirits(userAnswers: UserAnswers): EitherT[Future, String, Set[AdrTypeOfSpirit]] =
-    getValue(userAnswers, SpiritTypePage).map(_.map(fromSpiritsType))
+    getValue(userAnswers, SpiritTypePage).map(_.spiritTypes.map(fromSpiritsType))
 
   private def getOtherSpiritsName(userAnswers: UserAnswers): EitherT[Future, String, Option[String]] =
     EitherT.rightT(userAnswers.get(OtherSpiritsProducedPage))
