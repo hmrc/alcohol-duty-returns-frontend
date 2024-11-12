@@ -912,7 +912,7 @@ spiritType.checkYourAnswersLabel = Type of spirits
 spiritType.other.checkYourAnswersLabel = Other spirits produced
 spiritType.error.required = Select the spirits you have made this quarter
 spiritType.change.hidden = which of these spirits you have made
-spiritType.hint = Select all that apply in the past quarter.
+spiritType.hint = Select all you have made in the past 3 months.
 
 maltedBarleyUsed.title = How much malted barley have you used?
 maltedBarleyUsed.heading = How much malted barley have you used?
