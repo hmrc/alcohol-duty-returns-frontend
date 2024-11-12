@@ -32,5 +32,5 @@ class OtherSpiritsProducedFormProvider @Inject() extends Mappings {
 }
 
 object OtherSpiritsProducedFormProvider {
-  val otherTypesLength = 150
+  val otherTypesLength = 120
 }
