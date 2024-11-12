@@ -299,6 +299,14 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
       }
 
+      "must go from the AdjustmentListPage page to the Alcohol to declare page if the user selected 'Yes' and the Adjustment list is empty" in {
+        navigator.nextPage(
+          AdjustmentListPage,
+          NormalMode,
+          emptyUserAnswers.set(pages.adjustment.AdjustmentListPage, true).success.value
+        ) mustBe controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
+      }
+
       "must go from the AdjustmentListPage to the Journey Recovery page page if the answer is missing" in {
         navigator.nextPage(
           AdjustmentListPage,
