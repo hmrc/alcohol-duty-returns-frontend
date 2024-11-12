@@ -16,48 +16,18 @@
 
 package forms.spiritsQuestions
 
-import forms.mappings.Mappings
-import forms.spiritsQuestions.SpiritTypeFormProvider.{ifOtherSelectedThenBoxHasToBePopulated, otherTypesLength, permittedChars}
-import models.SpiritType
-import models.SpiritType.Other
-import models.spiritsQuestions.SpiritTypePageAnswers
-import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, set}
-import play.api.data.validation.Constraints.nonEmpty
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-
 import javax.inject.Inject
+
+import forms.mappings.Mappings
+import play.api.data.Form
+import play.api.data.Forms.set
+import models.SpiritType
 
 class SpiritTypeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[SpiritTypePageAnswers] =
+  def apply(): Form[Set[SpiritType]] =
     Form(
-      mapping(
-        "value"          -> set(enumerable[SpiritType]("spiritType.error.required"))
-          .verifying(nonEmptySet("spiritType.error.required")),
-        "otherTextInput" -> optional(
-          text()
-            .verifying(maxLength(otherTypesLength, "spiritType.other.error.length"))
-            .verifying(nonEmpty(errorMessage = "spiritType.error.other.required"))
-            .verifying(regexp(permittedChars, "spiritType.other.error.permitted-chars"))
-        )
-      )(SpiritTypePageAnswers.apply)(SpiritTypePageAnswers.unapply)
-        .verifying(ifOtherSelectedThenBoxHasToBePopulated("spiritType.error.other.required"))
+      "value" -> set(enumerable[SpiritType]("spiritType.error.required"))
+        .verifying(nonEmptySet("spiritType.error.required"))
     )
-}
-object SpiritTypeFormProvider {
-  val otherTypesLength: Int  = 120
-  val permittedChars: String = "^[A-Za-z0-9 ]+$"
-
-  def ifOtherSelectedThenBoxHasToBePopulated(errorMessageKey: String): Constraint[SpiritTypePageAnswers] =
-    Constraint("If Other is ticked, text input cannot be empty") { formAnswers =>
-      val otherSelected: Boolean      = formAnswers.spiritTypes.contains(Other)
-      val otherInputNotEmpty: Boolean = formAnswers.maybeOtherSpiritTypes.exists(_.trim.nonEmpty)
-
-      if (!otherSelected || otherInputNotEmpty) {
-        Valid
-      } else {
-        Invalid(ValidationError(errorMessageKey, "value"))
-      }
-    }
 }

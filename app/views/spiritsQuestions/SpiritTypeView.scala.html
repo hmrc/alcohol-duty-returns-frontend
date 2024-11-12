@@ -17,12 +17,12 @@
 @import components.{SectionHeading, PageHeading}
 
 @this(
-        layout: templates.Layout,
-        formHelper: FormWithCSRF,
-        govukErrorSummary: GovukErrorSummary,
-        govukCheckboxes: GovukCheckboxes,
-        govukButton: GovukButton,
-        sectionHeading: SectionHeading
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukCheckboxes: GovukCheckboxes,
+    govukButton: GovukButton,
+    sectionHeading: SectionHeading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -32,7 +32,7 @@
     @formHelper(action = controllers.spiritsQuestions.routes.SpiritTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> SpiritType.checkboxItems(form.errors).headOption.flatMap(_.id).getOrElse(""))))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> SpiritType.checkboxItems.headOption.flatMap(_.id).getOrElse(""))))
         }
 
         @sectionHeading(
@@ -40,40 +40,18 @@
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
-        @if(form.errors.isEmpty) {
-            @govukCheckboxes(
-                CheckboxesViewModel(
-                    form = form,
-                    name = "value",
-                    legend = LegendViewModel(messages("spiritType.heading")).asPageHeading(),
-                    items = SpiritType.checkboxItems(form.errors)
-                )
-                        .withHint(Hint(content = messages("spiritType.hint")))
+        @govukCheckboxes(
+            CheckboxesViewModel(
+                form   = form,
+                name   = "value",
+                legend = LegendViewModel(messages("spiritType.heading")).asPageHeading(),
+                items  = SpiritType.checkboxItems
             )
-        } else {
-            @if(form.errors.head.messages.head.equals("spiritType.error.other.required")) {
-                @govukCheckboxes(
-                    CheckboxesViewModel(
-                        form = form.withError(form.errors.head.copy(key = "otherTextInput")),
-                        name = "otherTextInput",
-                        legend = LegendViewModel(messages("spiritType.heading")).asPageHeading(),
-                        items = SpiritType.checkboxItems(form.errors)
-                    )
-                            .withHint(Hint(content = messages("spiritType.hint"))))
-            } else {
-                @govukCheckboxes(
-                    CheckboxesViewModel(
-                        form = form,
-                        name = "value",
-                        legend = LegendViewModel(messages("spiritType.heading")).asPageHeading(),
-                        items = SpiritType.checkboxItems(form.errors)
-                    )
-                            .withHint(Hint(content = messages("spiritType.hint"))))
-            }
-        }
+            .withHint(Hint(content =  messages("spiritType.hint")))
+        )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )
     }
 }

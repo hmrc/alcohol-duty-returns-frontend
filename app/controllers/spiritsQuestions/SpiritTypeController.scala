@@ -26,7 +26,6 @@ import pages.spiritsQuestions.{OtherSpiritsProducedPage, SpiritTypePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.CacheConnector
-import models.spiritsQuestions.SpiritTypePageAnswers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.SpiritTypeView
 
@@ -53,11 +52,10 @@ class SpiritTypeController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
       implicit request =>
-        val preparedForm =
-          request.userAnswers.get(SpiritTypePage) match {
-            case None          => form
-            case Some(answers) => form.fill(answers)
-          }
+        val preparedForm = request.userAnswers.get(SpiritTypePage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
         Ok(view(preparedForm, mode))
     }
@@ -71,16 +69,9 @@ class SpiritTypeController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value => {
               val (intermediateAnswers, otherSpiritsNowSelected) =
-                handleOtherSpiritsChange(
-                  request.userAnswers,
-                  SpiritTypePage.hasMadeOtherSpirits(value.spiritTypes)
-                ) // TODO: Fix this
+                handleOtherSpiritsChange(request.userAnswers, SpiritTypePage.hasMadeOtherSpirits(value))
               for {
-                updatedAnswers <-
-                  Future.fromTry(
-                    intermediateAnswers
-                      .set(SpiritTypePage, SpiritTypePageAnswers(value.spiritTypes, value.maybeOtherSpiritTypes))
-                  )
+                updatedAnswers <- Future.fromTry(intermediateAnswers.set(SpiritTypePage, value))
                 _              <- cacheConnector.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, otherSpiritsNowSelected))
             }
@@ -95,9 +86,7 @@ class SpiritTypeController @Inject() (
     answers: UserAnswers,
     newValue: Boolean
   ): (UserAnswers, Boolean) = {
-    val oldValue = SpiritTypePage.hasMadeOtherSpirits(
-      answers.get(SpiritTypePage).map(_.spiritTypes).getOrElse(Set.empty[SpiritType])
-    )
+    val oldValue = SpiritTypePage.hasMadeOtherSpirits(answers.get(SpiritTypePage).getOrElse(Set.empty[SpiritType]))
     if (isNowSelected(oldValue, newValue)) {
       (answers, true)
     } else if (isNowUnselected(oldValue, newValue)) {
@@ -105,6 +94,6 @@ class SpiritTypeController @Inject() (
     } else {
       (answers, false)
     }
-  } // TODO: Remove this essentially
+  }
 
 }

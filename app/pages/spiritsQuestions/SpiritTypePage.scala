@@ -18,11 +18,10 @@ package pages.spiritsQuestions
 
 import models.SpiritType
 import models.SpiritType.Other
-import models.spiritsQuestions.SpiritTypePageAnswers
 import play.api.libs.json.JsPath
 import pages.QuestionPage
 
-case object SpiritTypePage extends QuestionPage[SpiritTypePageAnswers] {
+case object SpiritTypePage extends QuestionPage[Set[SpiritType]] {
 
   override def path: JsPath = JsPath \ toString
 
