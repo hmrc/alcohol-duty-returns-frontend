@@ -25,7 +25,7 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class QuarterlySpiritsQuestionsNavigator @Inject() {
+class QuarterlySpiritsQuestionsNavigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case pages.spiritsQuestions.DeclareQuarterlySpiritsPage => declareQuarterlySpiritsRoute

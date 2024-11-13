@@ -19,7 +19,7 @@ import com.google.inject.Inject
 import controllers.actions.{CheckSpiritsAndIngredientsToggleAction, CheckSpiritsRegimeAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.spiritsQuestions.CheckYourAnswersSummaryListHelper
 import views.html.spiritsQuestions.CheckYourAnswersView
@@ -40,7 +40,7 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
       implicit request =>
-        val result = for {
+        val result: Option[Result] = for {
           spiritsList <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
         } yield Ok(view(spiritsList))
         result.getOrElse {

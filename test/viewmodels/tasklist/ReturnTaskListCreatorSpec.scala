@@ -785,57 +785,12 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
     "when the user answers yes to Declare QS question, must return a complete section and" - {
       "the QS task must have a link to DeclareQuarterlySpiritsController and" - {
-        val declareQuarterleySpiritsPage           = Json.obj(DeclareQuarterlySpiritsPage.toString -> true)
-        val declareSpiritsTotalPage                = Json.obj(DeclareSpiritsTotalPage.toString -> 10000)
-        val whiskyPage                             = Json.obj(WhiskyPage.toString -> Json.obj("scotchWhisky" -> 5000, "irishWhiskey" -> 2500))
-        val spiritTypePage                         = Json.obj(SpiritTypePage.toString -> Seq("maltSpirits", "ciderOrPerry"))
-        val spiritTypePageWithOther                = Json.obj(SpiritTypePage.toString -> Seq("maltSpirits", "ciderOrPerry", "other"))
-        val otherSpiritsProducedPage               = Json.obj(OtherSpiritsProducedPage.toString -> "Coco Pops Vodka")
-        val grainsUsedPage                         = Json.obj(
-          GrainsUsedPage.toString -> Json.obj(
-            "maltedBarleyQuantity"     -> 100000,
-            "wheatQuantity"            -> 200000,
-            "maizeQuantity"            -> 300000,
-            "ryeQuantity"              -> 400000,
-            "unmaltedGrainQuantity"    -> 500000,
-            "usedMaltedGrainNotBarley" -> false
-          )
-        )
-        val grainsUsedPageWithOther                = Json.obj(
-          GrainsUsedPage.toString -> Json.obj(
-            "maltedBarleyQuantity"     -> 100000,
-            "wheatQuantity"            -> 200000,
-            "maizeQuantity"            -> 300000,
-            "ryeQuantity"              -> 400000,
-            "unmaltedGrainQuantity"    -> 500000,
-            "usedMaltedGrainNotBarley" -> true
-          )
-        )
-        val otherMaltedGrainsPage                  = Json.obj(
-          OtherMaltedGrainsPage.toString -> Json.obj(
-            "otherMaltedGrainsTypes"    -> "Coco Pops",
-            "otherMaltedGrainsQuantity" -> 600000,
-            "maizeQuantity"             -> 300000
-          )
-        )
-        val alcoholUsedPage                        = Json.obj(
-          AlcoholUsedPage.toString -> Json.obj("beer" -> 100, "wine" -> 200, "madeWine" -> 300, "ciderOrPerry" -> 400)
-        )
-        val ethyleneGasOrMolassesUsedPage          = Json.obj(
-          EthyleneGasOrMolassesUsedPage.toString -> Json
-            .obj("ethyleneGas" -> 10000, "molasses" -> 20000, "otherIngredients" -> false)
-        )
-        val ethyleneGasOrMolassesUsedPageWithOther = Json.obj(
-          EthyleneGasOrMolassesUsedPage.toString -> Json
-            .obj("ethyleneGas" -> 10000, "molasses" -> 20000, "otherIngredients" -> true)
-        )
-        val otherIngredientsUsedPage               = Json.obj(
-          OtherIngredientsUsedPage.toString -> Json.obj(
-            "otherIngredientsUsedTypes"    -> "Weetabix",
-            "otherIngredientsUsedUnit"     -> "Tonnes",
-            "otherIngredientsUsedQuantity" -> 200
-          )
-        )
+        val declareQuarterleySpiritsPage = Json.obj(DeclareQuarterlySpiritsPage.toString -> true)
+        val declareSpiritsTotalPage      = Json.obj(DeclareSpiritsTotalPage.toString -> 10000)
+        val whiskyPage                   = Json.obj(WhiskyPage.toString -> Json.obj("scotchWhisky" -> 5000, "irishWhiskey" -> 2500))
+        val spiritTypePage               = Json.obj(SpiritTypePage.toString -> Seq("maltSpirits", "ciderOrPerry"))
+        val spiritTypePageWithOther      = Json.obj(SpiritTypePage.toString -> Seq("maltSpirits", "ciderOrPerry", "other"))
+        val otherSpiritsProducedPage     = Json.obj(OtherSpiritsProducedPage.toString -> "Coco Pops Vodka")
 
         def setUserAnswers(pages: Seq[JsObject]): UserAnswers = emptyUserAnswers.copy(data = pages.reduce(_ ++ _))
 
@@ -865,10 +820,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         Seq(
           ("whisky", declareSpiritsTotalPage),
-          ("spirits type", whiskyPage),
-          ("grains used", spiritTypePage),
-          ("alcohol used", grainsUsedPage),
-          ("ingredients used", alcoholUsedPage)
+          ("spirits type", whiskyPage)
         ).foldLeft(Seq(declareQuarterleySpiritsPage)) { case (completedBefore, (nextPageName, page)) =>
           val completedPages = completedBefore :+ page
 
@@ -905,59 +857,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               declareQuarterleySpiritsPage,
               declareSpiritsTotalPage,
               whiskyPage,
-              spiritTypePageWithOther,
-              grainsUsedPage,
-              alcoholUsedPage,
-              ethyleneGasOrMolassesUsedPage
-            )
-          )
-          val result      = returnTaskListCreator.returnQSSection(userAnswers)
-
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.spirits.inProgress")
-          )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
-          result.taskList.items(1).href          shouldBe Some(
-            controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
-          )
-        }
-
-        "be in progress when all but other malted grains used when declared have been completed" in {
-          val userAnswers = setUserAnswers(
-            Seq(
-              declareQuarterleySpiritsPage,
-              declareSpiritsTotalPage,
-              whiskyPage,
-              spiritTypePageWithOther,
-              otherSpiritsProducedPage,
-              grainsUsedPageWithOther,
-              alcoholUsedPage,
-              ethyleneGasOrMolassesUsedPage
-            )
-          )
-          val result      = returnTaskListCreator.returnQSSection(userAnswers)
-
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.spirits.inProgress")
-          )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
-          result.taskList.items(1).href          shouldBe Some(
-            controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
-          )
-        }
-
-        "be in progress when all but other ingredients used when declared have been completed" in {
-          val userAnswers = setUserAnswers(
-            Seq(
-              declareQuarterleySpiritsPage,
-              declareSpiritsTotalPage,
-              whiskyPage,
-              spiritTypePageWithOther,
-              otherSpiritsProducedPage,
-              grainsUsedPageWithOther,
-              otherMaltedGrainsPage,
-              alcoholUsedPage,
-              ethyleneGasOrMolassesUsedPageWithOther
+              spiritTypePageWithOther
             )
           )
           val result      = returnTaskListCreator.returnQSSection(userAnswers)
@@ -977,10 +877,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               declareQuarterleySpiritsPage,
               declareSpiritsTotalPage,
               whiskyPage,
-              spiritTypePage,
-              grainsUsedPage,
-              alcoholUsedPage,
-              ethyleneGasOrMolassesUsedPage
+              spiritTypePage
             )
           )
           val result      = returnTaskListCreator.returnQSSection(userAnswers)
@@ -1012,47 +909,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               declareSpiritsTotalPage,
               whiskyPage,
               spiritTypePageWithOther,
-              otherSpiritsProducedPage,
-              grainsUsedPage,
-              alcoholUsedPage,
-              ethyleneGasOrMolassesUsedPage
-            )
-          )
-          val result      = returnTaskListCreator.returnQSSection(userAnswers)
-
-          result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
-        }
-
-        "must be complete if the user answers yes to the Declare QS question and all questions including grains used with other are answered" in {
-          val userAnswers = setUserAnswers(
-            Seq(
-              declareQuarterleySpiritsPage,
-              declareSpiritsTotalPage,
-              whiskyPage,
-              spiritTypePage,
-              grainsUsedPageWithOther,
-              otherMaltedGrainsPage,
-              alcoholUsedPage,
-              ethyleneGasOrMolassesUsedPage
-            )
-          )
-          val result      = returnTaskListCreator.returnQSSection(userAnswers)
-
-          result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
-        }
-
-        "must be complete if the user answers yes to the Declare QS question and all questions including ethylene or molassess used with other are answered" in {
-          val userAnswers = setUserAnswers(
-            Seq(
-              declareQuarterleySpiritsPage,
-              declareSpiritsTotalPage,
-              whiskyPage,
-              spiritTypePage,
-              grainsUsedPageWithOther,
-              otherMaltedGrainsPage,
-              alcoholUsedPage,
-              ethyleneGasOrMolassesUsedPageWithOther,
-              otherIngredientsUsedPage
+              otherSpiritsProducedPage
             )
           )
           val result      = returnTaskListCreator.returnQSSection(userAnswers)

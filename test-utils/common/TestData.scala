@@ -837,43 +837,15 @@ trait TestData extends ModelGenerators {
         "maltSpirits",
         "grainSpirits"
       ),
-      OtherSpiritsProducedPage.toString                   -> "Other Type of Spirit",
-      GrainsUsedPage.toString                             -> Json.obj(
-        "maltedBarleyQuantity"     -> 1111,
-        "wheatQuantity"            -> 2222,
-        "maizeQuantity"            -> 3333,
-        "ryeQuantity"              -> 4444,
-        "unmaltedGrainQuantity"    -> 5555,
-        "usedMaltedGrainNotBarley" -> true
-      ),
-      OtherMaltedGrainsPage.toString                      -> Json.obj(
-        "otherMaltedGrainsTypes"    -> "Other malted grains",
-        "otherMaltedGrainsQuantity" -> 6666
-      ),
-      AlcoholUsedPage.toString                            -> Json.obj(
-        "beer"         -> 1111,
-        "wine"         -> 2222,
-        "madeWine"     -> 3333,
-        "ciderOrPerry" -> 4444
-      ),
-      EthyleneGasOrMolassesUsedPage.toString              -> Json.obj(
-        "ethyleneGas"      -> 6666,
-        "molasses"         -> 7777,
-        "otherIngredients" -> true
-      ),
-      OtherIngredientsUsedPage.toString                   -> Json.obj(
-        "otherIngredientsUsedTypes"    -> "Other Ingredient",
-        "otherIngredientsUsedUnit"     -> "Tonnes",
-        "otherIngredientsUsedQuantity" -> 4321
-      )
+      OtherSpiritsProducedPage.toString                   -> "Other Type of Spirit"
     )
   )
 
   val fullReturn =
     AdrReturnSubmission(
       AdrDutyDeclared(
-        true,
-        List(
+        declared = true,
+        dutyDeclaredItems = List(
           AdrDutyDeclaredItem(AdrAlcoholQuantity(100, 10), AdrDuty("315", 9.27, 92.7)),
           AdrDutyDeclaredItem(AdrAlcoholQuantity(110, 10), AdrDuty("313", 9.27, 92.7)),
           AdrDutyDeclaredItem(AdrAlcoholQuantity(1000, 100), AdrDuty("373", 10.01, 1001)),
@@ -884,26 +856,28 @@ trait TestData extends ModelGenerators {
           AdrDutyDeclaredItem(AdrAlcoholQuantity(100, 10), AdrDuty("361", 10.01, 100.1))
         )
       ),
-      AdrAdjustments(
-        true,
-        Some("Reason for over declaration"),
-        List(AdrAdjustmentItem("24AA", AdrAlcoholQuantity(2000, 200), AdrDuty("312", 9.27, -1854))),
-        true,
-        Some("Reason for under declaration"),
-        List(
+      adjustments = AdrAdjustments(
+        overDeclarationDeclared = true,
+        reasonForOverDeclaration = Some("Reason for over declaration"),
+        overDeclarationProducts =
+          List(AdrAdjustmentItem("24AA", AdrAlcoholQuantity(2000, 200), AdrDuty("312", 9.27, -1854))),
+        underDeclarationDeclared = true,
+        reasonForUnderDeclaration = Some("Reason for under declaration"),
+        underDeclarationProducts = List(
           AdrAdjustmentItem("23AL", AdrAlcoholQuantity(1000, 100), AdrDuty("311", 9.27, 927)),
           AdrAdjustmentItem("23AL", AdrAlcoholQuantity(100, 10), AdrDuty("371", 9.27, 92.7))
         ),
-        true,
-        List(AdrAdjustmentItem("24AC", AdrAlcoholQuantity(100, 10), AdrDuty("314", 9.27, -92.7))),
-        true,
-        List(AdrAdjustmentItem("24AD", AdrAlcoholQuantity(210, 21), AdrDuty("313", 9.27, -194.67))),
-        true,
-        List(AdrRepackagedDraughtAdjustmentItem("24AB", "371", 3.21, "311", 9.27, AdrAlcoholQuantity(1000, 100), 606))
+        spoiltProductDeclared = true,
+        spoiltProducts = List(AdrAdjustmentItem("24AC", AdrAlcoholQuantity(100, 10), AdrDuty("314", 9.27, -92.7))),
+        drawbackDeclared = true,
+        drawbackProducts = List(AdrAdjustmentItem("24AD", AdrAlcoholQuantity(210, 21), AdrDuty("313", 9.27, -194.67))),
+        repackagedDraughtDeclared = true,
+        repackagedDraughtProducts =
+          List(AdrRepackagedDraughtAdjustmentItem("24AB", "371", 3.21, "311", 9.27, AdrAlcoholQuantity(1000, 100), 606))
       ),
-      AdrDutySuspended(
-        true,
-        List(
+      dutySuspended = AdrDutySuspended(
+        declared = true,
+        dutySuspendedProducts = List(
           AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Beer, AdrAlcoholQuantity(1000, 100)),
           AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Cider, AdrAlcoholQuantity(2000, 200)),
           AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Spirits, AdrAlcoholQuantity(1000, 100)),
@@ -911,13 +885,13 @@ trait TestData extends ModelGenerators {
           AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.OtherFermentedProduct, AdrAlcoholQuantity(1000, 100))
         )
       ),
-      Some(
-        AdrSpirits(
-          true,
-          Some(
-            AdrSpiritsProduced(
-              AdrSpiritsVolumes(1234, 111, 222),
-              Set(
+      spirits = Some(
+        value = AdrSpirits(
+          spiritsDeclared = true,
+          spiritsProduced = Some(
+            value = AdrSpiritsProduced(
+              spiritsVolumes = AdrSpiritsVolumes(totalSpirits = 1234, scotchWhiskey = 111, irishWhisky = 222),
+              typesOfSpirit = Set(
                 AdrTypeOfSpirit.Other,
                 AdrTypeOfSpirit.CiderOrPerry,
                 AdrTypeOfSpirit.NeutralAgricultural,
@@ -927,17 +901,17 @@ trait TestData extends ModelGenerators {
                 AdrTypeOfSpirit.Beer,
                 AdrTypeOfSpirit.Malt
               ),
-              Some("Other Type of Spirit"),
-              true,
-              AdrSpiritsGrainsQuantities(Some(1111), Some(6666), Some(2222), Some(3333), Some(4444), Some(5555)),
-              Some("Other malted grains"),
-              AdrSpiritsIngredientsVolumes(Some(6666), Some(7777), Some(1111), Some(2222), Some(3333), Some(4444)),
-              Some(AdrOtherIngredient(4321, Tonnes, "Other Ingredient"))
+              otherSpiritTypeName = Some("Other Type of Spirit"),
+              hasOtherMaltedGrain = None,
+              grainsQuantities = AdrSpiritsGrainsQuantities(None, None, None, None, None, None),
+              otherMaltedGrainType = None,
+              ingredientsVolumes = AdrSpiritsIngredientsVolumes(None, None, None, None, None, None),
+              otherIngredient = None
             )
           )
         )
       ),
-      AdrTotals(1748.2, -1854, 1019.7, -92.7, -194.67, 606, 1232.53)
+      totals = AdrTotals(1748.2, -1854, 1019.7, -92.7, -194.67, 606, 1232.53)
     )
 
   val fullRepackageAdjustmentEntry: AdjustmentEntry = AdjustmentEntry(

@@ -19,9 +19,8 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.CacheConnector
 import generators.ModelGenerators
-import models.UnitsOfMeasure.Tonnes
-import models.spiritsQuestions.{AlcoholUsed, EthyleneGasOrMolassesUsed, GrainsUsed, OtherIngredientsUsed, OtherMaltedGrains, Whisky}
 import models.SpiritType
+import models.spiritsQuestions.Whisky
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.{DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.inject.bind
@@ -47,22 +46,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       .set(DeclareSpiritsTotalPage, BigDecimal(11))
       .success
       .value
-      .set(GrainsUsedPage, GrainsUsed(BigDecimal(1), BigDecimal(2), BigDecimal(3), BigDecimal(4), BigDecimal(5), true))
-      .success
-      .value
-      .set(AlcoholUsedPage, AlcoholUsed(BigDecimal(1), BigDecimal(2), BigDecimal(3), BigDecimal(4)))
-      .success
-      .value
       .set(WhiskyPage, Whisky(BigDecimal(1), BigDecimal(2)))
-      .success
-      .value
-      .set(OtherMaltedGrainsPage, OtherMaltedGrains("test other malted grains", BigDecimal(1)))
-      .success
-      .value
-      .set(EthyleneGasOrMolassesUsedPage, EthyleneGasOrMolassesUsed(BigDecimal(1), BigDecimal(2), true))
-      .success
-      .value
-      .set(OtherIngredientsUsedPage, OtherIngredientsUsed("test other ingredients", Tonnes, BigDecimal(1)))
       .success
       .value
 
@@ -85,18 +69,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val spiritsList          =
+        val spiritsList =
           CheckYourAnswersSummaryListHelper.spiritsSummaryList(completedUserAnswers)(getMessages(application)).get
-        val alcoholList          =
-          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(completedUserAnswers)(getMessages(application)).get
-        val grainsList           =
-          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(completedUserAnswers)(getMessages(application)).get
-        val otherIngredientsList = CheckYourAnswersSummaryListHelper
-          .otherIngredientsUsedSummaryList(completedUserAnswers)(getMessages(application))
-          .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(spiritsList, alcoholList, grainsList, otherIngredientsList)(
+        contentAsString(result) mustEqual view(spiritsList)(
           request,
           getMessages(application)
         ).toString
@@ -109,7 +86,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val userAnswers = completedUserAnswers
-        .remove(List(OtherMaltedGrainsPage, OtherSpiritsProducedPage, OtherIngredientsUsedPage, SpiritTypePage))
+        .remove(List(OtherSpiritsProducedPage, SpiritTypePage))
         .success
         .value
         .set(
@@ -133,18 +110,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val spiritsList          =
+        val spiritsList =
           CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(application)).get
-        val alcoholList          =
-          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(userAnswers)(getMessages(application)).get
-        val grainsList           =
-          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(userAnswers)(getMessages(application)).get
-        val otherIngredientsList = CheckYourAnswersSummaryListHelper
-          .otherIngredientsUsedSummaryList(userAnswers)(getMessages(application))
-          .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(spiritsList, alcoholList, grainsList, otherIngredientsList)(
+        contentAsString(result) mustEqual view(spiritsList)(
           request,
           getMessages(application)
         ).toString
@@ -157,6 +127,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val userAnswers = completedUserAnswers
+        .remove(List(OtherSpiritsProducedPage, SpiritTypePage))
+        .success
+        .value
         .set(
           SpiritTypePage,
           Set[SpiritType](SpiritType.Maltspirits, SpiritType.Grainspirits, SpiritType.Other)
@@ -181,23 +154,15 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val spiritsList          =
+        val spiritsList =
           CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(application)).get
-        val alcoholList          =
-          CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(userAnswers)(getMessages(application)).get
-        val grainsList           =
-          CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(userAnswers)(getMessages(application)).get
-        val otherIngredientsList = CheckYourAnswersSummaryListHelper
-          .otherIngredientsUsedSummaryList(userAnswers)(getMessages(application))
-          .get
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(spiritsList, alcoholList, grainsList, otherIngredientsList)(
+        contentAsString(result) mustEqual view(spiritsList)(
           request,
           getMessages(application)
         ).toString
       }
-
     }
 
     "must redirect to Journey Recovery for a GET" - {
@@ -234,6 +199,40 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }
+
+      "if one of the necessary pages has not been populated" in new SetUp {
+        val mockCacheConnector = mock[CacheConnector]
+
+        when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+        val userAnswers = completedUserAnswers
+          .remove(List(OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage))
+          .success
+          .value
+          .set(
+            SpiritTypePage,
+            Set[SpiritType](SpiritType.NeutralAgriculturalOrigin)
+          )
+          .success
+          .value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .configure(additionalConfig)
+          .overrides(
+            bind[CacheConnector].toInstance(mockCacheConnector)
+          )
+          .build()
+
+        running(application) {
+          val request =
+            FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+        }
+      }
+
     }
   }
 
