@@ -47,6 +47,7 @@ class AdjustmentNavigator @Inject() () {
       _ => controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           => userAnswers => repackagedTaxTypeRoute(userAnswers)
     case pages.adjustment.AdjustmentListPage                        => adjustmentListPageRoute
+    case pages.adjustment.DeleteAdjustmentPage                      => deleteListPageRoute
     case _                                                          =>
       _ => routes.TaskListController.onPageLoad
   }
@@ -163,6 +164,12 @@ class AdjustmentNavigator @Inject() () {
       case Some(true)  => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
       case Some(false) => routes.TaskListController.onPageLoad
       case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  private def deleteListPageRoute(userAnswers: UserAnswers): Call =
+    userAnswers.get(pages.adjustment.AdjustmentEntryListPage) match {
+      case Some(list) if list.nonEmpty => controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
+      case _                           => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
     }
 
   private def adjustmentTypeRoute(userAnswers: UserAnswers, mode: Mode): Call = {

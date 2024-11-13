@@ -19,6 +19,8 @@ package controllers.adjustment
 import connectors.UserAnswersConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import forms.adjustment.DeleteAdjustmentFormProvider
+import models.NormalMode
+import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -32,6 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteAdjustmentController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersConnector: UserAnswersConnector,
+  navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -63,9 +66,11 @@ class DeleteAdjustmentController @Inject() (
                 userAnswersWithUpdatedOverUnderReason <-
                   adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers)
                 _                                     <- userAnswersConnector.set(userAnswersWithUpdatedOverUnderReason)
-              } yield Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1))
+              } yield Redirect(
+                navigator.nextPage(DeleteAdjustmentPage, NormalMode, userAnswersWithUpdatedOverUnderReason)
+              )
             } else {
-              Future.successful(Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)))
+              Future.successful(Redirect(navigator.nextPage(DeleteAdjustmentPage, NormalMode, request.userAnswers)))
             }
         )
   }
