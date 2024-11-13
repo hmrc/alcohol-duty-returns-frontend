@@ -60,7 +60,7 @@ object Constants {
 
   val paddingBottomCssClass = "govuk-body govuk-!-padding-bottom-3"
 
-  val quarterlySpiritsMonths = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
+  val quarterlySpiritsMonths = Set(JANUARY, APRIL, JULY, OCTOBER)
 
   val pastPaymentsSessionKey: String = "past-payment-amount"
 }
