@@ -18,6 +18,6 @@
 
 @this()
 
-@(id: String, text: String, href: String, newTab: Boolean = false, classes: String = "${Css.linkNoVisitedStateCssClass}")
+@(id: String, text: String, href: String, newTab: Boolean = false, classes: String = Css.linkNoVisitedStateCssClass)
 
 <a class="@classes" href="@href" @if(newTab) { target="_blank" rel="noopener noreferrer" } id="@id">@text</a>
