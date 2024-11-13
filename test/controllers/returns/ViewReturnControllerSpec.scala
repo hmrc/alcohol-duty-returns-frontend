@@ -115,11 +115,11 @@ class ViewReturnControllerSpec extends SpecBase {
   }
 
   class SetUp {
-    val periodKey                     = periodKeyMar
+    val periodKey                     = periodKeyJan
     val returnDetails                 = exampleReturnDetails(periodKey, Instant.now(clock))
     val returnDetailsWithBadPeriodKey =
       returnDetails.copy(identification = returnDetails.identification.copy(periodKey = badPeriodKey))
-    val returnPeriodStr               = dateTimeHelper.formatMonthYear(returnPeriodMar.period)
+    val returnPeriodStr               = dateTimeHelper.formatMonthYear(returnPeriodJan.period)
     val submittedAtDateStr            = dateTimeHelper.formatDateMonthYear(
       dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
     )
