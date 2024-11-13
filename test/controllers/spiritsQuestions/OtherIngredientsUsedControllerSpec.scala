@@ -20,7 +20,6 @@ import base.SpecBase
 import forms.spiritsQuestions.OtherIngredientsUsedFormProvider
 import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import pages.spiritsQuestions.OtherIngredientsUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call

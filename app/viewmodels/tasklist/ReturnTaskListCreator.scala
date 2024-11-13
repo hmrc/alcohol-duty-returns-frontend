@@ -23,7 +23,7 @@ import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
-import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Hint, TaskList}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -268,20 +268,7 @@ class ReturnTaskListCreator @Inject() () {
         .fold(false)(spiritsTypePage =>
           !spiritsTypePage.contains(SpiritType.Other) || userAnswers.get(OtherSpiritsProducedPage).isDefined
         )
-      val grainsUsed          = userAnswers
-        .get(GrainsUsedPage)
-        .fold(false)(grainsUsed =>
-          !grainsUsed.usedMaltedGrainNotBarley || userAnswers.get(OtherMaltedGrainsPage).isDefined
-        )
-      val alcoholUsed         = userAnswers.get(AlcoholUsedPage).isDefined
-      val ingredientsUsed     = userAnswers
-        .get(EthyleneGasOrMolassesUsedPage)
-        .fold(false)(ethyleneGasOrMolassesUsedPage =>
-          !ethyleneGasOrMolassesUsedPage.otherIngredients || userAnswers.get(OtherIngredientsUsedPage).isDefined
-        )
-
-      val pagesCompleted =
-        Seq(declareSpiritsTotal, whisky, spiritsType, grainsUsed, alcoholUsed, ingredientsUsed)
+      val pagesCompleted      = Seq(declareSpiritsTotal, whisky, spiritsType)
 
       if (pagesCompleted.forall(_ == false))
         NotStarted

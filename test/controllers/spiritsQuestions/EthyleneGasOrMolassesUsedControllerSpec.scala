@@ -17,12 +17,10 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
-import forms.spiritsQuestions.EthyleneGasOrMolassesUsedFormProvider
 import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.spiritsQuestions.EthyleneGasOrMolassesUsedPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call

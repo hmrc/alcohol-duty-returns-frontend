@@ -20,7 +20,6 @@ import base.SpecBase
 import forms.spiritsQuestions.OtherMaltedGrainsFormProvider
 import models.{NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import pages.spiritsQuestions.OtherMaltedGrainsPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call

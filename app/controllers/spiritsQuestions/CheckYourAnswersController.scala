@@ -41,11 +41,8 @@ class CheckYourAnswersController @Inject() (
     (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle) {
       implicit request =>
         val result = for {
-          spiritsList          <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
-          alcoholList          <- CheckYourAnswersSummaryListHelper.alcoholUsedSummaryList(request.userAnswers)
-          grainsList           <- CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
-          otherIngredientsList <- CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
-        } yield Ok(view(spiritsList, alcoholList, grainsList, otherIngredientsList))
+          spiritsList <- CheckYourAnswersSummaryListHelper.spiritsSummaryList(request.userAnswers)
+        } yield Ok(view(spiritsList))
         result.getOrElse {
           logger.warn("Impossible to create summary list")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())

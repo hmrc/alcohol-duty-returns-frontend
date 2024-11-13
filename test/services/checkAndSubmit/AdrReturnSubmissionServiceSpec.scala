@@ -29,7 +29,7 @@ import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
 import pages.dutySuspended._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage}
+import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import queries.Settable
 import uk.gov.hmrc.http.client.HttpClientV2

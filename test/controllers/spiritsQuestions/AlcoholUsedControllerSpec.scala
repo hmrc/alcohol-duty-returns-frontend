@@ -23,7 +23,6 @@ import models.{NormalMode, UserAnswers}
 import models.spiritsQuestions.AlcoholUsed
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.spiritsQuestions.AlcoholUsedPage
 import play.api.Application
 import play.api.inject.bind
 import play.api.libs.json.Json

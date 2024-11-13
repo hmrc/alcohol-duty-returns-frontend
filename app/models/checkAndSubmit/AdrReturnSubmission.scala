@@ -225,7 +225,7 @@ case class AdrSpiritsProduced(
   spiritsVolumes: AdrSpiritsVolumes,
   typesOfSpirit: Set[AdrTypeOfSpirit],
   otherSpiritTypeName: Option[String],
-  hasOtherMaltedGrain: Boolean,
+  hasOtherMaltedGrain: Option[Boolean], // TODO: Check I can change these to Option since they are optional in the API
   grainsQuantities: AdrSpiritsGrainsQuantities,
   otherMaltedGrainType: Option[String],
   ingredientsVolumes: AdrSpiritsIngredientsVolumes,

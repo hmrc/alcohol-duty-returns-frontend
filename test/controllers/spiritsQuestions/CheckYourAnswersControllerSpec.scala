@@ -23,7 +23,7 @@ import models.UnitsOfMeasure.Tonnes
 import models.spiritsQuestions.{AlcoholUsed, EthyleneGasOrMolassesUsed, GrainsUsed, OtherIngredientsUsed, OtherMaltedGrains, Whisky}
 import models.SpiritType
 import org.mockito.ArgumentMatchers.any
-import pages.spiritsQuestions.{AlcoholUsedPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import pages.spiritsQuestions.{DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse

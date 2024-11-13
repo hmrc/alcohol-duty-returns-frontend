@@ -25,7 +25,7 @@
     pageHeading: PageHeading
 )
 
-@(spiritsList: SummaryList, alcoholIngredientsList: SummaryList, grainsList: SummaryList, otherIngredientsList: SummaryList)(implicit request: Request[_], messages: Messages)
+@(spiritsList: SummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
@@ -37,12 +37,6 @@
     @pageHeading(messages("checkYourAnswers.heading"))
 
     @govukSummaryList(spiritsList)
-
-    @govukSummaryList(grainsList)
-
-    @govukSummaryList(alcoholIngredientsList)
-
-    @govukSummaryList(otherIngredientsList)
 
     @govukButton(
         ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
