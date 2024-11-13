@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 @import viewmodels.Money
@@ -25,8 +25,7 @@
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-        bulletList: BulletList,
-        subHeading: SubHeading
+        bulletList: BulletList
 )
 
 @(adjustmentType: AdjustmentType, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal, repackagedRate:BigDecimal, repackagedDuty:BigDecimal, newDuty:BigDecimal)(implicit request: Request[_], messages: Messages)
