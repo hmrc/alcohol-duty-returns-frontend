@@ -17,6 +17,8 @@
 package viewmodels.returns
 
 import config.{Constants, FrontendAppConfig}
+import models.checkAndSubmit.AdrTypeOfSpirit
+import models.checkAndSubmit.AdrTypeOfSpirit._
 import models.returns._
 import models.{RateBand, ReturnPeriod}
 import play.api.i18n.Messages
@@ -358,6 +360,111 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   private def noneDeclareDutySuspensionHeader()(implicit messages: Messages): Seq[HeadCell] = Seq(
     HeadCell(
       content = Text(messages("viewReturn.table.description.legend"))
+    )
+  )
+
+  def createSpiritsViewModels(
+    returnDetails: ReturnDetails
+  )(implicit messages: Messages): Seq[TableViewModel] =
+    returnDetails.spirits match {
+      case Some(spirits) =>
+        Seq(
+          TableViewModel(
+            head = spiritsDeclaredTableHeader(),
+            rows = spiritsDeclaredRows(spirits)
+          ),
+          TableViewModel(
+            head = spiritsTypesDeclaredTableHeader(),
+            rows = spiritsTypesDeclaredRows(spirits)
+          )
+        )
+      case None          =>
+        Seq(
+          TableViewModel(
+            head = spiritsNotDeclaredTableHeader(),
+            rows = spiritsNotDeclaredRow()
+          )
+        )
+    }
+
+  private def spiritsDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] =
+    Seq(
+      HeadCell(
+        content = Text(messages("viewReturn.table.description.legend"))
+      ),
+      HeadCell(
+        content = Text(messages("viewReturn.table.totalVolume.lpa.legend")),
+        classes = Constants.textAlignRightWrapCssClass
+      )
+    )
+
+  private def spiritsDeclaredRows(spirits: ReturnSpirits)(implicit messages: Messages): Seq[TableRowViewModel] =
+    Seq(
+      ("viewReturn.spirits.totalVolume", spirits.spiritsVolumes.totalSpirits),
+      ("viewReturn.spirits.scotchWhisky", spirits.spiritsVolumes.scotchWhisky),
+      ("viewReturn.spirits.irishWhiskey", spirits.spiritsVolumes.irishWhiskey)
+    ).map { case (legendKey, value) =>
+      TableRowViewModel(
+        cells = Seq(
+          TableRow(content = Text(messages(legendKey))),
+          TableRow(
+            content = Text(messages("site.2DP", value)),
+            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+          )
+        )
+      )
+    }
+
+  private def spiritsTypesDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] =
+    Seq(
+      HeadCell(
+        content = Text(messages("viewReturn.table.typesOfSpirits.legend"))
+      )
+    )
+
+  private val spiritsTypeToMessageKey: Map[AdrTypeOfSpirit, String] =
+    Map(
+      Malt                -> "viewReturn.spirits.type.malt",
+      Grain               -> "viewReturn.spirits.type.grain",
+      NeutralAgricultural -> "viewReturn.spirits.type.neutralAgricultural",
+      NeutralIndustrial   -> "viewReturn.spirits.type.neutralIndustrial",
+      Beer                -> "viewReturn.spirits.type.beer",
+      CiderOrPerry        -> "viewReturn.spirits.type.cider",
+      WineOrMadeWine      -> "viewReturn.spirits.type.wine"
+    )
+
+  private def spiritsTypesDeclaredRows(spirits: ReturnSpirits)(implicit messages: Messages): Seq[TableRowViewModel] = {
+    val typesOfSpirit = spirits.typesOfSpirit
+
+    val spiritsTypesDetails = AdrTypeOfSpirit.values
+      .flatMap {
+        case Other if typesOfSpirit.contains(Other)               => spirits.otherSpiritTypeName
+        case typeOfSpirit if typesOfSpirit.contains(typeOfSpirit) =>
+          spiritsTypeToMessageKey.get(typeOfSpirit).map(messages(_))
+        case _                                                    => None
+      }
+      .mkString(", ")
+
+    Seq(
+      TableRowViewModel(
+        cells = Seq(
+          TableRow(content = Text(spiritsTypesDetails))
+        )
+      )
+    )
+  }
+
+  private def spiritsNotDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] = Seq(
+    HeadCell(
+      content = Text(messages("viewReturn.table.description.legend"))
+    )
+  )
+
+  private def spiritsNotDeclaredRow()(implicit messages: Messages) = Seq(
+    TableRowViewModel(
+      cells = Seq(
+        TableRow(content = Text(messages("viewReturn.spirits.noneDeclared")))
+      )
     )
   )
 }

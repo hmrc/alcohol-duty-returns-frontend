@@ -28,7 +28,16 @@
     printPage: PrintPage
 )
 
-@(period: String, submittedAtDate: String, submittedAtTime: String, dutyToDeclare: TableViewModel, adjustments: TableViewModel, totalDue: TableTotalViewModel, netDutySuspension: TableViewModel)(implicit request: Request[_], messages: Messages)
+@(
+   period: String,
+   submittedAtDate: String,
+   submittedAtTime: String,
+   dutyToDeclare: TableViewModel,
+   adjustments: TableViewModel,
+   totalDue: TableTotalViewModel,
+   netDutySuspension: TableViewModel,
+   spirits: Seq[TableViewModel]
+)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages(s"viewReturn.title", period)), fullWidth = true, withPrintCss = true) {
 
@@ -82,6 +91,17 @@
         head = Some(netDutySuspension.head),
         rows = netDutySuspension.rows.map(_.cells)
     ))
+
+    <br>
+
+    @spirits.zipWithIndex.map { case (spiritsTable, index) =>
+        @govukTable(Table(
+            caption = {if (index == 0) { Some(messages("viewReturn.spirits.caption")) } else { None }},
+            captionClasses = Constants.tableCaptionMCssClass,
+            head = Some(spiritsTable.head),
+            rows = spiritsTable.rows.map(_.cells)
+        ))
+    }
 
     <br>
 

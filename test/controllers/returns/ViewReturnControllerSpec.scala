@@ -18,6 +18,7 @@ package controllers.returns
 
 import base.SpecBase
 import connectors.{AlcoholDutyCalculatorConnector, AlcoholDutyReturnsConnector}
+import models.ReturnPeriod
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
@@ -32,8 +33,10 @@ import scala.concurrent.Future
 
 class ViewReturnControllerSpec extends SpecBase {
   "ViewReturnController" - {
-    "should return a view if able to fetch the return" in new SetUp {
-      when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKey))(any))
+    "should return a view if able to fetch the return and a spirits month" in new SetUp {
+      override def periodKeyUnderTest: String = periodKeyForSpirits
+
+      when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
         .thenReturn(Future.successful(returnDetails))
       when(mockCalculatorConnector.rateBands(any())(any))
         .thenReturn(Future.successful(rateBands))
@@ -51,13 +54,15 @@ class ViewReturnControllerSpec extends SpecBase {
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
-        when(mockViewModel.createNetDutySuspensionViewModel(returnDetails)).thenReturn(tableModel)
+        when(mockViewModel.createNetDutySuspensionViewModel(eqTo(returnDetails))(any())).thenReturn(tableModel)
+        when(mockViewModel.createSpiritsViewModels(eqTo(returnDetails))(any())).thenReturn(Seq(tableModel))
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
 
-        val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
+        val request =
+          FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKeyUnderTest).url)
         val result  = route(application, request).value
 
         val view = application.injector.instanceOf[ViewReturnView]
@@ -70,63 +75,155 @@ class ViewReturnControllerSpec extends SpecBase {
           tableModel,
           tableModel,
           totalTableModel,
-          tableModel
+          tableModel,
+          Seq(tableModel)
         )(
           request,
           messages
         ).toString
       }
+
+      verify(mockViewModel, times(1)).createSpiritsViewModels(any)(any)
     }
 
-    "should redirect to the journey recovery page if unable to fetch the return" in new SetUp {
-      when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKey))(any))
-        .thenReturn(Future.failed(new IllegalArgumentException("error")))
+    "should return a view if able to fetch the return and not a spirits month" in new SetUp {
+      override def periodKeyUnderTest: String = periodKeyNotForSpirits
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
-        .build()
-      running(application) {
-        val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
-        val result  = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "should redirect to the journey recovery page if unable to parse the returned period key" in new SetUp {
-      when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKey))(any))
-        .thenReturn(Future.successful(returnDetailsWithBadPeriodKey))
+      when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
+        .thenReturn(Future.successful(returnDetails))
       when(mockCalculatorConnector.rateBands(any())(any))
         .thenReturn(Future.successful(rateBands))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
         .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockCalculatorConnector))
+        .overrides(bind[ViewReturnViewModel].toInstance(mockViewModel))
         .build()
+
       running(application) {
-        val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url)
+        implicit val messages = getMessages(application)
+
+        when(mockViewModel.createTotalDueViewModel(returnDetails)).thenReturn(totalTableModel)
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createNetDutySuspensionViewModel(returnDetails)).thenReturn(tableModel)
+        when(mockViewModel.createSpiritsViewModels(returnDetails)).thenReturn(Seq(tableModel))
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
+          .thenReturn(tableModel)
+
+        val request =
+          FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKeyUnderTest).url)
+        val result  = route(application, request).value
+
+        val view = application.injector.instanceOf[ViewReturnView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          returnPeriodStr,
+          submittedAtDateStr,
+          submittedAtTimeStr,
+          tableModel,
+          tableModel,
+          totalTableModel,
+          tableModel,
+          Seq.empty
+        )(
+          request,
+          messages
+        ).toString
+      }
+
+      verify(mockViewModel, never).createSpiritsViewModels(any)(any)
+    }
+
+    "should redirect to the journey recovery page if unable to parse the period key" in new SetUp {
+      override def periodKeyUnderTest: String = periodKeyForSpirits
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
+        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockCalculatorConnector))
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(badPeriodKey).url)
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
+
+      verify(mockReturnsConnector, never).getReturn(any, any)(any)
+    }
+
+    "should redirect to the journey recovery page if unable to fetch the return" in new SetUp {
+      override def periodKeyUnderTest: String = periodKeyForSpirits
+
+      when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
+        .thenReturn(Future.failed(new IllegalArgumentException("error")))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
+        .build()
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKeyUnderTest).url)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+
+      verify(mockReturnsConnector, times(1)).getReturn(any, any)(any)
+      verify(mockCalculatorConnector, never).rateBands(any())(any)
+    }
+
+    "should redirect to the journey recovery page if the period key on the return doesn't match that of the request" in new SetUp {
+      override def periodKeyUnderTest: String = periodKeyForSpirits
+
+      when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
+        .thenReturn(
+          Future.successful(
+            returnDetails.copy(identification = returnDetails.identification.copy(periodKey = periodKeyNotForSpirits))
+          )
+        )
+      when(mockCalculatorConnector.rateBands(any())(any))
+        .thenReturn(Future.successful(rateBands))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
+        .build()
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKeyUnderTest).url)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+
+      verify(mockReturnsConnector, times(1)).getReturn(any, any)(any)
+      verify(mockCalculatorConnector, never).rateBands(any())(any)
     }
   }
 
-  class SetUp {
-    val periodKey                     = periodKeyJan
-    val returnDetails                 = exampleReturnDetails(periodKey, Instant.now(clock))
-    val returnDetailsWithBadPeriodKey =
-      returnDetails.copy(identification = returnDetails.identification.copy(periodKey = badPeriodKey))
-    val returnPeriodStr               = dateTimeHelper.formatMonthYear(returnPeriodJan.period)
-    val submittedAtDateStr            = dateTimeHelper.formatDateMonthYear(
+  abstract class SetUp {
+    val periodKeyForSpirits    = periodKeyJan
+    val periodKeyNotForSpirits = periodKeyFeb
+    def periodKeyUnderTest: String
+    val returnPeriodUnderTest  = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyUnderTest)
+    val returnDetails          = exampleReturnDetails(periodKeyUnderTest, Instant.now(clock))
+    val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriodUnderTest.period)
+    val submittedAtDateStr     = dateTimeHelper.formatDateMonthYear(
       dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
     )
-    val submittedAtTimeStr            = dateTimeHelper.formatHourMinuteMeridiem(
+    val submittedAtTimeStr     = dateTimeHelper.formatHourMinuteMeridiem(
       dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
     )
-    val rateBands                     = exampleRateBands(periodKey)
+    val rateBands              = exampleRateBands(periodKeyUnderTest)
 
     val tableModel              = TableViewModel.empty()
     val totalTableModel         = TableTotalViewModel(HeadCell(), HeadCell())
