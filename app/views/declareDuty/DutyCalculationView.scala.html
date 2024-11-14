@@ -14,8 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.TableViewModel
 @import components.{BulletList, SectionHeading, PageHeading, Paragraph, SubHeading}
+@import config.Constants.{Css, Format}
+@import viewmodels.TableViewModel
 
 @this(
         bulletList:BulletList,
@@ -49,10 +50,10 @@
 
     @govukTable(Table(
       caption = Some(messages("productList.caption")),
-      captionClasses = "govuk-table__caption--l",
+      captionClasses = Css.tableCaptionLCssClass,
       head = Some(dutyDueViewModel.head),
       rows = dutyDueViewModel.rows.map(row => {
-        val actions = TableRow(format = Some("numeric"), content = HtmlContent(tableRowActionList(
+        val actions = TableRow(format = Some(Format.numeric), content = HtmlContent(tableRowActionList(
           id = "productList",
           actions = row.actions.map(action => tableRowAction(
             id = "",

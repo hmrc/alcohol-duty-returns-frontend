@@ -15,6 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import config.Constants.Css
 @import viewmodels.declareDuty.TaxBandsViewModel
 
 @this(
@@ -46,10 +47,10 @@
 
         @pageHeading(messages("whatDoYouNeedToDeclare.heading"))
 
-        @paragraph(messages("whatDoYouNeedToDeclare.hint"), classes = "govuk-hint")
+        @paragraph(messages("whatDoYouNeedToDeclare.hint"), classes = Css.hintCssClass)
 
         @if(taxBandsViewModel.core.nonEmpty) {
-          @subHeading(messages("whatDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes="govuk-heading-m")
+          @subHeading(messages("whatDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @govukCheckboxes(CheckboxesViewModel(
             form   = form,
             name   = "value",
@@ -60,7 +61,7 @@
         }
 
         @if(taxBandsViewModel.draught.nonEmpty) {
-          @subHeading(messages(s"whatDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes="govuk-heading-m")
+          @subHeading(messages("whatDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @govukCheckboxes(CheckboxesViewModel(
             form   = form,
             name   = "value",
@@ -70,7 +71,7 @@
         }
 
         @if(taxBandsViewModel.smallProducerRelief.nonEmpty) {
-          @subHeading(messages(s"whatDoYouNeedToDeclare.smallProducerRelief.heading", messages(s"return.regime.$regime")), classes="govuk-heading-m")
+          @subHeading(messages("whatDoYouNeedToDeclare.smallProducerRelief.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @govukCheckboxes(CheckboxesViewModel(
             form   = form,
             name   = "value",
@@ -81,7 +82,7 @@
         }
 
         @if(taxBandsViewModel.draughtAndSmallProducerRelief.nonEmpty) {
-          @subHeading(messages(s"whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading", messages(s"return.regime.$regime")), classes="govuk-heading-m")
+          @subHeading(messages("whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @govukCheckboxes(CheckboxesViewModel(
             form   = form,
             name   = "value",

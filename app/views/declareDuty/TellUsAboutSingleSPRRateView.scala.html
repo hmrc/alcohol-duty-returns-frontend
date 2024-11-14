@@ -14,8 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components.{SectionHeading, SubHeading, PageHeading, Paragraph}
+@import config.Constants.Css
+@import viewmodels.InputWidth._
 @import viewmodels.declareDuty.CategoriesByRateTypeViewModel
 
 @this(
@@ -50,9 +51,9 @@
         @paragraph(messages(s"tellUsAboutSingleSPRRate.p1.$regime"))
 
       @if(categories.smallProducer.nonEmpty) {
-        @subHeading(messages(s"tellUsAboutSingleSPRRate.smallProducer.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
+        @subHeading(messages("tellUsAboutSingleSPRRate.smallProducer.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.smallProducer.zipWithIndex) {
-          @subHeading(categoryViewModel.category, classes = "govuk-heading-s")
+          @subHeading(categoryViewModel.category, classes = Css.headingSCssClass)
           @govukInput(
             InputViewModel(
               field = form(s"volumesWithRate[$index]"),
@@ -106,9 +107,9 @@
       }
 
       @if(categories.draughtAndSmallProducer.nonEmpty) {
-        @subHeading(messages(s"tellUsAboutSingleSPRRate.draughtSmallProducer.heading", messages(s"return.regime.$regime")), classes = "govuk-heading-m")
+        @subHeading(messages("tellUsAboutSingleSPRRate.draughtSmallProducer.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.draughtAndSmallProducer.zipWithIndex) {
-          @subHeading(categoryViewModel.category, classes = "govuk-heading-s")
+          @subHeading(categoryViewModel.category, classes = Css.headingSCssClass)
           @govukInput(
             InputViewModel(
               field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),

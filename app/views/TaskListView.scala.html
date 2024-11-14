@@ -14,8 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.tasklist.AlcoholDutyTaskList
 @import components.Link
+@import config.Constants.Css
+@import viewmodels.tasklist.AlcoholDutyTaskList
 
 @this(
         layout: templates.Layout,
@@ -37,7 +38,7 @@
 @paragraph(messages("taskList.expiry.date", taskList.sessionExpiryDate))
 
     @for(section <- taskList.sections) {
-        @subheading(section.title, classes = "govuk-heading-m")
+        @subheading(section.title, classes = Css.headingMCssClass)
         @govukTaskList(section.taskList)
     }
 

@@ -16,7 +16,7 @@
 
 package forms.adjustment
 
-import forms.adjustment.OverDeclarationReasonFormProvider.overDeclarationReasonLength
+import config.Constants
 
 import javax.inject.Inject
 import forms.mappings.Mappings
@@ -27,10 +27,6 @@ class OverDeclarationReasonFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "over-declaration-reason-input" -> text("overDeclarationReason.error.required")
-        .verifying(maxLength(overDeclarationReasonLength, "overDeclarationReason.error.length"))
+        .verifying(maxLength(Constants.overUnderDeclarationReasonLength, "overDeclarationReason.error.length"))
     )
-}
-
-object OverDeclarationReasonFormProvider {
-  val overDeclarationReasonLength = 250
 }

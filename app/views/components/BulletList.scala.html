@@ -14,9 +14,11 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
-@(elements: Seq[Content], classes: String = "govuk-list govuk-list--bullet", id: Option[String] = None)
+@(elements: Seq[Content], classes: String = Css.bulletListCssClass, id: Option[String] = None)
 
 <ul class="@classes" @id.map{id => id="@id"}>
 @elements.map { element =>

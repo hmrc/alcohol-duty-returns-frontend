@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this(
     layout: templates.Layout,
     govukButton: GovukButton
@@ -28,11 +30,11 @@
     showSignOut  = false
 ) {
 
-    <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>
+    <h1 class="@Css.headingXLCssClass">@messages("signedOut.heading")</h1>
 
-    <p class="govuk-body">@messages("signedOut.guidance")</p>
+    <p class="@Css.bodyCssClass">@messages("signedOut.guidance")</p>
 
-    <p class="govuk-body">
+    <p class="@Css.bodyCssClass">
         @govukButton(
             ButtonViewModel("signInButton", messages("site.signIn"))
                 .asLink(businessTaxAccountUrl)

@@ -16,6 +16,7 @@
 
 package viewmodels.govuk
 
+import config.Constants.Css
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
 
@@ -38,30 +39,33 @@ trait TagFluency {
       tag.copy(attributes = tag.attributes + attribute)
 
     def grey(): Tag =
-      withCssClass("govuk-tag--grey")
+      withCssClass(Css.greyTagCssClass)
 
     def green(): Tag =
-      withCssClass("govuk-tag--green")
+      withCssClass(Css.greenTagCssClass)
 
     def turquoise(): Tag =
-      withCssClass("govuk-tag--turquoise")
+      withCssClass(Css.turquoiseCssClass)
+
+    def lightBlue(): Tag =
+      withCssClass(Css.lightBlueTagCssClass)
 
     def blue(): Tag =
-      withCssClass("govuk-tag--blue")
+      withCssClass(Css.blueTagCssClass)
 
     def purple(): Tag =
-      withCssClass("govuk-tag--purple")
+      withCssClass(Css.purpleCssClass)
 
     def pink(): Tag =
-      withCssClass("govuk-tag--pink")
+      withCssClass(Css.pinkCssClass)
 
     def red(): Tag =
-      withCssClass("govuk-tag--red")
+      withCssClass(Css.redTagCssClass)
 
     def orange(): Tag =
-      withCssClass("govuk-tag--orange")
+      withCssClass(Css.orangeCssClass)
 
     def yellow(): Tag =
-      withCssClass("govuk-tag--yellow")
+      withCssClass(Css.yellowTagCssClass)
   }
 }

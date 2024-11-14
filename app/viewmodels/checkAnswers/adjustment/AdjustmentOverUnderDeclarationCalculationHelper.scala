@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers.adjustment
 
+import config.Constants
 import connectors.AlcoholDutyCalculatorConnector
 import models.UserAnswers
 import models.adjustment.{AdjustmentDuty, AdjustmentType}
@@ -90,5 +91,5 @@ class AdjustmentOverUnderDeclarationCalculationHelper @Inject() (
     total: BigDecimal,
     userAnswers: UserAnswers
   ): Try[UserAnswers] =
-    if (total.abs < 1000) userAnswers.remove(reasonPage) else Try(userAnswers)
+    if (total.abs < Constants.overUnderDeclarationThreshold) userAnswers.remove(reasonPage) else Try(userAnswers)
 }
