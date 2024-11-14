@@ -25,7 +25,7 @@ import navigation.ReturnsNavigator
 import pages.declareDuty.{DoYouHaveMultipleSPRDutyRatesPage, nextPages}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.declareDuty.DoYouHaveMultipleSPRDutyRatesView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DoYouHaveMultipleSPRDutyRatesController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: ReturnsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -72,7 +72,7 @@ class DoYouHaveMultipleSPRDutyRatesController @Inject() (
               updatedAnswers     <-
                 Future.fromTry(request.userAnswers.setByKey(currentPage, regime, value))
               clearedUserAnswers <- Future.fromTry(updatedAnswers.removePagesByKey(pagesToClear, regime))
-              _                  <- cacheConnector.set(clearedUserAnswers)
+              _                  <- userAnswersConnector.set(clearedUserAnswers)
             } yield Redirect(
               navigator.nextPageWithRegime(currentPage, mode, updatedAnswers, regime, pagesToClear.nonEmpty)
             )

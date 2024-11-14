@@ -16,6 +16,7 @@
 
 package viewmodels.govuk
 
+import config.Constants.Css
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
@@ -70,9 +71,9 @@ trait FieldsetFluency {
       legend.copy(classes = s"${legend.classes} $newClass")
 
     def asSubheading: Legend =
-      legend.withCssClass("govuk-fieldset__legend--m")
+      legend.withCssClass(Css.fieldsetLegendMCssClass)
 
     def asVisuallyHidden(): Legend =
-      withCssClass("govuk-visually-hidden")
+      withCssClass(Css.visuallyHiddenCssClass)
   }
 }

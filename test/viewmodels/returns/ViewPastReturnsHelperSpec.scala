@@ -17,6 +17,7 @@
 package viewmodels.returns
 
 import base.SpecBase
+import config.Constants.Css
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
@@ -61,7 +62,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       table.rows.size shouldBe obligationData.size
       table.rows.foreach { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text(messages("Completed")), classes = "govuk-tag--green")
+          Tag(content = Text(messages("Completed")), classes = Css.greenTagCssClass)
         )
       }
     }
@@ -81,7 +82,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       table.rows.size shouldBe obligationData.size
       table.rows.foreach { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text(messages("Due")), classes = "govuk-tag--blue")
+          Tag(content = Text(messages("Due")), classes = Css.blueTagCssClass)
         )
       }
     }
@@ -92,7 +93,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
       table.rows.size shouldBe obligationData.size
       table.rows.map { row =>
         row.cells(1).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text(messages("Overdue")), classes = "govuk-tag--red")
+          Tag(content = Text(messages("Overdue")), classes = Css.redTagCssClass)
         )
       }
     }

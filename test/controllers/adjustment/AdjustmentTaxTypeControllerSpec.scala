@@ -26,7 +26,7 @@ import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import models.RateType.Core
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import models.adjustment.AdjustmentEntry
@@ -55,7 +55,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
   val alcoholRegime                           = AlcoholRegime.Beer
   val rate                                    = Some(BigDecimal(10.99))
 
-  val rateBand           = RateBand(
+  val rateBand                 = RateBand(
     taxCode,
     "some band",
     RateType.DraughtRelief,
@@ -73,8 +73,8 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
       )
     )
   )
-  val application        = applicationBuilder(userAnswers = Some(userAnswers)).build()
-  val mockCacheConnector = mock[CacheConnector]
+  val application              = applicationBuilder(userAnswers = Some(userAnswers)).build()
+  val mockUserAnswersConnector = mock[UserAnswersConnector]
 
   "AdjustmentTaxType Controller" - {
 
@@ -113,14 +113,14 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         Some(rateBand)
       )
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -149,14 +149,14 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
           .success
           .value
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(newUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -177,14 +177,14 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         Some(rateBand)
       )
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
       running(application) {
@@ -206,14 +206,14 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         None
       )
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
       running(application) {
@@ -240,7 +240,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         Some(coreRateBand)
       )
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val adjustmentEntry = AdjustmentEntry(
         adjustmentType = Some(RepackagedDraughtProducts),
@@ -254,7 +254,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
       running(application) {
@@ -308,14 +308,14 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
     "must redirect to Journey Recovery currentAdjustmentEntry returns None" in {
       when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(None)
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
       running(application) {
@@ -338,7 +338,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
       running(application) {

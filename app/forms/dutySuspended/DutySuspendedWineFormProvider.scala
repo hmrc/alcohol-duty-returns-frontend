@@ -16,33 +16,42 @@
 
 package forms.dutySuspended
 
-import javax.inject.Inject
+import config.Constants
 
+import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
 import models.dutySuspended.DutySuspendedWine
 
 class DutySuspendedWineFormProvider @Inject() extends Mappings {
-
   def apply(): Form[DutySuspendedWine] = Form(
     mapping(
       "totalWine"         -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "dutySuspendedWine.error.totalWine.required",
         "dutySuspendedWine.error.totalWine.nonNumeric",
         "dutySuspendedWine.error.totalWine.decimalPlaces"
-      ).verifying(minimumValue(BigDecimal(-999999999.99), "dutySuspendedWine.error.totalWine.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedWine.error.totalWine.maximumRequired")),
+      ).verifying(
+        minimumValue(Constants.dutySuspendedVolumeMinimumValue, "dutySuspendedWine.error.totalWine.minimumRequired")
+      ).verifying(
+        maximumValue(Constants.dutySuspendedVolumeMaximumValue, "dutySuspendedWine.error.totalWine.maximumRequired")
+      ),
       "pureAlcoholInWine" -> bigDecimal(
-        4,
+        Constants.lpaMaximumDecimalPlaces,
         "dutySuspendedWine.error.pureAlcoholInWine.required",
         "dutySuspendedWine.error.pureAlcoholInWine.nonNumeric",
         "dutySuspendedWine.error.pureAlcoholInWine.decimalPlaces"
       ).verifying(
-        minimumValue(BigDecimal(-999999999.9999), "dutySuspendedWine.error.pureAlcoholInWine.minimumRequired")
+        minimumValue(
+          Constants.dutySuspendedLpaMinimumValue,
+          "dutySuspendedWine.error.pureAlcoholInWine.minimumRequired"
+        )
       ).verifying(
-        maximumValue(BigDecimal(999999999.9999), "dutySuspendedWine.error.pureAlcoholInWine.maximumRequired")
+        maximumValue(
+          Constants.dutySuspendedLpaMaximumValue,
+          "dutySuspendedWine.error.pureAlcoholInWine.maximumRequired"
+        )
       )
     )(DutySuspendedWine.apply)(DutySuspendedWine.unapply)
   )

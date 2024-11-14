@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this(
     layout: templates.Layout,
     govukButton: GovukButton
@@ -23,12 +25,12 @@
 
 @layout(pageTitle = titleNoForm(messages("journeyRecovery.continue.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("journeyRecovery.continue.heading")</h1>
+    <h1 class="@Css.headingXLCssClass">@messages("journeyRecovery.continue.heading")</h1>
 
-    <p class="govuk-body">@messages("journeyRecovery.continue.guidance")</p>
-    <p class="govuk-body">@messages("journeyRecovery.continue.guidance.p2")</p>
+    <p class="@Css.bodyCssClass">@messages("journeyRecovery.continue.guidance")</p>
+    <p class="@Css.bodyCssClass">@messages("journeyRecovery.continue.guidance.p2")</p>
 
-    <p class="govuk-body">
+    <p class="@Css.bodyCssClass">
         @govukButton(
             ButtonViewModel("continueButton", messages("site.continue"))
                 .asLink(continueUrl)

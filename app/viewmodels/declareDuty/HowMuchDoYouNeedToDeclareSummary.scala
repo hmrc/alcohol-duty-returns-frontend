@@ -24,7 +24,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow, Value}
 import RateBandHelper.rateBandRecap
-import config.Constants
+import config.Constants.Css
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -100,7 +100,7 @@ object HowMuchDoYouNeedToDeclareSummary {
     val headRow = SummaryListRowViewModel(
       key = messages(s"howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.${rateType.toString}"),
       value = ValueViewModel("")
-    ).withCssClass(Constants.tableRowNoBorderCssClass)
+    ).withCssClass(Css.summaryListRowNoBorderCssClass)
 
     val dutyRows = rateBands.toSeq.sortBy(_.taxTypeCode).map { rateBand =>
       dutyByTaxTypes.find(_.taxType == rateBand.taxTypeCode) match {
@@ -109,13 +109,13 @@ object HowMuchDoYouNeedToDeclareSummary {
             SummaryListRowViewModel(
               key = KeyViewModel(rateBandRecap(rateBand)),
               value = Value()
-            ).withCssClass(Constants.tableRowNoBorderCssClass),
+            ).withCssClass(Css.summaryListRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres"),
               value = ValueViewModel(
                 s"${messages("site.2DP", dutyByTaxType.totalLitres)} ${messages("site.unit.litres")}"
               )
-            ).withCssClass(Constants.tableRowNoBorderCssClass),
+            ).withCssClass(Css.summaryListRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol"),
               value = ValueViewModel(

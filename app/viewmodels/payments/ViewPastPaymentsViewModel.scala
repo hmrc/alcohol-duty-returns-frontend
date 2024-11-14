@@ -16,8 +16,7 @@
 
 package viewmodels.payments
 
-import config.Constants
-import config.Constants.boldFontCssClass
+import config.Constants.Css
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
 import models.TransactionType.RPI
 import models.{HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
@@ -52,7 +51,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
       HeadCell(content = Text(messages("viewPastPayments.description"))),
       HeadCell(
         content = Text(messages("viewPastPayments.outstandingPayments.remainingAmount")),
-        classes = Constants.textAlignRightCssClass
+        classes = Css.textAlignRightCssClass
       ),
       HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.status"))),
       HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.action")))
@@ -79,7 +78,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
           ),
           TableRow(
             content = Text(Money.format(outstandingPaymentsData.remainingAmount)),
-            classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
+            classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
           ),
           TableRow(content = HtmlContent(statusTag))
         ),
@@ -106,7 +105,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
     Seq(
       HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
       HeadCell(content = Text(messages("viewPastPayments.description"))),
-      HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Constants.textAlignRightCssClass)
+      HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Css.textAlignRightCssClass)
     )
 
   private def getUnallocatedPaymentsDataTableRows(
@@ -119,7 +118,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
           TableRow(content = Text(messages("viewPastPayments.unallocatedPayments.description"))),
           TableRow(
             content = Text(Money.format(unallocatedPaymentData.unallocatedAmount)),
-            classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
+            classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
           )
         )
       )
@@ -158,7 +157,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
           ),
           TableRow(
             content = Text(Money.format(historicPaymentsData.amountPaid)),
-            classes = s"$boldFontCssClass ${Constants.textAlignRightCssClass}"
+            classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
           )
         )
       )
@@ -236,11 +235,11 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
   ): Html = {
     val tag = status match {
       case OutstandingPaymentStatusToDisplay.Due          =>
-        Tag(content = Text(messages("viewPastReturns.status.due")), classes = Constants.blueTagCssClass)
+        Tag(content = Text(messages("viewPastReturns.status.due")), classes = Css.blueTagCssClass)
       case OutstandingPaymentStatusToDisplay.Overdue      =>
-        Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = Constants.redTagCssClass)
+        Tag(content = Text(messages("viewPastReturns.status.overdue")), classes = Css.redTagCssClass)
       case OutstandingPaymentStatusToDisplay.NothingToPay =>
-        Tag(content = Text(messages("viewPastPayments.status.nothingToPay")), classes = Constants.greyTagCssClass)
+        Tag(content = Text(messages("viewPastPayments.status.nothingToPay")), classes = Css.greyTagCssClass)
     }
     new GovukTag()(tag)
   }

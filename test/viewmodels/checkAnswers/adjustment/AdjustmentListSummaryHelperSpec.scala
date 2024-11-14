@@ -114,7 +114,7 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
       val exception                      = intercept[RuntimeException] {
         AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       }
-      exception.getMessage shouldBe "Couldn't fetch adjustment type value from cache"
+      exception.getMessage shouldBe "Couldn't fetch adjustment type value from user answers"
     }
   }
 

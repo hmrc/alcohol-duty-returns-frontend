@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, String
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CacheConnector @Inject() (
+class UserAnswersConnector @Inject() (
   config: FrontendAppConfig,
   implicit val httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
@@ -35,11 +35,13 @@ class CacheConnector @Inject() (
   def get(appaId: String, periodKey: String)(implicit
     hc: HeaderCarrier
   ): Future[Either[UpstreamErrorResponse, UserAnswers]] =
-    httpClient.get(url"${config.adrCacheGetUrl(appaId, periodKey)}").execute[Either[UpstreamErrorResponse, UserAnswers]]
+    httpClient
+      .get(url"${config.adrUserAnswersGetUrl(appaId, periodKey)}")
+      .execute[Either[UpstreamErrorResponse, UserAnswers]]
 
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
-      .put(url"${config.adrCacheSetUrl()}")
+      .put(url"${config.adrUserAnswersUrl()}")
       .setHeader("Csrf-Token" -> "nocheck")
       .withBody(Json.toJson(userAnswers))
       .execute[HttpResponse]
@@ -48,20 +50,20 @@ class CacheConnector @Inject() (
     returnAndUserDetails: ReturnAndUserDetails
   )(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, UserAnswers]] =
     httpClient
-      .post(url"${config.adrCacheCreateUserAnswersUrl()}")
+      .post(url"${config.adrUserAnswersUrl()}")
       .withBody(Json.toJson(returnAndUserDetails))
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[Either[UpstreamErrorResponse, UserAnswers]]
 
   def releaseLock(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
-      .delete(url"${config.adrReleaseCacheLockUrl(returnId.appaId, returnId.periodKey)}")
+      .delete(url"${config.adrReleaseUserAnswersLockUrl(returnId.appaId, returnId.periodKey)}")
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
 
   def keepAlive(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
-      .put(url"${config.adrCacheKeepAliveUrl(returnId.appaId, returnId.periodKey)}")
+      .put(url"${config.adrUserAnswersLockKeepAliveUrl(returnId.appaId, returnId.periodKey)}")
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
 }

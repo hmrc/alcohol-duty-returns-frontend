@@ -15,6 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading}
+@import config.Constants.Css
 
 @this(
     layout: templates.Layout,
@@ -35,7 +36,7 @@
 
     @pageHeading(messages("checkYourAnswers.heading"))
 
-    <h2 class="govuk-heading-m">@messages("checkYourAnswersDutySuspendedDeliveries.heading")</h2>
+    <h2 class="@Css.headingMCssClass">@messages("checkYourAnswersDutySuspendedDeliveries.heading")</h2>
 
     @govukSummaryList(list)
 

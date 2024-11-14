@@ -110,13 +110,13 @@ class ReturnPeriodSpec extends SpecBase {
       ReturnPeriod.fromPeriodKey("24AC").get.periodToDate() mustBe LocalDate.of(2024, 3, 31)
     }
 
-    Seq("24AC", "24AF", "24AI", "24AL").foreach { periodKey =>
+    Seq("24AA", "24AD", "24AG", "24AJ").foreach { periodKey =>
       s"$periodKey should have quarterly spirits" in {
         ReturnPeriod.fromPeriodKey(periodKey).get.hasQuarterlySpirits mustBe true
       }
     }
 
-    Seq("24AA", "24AB", "24AD", "24AE", "24AG", "24AH", "24AJ", "24AK").foreach { periodKey =>
+    Seq("24AB", "24AC", "24AE", "24AF", "24AH", "24AI", "24AK", "24AL").foreach { periodKey =>
       s"$periodKey should not have quarterly spirits" in {
         ReturnPeriod.fromPeriodKey(periodKey).get.hasQuarterlySpirits mustBe false
       }

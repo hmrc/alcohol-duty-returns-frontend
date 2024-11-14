@@ -18,7 +18,7 @@ package controllers.auth
 
 import base.SpecBase
 import config.FrontendAppConfig
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.OK
@@ -35,11 +35,11 @@ class AuthControllerSpec extends SpecBase {
 
     "must clear user answers and redirect to sign out, specifying the exit survey as the continue URL" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       val application =
         applicationBuilder(None)
-          .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+          .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
           .build()
 
       running(application) {
@@ -54,18 +54,18 @@ class AuthControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockCacheConnector, times(0)).releaseLock(eqTo(returnId))(any())
+        verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
       }
     }
 
     "must clear user answers, release the lock, and redirect to sign out, specifying the exit survey as the continue URL" in {
 
-      val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(HttpResponse(OK)))
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(HttpResponse(OK)))
 
       val application =
         applicationBuilder(None)
-          .overrides(bind[CacheConnector].toInstance(mockCacheConnector))
+          .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
           .build()
 
       running(application) {
@@ -80,7 +80,7 @@ class AuthControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockCacheConnector, times(1)).releaseLock(eqTo(returnId))(any())
+        verify(mockUserAnswersConnector, times(1)).releaseLock(eqTo(returnId))(any())
       }
     }
   }

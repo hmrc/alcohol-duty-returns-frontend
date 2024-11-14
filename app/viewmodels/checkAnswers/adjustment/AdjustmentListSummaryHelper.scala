@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.adjustment
 
-import config.Constants
+import config.Constants.Css
 import config.Constants.rowsPerPage
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
@@ -37,15 +37,15 @@ object AdjustmentListSummaryHelper {
     val adjustmentEntries: Seq[AdjustmentEntry] = getPaginatedAdjustmentEntries(userAnswers, pageNumber)
     TableViewModel(
       head = Seq(
-        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Constants.oneQuarterCssClass),
-        HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = Constants.oneQuarterCssClass),
+        HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Css.oneQuarterCssClass),
+        HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = Css.oneQuarterCssClass),
         HeadCell(
           content = Text(messages("adjustmentEntryList.duty")),
-          classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+          classes = s"${Css.oneQuarterCssClass} ${Css.textAlignRightCssClass}"
         ),
         HeadCell(
           content = Text(messages("adjustmentEntryList.action")),
-          classes = Constants.oneQuarterCssClass
+          classes = Css.oneQuarterCssClass
         )
       ),
       rows = getAdjustmentEntryRows(adjustmentEntries, pageNumber),
@@ -66,7 +66,7 @@ object AdjustmentListSummaryHelper {
     adjustmentEntries.zipWithIndex.map { case (adjustmentEntry, index) =>
       val adjustmentIndex     = (pageNumber - 1) * rowsPerPage + index
       val adjustmentType      = adjustmentEntry.adjustmentType.getOrElse(
-        throw new RuntimeException("Couldn't fetch adjustment type value from cache")
+        throw new RuntimeException("Couldn't fetch adjustment type value from user answers")
       )
       val adjustmentTypeLabel = messages(s"adjustmentType.checkYourAnswersLabel.$adjustmentType")
       val dutyValue           = if (adjustmentEntry.newDuty.isDefined) {
@@ -75,13 +75,15 @@ object AdjustmentListSummaryHelper {
         adjustmentEntry.duty
       }
       val formattedDutyValue  =
-        Money.format(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from cache")))
+        Money.format(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from user answers")))
       val description         = (adjustmentType, adjustmentEntry.spoiltRegime) match {
         case (Spoilt, Some(spoiltRegime)) => Text(messages(s"alcoholType.$spoiltRegime"))
         case _                            =>
           Text(
             rateBandRecap(
-              adjustmentEntry.rateBand.getOrElse(throw new RuntimeException("Couldn't fetch rateBand from cache"))
+              adjustmentEntry.rateBand.getOrElse(
+                throw new RuntimeException("Couldn't fetch rateBand from user answers")
+              )
             )
           )
       }
@@ -91,7 +93,7 @@ object AdjustmentListSummaryHelper {
           TableRow(description),
           TableRow(
             content = Text(formattedDutyValue),
-            classes = Constants.textAlignRightCssClass
+            classes = Css.textAlignRightCssClass
           )
         ),
         actions = Seq(
@@ -123,11 +125,11 @@ object AdjustmentListSummaryHelper {
     TableTotalViewModel(
       HeadCell(
         content = Text(messages("adjustmentList.total")),
-        classes = Constants.threeQuartersCssClass
+        classes = Css.threeQuartersCssClass
       ),
       HeadCell(
         content = Text(Money.format(total)),
-        classes = s"${Constants.oneQuarterCssClass} ${Constants.textAlignRightCssClass}"
+        classes = s"${Css.oneQuarterCssClass} ${Css.textAlignRightCssClass}"
       )
     )
 

@@ -16,7 +16,7 @@
 
 package viewmodels.govuk
 
-import config.Constants.visuallyHiddenCssClass
+import config.Constants.Css
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import viewmodels.LabelSize
@@ -31,10 +31,9 @@ trait LabelFluency {
       Label(content = content)
 
     def apply(visibleText: String, hiddenText: String): Label = {
-      val content = HtmlContent(s"$visibleText <span class=$visuallyHiddenCssClass>$hiddenText</span>")
+      val content = HtmlContent(s"$visibleText <span class=${Css.visuallyHiddenCssClass}>$hiddenText</span>")
       Label(content = content)
     }
-
   }
 
   implicit class FluentLabel(label: Label) {
@@ -48,7 +47,7 @@ trait LabelFluency {
       label.copy(classes = s"${label.classes} $className")
 
     def asSubheading: Label =
-      label.withCssClass("govuk-label--m govuk-!-margin-bottom-0")
+      label.withCssClass(s"${Css.labelMCssClass} ${Css.marginBottom0CssClass}")
 
     def withAttribute(attribute: (String, String)): Label =
       label.copy(attributes = label.attributes + attribute)
@@ -57,12 +56,12 @@ trait LabelFluency {
       label.copy(forAttr = Some(attr))
 
     def asVisuallyHidden(): Label =
-      withCssClass("govuk-visually-hidden")
+      withCssClass(Css.visuallyHiddenCssClass)
 
     def withHiddenText(visibleText: String, hiddenText: String): Label =
       label.copy(content =
         HtmlContent(
-          s"$visibleText <span class='govuk-visually-hidden'>$hiddenText</span>"
+          s"$visibleText <span class='${Css.visuallyHiddenCssClass}'>$hiddenText</span>"
         )
       )
   }

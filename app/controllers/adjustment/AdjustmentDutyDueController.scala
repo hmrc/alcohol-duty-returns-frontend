@@ -16,7 +16,7 @@
 
 package controllers.adjustment
 
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions._
 import models.adjustment.AdjustmentEntry
 import pages.adjustment.CurrentAdjustmentEntryPage
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentDutyDueController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -49,7 +49,7 @@ class AdjustmentDutyDueController @Inject() (
     for {
       adjustment  <- adjustmentEntryService.createAdjustment(request.userAnswers)
       userAnswers <- Future.fromTry(request.userAnswers.set(CurrentAdjustmentEntryPage, adjustment))
-      _           <- cacheConnector.set(userAnswers)
+      _           <- userAnswersConnector.set(userAnswers)
     } yield getView(adjustment)
 
   }

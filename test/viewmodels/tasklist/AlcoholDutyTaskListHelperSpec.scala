@@ -43,7 +43,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       )
 
       val result           =
-        taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodMar)(getMessages(application))
+        taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodJan)(getMessages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -81,7 +81,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         )
 
       val result           =
-        taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriodMar)(getMessages(application))
+        taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriodJan)(getMessages(application))
       val validUntilString = validUntil.toLocalDateString()
 
       result mustBe AlcoholDutyTaskList(
@@ -94,7 +94,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       result.completedTasks mustBe 4
     }
 
-    "must return a the quarter spirits task only in Mar, Jun, Sep and Dec" in new SetUp {
+    "must return a the quarter spirits task only in Jan, Apr, Jul and Oct" in new SetUp {
       val expectedSectionsWithQS = Seq(
         returnTaskListCreator.returnSection(emptyUserAnswers),
         returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
@@ -116,10 +116,10 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         val result =
           taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriod)(getMessages(application))
 
-        val periodQuarters = "CFIL"
-        val lastChar       = periodKey.last
+        val periodQuarterChars = Set('A', 'D', 'G', 'J')
+        val lastChar           = periodKey.last
 
-        if (periodQuarters.contains(lastChar)) {
+        if (periodQuarterChars.contains(lastChar)) {
           result.sections mustBe expectedSectionsWithQS
         } else {
           result.sections mustBe expectedSectionsWithoutQS

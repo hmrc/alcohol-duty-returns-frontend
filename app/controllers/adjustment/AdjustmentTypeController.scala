@@ -25,7 +25,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AlcoholicProductTypeHelper
@@ -37,7 +37,7 @@ import scala.util.Try
 
 class AdjustmentTypeController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -78,7 +78,7 @@ class AdjustmentTypeController @Inject() (
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(adjustmentType = Some(value)))
                 )
               singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswers(updatedAnswers))
-              _                             <- cacheConnector.set(singleRegimeUpdatedUserAnswer)
+              _                             <- userAnswersConnector.set(singleRegimeUpdatedUserAnswer)
             } yield Redirect(navigator.nextPage(AdjustmentTypePage, mode, singleRegimeUpdatedUserAnswer, hasChanged))
           }
         )
