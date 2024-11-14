@@ -40,7 +40,7 @@ class SpoiltVolumesAndDutyFormatter(
     maximumValueKey,
     fieldKey,
     maximumValue = Constants.volumeMaximumValue,
-    minimumValue = Constants.volumeAndDutyMinimumValue,
+    minimumValue = Constants.volumeMinimumValue,
     args = args
   )
 
@@ -57,15 +57,15 @@ class SpoiltVolumesAndDutyFormatter(
     args = args
   )
 
-  private def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def dutyFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
     fieldKey,
-    maximumValue = Constants.dutyDueMaximumValue,
-    minimumValue = Constants.volumeAndDutyMinimumValue,
+    maximumValue = Constants.spoiltDutyMaximumValue,
+    minimumValue = Constants.spoiltDutyMinimumValue,
     args = args
   )
 
@@ -78,7 +78,7 @@ class SpoiltVolumesAndDutyFormatter(
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], SpoiltVolumeWithDuty] = {
     val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
     val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
-    val duty        = dutyRateFormatter("duty").bind(s"$key.duty", data)
+    val duty        = dutyFormatter("duty").bind(s"$key.duty", data)
 
     (totalLitres, pureAlcohol, duty) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue), Right(duty)) =>

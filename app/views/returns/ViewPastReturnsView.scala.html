@@ -15,7 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading, SubHeading}
-@import config.Constants
+@import config.Constants.Css
 @import viewmodels.TableViewModel
 
 @this(
@@ -42,7 +42,7 @@
         @if(outstandingReturns.rows.nonEmpty) {
             @govukTable(Table(
                 caption = Some(messages("viewPastReturns.outstandingReturns.caption")),
-                captionClasses = Constants.tableCaptionMCssClass,
+                captionClasses = Css.tableCaptionMCssClass,
                 head = Some(outstandingReturns.head),
                 rows = outstandingReturns.rows.map(row => {
                     val actions = TableRow(content = HtmlContent(tableRowActionList(
@@ -63,7 +63,7 @@
         @if(completedReturns.rows.nonEmpty) {
             @govukTable(Table(
                 caption = Some(messages("viewPastReturns.completedReturns.caption")),
-                captionClasses = Constants.tableCaptionMCssClass,
+                captionClasses = Css.tableCaptionMCssClass,
                 head = Some(completedReturns.head),
                 rows = completedReturns.rows.map(row => {
                     val actions = TableRow(content = HtmlContent(tableRowActionList(

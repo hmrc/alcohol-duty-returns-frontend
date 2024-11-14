@@ -14,8 +14,10 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
 @(text: String)
 
-<h1 class="govuk-heading-xl">@text</h1>
+<h1 class="@Css.headingXLCssClass">@text</h1>

@@ -15,7 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading, Link}
-@import config.Constants
+@import config.Constants.Css
 @import viewmodels.TableViewModel
 @import viewmodels.Money
 
@@ -42,17 +42,17 @@
     @pageHeading(messages("viewPastPayments.heading"))
 
     @if(dutyBalance > 0) {
-        <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.youOwe")
+        <p class=@{Css.headingMCssClass}>@messages("viewPastPayments.youOwe")
             <br>
-            <span class=@{Constants.headingLCssClass}>@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
+            <span class=@{Css.headingLCssClass}>@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
         </p>
         @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance < 0) {
-        <p class=@{Constants.headingMCssClass}>@messages("viewPastPayments.youAre")
+        <p class=@{Css.headingMCssClass}>@messages("viewPastPayments.youAre")
             <br>
-            <span class=@{Constants.headingLCssClass}>@messages("viewPastPayments.negative.duty.value", Money.format(dutyBalance.abs))</span>
-            <p class=@{Constants.bodyCssClass}>@messages("viewPastPayments.credit.para1")
+            <span class=@{Css.headingLCssClass}>@messages("viewPastPayments.negative.duty.value", Money.format(dutyBalance.abs))</span>
+            <p class=@{Css.bodyCssClass}>@messages("viewPastPayments.credit.para1")
                 @link(
                 id = "view-past-payments-refund-link",
                 text = messages("viewPastPayments.credit.link.content"),
@@ -64,7 +64,7 @@
         @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance == 0) {
-        @paragraph(messages("viewPastPayments.zeroBalance.paragraph"), Constants.headingLCssClass)
+        @paragraph(messages("viewPastPayments.zeroBalance.paragraph"), Css.headingLCssClass)
     }
 
 
@@ -72,7 +72,7 @@
     @if(outstandingPaymentsTable.rows.size > 0) {
         @govukTable(Table(
             caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
-            captionClasses = Constants.tableCaptionMCssClass,
+            captionClasses = Css.tableCaptionMCssClass,
             head = Some(outstandingPaymentsTable.head),
             rows = outstandingPaymentsTable.rows.map(row => {
                 val actions = TableRow(content = HtmlContent(tableRowActionList(
@@ -94,18 +94,18 @@
     @if(unallocatedPaymentsTable.rows.size > 0) {
         @govukTable(Table(
             caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
-            captionClasses = Constants.tableCaptionMCssClass,
+            captionClasses = Css.tableCaptionMCssClass,
             head = Some(unallocatedPaymentsTable.head),
             rows = unallocatedPaymentsTable.rows.map(_.cells),
         ))
-        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"), Constants.paddingBottomCssClass)
+        @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"), Css.paddingBottomCssClass)
     }
 
 
     @if(historicPaymentsTable.rows.size > 0) {
         @govukTable(Table(
             caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", year))),
-            captionClasses = Constants.tableCaptionMCssClass,
+            captionClasses = Css.tableCaptionMCssClass,
             head = Some(historicPaymentsTable.head),
             rows = historicPaymentsTable.rows.map(_.cells),
         ))
@@ -113,7 +113,7 @@
     }
 
     @if(historicPaymentsTable.rows.size == 0) {
-            @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", year)), Constants.headingMCssClass)
+            @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", year)), Css.headingMCssClass)
             @paragraph(messages("viewPastPayments.historic.noPayments"))
     }
 

@@ -16,11 +16,13 @@
 
 package viewmodels
 
+import config.Constants.Css
+
 sealed trait LegendSize
 
 object LegendSize {
-  case object ExtraLarge extends WithCssClass("govuk-fieldset__legend--xl") with LegendSize
-  case object Large extends WithCssClass("govuk-fieldset__legend--l") with LegendSize
-  case object Medium extends WithCssClass("govuk-fieldset__legend--m") with LegendSize
-  case object Small extends WithCssClass("govuk-fieldset__legend--s") with LegendSize
+  case object ExtraLarge extends WithCssClass(Css.fieldsetLegendXLCssClass) with LegendSize
+  case object Large extends WithCssClass(Css.fieldsetLegendLCssClass) with LegendSize
+  case object Medium extends WithCssClass(Css.fieldsetLegendMCssClass) with LegendSize
+  case object Small extends WithCssClass(Css.fieldsetLegendSCssClass) with LegendSize
 }
