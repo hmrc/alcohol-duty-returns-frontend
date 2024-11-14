@@ -199,7 +199,7 @@ class ViewReturnViewModelSpec extends SpecBase {
     }
 
     "createSpiritsViewModels" - {
-      "should return a model with data when spirits are is declared" in new SetUp {
+      "should return a model with data when quarterly spirits are declared" in new SetUp {
         val spiritsViewModels = viewModel.createSpiritsViewModels(
           returnDetails.copy(spirits =
             Some(returnDetails.spirits.get.copy(typesOfSpirit = AdrTypeOfSpirit.values.toSet))
@@ -221,6 +221,7 @@ class ViewReturnViewModelSpec extends SpecBase {
           Text(messages("viewReturn.spirits.scotchWhisky")),
           Text(messages("viewReturn.spirits.irishWhiskey"))
         )
+        spiritsViewModels.head.caption mustBe Some(messages("viewReturn.spirits.caption"))
         spiritsViewModels.last.head.size mustBe 1
         spiritsViewModels.last.head.map(_.content) mustBe Seq(Text(messages("viewReturn.table.typesOfSpirits.legend")))
         spiritsViewModels.last.rows.size mustBe 1
@@ -237,9 +238,10 @@ class ViewReturnViewModelSpec extends SpecBase {
             "Coco Pops Vodka"
           ).mkString(", ")
         )
+        spiritsViewModels.last.caption mustBe None
       }
 
-      "should return a model with data when spirits are is declared and handling missing other spirits type name gracefully" in new SetUp {
+      "should return a model with data when quarterly spirits is declared and handling missing other spirits type name gracefully" in new SetUp {
         val spiritsViewModels = viewModel.createSpiritsViewModels(
           returnDetails.copy(spirits =
             Some(
@@ -269,6 +271,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         spiritsViewModels.head.rows.head.cells.head.content mustBe Text(
           messages("viewReturn.spirits.noneDeclared")
         )
+        spiritsViewModels.head.caption mustBe Some(messages("viewReturn.spirits.caption"))
       }
     }
   }

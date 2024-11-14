@@ -371,7 +371,8 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         Seq(
           TableViewModel(
             head = spiritsDeclaredTableHeader(),
-            rows = spiritsDeclaredRows(spirits)
+            rows = spiritsDeclaredRows(spirits),
+            caption = Some(messages("viewReturn.spirits.caption"))
           ),
           TableViewModel(
             head = spiritsTypesDeclaredTableHeader(),
@@ -382,7 +383,8 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         Seq(
           TableViewModel(
             head = spiritsNotDeclaredTableHeader(),
-            rows = spiritsNotDeclaredRow()
+            rows = spiritsNotDeclaredRow(),
+            caption = Some(messages("viewReturn.spirits.caption"))
           )
         )
     }

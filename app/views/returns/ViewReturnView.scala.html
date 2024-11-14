@@ -94,9 +94,9 @@
 
     <br>
 
-    @spirits.zipWithIndex.map { case (spiritsTable, index) =>
+    @spirits.map { spiritsTable =>
         @govukTable(Table(
-            caption = {if (index == 0) { Some(messages("viewReturn.spirits.caption")) } else { None }},
+            caption = spiritsTable.caption,
             captionClasses = Constants.tableCaptionMCssClass,
             head = Some(spiritsTable.head),
             rows = spiritsTable.rows.map(_.cells)
