@@ -318,12 +318,12 @@ class AdjustmentNavigatorSpec extends SpecBase {
         ) mustBe controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
       }
 
-      "must go from the DeleteAdjustmentPage page to the AdjustmentList page if the user selected 'Yes' and the Adjustment list is empty" in {
+      "must go from the DeleteAdjustmentPage page to the Adjustment to declare page if the user selected 'Yes' and the Adjustment list is empty" in {
         navigator.nextPage(
           DeleteAdjustmentPage,
           NormalMode,
           emptyUserAnswers
-        ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+        ) mustBe controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
       }
     }
   }

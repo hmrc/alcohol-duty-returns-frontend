@@ -169,7 +169,7 @@ class AdjustmentNavigator @Inject() () {
   private def deleteListPageRoute(userAnswers: UserAnswers): Call =
     userAnswers.get(pages.adjustment.AdjustmentEntryListPage) match {
       case Some(list) if list.nonEmpty => controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
-      case _                           => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
+      case _                           => controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
     }
 
   private def adjustmentTypeRoute(userAnswers: UserAnswers, mode: Mode): Call = {
