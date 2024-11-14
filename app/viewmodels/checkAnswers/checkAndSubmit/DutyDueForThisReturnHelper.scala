@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
-import config.Constants.{boldFontCssClass, summaryListKey, summaryListValue}
+import config.Constants.Css
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.checkAndSubmit.AdrDutySuspended
@@ -127,13 +127,13 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.table.nil.label")),
-              classes = boldFontCssClass
+              classes = Css.boldFontCssClass
             ),
             TableRow(Text(messages("dutyDueForThisReturn.table.nil.value")))
           ),
           actions = Seq(
             TableRowActionViewModel(
-              label = "Change",
+              label = messages("site.change"),
               href = controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
             )
           )
@@ -145,13 +145,13 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"alcoholType.$alcoholRegime"))),
-              classes = boldFontCssClass
+              classes = Css.boldFontCssClass
             ),
             TableRow(Text(Money.format(alcoholDuty.totalDuty)))
           ),
           actions = Seq(
             TableRowActionViewModel(
-              label = "Change",
+              label = messages("site.change"),
               href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
             )
           )
@@ -168,11 +168,11 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
-              classes = s"$boldFontCssClass $summaryListKey"
+              classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
             ),
             TableRow(
               Text(messages("dutyDueForThisReturn.dutySuspended.declared")),
-              classes = summaryListValue
+              classes = Css.summaryListValueCssClass
             )
           ),
           actions = Seq(
@@ -190,11 +190,11 @@ class DutyDueForThisReturnHelper @Inject() (
           cells = Seq(
             TableRow(
               content = Text(messages("dutyDueForThisReturn.dutySuspended.alcohol")),
-              classes = s"$boldFontCssClass $summaryListKey"
+              classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
             ),
             TableRow(
               Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare")),
-              classes = summaryListValue
+              classes = Css.summaryListValueCssClass
             )
           ),
           actions = Seq(
@@ -214,16 +214,16 @@ class DutyDueForThisReturnHelper @Inject() (
         cells = Seq(
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-            classes = s"$boldFontCssClass $summaryListKey"
+            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
           ),
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.nil.value")),
-            classes = summaryListValue
+            classes = Css.summaryListValueCssClass
           )
         ),
         actions = Seq(
           TableRowActionViewModel(
-            label = "Change",
+            label = messages("site.change"),
             href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
           )
         )
@@ -233,16 +233,16 @@ class DutyDueForThisReturnHelper @Inject() (
         cells = Seq(
           TableRow(
             content = Text(messages("dutyDueForThisReturn.table.adjustmentDue")),
-            classes = s"$boldFontCssClass $summaryListKey"
+            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
           ),
           TableRow(
             Text(Money.format(totalAdjustment)),
-            classes = summaryListValue
+            classes = Css.summaryListValueCssClass
           )
         ),
         actions = Seq(
           TableRowActionViewModel(
-            label = "Change",
+            label = messages("site.change"),
             href = controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
           )
         )

@@ -21,6 +21,7 @@ import pages.declareDuty.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePa
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
 import RateBandHelper.rateBandRecap
+import config.Constants.Css
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -38,19 +39,19 @@ object TellUsAboutSingleSPRRateSummary {
         SummaryListRowViewModel(
           key = KeyViewModel(rateBandRecap(rateBand)),
           value = Value()
-        ).withCssClass("govuk-summary-list__row--no-border"),
+        ).withCssClass(Css.summaryListRowNoBorderCssClass),
         SummaryListRowViewModel(
           key = messages("checkYourAnswersLabel.row.totalLitres"),
           value = ValueViewModel(
             s"${messages("site.2DP", dutyByTaxType.totalLitres)} ${messages("site.unit.litres")}"
           )
-        ).withCssClass("govuk-summary-list__row--no-border"),
+        ).withCssClass(Css.summaryListRowNoBorderCssClass),
         SummaryListRowViewModel(
           key = messages("checkYourAnswersLabel.row.pureAlcohol"),
           value = ValueViewModel(
             s"${messages("site.4DP", dutyByTaxType.pureAlcohol)} ${messages("site.unit.litres")}"
           )
-        ).withCssClass("govuk-summary-list__row--no-border"),
+        ).withCssClass(Css.summaryListRowNoBorderCssClass),
         SummaryListRowViewModel(
           key = messages("checkYourAnswersLabel.row.dutyRate"),
           value = ValueViewModel(messages("site.currency.2DP", dutyByTaxType.dutyRate))

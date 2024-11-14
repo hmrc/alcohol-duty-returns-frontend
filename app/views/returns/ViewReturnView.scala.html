@@ -15,7 +15,7 @@
  *@
 
 @import components.{PageHeading, Paragraph, PrintPage}
-@import config.Constants
+@import config.Constants.Css
 @import viewmodels.{TableTotalViewModel, TableViewModel}
 
 @this(
@@ -39,9 +39,9 @@
    spirits: Seq[TableViewModel]
 )(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages(s"viewReturn.title", period)), fullWidth = true, withPrintCss = true) {
+@layout(pageTitle = titleNoForm(messages("viewReturn.title", period)), fullWidth = true, withPrintCss = true) {
 
-    @pageHeading(messages(s"viewReturn.heading", period))
+    @pageHeading(messages("viewReturn.heading", period))
 
     @paragraph(messages("viewReturn.submittedAt", submittedAtDate, submittedAtTime))
 
@@ -49,7 +49,7 @@
 
     @govukTable(Table(
         caption = Some(messages("viewReturn.alcoholDuty.caption")),
-        captionClasses = Constants.tableCaptionMCssClass,
+        captionClasses = Css.tableCaptionMCssClass,
         head = Some(dutyToDeclare.head),
         rows = dutyToDeclare.rows.map(_.cells)
     ))
@@ -64,7 +64,7 @@
 
     @govukTable(Table(
         caption = Some(messages("viewReturn.adjustments.caption")),
-        captionClasses = Constants.tableCaptionMCssClass,
+        captionClasses = Css.tableCaptionMCssClass,
         head = Some(adjustments.head),
         rows = adjustments.rows.map(_.cells)
     ))
@@ -79,7 +79,7 @@
 
     @govukTable(Table(
         caption = Some(messages("viewReturn.dutyDue.caption")),
-        captionClasses = "govuk-table__caption--m",
+        captionClasses = Css.tableCaptionMCssClass,
         head = Some(totalDue.toHeadCells())
     ))
 
@@ -87,7 +87,7 @@
 
     @govukTable(Table(
         caption = Some(messages("viewReturn.netDutySuspension.caption")),
-        captionClasses = Constants.tableCaptionMCssClass,
+        captionClasses = Css.tableCaptionMCssClass,
         head = Some(netDutySuspension.head),
         rows = netDutySuspension.rows.map(_.cells)
     ))
@@ -97,7 +97,7 @@
     @spirits.map { spiritsTable =>
         @govukTable(Table(
             caption = spiritsTable.caption,
-            captionClasses = Constants.tableCaptionMCssClass,
+            captionClasses = Css.tableCaptionMCssClass,
             head = Some(spiritsTable.head),
             rows = spiritsTable.rows.map(_.cells)
         ))

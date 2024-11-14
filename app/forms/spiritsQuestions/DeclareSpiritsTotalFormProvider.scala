@@ -16,21 +16,22 @@
 
 package forms.spiritsQuestions
 
+import config.Constants
 import forms.mappings.Mappings
+
 import javax.inject.Inject
 import play.api.data.Form
 
 class DeclareSpiritsTotalFormProvider @Inject() extends Mappings {
-
   def apply(): Form[BigDecimal] =
     Form(
       "declare-spirits-total-input" -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "declareSpiritsTotal.error.required",
         "declareSpiritsTotal.error.nonNumeric",
         "declareSpiritsTotal.error.decimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.01), "declareSpiritsTotal.error.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "declareSpiritsTotal.error.maximumRequired"))
+        .verifying(minimumValue(Constants.volumeMinimumValue, "declareSpiritsTotal.error.minimumRequired"))
+        .verifying(maximumValue(Constants.volumeMaximumValue, "declareSpiritsTotal.error.maximumRequired"))
     )
 }

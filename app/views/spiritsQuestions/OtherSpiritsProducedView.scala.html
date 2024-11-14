@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
+@import components.{SectionHeading, SubHeading}
+@import config.Constants
 @import forms.spiritsQuestions.OtherSpiritsProducedFormProvider
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -49,7 +50,7 @@
                 label = LabelViewModel(messages("otherSpiritsProduced.heading")).asPageHeading()
             )
             .withWidth(TwoThirds)
-            .withMaxLength(OtherSpiritsProducedFormProvider.otherTypesLength)
+            .withMaxLength(Constants.otherSpiritsProducedMaxLength)
             .withHint(Hint(content = HtmlContent(messages("otherSpiritsProduced.hint"))))
         )
 

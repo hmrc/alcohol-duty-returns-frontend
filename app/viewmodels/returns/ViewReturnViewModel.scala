@@ -16,7 +16,8 @@
 
 package viewmodels.returns
 
-import config.{Constants, FrontendAppConfig}
+import config.Constants.Css
+import config.FrontendAppConfig
 import models.checkAndSubmit.AdrTypeOfSpirit
 import models.checkAndSubmit.AdrTypeOfSpirit._
 import models.returns._
@@ -52,14 +53,14 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   private def alcoholDeclaredTableHeader()(implicit messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(content = Text(messages("viewReturn.table.description.legend"))),
-      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.textAlignRightWrapCssClass),
+      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Css.textAlignRightWrapCssClass),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyRate.legend")),
-        classes = Constants.textAlignRightWrapCssClass
+        classes = Css.textAlignRightWrapCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyDue.legend")),
-        classes = Constants.textAlignRightWrapCssClass
+        classes = Css.textAlignRightWrapCssClass
       )
     )
 
@@ -70,7 +71,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyDue.legend")),
-        classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+        classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
       )
     )
 
@@ -89,15 +90,15 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
           ),
           TableRow(
             content = Text(messages("site.4DP", alcoholDeclaredDetailsRow.litresOfPureAlcohol)),
-            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           ),
           TableRow(
             content = Text(s"${Money.format(alcoholDeclaredDetailsRow.dutyRate)}"),
-            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           ),
           TableRow(
             content = Text(Money.format(alcoholDeclaredDetailsRow.dutyValue)),
-            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           )
         )
       )
@@ -121,7 +122,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
           TableRow(content = Text(messages("viewReturn.alcoholDuty.noneDeclared"))),
           TableRow(
             content = Text(messages("site.nil")),
-            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           )
         )
       )
@@ -136,7 +137,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       ),
       HeadCell(
         content = Text(Money.format(alcoholDeclared.total)),
-        classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+        classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
       )
     )
 
@@ -161,14 +162,14 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
     Seq(
       HeadCell(content = Text(messages("viewReturn.table.adjustmentType.legend"))),
       HeadCell(content = Text(messages("viewReturn.table.description.legend"))),
-      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Constants.textAlignRightWrapCssClass),
+      HeadCell(content = Text(messages("viewReturn.table.lpa.legend")), classes = Css.textAlignRightWrapCssClass),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyRate.legend")),
-        classes = Constants.textAlignRightWrapCssClass
+        classes = Css.textAlignRightWrapCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyValue.legend")),
-        classes = Constants.textAlignRightWrapCssClass
+        classes = Css.textAlignRightWrapCssClass
       )
     )
 
@@ -179,7 +180,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.dutyValue.legend")),
-        classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+        classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
       )
     )
 
@@ -208,15 +209,15 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
           ),
           TableRow(
             content = Text(messages("site.4DP", returnAdjustmentsRow.litresOfPureAlcohol)),
-            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           ),
           TableRow(
             content = Text(Money.format(returnAdjustmentsRow.dutyRate)),
-            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           ),
           TableRow(
             content = Text(Money.format(returnAdjustmentsRow.dutyValue)),
-            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           )
         )
       )
@@ -227,7 +228,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       TableRowViewModel(cells =
         Seq(
           TableRow(content = Text(messages("viewReturn.adjustments.noneDeclared"))),
-          TableRow(content = Text(messages("site.nil")), classes = Constants.textAlignRightCssClass)
+          TableRow(content = Text(messages("site.nil")), classes = Css.textAlignRightCssClass)
         )
       )
     )
@@ -239,7 +240,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       ),
       HeadCell(
         content = Text(Money.format(adjustments.total)),
-        classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+        classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
       )
     )
 
@@ -259,7 +260,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       HeadCell(
         content = Text(messages("viewReturn.dutyDue.total.legend"))
       ),
-      HeadCell(content = content, classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}")
+      HeadCell(content = content, classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}")
     )
   }
 
@@ -286,11 +287,11 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.totalVolume.legend")),
-        classes = Constants.textAlignRightWrapCssClass
+        classes = Css.textAlignRightWrapCssClass
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.lpa.legend")),
-        classes = Constants.textAlignRightWrapCssClass
+        classes = Css.textAlignRightWrapCssClass
       )
     )
 
@@ -340,11 +341,11 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         ),
         TableRow(
           content = Text(messages("site.2DP", total)),
-          classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+          classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
         ),
         TableRow(
           content = Text(messages("site.4DP", lpa)),
-          classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+          classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
         )
       )
     )
@@ -396,7 +397,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       ),
       HeadCell(
         content = Text(messages("viewReturn.table.totalVolume.lpa.legend")),
-        classes = Constants.textAlignRightWrapCssClass
+        classes = Css.textAlignRightWrapCssClass
       )
     )
 
@@ -411,7 +412,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
           TableRow(content = Text(messages(legendKey))),
           TableRow(
             content = Text(messages("site.2DP", value)),
-            classes = s"${Constants.textAlignRightCssClass} ${Constants.numericCellClass}"
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           )
         )
       )

@@ -16,6 +16,7 @@
 
 package viewmodels.govuk
 
+import config.Constants.Css
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.dateinput.{DateInput, InputItem}
@@ -48,7 +49,7 @@ trait YearMonthDateFluency {
       val field = form(id)
 
       def errorClass(id: String) =
-        if (errorMessage(field).isDefined || errorMessage(form(id)).isDefined) "govuk-input--error" else ""
+        if (errorMessage(field).isDefined || errorMessage(form(id)).isDefined) Css.inputErrorCssClass else ""
 
       val monthId = s"${field.id}.month"
       val yearId  = s"${field.id}.year"
@@ -62,14 +63,14 @@ trait YearMonthDateFluency {
           name = s"${field.name}.month",
           value = field("month").value,
           label = Some(messages("date.month")),
-          classes = s"govuk-input--width-2 ${errorClass(monthId)}".trim
+          classes = s"${Css.inputWidth2CssClass} ${errorClass(monthId)}".trim
         ),
         InputItem(
           id = yearId,
           name = s"${field.name}.year",
           value = field("year").value,
           label = Some(messages("date.year")),
-          classes = s"govuk-input--width-4 ${errorClass(yearId)}".trim
+          classes = s"${Css.inputWidth4CssClass} ${errorClass(yearId)}".trim
         )
       )
 
