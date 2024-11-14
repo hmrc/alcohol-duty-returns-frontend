@@ -102,7 +102,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
     "should return a You've Also Answered Table View Model" - {
       "when no spirits" - {
-        "and declared, with the correct label, declared content and redirect to the appropriate check yours answers page" in new SetUp {
+        "and declared, with the correct label, declared content, and redirect to the appropriate check your answers page" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -133,7 +133,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           result.rows.head.cells(1).content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
         }
 
-        "and dsd not declared, with the correct label, nothing to declare content, and redirect to the appropriate declaration page" in new SetUp {
+        "and DSD not declared, with the correct label, nothing to declare content, and redirect to the appropriate declaration page" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -166,7 +166,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       }
 
       "when spirits declared" - {
-        "and dsd declared, with the correct labels, declared content and redirect to the appropriate check your answers pages" in new SetUp {
+        "and DSD declared, with the correct labels, declared content, and redirect to the appropriate check your answers pages" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -201,7 +201,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           result.rows(1).cells(1).content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
         }
 
-        "and both not declared, with the correct labels, nothing to declare content, and redirect to the appropriate pages" in new SetUp {
+        "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate pages" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -238,7 +238,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       }
 
       "when spirits not declared" - {
-        "and dsd declared, with the correct labels, declared content and redirect to the appropriate pages" in new SetUp {
+        "and DSD declared, with the correct labels, declared content, and redirect to the appropriate pages" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -273,7 +273,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           result.rows(1).cells(1).content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
         }
 
-        "and both not declared, with the correct labels, nothing to declare content, and redirect to the appropriate declarations pages" in new SetUp {
+        "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate declarations pages" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
             declareAdjustmentQuestionPage(
               declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
