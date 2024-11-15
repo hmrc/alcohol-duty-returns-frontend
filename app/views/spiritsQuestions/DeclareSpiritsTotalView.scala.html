@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components.{Link, SectionHeading, PageHeading, BulletList}
+@import config.Constants.Css
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
+@import viewmodels.InputWidth._
 
 @this(
     layout: templates.Layout,
@@ -49,8 +50,8 @@
 
         @pageHeading(messages("declareSpiritsTotal.heading"))
 
-        @subheading(text = messages("declareSpiritsTotal.subheading1"), classes = "govuk-heading-m")
-        <p class="govuk-body">
+        @subheading(text = messages("declareSpiritsTotal.subheading1"), classes = Css.headingMCssClass)
+        <p class="@Css.bodyCssClass">
             @messages("declareSpiritsTotal.p1")
             @link(
             id = "draught-relief-question-guidance-link",
@@ -71,7 +72,7 @@
         @govukInput(
         InputViewModel(
                 field = form("declare-spirits-total-input"),
-                label = LabelViewModel(messages("declareSpiritsTotal.subheading2")).withCssClass("govuk-label--m"),
+                label = LabelViewModel(messages("declareSpiritsTotal.subheading2")).withCssClass(Css.labelMCssClass)
             )
             .asNumeric()
             .withWidth(Fixed10)

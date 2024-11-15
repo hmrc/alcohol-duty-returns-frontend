@@ -24,7 +24,6 @@ import play.api.data.Forms.set
 import models.SpiritType
 
 class SpiritTypeFormProvider @Inject() extends Mappings {
-
   def apply(): Form[Set[SpiritType]] =
     Form(
       "value" -> set(enumerable[SpiritType]("spiritType.error.required"))

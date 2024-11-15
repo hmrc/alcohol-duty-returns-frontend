@@ -16,7 +16,7 @@
 
 package controllers.dutySuspended
 
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.{Mode, UserAnswers}
@@ -33,7 +33,7 @@ import scala.util.Try
 
 class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -69,7 +69,7 @@ class DeclareDutySuspendedDeliveriesQuestionController @Inject() (
                   request.userAnswers.set(DeclareDutySuspendedDeliveriesQuestionPage, value)
                 )
               filterUserAnswer <- Future.fromTry(filterDSDQuestionAnswer(updatedAnswers, value))
-              _                <- cacheConnector.set(filterUserAnswer)
+              _                <- userAnswersConnector.set(filterUserAnswer)
             } yield Redirect(navigator.nextPage(DeclareDutySuspendedDeliveriesQuestionPage, mode, filterUserAnswer))
         )
   }

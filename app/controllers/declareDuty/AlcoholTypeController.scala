@@ -25,7 +25,7 @@ import navigation.ReturnsNavigator
 import pages.declareDuty.{AlcoholTypePage, nextPages}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.declareDuty.AlcoholTypeView
 
@@ -34,7 +34,7 @@ import scala.util.Try
 
 class AlcoholTypeController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: ReturnsNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -69,7 +69,7 @@ class AlcoholTypeController @Inject() (
             for {
               updatedAnswers                <- Future.fromTry(request.userAnswers.set(AlcoholTypePage, alcoholRegimes))
               userAnswersWithUpdatedRegimes <- Future.fromTry(clearUserAnswers(updatedAnswers, regimesToRemove))
-              _                             <- cacheConnector.set(userAnswersWithUpdatedRegimes)
+              _                             <- userAnswersConnector.set(userAnswersWithUpdatedRegimes)
             } yield Redirect(navigator.nextPage(AlcoholTypePage, mode, userAnswersWithUpdatedRegimes))
           }
         )

@@ -74,27 +74,27 @@ trait TestData extends ModelGenerators {
   }
 
   val quarterReturnPeriods    = Set(
-    ReturnPeriod(YearMonth.of(2024, Month.MARCH)),
-    ReturnPeriod(YearMonth.of(2024, Month.JUNE)),
-    ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
-    ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))
+    ReturnPeriod(YearMonth.of(2024, Month.JANUARY)),
+    ReturnPeriod(YearMonth.of(2024, Month.APRIL)),
+    ReturnPeriod(YearMonth.of(2024, Month.JULY)),
+    ReturnPeriod(YearMonth.of(2024, Month.OCTOBER))
   )
   val nonQuarterReturnPeriods =
     Set(
-      ReturnPeriod(YearMonth.of(2024, Month.JANUARY)),
       ReturnPeriod(YearMonth.of(2024, Month.FEBRUARY)),
-      ReturnPeriod(YearMonth.of(2024, Month.APRIL)),
+      ReturnPeriod(YearMonth.of(2024, Month.MARCH)),
       ReturnPeriod(YearMonth.of(2024, Month.MAY)),
-      ReturnPeriod(YearMonth.of(2024, Month.JULY)),
+      ReturnPeriod(YearMonth.of(2024, Month.JUNE)),
       ReturnPeriod(YearMonth.of(2024, Month.AUGUST)),
-      ReturnPeriod(YearMonth.of(2024, Month.OCTOBER)),
-      ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER))
+      ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
+      ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER)),
+      ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))
     )
 
   val nonQuarterReturnPeriodGen = Gen.oneOf(nonQuarterReturnPeriods.toSeq)
   val quarterReturnPeriodGen    = Gen.oneOf(quarterReturnPeriods.toSeq)
 
-  val returnPeriodMar = ReturnPeriod.fromPeriodKey(periodKeyMar).get
+  val returnPeriodJan = ReturnPeriod.fromPeriodKey(periodKeyJan).get
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     returnId,
@@ -131,7 +131,7 @@ trait TestData extends ModelGenerators {
     regimes = AlcoholRegimes(Set(OtherFermentedProduct))
   )
   val userAnswersWithoutOtherFermentedProduct: UserAnswers = emptyUserAnswers.copy(
-    regimes = AlcoholRegimes(Set(Beer, Spirits))
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits))
   )
 
   val userAnswersWithAllRegimes: UserAnswers = emptyUserAnswers.copy(
@@ -917,7 +917,7 @@ trait TestData extends ModelGenerators {
   val fullRepackageAdjustmentEntry: AdjustmentEntry = AdjustmentEntry(
     index = Some(0),
     adjustmentType = Some(AdjustmentType.RepackagedDraughtProducts),
-    period = Some(returnPeriodMar.period),
+    period = Some(returnPeriodJan.period),
     rateBand = Some(
       RateBand(
         taxTypeCode = "001",

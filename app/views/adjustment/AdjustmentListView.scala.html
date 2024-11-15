@@ -15,6 +15,7 @@
  *@
 
 @import components.{SectionHeading, PageHeading}
+@import config.Constants.Css
 @import viewmodels.{TableViewModel, PaginationViewModel}
 
 @this(
@@ -85,7 +86,7 @@
     @govukRadios(
         RadiosViewModel.yesNo(
         field = form("adjustment-list-yes-no-value"),
-        legend = LegendViewModel(messages("adjustmentList.question")).withCssClass("govuk-fieldset__legend--l")
+        legend = LegendViewModel(messages("adjustmentList.question")).withCssClass(Css.fieldsetLegendLCssClass)
         )
     )
 

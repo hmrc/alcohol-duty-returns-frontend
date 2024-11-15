@@ -17,7 +17,7 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import org.mockito.ArgumentMatchers.any
 import pages.declareDuty.{DoYouHaveMultipleSPRDutyRatesPage, DutyCalculationPage, HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
@@ -70,14 +70,14 @@ class DutyCalculationControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET if No is selected for add Multiple SPR option" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -106,14 +106,14 @@ class DutyCalculationControllerSpec extends SpecBase {
 
       val updatedUserAnswer = userAnswers.setByKey(DoYouHaveMultipleSPRDutyRatesPage, regime, true).success.value
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(updatedUserAnswer))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -140,14 +140,14 @@ class DutyCalculationControllerSpec extends SpecBase {
 
     "must redirect in the Journey Recovery screen if the user answers are empty" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -165,14 +165,14 @@ class DutyCalculationControllerSpec extends SpecBase {
 
       val updatedUserAnswers = userAnswers.setByKey(DutyCalculationPage, regime, alcoholDuty).success.value
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(updatedUserAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -188,14 +188,14 @@ class DutyCalculationControllerSpec extends SpecBase {
 
     "must redirect to the Journey Recover page if there is no data for a POST" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[AlcoholDutyCalculatorConnector].toInstance(calculatorMock),
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 

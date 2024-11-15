@@ -24,7 +24,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.UnderDeclarationReasonPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.UnderDeclarationReasonView
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UnderDeclarationReasonController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -64,7 +64,7 @@ class UnderDeclarationReasonController @Inject() (
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(UnderDeclarationReasonPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(UnderDeclarationReasonPage, mode, updatedAnswers))
         )
   }

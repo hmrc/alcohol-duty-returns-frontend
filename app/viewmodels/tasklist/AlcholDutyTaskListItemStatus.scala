@@ -16,6 +16,7 @@
 
 package viewmodels.tasklist
 
+import config.Constants.Css
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
@@ -26,12 +27,12 @@ object AlcholDutyTaskListItemStatus {
     content = Text(messages("taskList.section.status.completed"))
   )
   def notStarted(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
-    tag = Some(Tag(content = Text(messages("taskList.section.status.notStarted")), classes = "govuk-tag--blue"))
+    tag = Some(Tag(content = Text(messages("taskList.section.status.notStarted")), classes = Css.blueTagCssClass))
   )
   def inProgress(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
-    tag = Some(Tag(content = Text(messages("taskList.section.status.inProgress")), classes = "govuk-tag--light-blue"))
+    tag = Some(Tag(content = Text(messages("taskList.section.status.inProgress")), classes = Css.lightBlueTagCssClass))
   )
   def cannotStart(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
-    tag = Some(Tag(content = Text(messages("taskList.section.status.cannotStart")), classes = "govuk-tag--grey"))
+    tag = Some(Tag(content = Text(messages("taskList.section.status.cannotStart")), classes = Css.greyTagCssClass))
   )
 }

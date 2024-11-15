@@ -24,7 +24,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.OverDeclarationReasonPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.OverDeclarationReasonView
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class OverDeclarationReasonController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -64,7 +64,7 @@ class OverDeclarationReasonController @Inject() (
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(OverDeclarationReasonPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(OverDeclarationReasonPage, mode, updatedAnswers))
         )
   }

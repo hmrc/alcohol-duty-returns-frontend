@@ -16,21 +16,16 @@
 
 package forms.spiritsQuestions
 
-import javax.inject.Inject
+import config.Constants
 
+import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 
 class OtherSpiritsProducedFormProvider @Inject() extends Mappings {
-  import OtherSpiritsProducedFormProvider._
-
   def apply(): Form[String] =
     Form(
       "otherSpiritsProduced" -> text("otherSpiritsProduced.error.required")
-        .verifying(maxLength(otherTypesLength, "otherSpiritsProduced.error.length"))
+        .verifying(maxLength(Constants.otherSpiritsProducedMaxLength, "otherSpiritsProduced.error.length"))
     )
-}
-
-object OtherSpiritsProducedFormProvider {
-  val otherTypesLength = 120
 }

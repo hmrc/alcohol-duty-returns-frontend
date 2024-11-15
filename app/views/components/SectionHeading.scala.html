@@ -14,11 +14,13 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
 @(id: String, text: String)(implicit request: Request[_], messages: Messages)
 
-<h2 id = @id class="govuk-caption-xl hmrc-caption-xl govuk-!-margin-top-0">
-  <span class="govuk-visually-hidden">@messages("section.visuallyHidden")</span>
+<h2 id = @id class="@Css.captionXLCssClass @Css.hmrcCaptionXLCssClass @Css.marginTop0CssClass">
+  <span class="@Css.visuallyHiddenCssClass">@messages("section.visuallyHidden")</span>
   @text
 </h2>

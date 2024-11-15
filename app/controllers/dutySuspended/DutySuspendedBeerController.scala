@@ -24,7 +24,7 @@ import navigation.DeclareDutySuspendedDeliveriesNavigator
 import pages.dutySuspended.DutySuspendedBeerPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspended.DutySuspendedBeerView
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DutySuspendedBeerController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: DeclareDutySuspendedDeliveriesNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -66,7 +66,7 @@ class DutySuspendedBeerController @Inject() (
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedBeerPage, value))
-              _              <- cacheConnector.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DutySuspendedBeerPage, mode, updatedAnswers))
         )
     }

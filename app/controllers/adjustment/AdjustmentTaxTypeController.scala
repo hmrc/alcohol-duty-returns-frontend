@@ -25,7 +25,7 @@ import navigation.AdjustmentNavigator
 import pages.adjustment.{AdjustmentTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
-import connectors.{AlcoholDutyCalculatorConnector, CacheConnector}
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentTaxTypeController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
@@ -105,7 +105,7 @@ class AdjustmentTaxTypeController @Inject() (
                                 request.userAnswers
                                   .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(rateBand = Some(rateBand)))
                               )
-                            _              <- cacheConnector.set(updatedAnswers)
+                            _              <- userAnswersConnector.set(updatedAnswers)
                           } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers, hasChanged))
                         }
                       case None           =>

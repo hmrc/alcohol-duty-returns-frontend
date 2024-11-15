@@ -93,7 +93,7 @@ lazy val scoverageExcludedList:Seq[String] = Seq(
   ".*views.*",
   "testOnly.*",
   ".*testOnly.*",
-  ".*TestOnlyCacheConnector.*",
+  ".*TestOnlyUserAnswersConnector.*",
   ".*TestOnlyController.*",
   "testOnlyDoNotUseInAppConf.*"
 )

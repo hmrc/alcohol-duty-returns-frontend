@@ -17,6 +17,7 @@
 package viewmodels.payments
 
 import base.SpecBase
+import config.Constants.Css
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
@@ -78,7 +79,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingDuePayment))
       table.rows.map { row =>
         row.cells(3).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text("Due"), classes = "govuk-tag--blue")
+          Tag(content = Text("Due"), classes = Css.blueTagCssClass)
         )
       }
     }
@@ -88,7 +89,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingOverduePartialPayment))
       table.rows.map { row =>
         row.cells(3).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text("Overdue"), classes = "govuk-tag--red")
+          Tag(content = Text("Overdue"), classes = Css.redTagCssClass)
         )
       }
     }
@@ -98,7 +99,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingCreditPayment))
       table.rows.map { row =>
         row.cells(3).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text("Nothing to pay"), classes = "govuk-tag--grey")
+          Tag(content = Text("Nothing to pay"), classes = Css.greyTagCssClass)
         )
       }
     }
@@ -108,7 +109,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingLPIPayment))
       table.rows.map { row =>
         row.cells(3).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text("Due"), classes = "govuk-tag--blue")
+          Tag(content = Text("Due"), classes = Css.blueTagCssClass)
         )
       }
     }
@@ -118,7 +119,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(RPIPayment))
       table.rows.map { row =>
         row.cells(3).content.asHtml shouldBe new GovukTag()(
-          Tag(content = Text("Nothing to pay"), classes = "govuk-tag--grey")
+          Tag(content = Text("Nothing to pay"), classes = Css.greyTagCssClass)
         )
       }
     }

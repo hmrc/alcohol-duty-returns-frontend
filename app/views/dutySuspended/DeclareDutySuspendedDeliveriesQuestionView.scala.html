@@ -15,6 +15,7 @@
  *@
 
 @import components.{Link, SectionHeading, PageHeading}
+@import config.Constants.Css
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
 @this(
@@ -43,7 +44,7 @@
 
     @pageHeading(messages("declareDutySuspendedDeliveriesQuestion.heading"))
 
-    <p class="govuk-body">
+    <p class="@Css.bodyCssClass">
         @messages("declareDutySuspendedDeliveriesQuestion.p1")
     </p>
 

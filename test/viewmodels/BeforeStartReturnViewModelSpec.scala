@@ -17,7 +17,7 @@
 package viewmodels
 
 import base.SpecBase
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import models.ReturnPeriod
 import play.api.inject.bind
 import play.api.test.Helpers.running
@@ -29,7 +29,7 @@ import java.time.LocalDate
 
 class BeforeStartReturnViewModelSpec extends SpecBase {
   "WarningTextViewModel" - {
-    val mockCacheConnector = mock[CacheConnector]
+    val mockUserAnswersConnector = mock[UserAnswersConnector]
 
     "should show the correct message when currentDate is before returnDueDate" in {
       val currentDate  = LocalDate.of(2024, 1, 14)
@@ -38,7 +38,7 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -64,7 +64,7 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
@@ -88,7 +88,7 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
 
       val application = applicationBuilder()
         .overrides(
-          bind[CacheConnector].toInstance(mockCacheConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 

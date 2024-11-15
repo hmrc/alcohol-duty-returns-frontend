@@ -5,14 +5,12 @@ site.remove = Remove
 site.change = Change
 site.no = No
 site.yes = Yes
-site.dot = .
 site.continue = Continue
 site.saveAndContinue = Save and continue
 site.saveAndReturn = Save and return to your Business Tax Account
 site.agreeAndSubmit = Agree and send return
 site.start = Start now
 site.payNow = Pay now
-site.claimRepayment = Claim duty repayment
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
@@ -20,8 +18,6 @@ site.unit.litres = litres
 site.unit.tonnes = tonnes
 site.unit.litres.upper = Litres
 site.unit.tonnes.upper = Tonnes
-site.unit.per.litre = per litre
-site.unit.litre.unit = l
 site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
@@ -55,15 +51,8 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-index.title = alcohol-duty-returns-frontend
-index.heading = alcohol-duty-returns-frontend
-index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
 checkYourAnswers.title = Check your answers
 checkYourAnswers.heading = Check your answers
-
-checkYourAnswersDutySuspendedDeliveries.title = Duty suspended deliveries
-checkYourAnswersDutySuspendedDeliveries.heading = Duty suspended deliveries
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
@@ -110,7 +99,6 @@ section.return.Spirits = Declare spirits
 section.return.OtherFermentedProduct = Declare other fermented products
 section.alcoholDutyQuarterlySpiritsReturn = Spirits produced in the past 3 months
 section.adjustment = Adjust a previous return
-section.adjustment.default = Alcohol Duty adjustment
 section.adjustment.under-declaration = Adjust for under-declared alcohol
 section.adjustment.over-declaration = Adjust for over-declared alcohol
 section.adjustment.spoilt = Adjust for spoilt alcohol
@@ -125,7 +113,6 @@ viewPastReturns.title = Your returns
 viewPastReturns.outstandingReturns.caption = Outstanding returns
 viewPastReturns.completedReturns.caption = Completed returns
 viewPastReturns.period = Period
-viewPastReturns.reference = Reference
 viewPastReturns.status = Status
 viewPastReturns.action = Action
 viewPastReturns.submitReturn = Submit Return
@@ -188,10 +175,6 @@ viewPastPayments.LPI.description = 	Late payment interest charge
 viewPastPayments.credit.description = Credit for Alcohol Duty return
 viewPastPayments.ref = (ref: {0})
 viewPastPayments.status.nothingToPay = Nothing to pay
-viewPastPayments.status.partiallyPaid = Partially paid
-viewPastPayments.claimRefund = Claim refund
-viewPastPayments.payNow = Pay now
-viewPastPayments.claimRefund.hidden = Claim refund
 viewPastPayments.payNow.firstPart.hidden = Pay now
 viewPastPayments.payNow.secondPart.hidden = Pay {0} now
 viewPastPayments.unallocatedPayments.caption = Unallocated payments
@@ -201,7 +184,6 @@ viewPastPayments.unallocatedPayments.paragraph = An unallocated payment is when 
 viewPastPayments.historic.payments.paymentDate = Return period
 viewPastPayments.historic.caption = Cleared payments in {0}
 viewPastPayments.historic.noPayments = You have no cleared returns payments or late payment interest charge payments this year.
-viewPastPayments.outstandingPayments.noPayments = You have no outstanding payments.
 viewPastPayments.historic.Return.description = Cleared Alcohol Duty payments
 viewPastPayments.historic.LPI.description = Cleared late payment interest charge payments
 viewPastPayments.historic.paragraph = Cleared payments are those where monies have been received by HMRC or an existing credit balance has been used to pay any applicable duty.
@@ -233,7 +215,6 @@ taskList.section.dutySuspended.completed = Change the entries you’ve told us a
 
 taskList.section.spirits.heading = Report spirits production in the last three months
 taskList.section.spirits.needToDeclare.notStarted = Have you produced spirits from raw materials?
-taskList.section.spirits.hint = You need to tell us about any spirits you have produced from raw materials each quarter.
 taskList.section.spirits.needToDeclare.no = You told us you have not produced spirits this quarter
 taskList.section.spirits.needToDeclare.yes = You told us you produced spirits this quarter
 taskList.section.spirits.notStarted = Tell us about your spirits and ingredients
@@ -269,37 +250,6 @@ beforeStartReturn.text.dueWarning = The deadline for completing this return is t
 beforeStartReturn.text.overdueWarning = The deadline for completing this return was {0}
 beforeStartReturn.text.dueDateWarning = The deadline for completing this return is {0}
 
-return.regime.Beer = beer
-return.regime.Cider = cider
-return.regime.Wine = wine
-return.regime.Spirits = spirits
-return.regime.OtherFermentedProduct = other fermented products
-
-return.journey.abv.interval.label.Beer = beer
-return.journey.abv.interval.label.Cider = cider
-return.journey.abv.interval.label.SparklingCider = sparkling cider
-return.journey.abv.interval.label.Wine = wine
-return.journey.abv.interval.label.Spirits = spirits
-return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
-
-return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV (tax type code {2})
-return.journey.abv.single.interval = {0} between {1}% and {2}% ABV (tax type code {3})
-return.journey.abv.multi.interval = {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV (tax type code {6})
-
-return.journey.abv.recap.interval.exceeding.max.Core = Non-draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
-return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
-return.journey.abv.recap.interval.exceeding.max.DraughtRelief = Draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})
-return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
-return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = Non-draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
-return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
-
-
 # Beginning of product entry sub-journey
 
 alcoholType.title = Which types of alcoholic products do you need to declare?
@@ -309,9 +259,7 @@ alcoholType.Cider = Cider
 alcoholType.Wine = Wine
 alcoholType.Spirits = Spirits
 alcoholType.OtherFermentedProduct = Other fermented products
-alcoholType.checkYourAnswersLabel = Which types of alcoholic products do you need to declare?
 alcoholType.error.required = Select the types of alcoholic products you need to declare
-alcoholType.change.hidden = Alcohol Type
 alcoholType.p1 = Select the types of alcoholic product you need to declare in this return.
 alcoholType.p2 = Types you do not select will have nil values in your return.
 alcoholType.hint = Select all that apply.
@@ -392,9 +340,7 @@ declareAlcoholDutyQuestion.cider.p2 = If you have cider eligible for reliefs, yo
 declareAlcoholDutyQuestion.cider.p2.l1 = sparkling cider between 3.5% and 5.5%
 declareAlcoholDutyQuestion.cider.p2.l2 = sparkling cider between 5.6% and 8.4%
 declareAlcoholDutyQuestion.h4 = Do you need to declare any alcoholic products?
-declareAlcoholDutyQuestion.checkYourAnswersLabel = declareAlcoholDutyQuestion
 declareAlcoholDutyQuestion.error.required = Select yes if you need to declare any alcoholic products
-declareAlcoholDutyQuestion.change.hidden = alcohol duty to declare
 
 return.regime.Beer = beer
 return.regime.Cider = cider
@@ -406,31 +352,17 @@ whatDoYouNeedToDeclare.title = What do you need to declare?
 whatDoYouNeedToDeclare.heading = What do you need to declare?
 whatDoYouNeedToDeclare.hint = Select all that apply.
 whatDoYouNeedToDeclare.beer.heading = Beer (standard rate)
-whatDoYouNeedToDeclare.option1 = Between 1.2% and 3.4% ABV (tax type code 311)
-whatDoYouNeedToDeclare.option2 = Option 2
-whatDoYouNeedToDeclare.checkYourAnswersLabel = whatDoYouNeedToDeclare
 whatDoYouNeedToDeclare.error.required.Beer = Select the beers you need to declare
 whatDoYouNeedToDeclare.error.required.Cider = Select the ciders you need to declare
 whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other fermented products you need to declare
 whatDoYouNeedToDeclare.error.required.Spirits = Select the spirits you need to declare
 whatDoYouNeedToDeclare.error.required.Wine = Select the wines you need to declare
-whatDoYouNeedToDeclare.change.hidden = WhatDoYouNeedToDeclare
 whatDoYouNeedToDeclare.core.heading = Non-draught {0} (standard rate)
 whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)
 whatDoYouNeedToDeclare.smallProducerRelief.heading = Non-draught {0} eligible for Small Producer Relief
 whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = Draught {0} eligible for Small Producer Relief
-whatDoYouNeedToDeclare.option.abv.interval = Between {0}% and {1}% ABV (tax type code {2})
-whatDoYouNeedToDeclare.option.abv.exceeding.max = At or above {0}% ABV (tax type code {1})
 whatDoYouNeedToDeclare.checkYourAnswersLabel.card = {0} to declare
 whatDoYouNeedToDeclare.checkYourAnswersLabel.row = Selected {0} to declare
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.Core = Non-draught, between {0}% and {1}% ABV (tax type code {2})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.Core = Non-draught, at or above {0}% ABV (tax type code {1})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtRelief = Draught, between {0}% and {1}% ABV (tax type code {2})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtRelief = Draught, at or above {0}% ABV (tax type code {1})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.SmallProducerRelief = Non-draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.SmallProducerRelief = Non-draught, at or above {0}% ABV eligible for SPR (tax type code {1})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.interval.DraughtAndSmallProducerRelief = Draught, between {0}% and {1}% ABV eligible for SPR (tax type code {2})
-whatDoYouNeedToDeclare.checkYourAnswersLabel.option.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught, at or above {0}% ABV eligible for SPR (tax type code {1})
 
 howMuchDoYouNeedToDeclare.title.Beer = Tell us about the beer you need to declare
 howMuchDoYouNeedToDeclare.title.Cider = Tell us about the cider you need to declare
@@ -454,7 +386,6 @@ howMuchDoYouNeedToDeclare.hint = In litres, up to 2 decimal places.
 howMuchDoYouNeedToDeclare.pureAlcohol.hint = In litres, up to 4 decimal places
 howMuchDoYouNeedToDeclare.core.heading = How much non-draught {0} (standard rate) do you need to declare?
 howMuchDoYouNeedToDeclare.draught.heading = How much draught {0} (reduced rate) do you need to declare?
-howMuchDoYouNeedToDeclare.abv.interval = {0} between {1}% and {2}% ABV (tax type code {3})
 
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate
@@ -464,16 +395,13 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 
 doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?
 doYouHaveMultipleSPRDutyRates.heading = If you have more than one Small Producer Relief duty rate
-doYouHaveMultipleSPRDutyRates.h1 = If you have more than one Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}, for example:
 doYouHaveMultipleSPRDutyRates.l1 = your Small Producer Relief duty rate has changed and you need to report production when a different rate applied
 doYouHaveMultipleSPRDutyRates.l2 = you bottle and pay duty on behalf of more than one small producer, each of whom have their own Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.l3 = you merged with another producer and are reporting pre-merger production using the producers' own pre-merger Small Producer Relief duty rates
 doYouHaveMultipleSPRDutyRates.p2 = If you have more than one Small Producer Relief duty rate for the same type of {0} you will need to input them individually. For each duty rate we need to know the total amount produced, the litres of pure alcohol and the applicable duty rate.
 doYouHaveMultipleSPRDutyRates.h2 = Do you have more than one Small Producer Relief duty rate for the same tax type code?
-doYouHaveMultipleSPRDutyRates.checkYourAnswersLabel = doYouHaveMultipleSPRDutyRates
 doYouHaveMultipleSPRDutyRates.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare
-doYouHaveMultipleSPRDutyRates.change.hidden = DoYouHaveMultipleSPRDutyRates
 
 tellUsAboutSingleSPRRate.title.Beer = Tell us about the beer that is eligible for Small Producer Relief
 tellUsAboutSingleSPRRate.title.Cider = Tell us about the cider that is eligible for Small Producer Relief
@@ -492,11 +420,6 @@ tellUsAboutSingleSPRRate.p1.Cider = Tell us about the cider you need to declare 
 tellUsAboutSingleSPRRate.p1.Wine = Tell us about the wine you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that wine at the following Alcohol by Volume (ABV) strengths.
 tellUsAboutSingleSPRRate.p1.Spirits = Tell us about the spirits you need to declare that is eligible for Small Producer Relief, and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.
 tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Tell us about the other fermented product you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that other fermented product at the following Alcohol by Volume (ABV) strengths.
-
-tellUsAboutSingleSPRRate.hint = Give your volume answers in litres, up to 2 decimal places.
-tellUsAboutSingleSPRRate.legend.totalLitres = Total litres
-tellUsAboutSingleSPRRate.legend.pureAlcohol = Litres of pure alcohol
-tellUsAboutSingleSPRRate.legend.dutyRate = Your Small Producer Relief Duty rate for this {0}
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief (multiple duty rates)
 tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught {0} that is eligible for Small Producer Relief do you need to declare?
 tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught {0} that is eligible for Small Producer Relief do you need to declare?
@@ -506,7 +429,6 @@ tellUsAboutMultipleSPRRate.heading = Tell us about the {0} you need to declare t
 tellUsAboutMultipleSPRRate.radioHeading = What type of {0} do you need to declare?
 tellUsAboutMultipleSPRRate.p1 = For each {0} you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that {0} at the following Alcohol by Volume (ABV) strengths.
 tellUsAboutMultipleSPRRate.warning = If you have more than one duty rate for {0} in the same ABV range enter them one at a time.
-tellUsAboutMultipleSPRRate.h2 = What type of {0} do you need to declare?
 tellUsAboutMultipleSPRRate.h3.Beer = How much of this beer do you need to declare?
 tellUsAboutMultipleSPRRate.h3.Cider = How much of this cider do you need to declare?
 tellUsAboutMultipleSPRRate.h3.Spirits = How much of these spirits do you need to declare?
@@ -515,8 +437,6 @@ tellUsAboutMultipleSPRRate.h3.OtherFermentedProduct = How much of this other fer
 tellUsAboutMultipleSPRRate.hint.litres = In litres, up to 2 decimal places
 tellUsAboutMultipleSPRRate.pureAlcohol.hint = In litres, up to 4 decimal places
 tellUsAboutMultipleSPRRate.hint.currency = Include pounds and pence
-tellUsAboutMultipleSPRRate.checkYourAnswersLabel = TellUsAboutMultipleSPRRate
-
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief
 
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType = Description
@@ -533,10 +453,7 @@ checkYourAnswers.heading =  Check your answers
 multipleSPRList.title = {0} with Small Producer Relief duty to declare
 multipleSPRList.heading = {0} with Small Producer Relief duty to declare
 multipleSPRList.question = Do you want to add another?
-multipleSPRList.subheading = Small Producer Relief list
-multipleSPRList.checkYourAnswersLabel = multipleSPRList
 multipleSPRList.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare
-multipleSPRList.change.hidden = MultipleSPRList
 
 multipleSPRList.description.label = Description
 multipleSPRList.totalLitres.label = Total volume declared (litres)
@@ -547,16 +464,6 @@ multipleSPRList.action.label = Action
 checkYourAnswersLabel.row.totalLitres = Total volume
 checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 checkYourAnswersLabel.row.dutyRate = SPR duty rate
-checkYourAnswersLabel.row.rateBand.abv.interval = Between {0}% and {1}% ABV
-
-checkYourAnswers.label.abv.interval.Core = Non-draught, between {0}% and {1}% ABV (tax type code {2})
-checkYourAnswers.label.abv.exceeding.max.Core = Non-draught, at or above {0}% ABV (tax type code {1})
-checkYourAnswers.label.abv.interval.DraughtRelief = Non-draught, between {0}% and {1}% ABV (tax type code {2})
-checkYourAnswers.label.abv.exceeding.max.DraughtRelief = Non-draught, at or above {0}% ABV (tax type code {1})
-checkYourAnswers.label.abv.interval.SmallProducerRelief = Non-draught, between {0}% and {1}% ABV (tax type code {2})
-checkYourAnswers.label.abv.exceeding.max.SmallProducerRelief = Non-draught, at or above {0}% ABV (tax type code {1})
-checkYourAnswers.label.abv.interval.DraughtAndSmallProducerRelief = Draught, between {0}% and {1}% ABV (tax type code {2})
-checkYourAnswers.label.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught, at or above {0}% ABV (tax type code {1})
 
 deleteMultipleSPREntry.title = Remove this {0} entry?
 deleteMultipleSPREntry.heading = Remove this {0} entry?
@@ -567,7 +474,6 @@ dutyCalculation.title = You will owe £{0,number,#,##0.00}
 dutyCalculation.heading = You will owe £{0,number,#,##0.00}
 dutyCalculation.paragraph = We worked this out by:
 dutyCalculation.list = multiplying the volume of pure alcohol you entered by its duty rate
-dutyCalculation.h2 = Duty due
 
 dutyCalculation.table.description = Description
 dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol (LPA)
@@ -575,135 +481,9 @@ dutyCalculation.table.dutyRate = Duty rate (per litre)
 dutyCalculation.table.dutyDue = Duty due
 dutyCalculation.table.action = Action
 
-# old return journey
-
-productEntryGuidance.title = Tell us about your alcohol
-productEntryGuidance.heading = Tell us about your alcohol
-productEntryGuidance.p1 = For every alcoholic product you declare, we need to know
-productEntryGuidance.para1.list1 = its Alcohol by Volume (ABV) strength
-productEntryGuidance.para1.list2 = its tax type
-productEntryGuidance.para1.list3 = how much of it you need to declare
-productEntryGuidance.p2 = We will also ask you to give each product a name so you can identify it on your return.
-productEntryGuidance.p3 = You can group different products together as a single item on your return as long as they have the same ABV strength and tax type.
-productEntryGuidance.p4 = You do not need to list each item by brand or Stock Keeping Unit (SKU).
-
-productName.title = What name do you want to give this product?
-productName.heading = What name do you want to give this product?
-productName.p1 = Give your product a name so you can identify it on your return.
-productName.p2 = You may want to use an internal reference number or a description of the product’s alcohol type and ABV strength. For example, ‘Beer, 5.3%’
-productName.checkYourAnswersLabel = Name
-productName.error.required = Enter the name you want to give this product
-productName.error.length = Product name must be 50 characters or less
-productName.change.hidden = name
-
-alcoholByVolumeQuestion.title = What is this product’s Alcohol by Volume (ABV) strength?
-alcoholByVolumeQuestion.heading = What is this product’s Alcohol by Volume (ABV) strength?
-alcoholByVolumeQuestion.checkYourAnswersLabel.label = Alcohol strength
-alcoholByVolumeQuestion.checkYourAnswersLabel.value = {0}% ABV
-alcoholByVolumeQuestion.error.nonNumeric = This product’s Alcohol by Volume (ABV) strength must be a number
-alcoholByVolumeQuestion.error.required = Enter this product’s Alcohol by Volume (ABV) strength
-alcoholByVolumeQuestion.error.minimumRequired = This product’s Alcohol by Volume (ABV) strength must be 0.01 or more
-alcoholByVolumeQuestion.error.maximumRequired = This product’s Alcohol by Volume (ABV) strength must be 100 or less
-alcoholByVolumeQuestion.error.decimalPlaces = This product’s Alcohol by Volume (ABV) must be a number to two decimal places
-alcoholByVolumeQuestion.change.hidden = Alcohol by Volume (ABV) strength
-
-draughtReliefQuestion.title = Is this product eligible for Draught Relief?
-draughtReliefQuestion.heading = Is this product eligible for Draught Relief?
-draughtReliefQuestion.checkYourAnswersLabel = Eligible for Draught Relief
-draughtReliefQuestion.error.required = Select yes if this product is eligible for Draught Relief
-draughtReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-you-can-pay-less-alcohol-duty-on-draught-products
-draughtReliefQuestion.guidance.link.text = You can get a reduced rate of duty on some draught products (opens in a new tab)
-draughtReliefQuestion.change.hidden = whether this product is eligible for draught relief
-
-smallProducerReliefQuestion.title = Is this product eligible for Small Producer Relief?
-smallProducerReliefQuestion.heading = Is this product eligible for Small Producer Relief?
-smallProducerReliefQuestion.checkYourAnswersLabel = Eligible for Small Producer Relief
-smallProducerReliefQuestion.error.required = Select yes if this product is eligible for Small Producer Relief
-smallProducerReliefQuestion.guidance.link.url = https://www.gov.uk/guidance/check-if-youre-eligible-for-small-producer-relief-on-alcohol-duty
-smallProducerReliefQuestion.guidance.link.text = If you’re a small producer you may be able to pay a lower rate of duty on this product.
-smallProducerReliefQuestion.change.hidden = whether this product is eligible for Small Producer Relief
-
-declareSmallProducerReliefDutyRate.title = What is your Small Producer Relief duty rate?
-declareSmallProducerReliefDutyRate.heading = What is your Small Producer Relief duty rate?
-declareSmallProducerReliefDutyRate.hint = Give your answer in pounds and pence
-declareSmallProducerReliefDutyRate.guidance.link.prefix = You can
-declareSmallProducerReliefDutyRate.guidance.link.text = work out your Small Producer Relief duty rate (opens in a new tab)
-declareSmallProducerReliefDutyRate.guidance.link.url = https://www.gov.uk/guidance/find-out-your-alcohol-duty-rates-if-youre-eligible-for-small-producer-relief
-declareSmallProducerReliefDutyRate.checkYourAnswersLabel = DeclareSmallProducerReliefDutyRate
-declareSmallProducerReliefDutyRate.error.nonNumeric = Your Small Producer Relief duty rate must be a number
-declareSmallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate
-declareSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be 0.01 or more
-declareSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be 999999999.99 or less
-declareSmallProducerReliefDutyRate.error.decimalPlaces = Your Small Producer Relief duty rate must be a number to 2 decimal places
-declareSmallProducerReliefDutyRate.change.hidden = your Small Producer Relief duty rate
-
-taxType.title = Your product’s tax type code
-taxType.heading = Your product’s tax type code
-taxType.p1 = Based on your answers, we have found your product’s possible tax type codes. We found these tax type codes because you told us that this product is:
-taxType.bulletList.abv = Alcohol by Volume (ABV) strength
-taxType.bulletList.draughtRelief = eligible for Draught Relief
-taxType.bulletList.smallProducerRelief = eligible for Small Producer Relief
-taxType.guidance.link.url = #
-taxType.guidance.link.text = Find out more about Alcohol Duty tax type codes (opens in a new tab).
-taxType.radioHeading = Which tax type code matches your product?
-taxType.taxTypeRadio.taxType = tax type code
-taxType.taxTypeRadio.regime.Beer = Beer
-taxType.taxTypeRadio.regime.Wine = Wine
-taxType.taxTypeRadio.regime.Cider = Cider
-taxType.taxTypeRadio.regime.Spirits = Spirits
-taxType.taxTypeRadio.regime.OtherFermentedProduct = Other fermented products
-taxType.checkYourAnswersLabel = Tax type code
-taxType.error.required = Select this product’s tax type
-taxType.change.hidden = your product’s tax type code
-
-productVolume.title = How much of this product do you need to declare?
-productVolume.heading = How much of this product do you need to declare?
-productVolume.hint = Give your answers in litres, up to 2 decimal places. For example, 500.50
-productVolume.checkYourAnswersLabel = Volume
-productVolume.error.nonNumeric = This product’s volume must be a number
-productVolume.error.required = Enter how much of this product you need to declare
-productVolume.error.minimumRequired = This product’s volume must be 0.01 or more
-productVolume.error.maximumRequired = This product’s volume must be 999999999.99 or less
-productVolume.error.decimalPlaces = This product’s volume must be a number to 2 decimal places
-productVolume.change.hidden = Product volume
-
-dutyDue.title = Your calculations
-dutyDue.heading = Your calculations
-dutyDue.paragraph1 = Based on everything you’ve told us about this entry, we’ve worked out the litres of pure alcohol (LPA) and the duty due for this entry.
-dutyDue.subheading1 = {0} litres of pure alcohol (LPA)
-dutyDue.paragraph2 = This is based on:
-dutyDue.bulletList.1 = the Alcohol by Volume (ABV) strength of this entry is {0}
-dutyDue.bulletList.2 = you need to declare {0} litres of this entry
-dutyDue.subheading2 = The duty due for this entry is £{0}.
-dutyDue.paragraph3 = This is based on:
-dutyDue.bulletList.3 = the entry having {0} litres of pure alcohol (LPA)
-dutyDue.bulletList.4 = the duty rate for this entry being £{0} per litre  of pure alcohol
-dutyDue.rate.checkYourAnswersLabel = Duty rate
-dutyDue.duty.checkYourAnswersLabel = Duty due
-pureAlcohol.checkYourAnswersLabel = Pure alcohol
-
-productList.title = Products to declare
-productList.heading = Products to declare
-productList.question = Do you want to add another product?
 productList.caption = Duty due
-productList.error.required = Select yes if you want to add another product
 productList.change.hidden = this product
 productList.remove.hidden = this product
-productList.total = Total due
-productEntryList.name = Name
-productEntryList.duty = Duty due
-productEntryList.action = Action
-
-deleteProduct.title = Are you sure you want to remove this entry?
-deleteProduct.heading = Are you sure you want to remove this entry?
-deleteProduct.checkYourAnswersLabel = Are you sure you want to remove this entry?
-deleteProduct.paragraph = This will remove this entry and its information from the return.
-deleteProduct.error.required = Select yes if you need to delete a product
-deleteProduct.change.hidden = Delete Product
-
-# End of product entry sub-journey
-
-
 
 # Beginning of duty suspended deliveries sub-journey
 
@@ -711,7 +491,6 @@ declareDutySuspendedDeliveriesQuestion.title = Do you need to tell us about any 
 declareDutySuspendedDeliveriesQuestion.heading = Do you need to tell us about any duty suspended alcohol?
 declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to tell us about any duty suspended alcohol
 declareDutySuspendedDeliveriesQuestion.p1 = You need to tell us if you delivered alcohol to a duty suspended warehouse or received alcohol in duty suspense.
-declareDutySuspendedDeliveriesQuestion.change.hidden = whether you need to declare alcohol you delivered or received duty suspended
 
 dutySuspendedDeliveriesGuidance.title = Calculate your duty suspended alcohol
 dutySuspendedDeliveriesGuidance.heading = Calculate your duty suspended alcohol
@@ -837,9 +616,9 @@ dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired = 
 dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired = The volume of pure alcohol in other fermented products must be must be more than -100 million litres
 dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.decimalPlaces = The volume of pure alcohol in other fermented products must be up to 4 decimal places
 
+checkYourAnswersDutySuspendedDeliveries.heading = Duty suspended deliveries
+
 # End of of duty suspended deliveries sub-journey
-
-
 
 # Beginning of quarterly spirits questions sub-journey
 
@@ -914,19 +693,151 @@ spiritType.error.required = Select the spirits you have made this quarter
 spiritType.change.hidden = which of these spirits you have made
 spiritType.hint = Select all you have made in the past 3 months.
 
+otherIngredientsUsed.title = Tell us about the other ingredients you have used
+otherIngredientsUsed.heading = Tell us about the other ingredients you have used
+otherIngredientsUsed.subheading1 = What other ingredients have you used?
+otherIngredientsUsed.subheading2 = How do you measure this ingredient?
+otherIngredientsUsed.subheading3 = How much of this have you used?
+otherIngredientsUsed.hint = Use the measurement unit above, up to 2 decimal places.
+otherIngredientsUsed.error.otherIngredientsUsedTypes.required = Enter ingredients
+otherIngredientsUsed.error.otherIngredientsUsedTypes.length = Ingredients must be {0} characters or less
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.required = Enter how much of the other ingredients you have used
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.nonNumeric = The quantity of the other ingredients you need to declare must be a number
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.maximumRequired = The quantity of the other ingredients you need to declare must be 999999999.99 or less
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired = The quantity of the other ingredients you need to declare must be {0} or more
+otherIngredientsUsed.error.otherIngredientsUsedQuantity.decimalPlaces = The quantity of the other ingredients you need to declare must be a number to 2 decimal places
+otherIngredientsUsed.change.hidden = what other ingredients have you used
+
 otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
 otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
 otherSpiritsProduced.hint = Tell us what other spirits you have produced.
-otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
 otherSpiritsProduced.error.required = Enter the other spirits you produced
 otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
+
+grainsUsed.title = How much grain have you used this quarter?
+grainsUsed.heading = How much grain have you used this quarter?
+grainsUsed.subheading1 = Malted barley
+grainsUsed.subheading2 = Wheat
+grainsUsed.subheading3 = Maize
+grainsUsed.subheading4 = Rye
+grainsUsed.subheading5 = Unmalted grain
+grainsUsed.subheading6 = Have you used any malted grains that are not barley?
+grainsUsed.hint = Enter weight in tonnes, up to 2 decimal places.
+grainsUsed.error.maltedBarleyQuantity.required = Enter how much malted barley you have used
+grainsUsed.error.maltedBarleyQuantity.nonNumeric = The weight of malted barley you need to declare must be a number
+grainsUsed.error.maltedBarleyQuantity.maximumRequired = The weight of malted barley you need to declare must be 999999999.99 or less
+grainsUsed.error.maltedBarleyQuantity.minimumRequired = The weight of malted barley you need to declare must be 0.00 or more
+grainsUsed.error.maltedBarleyQuantity.decimalPlaces = The weight of malted barley you need to declare must be a number to 2 decimal places
+grainsUsed.maltedBarleyQuantity.checkYourAnswersLabel = Malted barley
+grainsUsed.maltedBarleyQuantity.change.hidden = malted barley
+grainsUsed.error.wheatQuantity.required = Enter how much wheat you have used
+grainsUsed.error.wheatQuantity.nonNumeric = The weight of wheat you need to declare must be a number
+grainsUsed.error.wheatQuantity.maximumRequired = The weight of wheat you need to declare must be 999999999.99 or less
+grainsUsed.error.wheatQuantity.minimumRequired = The weight of wheat you need to declare must be 0.00 or more
+grainsUsed.error.wheatQuantity.decimalPlaces = The weight of wheat you need to declare must be a number to 2 decimal places
+grainsUsed.wheatQuantity.checkYourAnswersLabel = Wheat
+grainsUsed.wheatQuantity.change.hidden = wheat
+grainsUsed.error.maizeQuantity.required = Enter how much maize you have used
+grainsUsed.error.maizeQuantity.nonNumeric = The weight of maize you need to declare must be a number
+grainsUsed.error.maizeQuantity.maximumRequired = The weight of maize you need to declare must be 999999999.99 or less
+grainsUsed.error.maizeQuantity.minimumRequired = The weight of maize you need to declare must be 0.00 or more
+grainsUsed.error.maizeQuantity.decimalPlaces = The weight of maize you need to declare must be a number to 2 decimal places
+grainsUsed.maizeQuantity.checkYourAnswersLabel = Maize
+grainsUsed.maizeQuantity.change.hidden = maize
+grainsUsed.error.ryeQuantity.required = Enter how much rye you have used
+grainsUsed.error.ryeQuantity.nonNumeric = The weight of rye you need to declare must be a number
+grainsUsed.error.ryeQuantity.maximumRequired = The weight of rye you need to declare must be 999999999.99 or less
+grainsUsed.error.ryeQuantity.minimumRequired = The weight of rye you need to declare must be 0.00 or more
+grainsUsed.error.ryeQuantity.decimalPlaces = The weight of rye you need to declare must be a number to 2 decimal places
+grainsUsed.ryeQuantity.checkYourAnswersLabel = Rye
+grainsUsed.ryeQuantity.change.hidden = rye
+grainsUsed.error.unmaltedGrainQuantity.required = Enter how much unmalted grain you have used
+grainsUsed.error.unmaltedGrainQuantity.nonNumeric = The weight of unmalted grain you need to declare must be a number
+grainsUsed.error.unmaltedGrainQuantity.maximumRequired = The weight of unmalted grain you need to declare must be 999999999.99 or less
+grainsUsed.error.unmaltedGrainQuantity.minimumRequired = The weight of unmalted grain you need to declare must be 0.00 or more
+grainsUsed.error.unmaltedGrainQuantity.decimalPlaces = The weight of unmalted grain you need to declare must be a number to 2 decimal places
+grainsUsed.error.usedMaltedGrainNotBarley.required = Select whether you have used any malted grains that are not barley
+grainsUsed.unmaltedGrainQuantity.checkYourAnswersLabel = Unmalted Grain
+grainsUsed.unmaltedGrainQuantity.change.hidden = unmalted grain
+
+alcoholUsed.title = How much alcohol have you used this quarter?
+alcoholUsed.heading = How much alcohol have you used this quarter?
+alcoholUsed.beer = Beer
+alcoholUsed.wine = Wine
+alcoholUsed.madeWine = Made-wine
+alcoholUsed.ciderOrPerry = Cider or perry
+alcoholUsed.hint = Enter volume in litres, up to 2 decimal places.
+alcoholUsed.error.beer.required = Enter how much beer you have used
+alcoholUsed.error.beer.nonNumeric = The volume of beer you need to declare must be a number
+alcoholUsed.error.beer.maximumRequired = The volume of beer you need to declare must be 999999999.99 or less
+alcoholUsed.error.beer.minimumRequired = The volume of beer you need to declare must be 0.00 or more
+alcoholUsed.error.beer.decimalPlaces = The volume of beer you need to declare must be a number to 2 decimal places
+alcoholUsed.beer.change.hidden = beer
+alcoholUsed.beer.checkYourAnswersLabel = Beer
+alcoholUsed.error.wine.required = Enter how much wine you have used
+alcoholUsed.error.wine.nonNumeric = The volume of wine you need to declare must be a number
+alcoholUsed.error.wine.maximumRequired = The volume of wine you need to declare must be 999999999.99 or less
+alcoholUsed.error.wine.minimumRequired = The volume of wine you need to declare must be 0.00 or more
+alcoholUsed.error.wine.decimalPlaces = The volume of wine you need to declare must be a number to 2 decimal places
+alcoholUsed.wine.change.hidden = wine
+alcoholUsed.wine.checkYourAnswersLabel = Wine
+alcoholUsed.error.madeWine.required = Enter how much made-wine you have used
+alcoholUsed.error.madeWine.nonNumeric = The volume of made-wine you need to declare must be a number
+alcoholUsed.error.madeWine.maximumRequired = The volume of made-wine you need to declare must be 999999999.99 or less
+alcoholUsed.error.madeWine.minimumRequired = The volume of made-wine you need to declare must be 0.00 or more
+alcoholUsed.error.madeWine.decimalPlaces = The volume of made-wine you need to declare must be a number to 2 decimal places
+alcoholUsed.madeWine.change.hidden = made-wine
+alcoholUsed.madeWine.checkYourAnswersLabel = Made-wine
+alcoholUsed.error.ciderOrPerry.required = Enter how much cider or perry you have used
+alcoholUsed.error.ciderOrPerry.nonNumeric = The volume of cider or perry you need to declare must be a number
+alcoholUsed.error.ciderOrPerry.maximumRequired = The volume of cider or perry you need to declare must be 999999999.99 or less
+alcoholUsed.error.ciderOrPerry.minimumRequired = The volume of cider or perry you need to declare must be 0.00 or more
+alcoholUsed.error.ciderOrPerry.decimalPlaces = The volume of cider or perry you need to declare must be a number to 2 decimal places
+alcoholUsed.ciderOrPerry.change.hidden = cider or perry
+alcoholUsed.ciderOrPerry.checkYourAnswersLabel = Cider/perry
+
+ethyleneGasOrMolassesUsed.title = How much ethylene gas or molasses have you used?
+ethyleneGasOrMolassesUsed.heading = How much ethylene gas or molasses have you used?
+ethyleneGasOrMolassesUsed.ethyleneGas = Ethylene gas
+ethyleneGasOrMolassesUsed.molasses = Molasses
+ethyleneGasOrMolassesUsed.hint = Enter volume in litres, up to 2 decimal places.
+ethyleneGasOrMolassesUsed.question = Have you used any other ingredients?
+ethyleneGasOrMolassesUsed.ethyleneGas.checkYourAnswersLabel = Ethylene gas
+ethyleneGasOrMolassesUsed.molasses.checkYourAnswersLabel = Molasses
+ethyleneGasOrMolassesUsed.error.ethyleneGas.required = Enter how much ethylene gas you have used
+ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric = The volume of ethylene gas you need to declare must be a number
+ethyleneGasOrMolassesUsed.error.ethyleneGas.decimalPlaces = The volume of ethylene gas you need to declare must be a number to 2 decimal places
+ethyleneGasOrMolassesUsed.error.ethyleneGas.minimumRequired = The volume of ethylene gas you need to declare must be 0.00 or more
+ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired = The volume of ethylene gas you need to declare must be 999999999.99 or less
+ethyleneGasOrMolassesUsed.error.molasses.required = Enter how much molasses you have used
+ethyleneGasOrMolassesUsed.error.molasses.nonNumeric = The volume of molasses you need to declare must be a number
+ethyleneGasOrMolassesUsed.error.molasses.decimalPlaces = The volume of molasses you need to declare must be a number to 2 decimal places
+ethyleneGasOrMolassesUsed.error.molasses.minimumRequired = The volume of molasses you need to declare must be 0.00 or more
+ethyleneGasOrMolassesUsed.error.molasses.maximumRequired = The volume of molasses you need to declare must be 999999999.99 or less
+ethyleneGasOrMolassesUsed.error.required = Select yes to declare any other ingredients you have used
+ethyleneGasOrMolassesUsed.ethyleneGas.change.hidden = ethylene gas
+ethyleneGasOrMolassesUsed.molasses.change.hidden = molasses
+
 otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
 otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
 otherSpiritsProduced.hint = Tell us what other spirits you have produced.
-otherSpiritsProduced.checkYourAnswersLabel = otherSpiritsProduced
 otherSpiritsProduced.error.required = Enter the other spirits you produced
 otherSpiritsProduced.error.length = Other spirits produced must be {0} characters or less
 otherSpiritsProduced.change.hidden = what other types of spirits have you produced this quarter
+
+otherMaltedGrains.title = Tell us about the other malted grains you have used
+otherMaltedGrains.heading = Tell us about the other malted grains you have used
+otherMaltedGrains.subheading1 = What other malted grains have you used?
+otherMaltedGrains.subheading2 = How much have you used?
+otherMaltedGrains.hint = Enter weight in tonnes, up to 2 decimal places.
+otherMaltedGrains.error.otherMaltedGrainsTypes.required = Enter other malted grains
+otherMaltedGrains.error.otherMaltedGrainsTypes.length = Other malted grains must be {0} characters or less
+otherMaltedGrains.error.otherMaltedGrainsQuantity.required = Enter how much other malted grains you have used
+otherMaltedGrains.error.otherMaltedGrainsQuantity.nonNumeric = The volume of other malted grains you need to declare must be a number
+otherMaltedGrains.error.otherMaltedGrainsQuantity.maximumRequired = The volume of other malted grains you need to declare must be 999999999.99 or less
+otherMaltedGrains.error.otherMaltedGrainsQuantity.minimumRequired = The volume of other malted grains you need to declare must be {0} or more
+otherMaltedGrains.error.otherMaltedGrainsQuantity.decimalPlaces = The volume of other malted grains you need to declare must be a number to 2 decimal places
+otherMaltedGrains.otherMaltedGrainsQuantity.change.hidden = what other malted grains have you used
 
 spiritsQuestions.checkYourAnswersLabel.card1 = Spirits you’ve produced
 spiritsQuestions.checkYourAnswersLabel.card2 = Grain ingredients you’ve used
@@ -946,7 +857,6 @@ declareAdjustmentQuestion.p3 = You can also tell us about any alcoholic products
 declareAdjustmentQuestion.para1.list3 = have become spoilt and not fit to be consumed
 declareAdjustmentQuestion.para1.list4 = duty was originally paid at a reduced rate (draught relief) however they are no longer eligible for that rate after being repackaged for non-draught sale
 declareAdjustmentQuestion.para1.list5 = have now exported, warehoused for export or completed its planned destruction having previously notifying HMRC
-declareAdjustmentQuestion.checkYourAnswersLabel = declareAdjustmentQuestion
 declareAdjustmentQuestion.error.required = Select yes if you need to tell us about any adjustments from previous returns
 declareAdjustmentQuestion.change.hidden = whether you need to make any adjustments from a previously submitted return
 
@@ -1031,14 +941,6 @@ adjustmentTaxType.error.notDraught = Tax type code must be for a draught alcohol
 adjustmentTaxType.repackaged.change.hidden = original tax type
 adjustmentTaxType.change.hidden = tax type
 adjustmentTaxType.repackaged.checkYourAnswersLabel = Original tax type
-adjustmentTaxType.checkYourAnswersLabel.abv.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
-adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.Core = Non-draught {0} at or above {1}% ABV ({2})
-adjustmentTaxType.checkYourAnswersLabel.abv.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})
-adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.DraughtRelief = Draught {0} at or above {1}% ABV ({2})
-adjustmentTaxType.checkYourAnswersLabel.abv.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)
-adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.SmallProducerRelief = Non-draught {0} at or above {1}% ABV eligible for SPR ({2} SPR)
-adjustmentTaxType.checkYourAnswersLabel.abv.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} at or above {1}% ABV eligible for SPR ({2} SPR)
-adjustmentTaxType.checkYourAnswersLabel.abv.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
 
 adjustmentVolume.title = How much do you need to adjust?
 adjustmentVolume.heading = How much do you need to adjust?
@@ -1048,7 +950,6 @@ adjustmentVolume.error.noValue.totalLitresVolume = Enter the total litres of {0}
 adjustmentVolume.error.minimumValue.totalLitresVolume = Litres of {0} must be must be more than 0.00
 adjustmentVolume.error.maximumValue.totalLitresVolume = Litres of {0} must be less than 100 million
 adjustmentVolume.error.decimalPlaces.totalLitresVolume = Litres of {0} must be a number up to 2 decimal places
-adjustmentVolume.error.totalLitresVolume.lessThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
 adjustmentVolume.error.invalid.pureAlcoholVolume = Litres of pure alcohol in {0} must be a number
 adjustmentVolume.error.noValue.pureAlcoholVolume = Enter the litres of pure alcohol in {0}
 adjustmentVolume.error.minimumValue.pureAlcoholVolume = Litres of pure alcohol must be more than 0.00
@@ -1061,7 +962,6 @@ adjustmentVolume.error.minimumValue.sprDutyRate = Your Small Producer Relief dut
 adjustmentVolume.error.maximumValue.sprDutyRate = Your Small Producer Relief duty rate must be less than £100 million
 adjustmentVolume.error.decimalPlaces.sprDutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 adjustmentVolume.change.hidden = volume
-adjustmentVolume.subHeading = {0} between {1}% and {2}% ABV (tax type code {3})
 adjustmentVolume.totalLitresVolume.heading = Total litres of {0}
 adjustmentVolume.totalLitresVolume.hint = In litres, up to 2 decimal places
 adjustmentVolume.pureAlcoholVolume.heading = Litres of pure alcohol
@@ -1093,14 +993,10 @@ adjustmentSmallProducerReliefDutyRate.change.hidden = SPR duty rate
 adjustmentDutyDue.title = The duty value for this adjustment is {0}
 adjustmentDutyDue.heading = The duty value for this adjustment is {0}
 adjustmentDutyDue.paragraph1 = This is because:
-adjustmentDutyDue.subheading1 = {0} litres of pure alcohol (LPA)
-adjustmentDutyDue.paragraph2 = This is because:
 adjustmentDutyDue.bulletList.1 = you declared {0} litres of pure alcohol (LPA)
 adjustmentDutyDue.bulletList.2 = the duty rate is {0} per litre of pure alcohol
 adjustmentDutyDue.bulletList.3 = the duty is {0} (duty rate multiplied by the litres of pure alcohol)
-adjustmentDutyDue.rate.checkYourAnswersLabel = Duty rate
 adjustmentDutyDue.duty.checkYourAnswersLabel = Duty value
-adjustmentDutyDue.lpa.checkYourAnswersLabel = Pure alcohol
 adjustmentDutyDue.repackaged.bulletList.1 = the reduced duty rate was {0} per litre of pure alcohol
 adjustmentDutyDue.repackaged.bulletList.2 = you originally paid {0}
 adjustmentDutyDue.repackaged.bulletList.3 = repackaged draught products are not eligible for reduced rates
@@ -1129,21 +1025,15 @@ deleteAdjustment.error.required = Select yes to remove this adjustment
 
 underDeclarationReason.title = Why were these alcoholic products not declared until now?
 underDeclarationReason.heading = Why were these alcoholic products not declared until now?
-underDeclarationReason.checkYourAnswersLabel = underDeclarationReason
 underDeclarationReason.error.required = Enter the reason why these alcoholic products were not declared until now
 underDeclarationReason.error.length = The reason these alcoholic products were not declared must be {0} characters or less
-underDeclarationReason.change.hidden = UnderDeclarationReason
 
 overDeclarationReason.title = Why was too much alcoholic product over-declared previously?
 overDeclarationReason.heading = Why was too much alcoholic product over-declared previously?
-overDeclarationReason.checkYourAnswersLabel = overDeclarationReason
 overDeclarationReason.error.required = Enter the reason why too much alcoholic product was over-declared
 overDeclarationReason.error.length = The reason why too much alcoholic product was over-declared must be {0} characters or less
-overDeclarationReason.change.hidden = OverDeclarationReason
 
 # End of adjustments sub-journey
-
-
 
 # Beginning of Check and submit sub-journey
 
@@ -1156,12 +1046,10 @@ dutyDueForThisReturn.negative.p1 = Your return has a negative value. You will be
 dutyDueForThisReturn.nil.p1 = Your return has a nil value and no duty is due.
 dutyDueForThisReturn.h2 = How we worked this out
 dutyDueForThisReturn.bulletList.1 = We calculated the total duty due on the alcoholic products you declared
-dutyDueForThisReturn.bulletList.2 = We calculated the total duty applicable on all the adjustments you declared in this return
 dutyDueForThisReturn.bulletList.3 = You told us you do not have any duty applicable alcoholic products or adjustments to declare
 dutyDueForThisReturn.p2 = Check the values of declared alcohol and adjustments are correct before continuing.
 dutyDueForThisReturn.h3 = Final duty summary
 dutyDueForThisReturn.table.dutyDue = {0} declared
-dutyDueForThisReturn.table.action = Action
 dutyDueForThisReturn.table.nil.label = Declared duty
 dutyDueForThisReturn.table.nil.value = Nil
 dutyDueForThisReturn.table.adjustmentDue = Adjustments to previous returns
@@ -1185,14 +1073,9 @@ returnSubmitted.viewReturnLink.text = View your return
 returnSubmitted.positive.h1 = What happens next
 returnSubmitted.positive.p1 = You can pay your duty now or later from your Business Tax Account, but you must pay it by {0}. You will be charged interest if you do not pay by this date.
 returnSubmitted.positive.p2 = Your reference number can be used as a payment reference when you pay this return.
-returnSubmitted.positive.p3 = Payment for this return was due on {0} and is late. You will be charged interest for the period from {0} to the date you make payment.
 returnSubmitted.direct.debit.h2 = Direct Debit
 returnSubmitted.direct.debit.p1 = You can pay duty automatically by direct debit.
 returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit
-returnSubmitted.direct.debit.p2 = You have a direct debit set up. The duty due will automatically be taken on {0}.
-returnSubmitted.direct.debit.manageLink.text = Manage your direct debit
-returnSubmitted.direct.debit.p3 = You can pay the duty automatically with a direct debit. Payments are taken on 25th of each month.
-returnSubmitted.direct.debit.setupLink.text = Set up a direct debit
 returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcohol Duty account. If you do not claim it back then it will be used toward any duty due from your next return.
 
 # End of Check and submit sub-journey

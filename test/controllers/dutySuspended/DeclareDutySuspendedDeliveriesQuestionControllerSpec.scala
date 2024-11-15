@@ -17,7 +17,7 @@
 package controllers.dutySuspended
 
 import base.SpecBase
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
 import models.NormalMode
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
@@ -79,9 +79,9 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockCacheConnector = mock[CacheConnector]
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -89,7 +89,7 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
             bind[DeclareDutySuspendedDeliveriesNavigator].toInstance(
               new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)
             ),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 
@@ -156,14 +156,14 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
     }
 
     "must redirect to the Task list when declare duty suspended deliveries question is answered as No" in {
-      val mockCacheConnector = mock[CacheConnector]
-      when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val application        =
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application              =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[DeclareDutySuspendedDeliveriesNavigator]
               .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
       running(application) {

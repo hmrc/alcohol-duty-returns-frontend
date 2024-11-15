@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import config.Constants.Css
 @import models.adjustment.AdjustmentType
+@import viewmodels.InputWidth._
 
 @this(
     layout: templates.Layout,
@@ -47,15 +48,15 @@
 
         @pageHeading(messages("adjustmentVolume.heading"))
 
-        @subHeading(rateBandContent, "govuk-heading-s")
+        @subHeading(rateBandContent, Css.headingSCssClass)
 
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key="totalLitresVolume",
+                key = "totalLitresVolume",
                 label = LabelViewModel(messages("adjustmentVolume.totalLitresVolume.heading", messages(s"return.regime.$regime"))),
-                errorMessageField = form(s"volumes_totalLitresVolume"),
-                value = form(s"volumes.totalLitresVolume").value
+                errorMessageField = form("volumes_totalLitresVolume"),
+                value = form("volumes.totalLitresVolume").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -66,10 +67,10 @@
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key="pureAlcoholVolume",
+                key = "pureAlcoholVolume",
                 label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading")),
-                errorMessageField = form(s"volumes_pureAlcoholVolume"),
-                value = form(s"volumes.pureAlcoholVolume").value
+                errorMessageField = form("volumes_pureAlcoholVolume"),
+                value = form("volumes.pureAlcoholVolume").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -81,10 +82,10 @@
         @govukInput(
             InputViewModel(
             field = form("volumes"),
-            key="sprDutyRate",
+            key = "sprDutyRate",
             label = LabelViewModel(messages("adjustmentVolume.smallProducerReliefDutyRate.heading")),
-            errorMessageField = form(s"volumes_sprDutyRate"),
-            value = form(s"volumes.sprDutyRate").value
+            errorMessageField = form("volumes_sprDutyRate"),
+            value = form("volumes.sprDutyRate").value
             )
             .asNumeric()
             .withWidth(Fixed10)

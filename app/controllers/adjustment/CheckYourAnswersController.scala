@@ -16,7 +16,7 @@
 
 package controllers.adjustment
 
-import connectors.CacheConnector
+import connectors.UserAnswersConnector
 import controllers.actions._
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
-  cacheConnector: CacheConnector,
+  userAnswersConnector: UserAnswersConnector,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -65,7 +65,7 @@ class CheckYourAnswersController @Inject() (
         for {
           updatedAnswers <- saveAdjustmentEntry(request.userAnswers, adjustmentEntry)
           cleanedAnswers <- Future.fromTry(updatedAnswers.remove(CurrentAdjustmentEntryPage))
-          _              <- cacheConnector.set(cleanedAnswers)
+          _              <- userAnswersConnector.set(cleanedAnswers)
         } yield Redirect(
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
         )
@@ -104,7 +104,7 @@ class CheckYourAnswersController @Inject() (
   ): Future[Result] =
     for {
       updateUserAnswers <- Future.fromTry(userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry))
-      _                 <- cacheConnector.set(updateUserAnswers)
+      _                 <- userAnswersConnector.set(updateUserAnswers)
     } yield Ok(
       view(
         summaryList
