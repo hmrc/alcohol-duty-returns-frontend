@@ -371,7 +371,12 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
       "Spirits section" - {
         "must return no spirits if the user doesn't have the spirits regime" in new SetUp {
           whenReady(
-            adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct))), quarterlySpiritsReturnPeriod).value
+            adrReturnSubmissionService
+              .getAdrReturnSubmission(
+                fullUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct))),
+                quarterlySpiritsReturnPeriod
+              )
+              .value
           ) { result =>
             result.toOption.get.spirits mustBe None
           }
