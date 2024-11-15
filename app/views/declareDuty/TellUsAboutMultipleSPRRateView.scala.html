@@ -56,16 +56,31 @@
             content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(s"return.regime.$regime")))
         ))
 
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("volumesWithRate.taxType"),
-                fieldset = FieldsetViewModel(LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(s"return.regime.$regime"))).withSize(LegendSize.Medium)),
-                items  = rateBandRadioItems,
-                errorMessageField = form("volumesWithRate_taxType")
+        @if(rateBandRadioItems.size > 1){
+            @govukRadios(
+                RadiosViewModel(
+                    field  = form("volumesWithRate.taxType"),
+                    fieldset = FieldsetViewModel(LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(s"return.regime.$regime"))).withSize(LegendSize.Medium)),
+                    items  = rateBandRadioItems,
+                    errorMessageField = form("volumesWithRate_taxType")
+                )
             )
-        )
+            @subHeading(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"), classes = "govuk-heading-m")
+        }
 
-        @subHeading(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"), classes = "govuk-heading-m")
+        @if(rateBandRadioItems.size == 1){
+            @subHeading(rateBandRadioItems.head.content.asHtml.toString(), classes = "govuk-heading-m")
+
+            @govukInput(
+                InputViewModel(
+                    field = form("volumesWithRate"),
+                    key = "taxType",
+                    label = LabelViewModel(Text("")),
+                    errorMessageField = form("volumesWithRate_taxType"),
+                    value = rateBandRadioItems.head.value
+                ).hidden
+            )
+        }
 
         @govukInput(
             InputViewModel(
