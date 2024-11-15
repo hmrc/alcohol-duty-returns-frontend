@@ -66,11 +66,11 @@
                     errorMessageField = form("volumesWithRate_taxType")
                 )
             )
-            @subHeading(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"), classes = "govuk-heading-m")
+            @subHeading(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"), classes = Css.headingMCssClass)
         }
 
         @if(rateBandRadioItems.size == 1){
-            @subHeading(rateBandRadioItems.head.content.asHtml.toString(), classes = "govuk-heading-m")
+            @subHeading(rateBandRadioItems.head.content.asHtml.toString(), classes = Css.headingMCssClass)
 
             @govukInput(
                 InputViewModel(
