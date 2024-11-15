@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import config.Constants.Css
 @import viewmodels.InputWidth._
 @import viewmodels.LegendSize
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -84,11 +85,11 @@
 
         @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate"),
+              field = form("volumesWithRate"),
               key = "totalLitres",
               label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_totalLitres"),
-              value = form(s"volumesWithRate.totalLitres").value
+              errorMessageField = form("volumesWithRate_totalLitres"),
+              value = form("volumesWithRate.totalLitres").value
             )
             .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
@@ -97,11 +98,11 @@
 
         @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate"),
+              field = form("volumesWithRate"),
               key = "pureAlcohol",
               label = LabelViewModel(messages("return.journey.pureAlcohol", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_pureAlcohol"),
-              value = form(s"volumesWithRate.pureAlcohol").value
+              errorMessageField = form("volumesWithRate_pureAlcohol"),
+              value = form("volumesWithRate.pureAlcohol").value
             )
             .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.pureAlcohol.hint")))
@@ -110,11 +111,11 @@
 
         @govukInput(
             InputViewModel(
-              field = form(s"volumesWithRate"),
+              field = form("volumesWithRate"),
               key = "dutyRate",
               label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_dutyRate"),
-              value = form(s"volumesWithRate.dutyRate").value
+              errorMessageField = form("volumesWithRate_dutyRate"),
+              value = form("volumesWithRate.dutyRate").value
             )
             .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))

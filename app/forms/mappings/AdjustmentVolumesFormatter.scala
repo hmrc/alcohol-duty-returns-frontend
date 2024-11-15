@@ -41,7 +41,7 @@ class AdjustmentVolumesFormatter(
     maximumValueKey,
     fieldKey,
     maximumValue = Constants.volumeMaximumValue,
-    minimumValue = Constants.volumeAndDutyMinimumValue,
+    minimumValue = Constants.volumeMinimumValue,
     args = args
   )
 

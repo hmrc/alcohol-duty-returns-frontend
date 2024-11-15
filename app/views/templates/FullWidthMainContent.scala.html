@@ -14,12 +14,13 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
 @(contentBlock: Html)
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+<div class="@Css.gridRowCssClass">
+  <div class="@Css.gridColumnFullCssClass">
     @contentBlock
   </div>
 </div>

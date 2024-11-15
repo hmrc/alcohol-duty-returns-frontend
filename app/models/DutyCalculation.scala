@@ -42,10 +42,13 @@ case class RepackagedDutyChangeRequest(
   newDuty: BigDecimal,
   oldDuty: BigDecimal
 )
+
 object RepackagedDutyChangeRequest {
   implicit val formats: OFormat[RepackagedDutyChangeRequest] = Json.format[RepackagedDutyChangeRequest]
 }
+
 case class AdjustmentTotalCalculationRequest(dutyList: Seq[BigDecimal])
+
 object AdjustmentTotalCalculationRequest {
   implicit val formats: OFormat[AdjustmentTotalCalculationRequest] = Json.format[AdjustmentTotalCalculationRequest]
 }

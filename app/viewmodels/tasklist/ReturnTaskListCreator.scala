@@ -16,6 +16,7 @@
 
 package viewmodels.tasklist
 
+import config.Constants
 import models.adjustment.AdjustmentType
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
 import pages.QuestionPage
@@ -33,6 +34,12 @@ import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 import javax.inject.Inject
 
 class ReturnTaskListCreator @Inject() () {
+  object SectionName {
+    val adjustment    = "adjustment"
+    val dutySuspended = "dutySuspended"
+    val spirits       = "spirits"
+  }
+
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
     createTaskListSection: () => Seq[TaskListItem],
@@ -167,7 +174,7 @@ class ReturnTaskListCreator @Inject() () {
 
     createDeclarationTask(
       getDeclarationState,
-      "adjustment",
+      SectionName.adjustment,
       controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url,
       inProgressRoute,
       controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url
@@ -239,7 +246,7 @@ class ReturnTaskListCreator @Inject() () {
 
     createDeclarationTask(
       getDeclarationState,
-      "dutySuspended",
+      SectionName.dutySuspended,
       controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
       controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
       controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
@@ -280,7 +287,7 @@ class ReturnTaskListCreator @Inject() () {
 
     createDeclarationTask(
       getDeclarationState,
-      "spirits",
+      SectionName.spirits,
       controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
       controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
       controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
@@ -389,10 +396,10 @@ class ReturnTaskListCreator @Inject() () {
     val adjustmentListQuestion = userAnswers.get(AdjustmentListPage).getOrElse(true)
     val taskListItems          = Seq(
       Some(returnAdjustmentJourneyTaskListItem(userAnswers)),
-      if (underDeclarationTotal >= 1000 && !adjustmentListQuestion) {
+      if (underDeclarationTotal >= Constants.overUnderDeclarationThreshold && !adjustmentListQuestion) {
         Some(returnAdjustmentJourneyUnderDeclarationTaskListItem(userAnswers))
       } else { None },
-      if (overDeclarationTotal.abs >= 1000 && !adjustmentListQuestion) {
+      if (overDeclarationTotal.abs >= Constants.overUnderDeclarationThreshold && !adjustmentListQuestion) {
         Some(returnAdjustmentJourneyOverDeclarationTaskListItem(userAnswers))
       } else { None }
     ).flatten
@@ -400,7 +407,7 @@ class ReturnTaskListCreator @Inject() () {
       userAnswers.get(DeclareAdjustmentQuestionPage),
       () => taskListItems,
       controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(_).url,
-      sectionName = "adjustment"
+      sectionName = SectionName.adjustment
     )
   }
 
@@ -409,7 +416,7 @@ class ReturnTaskListCreator @Inject() () {
       userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
       () => Seq(returnDSDJourneyTaskListItem(userAnswers)),
       controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(_).url,
-      sectionName = "dutySuspended"
+      sectionName = SectionName.dutySuspended
     )
 
   def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
@@ -417,6 +424,6 @@ class ReturnTaskListCreator @Inject() () {
       userAnswers.get(DeclareQuarterlySpiritsPage),
       () => Seq(returnQSJourneyTaskListItem(userAnswers)),
       controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(_).url,
-      sectionName = "spirits"
+      sectionName = SectionName.spirits
     )
 }

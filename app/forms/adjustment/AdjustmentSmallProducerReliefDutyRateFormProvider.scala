@@ -16,23 +16,26 @@
 
 package forms.adjustment
 
+import config.Constants
 import forms.mappings.Mappings
+
 import javax.inject.Inject
 import play.api.data.Form
 
 class AdjustmentSmallProducerReliefDutyRateFormProvider @Inject() extends Mappings {
-
   def apply(): Form[BigDecimal] =
     Form(
       "adjustment-small-producer-relief-duty-rate-input" -> bigDecimal(
-        2,
+        Constants.dutyMaximumDecimalPlaces,
         "adjustmentSmallProducerReliefDutyRate.error.required",
         "adjustmentSmallProducerReliefDutyRate.error.nonNumeric",
         "adjustmentSmallProducerReliefDutyRate.error.decimalPlaces"
       )
-        .verifying(minimumValue(BigDecimal(0.00), "adjustmentSmallProducerReliefDutyRate.error.minimumRequired"))
         .verifying(
-          maximumValue(BigDecimal(999999999.99), "adjustmentSmallProducerReliefDutyRate.error.maximumRequired")
+          minimumValue(Constants.dutyMinimumValue, "adjustmentSmallProducerReliefDutyRate.error.minimumRequired")
+        )
+        .verifying(
+          maximumValue(Constants.dutyMaximumValue, "adjustmentSmallProducerReliefDutyRate.error.maximumRequired")
         )
     )
 }

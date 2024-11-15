@@ -14,9 +14,11 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this()
 
-@(elements: Seq[Content], classes: String = "govuk-list govuk-list--number", id: Option[String] = None)
+@(elements: Seq[Content], classes: String = Css.numberListCssClass, id: Option[String] = None)
 
 <ol class="@classes" @id.map{id => id="@id"}>
     @elements.map { element =>

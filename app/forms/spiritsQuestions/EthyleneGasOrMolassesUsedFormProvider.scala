@@ -16,33 +16,37 @@
 
 package forms.spiritsQuestions
 
-import javax.inject.Inject
+import config.Constants
 
+import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
 import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 
 class EthyleneGasOrMolassesUsedFormProvider @Inject() extends Mappings {
-
   def apply(): Form[EthyleneGasOrMolassesUsed] = Form(
     mapping(
       "ethyleneGas"      -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "ethyleneGasOrMolassesUsed.error.ethyleneGas.required",
         "ethyleneGasOrMolassesUsed.error.ethyleneGas.nonNumeric",
         "ethyleneGasOrMolassesUsed.error.ethyleneGas.decimalPlaces"
-      ).verifying(minimumValue(BigDecimal(0.00), "ethyleneGasOrMolassesUsed.error.ethyleneGas.minimumRequired"))
-        .verifying(
-          maximumValue(BigDecimal(999999999.99), "ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired")
-        ),
+      ).verifying(
+        minimumValue(Constants.volumeMinimumValueIncZero, "ethyleneGasOrMolassesUsed.error.ethyleneGas.minimumRequired")
+      ).verifying(
+        maximumValue(Constants.volumeMaximumValue, "ethyleneGasOrMolassesUsed.error.ethyleneGas.maximumRequired")
+      ),
       "molasses"         -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "ethyleneGasOrMolassesUsed.error.molasses.required",
         "ethyleneGasOrMolassesUsed.error.molasses.nonNumeric",
         "ethyleneGasOrMolassesUsed.error.molasses.decimalPlaces"
-      ).verifying(minimumValue(BigDecimal(0.00), "ethyleneGasOrMolassesUsed.error.molasses.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "ethyleneGasOrMolassesUsed.error.molasses.maximumRequired")),
+      ).verifying(
+        minimumValue(Constants.volumeMinimumValueIncZero, "ethyleneGasOrMolassesUsed.error.molasses.minimumRequired")
+      ).verifying(
+        maximumValue(Constants.volumeMaximumValue, "ethyleneGasOrMolassesUsed.error.molasses.maximumRequired")
+      ),
       "otherIngredients" -> boolean("ethyleneGasOrMolassesUsed.error.required")
     )(EthyleneGasOrMolassesUsed.apply)(EthyleneGasOrMolassesUsed.unapply)
   )

@@ -16,6 +16,8 @@
 
 package forms.spiritsQuestions
 
+import config.Constants
+
 import javax.inject.Inject
 import forms.mappings.Mappings
 import models.UnitsOfMeasure
@@ -24,32 +26,32 @@ import play.api.data.Forms._
 import models.spiritsQuestions.OtherIngredientsUsed
 
 class OtherIngredientsUsedFormProvider @Inject() extends Mappings {
-  import OtherIngredientsUsedFormProvider._
-
   def apply(): Form[OtherIngredientsUsed] = Form(
     mapping(
       "otherIngredientsUsedTypes"    -> text("otherIngredientsUsed.error.otherIngredientsUsedTypes.required")
         .verifying(
-          maxLength(otherIngredientTypesMaxLength, "otherIngredientsUsed.error.otherIngredientsUsedTypes.length")
+          maxLength(
+            Constants.otherIngredientsUsedMaxLength,
+            "otherIngredientsUsed.error.otherIngredientsUsedTypes.length"
+          )
         ),
       "otherIngredientsUsedUnit"     -> UnitsOfMeasure.formField,
       "otherIngredientsUsedQuantity" -> bigDecimal(
-        quantityMaxDecimalPlaces,
+        Constants.maximumDecimalPlaces,
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.required",
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.nonNumeric",
         "otherIngredientsUsed.error.otherIngredientsUsedQuantity.decimalPlaces"
       ).verifying(
-        minimumValue(quantityMinValue, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired")
+        minimumValue(
+          Constants.quantityMinimumValue,
+          "otherIngredientsUsed.error.otherIngredientsUsedQuantity.minimumRequired"
+        )
       ).verifying(
-        maximumValue(quantityMaxValue, "otherIngredientsUsed.error.otherIngredientsUsedQuantity.maximumRequired")
+        maximumValue(
+          Constants.quantityMaximumValue,
+          "otherIngredientsUsed.error.otherIngredientsUsedQuantity.maximumRequired"
+        )
       )
     )(OtherIngredientsUsed.apply)(OtherIngredientsUsed.unapply)
   )
-}
-
-object OtherIngredientsUsedFormProvider {
-  val otherIngredientTypesMaxLength = 120
-  val quantityMaxDecimalPlaces      = 2
-  val quantityMinValue              = BigDecimal(0.01)
-  val quantityMaxValue              = BigDecimal(999999999.99)
 }

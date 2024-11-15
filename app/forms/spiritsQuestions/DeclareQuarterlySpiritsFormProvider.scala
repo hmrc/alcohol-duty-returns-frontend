@@ -22,7 +22,6 @@ import forms.mappings.Mappings
 import play.api.data.Form
 
 class DeclareQuarterlySpiritsFormProvider @Inject() extends Mappings {
-
   def apply(): Form[Boolean] =
     Form(
       "declareQuarterlySpirits-yesNoValue" -> boolean("declareQuarterlySpirits.error.required")

@@ -16,33 +16,42 @@
 
 package forms.dutySuspended
 
-import javax.inject.Inject
+import config.Constants
 
+import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
 import models.dutySuspended.DutySuspendedCider
 
 class DutySuspendedCiderFormProvider @Inject() extends Mappings {
-
   def apply(): Form[DutySuspendedCider] = Form(
     mapping(
       "totalCider"         -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "dutySuspendedCider.error.totalCider.required",
         "dutySuspendedCider.error.totalCider.nonNumeric",
         "dutySuspendedCider.error.totalCider.decimalPlaces"
-      ).verifying(minimumValue(BigDecimal(-999999999.99), "dutySuspendedCider.error.totalCider.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "dutySuspendedCider.error.totalCider.maximumRequired")),
+      ).verifying(
+        minimumValue(Constants.dutySuspendedVolumeMinimumValue, "dutySuspendedCider.error.totalCider.minimumRequired")
+      ).verifying(
+        maximumValue(Constants.dutySuspendedVolumeMaximumValue, "dutySuspendedCider.error.totalCider.maximumRequired")
+      ),
       "pureAlcoholInCider" -> bigDecimal(
-        4,
+        Constants.lpaMaximumDecimalPlaces,
         "dutySuspendedCider.error.pureAlcoholInCider.required",
         "dutySuspendedCider.error.pureAlcoholInCider.nonNumeric",
         "dutySuspendedCider.error.pureAlcoholInCider.decimalPlaces"
       ).verifying(
-        minimumValue(BigDecimal(-999999999.9999), "dutySuspendedCider.error.pureAlcoholInCider.minimumRequired")
+        minimumValue(
+          Constants.dutySuspendedLpaMinimumValue,
+          "dutySuspendedCider.error.pureAlcoholInCider.minimumRequired"
+        )
       ).verifying(
-        maximumValue(BigDecimal(999999999.9999), "dutySuspendedCider.error.pureAlcoholInCider.maximumRequired")
+        maximumValue(
+          Constants.dutySuspendedLpaMaximumValue,
+          "dutySuspendedCider.error.pureAlcoholInCider.maximumRequired"
+        )
       )
     )(DutySuspendedCider.apply)(DutySuspendedCider.unapply)
   )

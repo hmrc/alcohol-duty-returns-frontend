@@ -16,31 +16,31 @@
 
 package forms.spiritsQuestions
 
-import javax.inject.Inject
+import config.Constants
 
+import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
 import models.spiritsQuestions.Whisky
 
 class WhiskyFormProvider @Inject() extends Mappings {
-
   def apply(): Form[Whisky] = Form(
     mapping(
       "scotchWhisky" -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "whisky.error.scotchWhisky.required",
         "whisky.error.scotchWhisky.nonNumeric",
         "whisky.error.scotchWhisky.decimalPlaces"
-      ).verifying(minimumValue(BigDecimal(0.00), "whisky.error.scotchWhisky.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "whisky.error.scotchWhisky.maximumRequired")),
+      ).verifying(minimumValue(Constants.volumeMinimumValueIncZero, "whisky.error.scotchWhisky.minimumRequired"))
+        .verifying(maximumValue(Constants.volumeMaximumValue, "whisky.error.scotchWhisky.maximumRequired")),
       "irishWhiskey" -> bigDecimal(
-        2,
+        Constants.maximumDecimalPlaces,
         "whisky.error.irishWhiskey.required",
         "whisky.error.irishWhiskey.nonNumeric",
         "whisky.error.irishWhiskey.decimalPlaces"
-      ).verifying(minimumValue(BigDecimal(0.00), "whisky.error.irishWhiskey.minimumRequired"))
-        .verifying(maximumValue(BigDecimal(999999999.99), "whisky.error.irishWhiskey.maximumRequired"))
+      ).verifying(minimumValue(Constants.volumeMinimumValueIncZero, "whisky.error.irishWhiskey.minimumRequired"))
+        .verifying(maximumValue(Constants.volumeMaximumValue, "whisky.error.irishWhiskey.maximumRequired"))
     )(Whisky.apply)(Whisky.unapply)
   )
 }
