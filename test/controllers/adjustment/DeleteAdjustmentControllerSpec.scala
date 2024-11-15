@@ -251,7 +251,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val mockHelper               = mock[AdjustmentOverUnderDeclarationCalculationHelper]
       when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
-        emptyUserAnswers
+        userAnswers
           .set(OverDeclarationTotalPage, BigDecimal(1500))
           .success
           .value
@@ -261,7 +261,6 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
           bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
         )
         .build()
@@ -271,7 +270,9 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
         val result  = route(application, request).value
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(1)
+          .url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
       }
