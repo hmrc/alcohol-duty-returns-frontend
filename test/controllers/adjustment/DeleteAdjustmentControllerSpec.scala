@@ -17,18 +17,24 @@
 package controllers.adjustment
 
 import base.SpecBase
+import cats.data.NonEmptySeq
 import forms.adjustment.DeleteAdjustmentFormProvider
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.{DeleteAdjustmentPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import models.AlcoholRegime.Beer
+import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.adjustment.AdjustmentOverUnderDeclarationCalculationHelper
 import views.html.adjustment.DeleteAdjustmentView
 
+import java.time.YearMonth
 import scala.concurrent.Future
 
 class DeleteAdjustmentControllerSpec extends SpecBase {
@@ -170,6 +176,96 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
           bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
         )
         .build()
+      running(application) {
+        val request = FakeRequest(POST, deleteAdjustmentRoute)
+          .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+      }
+    }
+
+    "must clear the declaration question if the user answered 'yes' previously and the list is empty" in {
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockHelper               = mock[AdjustmentOverUnderDeclarationCalculationHelper]
+      when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
+        emptyUserAnswers
+          .set(OverDeclarationTotalPage, BigDecimal(1500))
+          .success
+          .value
+      )
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application              = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, deleteAdjustmentRoute)
+          .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
+        val result  = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.DeclareAdjustmentQuestionController
+          .onPageLoad(NormalMode)
+          .url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+      }
+    }
+
+    "must not clear the declaration question if the user answered 'yes' previously and there are items in the list" in {
+      val rateBand            = RateBand(
+        "310",
+        "some band",
+        RateType.DraughtRelief,
+        Some(BigDecimal(10.99)),
+        Set(
+          RangeDetailsByRegime(
+            AlcoholRegime.Beer,
+            NonEmptySeq.one(
+              ABVRange(
+                AlcoholType.Beer,
+                AlcoholByVolume(0.1),
+                AlcoholByVolume(5.8)
+              )
+            )
+          )
+        )
+      )
+      val adjustmentEntry     = AdjustmentEntry(
+        pureAlcoholVolume = Some(BigDecimal(12.12)),
+        totalLitresVolume = Some(BigDecimal(12.12)),
+        rateBand = Some(rateBand),
+        spoiltRegime = Some(Beer),
+        duty = Some(BigDecimal(12.12)),
+        adjustmentType = Some(Spoilt),
+        period = Some(YearMonth.of(24, 1))
+      )
+      val adjustmentEntryList = List(adjustmentEntry, adjustmentEntry.copy(adjustmentType = Some(Overdeclaration)))
+      val userAnswers         = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
+
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockHelper               = mock[AdjustmentOverUnderDeclarationCalculationHelper]
+      when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
+        emptyUserAnswers
+          .set(OverDeclarationTotalPage, BigDecimal(1500))
+          .success
+          .value
+      )
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
+        )
+        .build()
+
       running(application) {
         val request = FakeRequest(POST, deleteAdjustmentRoute)
           .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
