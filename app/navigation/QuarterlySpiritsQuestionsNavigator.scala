@@ -58,6 +58,8 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () {
     userAnswers.get(SpiritTypePage) match {
       case Some(spiritsType) if SpiritTypePage.hasMadeOtherSpirits(spiritsType) =>
         controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(NormalMode)
+      case Some(_)                                                              =>
+        controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       case _                                                                    => routes.JourneyRecoveryController.onPageLoad()
     }
 

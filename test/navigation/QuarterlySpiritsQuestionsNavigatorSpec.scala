@@ -90,6 +90,20 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           ) mustBe controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(NormalMode)
         }
 
+        "must to the CYA page if the answer if Other spirits is not checked" in {
+          navigator.nextPage(
+            pages.spiritsQuestions.SpiritTypePage,
+            NormalMode,
+            emptyUserAnswers
+              .set(
+                pages.spiritsQuestions.SpiritTypePage,
+                Set[SpiritType](SpiritType.Maltspirits, SpiritType.Grainspirits)
+              )
+              .success
+              .value
+          ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+        }
+
         "must go to the Journey Recovery page if there is an issue" in {
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
