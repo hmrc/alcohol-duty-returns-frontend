@@ -201,9 +201,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
 
       "if one of the necessary pages has not been populated" in new SetUp {
-        val mockCacheConnector = mock[CacheConnector]
+        val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-        when(mockCacheConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
         val userAnswers = completedUserAnswers
           .remove(List(OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage))
@@ -219,7 +219,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .configure(additionalConfig)
           .overrides(
-            bind[CacheConnector].toInstance(mockCacheConnector)
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
 

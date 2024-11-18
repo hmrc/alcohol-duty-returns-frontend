@@ -53,7 +53,7 @@ trait Generators extends ModelGenerators {
     arbitrary[BigInt] suchThat (x => x < Int.MinValue)
 
   def nonNumerics: Gen[String] =
-    alphaStr suchThat (_.size > 0)
+    alphaStr suchThat (_.nonEmpty)
 
   def decimals: Gen[String] =
     arbitrary[BigDecimal]
@@ -110,10 +110,22 @@ trait Generators extends ModelGenerators {
       chars  <- listOfN(length, arbitrary[Char])
     } yield chars.mkString
 
+  def alphaNumericStringsWithMaxLength(maxLength: Int): Gen[String] =
+    for {
+      length <- choose(1, maxLength)
+      chars  <- listOfN(length, alphaNumChar)
+    } yield chars.mkString
+
   def stringsLongerThan(minLength: Int): Gen[String] = for {
     maxLength <- (minLength * 2).max(100)
     length    <- Gen.chooseNum(minLength + 1, maxLength)
     chars     <- listOfN(length, arbitrary[Char])
+  } yield chars.mkString
+
+  def alphanumericStringsLongerThan(minLength: Int): Gen[String] = for {
+    maxLength <- (minLength * 2).max(100)
+    length    <- Gen.chooseNum(minLength + 1, maxLength)
+    chars     <- listOfN(length, alphaNumChar)
   } yield chars.mkString
 
   def stringsExceptSpecificValues(excluded: Seq[String]): Gen[String] =

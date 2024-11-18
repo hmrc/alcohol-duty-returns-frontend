@@ -33,10 +33,10 @@ class OtherSpiritsProducedFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      alphaNumericStringsWithMaxLength(maxLength)
     )
 
-    behave like fieldWithMaxLength(
+    behave like alphanumericFieldWithMaxLength(
       form,
       fieldName,
       maxLength = maxLength,
