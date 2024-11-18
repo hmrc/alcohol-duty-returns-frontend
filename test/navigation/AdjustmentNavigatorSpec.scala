@@ -25,7 +25,7 @@ import pages._
 import models._
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
-import pages.adjustment.{AdjustmentListPage, DeclareAdjustmentQuestionPage}
+import pages.adjustment.{AdjustmentListPage, DeclareAdjustmentQuestionPage, DeleteAdjustmentPage}
 
 class AdjustmentNavigatorSpec extends SpecBase {
   val navigator = new AdjustmentNavigator
@@ -305,6 +305,25 @@ class AdjustmentNavigatorSpec extends SpecBase {
           NormalMode,
           emptyUserAnswers
         ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
+
+      "must go from the DeleteAdjustmentPage page to the AdjustmentType page if the user selected 'Yes' and the Adjustment list is not empty" in {
+        navigator.nextPage(
+          DeleteAdjustmentPage,
+          NormalMode,
+          emptyUserAnswers
+            .set(pages.adjustment.AdjustmentEntryListPage, Seq(AdjustmentEntry(adjustmentType = Some(Spoilt))))
+            .success
+            .value
+        ) mustBe controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
+      }
+
+      "must go from the DeleteAdjustmentPage page to the Adjustment to declare page if the user selected 'Yes' and the Adjustment list is empty" in {
+        navigator.nextPage(
+          DeleteAdjustmentPage,
+          NormalMode,
+          emptyUserAnswers
+        ) mustBe controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
       }
     }
   }
