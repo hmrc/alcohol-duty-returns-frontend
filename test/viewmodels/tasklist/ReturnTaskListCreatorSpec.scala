@@ -49,7 +49,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.returns.needToDeclare.notStarted")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
       result.taskList.items.head.href          shouldBe Some(
         controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
       )
@@ -68,7 +68,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.returns.needToDeclare.no")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
       result.taskList.items.head.href          shouldBe Some(
         controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
       )
@@ -88,7 +88,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.returns.needToDeclare.yes")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
       result.taskList.items.head.href          shouldBe Some(
         controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
       )
@@ -113,7 +113,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
@@ -122,7 +122,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items
             .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
             case Some(task) =>
-              task.status shouldBe AlcholDutyTaskListItemStatus.notStarted
+              task.status shouldBe AlcoholDutyTaskListItemStatus.notStarted
               task.href   shouldBe Some(
                 controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
               )
@@ -171,7 +171,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
@@ -179,7 +179,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items
           .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
           case Some(task) =>
-            task.status shouldBe AlcholDutyTaskListItemStatus.completed
+            task.status shouldBe AlcoholDutyTaskListItemStatus.completed
             task.href   shouldBe Some(
               controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url
             )
@@ -210,7 +210,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.returns.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
         )
@@ -218,7 +218,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items
           .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
           case Some(task) =>
-            task.status shouldBe AlcholDutyTaskListItemStatus.inProgress
+            task.status shouldBe AlcoholDutyTaskListItemStatus.inProgress
             task.href   shouldBe Some(
               controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
             )
@@ -240,7 +240,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.adjustment.needToDeclare.notStarted")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
       result.taskList.items.head.href          shouldBe Some(
         controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url
       )
@@ -259,7 +259,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.adjustment.needToDeclare.no")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
       result.taskList.items.head.href          shouldBe Some(
         controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
       )
@@ -280,7 +280,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.adjustment.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
         )
@@ -288,7 +288,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.adjustment.notStarted")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
         result.taskList.items(1).href          shouldBe Some(
           controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
         )
@@ -312,7 +312,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.adjustment.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
         )
@@ -320,7 +320,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.adjustment.inProgress")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
         result.taskList.items(1).href          shouldBe Some(
           controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
         )
@@ -338,7 +338,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.adjustment.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
         )
@@ -346,7 +346,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.adjustment.inProgress")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
         result.taskList.items(1).href          shouldBe Some(
           controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
         )
@@ -363,7 +363,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.adjustment.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
         )
@@ -371,7 +371,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.adjustment.inProgress")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
         result.taskList.items(1).href          shouldBe Some(
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
         )
@@ -394,7 +394,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.adjustment.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
         )
@@ -402,7 +402,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.adjustment.completed")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items(1).href          shouldBe Some(
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
         )
@@ -431,7 +431,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(2).title.content shouldBe Text(
           messages("taskList.section.adjustment.under-declaration")
         )
-        result.taskList.items(2).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+        result.taskList.items(2).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
         result.taskList.items(2).href          shouldBe Some(
           controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
         )
@@ -439,7 +439,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(3).title.content shouldBe Text(
           messages("taskList.section.adjustment.over-declaration")
         )
-        result.taskList.items(3).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+        result.taskList.items(3).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
         result.taskList.items(3).href          shouldBe Some(
           controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
         )
@@ -471,7 +471,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(2).title.content shouldBe Text(
           messages("taskList.section.adjustment.under-declaration")
         )
-        result.taskList.items(2).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(2).status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items(2).href          shouldBe Some(
           controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
         )
@@ -479,7 +479,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(3).title.content shouldBe Text(
           messages("taskList.section.adjustment.over-declaration")
         )
-        result.taskList.items(3).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(3).status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items(3).href          shouldBe Some(
           controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
         )
@@ -498,7 +498,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.dutySuspended.needToDeclare.notStarted")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
       result.taskList.items.head.href          shouldBe Some(
         controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
       )
@@ -517,7 +517,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.dutySuspended.needToDeclare.no")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
       result.taskList.items.head.href          shouldBe Some(
         controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
       )
@@ -538,7 +538,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.dutySuspended.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
         )
@@ -546,7 +546,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.dutySuspended.notStarted")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
         result.taskList.items(1).href          shouldBe Some(
           controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url
         )
@@ -588,7 +588,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.dutySuspended.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
         )
@@ -596,7 +596,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.dutySuspended.inProgress")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
         result.taskList.items(1).href          shouldBe Some(
           controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url
         )
@@ -642,7 +642,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.dutySuspended.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
         )
@@ -650,7 +650,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.dutySuspended.completed")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items(1).href          shouldBe Some(
           controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
         )
@@ -685,7 +685,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.dutySuspended.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
         )
@@ -693,7 +693,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.dutySuspended.completed")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items(1).href          shouldBe Some(
           controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
         )
@@ -732,7 +732,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.title.content shouldBe Text(
           messages("taskList.section.dutySuspended.needToDeclare.yes")
         )
-        result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items.head.href          shouldBe Some(
           controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
         )
@@ -740,7 +740,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items(1).title.content shouldBe Text(
           messages("taskList.section.dutySuspended.completed")
         )
-        result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
         result.taskList.items(1).href          shouldBe Some(
           controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
         )
@@ -758,7 +758,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.spirits.needToDeclare.notStarted")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
       result.taskList.items.head.href          shouldBe Some(
         controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
       )
@@ -777,7 +777,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.spirits.needToDeclare.no")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
       result.taskList.items.head.href          shouldBe Some(
         controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
       )
@@ -804,7 +804,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items.head.title.content shouldBe Text(
             messages("taskList.section.spirits.needToDeclare.yes")
           )
-          result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+          result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
           result.taskList.items.head.href          shouldBe Some(
             controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
           )
@@ -812,7 +812,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items(1).title.content shouldBe Text(
             messages("taskList.section.spirits.notStarted")
           )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+          result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
           result.taskList.items(1).href          shouldBe Some(
             controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
           )
@@ -834,7 +834,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             result.taskList.items.head.title.content shouldBe Text(
               messages("taskList.section.spirits.needToDeclare.yes")
             )
-            result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+            result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
             result.taskList.items.head.href          shouldBe Some(
               controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
             )
@@ -842,7 +842,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             result.taskList.items(1).title.content shouldBe Text(
               messages("taskList.section.spirits.inProgress")
             )
-            result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+            result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
             result.taskList.items(1).href          shouldBe Some(
               controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
             )
@@ -865,7 +865,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items(1).title.content shouldBe Text(
             messages("taskList.section.spirits.inProgress")
           )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.inProgress
+          result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
           result.taskList.items(1).href          shouldBe Some(
             controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
           )
@@ -888,7 +888,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items.head.title.content shouldBe Text(
             messages("taskList.section.spirits.needToDeclare.yes")
           )
-          result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.completed
+          result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
           result.taskList.items.head.href          shouldBe Some(
             controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
           )
@@ -896,7 +896,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items(1).title.content shouldBe Text(
             messages("taskList.section.spirits.completed")
           )
-          result.taskList.items(1).status        shouldBe AlcholDutyTaskListItemStatus.completed
+          result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
           result.taskList.items(1).href          shouldBe Some(
             controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
           )
@@ -914,7 +914,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
           val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
-          result.taskList.items(1).status shouldBe AlcholDutyTaskListItemStatus.completed
+          result.taskList.items(1).status shouldBe AlcoholDutyTaskListItemStatus.completed
         }
       }
     }
@@ -931,7 +931,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.checkAndSubmit.needToDeclare")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.cannotStart
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.cannotStart
       result.taskList.items.head.href          shouldBe None
     }
 
@@ -944,7 +944,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       result.taskList.items.head.title.content shouldBe Text(
         messages("taskList.section.checkAndSubmit.needToDeclare")
       )
-      result.taskList.items.head.status        shouldBe AlcholDutyTaskListItemStatus.notStarted
+      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
       result.taskList.items.head.href          shouldBe Some(
         controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onPageLoad().url
       )

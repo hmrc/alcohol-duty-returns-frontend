@@ -38,26 +38,26 @@ class AlcoholDutyTaskListSpec extends SpecBase {
             "task1",
             TaskList(
               Seq(
-                TaskListItem(status = AlcholDutyTaskListItemStatus.completed),
-                TaskListItem(status = AlcholDutyTaskListItemStatus.completed)
+                TaskListItem(status = AlcoholDutyTaskListItemStatus.completed),
+                TaskListItem(status = AlcoholDutyTaskListItemStatus.completed)
               )
             ),
-            AlcholDutyTaskListItemStatus.completed
+            AlcoholDutyTaskListItemStatus.completed
           ),
           Section(
             "task2",
             TaskList(
               Seq(
-                TaskListItem(status = AlcholDutyTaskListItemStatus.completed),
-                TaskListItem(status = AlcholDutyTaskListItemStatus.notStarted)
+                TaskListItem(status = AlcoholDutyTaskListItemStatus.completed),
+                TaskListItem(status = AlcoholDutyTaskListItemStatus.notStarted)
               )
             ),
-            AlcholDutyTaskListItemStatus.completed
+            AlcoholDutyTaskListItemStatus.completed
           ),
           Section(
             "task3",
-            TaskList(Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.notStarted))),
-            AlcholDutyTaskListItemStatus.completed
+            TaskList(Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.notStarted))),
+            AlcoholDutyTaskListItemStatus.completed
           )
         ),
         "expiry"
@@ -75,26 +75,26 @@ class AlcoholDutyTaskListSpec extends SpecBase {
             "task1",
             TaskList(
               Seq(
-                TaskListItem(status = AlcholDutyTaskListItemStatus.completed),
-                TaskListItem(status = AlcholDutyTaskListItemStatus.completed)
+                TaskListItem(status = AlcoholDutyTaskListItemStatus.completed),
+                TaskListItem(status = AlcoholDutyTaskListItemStatus.completed)
               )
             ),
-            AlcholDutyTaskListItemStatus.completed
+            AlcoholDutyTaskListItemStatus.completed
           ),
           Section(
             "task2",
             TaskList(
               Seq(
-                TaskListItem(status = AlcholDutyTaskListItemStatus.completed),
-                TaskListItem(status = AlcholDutyTaskListItemStatus.completed)
+                TaskListItem(status = AlcoholDutyTaskListItemStatus.completed),
+                TaskListItem(status = AlcoholDutyTaskListItemStatus.completed)
               )
             ),
-            AlcholDutyTaskListItemStatus.completed
+            AlcoholDutyTaskListItemStatus.completed
           ),
           Section(
             "task3",
-            TaskList(Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.completed))),
-            AlcholDutyTaskListItemStatus.completed
+            TaskList(Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.completed))),
+            AlcoholDutyTaskListItemStatus.completed
           )
         ),
         "expiry"

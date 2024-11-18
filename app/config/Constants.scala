@@ -64,7 +64,6 @@ object Constants {
   val oneQuarterCssClass         = "govuk-!-width-one-quarter"
   val oneHalfCssClass            = "govuk-!-width-one-half"
   val threeQuartersCssClass      = "govuk-!-width-three-quarters"
-  val twoThirdsCssClass          = "govuk-!-width-two-thirds"
   val textAlignRightCssClass     = "text-align-right"
   val boldFontCssClass           = "govuk-!-font-weight-bold"
   val visuallyHiddenCssClass     = "govuk-visually-hidden"

@@ -18,7 +18,7 @@ package viewmodels.tasklist
 
 import config.Constants
 import models.adjustment.AdjustmentType
-import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, UserAnswers}
+import models.{AdjustmentSection, AlcoholRegime, AlcoholRegimes, CheckMode, DutySuspendedSection, Mode, NormalMode, SpiritType, SpiritsSection, TaskListSection, UserAnswers}
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
@@ -34,17 +34,12 @@ import viewmodels.tasklist.DeclarationState.{Completed, InProgress, NotStarted}
 import javax.inject.Inject
 
 class ReturnTaskListCreator @Inject() () {
-  object SectionName {
-    val adjustment    = "adjustment"
-    val dutySuspended = "dutySuspended"
-    val spirits       = "spirits"
-  }
 
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
     createTaskListSection: () => Seq[TaskListItem],
     declarationController: Mode => String,
-    sectionName: String
+    section: TaskListSection
   )(implicit
     messages: Messages
   ): Section = {
@@ -52,8 +47,8 @@ class ReturnTaskListCreator @Inject() () {
       case Some(true) =>
         Seq(
           TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.yes"))),
-            status = AlcholDutyTaskListItemStatus.completed,
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare.yes"))),
+            status = AlcoholDutyTaskListItemStatus.completed,
             href = Some(declarationController(CheckMode))
           )
         ) ++ createTaskListSection()
@@ -61,8 +56,8 @@ class ReturnTaskListCreator @Inject() () {
       case Some(false) =>
         Seq(
           TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.needToDeclare.no"))),
-            status = AlcholDutyTaskListItemStatus.completed,
+            title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare.no"))),
+            status = AlcoholDutyTaskListItemStatus.completed,
             href = Some(declarationController(CheckMode))
           )
         )
@@ -71,35 +66,36 @@ class ReturnTaskListCreator @Inject() () {
         Seq(
           TaskListItem(
             title = TaskListItemTitle(
-              content = Text(messages(s"taskList.section.$sectionName.needToDeclare.notStarted")),
-              classes = Constants.twoThirdsCssClass
+              content = Text(messages(s"taskList.section.${section.name}.needToDeclare.notStarted"))
             ),
-            hint = addHintForSpiritsJourney(sectionName),
-            status = AlcholDutyTaskListItemStatus.notStarted,
+            hint = addHintForSpiritsJourney(section),
+            status = AlcoholDutyTaskListItemStatus.notStarted,
             href = Some(declarationController(NormalMode))
           )
         )
     }
 
     Section(
-      title = messages(s"taskList.section.$sectionName.heading"),
+      title = messages(s"taskList.section.${section.name}.heading"),
       taskList = TaskList(items = taskListItems),
-      statusCompleted = AlcholDutyTaskListItemStatus.completed
+      statusCompleted = AlcoholDutyTaskListItemStatus.completed
     )
   }
 
-  private def addHintForSpiritsJourney(sectionName: String)(implicit
+  private def addHintForSpiritsJourney(section: TaskListSection)(implicit
     messages: Messages
   ): Option[Hint] =
-    sectionName match {
-      case "spirits" =>
-        Some(Hint(content = Text(messages("taskList.section.spirits.hint")), classes = Constants.twoThirdsCssClass))
-      case _         => None
+    section match {
+      case SpiritsSection =>
+        Some(
+          Hint(content = Text(messages(s"taskList.section.${section.name}.hint")))
+        )
+      case _              => None
     }
 
   private def createDeclarationTask(
     getDeclarationState: () => DeclarationState,
-    sectionName: String,
+    section: TaskListSection,
     notStartedUrl: String,
     inProgressUrl: String,
     startedOrCompleteUrl: String
@@ -107,20 +103,20 @@ class ReturnTaskListCreator @Inject() () {
     getDeclarationState() match {
       case NotStarted =>
         TaskListItem(
-          title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.notStarted"))),
-          status = AlcholDutyTaskListItemStatus.notStarted,
+          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.notStarted"))),
+          status = AlcoholDutyTaskListItemStatus.notStarted,
           href = Some(notStartedUrl)
         )
       case InProgress =>
         TaskListItem(
-          title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.inProgress"))),
-          status = AlcholDutyTaskListItemStatus.inProgress,
+          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.inProgress"))),
+          status = AlcoholDutyTaskListItemStatus.inProgress,
           href = Some(inProgressUrl)
         )
       case Completed  =>
         TaskListItem(
-          title = TaskListItemTitle(content = Text(messages(s"taskList.section.$sectionName.completed"))),
-          status = AlcholDutyTaskListItemStatus.completed,
+          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.completed"))),
+          status = AlcoholDutyTaskListItemStatus.completed,
           href = Some(startedOrCompleteUrl)
         )
     }
@@ -138,20 +134,20 @@ class ReturnTaskListCreator @Inject() () {
           case (Some(_), _)    =>
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
-              status = AlcholDutyTaskListItemStatus.completed,
+              status = AlcoholDutyTaskListItemStatus.completed,
               href = Some(controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
             )
           case (None, Some(_)) =>
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
-              status = AlcholDutyTaskListItemStatus.inProgress,
+              status = AlcoholDutyTaskListItemStatus.inProgress,
               href =
                 Some(controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
             )
           case _               =>
             TaskListItem(
               title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.$regime"))),
-              status = AlcholDutyTaskListItemStatus.notStarted,
+              status = AlcoholDutyTaskListItemStatus.notStarted,
               href =
                 Some(controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url)
             )
@@ -186,7 +182,7 @@ class ReturnTaskListCreator @Inject() () {
 
     createDeclarationTask(
       getDeclarationState,
-      SectionName.adjustment,
+      AdjustmentSection,
       controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url,
       inProgressRoute,
       controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url
@@ -224,7 +220,7 @@ class ReturnTaskListCreator @Inject() () {
       .get(AdjustmentListPage)
       .filter(_ == false)
       .flatMap(_ => userAnswers.get(reasonPage))
-      .fold(AlcholDutyTaskListItemStatus.notStarted)(_ => AlcholDutyTaskListItemStatus.completed)
+      .fold(AlcoholDutyTaskListItemStatus.notStarted)(_ => AlcoholDutyTaskListItemStatus.completed)
 
     TaskListItem(
       title = title,
@@ -258,7 +254,7 @@ class ReturnTaskListCreator @Inject() () {
 
     createDeclarationTask(
       getDeclarationState,
-      SectionName.dutySuspended,
+      DutySuspendedSection,
       controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
       controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url,
       controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
@@ -286,7 +282,7 @@ class ReturnTaskListCreator @Inject() () {
 
     createDeclarationTask(
       getDeclarationState,
-      SectionName.spirits,
+      SpiritsSection,
       controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
       controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url,
       controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
@@ -302,24 +298,24 @@ class ReturnTaskListCreator @Inject() () {
         (
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages("taskList.section.checkAndSubmit.needToDeclare"))),
-            status = AlcholDutyTaskListItemStatus.notStarted,
+            status = AlcoholDutyTaskListItemStatus.notStarted,
             href = Some(
               controllers.checkAndSubmit.routes.DutyDueForThisReturnController
                 .onPageLoad()
                 .url
             )
           ),
-          AlcholDutyTaskListItemStatus.completed
+          AlcoholDutyTaskListItemStatus.completed
         )
       } else {
         (
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages("taskList.section.checkAndSubmit.needToDeclare"))),
-            status = AlcholDutyTaskListItemStatus.cannotStart,
+            status = AlcoholDutyTaskListItemStatus.cannotStart,
             href = None,
             hint = Some(Hint(content = Text(messages("taskList.section.checkAndSubmit.hint"))))
           ),
-          AlcholDutyTaskListItemStatus.completed
+          AlcoholDutyTaskListItemStatus.completed
         )
       }
     Section(
@@ -335,7 +331,7 @@ class ReturnTaskListCreator @Inject() () {
         val declareAlcoholQuestionTask =
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
-            status = AlcholDutyTaskListItemStatus.completed,
+            status = AlcoholDutyTaskListItemStatus.completed,
             href = Some(
               controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
                 .onPageLoad(CheckMode)
@@ -347,7 +343,7 @@ class ReturnTaskListCreator @Inject() () {
         Seq(
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
-            status = AlcholDutyTaskListItemStatus.inProgress,
+            status = AlcoholDutyTaskListItemStatus.inProgress,
             href = Some(
               controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
                 .onPageLoad(CheckMode)
@@ -359,7 +355,7 @@ class ReturnTaskListCreator @Inject() () {
         Seq(
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.no"))),
-            status = AlcholDutyTaskListItemStatus.completed,
+            status = AlcoholDutyTaskListItemStatus.completed,
             href = Some(
               controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
                 .onPageLoad(CheckMode)
@@ -372,7 +368,7 @@ class ReturnTaskListCreator @Inject() () {
         Seq(
           TaskListItem(
             title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.notStarted"))),
-            status = AlcholDutyTaskListItemStatus.notStarted,
+            status = AlcoholDutyTaskListItemStatus.notStarted,
             href = Some(
               controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
                 .onPageLoad(NormalMode)
@@ -385,7 +381,7 @@ class ReturnTaskListCreator @Inject() () {
     Section(
       title = messages(s"taskList.section.returns.heading"),
       taskList = TaskList(items = taskListItems),
-      statusCompleted = AlcholDutyTaskListItemStatus.completed
+      statusCompleted = AlcoholDutyTaskListItemStatus.completed
     )
   }
 
@@ -406,7 +402,7 @@ class ReturnTaskListCreator @Inject() () {
       userAnswers.get(DeclareAdjustmentQuestionPage),
       () => taskListItems,
       controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(_).url,
-      sectionName = SectionName.adjustment
+      section = AdjustmentSection
     )
   }
 
@@ -415,7 +411,7 @@ class ReturnTaskListCreator @Inject() () {
       userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
       () => Seq(returnDSDJourneyTaskListItem(userAnswers)),
       controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(_).url,
-      sectionName = SectionName.dutySuspended
+      section = DutySuspendedSection
     )
 
   def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
@@ -423,6 +419,6 @@ class ReturnTaskListCreator @Inject() () {
       userAnswers.get(DeclareQuarterlySpiritsPage),
       () => Seq(returnQSJourneyTaskListItem(userAnswers)),
       controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(_).url,
-      sectionName = SectionName.spirits
+      section = SpiritsSection
     )
 }
