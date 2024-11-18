@@ -19,7 +19,9 @@ package controllers.adjustment
 import connectors.UserAnswersConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import forms.adjustment.DeleteAdjustmentFormProvider
-import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage}
+import models.{NormalMode, UserAnswers}
+import navigation.AdjustmentNavigator
+import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage, DeleteAdjustmentPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -28,10 +30,12 @@ import views.html.adjustment.DeleteAdjustmentView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class DeleteAdjustmentController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersConnector: UserAnswersConnector,
+  navigator: AdjustmentNavigator,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -62,12 +66,21 @@ class DeleteAdjustmentController @Inject() (
                 updatedAnswers                        <- Future.fromTry(request.userAnswers.removeBySeqIndex(AdjustmentEntryListPage, index))
                 userAnswersWithUpdatedOverUnderReason <-
                   adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers)
-                _                                     <- userAnswersConnector.set(userAnswersWithUpdatedOverUnderReason)
-              } yield Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1))
+                userAnswersDeclarationUpdate          <- Future.fromTry(emptyListCheck(userAnswersWithUpdatedOverUnderReason))
+                _                                     <- userAnswersConnector.set(userAnswersDeclarationUpdate)
+              } yield Redirect(
+                navigator.nextPage(DeleteAdjustmentPage, NormalMode, userAnswersDeclarationUpdate)
+              )
             } else {
-              Future.successful(Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)))
+              Future.successful(Redirect(navigator.nextPage(DeleteAdjustmentPage, NormalMode, request.userAnswers)))
             }
         )
   }
+
+  private def emptyListCheck(userAnswers: UserAnswers): Try[UserAnswers] =
+    userAnswers.get(pages.adjustment.AdjustmentEntryListPage) match {
+      case Some(list) if list.nonEmpty => Try(userAnswers)
+      case _                           => userAnswers.remove(DeclareAdjustmentQuestionPage)
+    }
 
 }
