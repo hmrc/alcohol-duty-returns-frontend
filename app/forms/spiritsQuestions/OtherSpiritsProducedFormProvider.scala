@@ -27,5 +27,6 @@ class OtherSpiritsProducedFormProvider @Inject() extends Mappings {
     Form(
       "otherSpiritsProduced" -> text("otherSpiritsProduced.error.required")
         .verifying(maxLength(Constants.otherSpiritsProducedMaxLength, "otherSpiritsProduced.error.length"))
+        .verifying(regexp(Constants.alphaNumericRegexString, "otherSpiritsProduced.error.alphanumeric"))
     )
 }
