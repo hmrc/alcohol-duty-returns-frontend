@@ -70,6 +70,7 @@ class ViewReturnViewModelSpec extends SpecBase {
 
         adjustmentsViewModel.rows.head.cells(1).content shouldBe Text("321")
         adjustmentsViewModel.rows(3).cells(1).content   shouldBe Text("Non-draught beer between 1% and 2% ABV (125)")
+        adjustmentsViewModel.rows(3).cells(3).content   shouldBe Text("£21.01")
       }
 
       "should return a model with data when a spoilt adjustment declared where Description is the regime name and duty rate is NA" in new SetUp {
