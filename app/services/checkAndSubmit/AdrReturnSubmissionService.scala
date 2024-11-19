@@ -53,17 +53,13 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       dutyDeclared  <- getDutyDeclared(userAnswers)
       adjustments   <- getAdjustments(userAnswers)
       dutySuspended <- getDutySuspended(userAnswers)
-      spirits       <-
-        if (
-          userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits && appConfig.spiritsAndIngredientsEnabled
-        ) getSpirits(userAnswers)
-        else EitherT.rightT[Future, String](None)
+      maybeSpirits  <- getSpirits(userAnswers, returnPeriod)
       totals        <- getTotals(userAnswers)
     } yield AdrReturnSubmission(
       dutyDeclared = dutyDeclared,
       adjustments = adjustments,
       dutySuspended = dutySuspended,
-      spirits = spirits,
+      spirits = maybeSpirits,
       totals = totals
     )
 
@@ -330,16 +326,22 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       otherFermentedDutySuspended
     ).flatten
 
-  def getSpirits(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrSpirits]] =
-    for {
-      declared        <- getValue(userAnswers, DeclareQuarterlySpiritsPage)
-      spiritsProduced <- if (declared) getSpiritProduced(userAnswers) else EitherT.rightT[Future, String](None)
-    } yield Some(
-      AdrSpirits(
-        declared,
-        spiritsProduced
+  def getSpirits(userAnswers: UserAnswers, returnPeriod: ReturnPeriod): EitherT[Future, String, Option[AdrSpirits]] =
+    if (
+      userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits && appConfig.spiritsAndIngredientsEnabled
+    ) {
+      for {
+        declared        <- getValue(userAnswers, DeclareQuarterlySpiritsPage)
+        spiritsProduced <- if (declared) getSpiritProduced(userAnswers) else EitherT.rightT[Future, String](None)
+      } yield Some(
+        AdrSpirits(
+          declared,
+          spiritsProduced
+        )
       )
-    )
+    } else {
+      EitherT.rightT[Future, String](None)
+    }
 
   private def getSpiritProduced(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrSpiritsProduced]] =
     for {
@@ -506,7 +508,7 @@ trait AdrReturnSubmissionService {
 
   def getDutyDeclared(userAnswers: UserAnswers): EitherT[Future, String, AdrDutyDeclared]
   def getAdjustments(userAnswers: UserAnswers): EitherT[Future, String, AdrAdjustments]
-  def getSpirits(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrSpirits]]
   def getDutySuspended(userAnswers: UserAnswers): EitherT[Future, String, AdrDutySuspended]
+  def getSpirits(userAnswers: UserAnswers, returnPeriod: ReturnPeriod): EitherT[Future, String, Option[AdrSpirits]]
   def getTotals(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): EitherT[Future, String, AdrTotals]
 }
