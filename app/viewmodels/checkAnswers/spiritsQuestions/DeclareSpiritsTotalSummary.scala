@@ -30,7 +30,7 @@ object DeclareSpiritsTotalSummary {
     answers.get(DeclareSpiritsTotalPage).map { answer =>
       SummaryListRowViewModel(
         key = "declareSpiritsTotal.checkYourAnswersLabel",
-        value = ValueViewModel(s"${messages("site.2DP", answer)} ${messages("checkYourAnswers.lpa.units")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer)} ${messages("spiritsQuestions.checkYourAnswers.lpa.units")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DeclareSpiritsTotalController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("declareSpiritsTotal.change.hidden"))

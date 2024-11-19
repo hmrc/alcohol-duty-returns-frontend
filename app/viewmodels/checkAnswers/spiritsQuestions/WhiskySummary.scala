@@ -31,7 +31,7 @@ object WhiskySummary {
       SummaryListRowViewModel(
         key = "whisky.scotchWhisky.checkYourAnswersLabel",
         value =
-          ValueViewModel(s"${messages("site.2DP", answer.scotchWhisky)} ${messages("checkYourAnswers.lpa.units")}"),
+          ValueViewModel(s"${messages("site.2DP", answer.scotchWhisky)} ${messages("spiritsQuestions.checkYourAnswers.lpa.units")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.WhiskyController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("whisky.scotchWhisky.change.hidden"))
@@ -44,7 +44,7 @@ object WhiskySummary {
       SummaryListRowViewModel(
         key = "whisky.irishWhiskey.checkYourAnswersLabel",
         value =
-          ValueViewModel(s"${messages("site.2DP", answer.irishWhiskey)} ${messages("checkYourAnswers.lpa.units")}"),
+          ValueViewModel(s"${messages("site.2DP", answer.irishWhiskey)} ${messages("spiritsQuestions.checkYourAnswers.lpa.units")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.WhiskyController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("whisky.irishWhiskey.change.hidden"))

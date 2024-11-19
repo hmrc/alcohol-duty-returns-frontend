@@ -704,7 +704,8 @@ spiritsQuestions.checkYourAnswersLabel.card2 = Grain ingredients you’ve used
 spiritsQuestions.checkYourAnswersLabel.card3 = Alcohol ingredients you’ve used
 spiritsQuestions.checkYourAnswersLabel.card4 = Other ingredients you’ve used
 
-checkYourAnswers.lpa.units = litres of pure alcohol
+spiritsQuestions.checkYourAnswers.lpa.units = litres of pure alcohol
+
 # End of quarterly spirits questions sub-journey
 
 # Beginning of adjustments sub-journey
