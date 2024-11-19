@@ -16,20 +16,18 @@
 
 package controllers.spiritsQuestions
 
+import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
-
-import javax.inject.Inject
 import models.{Mode, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, SpiritTypePage, WhiskyPage}
+import pages.spiritsQuestions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import connectors.UserAnswersConnector
-import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
