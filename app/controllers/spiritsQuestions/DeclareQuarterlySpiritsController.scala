@@ -18,17 +18,20 @@ package controllers.spiritsQuestions
 
 import controllers.actions._
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.QuarterlySpiritsQuestionsNavigator
-import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
+import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, SpiritTypePage, WhiskyPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import models.spiritsQuestions.EthyleneGasOrMolassesUsed
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class DeclareQuarterlySpiritsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -68,9 +71,29 @@ class DeclareQuarterlySpiritsController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
-                _              <- userAnswersConnector.set(updatedAnswers)
+                updatedAnswers      <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
+                maybeClearedAnswers <- Future.fromTry(clearUserAnswersWhenNoSelectedAfterYes(updatedAnswers, value))
+                _                   <- userAnswersConnector.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers))
           )
       }
+
+  def clearUserAnswersWhenNoSelectedAfterYes(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
+    if (value) {
+      Try(userAnswer)
+    } else {
+      userAnswer.remove(
+        List(
+          AlcoholUsedPage,
+          DeclareQuarterlySpiritsPage,
+          DeclareSpiritsTotalPage,
+          EthyleneGasOrMolassesUsedPage,
+          GrainsUsedPage,
+          OtherIngredientsUsedPage,
+          OtherMaltedGrainsPage,
+          SpiritTypePage,
+          WhiskyPage
+        )
+      )
+    }
 }

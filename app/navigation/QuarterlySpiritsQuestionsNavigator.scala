@@ -62,13 +62,12 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () {
     case _                                                    => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
   }
 
-  private def checkDeclareQuarterlySpiritsNavigation(userAnswers: UserAnswers): Call = {
+  private def checkDeclareQuarterlySpiritsNavigation(userAnswers: UserAnswers): Call =
     userAnswers.get(DeclareQuarterlySpiritsPage) match {
-      case Some(true) => controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
+      case Some(true)  => controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
       case Some(false) => routes.TaskListController.onPageLoad
-      case None => routes.JourneyRecoveryController.onPageLoad()
+      case None        => routes.JourneyRecoveryController.onPageLoad()
     }
-  }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
     userAnswers.get(DeclareQuarterlySpiritsPage) match {
