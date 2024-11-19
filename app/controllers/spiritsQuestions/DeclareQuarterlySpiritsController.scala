@@ -73,7 +73,7 @@ class DeclareQuarterlySpiritsController @Inject() (
               for {
                 updatedAnswers      <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
                 maybeClearedAnswers <- Future.fromTry(clearUserAnswersWhenNoSelectedAfterYes(updatedAnswers, value))
-                _                   <- userAnswersConnector.set(updatedAnswers)
+                _                   <- userAnswersConnector.set(maybeClearedAnswers)
               } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers))
           )
       }
@@ -85,7 +85,6 @@ class DeclareQuarterlySpiritsController @Inject() (
       userAnswer.remove(
         List(
           AlcoholUsedPage,
-          DeclareQuarterlySpiritsPage,
           DeclareSpiritsTotalPage,
           EthyleneGasOrMolassesUsedPage,
           GrainsUsedPage,
