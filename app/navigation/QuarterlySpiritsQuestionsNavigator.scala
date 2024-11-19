@@ -25,7 +25,7 @@ import play.api.mvc.Call
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class QuarterlySpiritsQuestionsNavigator @Inject() {
+class QuarterlySpiritsQuestionsNavigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case pages.spiritsQuestions.DeclareQuarterlySpiritsPage   => declareQuarterlySpiritsRoute
@@ -48,7 +48,8 @@ class QuarterlySpiritsQuestionsNavigator @Inject() {
 
   }
 
-  private def checkRouteMap(page: Page, hasChanged: Boolean): Call = page match {
+  private def checkRouteMap(page: Page, hasChanged: Boolean, userAnswers: UserAnswers): Call = page match {
+    case pages.spiritsQuestions.DeclareQuarterlySpiritsPage   => checkDeclareQuarterlySpiritsNavigation(userAnswers)
     case pages.spiritsQuestions.SpiritTypePage                =>
       if (hasChanged) controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
       else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
@@ -59,6 +60,14 @@ class QuarterlySpiritsQuestionsNavigator @Inject() {
       if (hasChanged) controllers.spiritsQuestions.routes.OtherIngredientsUsedController.onPageLoad(CheckMode)
       else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
     case _                                                    => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+  }
+
+  private def checkDeclareQuarterlySpiritsNavigation(userAnswers: UserAnswers): Call = {
+    userAnswers.get(DeclareQuarterlySpiritsPage) match {
+      case Some(true) => controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
+      case Some(false) => routes.TaskListController.onPageLoad
+      case None => routes.JourneyRecoveryController.onPageLoad()
+    }
   }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
@@ -97,6 +106,6 @@ class QuarterlySpiritsQuestionsNavigator @Inject() {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode  =>
-      checkRouteMap(page, hasAnswerChanged)
+      checkRouteMap(page, hasAnswerChanged, userAnswers)
   }
 }
