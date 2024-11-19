@@ -22,7 +22,7 @@ import play.api.data.FormError
 class OtherSpiritsProducedFormProviderSpec extends StringFieldBehaviours {
   val requiredKey = "otherSpiritsProduced.error.required"
   val lengthKey   = "otherSpiritsProduced.error.length"
-  val maxLength   = 120
+  val maxLength   = 150
 
   val form = new OtherSpiritsProducedFormProvider()()
 
