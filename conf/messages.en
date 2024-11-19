@@ -150,6 +150,7 @@ viewReturn.table.dutyDue.legend = Duty value
 viewReturn.printYourReturn = Print your return
 viewReturn.netDutySuspension.caption = Duty suspended deliveries
 viewReturn.netDutySuspension.noneDeclared = Nothing declared
+viewReturn.notApplicable = NA
 
 viewPastPayments.heading = Alcohol Duty payments
 viewPastPayments.title = Alcohol Duty payments
