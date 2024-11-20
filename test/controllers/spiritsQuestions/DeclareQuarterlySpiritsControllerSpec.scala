@@ -17,16 +17,16 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
+import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import play.api.Application
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
@@ -88,6 +88,37 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the task list page and clear user answers when 'No' is submitted" in new SetUp(
+      Some(emptyUserAnswers),
+      true
+    ) {
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      override val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, declareQuarterlySpiritsRoute)
+            .withFormUrlEncodedBody(("declareQuarterlySpirits-yesNoValue", "false"))
+
+        val result = route(application, request).value
+
+        // TODO: Connector should have 3 calls, one for getData, one for .set and one for .remove
+        verify(mockUserAnswersConnector.httpClient, times(1))
+
+        status(result) mustEqual SEE_OTHER
       }
     }
 

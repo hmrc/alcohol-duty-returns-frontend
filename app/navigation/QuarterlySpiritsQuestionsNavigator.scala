@@ -20,12 +20,13 @@ import controllers._
 import models._
 import pages._
 import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, SpiritTypePage}
+import play.api.Logging
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class QuarterlySpiritsQuestionsNavigator @Inject() () {
+class QuarterlySpiritsQuestionsNavigator @Inject() () extends Logging {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case pages.spiritsQuestions.DeclareQuarterlySpiritsPage => declareQuarterlySpiritsRoute
@@ -40,7 +41,7 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () {
 
   }
 
-  private def checkRouteMap(page: Page, hasChanged: Boolean, userAnswers: UserAnswers): Call = page match {
+  private def checkRouteMap(page: Page, userAnswers: UserAnswers, hasChanged: Boolean): Call = page match {
     case pages.spiritsQuestions.DeclareQuarterlySpiritsPage => checkDeclareQuarterlySpiritsNavigation(userAnswers)
     case pages.spiritsQuestions.SpiritTypePage              =>
       if (hasChanged) controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
@@ -52,7 +53,9 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () {
     userAnswers.get(DeclareQuarterlySpiritsPage) match {
       case Some(true)  => controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
       case Some(false) => routes.TaskListController.onPageLoad
-      case None        => routes.JourneyRecoveryController.onPageLoad()
+      case None        =>
+        logger.warn("There was no value for DeclareQuarterlySpiritsPage in the database")
+        routes.JourneyRecoveryController.onPageLoad()
     }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
@@ -75,6 +78,6 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode  =>
-      checkRouteMap(page, hasAnswerChanged, userAnswers)
+      checkRouteMap(page, userAnswers, hasAnswerChanged)
   }
 }

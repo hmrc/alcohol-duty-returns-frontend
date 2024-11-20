@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers._
 import models._
 import pages._
+import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 
 class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
 
@@ -140,6 +141,60 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           emptyUserAnswers,
           false
         ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from the Other Spirit Types page to the Check your answers page" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.OtherSpiritsProducedPage,
+          CheckMode,
+          emptyUserAnswers,
+          false
+        ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from the Whisk(e) page to the Check your answers page" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.WhiskyPage,
+          CheckMode,
+          emptyUserAnswers,
+          false
+        ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from the Total Spirits page to the Check your answers page" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.DeclareSpiritsTotalPage,
+          CheckMode,
+          emptyUserAnswers,
+          false
+        ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from the Declare Quarterly Spirits (DQS) page to the task list when No is selected on DQS" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
+          CheckMode,
+          emptyUserAnswers.set(DeclareQuarterlySpiritsPage, false).success.value,
+          false
+        ) mustBe routes.TaskListController.onPageLoad
+      }
+
+      "must go from the Declare Quarterly Spirits (DQS) page to the Declare Spirits Total page when Yes is selected on DQS" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
+          CheckMode,
+          emptyUserAnswers.set(DeclareQuarterlySpiritsPage, true).success.value,
+          false
+        ) mustBe controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
+      }
+
+      "must go from the Declare Quarterly Spirits (DQS) page to the Journey Recovery page when there is no answer set in mongo" in {
+        navigator.nextPage(
+          pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
+          CheckMode,
+          emptyUserAnswers,
+          false
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
     }
   }
