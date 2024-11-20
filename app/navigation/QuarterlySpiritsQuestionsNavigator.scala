@@ -40,12 +40,20 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () {
 
   }
 
-  private def checkRouteMap(page: Page, hasChanged: Boolean): Call = page match {
-    case pages.spiritsQuestions.SpiritTypePage =>
+  private def checkRouteMap(page: Page, hasChanged: Boolean, userAnswers: UserAnswers): Call = page match {
+    case pages.spiritsQuestions.DeclareQuarterlySpiritsPage => checkDeclareQuarterlySpiritsNavigation(userAnswers)
+    case pages.spiritsQuestions.SpiritTypePage              =>
       if (hasChanged) controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
       else controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
-    case _                                     => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+    case _                                                  => controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
   }
+
+  private def checkDeclareQuarterlySpiritsNavigation(userAnswers: UserAnswers): Call =
+    userAnswers.get(DeclareQuarterlySpiritsPage) match {
+      case Some(true)  => controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
+      case Some(false) => routes.TaskListController.onPageLoad
+      case None        => routes.JourneyRecoveryController.onPageLoad()
+    }
 
   private def declareQuarterlySpiritsRoute(userAnswers: UserAnswers): Call =
     userAnswers.get(DeclareQuarterlySpiritsPage) match {
@@ -67,6 +75,6 @@ class QuarterlySpiritsQuestionsNavigator @Inject() () {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode  =>
-      checkRouteMap(page, hasAnswerChanged)
+      checkRouteMap(page, hasAnswerChanged, userAnswers)
   }
 }
