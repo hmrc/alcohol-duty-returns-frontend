@@ -19,7 +19,6 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
-import models.requests.{DataRequest, IdentifierRequest}
 import models.{AlcoholRegimes, NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
@@ -27,7 +26,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, SpiritTypePage, WhiskyPage}
 import play.api.Application
 import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, Call}
+import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
