@@ -1,1 +1,4 @@
-GET         /clear-all        testonly.controllers.TestOnlyController.clearAllData()
+GET         /clear-all           testonly.controllers.TestOnlyController.clearAllData()
+
+GET         /custom-login        testonly.controllers.CustomLoginController.onPageLoad()
+POST        /custom-login        testonly.controllers.CustomLoginController.onSubmit()

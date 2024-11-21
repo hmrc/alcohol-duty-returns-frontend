@@ -42,6 +42,22 @@ trait SelectFluency {
         label = label,
         errorMessage = errorMessage(field)
       )
+
+    def apply2(
+      id: String,
+      name: String,
+      value: Option[String],
+      label: Label,
+      items: Seq[(String, String)]
+    ): Select =
+      Select(
+        id = id,
+        name = name,
+        items = items.map { case (value, text) => SelectItem(value = Some(value), text = text) },
+        value = value,
+        label = label,
+        errorMessage = None
+      )
   }
 
   implicit class FluentSelect(select: Select) {
