@@ -19,22 +19,25 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
-import models.{NormalMode, UserAnswers}
+import models.requests.{DataRequest, IdentifierRequest}
+import models.{AlcoholRegimes, NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, SpiritTypePage, WhiskyPage}
 import play.api.Application
 import play.api.inject.bind
-import play.api.mvc.Call
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
 import scala.concurrent.Future
+import scala.util.Success
 
 class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
   val userAnswersPreviouslyAnswered = emptyUserAnswers.set(DeclareQuarterlySpiritsPage, true).success.value
-
+  val mockUserAnswers: UserAnswers  = mock[UserAnswers]
   "DeclareQuarterlySpirits Controller" - {
     "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers), true) {
       running(application) {
@@ -92,18 +95,42 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
     }
 
     "must redirect to the task list page and clear user answers when 'No' is submitted" in new SetUp(
-      Some(emptyUserAnswers),
+      Some(mockUserAnswers),
       true
     ) {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val pagesToDelete                                                = List(
+        DeclareSpiritsTotalPage,
+        SpiritTypePage,
+        WhiskyPage
+      )
+      val identifierRequest: IdentifierRequest[AnyContentAsEmpty.type] =
+        IdentifierRequest(FakeRequest(), appaId, groupId, internalId)
+      val dataRequest: DataRequest[AnyContentAsEmpty.type]             =
+        DataRequest(identifierRequest, appaId, groupId, internalId, returnPeriod, mockUserAnswers)
+      val mockUserAnswersConnector: UserAnswersConnector               = mock[UserAnswersConnector]
+      val mockAlcoholRegimesSet: AlcoholRegimes                        = mock[AlcoholRegimes]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswers.set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())) thenReturn Success(
+        mockUserAnswers
+      )
+      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
+        DeclareQuarterlySpiritsPage,
+        false
+      )
+      when(mockUserAnswers.regimes) thenReturn mockAlcoholRegimesSet
+      when(mockAlcoholRegimesSet.hasRegime(any())) thenReturn true
 
       override val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(mockUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
+              .toInstance(
+                new FakeQuarterlySpiritsQuestionsNavigator(
+                  controllers.routes.TaskListController.onPageLoad,
+                  hasValueChanged = true
+                )
+              ),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -115,10 +142,14 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        // TODO: Connector should have 3 calls, one for getData, one for .set and one for .remove
-        verify(mockUserAnswersConnector.httpClient, times(1))
-
         status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustEqual Some(controllers.routes.TaskListController.onPageLoad.toString)
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockUserAnswers, times(1)).set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())
+        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
+        verify(mockUserAnswers, times(1)).regimes
+        verify(mockAlcoholRegimesSet, times(1)).hasRegime(any())
       }
     }
 

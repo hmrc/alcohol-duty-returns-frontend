@@ -77,7 +77,6 @@ class DeclareQuarterlySpiritsController @Inject() (
       }
 
   private def clearUserAnswersWhenNoSelectedAfterYes(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] = {
-    println("XXXXXXXXXXXX")
     if (value) {
       Try(userAnswer)
     } else {

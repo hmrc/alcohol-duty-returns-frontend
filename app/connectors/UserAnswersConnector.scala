@@ -34,17 +34,19 @@ class UserAnswersConnector @Inject() (
 
   def get(appaId: String, periodKey: String)(implicit
     hc: HeaderCarrier
-  ): Future[Either[UpstreamErrorResponse, UserAnswers]] =
+  ): Future[Either[UpstreamErrorResponse, UserAnswers]] = {
     httpClient
       .get(url"${config.adrUserAnswersGetUrl(appaId, periodKey)}")
       .execute[Either[UpstreamErrorResponse, UserAnswers]]
+  }
 
-  def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+  def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     httpClient
       .put(url"${config.adrUserAnswersUrl()}")
       .setHeader("Csrf-Token" -> "nocheck")
       .withBody(Json.toJson(userAnswers))
       .execute[HttpResponse]
+  }
 
   def createUserAnswers(
     returnAndUserDetails: ReturnAndUserDetails
