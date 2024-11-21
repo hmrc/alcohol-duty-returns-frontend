@@ -98,17 +98,10 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
       Some(mockUserAnswers),
       true
     ) {
-      val pagesToDelete                                                = List(
-        DeclareSpiritsTotalPage,
-        SpiritTypePage,
-        WhiskyPage
-      )
-      val identifierRequest: IdentifierRequest[AnyContentAsEmpty.type] =
-        IdentifierRequest(FakeRequest(), appaId, groupId, internalId)
-      val dataRequest: DataRequest[AnyContentAsEmpty.type]             =
-        DataRequest(identifierRequest, appaId, groupId, internalId, returnPeriod, mockUserAnswers)
-      val mockUserAnswersConnector: UserAnswersConnector               = mock[UserAnswersConnector]
-      val mockAlcoholRegimesSet: AlcoholRegimes                        = mock[AlcoholRegimes]
+      val pagesToDelete = List(DeclareSpiritsTotalPage, SpiritTypePage, WhiskyPage)
+
+      val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
+      val mockAlcoholRegimesSet: AlcoholRegimes          = mock[AlcoholRegimes]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(mockUserAnswers.set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())) thenReturn Success(
