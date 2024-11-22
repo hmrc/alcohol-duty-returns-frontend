@@ -901,7 +901,7 @@ trait TestData extends ModelGenerators {
           spiritsDeclared = true,
           spiritsProduced = Some(
             value = AdrSpiritsProduced(
-              spiritsVolumes = AdrSpiritsVolumes(totalSpirits = 1234, scotchWhiskey = 111, irishWhisky = 222),
+              spiritsVolumes = AdrSpiritsVolumes(totalSpirits = 1234, scotchWhisky = 111, irishWhiskey = 222),
               typesOfSpirit = Set(
                 AdrTypeOfSpirit.Other,
                 AdrTypeOfSpirit.CiderOrPerry,
