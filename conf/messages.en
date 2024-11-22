@@ -696,7 +696,6 @@ otherSpiritsProduced.heading = What other types of spirits have you produced thi
 otherSpiritsProduced.hint = Tell us what other spirits you have produced.
 otherSpiritsProduced.error.required = Enter the other spirits you have made
 otherSpiritsProduced.error.length = Other spirits you have made must be {0} characters or less
-otherSpiritsProduced.error.alphanumeric = Other spirits you have made must be letters, numbers and spaces
 otherSpiritsProduced.change.hidden = what other types of spirits have you produced this quarter
 
 spiritsQuestions.checkYourAnswersLabel.card1 = Spirits you’ve produced

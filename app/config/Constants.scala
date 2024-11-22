@@ -56,8 +56,6 @@ object Constants {
   val otherMaltedGrainsTypeMaxLength = 120
   val otherSpiritsProducedMaxLength  = 150
 
-  val alphaNumericRegexString: String = "^[A-Za-z0-9 ]+$"
-
   val rowsPerPage = 15
 
   val bodyCssClass               = "govuk-body"
