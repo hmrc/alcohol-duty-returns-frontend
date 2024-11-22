@@ -76,11 +76,11 @@ class DeclareQuarterlySpiritsController @Inject() (
           )
       }
 
-  private def clearUserAnswersWhenNoSelected(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
+  private def clearUserAnswersWhenNoSelected(userAnswers: UserAnswers, value: Boolean): Try[UserAnswers] =
     if (value) {
-      Success(userAnswer)
+      Success(userAnswers)
     } else {
-      userAnswer.remove(
+      userAnswers.remove(
         List(
           DeclareSpiritsTotalPage,
           SpiritTypePage,
