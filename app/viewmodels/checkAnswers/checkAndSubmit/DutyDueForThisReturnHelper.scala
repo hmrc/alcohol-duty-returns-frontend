@@ -20,9 +20,9 @@ import cats.data.EitherT
 import config.Constants.Css
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.checkAndSubmit.AdrDutySuspended
+import models.checkAndSubmit.{AdrDutySuspended, AdrSpirits}
 import models.declareDuty.AlcoholDuty
-import models.{AlcoholRegime, NormalMode, UserAnswers}
+import models.{AlcoholRegime, NormalMode, ReturnPeriod, UserAnswers}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import play.api.Logging
@@ -51,7 +51,8 @@ class DutyDueForThisReturnHelper @Inject() (
   private val dutyDueOrder = Seq(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
 
   def getDutyDueViewModel(
-    userAnswers: UserAnswers
+    userAnswers: UserAnswers,
+    returnPeriod: ReturnPeriod
   )(implicit hc: HeaderCarrier, messages: Messages): EitherT[Future, String, DutyDueForThisReturnViewModel] =
     for {
       dutiesByRegime             <- getDutiesByAlcoholRegime(userAnswers)
@@ -59,7 +60,8 @@ class DutyDueForThisReturnHelper @Inject() (
       total                      <- calculateTotal(dutiesByRegime, totalAdjustment)
       dutiesBreakdownViewModel   <- createTableViewModel(dutiesByRegime, totalAdjustment)
       dutySuspended              <- adrReturnSubmissionService.getDutySuspended(userAnswers)
-      youveAlsoAnsweredViewModel <- createYouveAlsoAnsweredTableViewModel(dutySuspended)
+      maybeSpirits               <- adrReturnSubmissionService.getSpirits(userAnswers, returnPeriod)
+      youveAlsoAnsweredViewModel <- createYouveAlsoAnsweredTableViewModel(dutySuspended, maybeSpirits)
     } yield DutyDueForThisReturnViewModel(
       dutiesBreakdownViewModel,
       youveAlsoAnsweredViewModel,
@@ -106,14 +108,15 @@ class DutyDueForThisReturnHelper @Inject() (
     )
   }
 
-  private def createYouveAlsoAnsweredTableViewModel(dutySuspended: AdrDutySuspended)(implicit
-    messages: Messages
+  private def createYouveAlsoAnsweredTableViewModel(dutySuspended: AdrDutySuspended, maybeSpirits: Option[AdrSpirits])(
+    implicit messages: Messages
   ): EitherT[Future, String, TableViewModel] = {
     val returnDutiesRow = createDutySuspendedRow(dutySuspended.declared)
+    val maybeSpiritsRow = maybeSpirits.map(spirits => createSpiritsRow(spirits.spiritsDeclared))
     EitherT.rightT[Future, String](
       TableViewModel(
         head = Seq.empty,
-        rows = returnDutiesRow
+        rows = maybeSpiritsRow.fold(returnDutiesRow)(returnDutiesRow ++ _)
       )
     )
   }
@@ -177,7 +180,7 @@ class DutyDueForThisReturnHelper @Inject() (
           ),
           actions = Seq(
             TableRowActionViewModel(
-              label = "Change",
+              label = messages("site.change"),
               href = controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController
                 .onPageLoad()
             )
@@ -199,9 +202,57 @@ class DutyDueForThisReturnHelper @Inject() (
           ),
           actions = Seq(
             TableRowActionViewModel(
-              label = "Change",
+              label = messages("site.change"),
               href =
                 controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode)
+            )
+          )
+        )
+      )
+    }
+
+  private def createSpiritsRow(
+    hasSpirits: Boolean
+  )(implicit messages: Messages): Seq[TableRowViewModel] =
+    if (hasSpirits) {
+      Seq(
+        TableRowViewModel(
+          cells = Seq(
+            TableRow(
+              content = Text(messages("dutyDueForThisReturn.spirits.production")),
+              classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
+            ),
+            TableRow(
+              Text(messages("dutyDueForThisReturn.spirits.declared")),
+              classes = Css.summaryListValueCssClass
+            )
+          ),
+          actions = Seq(
+            TableRowActionViewModel(
+              label = messages("site.change"),
+              href = controllers.spiritsQuestions.routes.CheckYourAnswersController
+                .onPageLoad()
+            )
+          )
+        )
+      )
+    } else {
+      Seq(
+        TableRowViewModel(
+          cells = Seq(
+            TableRow(
+              content = Text(messages("dutyDueForThisReturn.spirits.production")),
+              classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
+            ),
+            TableRow(
+              Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare")),
+              classes = Css.summaryListValueCssClass
+            )
+          ),
+          actions = Seq(
+            TableRowActionViewModel(
+              label = messages("site.change"),
+              href = controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode)
             )
           )
         )

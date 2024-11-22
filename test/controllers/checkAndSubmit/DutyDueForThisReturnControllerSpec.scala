@@ -56,7 +56,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
   "DutyDueForThisReturn Controller" - {
 
     "must return OK and the correct view for a GET if Yes is selected and there is alcohol to declare" in {
-      when(dutyDueForThisReturnHelper.getDutyDueViewModel(any())(any(), any())).thenReturn(
+      when(dutyDueForThisReturnHelper.getDutyDueViewModel(any(), any())(any(), any())).thenReturn(
         EitherT.rightT(viewModel)
       )
 
@@ -78,7 +78,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     }
 
     "must redirect in the Journey Recovery screen if the dutyDueForThisReturnHelper return an error" in {
-      when(dutyDueForThisReturnHelper.getDutyDueViewModel(any())(any(), any())).thenReturn(
+      when(dutyDueForThisReturnHelper.getDutyDueViewModel(any(), any())(any(), any())).thenReturn(
         EitherT.leftT("Error message")
       )
 
@@ -145,7 +145,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Journey Recover page if mapping from UserAnswer to AdrReturnSubmission return an error" in {
+    "must redirect to the Journey Recovery page if mapping from UserAnswer to AdrReturnSubmission return an error" in {
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
       val auditService                = mock[AuditService]
@@ -173,7 +173,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Journey Recover page if the submission is not successful" in {
+    "must redirect to the Journey Recovery page if the submission is not successful" in {
       val adrReturnSubmission         = mock[AdrReturnSubmission]
       val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
       val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
@@ -205,6 +205,5 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         verify(auditService, times(0)).audit(any())(any(), any())
       }
     }
-
   }
 }

@@ -22,12 +22,14 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
 case class TableViewModel(
   head: Seq[HeadCell],
   rows: Seq[TableRowViewModel],
-  total: Option[TableTotalViewModel] = None
+  total: Option[TableTotalViewModel] = None,
+  caption: Option[String] = None
 )
 
 object TableViewModel {
-  def empty(): TableViewModel = TableViewModel(Seq.empty, Seq.empty, None)
+  def empty(): TableViewModel = TableViewModel(Seq.empty, Seq.empty, None, None)
 }
+
 case class TableRowViewModel(cells: Seq[TableRow], actions: Seq[TableRowActionViewModel] = Seq.empty)
 
 case class TableTotalViewModel(legend: HeadCell, total: HeadCell) {

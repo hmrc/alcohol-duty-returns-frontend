@@ -58,7 +58,7 @@ class DutyDueForThisReturnController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     dutyDueForThisReturnHelper
-      .getDutyDueViewModel(request.userAnswers)
+      .getDutyDueViewModel(request.userAnswers, request.returnPeriod)
       .foldF(
         error => {
           logger.warn(error)
