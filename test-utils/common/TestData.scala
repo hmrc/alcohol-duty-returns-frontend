@@ -19,25 +19,22 @@ package common
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.TransactionType.{LPI, RPI, Return}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
-import models.checkAndSubmit.AdrUnitOfMeasure.Tonnes
+import models.checkAndSubmit._
 import models.declareDuty._
+import models.returns._
 import models._
 import org.scalacheck.Gen
+import org.scalacheck.Gen.{listOfN, numChar}
 import pages.adjustment._
+import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.libs.json.Json
-import org.scalacheck.Gen.{listOfN, numChar}
-import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import models.TransactionType.{LPI, RPI, Return}
-import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
-import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrOtherIngredient, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
-import models.returns._
-import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 
-import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
+import java.time._
 
 trait TestData extends ModelGenerators {
   val clock              = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))

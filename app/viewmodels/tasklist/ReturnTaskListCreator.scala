@@ -17,8 +17,9 @@
 package viewmodels.tasklist
 
 import config.Constants
+import models.TaskListSection.{AdjustmentSection, DutySuspendedSection, SpiritsSection}
 import models.adjustment.AdjustmentType
-import models.{AdjustmentSection, AlcoholRegime, AlcoholRegimes, CheckMode, DutySuspendedSection, Mode, NormalMode, SpiritType, SpiritsSection, TaskListSection, UserAnswers}
+import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, TaskListSection, UserAnswers}
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}

@@ -16,18 +16,25 @@
 
 package models
 
-sealed trait TaskListSection {
+import enumeratum.{EnumEntry, PlayEnum}
+
+sealed trait TaskListSection extends EnumEntry {
   val name: String
 }
 
-case object AdjustmentSection extends TaskListSection {
-  override val name: String = "adjustment"
-}
+object TaskListSection extends PlayEnum[TaskListSection] {
+  val values = findValues
 
-case object DutySuspendedSection extends TaskListSection {
-  override val name: String = "dutySuspended"
-}
+  case object AdjustmentSection extends TaskListSection {
+    override val name: String = "adjustment"
+  }
 
-case object SpiritsSection extends TaskListSection {
-  override val name: String = "spirits"
+  case object DutySuspendedSection extends TaskListSection {
+    override val name: String = "dutySuspended"
+  }
+
+  case object SpiritsSection extends TaskListSection {
+    override val name: String = "spirits"
+  }
+
 }
