@@ -378,11 +378,11 @@ class AdrReturnSubmissionServiceImpl @Inject() (
   def declareSpiritsTotal(userAnswers: UserAnswers): EitherT[Future, String, AdrSpiritsVolumes] =
     for {
       totalSpirits <- getValue(userAnswers, DeclareSpiritsTotalPage)
-      whiskey      <- getValue(userAnswers, WhiskyPage)
+      whisky       <- getValue(userAnswers, WhiskyPage)
     } yield AdrSpiritsVolumes(
       totalSpirits = totalSpirits,
-      scotchWhiskey = whiskey.scotchWhisky,
-      irishWhisky = whiskey.irishWhiskey
+      scotchWhisky = whisky.scotchWhisky,
+      irishWhiskey = whisky.irishWhiskey
     )
 
   def getTypeOfSpirits(userAnswers: UserAnswers): EitherT[Future, String, Set[AdrTypeOfSpirit]] =

@@ -136,8 +136,8 @@ object AdrDutySuspended {
 
 case class AdrSpiritsVolumes(
   totalSpirits: BigDecimal,
-  scotchWhiskey: BigDecimal,
-  irishWhisky: BigDecimal
+  scotchWhisky: BigDecimal,
+  irishWhiskey: BigDecimal
 )
 
 object AdrSpiritsVolumes {

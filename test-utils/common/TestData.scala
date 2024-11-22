@@ -275,6 +275,17 @@ trait TestData extends ModelGenerators {
           totalLtsPureAlcoholWine = Some(BigDecimal("0.5965")),
           totalLtsPureAlcoholOtherFermented = Some(BigDecimal("0.1894"))
         )
+      ),
+      spirits = Some(
+        ReturnSpirits(
+          ReturnSpiritsVolumes(
+            totalSpirits = BigDecimal("0.05"),
+            scotchWhisky = BigDecimal("0.26"),
+            irishWhiskey = BigDecimal("0.16")
+          ),
+          typesOfSpirit = Set(AdrTypeOfSpirit.NeutralAgricultural),
+          otherSpiritTypeName = Some("Coco Pops Vodka")
+        )
       )
     )
   }
@@ -291,7 +302,8 @@ trait TestData extends ModelGenerators {
         total = BigDecimal("0")
       ),
       totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0")),
-      netDutySuspension = None
+      netDutySuspension = None,
+      spirits = None
     )
 
   def nilReturnDetailsWithEmptySections(periodKey: String, now: Instant): ReturnDetails =
@@ -306,7 +318,8 @@ trait TestData extends ModelGenerators {
         total = BigDecimal("0")
       ),
       totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("0")),
-      netDutySuspension = None
+      netDutySuspension = None,
+      spirits = None
     )
 
   def returnWithSpoiltAdjustment(periodKey: String, now: Instant): ReturnDetails = {
@@ -341,7 +354,8 @@ trait TestData extends ModelGenerators {
         total = BigDecimal("-3151.50")
       ),
       totalDutyDue = ReturnTotalDutyDue(totalDue = BigDecimal("-6303.00")),
-      netDutySuspension = None
+      netDutySuspension = None,
+      spirits = None
     )
   }
 
