@@ -29,7 +29,7 @@ import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.util.{Success, Try}
 
 class DeclareQuarterlySpiritsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -70,15 +70,15 @@ class DeclareQuarterlySpiritsController @Inject() (
             value =>
               for {
                 updatedAnswers      <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
-                maybeClearedAnswers <- Future.fromTry(clearUserAnswersWhenNoSelectedAfterYes(updatedAnswers, value))
+                maybeClearedAnswers <- Future.fromTry(clearUserAnswersWhenNoSelected(updatedAnswers, value))
                 _                   <- userAnswersConnector.set(maybeClearedAnswers)
               } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers))
           )
       }
 
-  private def clearUserAnswersWhenNoSelectedAfterYes(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
+  private def clearUserAnswersWhenNoSelected(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
     if (value) {
-      Try(userAnswer)
+      Success(userAnswer)
     } else {
       userAnswer.remove(
         List(
