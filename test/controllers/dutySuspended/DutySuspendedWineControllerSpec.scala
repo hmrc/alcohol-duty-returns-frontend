@@ -17,9 +17,8 @@
 package controllers.dutySuspended
 
 import base.SpecBase
-import forms.dutySuspended.DutySuspendedWineFormProvider
 import models.NormalMode
-import models.dutySuspended.DutySuspendedWine
+import models.dutySuspended.DutySuspendedVolume
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.dutySuspended.DutySuspendedWinePage
@@ -28,6 +27,8 @@ import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import forms.dutySuspended.DutySuspendedFormProvider
+import models.AlcoholRegime.Wine
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedWineView
 
@@ -36,8 +37,9 @@ import scala.concurrent.Future
 class DutySuspendedWineControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DutySuspendedWineFormProvider()
-  val form         = formProvider()
+  val formProvider = new DutySuspendedFormProvider()
+  val regime       = Wine
+  val form         = formProvider(regime)(getMessages(app))
 
   lazy val dutySuspendedWineRoute = routes.DutySuspendedWineController.onPageLoad(NormalMode).url
   val validTotalWine              = 23.45
@@ -46,8 +48,8 @@ class DutySuspendedWineControllerSpec extends SpecBase {
   val userAnswers = userAnswersWithWine.copy(data =
     Json.obj(
       DutySuspendedWinePage.toString -> Json.obj(
-        "totalWine"         -> validTotalWine,
-        "pureAlcoholInWine" -> validPureAlcoholInWine
+        "totalLitresVolume" -> validTotalWine,
+        "pureAlcoholVolume" -> validPureAlcoholInWine
       )
     )
   )
@@ -80,7 +82,7 @@ class DutySuspendedWineControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(DutySuspendedWine(validTotalWine, validPureAlcoholInWine)),
+          form.fill(DutySuspendedVolume(validTotalWine, validPureAlcoholInWine)),
           NormalMode
         )(request, getMessages(application)).toString
       }
@@ -104,8 +106,8 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedWineRoute)
             .withFormUrlEncodedBody(
-              ("totalWine", validTotalWine.toString),
-              ("pureAlcoholInWine", validPureAlcoholInWine.toString)
+              ("volumes.totalLitresVolume", validTotalWine.toString),
+              ("volumes.pureAlcoholVolume", validPureAlcoholInWine.toString)
             )
 
         val result = route(application, request).value
@@ -167,8 +169,8 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedWineRoute)
             .withFormUrlEncodedBody(
-              ("totalWine", validTotalWine.toString),
-              ("pureAlcoholInWine", validPureAlcoholInWine.toString)
+              ("volumes.totalLitresVolume", validTotalWine.toString),
+              ("volumes.pureAlcoholVolume", validPureAlcoholInWine.toString)
             )
 
         val result = route(application, request).value
@@ -185,8 +187,8 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedWineRoute)
             .withFormUrlEncodedBody(
-              ("totalWine", validTotalWine.toString),
-              ("pureAlcoholInWine", validPureAlcoholInWine.toString)
+              ("volumes.totalLitresVolume", validTotalWine.toString),
+              ("volumes.pureAlcoholVolume", validPureAlcoholInWine.toString)
             )
 
         val result = route(application, request).value

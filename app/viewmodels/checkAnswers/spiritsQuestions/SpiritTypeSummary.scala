@@ -30,29 +30,24 @@ object SpiritTypeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(SpiritTypePage).flatMap { answers =>
-      val rowValue = answers.collect {
-        case answer if answer != SpiritType.Other => HtmlFormat.escape(messages(s"spiritType.$answer")).toString
-      }
-      if (rowValue.isEmpty)
-        None
-      else {
-        val value = ValueViewModel(
-          HtmlContent(
-            s"""<span aria-label=${messages("spiritType.checkYourAnswersLabel")}">${rowValue
-              .mkString(",<br>")}</span>"""
-          )
+      val value = ValueViewModel(
+        HtmlContent(
+          s"""<span aria-label=${messages("spiritType.checkYourAnswersLabel")}">${HtmlFormat
+            .escape(messages(s"spiritType.$answers"))
+            .toString
+            .mkString(",<br>")}</span>"""
         )
+      )
 
-        Some(
-          SummaryListRowViewModel(
-            key = "spiritType.checkYourAnswersLabel",
-            value = value,
-            actions = Seq(
-              ActionItemViewModel("site.change", routes.SpiritTypeController.onPageLoad(CheckMode).url)
-                .withVisuallyHiddenText(messages("spiritType.change.hidden"))
-            )
+      Some(
+        SummaryListRowViewModel(
+          key = "spiritType.checkYourAnswersLabel",
+          value = value,
+          actions = Seq(
+            ActionItemViewModel("site.change", routes.SpiritTypeController.onPageLoad(CheckMode).url)
+              .withVisuallyHiddenText(messages("spiritType.change.hidden"))
           )
         )
-      }
+      )
     }
 }

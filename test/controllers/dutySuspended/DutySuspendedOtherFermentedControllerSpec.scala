@@ -17,9 +17,8 @@
 package controllers.dutySuspended
 
 import base.SpecBase
-import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
 import models.NormalMode
-import models.dutySuspended.DutySuspendedOtherFermented
+import models.dutySuspended.DutySuspendedVolume
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.dutySuspended.DutySuspendedOtherFermentedPage
@@ -28,6 +27,8 @@ import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import forms.dutySuspended.DutySuspendedFormProvider
+import models.AlcoholRegime.OtherFermentedProduct
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedOtherFermentedView
 
@@ -36,8 +37,9 @@ import scala.concurrent.Future
 class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider                     = new DutySuspendedOtherFermentedFormProvider()
-  val form                             = formProvider()
+  val formProvider                     = new DutySuspendedFormProvider()
+  val regime                           = OtherFermentedProduct
+  val form                             = formProvider(regime)(getMessages(app))
   val validTotalOtherFermented         = 45.67
   val validPureAlcoholInOtherFermented = 23.45
 
@@ -46,8 +48,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
   val userAnswers = userAnswersWithOtherFermentedProduct.copy(data =
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
-        "totalOtherFermented"         -> validTotalOtherFermented,
-        "pureAlcoholInOtherFermented" -> validPureAlcoholInOtherFermented
+        "totalLitresVolume" -> validTotalOtherFermented,
+        "pureAlcoholVolume" -> validPureAlcoholInOtherFermented
       )
     )
   )
@@ -80,7 +82,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(DutySuspendedOtherFermented(validTotalOtherFermented, validPureAlcoholInOtherFermented)),
+          form.fill(DutySuspendedVolume(validTotalOtherFermented, validPureAlcoholInOtherFermented)),
           NormalMode
         )(request, getMessages(application)).toString
       }
@@ -104,8 +106,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedOtherFermentedRoute)
             .withFormUrlEncodedBody(
-              ("totalOtherFermented", validTotalOtherFermented.toString),
-              ("pureAlcoholInOtherFermented", validPureAlcoholInOtherFermented.toString)
+              ("volumes.totalLitresVolume", validTotalOtherFermented.toString),
+              ("volumes.pureAlcoholVolume", validPureAlcoholInOtherFermented.toString)
             )
 
         val result = route(application, request).value
@@ -166,7 +168,7 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedOtherFermentedRoute)
-            .withFormUrlEncodedBody(("totalOtherFermented", "value 1"), ("pureAlcoholInOtherFermented", "value 2"))
+            .withFormUrlEncodedBody(("volumes.totalLitresVolume", "value 1"), ("volumes.pureAlcoholVolume", "value 2"))
 
         val result = route(application, request).value
 
@@ -182,8 +184,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedOtherFermentedRoute)
             .withFormUrlEncodedBody(
-              ("totalOtherFermented", validTotalOtherFermented.toString),
-              ("pureAlcoholInOtherFermented", validPureAlcoholInOtherFermented.toString)
+              ("volumes.totalLitresVolume", validTotalOtherFermented.toString),
+              ("volumes.pureAlcoholVolume", validPureAlcoholInOtherFermented.toString)
             )
 
         val result = route(application, request).value

@@ -50,9 +50,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("totalOtherFermented"),
-                label = LabelViewModel(messages("dutySuspendedOtherFermented.subheading1")).asSubheading
-            )
+                field = form("volumes"),
+                key="totalLitresVolume",
+                label = LabelViewModel(messages("dutySuspendedOtherFermented.subheading1")).asSubheading,
+                errorMessageField = form("volumes_totalLitresVolume"),
+                value = form("volumes.totalLitresVolume").value)
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
@@ -61,8 +63,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("pureAlcoholInOtherFermented"),
-                label = LabelViewModel(messages("dutySuspendedOtherFermented.subheading2")).asSubheading
+                field = form("volumes"),
+                key="pureAlcoholVolume",
+                label = LabelViewModel(messages("dutySuspendedOtherFermented.subheading2")).asSubheading,
+                errorMessageField = form("volumes_pureAlcoholVolume"),
+                value = form("volumes.pureAlcoholVolume").value
             )
             .asNumeric()
             .withWidth(Fixed10)

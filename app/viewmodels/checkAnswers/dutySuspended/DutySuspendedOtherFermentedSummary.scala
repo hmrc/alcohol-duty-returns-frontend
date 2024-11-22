@@ -31,7 +31,7 @@ object DutySuspendedOtherFermentedSummary {
       SummaryListRowViewModel(
         key = "dutySuspendedOtherFermented.totalOtherFermented.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.2DP", answer.totalOtherFermented)} ${messages("site.unit.litres")}"
+          s"${messages("site.2DP", answer.totalLitresVolume)} ${messages("site.unit.litres")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
@@ -45,7 +45,7 @@ object DutySuspendedOtherFermentedSummary {
       SummaryListRowViewModel(
         key = "dutySuspendedOtherFermented.pureAlcoholInOtherFermented.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.4DP", answer.pureAlcoholInOtherFermented)} ${messages("site.unit.litres")}"
+          s"${messages("site.4DP", answer.pureAlcoholVolume)} ${messages("site.unit.litres")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)

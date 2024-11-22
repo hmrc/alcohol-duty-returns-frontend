@@ -23,6 +23,7 @@ import play.api.data.FieldMapping
 import play.api.data.Forms.of
 import models.Enumerable
 import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR, SpoiltVolumeWithDuty}
+import models.dutySuspended.DutySuspendedVolume
 
 trait Mappings extends Formatters with Constraints {
 
@@ -187,6 +188,33 @@ trait Mappings extends Formatters with Constraints {
         minimumValueKey,
         maximumValueKey,
         inconsistentKey,
+        args
+      )
+    )
+
+  protected def dutySuspendedVolumes(
+    invalidKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    inconsistentKey: String,
+    inconsistentSignKey: String,
+    zeroTotalLitresKey: String,
+    zeroLPAKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[DutySuspendedVolume] =
+    of(
+      new DutySuspendedVolumesFormatter(
+        invalidKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        inconsistentKey,
+        inconsistentSignKey,
+        zeroTotalLitresKey,
+        zeroLPAKey,
         args
       )
     )

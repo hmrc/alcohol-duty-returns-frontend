@@ -255,8 +255,8 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                              AdrDutySuspendedProduct(
                                                regime = AdrDutySuspendedAlcoholRegime.Beer,
                                                suspendedQuantity = AdrAlcoholQuantity(
-                                                 dutySuspendedBeer.totalBeer,
-                                                 dutySuspendedBeer.pureAlcoholInBeer
+                                                 dutySuspendedBeer.totalLitresVolume,
+                                                 dutySuspendedBeer.pureAlcoholVolume
                                                )
                                              )
                                            )
@@ -269,8 +269,8 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                              AdrDutySuspendedProduct(
                                                regime = AdrDutySuspendedAlcoholRegime.Cider,
                                                suspendedQuantity = AdrAlcoholQuantity(
-                                                 dutySuspendedCider.totalCider,
-                                                 dutySuspendedCider.pureAlcoholInCider
+                                                 dutySuspendedCider.totalLitresVolume,
+                                                 dutySuspendedCider.pureAlcoholVolume
                                                )
                                              )
                                            )
@@ -283,8 +283,8 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                              AdrDutySuspendedProduct(
                                                regime = AdrDutySuspendedAlcoholRegime.Spirits,
                                                suspendedQuantity = AdrAlcoholQuantity(
-                                                 dutySuspendedSpirits.totalSpirits,
-                                                 dutySuspendedSpirits.pureAlcoholInSpirits
+                                                 dutySuspendedSpirits.totalLitresVolume,
+                                                 dutySuspendedSpirits.pureAlcoholVolume
                                                )
                                              )
                                            )
@@ -297,8 +297,8 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                              AdrDutySuspendedProduct(
                                                regime = AdrDutySuspendedAlcoholRegime.Wine,
                                                suspendedQuantity = AdrAlcoholQuantity(
-                                                 dutySuspendedWine.totalWine,
-                                                 dutySuspendedWine.pureAlcoholInWine
+                                                 dutySuspendedWine.totalLitresVolume,
+                                                 dutySuspendedWine.pureAlcoholVolume
                                                )
                                              )
                                            )
@@ -311,8 +311,8 @@ class AdrReturnSubmissionServiceImpl @Inject() (
                                              AdrDutySuspendedProduct(
                                                regime = AdrDutySuspendedAlcoholRegime.OtherFermentedProduct,
                                                suspendedQuantity = AdrAlcoholQuantity(
-                                                 dutySuspendedOtherFermentedProducts.totalOtherFermented,
-                                                 dutySuspendedOtherFermentedProducts.pureAlcoholInOtherFermented
+                                                 dutySuspendedOtherFermentedProducts.totalLitresVolume,
+                                                 dutySuspendedOtherFermentedProducts.pureAlcoholVolume
                                                )
                                              )
                                            )

@@ -30,7 +30,7 @@ object DutySuspendedWineSummary {
     answers.get(DutySuspendedWinePage).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedWine.totalWine.checkYourAnswersLabel",
-        value = ValueViewModel(s"${messages("site.2DP", answer.totalWine)} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.totalLitresVolume)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedWineController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedWine.totalWine.change.hidden"))
@@ -43,7 +43,7 @@ object DutySuspendedWineSummary {
       SummaryListRowViewModel(
         key = "dutySuspendedWine.pureAlcoholInWine.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.4DP", answer.pureAlcoholInWine)} ${messages("site.unit.litres")}"
+          s"${messages("site.4DP", answer.pureAlcoholVolume)} ${messages("site.unit.litres")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedWineController.onPageLoad(CheckMode).url)

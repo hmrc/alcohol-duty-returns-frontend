@@ -17,7 +17,8 @@
 package controllers.dutySuspended
 
 import controllers.actions._
-import forms.dutySuspended.DutySuspendedSpiritsFormProvider
+import forms.dutySuspended.DutySuspendedFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
@@ -25,6 +26,7 @@ import pages.dutySuspended.DutySuspendedSpiritsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import models.AlcoholRegime.Spirits
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspended.DutySuspendedSpiritsView
 
@@ -38,17 +40,16 @@ class DutySuspendedSpiritsController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkRegime: CheckSpiritsRegimeAction,
-  formProvider: DutySuspendedSpiritsFormProvider,
+  formProvider: DutySuspendedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DutySuspendedSpiritsView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
     implicit request =>
+      val form         = formProvider(Spirits)
       val preparedForm = request.userAnswers.get(DutySuspendedSpiritsPage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -59,6 +60,7 @@ class DutySuspendedSpiritsController @Inject() (
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkRegime).async { implicit request =>
+      val form = formProvider(Spirits)
       form
         .bindFromRequest()
         .fold(

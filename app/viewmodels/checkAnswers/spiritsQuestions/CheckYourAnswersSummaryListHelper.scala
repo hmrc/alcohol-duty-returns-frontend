@@ -25,16 +25,16 @@ import viewmodels.govuk.summarylist.SummaryListViewModel
 object CheckYourAnswersSummaryListHelper {
   def spiritsSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
     val otherSpiritSummaryRow = getOptionalRow(OtherSpiritsProducedSummary.row(userAnswers))
-    val spiritTypeSummaryRow  = getOptionalRow(SpiritTypeSummary.row(userAnswers))
     for {
       totalSpiritsSummaryRow <- DeclareSpiritsTotalSummary.row(userAnswers)
       scotchWhiskySummaryRow <- WhiskySummary.scotchWhiskyRow(userAnswers)
       irishWhiskySummaryRow  <- WhiskySummary.irishWhiskeyRow(userAnswers)
+      spiritTypeSummaryRow   <- SpiritTypeSummary.row(userAnswers)
     } yield SummaryListViewModel(
       Seq(totalSpiritsSummaryRow) ++
         Seq(scotchWhiskySummaryRow) ++
         Seq(irishWhiskySummaryRow) ++
-        spiritTypeSummaryRow ++
+        Seq(spiritTypeSummaryRow) ++
         otherSpiritSummaryRow
     ).copy(card =
       Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card1"))))))

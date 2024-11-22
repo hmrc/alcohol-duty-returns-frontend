@@ -17,9 +17,8 @@
 package controllers.dutySuspended
 
 import base.SpecBase
-import forms.dutySuspended.DutySuspendedCiderFormProvider
 import models.NormalMode
-import models.dutySuspended.DutySuspendedCider
+import models.dutySuspended.DutySuspendedVolume
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.dutySuspended.DutySuspendedCiderPage
@@ -28,6 +27,8 @@ import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import forms.dutySuspended.DutySuspendedFormProvider
+import models.AlcoholRegime.Cider
 import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DutySuspendedCiderView
 
@@ -36,8 +37,9 @@ import scala.concurrent.Future
 class DutySuspendedCiderControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider            = new DutySuspendedCiderFormProvider()
-  val form                    = formProvider()
+  val formProvider            = new DutySuspendedFormProvider()
+  val regime                  = Cider
+  val form                    = formProvider(regime)(getMessages(app))
   val validTotalCider         = 45.67
   val validPureAlcoholInCider = 23.45
 
@@ -46,8 +48,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
   val userAnswers = userAnswersWithCider.copy(data =
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(
-        "totalCider"         -> validTotalCider,
-        "pureAlcoholInCider" -> validPureAlcoholInCider
+        "totalLitresVolume" -> validTotalCider,
+        "pureAlcoholVolume" -> validPureAlcoholInCider
       )
     )
   )
@@ -80,7 +82,7 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(DutySuspendedCider(validTotalCider, validPureAlcoholInCider)),
+          form.fill(DutySuspendedVolume(validTotalCider, validPureAlcoholInCider)),
           NormalMode
         )(request, getMessages(application)).toString
       }
@@ -104,8 +106,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedCiderRoute)
             .withFormUrlEncodedBody(
-              ("totalCider", validTotalCider.toString),
-              ("pureAlcoholInCider", validPureAlcoholInCider.toString)
+              ("volumes.totalLitresVolume", validTotalCider.toString),
+              ("volumes.pureAlcoholVolume", validPureAlcoholInCider.toString)
             )
 
         val result = route(application, request).value
@@ -167,8 +169,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedCiderRoute)
             .withFormUrlEncodedBody(
-              ("totalCider", validTotalCider.toString),
-              ("pureAlcoholInCider", validPureAlcoholInCider.toString)
+              ("volumes.totalLitresVolume", validTotalCider.toString),
+              ("volumes.pureAlcoholVolume", validPureAlcoholInCider.toString)
             )
 
         val result = route(application, request).value
@@ -185,8 +187,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedCiderRoute)
             .withFormUrlEncodedBody(
-              ("totalCider", validTotalCider.toString),
-              ("pureAlcoholInCider", validPureAlcoholInCider.toString)
+              ("volumes.totalLitresVolume", validTotalCider.toString),
+              ("volumes.pureAlcoholVolume", validPureAlcoholInCider.toString)
             )
 
         val result = route(application, request).value

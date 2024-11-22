@@ -50,8 +50,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("totalWine"),
+                field = form("volumes"),
+                key="totalLitresVolume",
                 label = LabelViewModel(messages("dutySuspendedWine.subheading1")).asSubheading,
+                errorMessageField = form("volumes_totalLitresVolume"),
+                value = form("volumes.totalLitresVolume").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -61,8 +64,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("pureAlcoholInWine"),
+                field = form("volumes"),
+                key="pureAlcoholVolume",
                 label = LabelViewModel(messages("dutySuspendedWine.subheading2")).asSubheading,
+                errorMessageField = form("volumes_pureAlcoholVolume"),
+                value = form("volumes.pureAlcoholVolume").value
             )
             .asNumeric()
             .withWidth(Fixed10)

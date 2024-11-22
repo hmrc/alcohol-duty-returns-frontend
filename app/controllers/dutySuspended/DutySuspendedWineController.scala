@@ -17,7 +17,8 @@
 package controllers.dutySuspended
 
 import controllers.actions._
-import forms.dutySuspended.DutySuspendedWineFormProvider
+import forms.dutySuspended.DutySuspendedFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.DeclareDutySuspendedDeliveriesNavigator
@@ -25,6 +26,7 @@ import pages.dutySuspended.DutySuspendedWinePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import models.AlcoholRegime.Wine
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspended.DutySuspendedWineView
 
@@ -38,17 +40,16 @@ class DutySuspendedWineController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkRegime: CheckWineRegimeAction,
-  formProvider: DutySuspendedWineFormProvider,
+  formProvider: DutySuspendedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DutySuspendedWineView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
     implicit request =>
+      val form         = formProvider(Wine)
       val preparedForm = request.userAnswers.get(DutySuspendedWinePage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -59,6 +60,7 @@ class DutySuspendedWineController @Inject() (
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkRegime).async { implicit request =>
+      val form = formProvider(Wine)
       form
         .bindFromRequest()
         .fold(

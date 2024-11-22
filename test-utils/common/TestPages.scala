@@ -17,7 +17,7 @@
 package common
 
 import models.AlcoholRegime._
-import models.dutySuspended.{DutySuspendedBeer, DutySuspendedCider, DutySuspendedOtherFermented, DutySuspendedSpirits, DutySuspendedWine}
+import models.dutySuspended.DutySuspendedVolume
 import models.{AlcoholRegime, RateBand, UserAnswers}
 import models.declareDuty.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
@@ -200,21 +200,21 @@ trait TestPages extends TestData {
   def specifyAllMultipleSPRListUnsorted(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
     multipleSPRListPage(userAnswers, regime, allVolumeAndRateByTaxTypeUnsorted)
 
-  def dutySuspendedBeerPage(userAnswers: UserAnswers, dutySuspendedBeer: DutySuspendedBeer): UserAnswers =
+  def dutySuspendedBeerPage(userAnswers: UserAnswers, dutySuspendedBeer: DutySuspendedVolume): UserAnswers =
     userAnswers.set(DutySuspendedBeerPage, dutySuspendedBeer).get
 
-  def dutySuspendedCiderPage(userAnswers: UserAnswers, dutySuspendedCider: DutySuspendedCider): UserAnswers =
+  def dutySuspendedCiderPage(userAnswers: UserAnswers, dutySuspendedCider: DutySuspendedVolume): UserAnswers =
     userAnswers.set(DutySuspendedCiderPage, dutySuspendedCider).get
 
-  def dutySuspendedWinePage(userAnswers: UserAnswers, dutySuspendedWine: DutySuspendedWine): UserAnswers =
+  def dutySuspendedWinePage(userAnswers: UserAnswers, dutySuspendedWine: DutySuspendedVolume): UserAnswers =
     userAnswers.set(DutySuspendedWinePage, dutySuspendedWine).get
 
-  def dutySuspendedSpiritsPage(userAnswers: UserAnswers, dutySuspendedSpirits: DutySuspendedSpirits): UserAnswers =
+  def dutySuspendedSpiritsPage(userAnswers: UserAnswers, dutySuspendedSpirits: DutySuspendedVolume): UserAnswers =
     userAnswers.set(DutySuspendedSpiritsPage, dutySuspendedSpirits).get
 
   def dutySuspendedOtherFermentedPage(
     userAnswers: UserAnswers,
-    dutySuspendedOtherFermented: DutySuspendedOtherFermented
+    dutySuspendedOtherFermented: DutySuspendedVolume
   ): UserAnswers =
     userAnswers.set(DutySuspendedOtherFermentedPage, dutySuspendedOtherFermented).get
 }
