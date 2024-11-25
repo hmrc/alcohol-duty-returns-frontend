@@ -86,9 +86,9 @@ class ViewReturnViewModelSpec extends SpecBase {
           s"$minus${messages("site.currency.2DP", returnDetailWithSpoilt.adjustments.total.abs)}"
         )
         adjustmentsViewModel.rows.head.cells(1).content shouldBe Text("123")
-        adjustmentsViewModel.rows.head.cells(3).content shouldBe Text("NA")
+        adjustmentsViewModel.rows.head.cells(3).content shouldBe Text("N/A")
         adjustmentsViewModel.rows(1).cells(1).content   shouldBe Text("Wine")
-        adjustmentsViewModel.rows(1).cells(3).content   shouldBe Text("NA")
+        adjustmentsViewModel.rows(1).cells(3).content   shouldBe Text("N/A")
       }
 
       "should return a model with no entries when a nil return" in new SetUp {
