@@ -49,14 +49,11 @@ class DirectDebitConnector @Inject() (
             Try(response.json.as[StartDirectDebitResponse]) match {
               case Success(data)      => Right[String, StartDirectDebitResponse](data)
               case Failure(exception) =>
-                logger.warn("Invalid JSON format when starting direct debit", exception)
                 Left(s"Invalid JSON format when starting direct debit. Exception: $exception")
             }
           case Left(errorResponse: UpstreamErrorResponse)    =>
-            logger.warn("Start Direct Debit failed with error. Error response", errorResponse)
             Left(s"Start Direct Debit failed with error. Error response: ${errorResponse.message}")
           case Right(otherStatusResponse)                    =>
-            logger.warn(s"Unexpected status code received when starting direct debit: ${otherStatusResponse.status}")
             Left(s"Unexpected status code received when starting direct debit: ${otherStatusResponse.status}")
         }
     }

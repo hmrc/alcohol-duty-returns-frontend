@@ -19,6 +19,7 @@ package controllers.checkAndSubmit
 import config.Constants.{adrReturnCreatedDetails, periodKeySessionKey}
 import config.FrontendAppConfig
 import controllers.actions._
+import handlers.ADRServerException
 import models.ReturnPeriod
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.Logging
@@ -47,8 +48,7 @@ class ReturnSubmittedController @Inject() (
 
     request.session.get(adrReturnCreatedDetails) match {
       case None                       =>
-        logger.warn("return details not present in session")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException("Return created details not present in session after submission")
       case Some(returnCreatedDetails) =>
         Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
           case Some(returnDetails: AdrReturnCreatedDetails) =>
@@ -74,8 +74,7 @@ class ReturnSubmittedController @Inject() (
               )
             )
           case None                                         =>
-            logger.warn("return details not valid")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            throw ADRServerException("Return created details not parseable after submission")
         }
     }
 

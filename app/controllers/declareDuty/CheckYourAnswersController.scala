@@ -17,6 +17,7 @@
 package controllers.declareDuty
 
 import controllers.actions._
+import handlers.ADRServerException
 import models.AlcoholRegime
 import play.api.Logging
 
@@ -43,8 +44,7 @@ class CheckYourAnswersController @Inject() (
       CheckYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
         case Some(summaryList) => Ok(view(regime, summaryList))
         case None              =>
-          logger.warn("Impossible to retrieve summary list rows")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          throw ADRServerException(s"Unable to retrieve summary list rows for page load $request")
       }
   }
 }

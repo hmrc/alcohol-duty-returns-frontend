@@ -26,6 +26,7 @@ import pages.adjustment.{AdjustmentRepackagedTaxTypePage, CurrentAdjustmentEntry
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
+import handlers.ADRServerException
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import play.api.Logging
@@ -76,8 +77,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
           )
         )
       case _                                                                                                      =>
-        logger.warn("Couldn't fetch the adjustmentType and repackagedRateBand in AdjustmentEntry from user answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(s"Couldn't fetch adjustmentType and repackagedRateBand in AdjustmentEntry from UserAnswers for page load $request")
     }
   }
 
@@ -120,12 +120,10 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")
                     }
                   case _                                    =>
-                    logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
-                    Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                    throw ADRServerException(s"Couldn't fetch adjustmentType and period in AdjustmentEntry from UserAnswers for page submit $request")
                 }
               case None                         =>
-                logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
-                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                throw ADRServerException(s"Couldn't fetch currentAdjustmentEntry from UserAnswers for page submit $request")
             }
         )
   }
@@ -146,8 +144,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
           )
         )
       case _                                                                               =>
-        logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRServerException(s"Couldn't fetch adjustmentType in AdjustmentEntry from UserAnswers when handling form errors $request")
     }
 
   def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =

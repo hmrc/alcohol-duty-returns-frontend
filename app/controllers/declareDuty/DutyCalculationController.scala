@@ -18,6 +18,7 @@ package controllers.declareDuty
 
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import controllers.actions._
+import handlers.ADRServerException
 import models.declareDuty.VolumeAndRateByTaxType
 import models.{AlcoholRegime, TotalDutyCalculationRequest, UserAnswers}
 import pages.QuestionPage
@@ -56,8 +57,7 @@ class DutyCalculationController @Inject() (
         _                  <- userAnswersConnector.set(updatedUserAnswers)
       } yield DutyCalculationHelper.dutyDueTableViewModel(totalDuty, request.userAnswers, regime) match {
         case Left(errorMessage)      =>
-          logger.warn(s"Failed to create duty due table view model: $errorMessage")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          throw ADRServerException(s"Failed to create dutyDueTableViewModel for page load $request: $errorMessage")
         case Right(dutyDueViewModel) => Ok(view(regime, dutyDueViewModel, totalDuty.totalDuty))
       }
   }
@@ -66,8 +66,7 @@ class DutyCalculationController @Inject() (
     implicit request =>
       request.userAnswers.getByKey(DutyCalculationPage, regime) match {
         case None            =>
-          logger.warn(s"Failed to get DutyCalculationPage from user answers for regime: $regime")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"Failed to get DutyCalculationPage from user answers for page submission for regime: $regime $request")
         case Some(totalDuty) =>
           for {
             updatedUserAnswers <- Future.fromTry(request.userAnswers.setByKey(AlcoholDutyPage, regime, totalDuty))

@@ -48,7 +48,7 @@ object ReturnPeriod {
     periodKey.charAt(3) - 'A' + 1
 
   def fromPeriodKeyOrThrow(periodKey: String): ReturnPeriod =
-    fromPeriodKey(periodKey).getOrElse(throw new IllegalArgumentException(s"Bad periodKey $periodKey"))
+    fromPeriodKey(periodKey).getOrElse(throw new IllegalArgumentException(s"Bad periodKey $periodKey (this should only be used for tests)"))
 
   def fromDateInPeriod(date: LocalDate): ReturnPeriod =
     ReturnPeriod(YearMonth.from(date))

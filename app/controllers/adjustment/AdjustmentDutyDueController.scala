@@ -18,6 +18,7 @@ package controllers.adjustment
 
 import connectors.UserAnswersConnector
 import controllers.actions._
+import handlers.ADRServerException
 import models.adjustment.AdjustmentEntry
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.Logging
@@ -79,8 +80,7 @@ class AdjustmentDutyDueController @Inject() (
       )
     )
     result.getOrElse {
-      logger.warn("Couldn't fetch correct AdjustmentEntry from user answers")
-      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      throw ADRServerException(s"Couldn't fetch AdjustmentEntry details from created adjustment $request")
     }
   }
 

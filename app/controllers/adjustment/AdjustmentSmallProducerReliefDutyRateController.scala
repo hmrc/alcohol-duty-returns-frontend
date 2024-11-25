@@ -26,6 +26,7 @@ import pages.adjustment.{AdjustmentSmallProducerReliefDutyRatePage, CurrentAdjus
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import handlers.ADRServerException
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -69,8 +70,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
           )
         )
       case _                                                                                                         =>
-        logger.warn("Couldn't fetch the adjustmentType and repackagedSprDutyRate in AdjustmentEntry from user answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(s"Couldn't fetch adjustmentType and repackagedSprDutyRate in AdjustmentEntry from UserAnswers for page load $request")
     }
   }
 
@@ -92,8 +92,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
                   )
                 )
               case _                                                                               =>
-                logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
-                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                throw ADRServerException(s"Couldn't fetch adjustmentType in AdjustmentEntry from UserAnswers for page submit $request")
             },
           value => {
             val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())

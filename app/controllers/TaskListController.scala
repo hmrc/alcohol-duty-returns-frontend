@@ -18,6 +18,7 @@ package controllers
 
 import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import handlers.ADRServerException
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -51,8 +52,9 @@ class TaskListController @Inject() (
           )
         )
       case None             =>
-        logger.warn("'Valid until' property not defined in User Answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(
+          s"'Valid until' property not defined in UserAnswers $request"
+        )
     }
   }
 }

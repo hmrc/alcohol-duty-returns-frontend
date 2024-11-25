@@ -26,6 +26,7 @@ import pages.declareDuty.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePa
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import handlers.ADRServerException
 import models.declareDuty.VolumeAndRateByTaxType
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -57,8 +58,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
       val form = formProvider(regime)
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
-          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          throw ADRServerException(s"Unable to retrieve WhatDoYouNeedToDeclarePage from UserAnswers for page load with regime: $regime $request")
         case Some(rateBands) =>
           val preparedForm               = request.userAnswers.getByKey(currentPage, regime) match {
             case None        => form
@@ -73,8 +73,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
-          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answer with regime: $regime")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"Unable to retrieve WhatDoYouNeedToDeclarePage from user answer for page submission with regime: $regime $request")
         case Some(rateBands) =>
           formProvider(regime)
             .bindFromRequest()

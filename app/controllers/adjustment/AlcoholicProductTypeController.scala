@@ -26,6 +26,7 @@ import pages.adjustment.{AlcoholicProductTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import handlers.ADRServerException
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -89,8 +90,7 @@ class AlcoholicProductTypeController @Inject() (
                   _              <- userAnswersConnector.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(AlcoholicProductTypePage, mode, updatedAnswers, hasChanged))
               case _            =>
-                logger.warn("Couldn't retrieve regime")
-                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                throw ADRServerException(s"Couldn't fetch regime for page submit $request")
             }
         )
   }

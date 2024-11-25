@@ -19,6 +19,7 @@ package controllers.payments
 import config.Constants.pastPaymentsSessionKey
 import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifyWithEnrolmentAction
+import handlers.ADRServerException
 import models.payments.OutstandingPayments
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -83,8 +84,7 @@ class ViewPastPaymentsController @Inject() (
     ).withSession(pastPaymentsData.session)
 
     openAndHistoricPaymentsFuture.recover { case ex =>
-      logger.warn(s"Error fetching payments data for $appaId", ex)
-      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      throw ADRServerException(s"Error fetching payments data for $appaId: $ex")
     }
   }
 }

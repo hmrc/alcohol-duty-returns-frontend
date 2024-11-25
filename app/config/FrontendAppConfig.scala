@@ -157,7 +157,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def getTaxTypeCodeByRegime(regime: AlcoholRegime): String           = spoiltDefaults.getOrElse(
     regime.toString,
     throw new RuntimeException(
-      s"Couldn't fetch spoilt tax type code for $regime regime"
+      s"Couldn't fetch spoilt tax type code for $regime regime from spoilt-defaults configuration"
     )
   )
 }

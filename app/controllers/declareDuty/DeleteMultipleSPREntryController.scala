@@ -25,6 +25,7 @@ import pages.declareDuty.{DeleteMultipleSPREntryPage, MultipleSPRListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import handlers.ADRServerException
 import navigation.ReturnsNavigator
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -54,8 +55,7 @@ class DeleteMultipleSPREntryController @Inject() (
       indexOpt match {
         case Some(index) => Ok(view(form, regime, index))
         case None        =>
-          logger.warn("No index provided")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          throw ADRServerException(s"No index provided to DeleteMultipleSPREntryController for page load $request")
       }
     }
 
@@ -63,8 +63,7 @@ class DeleteMultipleSPREntryController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       indexOpt match {
         case None        =>
-          logger.warn("No index provided")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"No index provided to DeleteMultipleSPREntryController for page submission $request")
         case Some(index) =>
           form
             .bindFromRequest()

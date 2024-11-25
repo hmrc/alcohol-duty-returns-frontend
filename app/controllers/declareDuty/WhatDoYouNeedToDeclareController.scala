@@ -19,6 +19,7 @@ package controllers.declareDuty
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import controllers.actions._
 import forms.declareDuty.WhatDoYouNeedToDeclareFormProvider
+import handlers.ADRServerException
 import models.requests.DataRequest
 import models.{AlcoholRegime, Mode, RateBand, ReturnPeriod, UserAnswers}
 import navigation.ReturnsNavigator
@@ -94,8 +95,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
         }
         .recover(
           { case e =>
-            logger.warn("Alcohol Type unselected", e)
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            throw ADRServerException(s"Unable to select Alcohol Type for page load for regime $regime: $e")
           }
         )
     }
@@ -113,7 +113,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
     rateBandTaxTypes.map { taxType =>
       rateBands
         .find(_.taxTypeCode == taxType)
-        .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: $taxType"))
+        .getOrElse(throw new ADRServerException(s"Invalid tax type not found in rateBanTaxTypes on page submission: $taxType"))
     }
   }
 

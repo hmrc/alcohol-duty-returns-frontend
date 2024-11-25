@@ -26,6 +26,7 @@ import pages.declareDuty.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, W
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import handlers.ADRServerException
 import models.declareDuty.VolumeAndRateByTaxType
 import play.api.Logging
 import play.api.data.Form
@@ -58,8 +59,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
       } yield Ok(view(form, mode, regime, TellUsAboutMultipleSPRRateHelper.radioItems(rateBands), index))
 
       result.getOrElse {
-        logger.warn("Error creating the form for TellUsAboutMultipleSPRRate screen")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(s"Error creating the form for TellUsAboutMultipleSPRRate screen for page load $request")
       }
     }
 
@@ -67,8 +67,7 @@ class TellUsAboutMultipleSPRRateController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(WhatDoYouNeedToDeclarePage, regime) match {
         case None            =>
-          logger.warn(s"Impossible to retrieve WhatDoYouNeedToDeclarePage from user answers with regime: $regime")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"Unable to retrieve WhatDoYouNeedToDeclarePage from UserAnswer for page submission with regime: $regime $request")
         case Some(rateBands) =>
           formProvider(regime)
             .bindFromRequest()

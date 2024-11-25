@@ -18,6 +18,7 @@ package controllers.returns
 
 import connectors.{AlcoholDutyCalculatorConnector, AlcoholDutyReturnsConnector}
 import controllers.actions._
+import handlers.{ADRBadRequest, ADRServerException}
 import models.ReturnPeriod
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -46,6 +47,7 @@ class ViewReturnController @Inject() (
 
   def onPageLoad(periodKey: String): Action[AnyContent] = identify.async { implicit request =>
     val appaId = request.appaId
+    val returnPeriod = ReturnPeriod.fromPeriodKey(periodKey).getOrElse(throw ADRBadRequest(s"Unable to parse period key $periodKey for view return for $appaId"))
 
     (for {
       returnDetails                     <- alcoholDutyReturnsConnector.getReturn(appaId, periodKey)
@@ -58,39 +60,31 @@ class ViewReturnController @Inject() (
                                                .map(returnPeriod => (returnPeriod.period, taxCode))
                                            }
       ratePeriodsAndTaxCodesToRateBands <- calculatorConnector.rateBands(ratePeriodsAndTaxCodes)
-    } yield ReturnPeriod
-      .fromPeriodKey(periodKey)
-      .fold {
-        logger.warn(s"Cannot parse period key $periodKey for $appaId on return")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      } { returnPeriod =>
-        val dutyToDeclareViewModel =
-          viewModel.createAlcoholDeclaredViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
-        val adjustmentsViewModel   =
-          viewModel.createAdjustmentsViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
-        val totalDueViewModel      = viewModel.createTotalDueViewModel(returnDetails)
-        val netDutySuspension      = viewModel.createNetDutySuspensionViewModel(returnDetails)
-        val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriod.period)
-        val submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
-        val submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
-        val submittedTime          = dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
-        val submittedTimeStr       = dateTimeHelper.formatHourMinuteMeridiem(submittedTime)
-
-        Ok(
-          view(
-            returnPeriodStr,
-            submittedDateStr,
-            submittedTimeStr,
-            dutyToDeclareViewModel,
-            adjustmentsViewModel,
-            totalDueViewModel,
-            netDutySuspension
-          )
+      dutyToDeclareViewModel =
+        viewModel.createAlcoholDeclaredViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
+      adjustmentsViewModel   =
+        viewModel.createAdjustmentsViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
+      totalDueViewModel      = viewModel.createTotalDueViewModel(returnDetails)
+      netDutySuspension      = viewModel.createNetDutySuspensionViewModel(returnDetails)
+      returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriod.period)
+      submittedDate          = dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
+      submittedDateStr       = dateTimeHelper.formatDateMonthYear(submittedDate)
+      submittedTime          = dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
+      submittedTimeStr       = dateTimeHelper.formatHourMinuteMeridiem(submittedTime)
+    } yield {
+      Ok(
+        view(
+          returnPeriodStr,
+          submittedDateStr,
+          submittedTimeStr,
+          dutyToDeclareViewModel,
+          adjustmentsViewModel,
+          totalDueViewModel,
+          netDutySuspension
         )
-      })
-      .recover { case _ =>
-        logger.warn(s"Unable to fetch return $appaId $periodKey")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-      }
+      )}
+    ).recover { case e =>
+      throw ADRServerException(s"Unable to fetch return $appaId $periodKey for viewing: $e")
+    }
   }
 }

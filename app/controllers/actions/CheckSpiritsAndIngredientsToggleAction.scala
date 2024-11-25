@@ -33,7 +33,7 @@ class CheckSpiritsAndIngredientsToggleAction @Inject() (appConfig: FrontendAppCo
     if (appConfig.spiritsAndIngredientsEnabled) {
       Future.successful(Right(request))
     } else {
-      logger.warn(s"Spirits and ingredients journey switched off")
+      logger.warn("Spirits and ingredients journey feature toggled off for a page that requires it")
       Future.successful(Left(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
     }
 }

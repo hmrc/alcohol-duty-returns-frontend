@@ -26,6 +26,7 @@ import pages.declareDuty.DoYouWantToAddMultipleSPRToListPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import handlers.ADRServerException
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.declareDuty.MultipleSPRListHelper
@@ -61,8 +62,7 @@ class MultipleSPRListController @Inject() (
         .sprTableViewModel(request.userAnswers, regime)
         .fold(
           error => {
-            logger.warn(s"Failed to create SPR table: $error")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            throw ADRServerException(s"Failed to create SPR table on page load: $error $request")
           },
           sprTable => Ok(view(preparedForm, regime, sprTable))
         )
@@ -78,8 +78,7 @@ class MultipleSPRListController @Inject() (
               .sprTableViewModel(request.userAnswers, regime)
               .fold(
                 error => {
-                  logger.warn(s"Failed to create SPR table: $error")
-                  Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                  throw ADRServerException(s"Failed to create SPR table on page submit: $error $request")
                 },
                 sprTable => Future.successful(BadRequest(view(formWithErrors, regime, sprTable)))
               ),

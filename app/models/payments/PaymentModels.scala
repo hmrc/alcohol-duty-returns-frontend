@@ -16,6 +16,7 @@
 
 package models.payments
 
+import handlers.ADRServerException
 import models.OutstandingPayment
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.libs.json.{Format, JsError, JsNumber, JsResult, JsString, JsSuccess, JsValue, Json, OFormat}
@@ -64,7 +65,7 @@ object StartPaymentRequest {
           returnUrl,
           backUrl
         )
-      case _                     => throw new RuntimeException("Cannot generate a StartPaymentRequest without any charge reference")
+      case _                     => throw ADRServerException(s"Cannot generate a StartPaymentRequest without any charge reference $appaId")
     }
 
   def apply(
@@ -82,8 +83,8 @@ object StartPaymentRequest {
         url
       )
     case _                     =>
-      throw new RuntimeException(
-        "Cannot generate a StartPaymentRequest without any charge reference for OutstandingPayment"
+      throw ADRServerException(
+        s"Cannot generate a StartPaymentRequest without any charge reference for OutstandingPayment $appaId"
       )
   }
 }

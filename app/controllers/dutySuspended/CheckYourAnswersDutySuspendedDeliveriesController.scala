@@ -18,6 +18,7 @@ package controllers.dutySuspended
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import handlers.ADRServerException
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -41,8 +42,7 @@ class CheckYourAnswersDutySuspendedDeliveriesController @Inject() (
     checkYourAnswersSummaryListHelper.dutySuspendedDeliveriesSummaryList(request.userAnswers) match {
       case summaryList if summaryList.rows.nonEmpty => Ok(view(summaryList))
       case _                                        =>
-        logger.warn("Impossible to retrieve summary list rows")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(s"Unable to create dutySuspendedDeliveriesSummaryList rows on page load $request")
     }
   }
 }

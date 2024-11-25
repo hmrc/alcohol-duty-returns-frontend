@@ -20,6 +20,7 @@ import cats.data.EitherT
 import config.Constants.adrReturnCreatedDetails
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
+import handlers.ADRServerException
 import models.UserAnswers
 import models.audit.AuditReturnSubmitted
 import models.checkAndSubmit.AdrReturnSubmission
@@ -60,10 +61,7 @@ class DutyDueForThisReturnController @Inject() (
     dutyDueForThisReturnHelper
       .getDutyDueViewModel(request.userAnswers, request.returnPeriod)
       .foldF(
-        error => {
-          logger.warn(error)
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-        },
+        error => throw ADRServerException(s"$error $request"),
         result => Future.successful(Ok(view(result)))
       )
   }
@@ -77,12 +75,9 @@ class DutyDueForThisReturnController @Inject() (
       _                           <- EitherT.rightT[Future, String](auditReturnSubmitted(request.userAnswers, adrReturnSubmission))
     } yield adrSubmissionCreatedDetails
     result.foldF(
-      error => {
-        logger.warn(error)
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      },
+      error => throw ADRServerException(error),
       adrSubmissionCreatedDetails => {
-        logger.warn(s"Successfully submitted return")
+        logger.warn(s"Successfully submitted return $request")
         val session =
           request.session + (adrReturnCreatedDetails -> Json.toJson(adrSubmissionCreatedDetails).toString)
         Future.successful(

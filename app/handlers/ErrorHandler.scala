@@ -17,8 +17,10 @@
 package handlers
 
 import play.api.Logging
+import play.api.http.Status.{BAD_REQUEST, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.RequestHeader
+import play.api.mvc.Results.{BadRequest, NotFound}
+import play.api.mvc.{RequestHeader, Result}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.ErrorTemplate
@@ -34,6 +36,16 @@ class ErrorHandler @Inject() (
     extends FrontendErrorHandler
     with Logging
     with I18nSupport {
+
+  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = exception match {
+    case ADRBadRequest(message) =>
+      logger.warn(message)
+      super.onClientError(request, BAD_REQUEST, message)
+    case ADRNotFound(message)   =>
+      logger.warn(message)
+      super.onClientError(request, NOT_FOUND, message)
+    case _                      => super.onServerError(request, exception)
+  }
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
     request: RequestHeader

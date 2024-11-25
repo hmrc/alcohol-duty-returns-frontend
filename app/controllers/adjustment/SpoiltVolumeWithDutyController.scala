@@ -19,6 +19,7 @@ package controllers.adjustment
 import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.adjustment.SpoiltVolumeWithDutyFormProvider
+import handlers.ADRServerException
 import models.adjustment.{AdjustmentEntry, SpoiltVolumeWithDuty}
 import models.requests.DataRequest
 import models.{AlcoholRegime, Mode}
@@ -95,8 +96,7 @@ class SpoiltVolumeWithDutyController @Inject() (
             Ok(view(form, mode, regime))
         }
       case _            =>
-        logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(s"Couldn't fetch regime value in AdjustmentEntry from UserAnswers for page load $request")
     }
   }
 
@@ -131,8 +131,7 @@ class SpoiltVolumeWithDutyController @Inject() (
               }
             )
         case _            =>
-          logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"Couldn't fetch regime value in AdjustmentEntry from UserAnswers for page submit $request")
       }
   }
 

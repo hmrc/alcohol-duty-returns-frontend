@@ -19,6 +19,7 @@ package controllers.adjustment
 import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.adjustment.AdjustmentVolumeFormProvider
+import handlers.ADRServerException
 
 import javax.inject.Inject
 import models.{AlcoholRegime, Mode}
@@ -106,8 +107,7 @@ class AdjustmentVolumeController @Inject() (
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
       case _            =>
-        logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(s"Couldn't fetch regime in AdjustmentEntry from UserAnswers for page load $request")
     }
   }
 
@@ -139,8 +139,7 @@ class AdjustmentVolumeController @Inject() (
               }
             )
         case _            =>
-          logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"Couldn't fetch regime in AdjustmentEntry from UserAnswers for page submit $request")
       }
   }
 
@@ -161,8 +160,7 @@ class AdjustmentVolumeController @Inject() (
           )
         )
       case _                                                                                            =>
-        logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRServerException(s"Couldn't fetch adjustmentType and rateBand in AdjustmentEntry from UserAnswers for form error handling $request")
     }
 
   def updateVolume(adjustmentEntry: AdjustmentEntry, currentValue: AdjustmentVolume): (AdjustmentEntry, Boolean) =

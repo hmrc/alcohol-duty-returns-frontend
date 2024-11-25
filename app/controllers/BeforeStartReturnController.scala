@@ -19,6 +19,7 @@ package controllers
 import config.Constants.periodKeySessionKey
 import connectors.UserAnswersConnector
 import controllers.actions._
+import handlers.{ADRServerException, ADRBadRequest, ADRNotFound}
 import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
 import models.{ObligationData, ReturnId, ReturnPeriod, UserAnswers}
 import play.api.Logging
@@ -55,8 +56,7 @@ class BeforeStartReturnController @Inject() (
 
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case None               =>
-        logger.warn("Period key is not valid")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRBadRequest(s"Period key $periodKey is not valid")
       case Some(returnPeriod) =>
         val currentDate = LocalDate.now(clock)
         val viewModel   = BeforeStartReturnViewModel(returnPeriod, currentDate)
@@ -72,9 +72,10 @@ class BeforeStartReturnController @Inject() (
           case Left(error) if error.statusCode == LOCKED    =>
             logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
             Redirect(controllers.routes.ReturnLockedController.onPageLoad())
-          case _                                            =>
-            logger.warn(s"Error retrieving the return $appaId/$periodKey for the user")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          case Left(error)                                  =>
+            throw ADRServerException(
+              s"Error retrieving the return $appaId/$periodKey for the user: ${error.statusCode} ${error.message}"
+            )
         }
     }
   }
@@ -82,19 +83,24 @@ class BeforeStartReturnController @Inject() (
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case None            =>
-        logger.warn("Period key not present in session")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRNotFound("Period key not present in session")
       case Some(periodKey) =>
+        val returnId = ReturnId(request.appaId, periodKey)
         val returnAndUserDetails =
-          ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
+          ReturnAndUserDetails(returnId, request.groupId, request.userId)
+
         userAnswersConnector.createUserAnswers(returnAndUserDetails).map {
-          case Right(userAnswer) =>
-            logger.info(s"Return ${request.appaId}/$periodKey created")
+          case Right(userAnswer)                            =>
+            logger.info(s"Return $returnId created")
             auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
-          case Left(error)       =>
-            logger.warn(s"Unable to create userAnswers:", error)
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          // LOCKED shouldn't happen here, and if unable to get obligations or subscriptions they couldn't have got
+          // here unless someone completed a return in the meantime (extremely unlikely) so treat as something outside
+          // of user control went wrong
+          case Left(error)                                  =>
+            throw ADRServerException(
+              s"Unable to create UserAnswers $returnId for the user: ${error.statusCode} ${error.message}"
+            )
         }
     }
   }
@@ -136,7 +142,10 @@ class BeforeStartReturnController @Inject() (
           returnValidUntilTime = userAnswers.validUntil
         )
         auditService.audit(auditReturnStarted)
-      case None                 => logger.warn("Impossible to create Return Started Audit Event, unable to retrieve obligation data")
+      case None                 =>
+        logger.warn(
+          s"Unable to create ReturnStarted audit event: unable to retrieve obligation data ${userAnswers.returnId.appaId}/${userAnswers.returnId.periodKey}"
+        )
     }
 
 }

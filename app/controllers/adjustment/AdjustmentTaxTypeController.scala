@@ -26,6 +26,7 @@ import pages.adjustment.{AdjustmentTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
+import handlers.ADRServerException
 import models.RateType.{DraughtAndSmallProducerRelief, DraughtRelief}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.RepackagedDraughtProducts
@@ -77,8 +78,7 @@ class AdjustmentTaxTypeController @Inject() (
           )
         )
       case _                                                                                            =>
-        logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(s"Couldn't fetch adjustmentType and rateBand in AdjustmentEntry from UserAnswers for page load $request")
     }
   }
 
@@ -112,8 +112,7 @@ class AdjustmentTaxTypeController @Inject() (
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.invalid")
                     }
                   case _                                    =>
-                    logger.warn("Impossible to retrieve adjustmentType and period in currentAdjustmentEntry")
-                    Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                    throw ADRServerException(s"Couldn't fetch adjustmentType and period in currentAdjustmentEntry from UserAnswers for page submit $request")
                 }
               case None                         =>
                 logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
@@ -142,8 +141,7 @@ class AdjustmentTaxTypeController @Inject() (
           )
         )
       case _                                                                               =>
-        logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRServerException(s"Couldn't fetch adjustmentType and rateBand in AdjustmentEntry from UserAnswers for form error handling $request")
     }
 
   private def rateBandResponseError(mode: Mode, value: Int, adjustmentType: AdjustmentType, errorMessage: String)(

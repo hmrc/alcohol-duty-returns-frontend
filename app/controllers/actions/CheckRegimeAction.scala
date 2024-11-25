@@ -33,7 +33,7 @@ trait CheckRegimeAction extends ActionRefiner[DataRequest, DataRequest] with Log
     if (request.userAnswers.regimes.hasRegime(regime)) {
       Future.successful(Right(request))
     } else {
-      logger.warn(s"User does not have regime: $regime")
+      logger.warn(s"${request.appaId} does not have regime $regime enabled for a page that requires it")
       Future.successful(Left(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
     }
 }

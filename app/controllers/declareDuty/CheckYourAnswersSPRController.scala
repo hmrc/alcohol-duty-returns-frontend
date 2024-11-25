@@ -18,6 +18,7 @@ package controllers.declareDuty
 
 import connectors.UserAnswersConnector
 import controllers.actions._
+import handlers.ADRServerException
 import models.declareDuty.VolumeAndRateByTaxType
 import models.{AlcoholRegime, UserAnswers}
 import pages.declareDuty.{MultipleSPRListPage, TellUsAboutMultipleSPRRatePage}
@@ -50,8 +51,7 @@ class CheckYourAnswersSPRController @Inject() (
     (identify andThen getData andThen requireData) { implicit request =>
       CheckYourAnswersSPRSummaryListHelper.summaryList(regime, request.userAnswers, index) match {
         case None              =>
-          logger.warn("Impossible to retrieve summary list")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          throw ADRServerException(s"Unable to retrieve summary list for page load $request")
         case Some(summaryList) =>
           Ok(view(regime, summaryList, index))
       }
@@ -61,8 +61,7 @@ class CheckYourAnswersSPRController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.getByKey(TellUsAboutMultipleSPRRatePage, regime) match {
         case None               =>
-          logger.warn("Impossible to retrieve TellUsAboutMultipleSPRRatePage from userAnswers")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"Unable to retrieve TellUsAboutMultipleSPRRatePage from userAnswers for page submission $request")
         case Some(sprRateEntry) =>
           for {
             updatedUserAnswers <- Future.fromTry(updateUserAnswer(request.userAnswers, regime, sprRateEntry, index))

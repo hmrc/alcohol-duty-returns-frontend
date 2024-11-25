@@ -20,6 +20,7 @@ import config.Constants.rowsPerPage
 import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
 import forms.adjustment.AdjustmentListFormProvider
+import handlers.ADRServerException
 import navigation.AdjustmentNavigator
 import models.{NormalMode, UserAnswers}
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
@@ -76,8 +77,7 @@ class AdjustmentListController @Inject() (
           }
         }
         .recover { case _ =>
-          logger.warn("Unable to fetch adjustment total")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          throw ADRServerException(s"Unable to calculate adjustment total for page load $request")
         }
   }
 

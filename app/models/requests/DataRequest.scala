@@ -35,4 +35,6 @@ case class DataRequest[A](
   userId: String,
   returnPeriod: ReturnPeriod,
   userAnswers: UserAnswers
-) extends WrappedRequest[A](request)
+) extends WrappedRequest[A](request) {
+  override def toString: String = userAnswers.returnId.toString
+}

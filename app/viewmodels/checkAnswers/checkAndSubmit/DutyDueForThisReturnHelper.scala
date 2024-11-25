@@ -58,10 +58,10 @@ class DutyDueForThisReturnHelper @Inject() (
       dutiesByRegime             <- getDutiesByAlcoholRegime(userAnswers)
       totalAdjustment            <- getTotalAdjustment(userAnswers)
       total                      <- calculateTotal(dutiesByRegime, totalAdjustment)
-      dutiesBreakdownViewModel   <- createTableViewModel(dutiesByRegime, totalAdjustment)
+      dutiesBreakdownViewModel   =  createTableViewModel(dutiesByRegime, totalAdjustment)
       dutySuspended              <- adrReturnSubmissionService.getDutySuspended(userAnswers)
       maybeSpirits               <- adrReturnSubmissionService.getSpirits(userAnswers, returnPeriod)
-      youveAlsoAnsweredViewModel <- createYouveAlsoAnsweredTableViewModel(dutySuspended, maybeSpirits)
+      youveAlsoAnsweredViewModel =  createYouveAlsoAnsweredTableViewModel(dutySuspended, maybeSpirits)
     } yield DutyDueForThisReturnViewModel(
       dutiesBreakdownViewModel,
       youveAlsoAnsweredViewModel,
@@ -97,27 +97,23 @@ class DutyDueForThisReturnHelper @Inject() (
 
   private def createTableViewModel(dutiesByRegime: Seq[(AlcoholRegime, AlcoholDuty)], totalAdjustment: BigDecimal)(
     implicit messages: Messages
-  ): EitherT[Future, String, TableViewModel] = {
+  ): TableViewModel = {
     val returnDutiesRow = createReturnRows(dutiesByRegime)
     val adjustmentRow   = createAdjustmentRow(totalAdjustment)
-    EitherT.rightT[Future, String](
-      TableViewModel(
-        head = Seq.empty,
-        rows = returnDutiesRow :+ adjustmentRow
-      )
+    TableViewModel(
+      head = Seq.empty,
+      rows = returnDutiesRow :+ adjustmentRow
     )
   }
 
   private def createYouveAlsoAnsweredTableViewModel(dutySuspended: AdrDutySuspended, maybeSpirits: Option[AdrSpirits])(
     implicit messages: Messages
-  ): EitherT[Future, String, TableViewModel] = {
+  ): TableViewModel = {
     val returnDutiesRow = createDutySuspendedRow(dutySuspended.declared)
     val maybeSpiritsRow = maybeSpirits.map(spirits => createSpiritsRow(spirits.spiritsDeclared))
-    EitherT.rightT[Future, String](
-      TableViewModel(
-        head = Seq.empty,
-        rows = maybeSpiritsRow.fold(returnDutiesRow)(returnDutiesRow ++ _)
-      )
+    TableViewModel(
+      head = Seq.empty,
+      rows = maybeSpiritsRow.fold(returnDutiesRow)(returnDutiesRow ++ _)
     )
   }
 

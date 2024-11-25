@@ -20,6 +20,7 @@ import config.Constants.{adrReturnCreatedDetails, pastPaymentsSessionKey}
 import config.FrontendAppConfig
 import connectors.PayApiConnector
 import controllers.actions.IdentifyWithEnrolmentAction
+import handlers.ADRServerException
 import models.OutstandingPayment
 import models.audit.AuditPaymentStarted
 import models.checkAndSubmit.AdrReturnCreatedDetails
@@ -63,10 +64,7 @@ class StartPaymentController @Inject() (
         )
         startPayment(startPaymentRequest, appaId, credentialID)
       case _                   =>
-        logger.warn(
-          "Return details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
-        )
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRServerException(s"Return details couldn't be read from the session; start payment failed: $appaId")
     }
   }
 
@@ -77,12 +75,8 @@ class StartPaymentController @Inject() (
     getPaymentDetails(request.session, index, appaId, url) match {
       case Some(startPaymentRequest) => startPayment(startPaymentRequest, appaId, credentialID)
       case _                         =>
-        logger.warn(
-          "OutstandingPayment details couldn't be read from the session. Start payment failed. Redirecting user to Journey Recovery"
-        )
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRServerException(s"OutstandingPayment details couldn't be read from the session; start payment failed: $appaId")
     }
-
   }
 
   private def getReturnDetails(session: Session): Option[AdrReturnCreatedDetails] =
@@ -97,8 +91,7 @@ class StartPaymentController @Inject() (
       .startPayment(startPaymentRequest)
       .foldF(
         _ => {
-          logger.warn("Start payment failed. Redirecting user to Journey Recovery")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"Start payment failed: $appaId")
         },
         startPaymentResponse => {
           auditPaymentStarted(

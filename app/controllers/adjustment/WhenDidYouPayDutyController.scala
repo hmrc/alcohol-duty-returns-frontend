@@ -26,6 +26,7 @@ import pages.adjustment.{CurrentAdjustmentEntryPage, WhenDidYouPayDutyPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import handlers.ADRServerException
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -72,7 +73,7 @@ class WhenDidYouPayDutyController @Inject() (
           )
         )
       case _                                                                                          =>
-        logger.warn("Couldn't fetch the adjustmentType and period in AdjustmentEntry from user answers")
+        throw ADRServerException(s"Couldn't fetch adjustmentType and period in AdjustmentEntry from UserAnswers for page load $request")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
@@ -95,8 +96,7 @@ class WhenDidYouPayDutyController @Inject() (
                   )
                 )
               case _                                                                               =>
-                logger.warn("Couldn't fetch the adjustmentType in AdjustmentEntry from user answers")
-                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+                throw ADRServerException(s"Couldn't fetch adjustmentType in AdjustmentEntry from UserAnswers for page submit $request")
             },
           value => {
             val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())

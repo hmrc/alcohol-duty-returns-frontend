@@ -107,22 +107,21 @@ class AdjustmentTypeController @Inject() (
     }
 
   private def checkIfOneRegimeAndUpdateUserAnswers(
-    userAnswer: UserAnswers
+    userAnswers: UserAnswers
   )(implicit messages: Messages): Try[UserAnswers] =
-    if (userAnswer.regimes.regimes.size == 1) {
-      val adjustment       = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-      val rateBand         = helper.createRateBandFromRegime(userAnswer.regimes.regimes.head)
-      val currentYearMonth = YearMonth.now()
-      userAnswer.set(
-        CurrentAdjustmentEntryPage,
-        adjustment.copy(
-          spoiltRegime = userAnswer.regimes.regimes.headOption,
-          rateBand = Some(rateBand),
-          period = Some(currentYearMonth.withMonth(1))
+    userAnswers.regimes.regimes.toList match {
+      case List(regime) =>
+        val adjustment = userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+        val rateBand = helper.createRateBandFromRegime(regime)
+        val currentYearMonth = YearMonth.now()
+        userAnswers.set(
+          CurrentAdjustmentEntryPage,
+          adjustment.copy(
+            spoiltRegime = userAnswers.regimes.regimes.headOption,
+            rateBand = Some(rateBand),
+            period = Some(currentYearMonth.withMonth(1))
+          )
         )
-      )
-    } else {
-      Try(userAnswer)
+      case _ => Try(userAnswers)
     }
-
 }

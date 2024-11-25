@@ -18,6 +18,7 @@ package controllers.returns
 
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
+import handlers.ADRServerException
 import models.ObligationData
 import models.ObligationStatus.{Fulfilled, Open}
 import play.api.Logging
@@ -52,9 +53,8 @@ class ViewPastReturnsController @Inject() (
         val completedReturnsTable   = viewModelHelper.getReturnsTable(fulfilledObligations)
         Ok(view(outstandingReturnsTable, completedReturnsTable))
       }
-      .recover { case _ =>
-        logger.warn("Unable to fetch obligation data")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+      .recover { case e =>
+        throw ADRServerException(s"Unable to fetch obligation data for viewing past returns ${request.appaId}: $e")
       }
   }
 }

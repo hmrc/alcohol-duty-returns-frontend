@@ -26,6 +26,7 @@ import pages.adjustment.{AdjustmentVolumeWithSPRPage, CurrentAdjustmentEntryPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import connectors.UserAnswersConnector
+import handlers.ADRServerException
 import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
 import models.requests.DataRequest
 import play.api.Logging
@@ -101,14 +102,10 @@ class AdjustmentVolumeWithSPRController @Inject() (
               )
             )
           case _                                                                                            =>
-            logger.warn(
-              "Couldn't fetch the adjustmentType, rateBand, totalLitres, pureAlcohol and sprDutyRate in AdjustmentEntry from user answers"
-            )
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            throw ADRServerException(s"Couldn't fetch adjustmentType, rateBand, totalLitres, pureAlcohol and sprDutyRate in AdjustmentEntry from UserAnswers for page load $request")
         }
       case _            =>
-        logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        throw ADRServerException(s"Couldn't fetch regime in AdjustmentEntry from UserAnswers for page load $request")
     }
 
   }
@@ -141,8 +138,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
               }
             )
         case _            =>
-          logger.warn("Couldn't fetch regime value in AdjustmentEntry from user answers")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          throw ADRServerException(s"Couldn't fetch regime in AdjustmentEntry from UserAnswers for page submit $request")
       }
   }
 
@@ -163,8 +159,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
           )
         )
       case _                                                                                            =>
-        logger.warn("Couldn't fetch the adjustmentType and rateBand in AdjustmentEntry from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRServerException(s"Couldn't fetch adjustmentType and rateBand in AdjustmentEntry from UserAnswers for form error handling $request")
     }
 
   def updateVolume(

@@ -26,7 +26,9 @@ import scala.util.{Failure, Success, Try}
 case class ReturnId(
   appaId: String,
   periodKey: String
-)
+) {
+  override def toString: String = s"$appaId/$periodKey"
+}
 
 object ReturnId {
 

@@ -92,12 +92,12 @@ class IdentifyWithEnrolmentActionImpl @Inject() (
     )
     val appaIdOpt: Option[String] =
       adrEnrolments.getIdentifier(config.enrolmentIdentifierKey).map(_.value)
-    getOrElseFailWithUnauthorised(appaIdOpt, "Unable to retrieve APPAID from enrolments")
+    getOrElseFailWithInsufficientEnrolments(appaIdOpt, "Unable to retrieve APPAID from enrolments")
   }
 
-  def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
+  def getOrElseFailWithInsufficientEnrolments[T](o: Option[T], failureMessage: String): T =
     o.getOrElse {
       logger.warn(s"Identifier Action failed with error: $failureMessage")
-      throw new IllegalStateException(failureMessage)
+      throw InsufficientEnrolments(failureMessage)
     }
 }

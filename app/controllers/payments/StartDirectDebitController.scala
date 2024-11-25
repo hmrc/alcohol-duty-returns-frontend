@@ -19,6 +19,7 @@ package controllers.payments
 import config.FrontendAppConfig
 import connectors.DirectDebitConnector
 import controllers.actions.IdentifyWithEnrolmentAction
+import handlers.ADRServerException
 import models.payments.StartDirectDebitRequest
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -50,9 +51,8 @@ class StartDirectDebitController @Inject() (
     directDebitConnector
       .startDirectDebit(startDirectDebitRequest)
       .foldF(
-        _ => {
-          logger.warn("Start direct debit failed. Redirecting user to Journey Recovery")
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        e => {
+          throw ADRServerException(s"Start direct debit failed ${request.appaId}: $e")
         },
         startDirectDebitResponse => Future.successful(Redirect(startDirectDebitResponse.nextUrl))
       )

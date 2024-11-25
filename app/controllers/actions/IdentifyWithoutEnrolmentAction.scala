@@ -88,6 +88,6 @@ class IdentifyWithoutEnrolmentActionImpl @Inject() (
   def getOrElseFailWithUnauthorised[T](o: Option[T], failureMessage: String): T =
     o.getOrElse {
       logger.warn(s"Identifier Action failed with error: $failureMessage")
-      throw new IllegalStateException(failureMessage)
+      throw new UnauthorizedException(failureMessage)
     }
 }

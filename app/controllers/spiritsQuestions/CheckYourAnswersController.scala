@@ -17,6 +17,7 @@
 package controllers.spiritsQuestions
 import com.google.inject.Inject
 import controllers.actions.{CheckSpiritsAndIngredientsToggleAction, CheckSpiritsRegimeAction, DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
+import handlers.ADRServerException
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -46,9 +47,9 @@ class CheckYourAnswersController @Inject() (
           grainsList           <- CheckYourAnswersSummaryListHelper.grainsUsedSummaryList(request.userAnswers)
           otherIngredientsList <- CheckYourAnswersSummaryListHelper.otherIngredientsUsedSummaryList(request.userAnswers)
         } yield Ok(view(spiritsList, alcoholList, grainsList, otherIngredientsList))
+
         result.getOrElse {
-          logger.warn("Impossible to create summary list")
-          Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          throw ADRServerException(s"Unable to create spirits summary list for check your answers $request")
         }
     }
 }

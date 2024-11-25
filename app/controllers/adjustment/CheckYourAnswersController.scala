@@ -18,6 +18,7 @@ package controllers.adjustment
 
 import connectors.UserAnswersConnector
 import controllers.actions._
+import handlers.ADRServerException
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
 import pages.adjustment.{AdjustmentEntryListPage, CurrentAdjustmentEntryPage}
@@ -54,8 +55,7 @@ class CheckYourAnswersController @Inject() (
       } yield setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList)
 
       result.getOrElse {
-        logger.warn("Couldn't create the summaryList from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRServerException(s"Couldn't create summaryList from UserAnswers for page load $request")
       }
   }
 
@@ -73,8 +73,7 @@ class CheckYourAnswersController @Inject() (
         logger.warn("Adjustment Entry not completed")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case _                                                   =>
-        logger.warn("Couldn't fetch currentAdjustmentEntry from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        throw ADRServerException(s"Couldn't fetch currentAdjustmentEntry from UserAnswers for page submit $request")
     }
   }
 
