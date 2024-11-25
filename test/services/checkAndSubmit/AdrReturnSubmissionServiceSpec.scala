@@ -83,34 +83,6 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
     }
 
     "Full return" - {
-      "must return the valid return submission when for a return is passed" in new SetUp {
-        whenReady(
-          adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
-        ) { result =>
-          result mustBe Right(fullReturn)
-        }
-      }
-
-      "must return the valid return submission without Spirits if the return period is not a quarter return" in new SetUp {
-        val expectedReturn = fullReturn.copy(spirits = None)
-
-        whenReady(
-          adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, notQuarterlySpiritsReturnPeriod).value
-        ) { result =>
-          result mustBe Right(expectedReturn)
-        }
-      }
-
-      "must return the valid return submission without Spirits if the feature toggle is off" in new SetUp(false) {
-        val expectedReturn = fullReturn.copy(spirits = None)
-
-        whenReady(
-          adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
-        ) { result =>
-          result mustBe Right(expectedReturn)
-        }
-      }
-
       "must return the valid return submission if one adjustment type is not filled" in new SetUp {
         val drawbackAdjustmentIndex = 5
         val userAnswers             =
@@ -397,16 +369,51 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
       }
 
       "Spirits section" - {
-        Seq(
-          DeclareQuarterlySpiritsPage
-        ).foreach { page =>
-          s"must return Left if $page is not present" in new SetUp {
-            val userAnswers = fullUserAnswers.remove(page).success.value
-            whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
-            ) { result =>
-              result mustBe Left(s"Value not found for page: $page")
-            }
+        "must return no spirits if the user doesn't have the spirits regime" in new SetUp {
+          whenReady(
+            adrReturnSubmissionService
+              .getAdrReturnSubmission(
+                fullUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct))),
+                quarterlySpiritsReturnPeriod
+              )
+              .value
+          ) { result =>
+            result.toOption.get.spirits mustBe None
+          }
+        }
+
+        "must return no spirits if not a spirits quarter" in new SetUp {
+          whenReady(
+            adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, notQuarterlySpiritsReturnPeriod).value
+          ) { result =>
+            result.toOption.get.spirits mustBe None
+          }
+        }
+
+        "must return no spirits if the feature toggle is off" in new SetUp(false) {
+          whenReady(
+            adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
+          ) { result =>
+            result.toOption.get.spirits mustBe None
+          }
+        }
+
+        "must return an error if DeclareQuarterlySpiritsPage is not present" in new SetUp {
+          val userAnswers = fullUserAnswers.remove(DeclareQuarterlySpiritsPage).success.value
+          whenReady(
+            adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+          ) { result =>
+            result mustBe Left(s"Value not found for page: $DeclareQuarterlySpiritsPage")
+          }
+        }
+
+        "must return spirits otherwise" in new SetUp {
+          whenReady(
+            adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
+          ) { result =>
+            result.toOption.get.spirits.nonEmpty mustBe true
+            result.toOption.get.spirits.get.spiritsDeclared mustBe true
+            result.toOption.get.spirits.get.spiritsProduced.nonEmpty mustBe true
           }
         }
       }

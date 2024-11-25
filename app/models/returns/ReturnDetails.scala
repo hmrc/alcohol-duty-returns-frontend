@@ -16,6 +16,7 @@
 
 package models.returns
 
+import models.checkAndSubmit.AdrTypeOfSpirit
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.Instant
@@ -25,7 +26,8 @@ case class ReturnDetails(
   alcoholDeclared: ReturnAlcoholDeclared,
   adjustments: ReturnAdjustments,
   totalDutyDue: ReturnTotalDutyDue,
-  netDutySuspension: Option[ReturnNetDutySuspension]
+  netDutySuspension: Option[ReturnNetDutySuspension],
+  spirits: Option[ReturnSpirits]
 )
 
 object ReturnDetails {
@@ -133,4 +135,24 @@ case class ReturnNetDutySuspension(
 
 object ReturnNetDutySuspension {
   implicit val returnTotalDutyDueFormat: OFormat[ReturnNetDutySuspension] = Json.format[ReturnNetDutySuspension]
+}
+
+case class ReturnSpiritsVolumes(
+  totalSpirits: BigDecimal,
+  scotchWhisky: BigDecimal,
+  irishWhiskey: BigDecimal
+)
+
+case object ReturnSpiritsVolumes {
+  implicit val returnSpiritsVolumesFormat: OFormat[ReturnSpiritsVolumes] = Json.format[ReturnSpiritsVolumes]
+}
+
+case class ReturnSpirits(
+  spiritsVolumes: ReturnSpiritsVolumes,
+  typesOfSpirit: Set[AdrTypeOfSpirit],
+  otherSpiritTypeName: Option[String]
+)
+
+case object ReturnSpirits {
+  implicit val returnSpiritsFormat: OFormat[ReturnSpirits] = Json.format[ReturnSpirits]
 }
