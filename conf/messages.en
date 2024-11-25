@@ -634,8 +634,8 @@ checkYourAnswersDutySuspendedDeliveries.heading = Duty suspended deliveries
 
 # Beginning of quarterly spirits questions sub-journey
 
-declareQuarterlySpirits.title = Tell us about spirits you produced from raw ingredients
-declareQuarterlySpirits.heading = Tell us about spirits you produced from raw ingredients
+declareQuarterlySpirits.title = Tell us about the spirits you have produced from raw ingredients
+declareQuarterlySpirits.heading = Tell us about the spirits you have produced from raw ingredients
 declareQuarterlySpirits.question = Have you made any spirits from raw ingredients in the past 3 months?
 declareQuarterlySpirits.paragraph1 = You do not need to tell us about any alcoholic products produced from base alcohol made elsewhere (for example if you rectify or compound).
 declareQuarterlySpirits.paragraph2 = You do need to tell us if you have made:
@@ -669,10 +669,10 @@ declareSpiritsTotal.error.decimalPlaces = Total volume of spirits must be a numb
 declareSpiritsTotal.hint = In litres of pure alcohol, up to 2 decimal places
 declareSpiritsTotal.inputSuffix = litres
 
-whisky.title = How much Scotch whisky and Irish whiskey have you produced?
-whisky.heading = How much Scotch whisky and Irish whiskey have you produced?
+whisky.title = How much Scotch Whisky and Irish Whiskey have you produced?
+whisky.heading = How much Scotch Whisky and Irish Whiskey have you produced?
 whisky.scotchWhisky.subheading1 = Scotch whisky
-whisky.hint = In litres of pure alcohol, up to 2 decimal places
+whisky.hint = In litres of pure alcohol, up to 2 decimal places. Enter 0 if none.
 whisky.irishWhiskey.subheading2 = Irish whiskey
 whisky.scotchWhisky.checkYourAnswersLabel = Scotch Whisky
 whisky.irishWhiskey.checkYourAnswersLabel = Irish Whiskey
@@ -681,12 +681,12 @@ whisky.irishWhiskey.change.hidden = irish whiskey
 whisky.error.scotchWhisky.required = Enter the volume of Scotch Whisky produced
 whisky.error.scotchWhisky.nonNumeric = Scotch Whisky must be a number up to 2 decimal places
 whisky.error.scotchWhisky.maximumRequired = Scotch Whisky must be less than 100 million litres
-whisky.error.scotchWhisky.minimumRequired = Scotch Whisky must be more than 0.00 litres
+whisky.error.scotchWhisky.minimumRequired = Scotch Whisky must be zero or higher
 whisky.error.scotchWhisky.decimalPlaces = Scotch Whisky must be a number up to 2 decimal places
 whisky.error.irishWhiskey.required = Enter the volume of Irish Whiskey produced
 whisky.error.irishWhiskey.nonNumeric = Irish Whiskey must be a number up to 2 decimal places
 whisky.error.irishWhiskey.maximumRequired = Irish Whiskey must be less than 100 million litres
-whisky.error.irishWhiskey.minimumRequired = Irish Whiskey must be more than 0.00 litres
+whisky.error.irishWhiskey.minimumRequired = Irish Whiskey must be zero or higher
 whisky.error.irishWhiskey.decimalPlaces = Irish Whiskey must be a number up to 2 decimal places
 
 spiritType.title = Which of these spirits have you made?
@@ -705,11 +705,10 @@ spiritType.error.required = Select the spirits you have made
 spiritType.change.hidden = which of these spirits you have made
 spiritType.hint = Select all you have made in the past 3 months
 
-otherSpiritsProduced.title = What other types of spirits have you produced this quarter?
-otherSpiritsProduced.heading = What other types of spirits have you produced this quarter?
-otherSpiritsProduced.hint = Tell us what other spirits you have produced.
-otherSpiritsProduced.error.required = Enter the other spirits you have made
-otherSpiritsProduced.error.length = Other spirits you have made must be {0} characters or less
+otherSpiritsProduced.title = Which other types of spirits have you produced?
+otherSpiritsProduced.heading = Which other types of spirits have you produced?
+otherSpiritsProduced.error.required = Enter the other types of spirits you have produced
+otherSpiritsProduced.error.length = Other types of spirits you have produced must be 150 characters or less
 otherSpiritsProduced.change.hidden = what other types of spirits have you produced this quarter
 
 spiritsQuestions.checkYourAnswersLabel.card1 = Spirits you’ve produced
