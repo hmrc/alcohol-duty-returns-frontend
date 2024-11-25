@@ -347,4 +347,5 @@ trait ModelGenerators {
     arbitraryVolumeAndRateByTaxType(rateBands).arbitrary.map(_.map(genDutyByTaxTypeFromVolumeAndRateByTaxType))
   }
 
+  def chargeReferenceGen: Gen[String] = Gen.listOfN(13, Gen.numChar).map(id => s"XA${id.mkString}")
 }

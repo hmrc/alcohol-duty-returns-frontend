@@ -70,6 +70,7 @@ class ViewReturnControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           returnPeriodStr,
+          Some(chargeReference),
           submittedAtDateStr,
           submittedAtTimeStr,
           tableModel,
@@ -124,6 +125,7 @@ class ViewReturnControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           returnPeriodStr,
+          Some(chargeReference),
           submittedAtDateStr,
           submittedAtTimeStr,
           tableModel,

@@ -28,7 +28,6 @@ import pages.adjustment._
 import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.libs.json.Json
-import org.scalacheck.Gen.{listOfN, numChar}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import models.TransactionType.{LPI, RPI, Return}
 import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
@@ -53,18 +52,19 @@ trait TestData extends ModelGenerators {
 
   val badPeriodKey = "24A"
 
-  val periodKeyJan = "24AA"
-  val periodKeyFeb = "24AB"
-  val periodKeyMar = "24AC"
-  val periodKeyApr = "24AD"
-  val periodKeyMay = "24AE"
-  val periodKeyJun = "24AF"
-  val periodKeyJul = "24AG"
-  val periodKeyAug = "24AH"
-  val periodKeySep = "24AI"
-  val periodKeyOct = "24AJ"
-  val periodKeyNov = "24AK"
-  val periodKeyDec = "24AL"
+  val periodKeyDec23 = "23AL"
+  val periodKeyJan   = "24AA"
+  val periodKeyFeb   = "24AB"
+  val periodKeyMar   = "24AC"
+  val periodKeyApr   = "24AD"
+  val periodKeyMay   = "24AE"
+  val periodKeyJun   = "24AF"
+  val periodKeyJul   = "24AG"
+  val periodKeyAug   = "24AH"
+  val periodKeySep   = "24AI"
+  val periodKeyOct   = "24AJ"
+  val periodKeyNov   = "24AK"
+  val periodKeyDec   = "24AL"
 
   private val adrPeriodStartDay = 1
 
@@ -154,7 +154,11 @@ trait TestData extends ModelGenerators {
     val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).periodFromDate()
 
     ReturnDetails(
-      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      identification = ReturnDetailsIdentification(
+        periodKey = periodKey,
+        chargeReference = Some(chargeReference),
+        submittedTime = now
+      ),
       alcoholDeclared = ReturnAlcoholDeclared(
         alcoholDeclaredDetails = Some(
           Seq(
@@ -242,8 +246,16 @@ trait TestData extends ModelGenerators {
               dutyValue = BigDecimal("-24161.50")
             ),
             ReturnAdjustmentsRow(
-              adjustmentTypeKey = ReturnAdjustments.drawbackKey,
+              adjustmentTypeKey = ReturnAdjustments.spoiltKey,
               returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(3, periodDate)).toPeriodKey,
+              taxType = "321",
+              litresOfPureAlcohol = BigDecimal(1150),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("-24161.50")
+            ),
+            ReturnAdjustmentsRow(
+              adjustmentTypeKey = ReturnAdjustments.drawbackKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(4, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(75),
               dutyRate = BigDecimal("21.01"),
@@ -251,7 +263,7 @@ trait TestData extends ModelGenerators {
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.repackagedDraughtKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(4, periodDate)).toPeriodKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(5, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(150),
               dutyRate = BigDecimal("21.01"),
@@ -292,7 +304,11 @@ trait TestData extends ModelGenerators {
 
   def nilReturnDetails(periodKey: String, now: Instant): ReturnDetails =
     ReturnDetails(
-      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      identification = ReturnDetailsIdentification(
+        periodKey = periodKey,
+        chargeReference = None,
+        submittedTime = now
+      ),
       alcoholDeclared = ReturnAlcoholDeclared(
         alcoholDeclaredDetails = None,
         total = BigDecimal(0)
@@ -308,7 +324,11 @@ trait TestData extends ModelGenerators {
 
   def nilReturnDetailsWithEmptySections(periodKey: String, now: Instant): ReturnDetails =
     ReturnDetails(
-      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      identification = ReturnDetailsIdentification(
+        periodKey = periodKey,
+        chargeReference = None,
+        submittedTime = now
+      ),
       alcoholDeclared = ReturnAlcoholDeclared(
         alcoholDeclaredDetails = Some(Seq.empty),
         total = BigDecimal(0)
@@ -325,7 +345,11 @@ trait TestData extends ModelGenerators {
   def returnWithSpoiltAdjustment(periodKey: String, now: Instant): ReturnDetails = {
     val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).periodFromDate()
     ReturnDetails(
-      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      identification = ReturnDetailsIdentification(
+        periodKey = periodKey,
+        chargeReference = Some(chargeReference),
+        submittedTime = now
+      ),
       alcoholDeclared = ReturnAlcoholDeclared(
         alcoholDeclaredDetails = Some(Seq.empty),
         total = BigDecimal(0)
@@ -407,7 +431,7 @@ trait TestData extends ModelGenerators {
       ReturnPeriod(YearMonth.of(today.getYear, today.getMonth)).toPeriodKey
     )
 
-  val chargeReference = "XA" + listOfN(10, numChar).sample.get.toString()
+  val chargeReference = chargeReferenceGen.sample.get
 
   val outstandingPartialPayment = OutstandingPayment(
     Return,

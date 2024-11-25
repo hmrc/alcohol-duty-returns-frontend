@@ -61,15 +61,15 @@ class ViewReturnViewModelSpec extends SpecBase {
 
     "createAdjustmentsViewModel" - {
       "should return a model with data when adjustments declared" in new SetUp {
-        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey2))
+        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey3))
 
-        adjustmentsViewModel.rows.size mustBe 4
+        adjustmentsViewModel.rows.size mustBe 5
         adjustmentsViewModel.total.get.total.content mustBe Text(
           s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
         )
 
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text("321")
-        adjustmentsViewModel.rows(3).cells(1).content mustBe Text("Non-draught beer between 1% and 2% ABV (125)")
+        adjustmentsViewModel.rows(4).cells(1).content mustBe Text("Non-draught beer between 1% and 2% ABV (125)")
       }
 
       "should return a model with data when a spoilt adjustment declared" in new SetUp {
@@ -282,6 +282,7 @@ class ViewReturnViewModelSpec extends SpecBase {
     val minus: Char                  = 0x2212
     val periodKey                    = periodKeyApr
     val periodKey2                   = periodKeyJan
+    val periodKey3                   = periodKeyDec23
     val nonZeroAmount                = BigDecimal("12345.67")
     val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
     val viewModel                    = new ViewReturnViewModel(appConfig)
