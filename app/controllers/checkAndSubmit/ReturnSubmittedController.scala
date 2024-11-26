@@ -28,7 +28,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.{DateTimeHelper, ReturnPeriodViewModel}
+import viewmodels.{DateTimeHelper, ReturnPeriodViewModelFactory}
 import views.html.checkAndSubmit.ReturnSubmittedView
 
 class ReturnSubmittedController @Inject() (
@@ -37,6 +37,7 @@ class ReturnSubmittedController @Inject() (
   identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnSubmittedView,
+  returnPeriodViewModelFactory: ReturnPeriodViewModelFactory,
   dateTimeHelper: DateTimeHelper
 ) extends FrontendBaseController
     with I18nSupport
@@ -54,7 +55,7 @@ class ReturnSubmittedController @Inject() (
           case Some(returnDetails: AdrReturnCreatedDetails) =>
             val periodKey                          = request.session.get(periodKeySessionKey).get
             val returnPeriod                       = ReturnPeriod.fromPeriodKey(periodKey).get
-            val returnPeriodViewModel              = ReturnPeriodViewModel(returnPeriod)
+            val returnPeriodViewModel              = returnPeriodViewModelFactory(returnPeriod)
             val periodStartDate                    = returnPeriodViewModel.fromDate
             val periodEndDate                      = returnPeriodViewModel.toDate
             val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)

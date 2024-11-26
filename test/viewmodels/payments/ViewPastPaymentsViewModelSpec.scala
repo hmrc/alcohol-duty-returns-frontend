@@ -31,7 +31,7 @@ import java.time.LocalDate
 class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChecks {
   val application: Application    = applicationBuilder().build()
   implicit val messages: Messages = getMessages(application)
-  val viewPastPaymentsViewModel   = new ViewPastPaymentsViewModel(dateTimeHelper)
+  val viewPastPaymentsViewModel   = new ViewPastPaymentsViewModel(createDateTimeHelper())
 
   "ViewPastPaymentsViewModel" - {
 

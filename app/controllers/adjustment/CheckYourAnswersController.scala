@@ -40,7 +40,8 @@ class CheckYourAnswersController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView
+  view: CheckYourAnswersView,
+  checkYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -50,7 +51,7 @@ class CheckYourAnswersController @Inject() (
     implicit request =>
       val result = for {
         adjustmentEntry <- getAdjustmentEntry(request.userAnswers, index)
-        summaryList     <- CheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
+        summaryList     <- checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
       } yield setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList)
 
       result.getOrElse {

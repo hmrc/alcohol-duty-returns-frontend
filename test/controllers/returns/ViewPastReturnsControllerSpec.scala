@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class ViewPastReturnsControllerSpec extends SpecBase {
   "ViewPastReturns Controller" - {
     "must return OK and the correct view for a GET" in {
-      val viewModelHelper                 = new ViewPastReturnsHelper()
+      val viewModelHelper                 = new ViewPastReturnsHelper(createDateTimeHelper())
       val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
       when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
         Seq(obligationDataSingleOpen, obligationDataSingleFulfilled)

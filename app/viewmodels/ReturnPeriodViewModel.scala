@@ -17,19 +17,17 @@
 package viewmodels
 
 import models.ReturnPeriod
+import play.api.i18n.Messages
 
-import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 case class ReturnPeriodViewModel(fromDate: String, toDate: String, returnDueDate: String)
-object ReturnPeriodViewModel {
 
-  val viewDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-
-  def apply(returnPeriod: ReturnPeriod): ReturnPeriodViewModel =
+class ReturnPeriodViewModelFactory @Inject() (dateTimeHelper: DateTimeHelper) {
+  def apply(returnPeriod: ReturnPeriod)(implicit messages: Messages): ReturnPeriodViewModel =
     ReturnPeriodViewModel(
-      viewDateFormatter.format(returnPeriod.periodFromDate()),
-      viewDateFormatter.format(returnPeriod.periodToDate()),
-      viewDateFormatter.format(returnPeriod.periodDueDate())
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodFromDate()),
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodToDate()),
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodDueDate())
     )
-
 }
