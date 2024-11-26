@@ -30,7 +30,7 @@ class DateTimeHelper @Inject() () {
   private val meridiemFormat         = DateTimeFormatter.ofPattern("a")
 
   def instantToLocalDate(instant: Instant): LocalDate = LocalDate.ofInstant(instant, ukTimeZone)
-  def instantToLocalTime(instant: Instant): LocalTime = LocalTime.ofInstant(instant.minusSeconds(3600 * 4), ukTimeZone)
+  def instantToLocalTime(instant: Instant): LocalTime = LocalTime.ofInstant(instant, ukTimeZone)
 
   /**
     * ante/post meridiem (am/pm) is locale specific, thus convert to lowercase
