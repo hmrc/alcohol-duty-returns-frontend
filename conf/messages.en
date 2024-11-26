@@ -689,8 +689,8 @@ whisky.error.irishWhiskey.maximumRequired = Irish Whiskey must be less than 100 
 whisky.error.irishWhiskey.minimumRequired = Irish Whiskey must be zero or higher
 whisky.error.irishWhiskey.decimalPlaces = Irish Whiskey must be a number up to 2 decimal places
 
-spiritType.title = Which have you produced?
-spiritType.heading = Which have you produced?
+spiritType.title = Which of these spirits have you produced?
+spiritType.heading = Which of these spirits have you produced?
 spiritType.maltSpirits = Malt spirits
 spiritType.grainSpirits = Grain spirits
 spiritType.neutralAgriculturalOrigin = Neutral spirits of agricultural origin
