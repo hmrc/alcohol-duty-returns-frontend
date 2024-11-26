@@ -142,6 +142,60 @@ class ViewReturnControllerSpec extends SpecBase {
       verify(mockViewModel, never).createSpiritsViewModels(any)(any)
     }
 
+    "should not pass a charge reference to the view if a nil return" in new SetUp {
+      override def periodKeyUnderTest: String = periodKeyForSpirits
+
+      when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
+        .thenReturn(Future.successful(nilReturn))
+      when(mockCalculatorConnector.rateBands(any())(any))
+        .thenReturn(Future.successful(rateBands))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockReturnsConnector))
+        .overrides(bind[AlcoholDutyCalculatorConnector].toInstance(mockCalculatorConnector))
+        .overrides(bind[ViewReturnViewModel].toInstance(mockViewModel))
+        .build()
+      running(application) {
+        implicit val messages = getMessages(application)
+
+        when(mockViewModel.createTotalDueViewModel(nilReturn)).thenReturn(totalTableModel)
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(nilReturn), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(nilReturn), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createNetDutySuspensionViewModel(eqTo(nilReturn))(any())).thenReturn(tableModel)
+        when(mockViewModel.createSpiritsViewModels(eqTo(nilReturn))(any())).thenReturn(Seq(tableModel))
+        when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(nilReturn), any())(any()))
+          .thenReturn(tableModel)
+        when(mockViewModel.createAdjustmentsViewModel(eqTo(nilReturn), any())(any()))
+          .thenReturn(tableModel)
+
+        val request =
+          FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKeyUnderTest).url)
+        val result  = route(application, request).value
+
+        val view = application.injector.instanceOf[ViewReturnView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          returnPeriodStr,
+          None,
+          submittedAtDateStr,
+          submittedAtTimeStr,
+          tableModel,
+          tableModel,
+          totalTableModel,
+          tableModel,
+          Seq(tableModel)
+        )(
+          request,
+          messages
+        ).toString
+      }
+
+      verify(mockViewModel, times(1)).createSpiritsViewModels(any)(any)
+    }
+
     "should redirect to the journey recovery page if unable to parse the period key" in new SetUp {
       override def periodKeyUnderTest: String = periodKeyForSpirits
 
@@ -218,6 +272,7 @@ class ViewReturnControllerSpec extends SpecBase {
     def periodKeyUnderTest: String
     val returnPeriodUnderTest  = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyUnderTest)
     val returnDetails          = exampleReturnDetails(periodKeyUnderTest, Instant.now(clock))
+    val nilReturn              = nilReturnDetails(periodKeyUnderTest, Instant.now(clock))
     val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriodUnderTest.period)
     val submittedAtDateStr     = dateTimeHelper.formatDateMonthYear(
       dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
