@@ -201,7 +201,6 @@ trait Mappings extends Formatters with Constraints {
     inconsistentKey: String,
     inconsistentSignKey: String,
     zeroTotalLitresKey: String,
-    zeroLPAKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[DutySuspendedVolume] =
     of(
@@ -214,7 +213,6 @@ trait Mappings extends Formatters with Constraints {
         inconsistentKey,
         inconsistentSignKey,
         zeroTotalLitresKey,
-        zeroLPAKey,
         args
       )
     )

@@ -147,15 +147,5 @@ class DutySuspendedFormProviderSpec extends BigDecimalFieldBehaviours {
       )
     }
 
-    "fail to bind when total litres value is positive and pure alcohol volume is zero" in {
-      val data = Map(
-        "volumes.totalLitresVolume" -> "23",
-        "volumes.pureAlcoholVolume" -> "0"
-      )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_pureAlcoholVolume", "dutySuspendedVolume.error.zeroLPA", List(""))
-      )
-    }
-
   }
 }

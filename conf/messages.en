@@ -524,10 +524,9 @@ dutySuspendedVolume.error.decimalPlaces.totalLitresVolume = Total net quantity o
 dutySuspendedVolume.error.maximumValue.pureAlcoholVolume = Total net quantity of pure alcohol must be less than 100 million litres
 dutySuspendedVolume.error.minimumValue.pureAlcoholVolume = Total net quantity of pure alcohol must be more than -100 million litres
 dutySuspendedVolume.error.decimalPlaces.pureAlcoholVolume = Total net quantity of pure alcohol must be a number up to 4 decimal places
-dutySuspendedVolume.error.incorrectSign = Total net quantity of pure alcohol must be more than 0.0000
-dutySuspendedVolume.error.zeroTotalLitres = Total net quantity of pure alcohol must be zero if {0} is also zero
-dutySuspendedVolume.error.zeroLPA = Total net quantity of pure alcohol must be more or less than zero if {0} is more or less than 0.00
-dutySuspendedVolume.error.lessThanExpected = Total net quantity of pure alcohol must be the same or less than the total net quantity of {0}
+dutySuspendedVolume.error.incorrectSign = Total net quantity of pure alcohol must be zero or more
+dutySuspendedVolume.error.zeroTotalLitres = Total net quantity of pure alcohol must be zero if total net quantity of {0} is also zero
+dutySuspendedVolume.error.lessThanExpected = Total net quantity of pure alcohol must be the same or less than total net quantity of {0}
 
 dutySuspendedCider.title = Tell us about your duty suspended cider
 dutySuspendedCider.heading = Tell us about your duty suspended cider

@@ -30,7 +30,6 @@ class DutySuspendedVolumesFormatter(
   inconsistentKey: String,
   inconsistentSignKey: String,
   zeroTotalLitresKey: String,
-  zeroLPAKey: String,
   args: Seq[String]
 ) extends Formatter[DutySuspendedVolume]
     with Formatters {
@@ -60,9 +59,9 @@ class DutySuspendedVolumesFormatter(
     args = args
   )
 
-  private val NUMBER_OF_FIELDS = 2
-  private val totalVolumeKey = "totalLitresVolume"
-  private val pureAlcoholKey = "pureAlcoholVolume"
+  private val NUMBER_OF_FIELDS        = 2
+  private val totalVolumeKey          = "totalLitresVolume"
+  private val pureAlcoholKey          = "pureAlcoholVolume"
   private val fieldKeys: List[String] = List(totalVolumeKey, pureAlcoholKey)
 
   private def requiredFieldFormError(key: String, field: String): FormError =
@@ -89,12 +88,8 @@ class DutySuspendedVolumesFormatter(
       volumes =>
         if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
           Left(Seq(FormError(nameToId(s"$key.$pureAlcoholKey"), inconsistentKey, args)))
-        }
-        else if ((volumes.totalLitresVolume > 0) && (volumes.pureAlcoholVolume < 0)) {
-           Left(Seq(FormError(nameToId(s"$key.$pureAlcoholKey"), inconsistentSignKey, args)))
-        }
-        else if (volumes.totalLitresVolume != 0 && volumes.pureAlcoholVolume == 0) {
-          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholKey"), zeroLPAKey, args)))
+        } else if ((volumes.totalLitresVolume > 0) && (volumes.pureAlcoholVolume < 0)) {
+          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholKey"), inconsistentSignKey, args)))
         } else if (volumes.totalLitresVolume == 0 && volumes.pureAlcoholVolume < 0) {
           Left(Seq(FormError(nameToId(s"$key.$pureAlcoholKey"), zeroTotalLitresKey, args)))
         } else {

@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.spiritsQuestions
 
 import controllers.spiritsQuestions.routes
-import models.{CheckMode, SpiritType, UserAnswers}
+import models.{CheckMode, UserAnswers}
 import pages.spiritsQuestions.SpiritTypePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat

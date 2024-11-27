@@ -34,7 +34,6 @@ class DutySuspendedFormProvider @Inject() extends Mappings {
       "dutySuspendedVolume.error.lessThanExpected",
       "dutySuspendedVolume.error.incorrectSign",
       "dutySuspendedVolume.error.zeroTotalLitres",
-      "dutySuspendedVolume.error.zeroLPA",
       Seq(messages(s"return.regime.$regime"))
     )
   )
