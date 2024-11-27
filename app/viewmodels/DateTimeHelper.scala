@@ -28,7 +28,7 @@ class DateTimeHelper @Inject() (languageUtils: LanguageUtils) {
   private val ukTimeZone: ZoneId = TimeZone.getTimeZone("Europe/London").toZoneId
 
   private val hourMinuteFormatter = DateTimeFormatter.ofPattern("h:mm")
-  private val meridiemFormat      = DateTimeFormatter.ofPattern("a")
+  private val meridiemFormatter   = DateTimeFormatter.ofPattern("a")
 
   def instantToLocalDate(instant: Instant): LocalDate = LocalDate.ofInstant(instant, ukTimeZone)
   def instantToLocalTime(instant: Instant): LocalTime = LocalTime.ofInstant(instant, ukTimeZone)
@@ -47,7 +47,7 @@ class DateTimeHelper @Inject() (languageUtils: LanguageUtils) {
     */
   def formatHourMinuteMeridiem(localTime: LocalTime): String = {
     val formattedTime = hourMinuteFormatter.format(localTime)
-    val meridiem      = meridiemFormat.format(localTime).toLowerCase()
+    val meridiem      = meridiemFormatter.format(localTime).toLowerCase()
     s"$formattedTime$meridiem"
   }
 }

@@ -189,30 +189,32 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
     ratePeriodsAndTaxCodesToRateBands: Map[(YearMonth, String), RateBand]
   )(implicit messages: Messages): Seq[TableRowViewModel] =
     returnAdjustments.map { returnAdjustmentsRow =>
-      val maybeRatePeriod = ReturnPeriod.fromPeriodKey(returnAdjustmentsRow.returnPeriodAffected).map(_.period)
-      val taxType         = returnAdjustmentsRow.taxType
-      val description     = if (returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)) {
-        appConfig.getRegimeNameByTaxTypeCode(taxType) match {
-          case Some(regime) => messages(s"alcoholType.$regime")
-          case _            => taxType
-        }
+      val maybeRatePeriod         = ReturnPeriod.fromPeriodKey(returnAdjustmentsRow.returnPeriodAffected).map(_.period)
+      val taxType                 = returnAdjustmentsRow.taxType
+      val (description, dutyRate) = if (returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)) {
+        (
+          appConfig.getRegimeNameByTaxTypeCode(taxType) match {
+            case Some(regime) => messages(s"alcoholType.$regime")
+            case _            => taxType
+          },
+          messages("viewReturn.notApplicable")
+        )
       } else {
-        getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType)
+        (
+          getDescriptionOrFallbackToTaxTypeCode(ratePeriodsAndTaxCodesToRateBands, maybeRatePeriod, taxType),
+          Money.format(returnAdjustmentsRow.dutyRate)
+        )
       }
       TableRowViewModel(
         cells = Seq(
           TableRow(content = Text(messages(s"viewReturn.adjustments.type.${returnAdjustmentsRow.adjustmentTypeKey}"))),
-          TableRow(content =
-            Text(
-              description
-            )
-          ),
+          TableRow(content = Text(description)),
           TableRow(
             content = Text(messages("site.4DP", returnAdjustmentsRow.litresOfPureAlcohol)),
             classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           ),
           TableRow(
-            content = Text(Money.format(returnAdjustmentsRow.dutyRate)),
+            content = Text(dutyRate),
             classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
           ),
           TableRow(
