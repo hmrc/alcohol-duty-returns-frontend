@@ -47,6 +47,13 @@ class DateTimeHelperSpec extends SpecBase {
       ) mustBe "3:07pm"
     }
 
+    // regression
+    "format a LocalTime to the format 'hour:minuteam/pm' when the hour is midday" in {
+      new DateTimeHelper().formatHourMinuteMeridiem(
+        LocalTime.now(clock).minusHours(3)
+      ) mustBe "12:07pm"
+    }
+
     "format a YearMonth to the format 'month year'" in {
       new DateTimeHelper().formatMonthYear(YearMonth.now(clock)) mustBe "June 2024"
     }
