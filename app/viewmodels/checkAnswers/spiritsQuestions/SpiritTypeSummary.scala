@@ -30,7 +30,7 @@ object SpiritTypeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(SpiritTypePage).flatMap { answers =>
-      val rowValue = answers.map(x => HtmlFormat.escape(messages(s"spiritType.$x")).toString)
+      val rowValue = answers.map(spiritType => HtmlFormat.escape(messages(s"spiritType.$spiritType")).toString)
 
       val value = ValueViewModel(HtmlContent(s"""<span aria-label=${messages(
         "spiritType.checkYourAnswersLabel"
