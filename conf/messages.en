@@ -165,6 +165,7 @@ viewReturn.table.dutyValue.legend = Duty value
 viewReturn.table.dutyDue.legend = Duty value
 viewReturn.table.typesOfSpirits.legend = Types of spirits produced
 viewReturn.printYourReturn = Print your return
+viewReturn.notApplicable = not applicable
 
 viewPastPayments.heading = Alcohol Duty payments
 viewPastPayments.title = Alcohol Duty payments
