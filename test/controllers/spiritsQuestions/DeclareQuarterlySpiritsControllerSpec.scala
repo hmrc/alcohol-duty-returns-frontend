@@ -23,7 +23,7 @@ import models.{AlcoholRegimes, NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, SpiritTypePage, WhiskyPage}
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
 import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -97,7 +97,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
       Some(mockUserAnswers),
       true
     ) {
-      val pagesToDelete = List(DeclareSpiritsTotalPage, SpiritTypePage, WhiskyPage)
+      val pagesToDelete = List(DeclareSpiritsTotalPage, SpiritTypePage, OtherSpiritsProducedPage, WhiskyPage)
 
       val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
       val mockAlcoholRegimesSet: AlcoholRegimes          = mock[AlcoholRegimes]

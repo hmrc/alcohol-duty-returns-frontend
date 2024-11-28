@@ -84,6 +84,7 @@ class DeclareQuarterlySpiritsController @Inject() (
         List(
           DeclareSpiritsTotalPage,
           SpiritTypePage,
+          OtherSpiritsProducedPage,
           WhiskyPage
         )
       )
