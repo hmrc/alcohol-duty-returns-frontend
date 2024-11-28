@@ -16,6 +16,7 @@
 
 package controllers.adjustment
 
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.adjustment.WhenDidYouPayDutyFormProvider
 
@@ -42,6 +43,7 @@ class WhenDidYouPayDutyController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: WhenDidYouPayDutyFormProvider,
+  appConfig: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
   view: WhenDidYouPayDutyView
 )(implicit ec: ExecutionContext)
@@ -60,7 +62,8 @@ class WhenDidYouPayDutyController @Inject() (
               period
             ),
             mode,
-            adjustmentType
+            adjustmentType,
+            appConfig.exciseEnquiriesUrl
           )
         )
       case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, _, _, _, _, _, _, _, _, _))            =>
@@ -68,7 +71,8 @@ class WhenDidYouPayDutyController @Inject() (
           view(
             form,
             mode,
-            adjustmentType
+            adjustmentType,
+            appConfig.exciseEnquiriesUrl
           )
         )
       case _                                                                                          =>
@@ -90,7 +94,8 @@ class WhenDidYouPayDutyController @Inject() (
                     view(
                       formWithErrors,
                       mode,
-                      adjustmentType
+                      adjustmentType,
+                      appConfig.exciseEnquiriesUrl
                     )
                   )
                 )

@@ -14,9 +14,11 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph}
+@import components.{Link, PageHeading, Paragraph, SectionHeading}
+@import config.Constants.Css
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.{Underdeclaration,Spoilt}
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -25,10 +27,11 @@
     govukButton: GovukButton,
     paragraph: Paragraph,
     sectionHeading: SectionHeading,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    link: Link
 )
 
-@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, exciseEnquiriesUrl: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, if(adjustmentType == Underdeclaration){
                                     messages("whenDidYouPayDuty.under-declaration.title")
@@ -60,7 +63,15 @@
                     }
                     )
 
-        @paragraph(messages("whenDidYouPayDuty.paragraph"))
+        <p class="@Css.bodyCssClass">
+            @link(
+                id = "excise-enquiries-link",
+                text =  messages("whenDidYouPayDuty.exciseEnquiries.link"),
+                href = exciseEnquiriesUrl,
+                newTab = true
+            )
+            @messages("whenDidYouPayDuty.paragraph")
+        </p>
 
         @govukDateInput(
             YearMonthDateViewModel(
