@@ -20,20 +20,19 @@ import base.SpecBase
 import common.TestData
 import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
-import models.{AlcoholRegime, AlcoholRegimes}
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.AdjustmentDuty
-import models.checkAndSubmit.{AdrAdjustments, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsProduced, AdrTotals}
-import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, GrainsUsed}
+import models.checkAndSubmit._
+import models.{AlcoholRegime, AlcoholRegimes}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage}
-import pages.dutySuspended._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage}
+import pages.dutySuspended._
+import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import queries.Settable
-import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.Future
 
@@ -141,75 +140,6 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           result mustBe Right(expectedReturn)
         }
       }
-
-      "must return the valid return submission if the users didn't selected any 'other malted grains'" in new SetUp {
-        val grainsUsed  = GrainsUsed(
-          maltedBarleyQuantity = BigDecimal(1111),
-          wheatQuantity = BigDecimal(2222),
-          maizeQuantity = BigDecimal(3333),
-          ryeQuantity = BigDecimal(4444),
-          unmaltedGrainQuantity = BigDecimal(5555),
-          usedMaltedGrainNotBarley = false
-        )
-        val userAnswers = fullUserAnswers
-          .set(GrainsUsedPage, grainsUsed)
-          .success
-          .value
-          .remove(OtherMaltedGrainsPage)
-          .success
-          .value
-
-        val adrSpiritsGrainsQuantities: AdrSpiritsGrainsQuantities =
-          fullReturn.spirits.get.spiritsProduced.get.grainsQuantities.copy(
-            otherMaltedGrain = None
-          )
-
-        val adrSpiritsProduced: AdrSpiritsProduced = fullReturn.spirits.get.spiritsProduced.get.copy(
-          hasOtherMaltedGrain = false,
-          otherMaltedGrainType = None,
-          grainsQuantities = adrSpiritsGrainsQuantities
-        )
-
-        val spirits: AdrSpirits = fullReturn.spirits.get.copy(spiritsProduced = Some(adrSpiritsProduced))
-        val expectedReturn      = fullReturn.copy(spirits = Some(spirits))
-
-        whenReady(
-          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
-        ) { result =>
-          result mustBe Right(expectedReturn)
-        }
-
-      }
-
-      "must return the valid return submission if the users didn't selected any 'other ingredients' in the spirits journey" in new SetUp {
-        val ethyleneGasOrMolassesUsed = EthyleneGasOrMolassesUsed(
-          ethyleneGas = BigDecimal(6666),
-          molasses = BigDecimal(7777),
-          otherIngredients = false
-        )
-        val userAnswers               = fullUserAnswers
-          .set(EthyleneGasOrMolassesUsedPage, ethyleneGasOrMolassesUsed)
-          .success
-          .value
-          .remove(OtherIngredientsUsedPage)
-          .success
-          .value
-
-        val adrSpiritsProduced: AdrSpiritsProduced = fullReturn.spirits.get.spiritsProduced.get.copy(
-          otherIngredient = None
-        )
-
-        val spirits: AdrSpirits = fullReturn.spirits.get.copy(spiritsProduced = Some(adrSpiritsProduced))
-        val expectedReturn      = fullReturn.copy(spirits = Some(spirits))
-
-        whenReady(
-          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
-        ) { result =>
-          result mustBe Right(expectedReturn)
-        }
-
-      }
-
     }
 
     "Errors for missing data" - {
@@ -302,21 +232,6 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
             }
           }
         }
-
-        "must return Left if OtherMaltedGrains is not populated but the producer answered 'yes' into the GrainsUsed page for otherMaltedGrain" in new SetUp {
-          val userAnswers = fullUserAnswers.remove(OtherMaltedGrainsPage).success.value
-
-          whenReady(
-            adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
-          ) { result =>
-            result.isLeft mustBe true
-            result.fold(
-              errorMessage => errorMessage must include("Other malted grain value not found"),
-              _ => fail()
-            )
-          }
-        }
-
       }
 
       "Duty Suspended section" - {

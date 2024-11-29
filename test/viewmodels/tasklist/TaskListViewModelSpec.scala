@@ -165,17 +165,17 @@ class TaskListViewModelSpec extends SpecBase {
     val validUntil           = Instant.now(clock)
     val validUntilString     = validUntil.toLocalDateString()
 
-    val completedStatus = AlcholDutyTaskListItemStatus.completed
+    val completedStatus = AlcoholDutyTaskListItemStatus.completed
 
-    val notStartedTaskList  = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.notStarted)))
-    val inProgressTaskList  = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.inProgress)))
-    val completeTaskList    = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.completed)))
-    val cannotStartTaskList = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.cannotStart)))
+    val notStartedTaskList  = TaskList(items = Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.notStarted)))
+    val inProgressTaskList  = TaskList(items = Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.inProgress)))
+    val completeTaskList    = TaskList(items = Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.completed)))
+    val cannotStartTaskList = TaskList(items = Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.cannotStart)))
 
     val notStartedSection  = Section("title", notStartedTaskList, completedStatus)
     val inProgressSection  = Section("title", inProgressTaskList, completedStatus)
     val completeSection    = Section("title", completeTaskList, completedStatus)
-    val cannotStartSection = Section("title", cannotStartTaskList, AlcholDutyTaskListItemStatus.notStarted)
+    val cannotStartSection = Section("title", cannotStartTaskList, AlcoholDutyTaskListItemStatus.notStarted)
 
     val mockReturnTaskListCreator = mock[ReturnTaskListCreator]
     val taskListViewModel         = new TaskListViewModel(mockReturnTaskListCreator, appConfig)
