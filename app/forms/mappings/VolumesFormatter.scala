@@ -23,7 +23,6 @@ import play.api.data.format.Formatter
 
 class VolumesFormatter(
   invalidKey: String,
-  allRequiredKey: String,
   requiredKey: String,
   decimalPlacesKey: String,
   minimumValueKey: String,
@@ -58,10 +57,6 @@ class VolumesFormatter(
     minimumValue = Constants.lpaMinimumValue,
     args = args
   )
-
-  private val NUMBER_OF_FIELDS = 3
-
-  private val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol")
 
   private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
@@ -100,26 +95,30 @@ class VolumesFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
-    val fields = fieldKeys.map { field =>
-      field -> data.get(s"$key.$field").filter(_.nonEmpty)
-    }.toMap
+    val totalLitresResult = validateField("totalLitres", key, data, volumeFormatter("totalLitres"))
+    val pureAlcoholResult =
+      validateField("pureAlcohol", key, data, pureAlcoholBigDecimalFormatter("pureAlcohol"))
+    val taxTypeResult     = validateField("taxType", key, data, stringFormatter("taxType"))
 
-    lazy val missingFields = fields
-      .withFilter(_._2.isEmpty)
-      .map(_._1)
-      .toList
-
-    fields.count(_._2.isDefined) match {
-      case NUMBER_OF_FIELDS =>
-        checkValues(key, data)
-      case _                =>
-        Left(
-          missingFields.map { field =>
-            requiredFieldFormError(key, field)
-          }
-        )
+    val allErrors =
+      totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ taxTypeResult.left.toSeq.flatten
+    if (allErrors.nonEmpty) {
+      Left(allErrors)
+    } else {
+      checkValues(key, data)
     }
   }
+
+  private[mappings] def validateField[T](
+    field: String,
+    key: String,
+    data: Map[String, String],
+    formatter: Formatter[T]
+  ): Either[Seq[FormError], T] =
+    data.get(s"$key.$field").filter(_.nonEmpty) match {
+      case Some(_) => formatter.bind(s"$key.$field", data)
+      case None    => Left(Seq(requiredFieldFormError(key, field)))
+    }
 
   override def unbind(key: String, value: VolumesByTaxType): Map[String, String] =
     Map(

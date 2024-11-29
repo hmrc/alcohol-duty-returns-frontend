@@ -23,7 +23,6 @@ import play.api.data.format.Formatter
 
 class AdjustmentVolumesFormatter(
   invalidKey: String,
-  allRequiredKey: String,
   requiredKey: String,
   decimalPlacesKey: String,
   minimumValueKey: String,
@@ -45,7 +44,7 @@ class AdjustmentVolumesFormatter(
     args = args
   )
 
-  private def pureAlcoholBigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def pureAlcoholVolumeFormatter(fieldKey: String)                  = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
@@ -57,17 +56,12 @@ class AdjustmentVolumesFormatter(
     minimumValue = Constants.lpaMinimumValue,
     args = args
   )
-
-  private val NUMBER_OF_FIELDS = 2
-
-  private val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume")
-
   private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolume] = {
     val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
-    val pureAlcohol = pureAlcoholBigDecimalFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
+    val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
 
     (totalLitres, pureAlcohol) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue)) =>
@@ -92,26 +86,26 @@ class AdjustmentVolumesFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolume] = {
-    val fields = fieldKeys.map { field =>
-      field -> data.get(s"$key.$field").filter(_.nonEmpty)
-    }.toMap
-
-    lazy val missingFields = fields
-      .withFilter(_._2.isEmpty)
-      .map(_._1)
-      .toList
-
-    fields.count(_._2.isDefined) match {
-      case NUMBER_OF_FIELDS =>
-        checkValues(key, data)
-      case _                =>
-        Left(
-          missingFields.map { field =>
-            requiredFieldFormError(key, field)
-          }
-        )
+    val totalLitresResult = validateField("totalLitresVolume", key, data, volumeFormatter)
+    val pureAlcoholResult = validateField("pureAlcoholVolume", key, data, pureAlcoholVolumeFormatter)
+    val allErrors         = totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
+    if (allErrors.nonEmpty) {
+      Left(allErrors)
+    } else {
+      checkValues(key, data)
     }
   }
+
+  private def validateField(
+    field: String,
+    key: String,
+    data: Map[String, String],
+    formatter: String => BigDecimalFieldFormatter
+  ): Either[Seq[FormError], BigDecimal] =
+    data.get(s"$key.$field").filter(_.nonEmpty) match {
+      case Some(_) => formatter(field).bind(s"$key.$field", data)
+      case None    => Left(Seq(requiredFieldFormError(key, field)))
+    }
 
   override def unbind(key: String, value: AdjustmentVolume): Map[String, String] =
     Map(

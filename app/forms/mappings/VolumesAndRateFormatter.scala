@@ -70,9 +70,6 @@ class VolumesAndRateFormatter(
     args = args
   )
 
-  private val NUMBER_OF_FIELDS        = 4
-  private val fieldKeys: List[String] = List("taxType", "totalLitres", "pureAlcohol", "dutyRate")
-
   private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
@@ -112,26 +109,29 @@ class VolumesAndRateFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
-    val fields = fieldKeys.map { field =>
-      field -> data.get(s"$key.$field").filter(_.nonEmpty)
-    }.toMap
-
-    lazy val missingFields = fields
-      .withFilter(_._2.isEmpty)
-      .map(_._1)
-      .toList
-
-    fields.count(_._2.isDefined) match {
-      case NUMBER_OF_FIELDS =>
-        checkValues(key, data)
-      case _                =>
-        Left(
-          missingFields.map { field =>
-            requiredFieldFormError(key, field)
-          }
-        )
+    val taxTypeResult     = validateField("taxType", key, data, stringFormatter("taxType"))
+    val totalLitresResult = validateField("totalLitres", key, data, volumeFormatter("totalLitres"))
+    val pureAlcoholResult = validateField("pureAlcohol", key, data, pureAlcoholVolumeFormatter("pureAlcohol"))
+    val dutyRateResult    = validateField("dutyRate", key, data, dutyRateFormatter("dutyRate"))
+    val allErrors         =
+      totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ dutyRateResult.left.toSeq.flatten ++ taxTypeResult.left.toSeq.flatten
+    if (allErrors.nonEmpty) {
+      Left(allErrors)
+    } else {
+      checkValues(key, data)
     }
   }
+
+  private[mappings] def validateField[T](
+    field: String,
+    key: String,
+    data: Map[String, String],
+    formatter: Formatter[T]
+  ): Either[Seq[FormError], T] =
+    data.get(s"$key.$field").filter(_.nonEmpty) match {
+      case Some(_) => formatter.bind(s"$key.$field", data)
+      case None    => Left(Seq(requiredFieldFormError(key, field)))
+    }
 
   override def unbind(key: String, value: VolumeAndRateByTaxType): Map[String, String] =
     Map(

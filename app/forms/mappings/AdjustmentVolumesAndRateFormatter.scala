@@ -69,9 +69,6 @@ class AdjustmentVolumesAndRateFormatter(
     args = args
   )
 
-  private val NUMBER_OF_FIELDS        = 3
-  private val fieldKeys: List[String] = List("totalLitresVolume", "pureAlcoholVolume", "sprDutyRate")
-
   private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
 
@@ -104,26 +101,28 @@ class AdjustmentVolumesAndRateFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
-    val fields = fieldKeys.map { field =>
-      field -> data.get(s"$key.$field").filter(_.nonEmpty)
-    }.toMap
-
-    lazy val missingFields = fields
-      .withFilter(_._2.isEmpty)
-      .map(_._1)
-      .toList
-
-    fields.count(_._2.isDefined) match {
-      case NUMBER_OF_FIELDS =>
-        checkValues(key, data)
-      case _                =>
-        Left(
-          missingFields.map { field =>
-            requiredFieldFormError(key, field)
-          }
-        )
+    val totalLitresResult = validateField("totalLitresVolume", key, data, volumeFormatter)
+    val pureAlcoholResult = validateField("pureAlcoholVolume", key, data, pureAlcoholVolumeFormatter)
+    val sprDutyRateResult = validateField("sprDutyRate", key, data, dutyRateFormatter)
+    val allErrors         =
+      totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ sprDutyRateResult.left.toSeq.flatten
+    if (allErrors.nonEmpty) {
+      Left(allErrors)
+    } else {
+      checkValues(key, data)
     }
   }
+
+  private def validateField(
+    field: String,
+    key: String,
+    data: Map[String, String],
+    formatter: String => BigDecimalFieldFormatter
+  ): Either[Seq[FormError], BigDecimal] =
+    data.get(s"$key.$field").filter(_.nonEmpty) match {
+      case Some(_) => formatter(field).bind(s"$key.$field", data)
+      case None    => Left(Seq(requiredFieldFormError(key, field)))
+    }
 
   override def unbind(key: String, value: AdjustmentVolumeWithSPR): Map[String, String] =
     Map(
