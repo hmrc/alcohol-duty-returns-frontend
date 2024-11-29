@@ -93,7 +93,7 @@ class BeforeStartReturnController @Inject() (
             auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
           case Left(error)       =>
-            logger.warn(s"Unable to create userAnswers: $error")
+            logger.warn(s"Unable to create userAnswers:", error)
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }
