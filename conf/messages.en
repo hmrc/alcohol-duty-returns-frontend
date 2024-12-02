@@ -956,5 +956,6 @@ returnSubmitted.direct.debit.h2 = Direct Debit
 returnSubmitted.direct.debit.p1 = You can pay duty automatically by direct debit.
 returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit
 returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcohol Duty account. If you do not claim it back then it will be used toward any duty due from your next return.
+returnSubmitted.warningText = Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.
 
 # End of Check and submit sub-journey

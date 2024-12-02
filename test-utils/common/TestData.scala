@@ -33,6 +33,10 @@ import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
+import viewmodels.ReturnPeriodViewModel
+import viewmodels.returns.ReturnSubmittedViewModel
 
 import java.time._
 
@@ -1120,4 +1124,32 @@ trait TestData extends ModelGenerators {
 
   val allVolumeAndRateByTaxType =
     Seq(volumeAndRateByTaxType1, volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
+
+  val testAdrReturnCreatedDetails = AdrReturnCreatedDetails(
+    processingDate = Instant.now(clock),
+    amount = BigDecimal(1),
+    chargeReference = Some("1234567890"),
+    paymentDueDate = Some(LocalDate.now(clock))
+  )
+
+  val testWarningMessage = WarningText(
+    iconFallbackText = Some("Warning"),
+    content =
+      Text("Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.")
+  )
+
+  val testReturnPeriodViewModel: ReturnPeriodViewModel = ReturnPeriodViewModel(
+    ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
+  )
+
+  val testReturnSubmittedViewModel: ReturnSubmittedViewModel = ReturnSubmittedViewModel(
+    returnDetails = testAdrReturnCreatedDetails,
+    periodStartDate = testReturnPeriodViewModel.fromDate,
+    periodEndDate = testReturnPeriodViewModel.toDate,
+    formattedProcessingDate = "27 August 2019",
+    formattedPaymentDueDate = "27 August 2020",
+    periodKey = periodKey,
+    businessTaxAccountUrl = "http://localhost:9020/business-account/",
+    warningText = testWarningMessage
+  )
 }

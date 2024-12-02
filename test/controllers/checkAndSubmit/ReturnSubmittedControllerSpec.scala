@@ -20,8 +20,11 @@ import base.SpecBase
 import config.Constants.adrReturnCreatedDetails
 import config.FrontendAppConfig
 import models.checkAndSubmit.AdrReturnCreatedDetails
+import org.mockito.ArgumentMatchers.any
+import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.test.Helpers._
+import viewmodels.returns.ReturnSubmittedHelper
 
 import java.time.{Instant, LocalDate}
 
@@ -34,13 +37,18 @@ class ReturnSubmittedControllerSpec extends SpecBase {
     Some(paymentDueDate)
   )
 
-  val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
+  val appConfig: FrontendAppConfig                     = app.injector.instanceOf[FrontendAppConfig]
+  val mockReturnSubmittedHelper: ReturnSubmittedHelper = mock[ReturnSubmittedHelper]
 
   "ReturnSubmitted Controller" - {
 
     "must return OK and the correct view for a GET" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[ReturnSubmittedHelper].toInstance(mockReturnSubmittedHelper))
         .build()
+
+      when(mockReturnSubmittedHelper.getReturnSubmittedViewModel(any())(any(), any()))
+        .thenReturn(testReturnSubmittedViewModel)
 
       running(application) {
         val request = FakeRequest(
@@ -60,7 +68,9 @@ class ReturnSubmittedControllerSpec extends SpecBase {
     }
 
     "must redirect in the Journey Recovery screen if the return details in session is empty" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[ReturnSubmittedHelper].toInstance(mockReturnSubmittedHelper))
+        .build()
 
       running(application) {
         val request =
@@ -116,7 +126,9 @@ class ReturnSubmittedControllerSpec extends SpecBase {
       }
 
       "should redirect to journey recovery if not valid" in {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(bind[ReturnSubmittedHelper].toInstance(mockReturnSubmittedHelper))
+          .build()
 
         val request =
           FakeRequest(GET, controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url)
