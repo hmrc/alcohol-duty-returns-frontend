@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package models.spiritsQuestions
+package models
 
-import play.api.libs.json._
+import enumeratum.{EnumEntry, PlayEnum}
 
-case class GrainsUsed(
-  maltedBarleyQuantity: BigDecimal,
-  wheatQuantity: BigDecimal,
-  maizeQuantity: BigDecimal,
-  ryeQuantity: BigDecimal,
-  unmaltedGrainQuantity: BigDecimal,
-  usedMaltedGrainNotBarley: Boolean
-)
+sealed trait TaskListSection extends EnumEntry {
+  val name: String
+}
 
-object GrainsUsed {
-  implicit val format: OFormat[GrainsUsed] = Json.format[GrainsUsed]
+object TaskListSection extends PlayEnum[TaskListSection] {
+  val values = findValues
+
+  case object AdjustmentSection extends TaskListSection {
+    override val name: String = "adjustment"
+  }
+
+  case object DutySuspendedSection extends TaskListSection {
+    override val name: String = "dutySuspended"
+  }
+
+  case object SpiritsSection extends TaskListSection {
+    override val name: String = "spirits"
+  }
+
 }

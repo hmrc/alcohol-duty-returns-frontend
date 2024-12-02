@@ -18,11 +18,10 @@ package generators
 
 import cats.data.NonEmptySeq
 import models._
+import models.declareDuty.{DutyByTaxType, VolumeAndRateByTaxType}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
-import enumeratum.scalacheck._
-import models.declareDuty.{DutyByTaxType, VolumeAndRateByTaxType}
 
 import java.time.YearMonth
 
@@ -45,71 +44,12 @@ trait ModelGenerators {
       } yield adjustment.AdjustmentVolume(totalLitresVolume, pureAlcoholVolume)
     }
 
-  implicit lazy val arbitraryGrainsUsed: Arbitrary[spiritsQuestions.GrainsUsed] =
-    Arbitrary {
-      for {
-        maltedBarleyQuantity     <- arbitrary[BigDecimal]
-        wheatQuantity            <- arbitrary[BigDecimal]
-        maizeQuantity            <- arbitrary[BigDecimal]
-        ryeQuantity              <- arbitrary[BigDecimal]
-        unmaltedGrainQuantity    <- arbitrary[BigDecimal]
-        usedMaltedGrainNotBarley <- arbitrary[Boolean]
-      } yield spiritsQuestions.GrainsUsed(
-        maltedBarleyQuantity,
-        wheatQuantity,
-        maizeQuantity,
-        ryeQuantity,
-        unmaltedGrainQuantity,
-        usedMaltedGrainNotBarley
-      )
-    }
-
-  implicit lazy val arbitraryOtherMaltedGrains: Arbitrary[spiritsQuestions.OtherMaltedGrains] =
-    Arbitrary {
-      for {
-        otherMaltedGrainsTypes    <- arbitrary[String]
-        otherMaltedGrainsQuantity <- arbitrary[BigDecimal]
-      } yield spiritsQuestions.OtherMaltedGrains(otherMaltedGrainsTypes, otherMaltedGrainsQuantity)
-    }
-
-  implicit lazy val arbitraryEthyleneGasOrMolassesUsed: Arbitrary[spiritsQuestions.EthyleneGasOrMolassesUsed] =
-    Arbitrary {
-      for {
-        ethyleneGas      <- arbitrary[BigDecimal]
-        molasses         <- arbitrary[BigDecimal]
-        otherIngredients <- arbitrary[Boolean]
-      } yield spiritsQuestions.EthyleneGasOrMolassesUsed(ethyleneGas, molasses, otherIngredients)
-    }
-
-  implicit lazy val arbitraryOtherIngredientsUsed: Arbitrary[spiritsQuestions.OtherIngredientsUsed] =
-    Arbitrary {
-      for {
-        otherIngredientsTypes    <- arbitrary[String]
-        otherIngredientsUnit     <- arbitrary[UnitsOfMeasure]
-        otherIngredientsQuantity <- arbitrary[BigDecimal]
-      } yield spiritsQuestions.OtherIngredientsUsed(
-        otherIngredientsTypes,
-        otherIngredientsUnit,
-        otherIngredientsQuantity
-      )
-    }
-
   implicit lazy val arbitraryWhisky: Arbitrary[spiritsQuestions.Whisky] =
     Arbitrary {
       for {
         scotchWhisky <- arbitrary[BigDecimal]
         irishWhiskey <- arbitrary[BigDecimal]
       } yield spiritsQuestions.Whisky(scotchWhisky, irishWhiskey)
-    }
-
-  implicit lazy val arbitraryAlcoholUsed: Arbitrary[spiritsQuestions.AlcoholUsed] =
-    Arbitrary {
-      for {
-        beer         <- arbitrary[BigDecimal]
-        wine         <- arbitrary[BigDecimal]
-        madeWine     <- arbitrary[BigDecimal]
-        ciderOrPerry <- arbitrary[BigDecimal]
-      } yield spiritsQuestions.AlcoholUsed(beer, wine, madeWine, ciderOrPerry)
     }
 
   implicit lazy val arbitraryDutySuspendedBeer: Arbitrary[dutySuspended.DutySuspendedBeer] =

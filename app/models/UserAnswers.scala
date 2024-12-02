@@ -51,7 +51,7 @@ object ReturnId {
   implicit val format: OFormat[ReturnId] = OFormat(reads, writes)
 }
 
-final case class UserAnswers(
+case class UserAnswers(
   returnId: ReturnId,
   groupId: String,
   internalId: String,
