@@ -34,7 +34,7 @@ object ReturnDetails {
   implicit val returnDetailsFormat: OFormat[ReturnDetails] = Json.format[ReturnDetails]
 }
 
-case class ReturnDetailsIdentification(periodKey: String, submittedTime: Instant)
+case class ReturnDetailsIdentification(periodKey: String, chargeReference: Option[String], submittedTime: Instant)
 
 object ReturnDetailsIdentification {
   implicit val returnDetailsIdentificationFormat: OFormat[ReturnDetailsIdentification] =
