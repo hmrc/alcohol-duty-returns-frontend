@@ -485,8 +485,7 @@ deleteMultipleSPREntry.error.required = Select yes to remove this entry
 
 dutyCalculation.title = You will owe £{0,number,#,##0.00}
 dutyCalculation.heading = You will owe £{0,number,#,##0.00}
-dutyCalculation.paragraph = We worked this out by:
-dutyCalculation.list = multiplying the volume of pure alcohol you entered by its duty rate
+dutyCalculation.paragraph = We worked this out by multiplying the volume of pure alcohol you entered by its duty rate.
 
 dutyCalculation.table.description = Description
 dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol (LPA)
