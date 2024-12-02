@@ -17,6 +17,8 @@
 package viewmodels.checkAnswers.dutySuspended
 
 import controllers.dutySuspended.routes
+import models.AlcoholRegime.Cider
+import models.dutySuspended.DutySuspendedVolume
 import models.{CheckMode, UserAnswers}
 import pages.dutySuspended.DutySuspendedCiderPage
 import play.api.i18n.Messages
@@ -27,10 +29,10 @@ import viewmodels.implicits._
 object DutySuspendedCiderSummary {
 
   def totalVolumeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedCiderPage).map { answer =>
+    answers.get(DutySuspendedCiderPage)(DutySuspendedVolume.format(Cider)).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedCider.totalCider.checkYourAnswersLabel",
-        value = ValueViewModel(s"${messages("site.2DP", answer.totalLitresVolume)} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.total)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedCider.totalCider.change.hidden"))
@@ -39,11 +41,11 @@ object DutySuspendedCiderSummary {
     }
 
   def pureAlcoholRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedCiderPage).map { answer =>
+    answers.get(DutySuspendedCiderPage)(DutySuspendedVolume.format(Cider)).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedCider.pureAlcoholInCider.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.4DP", answer.pureAlcoholVolume)} ${messages("site.unit.litres")}"
+          s"${messages("site.4DP", answer.pureAlcohol)} ${messages("site.unit.litres")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedCiderController.onPageLoad(CheckMode).url)

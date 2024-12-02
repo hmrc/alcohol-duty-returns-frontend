@@ -16,10 +16,21 @@
 
 package models.dutySuspended
 
+import models.AlcoholRegime
 import play.api.libs.json._
 
-case class DutySuspendedVolume(totalLitresVolume: BigDecimal, pureAlcoholVolume: BigDecimal)
-
+case class DutySuspendedVolume(total: BigDecimal, pureAlcohol: BigDecimal)
 object DutySuspendedVolume {
-  implicit val format: OFormat[DutySuspendedVolume] = Json.format[DutySuspendedVolume]
+  implicit def reads(regime: AlcoholRegime): Reads[DutySuspendedVolume]    = (json: JsValue) =>
+    for {
+      total       <- (json \ DutySuspendedRegimeSpecificKey.totalVolumeKey(regime)).validate[BigDecimal]
+      pureAlcohol <- (json \ DutySuspendedRegimeSpecificKey.pureAlcoholKey(regime)).validate[BigDecimal]
+    } yield DutySuspendedVolume(total, pureAlcohol)
+  implicit def writes(regime: AlcoholRegime): OWrites[DutySuspendedVolume] = (volume: DutySuspendedVolume) => {
+    Json.obj(
+      DutySuspendedRegimeSpecificKey.totalVolumeKey(regime) -> volume.total,
+      DutySuspendedRegimeSpecificKey.pureAlcoholKey(regime) -> volume.pureAlcohol
+    )
+  }
+  implicit def format(regime: AlcoholRegime): OFormat[DutySuspendedVolume] = OFormat(reads(regime), writes(regime))
 }

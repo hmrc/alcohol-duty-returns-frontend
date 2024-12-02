@@ -802,24 +802,24 @@ trait TestData extends ModelGenerators {
       OverDeclarationReasonPage.toString                  -> "Reason for over declaration",
       DeclareDutySuspendedDeliveriesQuestionPage.toString -> true,
       DutySuspendedBeerPage.toString                      -> Json.obj(
-        "totalLitresVolume" -> 1000,
-        "pureAlcoholVolume" -> 100
+        "totalBeer"         -> 1000,
+        "pureAlcoholInBeer" -> 100
       ),
       DutySuspendedCiderPage.toString                     -> Json.obj(
-        "totalLitresVolume" -> 2000,
-        "pureAlcoholVolume" -> 200
+        "totalCider"         -> 2000,
+        "pureAlcoholInCider" -> 200
       ),
       DutySuspendedSpiritsPage.toString                   -> Json.obj(
-        "totalLitresVolume" -> 1000,
-        "pureAlcoholVolume" -> 100
+        "totalSpirits"         -> 1000,
+        "pureAlcoholInSpirits" -> 100
       ),
       DutySuspendedWinePage.toString                      -> Json.obj(
-        "totalLitresVolume" -> 1000,
-        "pureAlcoholVolume" -> 100
+        "totalWine"         -> 1000,
+        "pureAlcoholInWine" -> 100
       ),
       DutySuspendedOtherFermentedPage.toString            -> Json.obj(
-        "totalLitresVolume" -> 1000,
-        "pureAlcoholVolume" -> 100
+        "totalOtherFermented"         -> 1000,
+        "pureAlcoholInOtherFermented" -> 100
       ),
       DeclareQuarterlySpiritsPage.toString                -> true,
       DeclareSpiritsTotalPage.toString                    -> 1234,

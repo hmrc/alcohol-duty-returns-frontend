@@ -27,6 +27,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.Spirits
+import models.dutySuspended.DutySuspendedVolume
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspended.DutySuspendedSpiritsView
 
@@ -50,7 +51,7 @@ class DutySuspendedSpiritsController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
     implicit request =>
       val form         = formProvider(Spirits)
-      val preparedForm = request.userAnswers.get(DutySuspendedSpiritsPage) match {
+      val preparedForm = request.userAnswers.get(DutySuspendedSpiritsPage)(DutySuspendedVolume.format(Spirits)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -67,7 +68,10 @@ class DutySuspendedSpiritsController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedSpiritsPage, value))
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(DutySuspendedSpiritsPage, value)(DutySuspendedVolume.format(Spirits))
+                )
               _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DutySuspendedSpiritsPage, mode, updatedAnswers))
         )

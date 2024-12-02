@@ -559,20 +559,20 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           .copy(data =
             Json.obj(
               DutySuspendedBeerPage.toString    -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalBeer"         -> validTotal,
+                "pureAlcoholInBeer" -> validPureAlcohol
               ),
               DutySuspendedCiderPage.toString   -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalCider"         -> validTotal,
+                "pureAlcoholInCider" -> validPureAlcohol
               ),
               DutySuspendedSpiritsPage.toString -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalSpirits"         -> validTotal,
+                "pureAlcoholInSpirits" -> validPureAlcohol
               ),
               DutySuspendedWinePage.toString    -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalWine"         -> validTotal,
+                "pureAlcoholInWine" -> validPureAlcohol
               )
             )
           )
@@ -609,24 +609,24 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           .copy(data =
             Json.obj(
               DutySuspendedBeerPage.toString           -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalBeer"         -> validTotal,
+                "pureAlcoholInBeer" -> validPureAlcohol
               ),
               DutySuspendedCiderPage.toString          -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalCider"         -> validTotal,
+                "pureAlcoholInCider" -> validPureAlcohol
               ),
               DutySuspendedSpiritsPage.toString        -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalSpirits"         -> validTotal,
+                "pureAlcoholInSpirits" -> validPureAlcohol
               ),
               DutySuspendedWinePage.toString           -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalWine"         -> validTotal,
+                "pureAlcoholInWine" -> validPureAlcohol
               ),
               DutySuspendedOtherFermentedPage.toString -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalOtherFermented"         -> validTotal,
+                "pureAlcoholInOtherFermented" -> validPureAlcohol
               )
             )
           )
@@ -664,12 +664,12 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           .copy(data =
             Json.obj(
               DutySuspendedCiderPage.toString          -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalCider"         -> validTotal,
+                "pureAlcoholInCider" -> validPureAlcohol
               ),
               DutySuspendedOtherFermentedPage.toString -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalOtherFermented"         -> validTotal,
+                "pureAlcoholInOtherFermented" -> validPureAlcohol
               )
             )
           )
@@ -707,16 +707,16 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           .copy(data =
             Json.obj(
               DutySuspendedBeerPage.toString    -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalBeer"         -> validTotal,
+                "pureAlcoholInBeer" -> validPureAlcohol
               ),
               DutySuspendedWinePage.toString    -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalWine"         -> validTotal,
+                "pureAlcoholInWine" -> validPureAlcohol
               ),
               DutySuspendedSpiritsPage.toString -> Json.obj(
-                "totalLitresVolume" -> validTotal,
-                "pureAlcoholVolume" -> validPureAlcohol
+                "totalSpirits"         -> validTotal,
+                "pureAlcoholInSpirits" -> validPureAlcohol
               )
             )
           )

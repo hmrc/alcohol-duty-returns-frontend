@@ -27,6 +27,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.OtherFermentedProduct
+import models.dutySuspended.DutySuspendedVolume
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspended.DutySuspendedOtherFermentedView
 
@@ -50,7 +51,9 @@ class DutySuspendedOtherFermentedController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
     implicit request =>
       val form         = formProvider(OtherFermentedProduct)
-      val preparedForm = request.userAnswers.get(DutySuspendedOtherFermentedPage) match {
+      val preparedForm = request.userAnswers.get(DutySuspendedOtherFermentedPage)(
+        DutySuspendedVolume.format(OtherFermentedProduct)
+      ) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -67,7 +70,11 @@ class DutySuspendedOtherFermentedController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedOtherFermentedPage, value))
+              updatedAnswers <- Future.fromTry(
+                                  request.userAnswers.set(DutySuspendedOtherFermentedPage, value)(
+                                    DutySuspendedVolume.format(OtherFermentedProduct)
+                                  )
+                                )
               _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DutySuspendedOtherFermentedPage, mode, updatedAnswers))
         )

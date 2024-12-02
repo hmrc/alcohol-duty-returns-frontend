@@ -48,8 +48,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
   val userAnswers = userAnswersWithCider.copy(data =
     Json.obj(
       DutySuspendedCiderPage.toString -> Json.obj(
-        "totalLitresVolume" -> validTotalCider,
-        "pureAlcoholVolume" -> validPureAlcoholInCider
+        "totalCider"         -> validTotalCider,
+        "pureAlcoholInCider" -> validPureAlcoholInCider
       )
     )
   )
@@ -106,8 +106,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedCiderRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalCider.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInCider.toString)
+              ("volumes.totalCider", validTotalCider.toString),
+              ("volumes.pureAlcoholInCider", validPureAlcoholInCider.toString)
             )
 
         val result = route(application, request).value
@@ -169,8 +169,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedCiderRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalCider.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInCider.toString)
+              ("volumes.totalCider", validTotalCider.toString),
+              ("volumes.pureAlcoholInCider", validPureAlcoholInCider.toString)
             )
 
         val result = route(application, request).value
@@ -187,8 +187,8 @@ class DutySuspendedCiderControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedCiderRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalCider.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInCider.toString)
+              ("volumes.totalCider", validTotalCider.toString),
+              ("volumes.pureAlcoholInCider", validPureAlcoholInCider.toString)
             )
 
         val result = route(application, request).value

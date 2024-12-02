@@ -34,24 +34,24 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
     Json.obj(
       AlcoholRegimePage.toString               -> Json.toJson(AlcoholRegime.values),
       DutySuspendedBeerPage.toString           -> Json.obj(
-        "totalLitresVolume" -> validTotal,
-        "pureAlcoholVolume" -> validPureAlcohol
+        "totalBeer"         -> validTotal,
+        "pureAlcoholInBeer" -> validPureAlcohol
       ),
       DutySuspendedCiderPage.toString          -> Json.obj(
-        "totalLitresVolume" -> validTotal,
-        "pureAlcoholVolume" -> validPureAlcohol
+        "totalCider"         -> validTotal,
+        "pureAlcoholInCider" -> validPureAlcohol
       ),
       DutySuspendedSpiritsPage.toString        -> Json.obj(
-        "totalLitresVolume" -> validTotal,
-        "pureAlcoholVolume" -> validPureAlcohol
+        "totalSpirits"         -> validTotal,
+        "pureAlcoholInSpirits" -> validPureAlcohol
       ),
       DutySuspendedWinePage.toString           -> Json.obj(
-        "totalLitresVolume" -> validTotal,
-        "pureAlcoholVolume" -> validPureAlcohol
+        "totalWine"         -> validTotal,
+        "pureAlcoholInWine" -> validPureAlcohol
       ),
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
-        "totalLitresVolume" -> validTotal,
-        "pureAlcoholVolume" -> validPureAlcohol
+        "totalOtherFermented"         -> validTotal,
+        "pureAlcoholInOtherFermented" -> validPureAlcohol
       )
     )
   )
@@ -91,8 +91,8 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
           regimes = AlcoholRegimes(Set(regime)),
           data = Json.obj(
             page.toString -> Json.obj(
-              "totalLitresVolume" -> validTotal,
-              "pureAlcoholVolume" -> validPureAlcohol
+              s"total${regime.entryName}"         -> validTotal,
+              s"pureAlcoholIn${regime.entryName}" -> validPureAlcohol
             )
           )
         )

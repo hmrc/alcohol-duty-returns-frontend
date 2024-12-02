@@ -48,8 +48,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
   val userAnswers = userAnswersWithOtherFermentedProduct.copy(data =
     Json.obj(
       DutySuspendedOtherFermentedPage.toString -> Json.obj(
-        "totalLitresVolume" -> validTotalOtherFermented,
-        "pureAlcoholVolume" -> validPureAlcoholInOtherFermented
+        "totalOtherFermented"         -> validTotalOtherFermented,
+        "pureAlcoholInOtherFermented" -> validPureAlcoholInOtherFermented
       )
     )
   )
@@ -106,8 +106,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedOtherFermentedRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalOtherFermented.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInOtherFermented.toString)
+              ("volumes.totalOtherFermented", validTotalOtherFermented.toString),
+              ("volumes.pureAlcoholInOtherFermented", validPureAlcoholInOtherFermented.toString)
             )
 
         val result = route(application, request).value
@@ -168,7 +168,10 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedOtherFermentedRoute)
-            .withFormUrlEncodedBody(("volumes.totalLitresVolume", "value 1"), ("volumes.pureAlcoholVolume", "value 2"))
+            .withFormUrlEncodedBody(
+              ("volumes.totalOtherFermented", "value 1"),
+              ("volumes.pureAlcoholInOtherFermented", "value 2")
+            )
 
         val result = route(application, request).value
 
@@ -184,8 +187,8 @@ class DutySuspendedOtherFermentedControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedOtherFermentedRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalOtherFermented.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInOtherFermented.toString)
+              ("volumes.totalOtherFermented", validTotalOtherFermented.toString),
+              ("volumes.pureAlcoholInOtherFermented", validPureAlcoholInOtherFermented.toString)
             )
 
         val result = route(application, request).value

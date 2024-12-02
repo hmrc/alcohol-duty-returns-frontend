@@ -17,6 +17,8 @@
 package viewmodels.checkAnswers.dutySuspended
 
 import controllers.dutySuspended.routes
+import models.AlcoholRegime.OtherFermentedProduct
+import models.dutySuspended.DutySuspendedVolume
 import models.{CheckMode, UserAnswers}
 import pages.dutySuspended.DutySuspendedOtherFermentedPage
 import play.api.i18n.Messages
@@ -27,11 +29,11 @@ import viewmodels.implicits._
 object DutySuspendedOtherFermentedSummary {
 
   def totalVolumeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedOtherFermentedPage).map { answer =>
+    answers.get(DutySuspendedOtherFermentedPage)(DutySuspendedVolume.format(OtherFermentedProduct)).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedOtherFermented.totalOtherFermented.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.2DP", answer.totalLitresVolume)} ${messages("site.unit.litres")}"
+          s"${messages("site.2DP", answer.total)} ${messages("site.unit.litres")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)
@@ -41,11 +43,11 @@ object DutySuspendedOtherFermentedSummary {
     }
 
   def pureAlcoholRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedOtherFermentedPage).map { answer =>
+    answers.get(DutySuspendedOtherFermentedPage)(DutySuspendedVolume.format(OtherFermentedProduct)).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedOtherFermented.pureAlcoholInOtherFermented.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.4DP", answer.pureAlcoholVolume)} ${messages("site.unit.litres")}"
+          s"${messages("site.4DP", answer.pureAlcohol)} ${messages("site.unit.litres")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedOtherFermentedController.onPageLoad(CheckMode).url)

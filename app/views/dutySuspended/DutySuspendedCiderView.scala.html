@@ -16,6 +16,8 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import models.dutySuspended.DutySuspendedRegimeSpecificKey
+@import models.AlcoholRegime.Cider
 
 @this(
     layout: templates.Layout,
@@ -52,10 +54,10 @@
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key="totalLitresVolume",
+                key=DutySuspendedRegimeSpecificKey.totalVolumeKey(Cider),
                 label = LabelViewModel(messages("dutySuspendedCider.subheading1")).asSubheading,
-                errorMessageField = form("volumes_totalLitresVolume"),
-                value = form("volumes.totalLitresVolume").value
+                errorMessageField = form(s"volumes_${DutySuspendedRegimeSpecificKey.totalVolumeKey(Cider)}"),
+                value = form(s"volumes.${DutySuspendedRegimeSpecificKey.totalVolumeKey(Cider)}").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -66,10 +68,10 @@
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key="pureAlcoholVolume",
+                key=DutySuspendedRegimeSpecificKey.pureAlcoholKey(Cider),
                 label = LabelViewModel(messages("dutySuspendedCider.subheading2")).asSubheading,
-                errorMessageField = form("volumes_pureAlcoholVolume"),
-                value = form("volumes.pureAlcoholVolume").value
+                errorMessageField =  form(s"volumes_${DutySuspendedRegimeSpecificKey.pureAlcoholKey(Cider)}"),
+                value = form(s"volumes.${DutySuspendedRegimeSpecificKey.pureAlcoholKey(Cider)}").value
             )
             .asNumeric()
             .withWidth(Fixed10)

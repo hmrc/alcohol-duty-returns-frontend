@@ -49,8 +49,8 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
   val userAnswers = userAnswersWithBeer.copy(data =
     Json.obj(
       DutySuspendedBeerPage.toString -> Json.obj(
-        "totalLitresVolume" -> validTotalBeer,
-        "pureAlcoholVolume" -> validPureAlcoholInBeer
+        "totalBeer"         -> validTotalBeer,
+        "pureAlcoholInBeer" -> validPureAlcoholInBeer
       )
     )
   )
@@ -110,8 +110,8 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedBeerRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalBeer.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInBeer.toString)
+              ("volumes.totalBeer", validTotalBeer.toString),
+              ("volumes.pureAlcoholInBeer", validPureAlcoholInBeer.toString)
             )
 
         val result = route(application, request).value
@@ -172,7 +172,7 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, dutySuspendedBeerRoute)
-            .withFormUrlEncodedBody(("volumes.totalLitresVolume", "5.6"), ("volumes.pureAlcoholVolume", "47.5"))
+            .withFormUrlEncodedBody(("volumes.totalBeer", "5.6"), ("volumes.pureAlcoholInBeer", "47.5"))
 
         val result = route(application, request).value
 
@@ -188,8 +188,8 @@ class DutySuspendedBeerControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedBeerRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalBeer.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInBeer.toString)
+              ("volumes.totalBeer", validTotalBeer.toString),
+              ("volumes.pureAlcoholInBeer", validPureAlcoholInBeer.toString)
             )
 
         val result = route(application, request).value

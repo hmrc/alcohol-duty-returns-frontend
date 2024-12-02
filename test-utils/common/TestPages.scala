@@ -201,20 +201,24 @@ trait TestPages extends TestData {
     multipleSPRListPage(userAnswers, regime, allVolumeAndRateByTaxTypeUnsorted)
 
   def dutySuspendedBeerPage(userAnswers: UserAnswers, dutySuspendedBeer: DutySuspendedVolume): UserAnswers =
-    userAnswers.set(DutySuspendedBeerPage, dutySuspendedBeer).get
+    userAnswers.set(DutySuspendedBeerPage, dutySuspendedBeer)(DutySuspendedVolume.format(Beer)).get
 
   def dutySuspendedCiderPage(userAnswers: UserAnswers, dutySuspendedCider: DutySuspendedVolume): UserAnswers =
-    userAnswers.set(DutySuspendedCiderPage, dutySuspendedCider).get
+    userAnswers.set(DutySuspendedCiderPage, dutySuspendedCider)(DutySuspendedVolume.format(Cider)).get
 
   def dutySuspendedWinePage(userAnswers: UserAnswers, dutySuspendedWine: DutySuspendedVolume): UserAnswers =
-    userAnswers.set(DutySuspendedWinePage, dutySuspendedWine).get
+    userAnswers.set(DutySuspendedWinePage, dutySuspendedWine)(DutySuspendedVolume.format(Wine)).get
 
   def dutySuspendedSpiritsPage(userAnswers: UserAnswers, dutySuspendedSpirits: DutySuspendedVolume): UserAnswers =
-    userAnswers.set(DutySuspendedSpiritsPage, dutySuspendedSpirits).get
+    userAnswers.set(DutySuspendedSpiritsPage, dutySuspendedSpirits)(DutySuspendedVolume.format(Spirits)).get
 
   def dutySuspendedOtherFermentedPage(
     userAnswers: UserAnswers,
     dutySuspendedOtherFermented: DutySuspendedVolume
   ): UserAnswers =
-    userAnswers.set(DutySuspendedOtherFermentedPage, dutySuspendedOtherFermented).get
+    userAnswers
+      .set(DutySuspendedOtherFermentedPage, dutySuspendedOtherFermented)(
+        DutySuspendedVolume.format(OtherFermentedProduct)
+      )
+      .get
 }

@@ -48,8 +48,8 @@ class DutySuspendedWineControllerSpec extends SpecBase {
   val userAnswers = userAnswersWithWine.copy(data =
     Json.obj(
       DutySuspendedWinePage.toString -> Json.obj(
-        "totalLitresVolume" -> validTotalWine,
-        "pureAlcoholVolume" -> validPureAlcoholInWine
+        "totalWine"         -> validTotalWine,
+        "pureAlcoholInWine" -> validPureAlcoholInWine
       )
     )
   )
@@ -106,8 +106,8 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedWineRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalWine.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInWine.toString)
+              ("volumes.totalWine", validTotalWine.toString),
+              ("volumes.pureAlcoholInWine", validPureAlcoholInWine.toString)
             )
 
         val result = route(application, request).value
@@ -169,8 +169,8 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedWineRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalWine.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInWine.toString)
+              ("volumes.totalWine", validTotalWine.toString),
+              ("volumes.pureAlcoholInWine", validPureAlcoholInWine.toString)
             )
 
         val result = route(application, request).value
@@ -187,8 +187,8 @@ class DutySuspendedWineControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, dutySuspendedWineRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalWine.toString),
-              ("volumes.pureAlcoholVolume", validPureAlcoholInWine.toString)
+              ("volumes.totalWine", validTotalWine.toString),
+              ("volumes.pureAlcoholInWine", validPureAlcoholInWine.toString)
             )
 
         val result = route(application, request).value

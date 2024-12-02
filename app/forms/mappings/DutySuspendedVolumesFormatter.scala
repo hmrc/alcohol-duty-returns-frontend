@@ -17,7 +17,8 @@
 package forms.mappings
 
 import config.Constants
-import models.dutySuspended.DutySuspendedVolume
+import models.AlcoholRegime
+import models.dutySuspended.{DutySuspendedRegimeSpecificKey, DutySuspendedVolume}
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
@@ -30,7 +31,8 @@ class DutySuspendedVolumesFormatter(
   inconsistentKey: String,
   inconsistentSignKey: String,
   zeroTotalLitresKey: String,
-  args: Seq[String]
+  args: Seq[String],
+  regime: AlcoholRegime
 ) extends Formatter[DutySuspendedVolume]
     with Formatters {
 
@@ -59,10 +61,8 @@ class DutySuspendedVolumesFormatter(
     args = args
   )
 
-  private val NUMBER_OF_FIELDS        = 2
-  private val totalVolumeKey          = "totalLitresVolume"
-  private val pureAlcoholKey          = "pureAlcoholVolume"
-  private val fieldKeys: List[String] = List(totalVolumeKey, pureAlcoholKey)
+  private val totalVolumeKey = DutySuspendedRegimeSpecificKey.totalVolumeKey(regime)
+  private val pureAlcoholKey = DutySuspendedRegimeSpecificKey.pureAlcoholKey(regime)
 
   private def requiredFieldFormError(key: String, field: String): FormError =
     FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
@@ -86,11 +86,11 @@ class DutySuspendedVolumesFormatter(
     formatVolume(key, data).fold(
       errors => Left(errors),
       volumes =>
-        if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
+        if (volumes.total < volumes.pureAlcohol) {
           Left(Seq(FormError(nameToId(s"$key.$pureAlcoholKey"), inconsistentKey, args)))
-        } else if ((volumes.totalLitresVolume > 0) && (volumes.pureAlcoholVolume < 0)) {
+        } else if ((volumes.total > 0) && (volumes.pureAlcohol < 0)) {
           Left(Seq(FormError(nameToId(s"$key.$pureAlcoholKey"), inconsistentSignKey, args)))
-        } else if (volumes.totalLitresVolume == 0 && volumes.pureAlcoholVolume < 0) {
+        } else if (volumes.total == 0 && volumes.pureAlcohol < 0) {
           Left(Seq(FormError(nameToId(s"$key.$pureAlcoholKey"), zeroTotalLitresKey, args)))
         } else {
           Right(volumes)
@@ -98,30 +98,30 @@ class DutySuspendedVolumesFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], DutySuspendedVolume] = {
-    val fields = fieldKeys.map { field =>
-      field -> data.get(s"$key.$field").filter(_.nonEmpty)
-    }.toMap
-
-    lazy val missingFields = fields
-      .withFilter(_._2.isEmpty)
-      .map(_._1)
-      .toList
-
-    fields.count(_._2.isDefined) match {
-      case NUMBER_OF_FIELDS =>
-        checkValues(key, data)
-      case _                =>
-        Left(
-          missingFields.map { field =>
-            requiredFieldFormError(key, field)
-          }
-        )
+    val totalLitresResult = validateField(totalVolumeKey, key, data, volumeFormatter)
+    val pureAlcoholResult = validateField(pureAlcoholKey, key, data, pureAlcoholBigDecimalFormatter)
+    val allErrors         = totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
+    if (allErrors.nonEmpty) {
+      Left(allErrors)
+    } else {
+      checkValues(key, data)
     }
   }
 
+  private def validateField(
+    field: String,
+    key: String,
+    data: Map[String, String],
+    formatter: String => BigDecimalFieldFormatter
+  ): Either[Seq[FormError], BigDecimal] =
+    data.get(s"$key.$field").filter(_.nonEmpty) match {
+      case Some(_) => formatter(field).bind(s"$key.$field", data)
+      case None    => Left(Seq(requiredFieldFormError(key, field)))
+    }
+
   override def unbind(key: String, value: DutySuspendedVolume): Map[String, String] =
     Map(
-      s"$key.$totalVolumeKey" -> value.totalLitresVolume.toString,
-      s"$key.$pureAlcoholKey" -> value.pureAlcoholVolume.toString
+      s"$key.$totalVolumeKey" -> value.total.toString,
+      s"$key.$pureAlcoholKey" -> value.pureAlcohol.toString
     )
 }

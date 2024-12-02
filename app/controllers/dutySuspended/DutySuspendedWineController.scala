@@ -27,6 +27,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.Wine
+import models.dutySuspended.DutySuspendedVolume
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspended.DutySuspendedWineView
 
@@ -50,7 +51,7 @@ class DutySuspendedWineController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
     implicit request =>
       val form         = formProvider(Wine)
-      val preparedForm = request.userAnswers.get(DutySuspendedWinePage) match {
+      val preparedForm = request.userAnswers.get(DutySuspendedWinePage)(DutySuspendedVolume.format(Wine)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -67,7 +68,8 @@ class DutySuspendedWineController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedWinePage, value))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(DutySuspendedWinePage, value)(DutySuspendedVolume.format(Wine)))
               _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DutySuspendedWinePage, mode, updatedAnswers))
         )

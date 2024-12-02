@@ -27,6 +27,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.Cider
+import models.dutySuspended.DutySuspendedVolume
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspended.DutySuspendedCiderView
 
@@ -50,7 +51,7 @@ class DutySuspendedCiderController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
     implicit request =>
       val form         = formProvider(Cider)
-      val preparedForm = request.userAnswers.get(DutySuspendedCiderPage) match {
+      val preparedForm = request.userAnswers.get(DutySuspendedCiderPage)(DutySuspendedVolume.format(Cider)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -67,7 +68,9 @@ class DutySuspendedCiderController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedCiderPage, value))
+              updatedAnswers <-
+                Future
+                  .fromTry(request.userAnswers.set(DutySuspendedCiderPage, value)(DutySuspendedVolume.format(Cider)))
               _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DutySuspendedCiderPage, mode, updatedAnswers))
         )

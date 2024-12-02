@@ -17,6 +17,8 @@
 package viewmodels.checkAnswers.dutySuspended
 
 import controllers.dutySuspended.routes
+import models.AlcoholRegime.Spirits
+import models.dutySuspended.DutySuspendedVolume
 import models.{CheckMode, UserAnswers}
 import pages.dutySuspended.DutySuspendedSpiritsPage
 import play.api.i18n.Messages
@@ -27,10 +29,10 @@ import viewmodels.implicits._
 object DutySuspendedSpiritsSummary {
 
   def totalVolumeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedSpiritsPage).map { answer =>
+    answers.get(DutySuspendedSpiritsPage)(DutySuspendedVolume.format(Spirits)).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedSpirits.totalSpirits.checkYourAnswersLabel",
-        value = ValueViewModel(s"${messages("site.2DP", answer.totalLitresVolume)} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.total)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedSpirits.totalSpirits.change.hidden"))
@@ -39,11 +41,11 @@ object DutySuspendedSpiritsSummary {
     }
 
   def pureAlcoholRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedSpiritsPage).map { answer =>
+    answers.get(DutySuspendedSpiritsPage)(DutySuspendedVolume.format(Spirits)).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedSpirits.pureAlcoholInSpirits.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.4DP", answer.pureAlcoholVolume)} ${messages("site.unit.litres")}"
+          s"${messages("site.4DP", answer.pureAlcohol)} ${messages("site.unit.litres")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedSpiritsController.onPageLoad(CheckMode).url)

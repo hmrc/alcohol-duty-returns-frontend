@@ -17,6 +17,8 @@
 package viewmodels.checkAnswers.dutySuspended
 
 import controllers.dutySuspended.routes
+import models.AlcoholRegime.Wine
+import models.dutySuspended.DutySuspendedVolume
 import models.{CheckMode, UserAnswers}
 import pages.dutySuspended.DutySuspendedWinePage
 import play.api.i18n.Messages
@@ -27,10 +29,10 @@ import viewmodels.implicits._
 object DutySuspendedWineSummary {
 
   def totalVolumeRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedWinePage).map { answer =>
+    answers.get(DutySuspendedWinePage)(DutySuspendedVolume.format(Wine)).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedWine.totalWine.checkYourAnswersLabel",
-        value = ValueViewModel(s"${messages("site.2DP", answer.totalLitresVolume)} ${messages("site.unit.litres")}"),
+        value = ValueViewModel(s"${messages("site.2DP", answer.total)} ${messages("site.unit.litres")}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedWineController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("dutySuspendedWine.totalWine.change.hidden"))
@@ -39,11 +41,11 @@ object DutySuspendedWineSummary {
     }
 
   def pureAlcoholRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DutySuspendedWinePage).map { answer =>
+    answers.get(DutySuspendedWinePage)(DutySuspendedVolume.format(Wine)).map { answer =>
       SummaryListRowViewModel(
         key = "dutySuspendedWine.pureAlcoholInWine.checkYourAnswersLabel",
         value = ValueViewModel(
-          s"${messages("site.4DP", answer.pureAlcoholVolume)} ${messages("site.unit.litres")}"
+          s"${messages("site.4DP", answer.pureAlcohol)} ${messages("site.unit.litres")}"
         ),
         actions = Seq(
           ActionItemViewModel("site.change", routes.DutySuspendedWineController.onPageLoad(CheckMode).url)
