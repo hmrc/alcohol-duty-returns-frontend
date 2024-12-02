@@ -30,6 +30,7 @@
 
 @(
    period: String,
+   chargeReference: Option[String],
    submittedAtDate: String,
    submittedAtTime: String,
    dutyToDeclare: TableViewModel,
@@ -42,6 +43,10 @@
 @layout(pageTitle = titleNoForm(messages("viewReturn.title", period)), fullWidth = true, withPrintCss = true) {
 
     @pageHeading(messages("viewReturn.heading", period))
+
+    @chargeReference.map { chargeReference =>
+      @paragraph(messages("viewReturn.chargeReference", chargeReference))
+    }
 
     @paragraph(messages("viewReturn.submittedAt", submittedAtDate, submittedAtTime))
 

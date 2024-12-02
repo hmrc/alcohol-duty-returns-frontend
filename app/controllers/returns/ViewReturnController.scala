@@ -95,6 +95,7 @@ class ViewReturnController @Inject() (
           Ok(
             view(
               returnPeriodStr,
+              returnDetails.identification.chargeReference,
               submittedDateStr,
               submittedTimeStr,
               dutyToDeclareViewModel,

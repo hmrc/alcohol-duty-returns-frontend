@@ -123,6 +123,7 @@ viewPastReturns.noReturns = No outstanding returns
 
 viewReturn.heading = {0} Alcohol Duty Return
 viewReturn.title = {0} Alcohol Duty Return
+viewReturn.chargeReference = Reference: {0}
 viewReturn.submittedAt = Submitted on {0} at {1}
 viewReturn.alcoholDuty.caption = Alcohol declared
 viewReturn.alcoholDuty.total.legend = Total declared duty value
