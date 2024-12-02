@@ -72,7 +72,7 @@ class ReturnSubmittedHelper @Inject() (dateTimeHelper: DateTimeHelper, appConfig
 
   private def getWarningText(implicit messages: Messages): WarningText =
     WarningText(
-      iconFallbackText = Some("Warning"),
+      iconFallbackText = Some(messages("returnSubmitted.warningFallbackText")),
       content = Text(messages("returnSubmitted.warningText"))
     )
 
