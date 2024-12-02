@@ -23,17 +23,16 @@ import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.adjustment.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
-import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrOtherIngredient, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit, AdrUnitOfMeasure}
-import models.declareDuty.AlcoholDuty
 import models.checkAndSubmit.AdrTypeOfSpirit.fromSpiritsType
+import models.checkAndSubmit._
+import models.declareDuty.AlcoholDuty
 import models.dutySuspended.DutySuspendedVolume
 import models.{AlcoholRegime, ReturnPeriod, UserAnswers}
-import models.spiritsQuestions.{EthyleneGasOrMolassesUsed, OtherMaltedGrains}
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, UnderDeclarationReasonPage}
-import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import pages.spiritsQuestions.{AlcoholUsedPage, DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, EthyleneGasOrMolassesUsedPage, GrainsUsedPage, OtherIngredientsUsedPage, OtherMaltedGrainsPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import pages.dutySuspended._
+import pages.spiritsQuestions._
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -351,80 +350,48 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       spiritVolumes       <- declareSpiritsTotal(userAnswers)
       typesOfSpirit       <- getTypeOfSpirits(userAnswers)
       otherSpiritTypeName <- getOtherSpiritsName(userAnswers)
-      grains              <- getValue(userAnswers, GrainsUsedPage)
-      otherMaltedGrain    <- if (grains.usedMaltedGrainNotBarley) getOtherMaltedGrainValue(userAnswers)
-                             else EitherT.rightT[Future, String](None)
-      ethyleneOrMolasses  <- getValue(userAnswers, EthyleneGasOrMolassesUsedPage)
-      ingredientsVolumes  <- getSpiritsIngredientsVolumes(userAnswers, ethyleneOrMolasses)
-      otherIngredient     <- if (ethyleneOrMolasses.otherIngredients) getOtherIngredients(userAnswers)
-                             else EitherT.rightT[Future, String](None)
     } yield Some(
       AdrSpiritsProduced(
         spiritsVolumes = spiritVolumes,
         typesOfSpirit = typesOfSpirit,
         otherSpiritTypeName = otherSpiritTypeName,
-        hasOtherMaltedGrain = grains.usedMaltedGrainNotBarley,
+        hasOtherMaltedGrain = None,
         grainsQuantities = AdrSpiritsGrainsQuantities(
-          maltedBarley = Some(grains.maltedBarleyQuantity),
-          otherMaltedGrain = otherMaltedGrain.map(_.otherMaltedGrainsQuantity),
-          wheat = Some(grains.wheatQuantity),
-          maize = Some(grains.maizeQuantity),
-          rye = Some(grains.ryeQuantity),
-          unmaltedGrain = Some(grains.unmaltedGrainQuantity)
+          maltedBarley = None,
+          otherMaltedGrain = None,
+          wheat = None,
+          maize = None,
+          rye = None,
+          unmaltedGrain = None
         ),
-        otherMaltedGrainType = otherMaltedGrain.map(_.otherMaltedGrainsTypes),
-        ingredientsVolumes = ingredientsVolumes,
-        otherIngredient = otherIngredient
+        otherMaltedGrainType = None,
+        ingredientsVolumes = AdrSpiritsIngredientsVolumes(
+          ethylene = None,
+          molasses = None,
+          beer = None,
+          wine = None,
+          madeWine = None,
+          ciderOrPerry = None
+        ),
+        otherIngredient = None
       )
     )
 
   def declareSpiritsTotal(userAnswers: UserAnswers): EitherT[Future, String, AdrSpiritsVolumes] =
     for {
       totalSpirits <- getValue(userAnswers, DeclareSpiritsTotalPage)
-      whiskey      <- getValue(userAnswers, WhiskyPage)
+      whisky       <- getValue(userAnswers, WhiskyPage)
     } yield AdrSpiritsVolumes(
       totalSpirits = totalSpirits,
-      scotchWhiskey = whiskey.scotchWhisky,
-      irishWhisky = whiskey.irishWhiskey
+      scotchWhisky = whisky.scotchWhisky,
+      irishWhiskey = whisky.irishWhiskey
     )
 
-  def getTypeOfSpirits(userAnswers: UserAnswers): EitherT[Future, String, Set[AdrTypeOfSpirit]] =
+  private def getTypeOfSpirits(userAnswers: UserAnswers): EitherT[Future, String, Set[AdrTypeOfSpirit]] =
     getValue(userAnswers, SpiritTypePage).map(_.map(fromSpiritsType))
 
   private def getOtherSpiritsName(userAnswers: UserAnswers): EitherT[Future, String, Option[String]] =
     EitherT.rightT(userAnswers.get(OtherSpiritsProducedPage))
-
-  private def getOtherMaltedGrainValue(answers: UserAnswers): EitherT[Future, String, Option[OtherMaltedGrains]] =
-    answers.get(OtherMaltedGrainsPage) match {
-      case Some(value) => EitherT.rightT(Some(value))
-      case None        => EitherT.leftT("Other malted grain value not found")
-    }
-
-  private def getSpiritsIngredientsVolumes(
-    userAnswers: UserAnswers,
-    ethyleneOrMolasses: EthyleneGasOrMolassesUsed
-  ): EitherT[Future, String, AdrSpiritsIngredientsVolumes] =
-    getValue(userAnswers, AlcoholUsedPage).map { alcoholUsed =>
-      AdrSpiritsIngredientsVolumes(
-        ethylene = Some(ethyleneOrMolasses.ethyleneGas),
-        molasses = Some(ethyleneOrMolasses.molasses),
-        beer = Some(alcoholUsed.beer),
-        wine = Some(alcoholUsed.wine),
-        madeWine = Some(alcoholUsed.madeWine),
-        ciderOrPerry = Some(alcoholUsed.ciderOrPerry)
-      )
-    }
-
-  private def getOtherIngredients(userAnswers: UserAnswers): EitherT[Future, String, Option[AdrOtherIngredient]] =
-    getValue(userAnswers, OtherIngredientsUsedPage).map { otherIngredient =>
-      Some(
-        AdrOtherIngredient(
-          quantity = otherIngredient.otherIngredientsUsedQuantity,
-          unitOfMeasure = AdrUnitOfMeasure(otherIngredient.otherIngredientsUsedUnit),
-          ingredientName = otherIngredient.otherIngredientsUsedTypes
-        )
-      )
-    }
 
   private def getAdjustmentsByType(
     userAnswers: UserAnswers

@@ -29,66 +29,14 @@ object CheckYourAnswersSummaryListHelper {
       totalSpiritsSummaryRow <- DeclareSpiritsTotalSummary.row(userAnswers)
       scotchWhiskySummaryRow <- WhiskySummary.scotchWhiskyRow(userAnswers)
       irishWhiskySummaryRow  <- WhiskySummary.irishWhiskeyRow(userAnswers)
-      spiritTypeSummaryRow   <- SpiritTypeSummary.row(userAnswers)
     } yield SummaryListViewModel(
       Seq(totalSpiritsSummaryRow) ++
         Seq(scotchWhiskySummaryRow) ++
         Seq(irishWhiskySummaryRow) ++
-        Seq(spiritTypeSummaryRow) ++
+        SpiritTypeSummary.row(userAnswers) ++
         otherSpiritSummaryRow
     ).copy(card =
       Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card1"))))))
-    )
-  }
-
-  def grainsUsedSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
-    val otherMaltedGrainsRow = getOptionalRow(OtherMaltedGrainsSummary.row(userAnswers))
-    for {
-      maltedBarleySummaryRow  <- GrainsUsedSummary.maltedBarleyRow(userAnswers)
-      wheatSummaryRow         <- GrainsUsedSummary.wheatRow(userAnswers)
-      maizeSummaryRow         <- GrainsUsedSummary.maizeRow(userAnswers)
-      ryeSummaryRow           <- GrainsUsedSummary.ryeRow(userAnswers)
-      unmaltedGrainSummaryRow <- GrainsUsedSummary.unmaltedGrainQuantityRow(userAnswers)
-    } yield SummaryListViewModel(
-      Seq(maltedBarleySummaryRow) ++
-        Seq(wheatSummaryRow) ++
-        Seq(maizeSummaryRow) ++
-        Seq(ryeSummaryRow) ++
-        Seq(unmaltedGrainSummaryRow) ++
-        otherMaltedGrainsRow
-    ).copy(card =
-      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card2"))))))
-    )
-  }
-
-  def alcoholUsedSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] =
-    for {
-      beerSummaryRow         <- AlcoholUsedSummary.beerRow(userAnswers)
-      wineSummaryRow         <- AlcoholUsedSummary.wineRow(userAnswers)
-      madeWineSummaryRow     <- AlcoholUsedSummary.madeWineRow(userAnswers)
-      ciderOrPerrySummaryRow <- AlcoholUsedSummary.ciderOrPerryRow(userAnswers)
-    } yield SummaryListViewModel(
-      Seq(
-        beerSummaryRow,
-        wineSummaryRow,
-        madeWineSummaryRow,
-        ciderOrPerrySummaryRow
-      )
-    ).copy(card =
-      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card3"))))))
-    )
-
-  def otherIngredientsUsedSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
-    val otherIngredients = getOptionalRow(OtherIngredientsUsedSummary.row(userAnswers))
-    for {
-      ethyleneGas <- EthyleneGasOrMolassesUsedSummary.ethyleneGasUsedRow(userAnswers)
-      molasses    <- EthyleneGasOrMolassesUsedSummary.molassesUsedRow(userAnswers)
-    } yield SummaryListViewModel(
-      Seq(ethyleneGas) ++
-        Seq(molasses) ++
-        otherIngredients
-    ).copy(card =
-      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card4"))))))
     )
   }
 

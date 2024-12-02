@@ -26,18 +26,18 @@ trait DutySuspendedRegimeKeyProvider {
 
 object DutySuspendedRegimeSpecificKey extends DutySuspendedRegimeKeyProvider {
   override def totalVolumeKey(regime: AlcoholRegime): String = regime match {
-    case AlcoholRegime.Beer => "totalBeer"
-    case AlcoholRegime.Cider => "totalCider"
+    case AlcoholRegime.Beer                  => "totalBeer"
+    case AlcoholRegime.Cider                 => "totalCider"
     case AlcoholRegime.OtherFermentedProduct => "totalOtherFermented"
-    case AlcoholRegime.Wine => "totalWine"
-    case AlcoholRegime.Spirits => "totalSpirits"
+    case AlcoholRegime.Wine                  => "totalWine"
+    case AlcoholRegime.Spirits               => "totalSpirits"
   }
 
   override def pureAlcoholKey(regime: AlcoholRegime): String = regime match {
-    case AlcoholRegime.Beer => "pureAlcoholInBeer"
-    case AlcoholRegime.Cider => "pureAlcoholInCider"
+    case AlcoholRegime.Beer                  => "pureAlcoholInBeer"
+    case AlcoholRegime.Cider                 => "pureAlcoholInCider"
     case AlcoholRegime.OtherFermentedProduct => "pureAlcoholInOtherFermented"
-    case AlcoholRegime.Wine => "pureAlcoholInWine"
-    case AlcoholRegime.Spirits => "pureAlcoholInSpirits"
+    case AlcoholRegime.Wine                  => "pureAlcoholInWine"
+    case AlcoholRegime.Spirits               => "pureAlcoholInSpirits"
   }
 }

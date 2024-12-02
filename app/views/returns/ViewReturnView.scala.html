@@ -28,11 +28,25 @@
     printPage: PrintPage
 )
 
-@(period: String, submittedAtDate: String, submittedAtTime: String, dutyToDeclare: TableViewModel, adjustments: TableViewModel, totalDue: TableTotalViewModel, netDutySuspension: TableViewModel)(implicit request: Request[_], messages: Messages)
+@(
+   period: String,
+   chargeReference: Option[String],
+   submittedAtDate: String,
+   submittedAtTime: String,
+   dutyToDeclare: TableViewModel,
+   adjustments: TableViewModel,
+   totalDue: TableTotalViewModel,
+   netDutySuspension: TableViewModel,
+   spirits: Seq[TableViewModel]
+)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewReturn.title", period)), fullWidth = true, withPrintCss = true) {
 
     @pageHeading(messages("viewReturn.heading", period))
+
+    @chargeReference.map { chargeReference =>
+      @paragraph(messages("viewReturn.chargeReference", chargeReference))
+    }
 
     @paragraph(messages("viewReturn.submittedAt", submittedAtDate, submittedAtTime))
 
@@ -82,6 +96,17 @@
         head = Some(netDutySuspension.head),
         rows = netDutySuspension.rows.map(_.cells)
     ))
+
+    <br>
+
+    @spirits.map { spiritsTable =>
+        @govukTable(Table(
+            caption = spiritsTable.caption,
+            captionClasses = Css.tableCaptionMCssClass,
+            head = Some(spiritsTable.head),
+            rows = spiritsTable.rows.map(_.cells)
+        ))
+    }
 
     <br>
 

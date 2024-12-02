@@ -16,23 +16,29 @@
 
 package viewmodels.tasklist
 
+import config.Constants
 import config.Constants.Css
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskListItemStatus
 
-object AlcholDutyTaskListItemStatus {
-  def completed(implicit messages: Messages): TaskListItemStatus   = TaskListItemStatus(
-    content = Text(messages("taskList.section.status.completed"))
+object AlcoholDutyTaskListItemStatus {
+  def completed(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
+    content = Text(messages("taskList.section.status.completed")),
+    classes = Constants.textAlignRightCssClass
   )
-  def notStarted(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
-    tag = Some(Tag(content = Text(messages("taskList.section.status.notStarted")), classes = Css.blueTagCssClass))
+  def notStarted(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
+    tag = Some(Tag(content = Text(messages("taskList.section.status.notStarted")), classes = Css.blueTagCssClass)),
+    classes = Constants.textAlignRightCssClass
   )
+
   def inProgress(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
-    tag = Some(Tag(content = Text(messages("taskList.section.status.inProgress")), classes = Css.lightBlueTagCssClass))
+    tag = Some(Tag(content = Text(messages("taskList.section.status.inProgress")), classes = Css.lightBlueTagCssClass)),
+    classes = Constants.textAlignRightCssClass
   )
   def cannotStart(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
-    tag = Some(Tag(content = Text(messages("taskList.section.status.cannotStart")), classes = Css.greyTagCssClass))
+    tag = Some(Tag(content = Text(messages("taskList.section.status.cannotStart")), classes = Css.greyTagCssClass)),
+    classes = Constants.textAlignRightCssClass
   )
 }

@@ -136,8 +136,8 @@ object AdrDutySuspended {
 
 case class AdrSpiritsVolumes(
   totalSpirits: BigDecimal,
-  scotchWhiskey: BigDecimal,
-  irishWhisky: BigDecimal
+  scotchWhisky: BigDecimal,
+  irishWhiskey: BigDecimal
 )
 
 object AdrSpiritsVolumes {
@@ -225,7 +225,7 @@ case class AdrSpiritsProduced(
   spiritsVolumes: AdrSpiritsVolumes,
   typesOfSpirit: Set[AdrTypeOfSpirit],
   otherSpiritTypeName: Option[String],
-  hasOtherMaltedGrain: Boolean,
+  hasOtherMaltedGrain: Option[Boolean],
   grainsQuantities: AdrSpiritsGrainsQuantities,
   otherMaltedGrainType: Option[String],
   ingredientsVolumes: AdrSpiritsIngredientsVolumes,
