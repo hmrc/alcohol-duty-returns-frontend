@@ -21,6 +21,7 @@ import connectors.{AlcoholDutyCalculatorConnector, AlcoholDutyReturnsConnector}
 import models.ReturnPeriod
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
@@ -267,20 +268,24 @@ class ViewReturnControllerSpec extends SpecBase {
   }
 
   abstract class SetUp {
-    val periodKeyForSpirits    = periodKeyJan
-    val periodKeyNotForSpirits = periodKeyFeb
+    implicit val messages: Messages = getMessages(app)
+    val periodKeyForSpirits         = periodKeyJan
+    val periodKeyNotForSpirits      = periodKeyFeb
     def periodKeyUnderTest: String
-    val returnPeriodUnderTest  = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyUnderTest)
-    val returnDetails          = exampleReturnDetails(periodKeyUnderTest, Instant.now(clock))
-    val nilReturn              = nilReturnDetails(periodKeyUnderTest, Instant.now(clock))
-    val returnPeriodStr        = dateTimeHelper.formatMonthYear(returnPeriodUnderTest.period)
-    val submittedAtDateStr     = dateTimeHelper.formatDateMonthYear(
+
+    val dateTimeHelper = createDateTimeHelper()
+
+    val returnPeriodUnderTest = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyUnderTest)
+    val returnDetails         = exampleReturnDetails(periodKeyUnderTest, Instant.now(clock))
+    val nilReturn             = nilReturnDetails(periodKeyUnderTest, Instant.now(clock))
+    val returnPeriodStr       = dateTimeHelper.formatMonthYear(returnPeriodUnderTest.period)
+    val submittedAtDateStr    = dateTimeHelper.formatDateMonthYear(
       dateTimeHelper.instantToLocalDate(returnDetails.identification.submittedTime)
     )
-    val submittedAtTimeStr     = dateTimeHelper.formatHourMinuteMeridiem(
+    val submittedAtTimeStr    = dateTimeHelper.formatHourMinuteMeridiem(
       dateTimeHelper.instantToLocalTime(returnDetails.identification.submittedTime)
     )
-    val rateBands              = exampleRateBands(periodKeyUnderTest)
+    val rateBands             = exampleRateBands(periodKeyUnderTest)
 
     val tableModel              = TableViewModel.empty()
     val totalTableModel         = TableTotalViewModel(HeadCell(), HeadCell())

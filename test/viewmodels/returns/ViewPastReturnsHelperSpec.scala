@@ -131,6 +131,6 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   }
 
   class SetUp {
-    val viewPastReturnsHelper = new ViewPastReturnsHelper()
+    val viewPastReturnsHelper = new ViewPastReturnsHelper(createDateTimeHelper())
   }
 }

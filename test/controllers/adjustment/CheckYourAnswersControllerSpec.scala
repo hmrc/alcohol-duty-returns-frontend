@@ -29,7 +29,7 @@ import pages.adjustment._
 import play.api.inject.bind
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.adjustment.CheckYourAnswersSummaryListHelper
+import viewmodels.checkAnswers.adjustment.{CheckYourAnswersSummaryListHelper, WhenDidYouPayDutySummary}
 import views.html.adjustment.CheckYourAnswersView
 
 import java.time.YearMonth
@@ -158,7 +158,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
           val view = application.injector.instanceOf[CheckYourAnswersView]
 
-          val list = CheckYourAnswersSummaryListHelper
+          val list = new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
             .currentAdjustmentEntrySummaryList(completeUserAnswers.get(CurrentAdjustmentEntryPage).get)(
               getMessages(app)
             )
@@ -190,7 +190,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val list = CheckYourAnswersSummaryListHelper
+        val list = new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
           .currentAdjustmentEntrySummaryList(savedAdjustmentEntry)(getMessages(app))
           .get
 
@@ -224,7 +224,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val list = CheckYourAnswersSummaryListHelper
+        val list = new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
           .currentAdjustmentEntrySummaryList(savedAdjustmentEntry)(getMessages(app))
           .get
 
@@ -261,7 +261,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
           val view = application.injector.instanceOf[CheckYourAnswersView]
 
-          val list = CheckYourAnswersSummaryListHelper
+          val list = new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
             .currentAdjustmentEntrySummaryList(incompleteAdjustmentEntry)(getMessages(app))
             .get
 
@@ -301,7 +301,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         val list =
-          CheckYourAnswersSummaryListHelper
+          new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
             .currentAdjustmentEntrySummaryList(adjustmentEntry)(getMessages(app))
             .get
 
