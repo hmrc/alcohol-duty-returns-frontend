@@ -490,7 +490,7 @@ dutyCalculation.paragraph = We worked this out by multiplying the volume of pure
 dutyCalculation.table.description = Description
 dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol (LPA)
 dutyCalculation.table.dutyRate = Duty rate (per litre)
-dutyCalculation.table.dutyDue = Duty due
+dutyCalculation.table.dutyDue = Duty value
 dutyCalculation.table.action = Action
 
 productList.caption = Duty due
