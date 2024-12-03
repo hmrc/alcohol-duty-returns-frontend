@@ -291,5 +291,79 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
     }
+
+    "must fail when pure alcohol volume is empty and total litres value exceeds maximum and and dutyRate is invalid" in {
+      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
+        (volumeAndRateByTaxType, acc: Map[String, String]) =>
+          acc ++ Map(
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
+              .indexOf(volumeAndRateByTaxType)}",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "999999999999",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.1abc"
+          )
+      }
+
+      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
+        (volumeAndRateByTaxType, acc: List[FormError]) =>
+          acc ++ List(
+            FormError(
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              "return.journey.error.maximumValue.totalLitres",
+              List("")
+            ),
+            FormError(
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              "return.journey.error.noValue.pureAlcohol",
+              List("")
+            ),
+            FormError(
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              "return.journey.error.invalid.dutyRate",
+              List("")
+            )
+          )
+      }
+
+      val result = form.bind(values)
+      result.errors must contain allElementsOf expectedErrors
+    }
+
+    "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
+      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
+        (volumeAndRateByTaxType, acc: Map[String, String]) =>
+          acc ++ Map(
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
+              .indexOf(volumeAndRateByTaxType)}",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "9999999999.123",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "-671.12345",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "99999999999.546"
+          )
+      }
+
+      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
+        (volumeAndRateByTaxType, acc: List[FormError]) =>
+          acc ++ List(
+            FormError(
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              "return.journey.error.tooManyDecimalPlaces.totalLitres",
+              List("")
+            ),
+            FormError(
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              "return.journey.error.tooManyDecimalPlaces.pureAlcohol",
+              List("")
+            ),
+            FormError(
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              "return.journey.error.tooManyDecimalPlaces.dutyRate",
+              List("")
+            )
+          )
+      }
+
+      val result = form.bind(values)
+      result.errors must contain allElementsOf expectedErrors
+    }
   }
 }

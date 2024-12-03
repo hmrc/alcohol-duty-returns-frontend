@@ -145,6 +145,44 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
         FormError("volumes_pureAlcoholVolume", "spoiltVolumeWithDuty.error.lessThanExpected", List(""))
       )
     }
+
+    "fail to bind when pure alcohol volume is empty, total litres value exceeds maximum and duty is invalid" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "9999999999999999",
+        "volumes.pureAlcoholVolume" -> "",
+        "volumes.duty"              -> "abc"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError(
+          "volumes_totalLitresVolume",
+          List("spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume"),
+          List("")
+        ),
+        FormError("volumes_pureAlcoholVolume", List("spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume"), List("")),
+        FormError("volumes_duty", List("spoiltVolumeWithDuty.error.invalid.duty"), List(""))
+      )
+    }
+
+    "fail to bind with decimal places error when pure alcohol, total litres and duty have more than expected decimals and are also out of range" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "999999999999.9999",
+        "volumes.pureAlcoholVolume" -> "-12323.234423",
+        "volumes.duty"              -> "99999999999.856"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError(
+          "volumes_totalLitresVolume",
+          List("spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume"),
+          List("")
+        ),
+        FormError(
+          "volumes_pureAlcoholVolume",
+          List("spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume"),
+          List("")
+        ),
+        FormError("volumes_duty", List("spoiltVolumeWithDuty.error.decimalPlaces.duty"), List(""))
+      )
+    }
   }
 
 }
