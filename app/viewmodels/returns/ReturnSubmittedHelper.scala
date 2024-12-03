@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
-import viewmodels.{DateTimeHelper, ReturnPeriodViewModel}
+import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
 
 case class ReturnSubmittedViewModel(
   returnDetails: AdrReturnCreatedDetails,
@@ -39,7 +39,11 @@ case class ReturnSubmittedViewModel(
   warningText: WarningText
 )
 
-class ReturnSubmittedHelper @Inject() (dateTimeHelper: DateTimeHelper, appConfig: FrontendAppConfig) {
+class ReturnSubmittedHelper @Inject() (
+  dateTimeHelper: DateTimeHelper,
+  appConfig: FrontendAppConfig,
+  returnPeriodViewModelFactory: ReturnPeriodViewModelFactory
+) {
 
   def getReturnSubmittedViewModel(returnDetails: AdrReturnCreatedDetails)(implicit
     request: IdentifierRequest[AnyContent],
@@ -52,7 +56,7 @@ class ReturnSubmittedHelper @Inject() (dateTimeHelper: DateTimeHelper, appConfig
     val returnPeriod                       = ReturnPeriod
       .fromPeriodKey(periodKey)
       .getOrElse(throw new IllegalArgumentException("Invalid period key was provided. Did not match regex."))
-    val returnPeriodViewModel              = ReturnPeriodViewModel(returnPeriod)
+    val returnPeriodViewModel              = returnPeriodViewModelFactory(returnPeriod)
     val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)
     val formattedProcessingDate            = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
     val formattedPaymentDueDate            = returnDetails.paymentDueDate.map(dateTimeHelper.formatDateMonthYear).getOrElse("")

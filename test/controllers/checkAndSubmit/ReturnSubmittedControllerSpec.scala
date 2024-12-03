@@ -21,9 +21,11 @@ import config.Constants.adrReturnCreatedDetails
 import config.FrontendAppConfig
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import org.mockito.ArgumentMatchers.any
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.test.Helpers._
+import viewmodels.DateTimeHelper
 import viewmodels.returns.ReturnSubmittedHelper
 
 import java.time.{Instant, LocalDate}
@@ -43,12 +45,13 @@ class ReturnSubmittedControllerSpec extends SpecBase {
   "ReturnSubmitted Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application                 = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[ReturnSubmittedHelper].toInstance(mockReturnSubmittedHelper))
         .build()
-
+      implicit val messages: Messages = getMessages(application)
+      val testViewModel               = testReturnSubmittedViewModel(application.injector.instanceOf[DateTimeHelper])
       when(mockReturnSubmittedHelper.getReturnSubmittedViewModel(any())(any(), any()))
-        .thenReturn(testReturnSubmittedViewModel)
+        .thenReturn(testViewModel)
 
       running(application) {
         val request = FakeRequest(

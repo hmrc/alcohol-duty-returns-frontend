@@ -18,20 +18,18 @@ package viewmodels
 
 import models.ReturnPeriod
 import play.api.i18n.Messages
-
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
-import ReturnPeriodViewModel.viewDateFormatter
 
 import java.time.LocalDate
+import javax.inject.Inject
 
-case class BeforeStartReturnViewModel(returnPeriod: ReturnPeriod, currentDate: LocalDate) {
-  private val returnDueDate = returnPeriod.periodDueDate()
+case class BeforeStartReturnViewModel(returnDueDate: LocalDate, dueDateString: String, currentDate: LocalDate) {
   def warningText(implicit messages: Messages): WarningText = {
     val message: String = if (currentDate.isBefore(returnDueDate)) {
-      messages("beforeStartReturn.text.dueDateWarning", viewDateFormatter.format(returnDueDate))
+      messages("beforeStartReturn.text.dueDateWarning", dueDateString)
     } else if (currentDate.isAfter(returnDueDate)) {
-      messages("beforeStartReturn.text.overdueWarning", viewDateFormatter.format(returnDueDate))
+      messages("beforeStartReturn.text.overdueWarning", dueDateString)
     } else {
       messages("beforeStartReturn.text.dueWarning")
     }
@@ -40,6 +38,15 @@ case class BeforeStartReturnViewModel(returnPeriod: ReturnPeriod, currentDate: L
       iconFallbackText = Some("Warning"),
       content = Text(message)
     )
+  }
+}
 
+class BeforeStartReturnViewModelFactory @Inject() (dateTimeHelper: DateTimeHelper) {
+  def apply(returnPeriod: ReturnPeriod, currentDate: LocalDate)(implicit
+    messages: Messages
+  ): BeforeStartReturnViewModel = {
+    val returnDueDate = returnPeriod.periodDueDate()
+
+    BeforeStartReturnViewModel(returnDueDate, dateTimeHelper.formatDateMonthYear(returnDueDate), currentDate)
   }
 }

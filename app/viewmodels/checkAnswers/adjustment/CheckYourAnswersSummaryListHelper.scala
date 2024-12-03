@@ -21,7 +21,9 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import viewmodels.govuk.summarylist._
 
-object CheckYourAnswersSummaryListHelper {
+import javax.inject.Inject
+
+class CheckYourAnswersSummaryListHelper @Inject() (whenDidYouPayDutySummary: WhenDidYouPayDutySummary) {
 
   def currentAdjustmentEntrySummaryList(
     adjustmentEntry: AdjustmentEntry
@@ -29,7 +31,7 @@ object CheckYourAnswersSummaryListHelper {
 
     val newTaxType        = getOptionalRow(AdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry))
     val sprDutyRate       = getOptionalRow(AdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry))
-    val returnPeriod      = getOptionalRow(WhenDidYouPayDutySummary.row(adjustmentEntry))
+    val returnPeriod      = getOptionalRow(whenDidYouPayDutySummary.row(adjustmentEntry))
     val spoiltAlcoholType = getOptionalRow(AlcoholicProductTypeSummary.row(adjustmentEntry))
     val taxType           = getOptionalRow(AdjustmentTaxTypeSummary.row(adjustmentEntry))
     for {

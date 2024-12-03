@@ -33,6 +33,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.language.LanguageUtils
 import viewmodels.DateTimeHelper
 
 import scala.concurrent.ExecutionContext
@@ -70,7 +71,8 @@ trait SpecBase
   def FakeRequestWithoutSession()                                                                    = play.api.test.FakeRequest()
   def FakeRequestWithoutSession(verb: String, route: String)                                         = play.api.test.FakeRequest(verb, route)
 
-  val dateTimeHelper = new DateTimeHelper()
+  def createDateTimeHelper(): DateTimeHelper =
+    new DateTimeHelper(app.injector.instanceOf[LanguageUtils])
 
   implicit val hc: HeaderCarrier    = HeaderCarrier()
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global

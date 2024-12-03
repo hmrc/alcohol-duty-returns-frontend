@@ -24,16 +24,18 @@ import org.mockito.ArgumentMatchers.any
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import viewmodels.DateTimeHelper
+import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
 
 import java.time.{Instant, LocalDate}
 
 class ReturnSubmittedHelperSpec extends SpecBase {
 
-  val mockDateTimeHelper = mock[DateTimeHelper]
-  val mockAppConfig      = mock[FrontendAppConfig]
+  val mockDateTimeHelper               = mock[DateTimeHelper]
+  val mockAppConfig                    = mock[FrontendAppConfig]
+  val mockReturnPeriodViewModelFactory = mock[ReturnPeriodViewModelFactory]
 
-  val returnSubmittedHelper = new ReturnSubmittedHelper(mockDateTimeHelper, mockAppConfig)
+  val returnSubmittedHelper =
+    new ReturnSubmittedHelper(mockDateTimeHelper, mockAppConfig, mockReturnPeriodViewModelFactory)
 
   val application: Application                         = applicationBuilder().build()
   val messages: Messages                               = getMessages(application)
@@ -58,8 +60,10 @@ class ReturnSubmittedHelperSpec extends SpecBase {
     "must return a ReturnSubmittedViewModel" - {
       "when given return details and a valid period key" in {
         when(mockAppConfig.businessTaxAccountUrl).thenReturn(btaUrl)
-        when(mockDateTimeHelper.formatDateMonthYear(any())).thenReturn(formattedDate)
+        when(mockDateTimeHelper.formatDateMonthYear(any())(any())).thenReturn(formattedDate)
         when(mockDateTimeHelper.instantToLocalDate(any())).thenReturn(LocalDate.of(1, 1, 1))
+        when(mockReturnPeriodViewModelFactory.apply(any())(any()))
+          .thenReturn(ReturnPeriodViewModel("TEST DATE 1", "TEST DATE 2", "TEST DATE 3"))
 
         val result = returnSubmittedHelper.getReturnSubmittedViewModel(testReturnDetails)(identifierRequest, messages)
 

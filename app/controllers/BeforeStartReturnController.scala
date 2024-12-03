@@ -28,7 +28,7 @@ import services.AuditService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.{BeforeStartReturnViewModel, ReturnPeriodViewModel}
+import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
 
 import java.time.{Clock, Instant, LocalDate}
@@ -42,7 +42,9 @@ class BeforeStartReturnController @Inject() (
   auditService: AuditService,
   clock: Clock,
   val controllerComponents: MessagesControllerComponents,
-  view: BeforeStartReturnView
+  view: BeforeStartReturnView,
+  beforeStartReturnViewModelFactory: BeforeStartReturnViewModelFactory,
+  returnPeriodViewModelFactory: ReturnPeriodViewModelFactory
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -59,7 +61,7 @@ class BeforeStartReturnController @Inject() (
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(returnPeriod) =>
         val currentDate = LocalDate.now(clock)
-        val viewModel   = BeforeStartReturnViewModel(returnPeriod, currentDate)
+        val viewModel   = beforeStartReturnViewModelFactory(returnPeriod, currentDate)
         val session     = request.session + (periodKeySessionKey, periodKey)
         userAnswersConnector.get(request.appaId, periodKey).map {
           case Right(ua)                                    =>
@@ -68,7 +70,7 @@ class BeforeStartReturnController @Inject() (
             Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
           case Left(error) if error.statusCode == NOT_FOUND =>
             logger.info(s"Return $appaId/$periodKey not found")
-            Ok(view(ReturnPeriodViewModel(returnPeriod), viewModel)).withSession(session)
+            Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session)
           case Left(error) if error.statusCode == LOCKED    =>
             logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
             Redirect(controllers.routes.ReturnLockedController.onPageLoad())
@@ -93,7 +95,7 @@ class BeforeStartReturnController @Inject() (
             auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
           case Left(error)       =>
-            logger.warn(s"Unable to create userAnswers:", error)
+            logger.warn(s"Unable to create userAnswers: $error")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }
