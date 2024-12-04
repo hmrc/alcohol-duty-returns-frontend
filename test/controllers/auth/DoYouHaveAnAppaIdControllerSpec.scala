@@ -42,7 +42,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DoYouHaveAnAppaIdView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, false)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(form, false, true)(request, getMessages(application)).toString
       }
     }
 
@@ -59,7 +59,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DoYouHaveAnAppaIdView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, true)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(form, true, true)(request, getMessages(application)).toString
       }
     }
 
@@ -96,6 +96,26 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
       }
     }
 
+    Seq(true, false).foreach { signedIn =>
+      s"must return the correct view for a GET when${if (signedIn) " not" else ""} signed in" in {
+        val application = applicationBuilder(signedIn = signedIn).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, doYouHaveAnAppaIdRouteUrl(true))
+              .withFormUrlEncodedBody(("value", ""))
+
+          val boundForm = form.bind(Map("value" -> ""))
+
+          val view = application.injector.instanceOf[DoYouHaveAnAppaIdView]
+
+          val result = route(application, request).value
+
+          contentAsString(result) mustEqual view(boundForm, true, signedIn)(request, getMessages(application)).toString
+        }
+      }
+    }
+
     "must return a Bad Request and errors when no data is submitted" in {
       val application = applicationBuilder().build()
 
@@ -111,7 +131,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, false)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, false, true)(request, getMessages(application)).toString
       }
     }
   }
