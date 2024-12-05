@@ -44,7 +44,6 @@ class CheckAffinityGroupIsOrganisationActionSpec extends SpecBase {
 
   def testCodeBlock(isOrganisationStore: mutable.Map[String, Boolean]): IsOrganisationRequest[_] => Future[Result] = {
     request =>
-
       isOrganisationStore.synchronized {
         isOrganisationStore.put(isOrganisationKey, request.isOrganisation)
       }
