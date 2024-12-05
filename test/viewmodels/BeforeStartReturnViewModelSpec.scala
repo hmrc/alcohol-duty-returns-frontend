@@ -23,7 +23,6 @@ import play.api.inject.bind
 import play.api.test.Helpers.running
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
-import ReturnPeriodViewModel.viewDateFormatter
 
 import java.time.LocalDate
 
@@ -34,22 +33,24 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
     "should show the correct message when currentDate is before returnDueDate" in {
       val currentDate  = LocalDate.of(2024, 1, 14)
       val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
-      val viewModel    = BeforeStartReturnViewModel(returnPeriod, currentDate)
-
-      val application = applicationBuilder()
+      val application  = applicationBuilder()
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
 
       running(application) {
-        val messages = getMessages(application)
-        val result   = viewModel.warningText(messages)
+        implicit val messages = getMessages(application)
+        val viewModel         = new BeforeStartReturnViewModelFactory(createDateTimeHelper())(returnPeriod, currentDate)
+        val result            = viewModel.warningText(messages)
         result mustBe
           WarningText(
             iconFallbackText = Some("Warning"),
             content = Text(
-              messages(s"beforeStartReturn.text.dueDateWarning", viewDateFormatter.format(returnPeriod.periodDueDate()))
+              messages(
+                s"beforeStartReturn.text.dueDateWarning",
+                createDateTimeHelper().formatDateMonthYear(returnPeriod.periodDueDate())
+              )
             ),
             classes = ""
           )
@@ -58,9 +59,10 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
     }
 
     "should show the correct message when currentDate is the same as returnDueDate" in {
-      val currentDate  = LocalDate.of(2024, 1, 15)
-      val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
-      val viewModel    = BeforeStartReturnViewModel(returnPeriod, currentDate)
+      implicit val messages = getMessages(app)
+      val currentDate       = LocalDate.of(2024, 1, 15)
+      val returnPeriod      = ReturnPeriod.fromPeriodKey("23AL").get
+      val viewModel         = new BeforeStartReturnViewModelFactory(createDateTimeHelper())(returnPeriod, currentDate)
 
       val application = applicationBuilder()
         .overrides(
@@ -82,9 +84,10 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
     }
 
     "should show the correct message when currentDate is after returnDueDate" in {
-      val currentDate  = LocalDate.of(2024, 1, 16)
-      val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
-      val viewModel    = BeforeStartReturnViewModel(returnPeriod, currentDate)
+      implicit val messages = getMessages(app)
+      val currentDate       = LocalDate.of(2024, 1, 16)
+      val returnPeriod      = ReturnPeriod.fromPeriodKey("23AL").get
+      val viewModel         = new BeforeStartReturnViewModelFactory(createDateTimeHelper())(returnPeriod, currentDate)
 
       val application = applicationBuilder()
         .overrides(
@@ -93,13 +96,16 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
         .build()
 
       running(application) {
-        val messages = getMessages(application)
-        val result   = viewModel.warningText(messages)
+        implicit val messages = getMessages(application)
+        val result            = viewModel.warningText(messages)
         result mustBe
           WarningText(
             iconFallbackText = Some("Warning"),
             content = Text(
-              messages("beforeStartReturn.text.overdueWarning", viewDateFormatter.format(returnPeriod.periodDueDate()))
+              messages(
+                "beforeStartReturn.text.overdueWarning",
+                createDateTimeHelper().formatDateMonthYear(returnPeriod.periodDueDate())
+              )
             ),
             classes = ""
           )

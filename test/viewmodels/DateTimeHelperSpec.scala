@@ -17,45 +17,51 @@
 package viewmodels
 
 import base.SpecBase
+import play.api.i18n.Messages
 
 import java.time.{Instant, LocalDate, LocalTime, YearMonth}
 import java.time.format.DateTimeFormatter
 
 class DateTimeHelperSpec extends SpecBase {
   "DateTimeHelper" - {
-    "should convert an Instant to a LocalDate" in {
+    "should convert an Instant to a LocalDate" in new SetUp {
       DateTimeFormatter.ISO_LOCAL_DATE.format(
-        new DateTimeHelper().instantToLocalDate(Instant.now(clock))
+        dateTimeHelper.instantToLocalDate(Instant.now(clock))
       ) mustBe "2024-06-11"
     }
 
-    "should convert an Instant to a LocalTime" in {
+    "should convert an Instant to a LocalTime" in new SetUp {
       DateTimeFormatter.ISO_LOCAL_TIME.format(
-        new DateTimeHelper().instantToLocalTime(Instant.now(clock))
+        dateTimeHelper.instantToLocalTime(Instant.now(clock))
       ) mustBe "16:07:47.838"
     }
 
-    "format a LocalDate to the format 'day month year'" in {
-      new DateTimeHelper().formatDateMonthYear(
+    "format a LocalDate to the format 'day month year'" in new SetUp {
+      dateTimeHelper.formatDateMonthYear(
         LocalDate.now(clock)
       ) mustBe "11 June 2024"
     }
 
-    "format a LocalTime to the format 'hour:minuteam/pm'" in {
-      new DateTimeHelper().formatHourMinuteMeridiem(
+    "format a YearMonth to the format 'month year'" in new SetUp {
+      dateTimeHelper.formatMonthYear(YearMonth.now(clock)) mustBe "June 2024"
+    }
+
+    "format a LocalTime to the format 'hour:minuteam/pm'" in new SetUp {
+      dateTimeHelper.formatHourMinuteMeridiem(
         LocalTime.now(clock)
       ) mustBe "3:07pm"
     }
 
     // regression
-    "format a LocalTime to the format 'hour:minuteam/pm' when the hour is midday" in {
-      new DateTimeHelper().formatHourMinuteMeridiem(
+    "format a LocalTime to the format 'hour:minuteam/pm' when the hour is midday" in new SetUp {
+      dateTimeHelper.formatHourMinuteMeridiem(
         LocalTime.now(clock).minusHours(3)
       ) mustBe "12:07pm"
     }
+  }
 
-    "format a YearMonth to the format 'month year'" in {
-      new DateTimeHelper().formatMonthYear(YearMonth.now(clock)) mustBe "June 2024"
-    }
+  class SetUp {
+    implicit val messages: Messages = getMessages(app)
+    val dateTimeHelper              = createDateTimeHelper()
   }
 }

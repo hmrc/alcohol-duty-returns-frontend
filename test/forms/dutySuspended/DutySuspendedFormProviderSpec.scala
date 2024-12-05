@@ -110,7 +110,7 @@ class DutySuspendedFormProviderSpec extends BigDecimalFieldBehaviours {
 
     "fail to bind when pure alcohol volume is higher than total litres value" in {
       val data = Map(
-        s"volumes.$totalVolumeKey" -> "0",
+        s"volumes.$totalVolumeKey" -> "1",
         s"volumes.$pureAlcoholKey" -> "2"
       )
       form.bind(data).errors must contain allElementsOf List(

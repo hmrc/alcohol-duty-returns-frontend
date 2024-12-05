@@ -16,33 +16,38 @@
 
 package viewmodels
 
+import play.api.i18n.Messages
+import uk.gov.hmrc.play.language.LanguageUtils
+
 import java.time.{Instant, LocalDate, LocalTime, YearMonth, ZoneId}
 import java.time.format.DateTimeFormatter
 import java.util.TimeZone
 import javax.inject.Inject
 
-class DateTimeHelper @Inject() () {
+class DateTimeHelper @Inject() (languageUtils: LanguageUtils) {
   private val ukTimeZone: ZoneId = TimeZone.getTimeZone("Europe/London").toZoneId
 
-  private val monthYearFormatter     = DateTimeFormatter.ofPattern("LLLL yyyy")
-  private val dateMonthYearFormatter = DateTimeFormatter.ofPattern("d LLLL yyyy")
-  private val hourMinuteFormatter    = DateTimeFormatter.ofPattern("h:mm")
-  private val meridiemFormat         = DateTimeFormatter.ofPattern("a")
+  private val hourMinuteFormatter = DateTimeFormatter.ofPattern("h:mm")
+  private val meridiemFormatter   = DateTimeFormatter.ofPattern("a")
 
   def instantToLocalDate(instant: Instant): LocalDate = LocalDate.ofInstant(instant, ukTimeZone)
   def instantToLocalTime(instant: Instant): LocalTime = LocalTime.ofInstant(instant, ukTimeZone)
 
+  def formatDateMonthYear(localDate: LocalDate)(implicit messages: Messages): String =
+    languageUtils.Dates.formatDate(localDate)
+
+  // Workaround as LanguageUtils doesn't support YearMonth nor expose formatter
+  def formatMonthYear(yearMonth: YearMonth)(implicit messages: Messages): String = {
+    val localDate = LocalDate.of(yearMonth.getYear, yearMonth.getMonth, 1)
+    formatDateMonthYear(localDate).drop(2)
+  }
+
   /**
     * ante/post meridiem (am/pm) is locale specific, thus convert to lowercase
     */
-  def formatDateMonthYear(localDate: LocalDate): String =
-    dateMonthYearFormatter.format(localDate)
-
   def formatHourMinuteMeridiem(localTime: LocalTime): String = {
     val formattedTime = hourMinuteFormatter.format(localTime)
-    val meridiem      = meridiemFormat.format(localTime).toLowerCase()
+    val meridiem      = meridiemFormatter.format(localTime).toLowerCase()
     s"$formattedTime$meridiem"
   }
-
-  def formatMonthYear(yearMonth: YearMonth): String = monthYearFormatter.format(yearMonth)
 }

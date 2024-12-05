@@ -25,7 +25,6 @@ import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskList
-import viewmodels.govuk.all.FluentInstant
 
 import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
@@ -163,7 +162,8 @@ class TaskListViewModelSpec extends SpecBase {
     private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
     private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
     val validUntil           = Instant.now(clock)
-    val validUntilString     = validUntil.toLocalDateString()
+    val validUntilString     =
+      createDateTimeHelper().formatDateMonthYear(createDateTimeHelper().instantToLocalDate(validUntil))
 
     val completedStatus = AlcoholDutyTaskListItemStatus.completed
 
@@ -178,6 +178,6 @@ class TaskListViewModelSpec extends SpecBase {
     val cannotStartSection = Section("title", cannotStartTaskList, AlcoholDutyTaskListItemStatus.notStarted)
 
     val mockReturnTaskListCreator = mock[ReturnTaskListCreator]
-    val taskListViewModel         = new TaskListViewModel(mockReturnTaskListCreator, appConfig)
+    val taskListViewModel         = new TaskListViewModel(createDateTimeHelper(), mockReturnTaskListCreator, appConfig)
   }
 }

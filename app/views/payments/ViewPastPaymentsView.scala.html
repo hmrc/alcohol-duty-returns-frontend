@@ -49,18 +49,7 @@
         @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance < 0) {
-        <p class=@{Css.headingMCssClass}>@messages("viewPastPayments.youAre")
-            <br>
-            <span class=@{Css.headingLCssClass}>@messages("viewPastPayments.negative.duty.value", Money.format(dutyBalance.abs))</span>
-            <p class=@{Css.bodyCssClass}>@messages("viewPastPayments.credit.para1")
-                @link(
-                id = "view-past-payments-refund-link",
-                text = messages("viewPastPayments.credit.link.content"),
-                href = "test",
-                newTab = true
-                ) @messages("viewPastPayments.credit.para2")
-            </p>
-        </p>
+        @paragraph(messages("viewPastPayments.credit.paragraph"))
         @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
     }
     @if(dutyBalance == 0) {

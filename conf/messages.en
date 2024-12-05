@@ -177,9 +177,7 @@ viewPastPayments.youOwe = You owe
 viewPastPayments.youAre = You are
 viewPastPayments.duty.value = {0}
 viewPastPayments.negative.duty.value = {0} in credit
-viewPastPayments.credit.para1 = You have nothing to pay. You can
-viewPastPayments.credit.link.content = request a refund
-viewPastPayments.credit.para2 = or we will use the credit toward future payments.
+viewPastPayments.credit.paragraph = You have nothing to pay. You can request a refund or we will use the credit toward future payments.
 viewPastPayments.zeroBalance.paragraph = You have nothing to pay.
 viewPastPayments.outstandingPayments.paragraph = Payments take up to 7 working days to show, depending on how you pay. After you complete your return your tax calculation will take up to 2 days.
 viewPastPayments.Return.description = Payment for Alcohol Duty return
@@ -486,13 +484,12 @@ deleteMultipleSPREntry.error.required = Select yes to remove this entry
 
 dutyCalculation.title = You will owe £{0,number,#,##0.00}
 dutyCalculation.heading = You will owe £{0,number,#,##0.00}
-dutyCalculation.paragraph = We worked this out by:
-dutyCalculation.list = multiplying the volume of pure alcohol you entered by its duty rate
+dutyCalculation.paragraph = We worked this out by multiplying the volume of pure alcohol you entered by its duty rate.
 
 dutyCalculation.table.description = Description
 dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol (LPA)
 dutyCalculation.table.dutyRate = Duty rate (per litre)
-dutyCalculation.table.dutyDue = Duty due
+dutyCalculation.table.dutyDue = Duty value
 dutyCalculation.table.action = Action
 
 productList.caption = Duty due
@@ -920,5 +917,7 @@ returnSubmitted.direct.debit.h2 = Direct Debit
 returnSubmitted.direct.debit.p1 = You can pay duty automatically by direct debit.
 returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit
 returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcohol Duty account. If you do not claim it back then it will be used toward any duty due from your next return.
+returnSubmitted.warningText = Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.
+returnSubmitted.warningFallbackText = Warning
 
 # End of Check and submit sub-journey

@@ -25,13 +25,12 @@ import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
-import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
+import viewmodels.{DateTimeHelper, TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
-import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, YearMonth}
 import javax.inject.Inject
 
-class ViewPastReturnsHelper @Inject() () extends Logging {
+class ViewPastReturnsHelper @Inject() (dateTimeHelper: DateTimeHelper) extends Logging {
 
   def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
     val sortedObligationData = obligationData.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
@@ -65,16 +64,15 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
           TableRow(content = Text(formatYearMonth(getPeriod(periodKey)))),
           TableRow(content = HtmlContent(statusTag))
         ),
-        actions = getAction(messages, obligationData, status, periodKey)
+        actions = getAction(obligationData, status, periodKey)
       )
     }
 
   private def getAction(
-    messages: Messages,
     obligationData: ObligationData,
     status: ObligationStatusToDisplay,
     periodKey: String
-  ): Seq[TableRowActionViewModel] =
+  )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(ObligationStatusToDisplay.Completed)) {
       Seq(
         TableRowActionViewModel(
@@ -95,10 +93,8 @@ class ViewPastReturnsHelper @Inject() () extends Logging {
       )
     }
 
-  private def formatYearMonth(yearMonth: YearMonth): String = {
-    val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
-    yearMonth.format(formatter)
-  }
+  private def formatYearMonth(yearMonth: YearMonth)(implicit messages: Messages): String =
+    dateTimeHelper.formatMonthYear(yearMonth)
 
   private def getObligationStatus(obligationData: ObligationData, today: LocalDate): ObligationStatusToDisplay =
     if (obligationData.status == Open) {

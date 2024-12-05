@@ -27,7 +27,6 @@ import pages.declareDuty.DeclareAlcoholDutyQuestionPage
 import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
 import play.api.Application
 import play.api.i18n.Messages
-import viewmodels.govuk.all.FluentInstant
 
 import java.time.Instant
 
@@ -44,7 +43,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
       val result           =
         taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodJan)(getMessages(application))
-      val validUntilString = validUntil.toLocalDateString()
+      val validUntilString =
+        createDateTimeHelper().formatDateMonthYear(createDateTimeHelper().instantToLocalDate(validUntil))
 
       result mustBe AlcoholDutyTaskList(
         expectedSections,
@@ -82,7 +82,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
       val result           =
         taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriodJan)(getMessages(application))
-      val validUntilString = validUntil.toLocalDateString()
+      val validUntilString =
+        createDateTimeHelper().formatDateMonthYear(createDateTimeHelper().instantToLocalDate(validUntil))
 
       result mustBe AlcoholDutyTaskList(
         expectedSections,
@@ -135,6 +136,6 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
     val validUntil                   = Instant.now(clock)
     implicit val messages: Messages  = getMessages(application)
     val returnTaskListCreator        = new ReturnTaskListCreator()
-    val taskListViewModel            = new TaskListViewModel(returnTaskListCreator, appConfig)
+    val taskListViewModel            = new TaskListViewModel(createDateTimeHelper(), returnTaskListCreator, appConfig)
   }
 }

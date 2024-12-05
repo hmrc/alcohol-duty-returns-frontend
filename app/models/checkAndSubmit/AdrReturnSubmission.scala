@@ -276,7 +276,11 @@ case class AdrReturnCreatedDetails(
   amount: BigDecimal,
   chargeReference: Option[String],
   paymentDueDate: Option[LocalDate]
-)
+) {
+  val isAmountZero: Boolean            = amount == 0
+  val isAmountLessThanZero: Boolean    = amount < 0
+  val isAmountGreaterThanZero: Boolean = amount > 0
+}
 
 object AdrReturnCreatedDetails {
   implicit val format: OFormat[AdrReturnCreatedDetails] = Json.format[AdrReturnCreatedDetails]

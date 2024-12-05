@@ -48,7 +48,7 @@ class DutySuspendedVolumesFormatter(
     args = args
   )
 
-  private def pureAlcoholBigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private def pureAlcoholFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
@@ -69,7 +69,7 @@ class DutySuspendedVolumesFormatter(
 
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], DutySuspendedVolume] = {
     val totalLitres = volumeFormatter(totalVolumeKey).bind(s"$key.$totalVolumeKey", data)
-    val pureAlcohol = pureAlcoholBigDecimalFormatter(pureAlcoholKey).bind(s"$key.$pureAlcoholKey", data)
+    val pureAlcohol = pureAlcoholFormatter(pureAlcoholKey).bind(s"$key.$pureAlcoholKey", data)
 
     (totalLitres, pureAlcohol) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue)) =>
@@ -99,7 +99,7 @@ class DutySuspendedVolumesFormatter(
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], DutySuspendedVolume] = {
     val totalLitresResult = validateField(totalVolumeKey, key, data, volumeFormatter)
-    val pureAlcoholResult = validateField(pureAlcoholKey, key, data, pureAlcoholBigDecimalFormatter)
+    val pureAlcoholResult = validateField(pureAlcoholKey, key, data, pureAlcoholFormatter)
     val allErrors         = totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
