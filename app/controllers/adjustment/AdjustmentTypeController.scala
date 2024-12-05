@@ -26,6 +26,7 @@ import pages.adjustment.{AdjustmentTypePage, CurrentAdjustmentEntryPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import models.adjustment.AdjustmentType.Spoilt
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AlcoholicProductTypeHelper
@@ -72,14 +73,17 @@ class AdjustmentTypeController @Inject() (
             val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
             val (updatedAdjustment, hasChanged) = updateAdjustmentType(adjustment, value)
             for {
-              updatedAnswers                <-
+              updatedAnswers                         <-
                 Future.fromTry(
                   request.userAnswers
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(adjustmentType = Some(value)))
                 )
-              singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswers(updatedAnswers))
-              _                             <- userAnswersConnector.set(singleRegimeUpdatedUserAnswer)
-            } yield Redirect(navigator.nextPage(AdjustmentTypePage, mode, singleRegimeUpdatedUserAnswer, hasChanged))
+              singleRegimeAndSpoiltUpdatedUserAnswer <-
+                Future.fromTry(checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(updatedAnswers, value))
+              _                                      <- userAnswersConnector.set(singleRegimeAndSpoiltUpdatedUserAnswer)
+            } yield Redirect(
+              navigator.nextPage(AdjustmentTypePage, mode, singleRegimeAndSpoiltUpdatedUserAnswer, hasChanged)
+            )
           }
         )
   }
@@ -106,10 +110,11 @@ class AdjustmentTypeController @Inject() (
         )
     }
 
-  private def checkIfOneRegimeAndUpdateUserAnswers(
-    userAnswer: UserAnswers
+  private def checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(
+    userAnswer: UserAnswers,
+    adjustmentType: AdjustmentType
   )(implicit messages: Messages): Try[UserAnswers] =
-    if (userAnswer.regimes.regimes.size == 1) {
+    if (userAnswer.regimes.regimes.size == 1 && adjustmentType == Spoilt) {
       val adjustment       = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
       val rateBand         = helper.createRateBandFromRegime(userAnswer.regimes.regimes.head)
       val currentYearMonth = YearMonth.now()
@@ -118,7 +123,7 @@ class AdjustmentTypeController @Inject() (
         adjustment.copy(
           spoiltRegime = userAnswer.regimes.regimes.headOption,
           rateBand = Some(rateBand),
-          period = Some(currentYearMonth.withMonth(1))
+          period = Some(currentYearMonth.minusMonths(1))
         )
       )
     } else {
