@@ -137,7 +137,8 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             TableRowActionViewModel(
               label = messages("site.change"),
-              href = controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode)
+              href = controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode),
+              visuallyHiddenText = Some(messages("dutyDueForThisReturn.table.nil.label"))
             )
           )
         )
@@ -155,7 +156,9 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             TableRowActionViewModel(
               label = messages("site.change"),
-              href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(alcoholRegime)
+              href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(alcoholRegime),
+              visuallyHiddenText =
+                Some(messages("dutyDueForThisReturn.table.dutyDue", messages(s"alcoholType.$alcoholRegime")))
             )
           )
         )
@@ -182,7 +185,8 @@ class DutyDueForThisReturnHelper @Inject() (
             TableRowActionViewModel(
               label = messages("site.change"),
               href = controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController
-                .onPageLoad()
+                .onPageLoad(),
+              visuallyHiddenText = Some(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
             )
           )
         )
@@ -203,8 +207,9 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             TableRowActionViewModel(
               label = messages("site.change"),
-              href =
-                controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode)
+              href = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController
+                .onPageLoad(NormalMode),
+              visuallyHiddenText = Some(messages("dutyDueForThisReturn.dutySuspended.alcohol"))
             )
           )
         )
@@ -230,8 +235,8 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             TableRowActionViewModel(
               label = messages("site.change"),
-              href = controllers.spiritsQuestions.routes.CheckYourAnswersController
-                .onPageLoad()
+              href = controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad(),
+              visuallyHiddenText = Some(messages("dutyDueForThisReturn.spirits.production"))
             )
           )
         )
@@ -252,7 +257,8 @@ class DutyDueForThisReturnHelper @Inject() (
           actions = Seq(
             TableRowActionViewModel(
               label = messages("site.change"),
-              href = controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode)
+              href = controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode),
+              visuallyHiddenText = Some(messages("dutyDueForThisReturn.spirits.production"))
             )
           )
         )
@@ -275,7 +281,8 @@ class DutyDueForThisReturnHelper @Inject() (
         actions = Seq(
           TableRowActionViewModel(
             label = messages("site.change"),
-            href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
+            href = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode),
+            visuallyHiddenText = Some(messages("dutyDueForThisReturn.table.adjustmentDue"))
           )
         )
       )
@@ -294,7 +301,8 @@ class DutyDueForThisReturnHelper @Inject() (
         actions = Seq(
           TableRowActionViewModel(
             label = messages("site.change"),
-            href = controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
+            href = controllers.adjustment.routes.AdjustmentListController.onPageLoad(1),
+            visuallyHiddenText = Some(messages("dutyDueForThisReturn.table.adjustmentDue"))
           )
         )
       )
