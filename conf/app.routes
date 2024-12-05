@@ -12,7 +12,7 @@ GET         /there-is-a-problem                          controllers.JourneyReco
 
 GET         /return-locked                               controllers.ReturnLockedController.onPageLoad()
 
-GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut()
+GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut(isOrganisation: Boolean)
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
 GET         /no-access                                   controllers.UnauthorisedController.onPageLoad

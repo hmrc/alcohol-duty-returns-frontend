@@ -38,7 +38,13 @@
     fullWidthPageLayout: FullWidthMainContent
 )
 
-@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = true, fullWidth: Boolean = false, withPrintCss: Boolean = false)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
+@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = true, fullWidth: Boolean = false, withPrintCss: Boolean = false, isOrganisation: Boolean = true)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
+
+    @getSignOutUrl(showSignOut: Boolean, isOrganisation: Boolean) = @{
+        if(showSignOut) {
+            Some(controllers.auth.routes.AuthController.signOut(isOrganisation).url)
+        } else None
+    }
 
 @head = {
 
@@ -49,7 +55,7 @@
                 countdown           = Some(appConfig.countdown),
                 keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
                 keepAliveButtonText = Some(messages("timeout.keepAlive")),
-                signOutUrl          = Some(controllers.auth.routes.AuthController.signOut().url),
+                signOutUrl          = Some(controllers.auth.routes.AuthController.signOut(isOrganisation).url),
                 signOutButtonText   = Some(messages("timeout.signOut")),
                 title               = Some(messages("timeout.title")),
                 message             = Some(messages("timeout.message"))
@@ -103,7 +109,7 @@
     headBlock   = Some(head),
     headerBlock = Some(hmrcStandardHeader(
         serviceUrl  = Some(routes.ServiceEntryController.onPageLoad.url),
-        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None,
+        signOutUrl  = getSignOutUrl(showSignOut, isOrganisation),
         phaseBanner = Some(betaBanner(appConfig.feedbackUrl))
     )),
     beforeContentBlock = Some(beforeContent),
