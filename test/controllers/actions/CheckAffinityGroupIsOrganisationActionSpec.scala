@@ -27,6 +27,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 
+import scala.collection.mutable
 import scala.concurrent.Future
 
 class CheckAffinityGroupIsOrganisationActionSpec extends SpecBase {
@@ -38,12 +39,17 @@ class CheckAffinityGroupIsOrganisationActionSpec extends SpecBase {
 
   val newCheckAffinityGroupIsOrganisationAction =
     new CheckAffinityGroupIsOrganisationActionImpl(mockAuthConnector, defaultBodyParser)
-  def testCodeBlock(isOrganisation: Boolean): IsOrganisationRequest[_] => Future[Result] = { request =>
-    println("Passed in: " + isOrganisation)
-    println("From request: " + request.isOrganisation)
 
-    request.isOrganisation mustBe !isOrganisation
-    Future(Ok(testContent))
+  val isOrganisationKey = "isOrganisation"
+
+  def testCodeBlock(isOrganisationStore: mutable.Map[String, Boolean]): IsOrganisationRequest[_] => Future[Result] = {
+    request =>
+
+      isOrganisationStore.synchronized {
+        isOrganisationStore.put(isOrganisationKey, request.isOrganisation)
+      }
+
+      Future(Ok(testContent))
   }
 
   override def beforeEach(): Unit = {
@@ -56,21 +62,33 @@ class CheckAffinityGroupIsOrganisationActionSpec extends SpecBase {
       when(mockAuthConnector.authorise(eqTo(Organisation), eqTo(EmptyRetrieval))(any(), any()))
         .thenReturn(Future.unit)
 
+      val isOrganisationStore = mutable.Map[String, Boolean]()
+
       val result: Future[Result] =
-        newCheckAffinityGroupIsOrganisationAction.invokeBlock(FakeRequest(), testCodeBlock(true))
+        newCheckAffinityGroupIsOrganisationAction.invokeBlock(FakeRequest(), testCodeBlock(isOrganisationStore))
 
       status(result) mustBe OK
       contentAsString(result) mustBe testContent
+
+      isOrganisationStore.synchronized {
+        isOrganisationStore(isOrganisationKey) mustBe true
+      }
     }
     "must execute the block with isOrganisation set to false, when the request is NOT an organisation" in {
       when(mockAuthConnector.authorise(eqTo(Organisation), eqTo(EmptyRetrieval))(any(), any()))
         .thenReturn(Future.failed(new Exception("Test Exception")))
 
+      val isOrganisationStore = mutable.Map[String, Boolean]()
+
       val result: Future[Result] =
-        newCheckAffinityGroupIsOrganisationAction.invokeBlock(FakeRequest(), testCodeBlock(false))
+        newCheckAffinityGroupIsOrganisationAction.invokeBlock(FakeRequest(), testCodeBlock(isOrganisationStore))
 
       status(result) mustBe OK
       contentAsString(result) mustBe testContent
+
+      isOrganisationStore.synchronized {
+        isOrganisationStore(isOrganisationKey) mustBe false
+      }
     }
   }
 }

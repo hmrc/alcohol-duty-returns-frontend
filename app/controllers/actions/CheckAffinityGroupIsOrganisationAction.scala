@@ -48,8 +48,6 @@ class CheckAffinityGroupIsOrganisationActionImpl @Inject() (
     block: IsOrganisationRequest[A] => Future[Result]
   ): Future[Result] = {
 
-    println("XXXXXXXX")
-
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorised(predicate) {
