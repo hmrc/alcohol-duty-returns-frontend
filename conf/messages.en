@@ -493,8 +493,6 @@ dutyCalculation.table.dutyDue = Duty value
 dutyCalculation.table.action = Action
 
 productList.caption = Duty due
-productList.change.hidden = this product
-productList.remove.hidden = this product
 
 # Beginning of duty suspended deliveries sub-journey
 
