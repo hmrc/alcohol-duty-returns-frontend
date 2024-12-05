@@ -14,12 +14,11 @@
  * limitations under the License.
  *@
 
-@import components.{BulletList, SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 @import config.Constants.{Css, Format}
 @import viewmodels.TableViewModel
 
 @this(
-        bulletList:BulletList,
         formHelper: FormWithCSRF,
         layout: templates.Layout,
         govukButton: GovukButton,
@@ -46,8 +45,6 @@
 
     @paragraph(messages("dutyCalculation.paragraph"))
 
-    @bulletList(Seq(messages("dutyCalculation.list")))
-
     @govukTable(Table(
       caption = Some(messages("productList.caption")),
       captionClasses = Css.tableCaptionLCssClass,
@@ -68,7 +65,7 @@
     )
 
     @govukButton(
-      ButtonViewModel("continueButton", messages("site.continue"))
+      ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
     )
   }
 }
