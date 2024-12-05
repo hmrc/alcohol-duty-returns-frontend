@@ -18,8 +18,10 @@ package viewmodels.tasklist
 
 import config.Constants
 import models.TaskListSection.{AdjustmentSection, DutySuspendedSection, SpiritsSection}
+import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.adjustment.AdjustmentType
 import models.{AlcoholRegime, AlcoholRegimes, CheckMode, Mode, NormalMode, SpiritType, TaskListSection, UserAnswers}
+import models.dutySuspended.DutySuspendedVolume
 import pages.QuestionPage
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
@@ -233,13 +235,27 @@ class ReturnTaskListCreator @Inject() () {
   private def returnDSDJourneyTaskListItem(userAnswers: UserAnswers)(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
       val regimes             = userAnswers.regimes
-      val maybeBeer           = if (regimes.hasBeer()) Some(userAnswers.get(DutySuspendedBeerPage).isDefined) else None
-      val maybeCider          = if (regimes.hasCider()) Some(userAnswers.get(DutySuspendedCiderPage).isDefined) else None
-      val maybeWine           = if (regimes.hasWine()) Some(userAnswers.get(DutySuspendedWinePage).isDefined) else None
+      val maybeBeer           =
+        if (regimes.hasBeer()) Some(userAnswers.get(DutySuspendedBeerPage)(DutySuspendedVolume.format(Beer)).isDefined)
+        else None
+      val maybeCider          =
+        if (regimes.hasCider())
+          Some(userAnswers.get(DutySuspendedCiderPage)(DutySuspendedVolume.format(Cider)).isDefined)
+        else None
+      val maybeWine           =
+        if (regimes.hasWine()) Some(userAnswers.get(DutySuspendedWinePage)(DutySuspendedVolume.format(Wine)).isDefined)
+        else None
       val maybeSpirits        =
-        if (regimes.hasSpirits()) Some(userAnswers.get(DutySuspendedSpiritsPage).isDefined) else None
+        if (regimes.hasSpirits())
+          Some(userAnswers.get(DutySuspendedSpiritsPage)(DutySuspendedVolume.format(Spirits)).isDefined)
+        else None
       val maybeOtherFermented =
-        if (regimes.hasOtherFermentedProduct()) Some(userAnswers.get(DutySuspendedOtherFermentedPage).isDefined)
+        if (regimes.hasOtherFermentedProduct())
+          Some(
+            userAnswers
+              .get(DutySuspendedOtherFermentedPage)(DutySuspendedVolume.format(OtherFermentedProduct))
+              .isDefined
+          )
         else None
 
       val pagesCompleted = Seq(maybeBeer, maybeCider, maybeWine, maybeSpirits, maybeOtherFermented).flatten

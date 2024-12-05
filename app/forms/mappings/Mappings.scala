@@ -21,8 +21,9 @@ import models.declareDuty.{VolumeAndRateByTaxType, VolumesByTaxType}
 import java.time.{LocalDate, YearMonth}
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
-import models.Enumerable
+import models.{AlcoholRegime, Enumerable}
 import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR, SpoiltVolumeWithDuty}
+import models.dutySuspended.DutySuspendedVolume
 
 trait Mappings extends Formatters with Constraints {
 
@@ -188,6 +189,33 @@ trait Mappings extends Formatters with Constraints {
         maximumValueKey,
         inconsistentKey,
         args
+      )
+    )
+
+  protected def dutySuspendedVolumes(
+    invalidKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    inconsistentKey: String,
+    inconsistentSignKey: String,
+    zeroTotalLitresKey: String,
+    args: Seq[String] = Seq.empty,
+    regime: AlcoholRegime
+  ): FieldMapping[DutySuspendedVolume] =
+    of(
+      new DutySuspendedVolumesFormatter(
+        invalidKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        inconsistentKey,
+        inconsistentSignKey,
+        zeroTotalLitresKey,
+        args,
+        regime
       )
     )
 }

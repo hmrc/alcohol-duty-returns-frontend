@@ -16,6 +16,8 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import models.dutySuspended.DutySuspendedRegimeSpecificKey
+@import models.AlcoholRegime.OtherFermentedProduct
 
 @this(
     layout: templates.Layout,
@@ -50,8 +52,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("totalOtherFermented"),
-                label = LabelViewModel(messages("dutySuspendedOtherFermented.subheading1")).asSubheading
+                field = form("volumes"),
+                key=DutySuspendedRegimeSpecificKey.totalVolumeKey(OtherFermentedProduct),
+                label = LabelViewModel(messages("dutySuspendedOtherFermented.subheading1")).asSubheading,
+                errorMessageField = form(s"volumes_${DutySuspendedRegimeSpecificKey.totalVolumeKey(OtherFermentedProduct)}"),
+                value = form(s"volumes.${DutySuspendedRegimeSpecificKey.totalVolumeKey(OtherFermentedProduct)}").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -61,8 +66,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("pureAlcoholInOtherFermented"),
-                label = LabelViewModel(messages("dutySuspendedOtherFermented.subheading2")).asSubheading
+                field = form("volumes"),
+                key=DutySuspendedRegimeSpecificKey.pureAlcoholKey(OtherFermentedProduct),
+                label = LabelViewModel(messages("dutySuspendedOtherFermented.subheading2")).asSubheading,
+                errorMessageField =  form(s"volumes_${DutySuspendedRegimeSpecificKey.pureAlcoholKey(OtherFermentedProduct)}"),
+                value = form(s"volumes.${DutySuspendedRegimeSpecificKey.pureAlcoholKey(OtherFermentedProduct)}").value
             )
             .asNumeric()
             .withWidth(Fixed10)

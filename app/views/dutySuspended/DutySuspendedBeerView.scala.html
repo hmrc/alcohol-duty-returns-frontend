@@ -16,6 +16,8 @@
 
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import models.dutySuspended.DutySuspendedRegimeSpecificKey
+@import models.AlcoholRegime.Beer
 
 @this(
     layout: templates.Layout,
@@ -50,8 +52,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("totalBeer"),
+                field = form("volumes"),
+                key=DutySuspendedRegimeSpecificKey.totalVolumeKey(Beer),
                 label = LabelViewModel(messages("dutySuspendedBeer.subheading1")).asSubheading,
+                errorMessageField = form(s"volumes_${DutySuspendedRegimeSpecificKey.totalVolumeKey(Beer)}"),
+                value = form(s"volumes.${DutySuspendedRegimeSpecificKey.totalVolumeKey(Beer)}").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -61,8 +66,11 @@
 
         @govukInput(
             InputViewModel(
-                field = form("pureAlcoholInBeer"),
+                field = form("volumes"),
+                key=DutySuspendedRegimeSpecificKey.pureAlcoholKey(Beer),
                 label = LabelViewModel(messages("dutySuspendedBeer.subheading2")).asSubheading,
+                errorMessageField =  form(s"volumes_${DutySuspendedRegimeSpecificKey.pureAlcoholKey(Beer)}"),
+                value = form(s"volumes.${DutySuspendedRegimeSpecificKey.pureAlcoholKey(Beer)}").value
             )
             .asNumeric()
             .withWidth(Fixed10)

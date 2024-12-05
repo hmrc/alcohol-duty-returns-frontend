@@ -17,7 +17,7 @@
 package controllers.dutySuspended
 
 import controllers.actions._
-import forms.dutySuspended.DutySuspendedOtherFermentedFormProvider
+import forms.dutySuspended.DutySuspendedFormProvider
 
 import javax.inject.Inject
 import models.Mode
@@ -26,6 +26,8 @@ import pages.dutySuspended.DutySuspendedOtherFermentedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
+import models.AlcoholRegime.OtherFermentedProduct
+import models.dutySuspended.DutySuspendedVolume
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.dutySuspended.DutySuspendedOtherFermentedView
 
@@ -39,18 +41,19 @@ class DutySuspendedOtherFermentedController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   checkRegime: CheckOtherFermentedRegimeAction,
-  formProvider: DutySuspendedOtherFermentedFormProvider,
+  formProvider: DutySuspendedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DutySuspendedOtherFermentedView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData andThen checkRegime) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(DutySuspendedOtherFermentedPage) match {
+      val form         = formProvider(OtherFermentedProduct)
+      val preparedForm = request.userAnswers.get(DutySuspendedOtherFermentedPage)(
+        DutySuspendedVolume.format(OtherFermentedProduct)
+      ) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -60,13 +63,18 @@ class DutySuspendedOtherFermentedController @Inject() (
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkRegime).async { implicit request =>
+      val form = formProvider(OtherFermentedProduct)
       form
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(DutySuspendedOtherFermentedPage, value))
+              updatedAnswers <- Future.fromTry(
+                                  request.userAnswers.set(DutySuspendedOtherFermentedPage, value)(
+                                    DutySuspendedVolume.format(OtherFermentedProduct)
+                                  )
+                                )
               _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(DutySuspendedOtherFermentedPage, mode, updatedAnswers))
         )

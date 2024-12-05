@@ -16,11 +16,11 @@
 
 package pages.dutySuspended
 
-import models.dutySuspended.DutySuspendedSpirits
+import models.dutySuspended.DutySuspendedVolume
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object DutySuspendedSpiritsPage extends QuestionPage[DutySuspendedSpirits] {
+case object DutySuspendedSpiritsPage extends QuestionPage[DutySuspendedVolume] {
 
   override def path: JsPath = JsPath \ toString
 
