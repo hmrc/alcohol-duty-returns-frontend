@@ -19,18 +19,22 @@ package viewmodels.tasklist
 import config.FrontendAppConfig
 import models.{ReturnPeriod, UserAnswers}
 import play.api.i18n.Messages
-import viewmodels.govuk.all.FluentInstant
+import viewmodels.DateTimeHelper
 
 import java.time.Instant
 import javax.inject.Inject
 
-class TaskListViewModel @Inject() (returnTaskListCreator: ReturnTaskListCreator, appConfig: FrontendAppConfig) {
+class TaskListViewModel @Inject() (
+  dateTimeHelper: DateTimeHelper,
+  returnTaskListCreator: ReturnTaskListCreator,
+  appConfig: FrontendAppConfig
+) {
   def getTaskList(userAnswers: UserAnswers, validUntil: Instant, returnPeriod: ReturnPeriod)(implicit
     messages: Messages
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
       sections(userAnswers, returnPeriod),
-      validUntil.toLocalDateString()
+      dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
     )
 
   private def sections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit

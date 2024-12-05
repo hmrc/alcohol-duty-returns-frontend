@@ -25,7 +25,6 @@ import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskList
-import viewmodels.govuk.all.FluentInstant
 
 import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
@@ -163,21 +162,22 @@ class TaskListViewModelSpec extends SpecBase {
     private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
     private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
     val validUntil           = Instant.now(clock)
-    val validUntilString     = validUntil.toLocalDateString()
+    val validUntilString     =
+      createDateTimeHelper().formatDateMonthYear(createDateTimeHelper().instantToLocalDate(validUntil))
 
-    val completedStatus = AlcholDutyTaskListItemStatus.completed
+    val completedStatus = AlcoholDutyTaskListItemStatus.completed
 
-    val notStartedTaskList  = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.notStarted)))
-    val inProgressTaskList  = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.inProgress)))
-    val completeTaskList    = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.completed)))
-    val cannotStartTaskList = TaskList(items = Seq(TaskListItem(status = AlcholDutyTaskListItemStatus.cannotStart)))
+    val notStartedTaskList  = TaskList(items = Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.notStarted)))
+    val inProgressTaskList  = TaskList(items = Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.inProgress)))
+    val completeTaskList    = TaskList(items = Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.completed)))
+    val cannotStartTaskList = TaskList(items = Seq(TaskListItem(status = AlcoholDutyTaskListItemStatus.cannotStart)))
 
     val notStartedSection  = Section("title", notStartedTaskList, completedStatus)
     val inProgressSection  = Section("title", inProgressTaskList, completedStatus)
     val completeSection    = Section("title", completeTaskList, completedStatus)
-    val cannotStartSection = Section("title", cannotStartTaskList, AlcholDutyTaskListItemStatus.notStarted)
+    val cannotStartSection = Section("title", cannotStartTaskList, AlcoholDutyTaskListItemStatus.notStarted)
 
     val mockReturnTaskListCreator = mock[ReturnTaskListCreator]
-    val taskListViewModel         = new TaskListViewModel(mockReturnTaskListCreator, appConfig)
+    val taskListViewModel         = new TaskListViewModel(createDateTimeHelper(), mockReturnTaskListCreator, appConfig)
   }
 }

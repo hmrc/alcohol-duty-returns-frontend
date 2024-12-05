@@ -225,7 +225,7 @@ case class AdrSpiritsProduced(
   spiritsVolumes: AdrSpiritsVolumes,
   typesOfSpirit: Set[AdrTypeOfSpirit],
   otherSpiritTypeName: Option[String],
-  hasOtherMaltedGrain: Boolean,
+  hasOtherMaltedGrain: Option[Boolean],
   grainsQuantities: AdrSpiritsGrainsQuantities,
   otherMaltedGrainType: Option[String],
   ingredientsVolumes: AdrSpiritsIngredientsVolumes,
@@ -276,7 +276,11 @@ case class AdrReturnCreatedDetails(
   amount: BigDecimal,
   chargeReference: Option[String],
   paymentDueDate: Option[LocalDate]
-)
+) {
+  val isAmountZero: Boolean            = amount == 0
+  val isAmountLessThanZero: Boolean    = amount < 0
+  val isAmountGreaterThanZero: Boolean = amount > 0
+}
 
 object AdrReturnCreatedDetails {
   implicit val format: OFormat[AdrReturnCreatedDetails] = Json.format[AdrReturnCreatedDetails]

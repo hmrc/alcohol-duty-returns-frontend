@@ -16,35 +16,30 @@
 
 package controllers.checkAndSubmit
 
-import config.Constants.{adrReturnCreatedDetails, periodKeySessionKey}
-import config.FrontendAppConfig
+import config.Constants.adrReturnCreatedDetails
 import controllers.actions._
-import models.ReturnPeriod
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.Logging
-
-import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.{DateTimeHelper, ReturnPeriodViewModel}
+import viewmodels.returns.{ReturnSubmittedHelper, ReturnSubmittedViewModel}
 import views.html.checkAndSubmit.ReturnSubmittedView
 
+import javax.inject.Inject
+
 class ReturnSubmittedController @Inject() (
-  appConfig: FrontendAppConfig,
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnSubmittedView,
-  dateTimeHelper: DateTimeHelper
+  returnSubmittedHelper: ReturnSubmittedHelper
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
 
   def onPageLoad(): Action[AnyContent] = identify { implicit request =>
-    val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
-
     request.session.get(adrReturnCreatedDetails) match {
       case None                       =>
         logger.warn("return details not present in session")
@@ -52,27 +47,8 @@ class ReturnSubmittedController @Inject() (
       case Some(returnCreatedDetails) =>
         Json.fromJson[AdrReturnCreatedDetails](Json.parse(returnCreatedDetails)).asOpt match {
           case Some(returnDetails: AdrReturnCreatedDetails) =>
-            val periodKey                          = request.session.get(periodKeySessionKey).get
-            val returnPeriod                       = ReturnPeriod.fromPeriodKey(periodKey).get
-            val returnPeriodViewModel              = ReturnPeriodViewModel(returnPeriod)
-            val periodStartDate                    = returnPeriodViewModel.fromDate
-            val periodEndDate                      = returnPeriodViewModel.toDate
-            val formattedProcessingDateAsLocalDate = dateTimeHelper.instantToLocalDate(returnDetails.processingDate)
-            val formattedProcessingDate            = dateTimeHelper.formatDateMonthYear(formattedProcessingDateAsLocalDate)
-            val formattedPaymentDueDate            =
-              returnDetails.paymentDueDate.map(dateTimeHelper.formatDateMonthYear).getOrElse("")
-
-            Ok(
-              view(
-                returnDetails,
-                periodStartDate,
-                periodEndDate,
-                formattedProcessingDate,
-                formattedPaymentDueDate,
-                periodKey,
-                businessTaxAccountUrl
-              )
-            )
+            val viewModel: ReturnSubmittedViewModel = returnSubmittedHelper.getReturnSubmittedViewModel(returnDetails)
+            Ok(view(viewModel))
           case None                                         =>
             logger.warn("return details not valid")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())

@@ -19,25 +19,27 @@ package common
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.TransactionType.{LPI, RPI, Return}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
-import models.checkAndSubmit.AdrUnitOfMeasure.Tonnes
 import models.declareDuty._
+import models.returns._
 import models._
+import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnCreatedDetails, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
 import org.scalacheck.Gen
 import pages.adjustment._
+import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.libs.json.Json
-import org.scalacheck.Gen.{listOfN, numChar}
-import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
-import models.TransactionType.{LPI, RPI, Return}
 import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
-import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrOtherIngredient, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
-import models.returns._
-import models.returns.{ReturnAdjustments, ReturnAlcoholDeclared, ReturnAlcoholDeclaredRow, ReturnDetails, ReturnDetailsIdentification, ReturnTotalDutyDue}
+import play.api.i18n.Messages
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
+import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
+import viewmodels.returns.ReturnSubmittedViewModel
 
-import java.time.{Clock, Instant, LocalDate, Month, YearMonth, ZoneId}
+import java.time._
 
 trait TestData extends ModelGenerators {
   val clock              = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))
@@ -53,18 +55,19 @@ trait TestData extends ModelGenerators {
 
   val badPeriodKey = "24A"
 
-  val periodKeyJan = "24AA"
-  val periodKeyFeb = "24AB"
-  val periodKeyMar = "24AC"
-  val periodKeyApr = "24AD"
-  val periodKeyMay = "24AE"
-  val periodKeyJun = "24AF"
-  val periodKeyJul = "24AG"
-  val periodKeyAug = "24AH"
-  val periodKeySep = "24AI"
-  val periodKeyOct = "24AJ"
-  val periodKeyNov = "24AK"
-  val periodKeyDec = "24AL"
+  val periodKeyDec23 = "23AL"
+  val periodKeyJan   = "24AA"
+  val periodKeyFeb   = "24AB"
+  val periodKeyMar   = "24AC"
+  val periodKeyApr   = "24AD"
+  val periodKeyMay   = "24AE"
+  val periodKeyJun   = "24AF"
+  val periodKeyJul   = "24AG"
+  val periodKeyAug   = "24AH"
+  val periodKeySep   = "24AI"
+  val periodKeyOct   = "24AJ"
+  val periodKeyNov   = "24AK"
+  val periodKeyDec   = "24AL"
 
   private val adrPeriodStartDay = 1
 
@@ -154,7 +157,11 @@ trait TestData extends ModelGenerators {
     val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).periodFromDate()
 
     ReturnDetails(
-      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      identification = ReturnDetailsIdentification(
+        periodKey = periodKey,
+        chargeReference = Some(chargeReference),
+        submittedTime = now
+      ),
       alcoholDeclared = ReturnAlcoholDeclared(
         alcoholDeclaredDetails = Some(
           Seq(
@@ -242,8 +249,16 @@ trait TestData extends ModelGenerators {
               dutyValue = BigDecimal("-24161.50")
             ),
             ReturnAdjustmentsRow(
-              adjustmentTypeKey = ReturnAdjustments.drawbackKey,
+              adjustmentTypeKey = ReturnAdjustments.spoiltKey,
               returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(3, periodDate)).toPeriodKey,
+              taxType = "321",
+              litresOfPureAlcohol = BigDecimal(1150),
+              dutyRate = BigDecimal("21.01"),
+              dutyValue = BigDecimal("-24161.50")
+            ),
+            ReturnAdjustmentsRow(
+              adjustmentTypeKey = ReturnAdjustments.drawbackKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(4, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(75),
               dutyRate = BigDecimal("21.01"),
@@ -251,7 +266,7 @@ trait TestData extends ModelGenerators {
             ),
             ReturnAdjustmentsRow(
               adjustmentTypeKey = ReturnAdjustments.repackagedDraughtKey,
-              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(4, periodDate)).toPeriodKey,
+              returnPeriodAffected = ReturnPeriod.fromDateInPeriod(periodFrom(5, periodDate)).toPeriodKey,
               taxType = "321",
               litresOfPureAlcohol = BigDecimal(150),
               dutyRate = BigDecimal("21.01"),
@@ -292,7 +307,11 @@ trait TestData extends ModelGenerators {
 
   def nilReturnDetails(periodKey: String, now: Instant): ReturnDetails =
     ReturnDetails(
-      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      identification = ReturnDetailsIdentification(
+        periodKey = periodKey,
+        chargeReference = None,
+        submittedTime = now
+      ),
       alcoholDeclared = ReturnAlcoholDeclared(
         alcoholDeclaredDetails = None,
         total = BigDecimal(0)
@@ -308,7 +327,11 @@ trait TestData extends ModelGenerators {
 
   def nilReturnDetailsWithEmptySections(periodKey: String, now: Instant): ReturnDetails =
     ReturnDetails(
-      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      identification = ReturnDetailsIdentification(
+        periodKey = periodKey,
+        chargeReference = None,
+        submittedTime = now
+      ),
       alcoholDeclared = ReturnAlcoholDeclared(
         alcoholDeclaredDetails = Some(Seq.empty),
         total = BigDecimal(0)
@@ -325,7 +348,11 @@ trait TestData extends ModelGenerators {
   def returnWithSpoiltAdjustment(periodKey: String, now: Instant): ReturnDetails = {
     val periodDate = ReturnPeriod.fromPeriodKeyOrThrow(periodKey).periodFromDate()
     ReturnDetails(
-      identification = ReturnDetailsIdentification(periodKey = periodKey, submittedTime = now),
+      identification = ReturnDetailsIdentification(
+        periodKey = periodKey,
+        chargeReference = Some(chargeReference),
+        submittedTime = now
+      ),
       alcoholDeclared = ReturnAlcoholDeclared(
         alcoholDeclaredDetails = Some(Seq.empty),
         total = BigDecimal(0)
@@ -407,7 +434,7 @@ trait TestData extends ModelGenerators {
       ReturnPeriod(YearMonth.of(today.getYear, today.getMonth)).toPeriodKey
     )
 
-  val chargeReference = "XA" + listOfN(10, numChar).sample.get.toString()
+  val chargeReference = chargeReferenceGen.sample.get
 
   val outstandingPartialPayment = OutstandingPayment(
     Return,
@@ -851,43 +878,15 @@ trait TestData extends ModelGenerators {
         "maltSpirits",
         "grainSpirits"
       ),
-      OtherSpiritsProducedPage.toString                   -> "Other Type of Spirit",
-      GrainsUsedPage.toString                             -> Json.obj(
-        "maltedBarleyQuantity"     -> 1111,
-        "wheatQuantity"            -> 2222,
-        "maizeQuantity"            -> 3333,
-        "ryeQuantity"              -> 4444,
-        "unmaltedGrainQuantity"    -> 5555,
-        "usedMaltedGrainNotBarley" -> true
-      ),
-      OtherMaltedGrainsPage.toString                      -> Json.obj(
-        "otherMaltedGrainsTypes"    -> "Other malted grains",
-        "otherMaltedGrainsQuantity" -> 6666
-      ),
-      AlcoholUsedPage.toString                            -> Json.obj(
-        "beer"         -> 1111,
-        "wine"         -> 2222,
-        "madeWine"     -> 3333,
-        "ciderOrPerry" -> 4444
-      ),
-      EthyleneGasOrMolassesUsedPage.toString              -> Json.obj(
-        "ethyleneGas"      -> 6666,
-        "molasses"         -> 7777,
-        "otherIngredients" -> true
-      ),
-      OtherIngredientsUsedPage.toString                   -> Json.obj(
-        "otherIngredientsUsedTypes"    -> "Other Ingredient",
-        "otherIngredientsUsedUnit"     -> "Tonnes",
-        "otherIngredientsUsedQuantity" -> 4321
-      )
+      OtherSpiritsProducedPage.toString                   -> "Other Type of Spirit"
     )
   )
 
   val fullReturn =
     AdrReturnSubmission(
       AdrDutyDeclared(
-        true,
-        List(
+        declared = true,
+        dutyDeclaredItems = List(
           AdrDutyDeclaredItem(AdrAlcoholQuantity(100, 10), AdrDuty("315", 9.27, 92.7)),
           AdrDutyDeclaredItem(AdrAlcoholQuantity(110, 10), AdrDuty("313", 9.27, 92.7)),
           AdrDutyDeclaredItem(AdrAlcoholQuantity(1000, 100), AdrDuty("373", 10.01, 1001)),
@@ -898,26 +897,28 @@ trait TestData extends ModelGenerators {
           AdrDutyDeclaredItem(AdrAlcoholQuantity(100, 10), AdrDuty("361", 10.01, 100.1))
         )
       ),
-      AdrAdjustments(
-        true,
-        Some("Reason for over declaration"),
-        List(AdrAdjustmentItem("24AA", AdrAlcoholQuantity(2000, 200), AdrDuty("312", 9.27, -1854))),
-        true,
-        Some("Reason for under declaration"),
-        List(
+      adjustments = AdrAdjustments(
+        overDeclarationDeclared = true,
+        reasonForOverDeclaration = Some("Reason for over declaration"),
+        overDeclarationProducts =
+          List(AdrAdjustmentItem("24AA", AdrAlcoholQuantity(2000, 200), AdrDuty("312", 9.27, -1854))),
+        underDeclarationDeclared = true,
+        reasonForUnderDeclaration = Some("Reason for under declaration"),
+        underDeclarationProducts = List(
           AdrAdjustmentItem("23AL", AdrAlcoholQuantity(1000, 100), AdrDuty("311", 9.27, 927)),
           AdrAdjustmentItem("23AL", AdrAlcoholQuantity(100, 10), AdrDuty("371", 9.27, 92.7))
         ),
-        true,
-        List(AdrAdjustmentItem("24AC", AdrAlcoholQuantity(100, 10), AdrDuty("314", 9.27, -92.7))),
-        true,
-        List(AdrAdjustmentItem("24AD", AdrAlcoholQuantity(210, 21), AdrDuty("313", 9.27, -194.67))),
-        true,
-        List(AdrRepackagedDraughtAdjustmentItem("24AB", "371", 3.21, "311", 9.27, AdrAlcoholQuantity(1000, 100), 606))
+        spoiltProductDeclared = true,
+        spoiltProducts = List(AdrAdjustmentItem("24AC", AdrAlcoholQuantity(100, 10), AdrDuty("314", 9.27, -92.7))),
+        drawbackDeclared = true,
+        drawbackProducts = List(AdrAdjustmentItem("24AD", AdrAlcoholQuantity(210, 21), AdrDuty("313", 9.27, -194.67))),
+        repackagedDraughtDeclared = true,
+        repackagedDraughtProducts =
+          List(AdrRepackagedDraughtAdjustmentItem("24AB", "371", 3.21, "311", 9.27, AdrAlcoholQuantity(1000, 100), 606))
       ),
-      AdrDutySuspended(
-        true,
-        List(
+      dutySuspended = AdrDutySuspended(
+        declared = true,
+        dutySuspendedProducts = List(
           AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Beer, AdrAlcoholQuantity(1000, 100)),
           AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Cider, AdrAlcoholQuantity(2000, 200)),
           AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.Spirits, AdrAlcoholQuantity(1000, 100)),
@@ -925,13 +926,13 @@ trait TestData extends ModelGenerators {
           AdrDutySuspendedProduct(AdrDutySuspendedAlcoholRegime.OtherFermentedProduct, AdrAlcoholQuantity(1000, 100))
         )
       ),
-      Some(
-        AdrSpirits(
-          true,
-          Some(
-            AdrSpiritsProduced(
-              AdrSpiritsVolumes(1234, 111, 222),
-              Set(
+      spirits = Some(
+        value = AdrSpirits(
+          spiritsDeclared = true,
+          spiritsProduced = Some(
+            value = AdrSpiritsProduced(
+              spiritsVolumes = AdrSpiritsVolumes(totalSpirits = 1234, scotchWhisky = 111, irishWhiskey = 222),
+              typesOfSpirit = Set(
                 AdrTypeOfSpirit.Other,
                 AdrTypeOfSpirit.CiderOrPerry,
                 AdrTypeOfSpirit.NeutralAgricultural,
@@ -941,17 +942,17 @@ trait TestData extends ModelGenerators {
                 AdrTypeOfSpirit.Beer,
                 AdrTypeOfSpirit.Malt
               ),
-              Some("Other Type of Spirit"),
-              true,
-              AdrSpiritsGrainsQuantities(Some(1111), Some(6666), Some(2222), Some(3333), Some(4444), Some(5555)),
-              Some("Other malted grains"),
-              AdrSpiritsIngredientsVolumes(Some(6666), Some(7777), Some(1111), Some(2222), Some(3333), Some(4444)),
-              Some(AdrOtherIngredient(4321, Tonnes, "Other Ingredient"))
+              otherSpiritTypeName = Some("Other Type of Spirit"),
+              hasOtherMaltedGrain = None,
+              grainsQuantities = AdrSpiritsGrainsQuantities(None, None, None, None, None, None),
+              otherMaltedGrainType = None,
+              ingredientsVolumes = AdrSpiritsIngredientsVolumes(None, None, None, None, None, None),
+              otherIngredient = None
             )
           )
         )
       ),
-      AdrTotals(1748.2, -1854, 1019.7, -92.7, -194.67, 606, 1232.53)
+      totals = AdrTotals(1748.2, -1854, 1019.7, -92.7, -194.67, 606, 1232.53)
     )
 
   val fullRepackageAdjustmentEntry: AdjustmentEntry = AdjustmentEntry(
@@ -1149,4 +1150,35 @@ trait TestData extends ModelGenerators {
 
   val allVolumeAndRateByTaxType =
     Seq(volumeAndRateByTaxType1, volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
+
+  val testAdrReturnCreatedDetails = AdrReturnCreatedDetails(
+    processingDate = Instant.now(clock),
+    amount = BigDecimal(1),
+    chargeReference = Some("1234567890"),
+    paymentDueDate = Some(LocalDate.now(clock))
+  )
+
+  val testWarningMessage = WarningText(
+    iconFallbackText = Some("Warning"),
+    content =
+      Text("Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.")
+  )
+
+  def testReturnPeriodViewModel(dateTimeHelper: DateTimeHelper)(implicit messages: Messages): ReturnPeriodViewModel =
+    new ReturnPeriodViewModelFactory(dateTimeHelper).apply(
+      ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
+    )
+
+  def testReturnSubmittedViewModel(dateTimeHelper: DateTimeHelper)(implicit
+    messages: Messages
+  ): ReturnSubmittedViewModel = ReturnSubmittedViewModel(
+    returnDetails = testAdrReturnCreatedDetails,
+    periodStartDate = testReturnPeriodViewModel(dateTimeHelper).fromDate,
+    periodEndDate = testReturnPeriodViewModel(dateTimeHelper).toDate,
+    formattedProcessingDate = "27 August 2019",
+    formattedPaymentDueDate = "27 August 2020",
+    periodKey = periodKey,
+    businessTaxAccountUrl = "http://localhost:9020/business-account/",
+    warningText = testWarningMessage
+  )
 }

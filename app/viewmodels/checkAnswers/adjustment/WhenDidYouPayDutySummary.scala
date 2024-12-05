@@ -20,28 +20,23 @@ import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import models.{CheckMode, YearMonthModelFormatter}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.DateTimeHelper
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object WhenDidYouPayDutySummary extends YearMonthModelFormatter {
+import javax.inject.Inject
+
+class WhenDidYouPayDutySummary @Inject() (dateTimeHelper: DateTimeHelper) extends YearMonthModelFormatter {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     (adjustmentEntry.period, adjustmentEntry.adjustmentType) match {
       case (Some(period), Some(adjustmentType)) if !adjustmentType.equals(Spoilt) =>
-        val month            = period.getMonth.toString
-        val capitalizedMonth = s"${month.charAt(0).toUpper}${month.substring(1).toLowerCase}"
-        val value            =
-          HtmlFormat.escape(capitalizedMonth).toString + " " + HtmlFormat
-            .escape(period.getYear.toString)
-            .toString
-
         Some(
           SummaryListRowViewModel(
             key = "whenDidYouPayDuty.checkYourAnswersLabel",
-            value = ValueViewModel(HtmlContent(value)),
+            value = ValueViewModel(HtmlContent(dateTimeHelper.formatMonthYear(period))),
             actions = Seq(
               ActionItemViewModel(
                 "site.change",

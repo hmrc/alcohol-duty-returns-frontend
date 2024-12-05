@@ -24,11 +24,12 @@ import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarte
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.LOCKED
+import play.api.i18n.Messages
 import play.api.test.Helpers._
 import play.api.inject.bind
 import services.AuditService
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import viewmodels.{BeforeStartReturnViewModel, ReturnPeriodViewModel}
+import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
 
 import java.time.{Clock, Instant, LocalDate}
@@ -38,6 +39,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
   "BeforeStartReturn Controller" - {
     val mockUserAnswersConnector       = mock[UserAnswersConnector]
     val mockAuditService: AuditService = mock[AuditService]
+    implicit val messages: Messages    = getMessages(app)
 
     val emptyUserAnswers: UserAnswers = UserAnswers(
       returnId,
@@ -70,7 +72,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     )
 
     val currentDate = LocalDate.now(clock)
-    val viewModel   = BeforeStartReturnViewModel(returnPeriod, currentDate)
+    val viewModel   = new BeforeStartReturnViewModelFactory(createDateTimeHelper())(returnPeriod, currentDate)
 
     "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in {
       when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
@@ -122,7 +124,9 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[BeforeStartReturnView]
 
         val returnPeriodViewModel =
-          ReturnPeriodViewModel(ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get)
+          new ReturnPeriodViewModelFactory(createDateTimeHelper())(
+            ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get
+          )
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(

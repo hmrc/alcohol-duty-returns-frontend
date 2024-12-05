@@ -180,7 +180,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
       )
     }
 
-  private def formatDateYearMonth(date: LocalDate): String =
+  private def formatDateYearMonth(date: LocalDate)(implicit messages: Messages): String =
     dateTimeHelper.formatDateMonthYear(date)
 
   private def formatDescription(

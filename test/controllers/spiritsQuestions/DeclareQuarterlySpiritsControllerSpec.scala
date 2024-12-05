@@ -17,24 +17,26 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{AlcoholRegimes, NormalMode, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.spiritsQuestions.DeclareQuarterlySpiritsPage
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import play.api.Application
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.DeclareQuarterlySpiritsView
 
 import scala.concurrent.Future
+import scala.util.Success
 
 class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
   val userAnswersPreviouslyAnswered = emptyUserAnswers.set(DeclareQuarterlySpiritsPage, true).success.value
-
+  val mockUserAnswers: UserAnswers  = mock[UserAnswers]
   "DeclareQuarterlySpirits Controller" - {
     "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers), true) {
       running(application) {
@@ -88,6 +90,58 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the task list page and clear user answers when 'No' is submitted" in new SetUp(
+      Some(mockUserAnswers),
+      true
+    ) {
+      val pagesToDelete = List(DeclareSpiritsTotalPage, SpiritTypePage, OtherSpiritsProducedPage, WhiskyPage)
+
+      val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
+      val mockAlcoholRegimesSet: AlcoholRegimes          = mock[AlcoholRegimes]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockUserAnswers.set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())) thenReturn Success(
+        mockUserAnswers
+      )
+      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
+        DeclareQuarterlySpiritsPage,
+        false
+      )
+      when(mockUserAnswers.regimes) thenReturn mockAlcoholRegimesSet
+      when(mockAlcoholRegimesSet.hasRegime(any())) thenReturn true
+
+      override val application =
+        applicationBuilder(userAnswers = Some(mockUserAnswers))
+          .overrides(
+            bind[QuarterlySpiritsQuestionsNavigator]
+              .toInstance(
+                new FakeQuarterlySpiritsQuestionsNavigator(
+                  controllers.routes.TaskListController.onPageLoad,
+                  hasValueChanged = true
+                )
+              ),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, declareQuarterlySpiritsRoute)
+            .withFormUrlEncodedBody(("declareQuarterlySpirits-yesNoValue", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustEqual Some(controllers.routes.TaskListController.onPageLoad.toString)
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockUserAnswers, times(1)).set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())
+        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
+        verify(mockUserAnswers, times(1)).regimes
+        verify(mockAlcoholRegimesSet, times(1)).hasRegime(any())
       }
     }
 
