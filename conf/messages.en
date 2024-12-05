@@ -410,7 +410,7 @@ doYouHaveMultipleSPRDutyRates.heading = If you have more than one Small Producer
 doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}, for example:
 doYouHaveMultipleSPRDutyRates.l1 = your Small Producer Relief duty rate has changed and you need to report production when a different rate applied
 doYouHaveMultipleSPRDutyRates.l2 = you bottle and pay duty on behalf of more than one small producer, each of whom have their own Small Producer Relief duty rate
-doYouHaveMultipleSPRDutyRates.l3 = you merged with another producer and are reporting pre-merger production using the producers' own pre-merger Small Producer Relief duty rates
+doYouHaveMultipleSPRDutyRates.l3 = you merged with another producer and are reporting pre-merger production using the producers'' own pre-merger Small Producer Relief duty rates
 doYouHaveMultipleSPRDutyRates.p2 = If you have more than one Small Producer Relief duty rate for the same type of {0} you will need to input them individually. For each duty rate we need to know the total amount produced, the litres of pure alcohol and the applicable duty rate.
 doYouHaveMultipleSPRDutyRates.h2 = Do you have more than one Small Producer Relief duty rate for the same tax type code?
 doYouHaveMultipleSPRDutyRates.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare
@@ -484,13 +484,12 @@ deleteMultipleSPREntry.error.required = Select yes to remove this entry
 
 dutyCalculation.title = You will owe £{0,number,#,##0.00}
 dutyCalculation.heading = You will owe £{0,number,#,##0.00}
-dutyCalculation.paragraph = We worked this out by:
-dutyCalculation.list = multiplying the volume of pure alcohol you entered by its duty rate
+dutyCalculation.paragraph = We worked this out by multiplying the volume of pure alcohol you entered by its duty rate.
 
 dutyCalculation.table.description = Description
 dutyCalculation.table.litresOfPureAlcohol = Litres of pure alcohol (LPA)
 dutyCalculation.table.dutyRate = Duty rate (per litre)
-dutyCalculation.table.dutyDue = Duty due
+dutyCalculation.table.dutyDue = Duty value
 dutyCalculation.table.action = Action
 
 productList.caption = Duty due
@@ -722,21 +721,21 @@ spiritsQuestions.checkYourAnswers.lpa.units = litres of pure alcohol
 
 # Beginning of adjustments sub-journey
 
-declareAdjustmentQuestion.title = Do you need to declare an adjustment from a previously submitted return?
-declareAdjustmentQuestion.heading = Do you need to declare an adjustment from a previously submitted return?
-declareAdjustmentQuestion.p1 = You need to tell us about any changes from previous returns if you have done any of the following:
-declareAdjustmentQuestion.para1.list1 = under-declared on alcoholic products on an earlier return and may not have paid enough duty
-declareAdjustmentQuestion.para1.list2 = over-declared alcoholic products on an earlier return and may have paid too much duty
-declareAdjustmentQuestion.p2 = You may be required to provide an explanation if declaring previously under-declared or over-declared alcoholic products.
-declareAdjustmentQuestion.p3 = You can also tell us about any alcoholic products you previously paid duty on and:
-declareAdjustmentQuestion.para1.list3 = have become spoilt and not fit to be consumed
-declareAdjustmentQuestion.para1.list4 = duty was originally paid at a reduced rate (draught relief) however they are no longer eligible for that rate after being repackaged for non-draught sale
-declareAdjustmentQuestion.para1.list5 = have now exported, warehoused for export or completed its planned destruction having previously notifying HMRC
-declareAdjustmentQuestion.error.required = Select yes if you need to tell us about any adjustments from previous returns
-declareAdjustmentQuestion.change.hidden = whether you need to make any adjustments from a previously submitted return
+declareAdjustmentQuestion.title = Declare adjustments from earlier returns
+declareAdjustmentQuestion.heading = Declare adjustments from earlier returns
+declareAdjustmentQuestion.p1 = You must tell us about changes from earlier returns including:
+declareAdjustmentQuestion.para1.list1 = under-declared alcoholic products
+declareAdjustmentQuestion.para1.list2 = over-declared alcoholic products
+declareAdjustmentQuestion.p2 = You may be required to explain why these were under or over-declared.
+declareAdjustmentQuestion.p3 = You can also tell us about alcoholic products declared in earlier returns that have then:
+declareAdjustmentQuestion.para1.list3 = become spoilt and no longer fit to be consumed
+declareAdjustmentQuestion.para1.list4 = been repackaged and are no longer eligible for a reduced rate (draught relief)
+declareAdjustmentQuestion.para1.list5 = been exported
+declareAdjustmentQuestion.question.h2 = Do you have adjustments to declare?
+declareAdjustmentQuestion.error.required = Select yes if you have adjustments to declare
 
-adjustmentType.title = What type of adjustment do you need to make?
-adjustmentType.heading = What type of adjustment do you need to make?
+adjustmentType.title = What type of adjustment are you declaring?
+adjustmentType.heading = What type of adjustment are you declaring?
 adjustmentType.under-declaration = Under-declaration
 adjustmentType.under-declaration.hint = You under-declared alcohol on a previous return and have not paid enough duty.
 adjustmentType.over-declaration = Over-declaration
@@ -744,11 +743,11 @@ adjustmentType.over-declaration.hint = 	You over-declared alcohol on a previous 
 adjustmentType.spoilt = Spoilt
 adjustmentType.spoilt.hint = You have paid duty on alcohol and it is now spoilt and cannot be consumed.
 adjustmentType.drawback = Drawback
-adjustmentType.drawback.hint = 	You exported, warehoused for export or completed the planned destruction of alcohol you already paid duty on in an earlier return. You need an approved ‘notice of intention to claim drawback’ (NOI) before you tell us about it.
+adjustmentType.drawback.hint = You exported alcohol you already paid duty on in an earlier return. You need an approved ''notice of intention to claim drawback'' (NOI) before you tell us about it.
 adjustmentType.repackaged-draught-products = Repackaged draught products
 adjustmentType.repackaged-draught-products.hint = You have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate.
 adjustmentType.checkYourAnswersLabel = Adjustment
-adjustmentType.error.required = Select the type of adjustment you need to make
+adjustmentType.error.required = Select the type of adjustment
 adjustmentType.change.hidden = adjustment
 adjustmentType.checkYourAnswersLabel.over-declaration = Over-declared
 adjustmentType.checkYourAnswersLabel.under-declaration = Under-declared
@@ -793,7 +792,8 @@ whenDidYouPayDuty.under-declaration.title = When should you have paid duty?
 whenDidYouPayDuty.spoilt.title = To the nearest month, when did you pay duty on this?
 whenDidYouPayDuty.under-declaration.heading = When should you have paid duty?
 whenDidYouPayDuty.spoilt.heading = To the nearest month, when did you pay duty on this?
-whenDidYouPayDuty.paragraph = Contact HMRC if this was originally declared before August 2023.
+whenDidYouPayDuty.exciseEnquiries.link = Call or contact HMRC by post (opens in new tab)
+whenDidYouPayDuty.paragraph = if this was originally declared before August 2023.
 whenDidYouPayDuty.hint = For example, 10 2024
 whenDidYouPayDuty.date.error.required.all = Enter the date you paid duty
 whenDidYouPayDuty.date.error.required = The date you paid duty must include a {0}
@@ -898,15 +898,15 @@ deleteAdjustment.heading = Remove this adjustment?
 deleteAdjustment.paragraph = The adjustment and its information will be removed from your return.
 deleteAdjustment.error.required = Select yes to remove this adjustment
 
-underDeclarationReason.title = Why were these alcoholic products not declared until now?
-underDeclarationReason.heading = Why were these alcoholic products not declared until now?
-underDeclarationReason.error.required = Enter the reason why these alcoholic products were not declared until now
-underDeclarationReason.error.length = The reason these alcoholic products were not declared must be {0} characters or less
+underDeclarationReason.title = Why were the alcoholic products not declared until now?
+underDeclarationReason.heading = Why were the alcoholic products not declared until now?
+underDeclarationReason.error.required = Enter the reason why the alcoholic products were not declared until now
+underDeclarationReason.error.length = The reason must be {0} characters or less
 
-overDeclarationReason.title = Why was too much alcoholic product over-declared previously?
-overDeclarationReason.heading = Why was too much alcoholic product over-declared previously?
-overDeclarationReason.error.required = Enter the reason why too much alcoholic product was over-declared
-overDeclarationReason.error.length = The reason why too much alcoholic product was over-declared must be {0} characters or less
+overDeclarationReason.title = Why were alcoholic products over-declared?
+overDeclarationReason.heading = Why were alcoholic products over-declared?
+overDeclarationReason.error.required = Enter the reason why alcoholic products were over-declared?
+overDeclarationReason.error.length = The reason must be {0} characters or less
 
 # End of adjustments sub-journey
 
@@ -915,10 +915,10 @@ overDeclarationReason.error.length = The reason why too much alcoholic product w
 dutyDueForThisReturn.title = The duty due for this return is {0}
 dutyDueForThisReturn.nil.title = No duty due
 dutyDueForThisReturn.heading = The duty due for this return is {0}
-dutyDueForThisReturn.nil.heading = No duty due (nil return)
+dutyDueForThisReturn.nil.heading = No duty due
 dutyDueForThisReturn.positive.p1 = You will be liable for this amount once you send your return.
-dutyDueForThisReturn.negative.p1 = Your return has a negative value. You will be able to claim this back. If you do not claim it back we will automatically deduct it from your next return.
-dutyDueForThisReturn.nil.p1 = Your return has a nil value and no duty is due.
+dutyDueForThisReturn.negative.p1 = Your return has a negative duty value. You will be able to claim this back after sending your return. If you do not claim it back we will automatically deduct it from your next return.
+dutyDueForThisReturn.nil.p1 = There is no duty to pay on this return.
 dutyDueForThisReturn.h2 = How we worked this out
 dutyDueForThisReturn.bulletList.1 = We calculated the total duty due on the alcoholic products you declared
 dutyDueForThisReturn.bulletList.3 = You told us you do not have any duty applicable alcoholic products or adjustments to declare
@@ -955,5 +955,7 @@ returnSubmitted.direct.debit.h2 = Direct Debit
 returnSubmitted.direct.debit.p1 = You can pay duty automatically by direct debit.
 returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit
 returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcohol Duty account. If you do not claim it back then it will be used toward any duty due from your next return.
+returnSubmitted.warningText = Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.
+returnSubmitted.warningFallbackText = Warning
 
 # End of Check and submit sub-journey

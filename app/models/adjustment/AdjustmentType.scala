@@ -33,10 +33,10 @@ object AdjustmentType extends Enumerable.Implicits {
   case object Drawback extends WithName("drawback") with AdjustmentType
 
   val values: Seq[AdjustmentType] = Seq(
+    Spoilt,
     Underdeclaration,
     Overdeclaration,
     RepackagedDraughtProducts,
-    Spoilt,
     Drawback
   )
 
