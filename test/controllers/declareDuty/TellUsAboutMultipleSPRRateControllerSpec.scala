@@ -64,7 +64,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
+        val rateBandRadioButton =
+          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -87,7 +88,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
+        val rateBandRadioButton =
+          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -124,7 +126,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
+        val rateBandRadioButton =
+          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -158,7 +161,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
+        val rateBandRadioButton =
+          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
         val form = formProvider(regime)(getMessages(application))
 
@@ -405,7 +409,8 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val rateBandRadioButton = TellUsAboutMultipleSPRRateHelper.radioItems(rateBands)(getMessages(application))
+        val rateBandRadioButton =
+          TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, regime, rateBandRadioButton, None)(

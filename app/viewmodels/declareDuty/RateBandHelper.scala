@@ -16,18 +16,28 @@
 
 package viewmodels.declareDuty
 
-import models.{ABVRange, AlcoholByVolume, RateBand, RateType}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
 
 object RateBandHelper {
 
-  def rateBandContent(rateBand: RateBand)(implicit messages: Messages): String                         =
-    rateBand.rangeDetails.flatMap(_.abvRanges.toSeq) match {
+  def rateBandContent(rateBand: RateBand, maybeByRegime: Option[AlcoholRegime])(implicit
+    messages: Messages
+  ): String = {
+    val rangeDetails =
+      maybeByRegime.fold(rateBand.rangeDetails)(regime => rateBand.rangeDetails.filter(_.alcoholRegime == regime))
+    rangeDetails.flatMap(_.abvRanges.toSeq) match {
+      case abvRanges if abvRanges.isEmpty   =>
+        throw new IllegalArgumentException(
+          s"No ranges found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
+        )
       case abvRanges if abvRanges.size == 1 =>
         singleInterval(abvRanges.head, rateBand.taxTypeCode)
       case abvRanges                        =>
         multipleIntervals(abvRanges, rateBand.taxTypeCode)
+
     }
+  }
   private def singleInterval(interval: ABVRange, taxType: String)(implicit messages: Messages): String =
     interval.maxABV match {
       case AlcoholByVolume.MAX =>
@@ -65,8 +75,14 @@ object RateBandHelper {
     ).capitalize
   }
 
-  def rateBandRecap(rateBand: RateBand)(implicit messages: Messages): String =
-    rateBand.rangeDetails.flatMap(_.abvRanges.toSeq) match {
+  def rateBandRecap(rateBand: RateBand, maybeByRegime: Option[AlcoholRegime])(implicit messages: Messages): String = {
+    val rangeDetails =
+      maybeByRegime.fold(rateBand.rangeDetails)(regime => rateBand.rangeDetails.filter(_.alcoholRegime == regime))
+    rangeDetails.flatMap(_.abvRanges.toSeq) match {
+      case abvRanges if abvRanges.isEmpty   =>
+        throw new IllegalArgumentException(
+          s"No ranges found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
+        )
       case abvRanges if abvRanges.size == 1 =>
         singleIntervalRecap(
           abvRanges.head,
@@ -76,6 +92,7 @@ object RateBandHelper {
       case abvRanges                        =>
         multipleIntervalsRecap(abvRanges, rateBand.taxTypeCode, rateBand.rateType)
     }
+  }
 
   private def singleIntervalRecap(interval: ABVRange, taxType: String, rateType: RateType)(implicit
     messages: Messages
