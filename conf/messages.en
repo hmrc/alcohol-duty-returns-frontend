@@ -845,8 +845,8 @@ adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief dut
 adjustmentVolume.pureAlcohol = litres of pure alcohol (LPA)
 adjustmentVolume.totalLitres = litres of {0}
 
-adjustmentRepackagedTaxType.title = What is the original tax type code for the alcohol you are repackaging?
-adjustmentRepackagedTaxType.heading = What is the original tax type code for the alcohol you are repackaging?
+adjustmentRepackagedTaxType.title = What is the tax type code for the newly repackaged products?
+adjustmentRepackagedTaxType.heading = What is the tax type code for the newly repackaged products?
 adjustmentRepackagedTaxType.checkYourAnswersLabel = New tax type
 adjustmentRepackagedTaxType.error.invalid = Enter a valid tax type code
 adjustmentRepackagedTaxType.error.required = Enter the new tax type code
