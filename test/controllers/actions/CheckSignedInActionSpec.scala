@@ -26,6 +26,7 @@ import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 
+import scala.collection.mutable
 import scala.concurrent.Future
 
 class CheckSignedInActionSpec extends SpecBase {
@@ -35,8 +36,12 @@ class CheckSignedInActionSpec extends SpecBase {
 
   val checkSignedInAction = new CheckSignedInActionImpl(mockAuthConnector, defaultBodyParser)
 
-  def testAction(expectedSignedIn: Boolean): SignedInRequest[_] => Future[Result] = { request =>
-    request.signedIn mustBe expectedSignedIn
+  val signedInKey = "signedIn"
+
+  def testAction(signedInStore: mutable.Map[String, Boolean]): SignedInRequest[_] => Future[Result] = { request =>
+    signedInStore.synchronized {
+      signedInStore.put(signedInKey, request.signedIn)
+    }
 
     Future(Ok(testContent))
   }
@@ -54,10 +59,16 @@ class CheckSignedInActionSpec extends SpecBase {
       )
         .thenReturn(Future.unit)
 
-      val result: Future[Result] = checkSignedInAction.invokeBlock(FakeRequest(), testAction(true))
+      val signedInStore = mutable.Map[String, Boolean]()
+
+      val result: Future[Result] = checkSignedInAction.invokeBlock(FakeRequest(), testAction(signedInStore))
 
       status(result) mustBe OK
       contentAsString(result) mustBe testContent
+
+      signedInStore.synchronized {
+        signedInStore(signedInKey) mustBe true
+      }
     }
 
     "execute the block and return not signed in if no longer authorised or never logged in" in {
@@ -76,10 +87,16 @@ class CheckSignedInActionSpec extends SpecBase {
           )(any(), any())
         ).thenReturn(Future.failed(exception))
 
-        val result: Future[Result] = checkSignedInAction.invokeBlock(FakeRequest(), testAction(false))
+        val signedInStore = mutable.Map[String, Boolean]()
+
+        val result: Future[Result] = checkSignedInAction.invokeBlock(FakeRequest(), testAction(signedInStore))
 
         status(result) mustBe OK
         contentAsString(result) mustBe testContent
+
+        signedInStore.synchronized {
+          signedInStore(signedInKey) mustBe false
+        }
       }
     }
   }
