@@ -25,7 +25,7 @@ import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
+import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
@@ -50,12 +50,16 @@ trait SpecBase
     with IntegrationPatience
     with ModelGenerators
     with TestData
-    with TestPages {
+    with TestPages
+    with BeforeAndAfterEach {
   def getMessages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   val fakeIdentifierUserDetails = FakeIdentifierUserDetails(appaId, groupId, internalId)
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+  protected def applicationBuilder(
+    userAnswers: Option[UserAnswers] = None,
+    isOrganisation: Boolean = true
+  ): GuiceApplicationBuilder                                 =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
@@ -63,17 +67,20 @@ trait SpecBase
         bind[IdentifyWithEnrolmentAction].to[FakeIdentifyWithEnrolmentAction],
         bind[IdentifyWithoutEnrolmentAction].to[FakeIdentifyWithoutEnrolmentAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[ServiceEntryCheckAction].to[FakeServiceEntryCheckAction]
+        bind[ServiceEntryCheckAction].to[FakeServiceEntryCheckAction],
+        bind[FakeIsOrganisation].toInstance(FakeIsOrganisation(isOrganisation)),
+        bind[CheckAffinityGroupIsOrganisationAction].to[FakeCheckAffinityGroupAction]
       )
-  def FakeRequest()                                                                                  = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
-  def FakeRequest(verb: String, route: String)                                                       =
+  def FakeRequest()                                          = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
+  def FakeRequest(verb: String, route: String)               =
     play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
-  def FakeRequestWithoutSession()                                                                    = play.api.test.FakeRequest()
-  def FakeRequestWithoutSession(verb: String, route: String)                                         = play.api.test.FakeRequest(verb, route)
+  def FakeRequestWithoutSession()                            = play.api.test.FakeRequest()
+  def FakeRequestWithoutSession(verb: String, route: String) = play.api.test.FakeRequest(verb, route)
 
   def createDateTimeHelper(): DateTimeHelper =
     new DateTimeHelper(app.injector.instanceOf[LanguageUtils])
 
   implicit val hc: HeaderCarrier    = HeaderCarrier()
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
 }

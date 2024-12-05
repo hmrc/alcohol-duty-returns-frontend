@@ -39,16 +39,23 @@ class AuthController @Inject() (
     with Logging
     with I18nSupport {
 
-  def signOut(): Action[AnyContent] = identify.async { implicit request =>
-    request.session.get(periodKeySessionKey) match {
-      case Some(periodKey) =>
-        userAnswersConnector
-          .releaseLock(ReturnId(request.appaId, periodKey))
-          .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
-      case None            =>
-        logger.info("Period key not found during sign out")
+  def signOut(isOrganisation: Boolean = true): Action[AnyContent] =
+    if (isOrganisation) {
+      identify.async { implicit request =>
+        request.session.get(periodKeySessionKey) match {
+          case Some(periodKey) =>
+            userAnswersConnector
+              .releaseLock(ReturnId(request.appaId, periodKey))
+              .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+          case None            =>
+            logger.info("Period key not found during sign out")
+            Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+        }
+      }
+    } else {
+      Action.async { _ =>
         Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+      }
     }
 
-  }
 }
