@@ -91,9 +91,10 @@ object MultipleSPRListHelper {
     messages: Messages
   ): Seq[TableRowViewModel] =
     sprList.zipWithIndex.map { case (sprEntry, index) =>
+      val rateBandDescription = rateBandRecap(sprEntry.rateBand)
       TableRowViewModel(
         cells = Seq(
-          TableRow(Text(rateBandRecap(sprEntry.rateBand))),
+          TableRow(Text(rateBandDescription)),
           TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres)), format = Some(Format.numeric)),
           TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol)), format = Some(Format.numeric)),
           TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)), format = Some(Format.numeric))
@@ -103,12 +104,12 @@ object MultipleSPRListHelper {
             label = messages("site.change"),
             href = controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController
               .onPageLoad(NormalMode, regime, Some(index)),
-            visuallyHiddenText = Some(messages("productList.change.hidden"))
+            visuallyHiddenText = Some(rateBandDescription)
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
             href = controllers.declareDuty.routes.DeleteMultipleSPREntryController.onPageLoad(regime, Some(index)),
-            visuallyHiddenText = Some(messages("productList.remove.hidden"))
+            visuallyHiddenText = Some(rateBandDescription)
           )
         )
       )
