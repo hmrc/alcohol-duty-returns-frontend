@@ -33,49 +33,54 @@ class AdjustmentTypeHelperSpec extends SpecBase {
   "AdjustmentTypeHelper" - {
     "checkIfOneRegimeAndSpoiltAndUpdateUserAnswers" - {
       "should update user answers correctly when there is only one regime and adjustment type is Spoilt" in new SetUp {
-        val regimes = AlcoholRegimes(Set(regime))
-        val userAnswers = emptyUserAnswers
+        val regimes        = AlcoholRegimes(Set(regime))
+        val userAnswers    = emptyUserAnswers
           .copy(regimes = regimes)
-          .set(CurrentAdjustmentEntryPage, AdjustmentEntry()).success.value
+          .set(CurrentAdjustmentEntryPage, AdjustmentEntry())
+          .success
+          .value
         when(alcoholicProductTypeHelper.createRateBandFromRegime(regime))
           .thenReturn(spoiltRateBand)
-        val result = helper.checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(userAnswers, Spoilt)
+        val result         = helper.checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(userAnswers, Spoilt)
         val updatedAnswers = result.get
-        val updatedEntry = updatedAnswers.get(CurrentAdjustmentEntryPage).value
+        val updatedEntry   = updatedAnswers.get(CurrentAdjustmentEntryPage).value
         updatedEntry.spoiltRegime mustBe Some(models.AlcoholRegime.Beer)
         updatedEntry.rateBand mustBe Some(spoiltRateBand)
         updatedEntry.period mustBe Some(YearMonth.now().minusMonths(1))
       }
 
       "should return the original user answers when there is more than one regime" in new SetUp {
-        val regimes = AlcoholRegimes(Set(regime, Cider))
+        val regimes     = AlcoholRegimes(Set(regime, Cider))
         val userAnswers = emptyUserAnswers.copy(regimes = regimes)
-        val result = helper.checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(userAnswers, Spoilt)
+        val result      = helper.checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(userAnswers, Spoilt)
         result mustBe Success(userAnswers)
       }
 
       "should return the original user answers when the adjustment type is not Spoilt" in new SetUp {
-        val regimes = AlcoholRegimes(Set(models.AlcoholRegime.Beer))
+        val regimes     = AlcoholRegimes(Set(models.AlcoholRegime.Beer))
         val userAnswers = emptyUserAnswers.copy(regimes = regimes)
-        val result = helper.checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(userAnswers, AdjustmentType.Drawback)
+        val result      = helper.checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(userAnswers, AdjustmentType.Drawback)
         result mustBe Success(userAnswers)
       }
     }
   }
 
-  class SetUp{
+  class SetUp {
     val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
-    val alcoholicProductTypeHelper = mock[AlcoholicProductTypeHelper]
-    val helper = new AdjustmentTypeHelper(alcoholicProductTypeHelper)
-    implicit val messages: Messages = getMessages(applicationBuilder().build())
-    val regime = Beer
-    val spoiltRateBand = RateBand(
+    val alcoholicProductTypeHelper   = mock[AlcoholicProductTypeHelper]
+    val helper                       = new AdjustmentTypeHelper(alcoholicProductTypeHelper)
+    implicit val messages: Messages  = getMessages(applicationBuilder().build())
+    val regime                       = Beer
+    val spoiltRateBand               = RateBand(
       appConfig.getTaxTypeCodeByRegime(regime),
       messages(s"alcoholType.$regime"),
       Core,
       Some(BigDecimal(0.01)),
       Set(
-        RangeDetailsByRegime(regime, NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(0), AlcoholByVolume(100))))
+        RangeDetailsByRegime(
+          regime,
+          NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(0), AlcoholByVolume(100)))
+        )
       )
     )
   }

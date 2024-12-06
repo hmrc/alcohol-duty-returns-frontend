@@ -27,15 +27,15 @@ import javax.inject.Inject
 import scala.util.Try
 
 class AdjustmentTypeHelper @Inject() (
-                                      helper: AlcoholicProductTypeHelper
-                                    ) {
+  helper: AlcoholicProductTypeHelper
+) {
   def checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(
-                                                             userAnswer: UserAnswers,
-                                                             adjustmentType: AdjustmentType
-                                                           )(implicit messages: Messages): Try[UserAnswers] =
+    userAnswer: UserAnswers,
+    adjustmentType: AdjustmentType
+  )(implicit messages: Messages): Try[UserAnswers] =
     if (userAnswer.regimes.regimes.size == 1 && adjustmentType == Spoilt) {
-      val adjustment = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-      val rateBand = helper.createRateBandFromRegime(userAnswer.regimes.regimes.head)
+      val adjustment       = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+      val rateBand         = helper.createRateBandFromRegime(userAnswer.regimes.regimes.head)
       val currentYearMonth = YearMonth.now()
       userAnswer.set(
         CurrentAdjustmentEntryPage,
