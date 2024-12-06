@@ -112,7 +112,8 @@ class RateBandHelperSpec extends SpecBase {
         }
 
         "with a known regime to select a single range from two regimes" in new SetUp {
-          val rateBand = multipleIntervalRateBandTwoRegimes(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateTypeStandard)
+          val rateBand =
+            multipleIntervalRateBandTwoRegimes(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateTypeStandard)
 
           val result = RateBandHelper.rateBandContent(rateBand, Some(regime))
 
@@ -216,7 +217,8 @@ class RateBandHelperSpec extends SpecBase {
           }
 
           "with a known regime to select a single range from two regimes" in new SetUp {
-            val rateBand = multipleIntervalRateBandTwoRegimes(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateType)
+            val rateBand =
+              multipleIntervalRateBandTwoRegimes(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateType)
 
             val result = RateBandHelper.rateBandRecap(rateBand, Some(regime))
 
@@ -266,7 +268,13 @@ class RateBandHelperSpec extends SpecBase {
       )
     )
 
-    def multipleIntervalRateBand(lowerLimit1: BigDecimal, upperLimit1: BigDecimal, lowerLimit2: BigDecimal, upperLimit2: BigDecimal, rateType: RateType) = RateBand(
+    def multipleIntervalRateBand(
+      lowerLimit1: BigDecimal,
+      upperLimit1: BigDecimal,
+      lowerLimit2: BigDecimal,
+      upperLimit2: BigDecimal,
+      rateType: RateType
+    ) = RateBand(
       taxType,
       description,
       rateType,
@@ -292,7 +300,13 @@ class RateBandHelperSpec extends SpecBase {
       )
     )
 
-    def multipleIntervalRateBandTwoRegimes(lowerLimit1: BigDecimal, upperLimit1: BigDecimal, lowerLimit2: BigDecimal, upperLimit2: BigDecimal, rateType: RateType) = RateBand(
+    def multipleIntervalRateBandTwoRegimes(
+      lowerLimit1: BigDecimal,
+      upperLimit1: BigDecimal,
+      lowerLimit2: BigDecimal,
+      upperLimit2: BigDecimal,
+      rateType: RateType
+    ) = RateBand(
       taxType,
       description,
       rateType,

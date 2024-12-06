@@ -25,7 +25,7 @@ import play.api.i18n.Messages
 
 class AdjustmentVolumeWithSPRFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[AdjustmentVolumeWithSPR] =
+  def apply()(implicit messages: Messages): Form[AdjustmentVolumeWithSPR] =
     Form(
       "volumes" -> adjustmentVolumesWithRate(
         "adjustmentVolume.error.invalid",
@@ -33,8 +33,7 @@ class AdjustmentVolumeWithSPRFormProvider @Inject() extends Mappings {
         "adjustmentVolume.error.decimalPlaces",
         "adjustmentVolume.error.minimumValue",
         "adjustmentVolume.error.maximumValue",
-        "adjustmentVolume.error.lessThanExpected",
-        Seq(messages(s"return.regime.$regime"))
+        "adjustmentVolume.error.lessThanExpected"
       )
     )
 }

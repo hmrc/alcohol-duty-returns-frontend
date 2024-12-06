@@ -25,9 +25,8 @@ import play.api.i18n.Messages
 
 class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with ModelGenerators with SpecBase {
 
-  val regime   = regimeGen.sample.value
   val messages = mock[Messages]
-  val form     = new AdjustmentVolumeFormProvider()(regime)(messages)
+  val form     = new AdjustmentVolumeFormProvider()()(messages)
 
   ".volumes" - {
     "must bind valid data" in {
@@ -48,9 +47,9 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq())
       )
     }
 
@@ -59,9 +58,9 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
         "volumes.totalLitresVolume" -> "",
         "volumes.pureAlcoholVolume" -> ""
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq())
       )
     }
 
@@ -70,9 +69,9 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
         "volumes.totalLitresVolume" -> "1.111",
         "volumes.pureAlcoholVolume" -> "1.11234"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.decimalPlaces.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", s"adjustmentVolume.error.decimalPlaces.pureAlcoholVolume", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.decimalPlaces.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", s"adjustmentVolume.error.decimalPlaces.pureAlcoholVolume", Seq())
       )
     }
 
@@ -81,9 +80,9 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
         "volumes.totalLitresVolume" -> "invalid",
         "volumes.pureAlcoholVolume" -> "invalid"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.invalid.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.invalid.pureAlcoholVolume", List(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.invalid.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.invalid.pureAlcoholVolume", Seq())
       )
     }
 
@@ -92,9 +91,9 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
         "volumes.totalLitresVolume" -> "0",
         "volumes.pureAlcoholVolume" -> "0"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.minimumValue.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.minimumValue.pureAlcoholVolume", List(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.minimumValue.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.minimumValue.pureAlcoholVolume", Seq())
       )
     }
 
@@ -103,9 +102,9 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
         "volumes.totalLitresVolume" -> "100000000000",
         "volumes.pureAlcoholVolume" -> "100000000000"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.maximumValue.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.maximumValue.pureAlcoholVolume", List(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.maximumValue.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.maximumValue.pureAlcoholVolume", Seq())
       )
     }
 
@@ -114,8 +113,8 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
         "volumes.totalLitresVolume" -> "1",
         "volumes.pureAlcoholVolume" -> "2"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", List(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", Seq())
       )
     }
   }
