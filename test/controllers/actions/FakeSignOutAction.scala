@@ -16,19 +16,18 @@
 
 package controllers.actions
 
-import models.requests.SignedInRequest
+import models.requests.RequestWithOptAppaId
 import play.api.mvc._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-case class FakeIsSignedIn(signedIn: Boolean)
+case class FakeAppaId(appaId: Option[String])
 
-class FakeCheckSignedInAction @Inject() (bodyParsers: PlayBodyParsers, fakeIsSignedIn: FakeIsSignedIn)
-    extends CheckSignedInAction {
+class FakeSignOutAction @Inject() (bodyParsers: PlayBodyParsers, fakeAppaId: FakeAppaId) extends SignOutAction {
 
-  override def invokeBlock[A](request: Request[A], block: SignedInRequest[A] => Future[Result]): Future[Result] =
-    block(SignedInRequest(request, fakeIsSignedIn.signedIn))
+  override def invokeBlock[A](request: Request[A], block: RequestWithOptAppaId[A] => Future[Result]): Future[Result] =
+    block(RequestWithOptAppaId(request, fakeAppaId.appaId))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default
