@@ -16,7 +16,7 @@
 
 package viewmodels.declareDuty
 
-import models.{RateBand, RateType}
+import models.{AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -31,14 +31,14 @@ case class TaxBandsViewModel(
 )
 
 object TaxBandsViewModel {
-  def apply(rateBands: Seq[RateBand])(implicit messages: Messages): TaxBandsViewModel = {
+  def apply(rateBands: Seq[RateBand], regime: AlcoholRegime)(implicit messages: Messages): TaxBandsViewModel = {
     val rateBandsByType = rateBands
       .groupBy(_.rateType)
       .view
       .mapValues(rateBands =>
         rateBands.map(rateBand =>
           CheckboxGroupedItemViewModel(
-            content = Text(rateBandContent(rateBand)),
+            content = Text(rateBandContent(rateBand, Some(regime))),
             fieldId = "rateBand",
             value = rateBand.taxTypeCode
           )

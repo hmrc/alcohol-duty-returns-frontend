@@ -66,7 +66,7 @@ object WhatDoYouNeedToDeclareSummary {
           "<ul>" +
             rateBands.toSeq
               .sortBy(_.taxTypeCode)
-              .map(answer => s"<li>${rateBandRecap(answer)}</li>")
+              .map(answer => s"<li>${rateBandRecap(answer, Some(regime))}</li>")
               .mkString("")
             + "</ul>"
         )

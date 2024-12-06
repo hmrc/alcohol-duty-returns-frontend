@@ -41,7 +41,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
   val formProvider = new AdjustmentVolumeFormProvider()
   val regime       = Beer
   val messages     = mock[Messages]
-  val form         = formProvider(regime)(messages)
+  val form         = formProvider()(messages)
   def onwardRoute  = Call("GET", "/foo")
 
   val validTotalLitres = BigDecimal(10.23)
@@ -272,7 +272,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val form    = formProvider(regime)(getMessages(app))
+        val form    = formProvider()(getMessages(app))
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
             .withFormUrlEncodedBody(

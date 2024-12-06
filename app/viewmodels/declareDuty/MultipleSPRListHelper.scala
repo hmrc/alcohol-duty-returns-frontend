@@ -93,7 +93,7 @@ object MultipleSPRListHelper {
     sprList.zipWithIndex.map { case (sprEntry, index) =>
       TableRowViewModel(
         cells = Seq(
-          TableRow(Text(rateBandRecap(sprEntry.rateBand))),
+          TableRow(Text(rateBandRecap(sprEntry.rateBand, Some(regime)))),
           TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres)), format = Some(Format.numeric)),
           TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol)), format = Some(Format.numeric)),
           TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)), format = Some(Format.numeric))

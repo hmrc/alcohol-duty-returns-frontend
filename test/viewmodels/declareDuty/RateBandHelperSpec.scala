@@ -19,11 +19,11 @@ package viewmodels.declareDuty
 import base.SpecBase
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
+import models.AlcoholRegime.{Cider, OtherFermentedProduct}
 import models.RateType.{Core, DraughtRelief}
 import models.{ABVRange, AlcoholByVolume, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import org.scalacheck.Gen
 import play.api.i18n.Messages
-import viewmodels.declareDuty.RateBandHelper
 
 class RateBandHelperSpec extends SpecBase {
   val application                 = applicationBuilder().build()
@@ -33,249 +33,213 @@ class RateBandHelperSpec extends SpecBase {
 
     "should return the correct message when choosing bands to report" - {
 
-      "for a single interval" in new SetUp {
+      "for a single interval" - {
+        val lowerLimit = BigDecimal(1)
+        val upperLimit = BigDecimal(10)
 
-        val lowerLimit = 1
-        val upperLimit = 10
+        "without a known regime" in new SetUp {
+          val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateTypeStandard)
 
-        val rateBand = RateBand(
-          taxType,
-          description,
-          rateTypeStandard,
-          None,
-          Set(
-            RangeDetailsByRegime(
-              regime,
-              NonEmptySeq.one(
-                ABVRange(
-                  label,
-                  AlcoholByVolume(lowerLimit),
-                  AlcoholByVolume(upperLimit)
-                )
-              )
-            )
+          val result = RateBandHelper.rateBandContent(rateBand, None)
+
+          result mustEqual messages.messages(
+            "return.journey.abv.single.interval",
+            alcoholLabel.capitalize,
+            lowerLimit,
+            upperLimit,
+            taxType
           )
-        )
+        }
 
-        val result = RateBandHelper.rateBandContent(rateBand)
+        "with a known regime" - {
+          "and matches that of the rate band interval" in new SetUp {
+            val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateTypeStandard)
 
-        result mustEqual messages.messages(
-          "return.journey.abv.single.interval",
-          alcoholLabel.capitalize,
-          lowerLimit,
-          upperLimit,
-          taxType
-        )
+            val result = RateBandHelper.rateBandContent(rateBand, Some(regime))
 
-      }
-
-      "for multiple intervals" in new SetUp {
-
-        val lowerLimit1 = 1
-        val upperLimit1 = 10
-        val lowerLimit2 = 11
-        val upperLimit2 = 20
-
-        val rateBand = RateBand(
-          taxType,
-          description,
-          rateTypeStandard,
-          None,
-          Set(
-            RangeDetailsByRegime(
-              regime,
-              NonEmptySeq.fromSeqUnsafe(
-                Seq(
-                  ABVRange(
-                    label,
-                    AlcoholByVolume(lowerLimit1),
-                    AlcoholByVolume(upperLimit1)
-                  ),
-                  ABVRange(
-                    secondaryLabel,
-                    AlcoholByVolume(lowerLimit2),
-                    AlcoholByVolume(upperLimit2)
-                  )
-                )
-              )
-            )
-          )
-        )
-
-        val result = RateBandHelper.rateBandContent(rateBand)
-
-        result mustEqual messages.messages(
-          "return.journey.abv.multi.interval",
-          alcoholLabel.capitalize,
-          lowerLimit1,
-          upperLimit1,
-          secondaryAlcoholLabel,
-          lowerLimit2,
-          upperLimit2,
-          taxType
-        )
-      }
-
-      "for interval with MAX value" in new SetUp {
-
-        val lowerLimit = 1
-
-        val rateBand = RateBand(
-          taxType,
-          description,
-          rateTypeStandard,
-          None,
-          Set(
-            RangeDetailsByRegime(
-              regime,
-              NonEmptySeq.one(
-                ABVRange(
-                  label,
-                  AlcoholByVolume(lowerLimit),
-                  AlcoholByVolume.MAX
-                )
-              )
-            )
-          )
-        )
-
-        val result = RateBandHelper.rateBandContent(rateBand)
-
-        result mustEqual messages.messages(
-          "return.journey.abv.interval.exceeding.max",
-          alcoholLabel.capitalize,
-          lowerLimit,
-          taxType
-        )
-      }
-    }
-
-    "should return the correct message when creating labels for confirmation lists and tables to report" - {
-
-      RateType.values.foreach { rateType =>
-        s"for a single interval for rate type: $rateType" in new SetUp {
-          val lowerLimit = 1
-          val upperLimit = 10
-
-          val rateBand = RateBand(
-            taxType,
-            description,
-            rateType,
-            None,
-            Set(
-              RangeDetailsByRegime(
-                regime,
-                NonEmptySeq.one(
-                  ABVRange(
-                    label,
-                    AlcoholByVolume(lowerLimit),
-                    AlcoholByVolume(upperLimit)
-                  )
-                )
-              )
-            )
-          )
-
-          val result = RateBandHelper.rateBandRecap(rateBand)
-
-          result mustEqual messages
-            .messages(
-              s"return.journey.abv.recap.single.interval.$rateType",
-              alcoholLabel,
+            result mustEqual messages.messages(
+              "return.journey.abv.single.interval",
+              alcoholLabel.capitalize,
               lowerLimit,
               upperLimit,
               taxType
             )
-            .capitalize
+          }
+
+          "and doesn't match that of the rate band interval" in new SetUp {
+            val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateTypeStandard)
+
+            an[IllegalArgumentException] must be thrownBy RateBandHelper
+              .rateBandContent(rateBand, Some(anotherRegime))
+          }
         }
 
-        s"for multiple intervals for rate type: $rateType" in new SetUp {
-          val lowerLimit1 = 1
-          val upperLimit1 = 10
-          val lowerLimit2 = 11
-          val upperLimit2 = 20
+        "for interval with MAX value" in new SetUp {
+          val rateBand = singleIntervalRateBand(lowerLimit, AlcoholByVolume.MAX.value.toInt, rateTypeStandard)
 
-          val rateBand = RateBand(
-            taxType,
-            description,
-            rateType,
-            None,
-            Set(
-              RangeDetailsByRegime(
-                regime,
-                NonEmptySeq.fromSeqUnsafe(
-                  Seq(
-                    ABVRange(
-                      label,
-                      AlcoholByVolume(lowerLimit1),
-                      AlcoholByVolume(upperLimit1)
-                    ),
-                    ABVRange(
-                      secondaryLabel,
-                      AlcoholByVolume(lowerLimit2),
-                      AlcoholByVolume(upperLimit2)
-                    )
-                  )
-                )
-              )
-            )
+          val result = RateBandHelper.rateBandContent(rateBand, None)
+
+          result mustEqual messages.messages(
+            "return.journey.abv.interval.exceeding.max",
+            alcoholLabel.capitalize,
+            lowerLimit,
+            taxType
           )
+        }
+      }
 
-          val result = RateBandHelper.rateBandRecap(rateBand)
+      "for multiple intervals" - {
+        val lowerLimit1 = BigDecimal(1)
+        val upperLimit1 = BigDecimal(10)
+        val lowerLimit2 = BigDecimal(11)
+        val upperLimit2 = BigDecimal(20)
 
-          result mustEqual messages
-            .messages(
-              s"return.journey.abv.recap.multi.interval.$rateType",
-              alcoholLabel,
-              lowerLimit1,
-              upperLimit1,
-              secondaryAlcoholLabel,
-              lowerLimit2,
-              upperLimit2,
-              taxType
-            )
-            .capitalize
+        "without a known regime" in new SetUp {
+          val rateBand = multipleIntervalRateBand(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateTypeStandard)
+
+          val result = RateBandHelper.rateBandContent(rateBand, None)
+
+          result mustEqual messages.messages(
+            "return.journey.abv.multi.interval",
+            alcoholLabel.capitalize,
+            lowerLimit1,
+            upperLimit1,
+            secondaryAlcoholLabel,
+            lowerLimit2,
+            upperLimit2,
+            taxType
+          )
         }
 
-        s"for interval with MAX value for rate type: $rateType" in new SetUp {
-          val lowerLimit = 1
+        "with a known regime to select a single range from two regimes" in new SetUp {
+          val rateBand =
+            multipleIntervalRateBandTwoRegimes(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateTypeStandard)
 
-          val rateBand = RateBand(
-            taxType,
-            description,
-            rateType,
-            None,
-            Set(
-              RangeDetailsByRegime(
-                regime,
-                NonEmptySeq.one(
-                  ABVRange(
-                    label,
-                    AlcoholByVolume(lowerLimit),
-                    AlcoholByVolume.MAX
-                  )
-                )
-              )
-            )
+          val result = RateBandHelper.rateBandContent(rateBand, Some(regime))
+
+          result mustEqual messages.messages(
+            "return.journey.abv.single.interval",
+            alcoholLabel.capitalize,
+            lowerLimit1,
+            upperLimit1,
+            taxType
           )
+        }
+      }
+    }
 
-          val result = RateBandHelper.rateBandRecap(rateBand)
+    "should return the correct message when creating labels for confirmation lists and tables to report" - {
+      RateType.values.foreach { rateType =>
+        s"for a single interval for rate type: $rateType" - {
+          val lowerLimit = BigDecimal(1)
+          val upperLimit = BigDecimal(10)
 
-          result mustEqual messages
-            .messages(
-              s"return.journey.abv.recap.interval.exceeding.max.$rateType",
-              alcoholLabel,
-              lowerLimit,
-              taxType
-            )
-            .capitalize
+          "without a known regime" in new SetUp {
+            val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateType)
+
+            val result = RateBandHelper.rateBandRecap(rateBand, None)
+
+            result mustEqual messages
+              .messages(
+                s"return.journey.abv.recap.single.interval.$rateType",
+                alcoholLabel,
+                lowerLimit,
+                upperLimit,
+                taxType
+              )
+              .capitalize
+          }
+
+          "with a known regime" - {
+            "and matches that of the rate band interval" in new SetUp {
+              val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateType)
+
+              val result = RateBandHelper.rateBandRecap(rateBand, Some(regime))
+
+              result mustEqual messages
+                .messages(
+                  s"return.journey.abv.recap.single.interval.$rateType",
+                  alcoholLabel,
+                  lowerLimit,
+                  upperLimit,
+                  taxType
+                )
+                .capitalize
+            }
+
+            "and doesn't match that of the rate band interval" in new SetUp {
+              val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateType)
+
+              an[IllegalArgumentException] must be thrownBy RateBandHelper
+                .rateBandRecap(rateBand, Some(anotherRegime))
+            }
+
+            "for interval with MAX value" in new SetUp {
+              val rateBand = singleIntervalRateBand(lowerLimit, AlcoholByVolume.MAX.value.toInt, rateType)
+
+              val result = RateBandHelper.rateBandRecap(rateBand, None)
+
+              result mustEqual messages
+                .messages(
+                  s"return.journey.abv.recap.interval.exceeding.max.$rateType",
+                  alcoholLabel,
+                  lowerLimit,
+                  taxType
+                )
+                .capitalize
+            }
+          }
+        }
+
+        s"for multiple intervals for rate type: $rateType" - {
+          val lowerLimit1 = BigDecimal(1)
+          val upperLimit1 = BigDecimal(10)
+          val lowerLimit2 = BigDecimal(11)
+          val upperLimit2 = BigDecimal(20)
+
+          "without a known regime" in new SetUp {
+            val rateBand = multipleIntervalRateBand(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateType)
+
+            val result = RateBandHelper.rateBandRecap(rateBand, None)
+
+            result mustEqual messages
+              .messages(
+                s"return.journey.abv.recap.multi.interval.$rateType",
+                alcoholLabel,
+                lowerLimit1,
+                upperLimit1,
+                secondaryAlcoholLabel,
+                lowerLimit2,
+                upperLimit2,
+                taxType
+              )
+              .capitalize
+          }
+
+          "with a known regime to select a single range from two regimes" in new SetUp {
+            val rateBand =
+              multipleIntervalRateBandTwoRegimes(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateType)
+
+            val result = RateBandHelper.rateBandRecap(rateBand, Some(regime))
+
+            result mustEqual messages
+              .messages(
+                s"return.journey.abv.recap.single.interval.$rateType",
+                alcoholLabel,
+                lowerLimit1,
+                upperLimit1,
+                taxType
+              )
+              .capitalize
+          }
         }
       }
     }
   }
 
   class SetUp extends ModelGenerators {
-    val regime                = regimeGen.sample.value
+    val regime                = Cider
+    val anotherRegime         = OtherFermentedProduct
     val taxType               = "001"
     val description           = "test"
     val label                 = AlcoholType.Cider
@@ -284,5 +248,95 @@ class RateBandHelperSpec extends SpecBase {
     val secondaryAlcoholLabel = messages(s"return.journey.abv.interval.label.$secondaryLabel")
 
     val rateTypeStandard = Gen.oneOf(Core, DraughtRelief).sample.value
+
+    def singleIntervalRateBand(lowerLimit: BigDecimal, upperLimit: BigDecimal, rateType: RateType) = RateBand(
+      taxType,
+      description,
+      rateType,
+      None,
+      Set(
+        RangeDetailsByRegime(
+          regime,
+          NonEmptySeq.one(
+            ABVRange(
+              label,
+              AlcoholByVolume(lowerLimit),
+              AlcoholByVolume(upperLimit)
+            )
+          )
+        )
+      )
+    )
+
+    def multipleIntervalRateBand(
+      lowerLimit1: BigDecimal,
+      upperLimit1: BigDecimal,
+      lowerLimit2: BigDecimal,
+      upperLimit2: BigDecimal,
+      rateType: RateType
+    ) = RateBand(
+      taxType,
+      description,
+      rateType,
+      None,
+      Set(
+        RangeDetailsByRegime(
+          regime,
+          NonEmptySeq.fromSeqUnsafe(
+            Seq(
+              ABVRange(
+                label,
+                AlcoholByVolume(lowerLimit1),
+                AlcoholByVolume(upperLimit1)
+              ),
+              ABVRange(
+                secondaryLabel,
+                AlcoholByVolume(lowerLimit2),
+                AlcoholByVolume(upperLimit2)
+              )
+            )
+          )
+        )
+      )
+    )
+
+    def multipleIntervalRateBandTwoRegimes(
+      lowerLimit1: BigDecimal,
+      upperLimit1: BigDecimal,
+      lowerLimit2: BigDecimal,
+      upperLimit2: BigDecimal,
+      rateType: RateType
+    ) = RateBand(
+      taxType,
+      description,
+      rateType,
+      None,
+      Set(
+        RangeDetailsByRegime(
+          regime,
+          NonEmptySeq.fromSeqUnsafe(
+            Seq(
+              ABVRange(
+                label,
+                AlcoholByVolume(lowerLimit1),
+                AlcoholByVolume(upperLimit1)
+              )
+            )
+          )
+        ),
+        RangeDetailsByRegime(
+          anotherRegime,
+          NonEmptySeq.fromSeqUnsafe(
+            Seq(
+              ABVRange(
+                secondaryLabel,
+                AlcoholByVolume(lowerLimit2),
+                AlcoholByVolume(upperLimit2)
+              )
+            )
+          )
+        )
+      )
+    )
   }
 }
