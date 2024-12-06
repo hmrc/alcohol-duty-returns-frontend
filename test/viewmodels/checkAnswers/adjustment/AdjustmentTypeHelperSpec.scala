@@ -41,7 +41,7 @@ class AdjustmentTypeHelperSpec extends SpecBase {
         val result         = helper.updateIfSingleRegimeAndSpoilt(userAnswers, Spoilt, clock)
         val updatedAnswers = result.get
         val updatedEntry   = updatedAnswers.get(CurrentAdjustmentEntryPage).value
-        updatedEntry.spoiltRegime mustBe Some(models.AlcoholRegime.Beer)
+        updatedEntry.spoiltRegime mustBe Some(Beer)
         updatedEntry.rateBand mustBe Some(spoiltRateBand)
         updatedEntry.period mustBe Some(YearMonth.now(clock).minusMonths(1))
       }
