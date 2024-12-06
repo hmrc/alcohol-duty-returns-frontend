@@ -19,7 +19,7 @@ package controllers.auth
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
 import connectors.UserAnswersConnector
-import controllers.actions.IdentifyWithEnrolmentAction
+import controllers.actions.{IdentifyWithEnrolmentAction, SignOutAction}
 import models.ReturnId
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -33,13 +33,18 @@ class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   config: FrontendAppConfig,
   userAnswersConnector: UserAnswersConnector,
-  identify: IdentifyWithEnrolmentAction
+  signOutAction: SignOutAction
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with Logging
     with I18nSupport {
 
-  def signOut(): Action[AnyContent] = identify.async { implicit request =>
+  def signOut(): Action[AnyContent] = signOutAction.async { implicit request =>
+    // NOTE to self, could match over this twice, but do we need appaId if it's in the request anyway? Answer: NO!
+    request.appaId match {
+      case Some(value) => ???
+      case None        => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
+    }
     request.session.get(periodKeySessionKey) match {
       case Some(periodKey) =>
         userAnswersConnector
