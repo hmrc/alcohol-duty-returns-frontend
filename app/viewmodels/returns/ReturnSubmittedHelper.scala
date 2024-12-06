@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
-import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
+import viewmodels.{DateTimeHelper, ReturnPeriodViewModelFactory}
 
 case class ReturnSubmittedViewModel(
   returnDetails: AdrReturnCreatedDetails,

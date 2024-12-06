@@ -19,6 +19,7 @@ package common
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.RateType.Core
 import models.TransactionType.{LPI, RPI, Return}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.declareDuty._
@@ -1180,5 +1181,18 @@ trait TestData extends ModelGenerators {
     periodKey = periodKey,
     businessTaxAccountUrl = "http://localhost:9020/business-account/",
     warningText = testWarningMessage
+  )
+
+  val spoiltRateBand = RateBand(
+    "123",
+    "Beer",
+    Core,
+    Some(BigDecimal(0.01)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(0), AlcoholByVolume(100)))
+      )
+    )
   )
 }
