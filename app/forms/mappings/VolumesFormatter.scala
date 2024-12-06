@@ -95,13 +95,13 @@ class VolumesFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
+    val taxTypeResult     = validateField("taxType", key, data, stringFormatter("taxType"))
     val totalLitresResult = validateField("totalLitres", key, data, volumeFormatter("totalLitres"))
     val pureAlcoholResult =
       validateField("pureAlcohol", key, data, pureAlcoholBigDecimalFormatter("pureAlcohol"))
-    val taxTypeResult     = validateField("taxType", key, data, stringFormatter("taxType"))
 
     val allErrors =
-      totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ taxTypeResult.left.toSeq.flatten
+      taxTypeResult.left.toSeq.flatten ++ totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
     } else {

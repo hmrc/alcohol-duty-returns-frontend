@@ -114,7 +114,7 @@ class VolumesAndRateFormatter(
     val pureAlcoholResult = validateField("pureAlcohol", key, data, pureAlcoholVolumeFormatter("pureAlcohol"))
     val dutyRateResult    = validateField("dutyRate", key, data, dutyRateFormatter("dutyRate"))
     val allErrors         =
-      totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ dutyRateResult.left.toSeq.flatten ++ taxTypeResult.left.toSeq.flatten
+      taxTypeResult.left.toSeq.flatten ++ totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ dutyRateResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
     } else {
