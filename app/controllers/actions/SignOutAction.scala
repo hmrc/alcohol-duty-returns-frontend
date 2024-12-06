@@ -19,22 +19,24 @@ package controllers.actions
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.routes
-import models.requests.{RequestForSignOut, RequestWithAppaId}
+import models.requests.RequestWithOptAppaId
 import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.CredentialStrength.strong
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
-import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait SignOutAction extends ActionBuilder[RequestWithAppaId, AnyContent] with ActionFunction[Request, RequestWithAppaId]
+trait SignOutAction
+    extends ActionBuilder[RequestWithOptAppaId, AnyContent]
+    with ActionFunction[Request, RequestWithOptAppaId]
 
 class SignOutActionImpl @Inject() (
   override val authConnector: AuthConnector,
@@ -52,17 +54,17 @@ class SignOutActionImpl @Inject() (
       Organisation and
       ConfidenceLevel.L50
 
-  override def invokeBlock[A](request: Request[A], block: RequestWithAppaId[A] => Future[Result]): Future[Result] = {
+  override def invokeBlock[A](request: Request[A], block: RequestWithOptAppaId[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorised(predicate).retrieve(allEnrolments) { enrolments =>
       val appaId = getAppaId(enrolments)
-      block(RequestWithAppaId(request, Some(appaId)))
+      block(RequestWithOptAppaId(request, Some(appaId)))
     } recoverWith {
       case e: AuthorisationException =>
-        logger.debug(s"Got AuthorisationException:", e)
-        block(RequestWithAppaId(request, None))
+        logger.debug(s"Returning a request with AppaId set to None since there was AuthorisationException:", e)
+        block(RequestWithOptAppaId(request, None))
       case e: UnauthorizedException  =>
         logger.debug(s"Got UnauthorizedException:", e)
         Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))

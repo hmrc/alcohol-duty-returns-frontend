@@ -19,7 +19,7 @@ package controllers.auth
 import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
 import connectors.UserAnswersConnector
-import controllers.actions.{IdentifyWithEnrolmentAction, SignOutAction}
+import controllers.actions.SignOutAction
 import models.ReturnId
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -40,20 +40,24 @@ class AuthController @Inject() (
     with I18nSupport {
 
   def signOut(): Action[AnyContent] = signOutAction.async { implicit request =>
-    // NOTE to self, could match over this twice, but do we need appaId if it's in the request anyway? Answer: NO!
     request.appaId match {
-      case Some(value) => ???
-      case None        => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
-    }
-    request.session.get(periodKeySessionKey) match {
-      case Some(periodKey) =>
-        userAnswersConnector
-          .releaseLock(ReturnId(request.appaId, periodKey))
-          .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
-      case None            =>
-        logger.info("Period key not found during sign out")
+      case Some(appaId) =>
+        val a = request.session.get(periodKeySessionKey)
+        println("PPPPPPP" + a)
+        a match {
+          case Some(periodKey) =>
+            println("AAAAAAAAAAA")
+            userAnswersConnector
+              .releaseLock(ReturnId(appaId, periodKey))
+              .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+          case None            =>
+            println("BBBBBBBBBBBB")
+            logger.info("Period key not found during sign out")
+            Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+        }
+      case None         =>
+        println("CCCCCCCCC")
         Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
     }
-
   }
 }
