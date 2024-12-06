@@ -132,5 +132,33 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         FormError("volumes_0_pureAlcohol", "return.journey.error.lessThanExpected", List(""))
       )
     }
+
+    "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum" in {
+      val data = Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "99999999999",
+        "volumes[0].pureAlcohol" -> ""
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_0_totalLitres", List("return.journey.error.maximumValue.totalLitres"), List("")),
+        FormError("volumes_0_pureAlcohol", List("return.journey.error.noValue.pureAlcohol"), List(""))
+      )
+    }
+
+    "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
+      val data = Map(
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "111111111111.234",
+        "volumes[0].pureAlcohol" -> "-2.45356"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError(
+          "volumes_0_totalLitres",
+          List("return.journey.error.tooManyDecimalPlaces.totalLitres"),
+          List("")
+        ),
+        FormError("volumes_0_pureAlcohol", List("return.journey.error.tooManyDecimalPlaces.pureAlcohol"), List(""))
+      )
+    }
   }
 }

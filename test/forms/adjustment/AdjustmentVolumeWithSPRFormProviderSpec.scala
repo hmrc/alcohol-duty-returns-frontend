@@ -145,6 +145,40 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", List(""))
       )
     }
+
+    "fail to bind when pure alcohol volume is empty, total litres value exceeds maximum and sprDutyRate is invalid" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "9999999999999999",
+        "volumes.pureAlcoholVolume" -> "",
+        "volumes.sprDutyRate"       -> "abc"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", List("adjustmentVolume.error.maximumValue.totalLitresVolume"), List("")),
+        FormError("volumes_pureAlcoholVolume", List("adjustmentVolume.error.noValue.pureAlcoholVolume"), List("")),
+        FormError("volumes_sprDutyRate", List("adjustmentVolume.error.invalid.sprDutyRate"), List(""))
+      )
+    }
+
+    "fail to bind with decimal places error when pure alcohol, total litres and sprDutyRate have more than expected decimals and are also out of range" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "999999999999.9999",
+        "volumes.pureAlcoholVolume" -> "-12323.234423",
+        "volumes.sprDutyRate"       -> "99999999999.856"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError(
+          "volumes_totalLitresVolume",
+          List("adjustmentVolume.error.decimalPlaces.totalLitresVolume"),
+          List("")
+        ),
+        FormError(
+          "volumes_pureAlcoholVolume",
+          List("adjustmentVolume.error.decimalPlaces.pureAlcoholVolume"),
+          List("")
+        ),
+        FormError("volumes_sprDutyRate", List("adjustmentVolume.error.decimalPlaces.sprDutyRate"), List(""))
+      )
+    }
   }
 
 }

@@ -521,7 +521,6 @@ class MappingsSpec extends SpecBase with Mappings {
   "adjustmentVolumes" - {
     val mapping = adjustmentVolumes(
       "invalid",
-      "allRequired",
       "required",
       "decimalPlaces",
       "minimumValue",
@@ -949,7 +948,6 @@ class MappingsSpec extends SpecBase with Mappings {
   "Volumes" - {
     val mapping = volumes(
       "invalid",
-      "allRequired",
       "required",
       "decimalPlaces",
       "minimumValue",

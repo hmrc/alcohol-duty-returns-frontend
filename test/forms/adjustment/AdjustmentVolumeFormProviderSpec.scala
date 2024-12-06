@@ -118,6 +118,32 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
         FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", List(""))
       )
     }
+
+    "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "9999999999999999",
+        "volumes.pureAlcoholVolume" -> ""
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumes_totalLitresVolume", List("adjustmentVolume.error.maximumValue.totalLitresVolume"), List("")),
+        FormError("volumes_pureAlcoholVolume", List("adjustmentVolume.error.noValue.pureAlcoholVolume"), List(""))
+      )
+    }
+
+    "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "999999999999.9999",
+        "volumes.pureAlcoholVolume" -> "-12323.234423"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError(
+          "volumes_totalLitresVolume",
+          List("adjustmentVolume.error.decimalPlaces.totalLitresVolume"),
+          List("")
+        ),
+        FormError("volumes_pureAlcoholVolume", List("adjustmentVolume.error.decimalPlaces.pureAlcoholVolume"), List(""))
+      )
+    }
   }
 
 }
