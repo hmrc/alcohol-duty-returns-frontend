@@ -17,6 +17,7 @@
 package controllers.auth
 
 import config.FrontendAppConfig
+import controllers.actions.CheckSignedInAction
 import forms.auth.DoYouHaveAnAppaIdFormProvider
 
 import javax.inject.Inject
@@ -27,6 +28,7 @@ import views.html.auth.DoYouHaveAnAppaIdView
 
 class DoYouHaveAnAppaIdController @Inject() (
   override val messagesApi: MessagesApi,
+  checkSignedIn: CheckSignedInAction,
   appConfig: FrontendAppConfig,
   formProvider: DoYouHaveAnAppaIdFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -39,16 +41,17 @@ class DoYouHaveAnAppaIdController @Inject() (
   private def wasReferredFromBTA(request: WrappedRequest[_]) =
     request.headers.get("Referer").exists(_.contains(appConfig.fromBusinessAccountPath))
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+  def onPageLoad: Action[AnyContent] = checkSignedIn { implicit request =>
     val referredFromBTA = wasReferredFromBTA(request)
-    Ok(view(form, referredFromBTA))
+    val signedIn        = request.signedIn
+    Ok(view(form, referredFromBTA, signedIn))
   }
 
-  def onSubmit(wasReferredFromBTA: Boolean): Action[AnyContent] = Action { implicit request =>
+  def onSubmit(wasReferredFromBTA: Boolean): Action[AnyContent] = checkSignedIn { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => BadRequest(view(formWithErrors, wasReferredFromBTA)),
+        formWithErrors => BadRequest(view(formWithErrors, wasReferredFromBTA, request.signedIn)),
         if (_) {
           Redirect(appConfig.requestAccessUrl)
         } else {
