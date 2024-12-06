@@ -31,6 +31,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.AdjustmentTypeHelper
 import views.html.adjustment.AdjustmentTypeView
 
+import java.time.Clock
 import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentTypeController @Inject() (
@@ -43,7 +44,8 @@ class AdjustmentTypeController @Inject() (
   formProvider: AdjustmentTypeFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: AdjustmentTypeView,
-  helper: AdjustmentTypeHelper
+  helper: AdjustmentTypeHelper,
+  clock: Clock
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -70,16 +72,16 @@ class AdjustmentTypeController @Inject() (
             val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
             val (updatedAdjustment, hasChanged) = updateAdjustmentType(adjustment, value)
             for {
-              updatedAnswers                         <-
+              updatedAnswers                            <-
                 Future.fromTry(
                   request.userAnswers
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(adjustmentType = Some(value)))
                 )
-              singleRegimeAndSpoiltUpdatedUserAnswer <-
-                Future.fromTry(helper.checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(updatedAnswers, value))
-              _                                      <- userAnswersConnector.set(singleRegimeAndSpoiltUpdatedUserAnswer)
+              conditionalUpdateForSingleRegimeAndSpoilt <-
+                Future.fromTry(helper.updateIfSingleRegimeAndSpoilt(updatedAnswers, value, clock))
+              _                                         <- userAnswersConnector.set(conditionalUpdateForSingleRegimeAndSpoilt)
             } yield Redirect(
-              navigator.nextPage(AdjustmentTypePage, mode, singleRegimeAndSpoiltUpdatedUserAnswer, hasChanged)
+              navigator.nextPage(AdjustmentTypePage, mode, conditionalUpdateForSingleRegimeAndSpoilt, hasChanged)
             )
           }
         )

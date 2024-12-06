@@ -22,31 +22,31 @@ import models.adjustment.AdjustmentType.Spoilt
 import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.i18n.Messages
 
-import java.time.YearMonth
+import java.time.{Clock, YearMonth}
 import javax.inject.Inject
 import scala.util.Try
 
 class AdjustmentTypeHelper @Inject() (
   helper: AlcoholicProductTypeHelper
 ) {
-  def checkIfOneRegimeAndSpoiltAndUpdateUserAnswers(
+  def updateIfSingleRegimeAndSpoilt(
     userAnswer: UserAnswers,
-    adjustmentType: AdjustmentType
+    adjustmentType: AdjustmentType,
+    clock: Clock
   )(implicit messages: Messages): Try[UserAnswers] =
-    if (userAnswer.regimes.regimes.size == 1 && adjustmentType == Spoilt) {
-      val adjustment       = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
-      val rateBand         = helper.createRateBandFromRegime(userAnswer.regimes.regimes.head)
-      val currentYearMonth = YearMonth.now()
-      userAnswer.set(
-        CurrentAdjustmentEntryPage,
-        adjustment.copy(
-          spoiltRegime = userAnswer.regimes.regimes.headOption,
-          rateBand = Some(rateBand),
-          period = Some(currentYearMonth.minusMonths(1))
+    userAnswer.regimes.regimes.toList match {
+      case List(regime) if adjustmentType == Spoilt =>
+        val adjustment       = userAnswer.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
+        val rateBand         = helper.createRateBandFromRegime(regime)
+        val currentYearMonth = YearMonth.now(clock)
+        userAnswer.set(
+          CurrentAdjustmentEntryPage,
+          adjustment.copy(
+            spoiltRegime = Some(regime),
+            rateBand = Some(rateBand),
+            period = Some(currentYearMonth.minusMonths(1))
+          )
         )
-      )
-    } else {
-      Try(userAnswer)
+      case _                                        => Try(userAnswer)
     }
-
 }
