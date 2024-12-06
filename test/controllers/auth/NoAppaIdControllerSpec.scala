@@ -18,6 +18,8 @@ package controllers.auth
 
 import base.SpecBase
 import config.FrontendAppConfig
+import controllers.actions.FakeIsSignedIn
+import play.api.inject.bind
 import play.api.test.Helpers._
 import views.html.auth.NoAppaIdView
 
@@ -39,7 +41,24 @@ class NoAppaIdControllerSpec extends SpecBase {
           val result    = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(appConfig, fromBTA)(request, getMessages(application)).toString
+          contentAsString(result) mustEqual view(appConfig, fromBTA, true)(request, getMessages(application)).toString
+        }
+      }
+    }
+
+    Seq(true, false).foreach { signedIn =>
+      s"must return OK and the correct view for a GET when${if (signedIn) " not" else ""} signed in" in {
+        val application = applicationBuilder(signedIn = signedIn).build()
+
+        running(application) {
+          val request = FakeRequest(GET, noAppaIdRouteUrl(true))
+
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val view      = application.injector.instanceOf[NoAppaIdView]
+          val result    = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(appConfig, true, signedIn)(request, getMessages(application)).toString
         }
       }
     }

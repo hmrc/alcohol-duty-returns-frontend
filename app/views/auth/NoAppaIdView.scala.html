@@ -30,9 +30,9 @@
     paragraph: Paragraph
 )
 
-@(appConfig: FrontendAppConfig, wasReferredFromBTA: Boolean)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, wasReferredFromBTA: Boolean, signedIn: Boolean)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("noAppaId.title"))) {
+@layout(pageTitle = titleNoForm(messages("noAppaId.title")), timeout = signedIn, showSignOut = signedIn) {
     @formHelper(action = controllers.auth.routes.NoAppaIdController.onSubmit(wasReferredFromBTA), Symbol("autoComplete") -> "off") {
         @pageHeading(messages("noAppaId.heading"))
 

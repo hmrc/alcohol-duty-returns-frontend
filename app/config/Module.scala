@@ -29,6 +29,7 @@ class Module extends AbstractModule {
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
+    bind(classOf[CheckSignedInAction]).to(classOf[CheckSignedInActionImpl]).asEagerSingleton()
     bind(classOf[IdentifyWithEnrolmentAction]).to(classOf[IdentifyWithEnrolmentActionImpl]).asEagerSingleton()
     bind(classOf[IdentifyWithoutEnrolmentAction])
       .to(classOf[IdentifyWithoutEnrolmentActionImpl])

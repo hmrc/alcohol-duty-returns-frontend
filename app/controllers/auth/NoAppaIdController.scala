@@ -17,6 +17,7 @@
 package controllers.auth
 
 import config.FrontendAppConfig
+import controllers.actions.CheckSignedInAction
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -27,13 +28,16 @@ import javax.inject.Inject
 class NoAppaIdController @Inject() (
   appConfig: FrontendAppConfig,
   override val messagesApi: MessagesApi,
+  checkSignedIn: CheckSignedInAction,
   val controllerComponents: MessagesControllerComponents,
   view: NoAppaIdView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(wasReferredFromBTA: Boolean): Action[AnyContent] = Action { implicit request =>
-    Ok(view(appConfig, wasReferredFromBTA))
+  def onPageLoad(wasReferredFromBTA: Boolean): Action[AnyContent] = checkSignedIn { implicit request =>
+    val signedIn = request.signedIn
+
+    Ok(view(appConfig, wasReferredFromBTA, signedIn))
   }
 
   def onSubmit(wasReferredFromBTA: Boolean): Action[AnyContent] = Action { _ =>

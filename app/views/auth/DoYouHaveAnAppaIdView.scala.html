@@ -25,9 +25,9 @@
     sectionHeading: SectionHeading,
 )
 
-@(form: Form[_], wasReferredFromBTA: Boolean)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], wasReferredFromBTA: Boolean, signedIn: Boolean)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("doYouHaveAnAppaId.title"))) {
+@layout(pageTitle = title(form, messages("doYouHaveAnAppaId.title")), timeout = signedIn, showSignOut = signedIn) {
 
     @formHelper(action = controllers.auth.routes.DoYouHaveAnAppaIdController.onSubmit(wasReferredFromBTA), Symbol("autoComplete") -> "off") {
 

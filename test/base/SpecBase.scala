@@ -55,21 +55,26 @@ trait SpecBase
 
   val fakeIdentifierUserDetails = FakeIdentifierUserDetails(appaId, groupId, internalId)
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+  protected def applicationBuilder(
+    userAnswers: Option[UserAnswers] = None,
+    signedIn: Boolean = true
+  ): GuiceApplicationBuilder                                 =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[FakeIsSignedIn].toInstance(FakeIsSignedIn(signedIn)),
         bind[FakeIdentifierUserDetails].toInstance(fakeIdentifierUserDetails),
+        bind[CheckSignedInAction].to[FakeCheckSignedInAction],
         bind[IdentifyWithEnrolmentAction].to[FakeIdentifyWithEnrolmentAction],
         bind[IdentifyWithoutEnrolmentAction].to[FakeIdentifyWithoutEnrolmentAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[ServiceEntryCheckAction].to[FakeServiceEntryCheckAction]
       )
-  def FakeRequest()                                                                                  = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
-  def FakeRequest(verb: String, route: String)                                                       =
+  def FakeRequest()                                          = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
+  def FakeRequest(verb: String, route: String)               =
     play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
-  def FakeRequestWithoutSession()                                                                    = play.api.test.FakeRequest()
-  def FakeRequestWithoutSession(verb: String, route: String)                                         = play.api.test.FakeRequest(verb, route)
+  def FakeRequestWithoutSession()                            = play.api.test.FakeRequest()
+  def FakeRequestWithoutSession(verb: String, route: String) = play.api.test.FakeRequest(verb, route)
 
   def createDateTimeHelper(): DateTimeHelper =
     new DateTimeHelper(app.injector.instanceOf[LanguageUtils])
