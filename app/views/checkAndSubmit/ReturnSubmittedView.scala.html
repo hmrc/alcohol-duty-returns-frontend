@@ -72,7 +72,9 @@
 
         @govukWarningText(viewModel.warningText)
 
-        @subHeading(messages("returnSubmitted.direct.debit.h2"))
+        @govukButton(
+            ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
+        )
 
         @paragraph( content =
             HtmlContent(
@@ -83,11 +85,6 @@
                     href = controllers.payments.routes.StartDirectDebitController.initiateAndRedirect().url
         )))
 
-
-        @govukButton(
-            ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
-        )
-
         @paragraph( content =
             HtmlContent(
                 link(
@@ -96,7 +93,6 @@
                     href = viewModel.businessTaxAccountUrl
         )))
     }
-
 
     @if(viewModel.returnDetails.isAmountZero) {
         @govukPanel(Panel(
