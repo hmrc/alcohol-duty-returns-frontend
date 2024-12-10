@@ -39,7 +39,7 @@ import scala.concurrent.Future
 class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
   val formProvider = new AdjustmentVolumeWithSPRFormProvider()
   val regime       = Beer
-  val form         = formProvider()(getMessages(app))
+  val form         = formProvider()
   def onwardRoute  = Call("GET", "/foo")
 
   val validTotalLitres = BigDecimal(10.23)
@@ -281,7 +281,7 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val form    = formProvider()(getMessages(app))
+        val form    = formProvider()
         val request =
           FakeRequest(POST, adjustmentVolumeWithSPRRoute)
             .withFormUrlEncodedBody(

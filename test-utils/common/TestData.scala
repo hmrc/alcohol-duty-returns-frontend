@@ -19,12 +19,13 @@ package common
 import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
+import models.RateType.Core
 import models.TransactionType.{LPI, RPI, Return}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.declareDuty._
 import models.returns._
 import models._
-import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
+import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnCreatedDetails, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
 import org.scalacheck.Gen
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
@@ -32,7 +33,12 @@ import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.libs.json.Json
 import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
+import play.api.i18n.Messages
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
+import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
+import viewmodels.returns.ReturnSubmittedViewModel
 
 import java.time._
 
@@ -1145,4 +1151,48 @@ trait TestData extends ModelGenerators {
 
   val allVolumeAndRateByTaxType =
     Seq(volumeAndRateByTaxType1, volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
+
+  val testAdrReturnCreatedDetails = AdrReturnCreatedDetails(
+    processingDate = Instant.now(clock),
+    amount = BigDecimal(1),
+    chargeReference = Some("1234567890"),
+    paymentDueDate = Some(LocalDate.now(clock))
+  )
+
+  val testWarningMessage = WarningText(
+    iconFallbackText = Some("Warning"),
+    content =
+      Text("Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.")
+  )
+
+  def testReturnPeriodViewModel(dateTimeHelper: DateTimeHelper)(implicit messages: Messages): ReturnPeriodViewModel =
+    new ReturnPeriodViewModelFactory(dateTimeHelper).apply(
+      ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
+    )
+
+  def testReturnSubmittedViewModel(dateTimeHelper: DateTimeHelper)(implicit
+    messages: Messages
+  ): ReturnSubmittedViewModel = ReturnSubmittedViewModel(
+    returnDetails = testAdrReturnCreatedDetails,
+    periodStartDate = testReturnPeriodViewModel(dateTimeHelper).fromDate,
+    periodEndDate = testReturnPeriodViewModel(dateTimeHelper).toDate,
+    formattedProcessingDate = "27 August 2019",
+    formattedPaymentDueDate = "27 August 2020",
+    periodKey = periodKey,
+    businessTaxAccountUrl = "http://localhost:9020/business-account/",
+    warningText = testWarningMessage
+  )
+
+  val spoiltRateBand = RateBand(
+    "123",
+    "Beer",
+    Core,
+    Some(BigDecimal(0.01)),
+    Set(
+      RangeDetailsByRegime(
+        Beer,
+        NonEmptySeq.one(ABVRange(AlcoholType.Beer, AlcoholByVolume(0), AlcoholByVolume(100)))
+      )
+    )
+  )
 }

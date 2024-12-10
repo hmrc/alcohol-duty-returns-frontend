@@ -30,7 +30,6 @@ import connectors.UserAnswersConnector
 import models.AlcoholRegime.Beer
 import models.adjustment.{AdjustmentEntry, AdjustmentVolume}
 import models.adjustment.AdjustmentType.Underdeclaration
-import play.api.i18n.Messages
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentVolumeView
 
@@ -40,8 +39,7 @@ import scala.concurrent.Future
 class AdjustmentVolumeControllerSpec extends SpecBase {
   val formProvider = new AdjustmentVolumeFormProvider()
   val regime       = Beer
-  val messages     = mock[Messages]
-  val form         = formProvider()(messages)
+  val form         = formProvider()
   def onwardRoute  = Call("GET", "/foo")
 
   val validTotalLitres = BigDecimal(10.23)
@@ -272,7 +270,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val form    = formProvider()(getMessages(app))
+        val form    = formProvider()
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
             .withFormUrlEncodedBody(

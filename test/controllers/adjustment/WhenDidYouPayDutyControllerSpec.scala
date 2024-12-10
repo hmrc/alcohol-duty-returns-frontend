@@ -17,6 +17,7 @@
 package controllers.adjustment
 
 import base.SpecBase
+import config.FrontendAppConfig
 import forms.adjustment.WhenDidYouPayDutyFormProvider
 import models.NormalMode
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
@@ -69,6 +70,8 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers)).build()
 
       running(application) {
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
         val request = FakeRequest(GET, whenDidYouPayDutyRoute)
 
         val view = application.injector.instanceOf[WhenDidYouPayDutyView]
@@ -76,7 +79,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, adjustmentType)(
+        contentAsString(result) mustEqual view(form, NormalMode, adjustmentType, appConfig.exciseEnquiriesUrl)(
           request,
           getMessages(application)
         ).toString
@@ -88,6 +91,8 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
         val request = FakeRequest(GET, whenDidYouPayDutyRoute)
 
         val view = application.injector.instanceOf[WhenDidYouPayDutyView]
@@ -95,7 +100,12 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(period), NormalMode, adjustmentType)(
+        contentAsString(result) mustEqual view(
+          form.fill(period),
+          NormalMode,
+          adjustmentType,
+          appConfig.exciseEnquiriesUrl
+        )(
           request,
           getMessages(application)
         ).toString
@@ -103,7 +113,6 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -205,6 +214,8 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(validEmptyUserAnswers)).build()
 
       running(application) {
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
         val request =
           FakeRequest(POST, whenDidYouPayDutyRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
@@ -216,7 +227,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, adjustmentType)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, adjustmentType, appConfig.exciseEnquiriesUrl)(
           request,
           getMessages(application)
         ).toString

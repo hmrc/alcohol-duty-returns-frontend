@@ -21,12 +21,9 @@ import forms.behaviours.BigDecimalFieldBehaviours
 import generators.ModelGenerators
 import models.adjustment.AdjustmentVolume
 import play.api.data.FormError
-import play.api.i18n.Messages
 
 class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with ModelGenerators with SpecBase {
-
-  val messages = mock[Messages]
-  val form     = new AdjustmentVolumeFormProvider()()(messages)
+  val form = new AdjustmentVolumeFormProvider()()
 
   ".volumes" - {
     "must bind valid data" in {
@@ -117,6 +114,31 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
         FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", Seq())
       )
     }
-  }
 
+    "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "9999999999999999",
+        "volumes.pureAlcoholVolume" -> ""
+      )
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", Seq("adjustmentVolume.error.maximumValue.totalLitresVolume"), Seq()),
+        FormError("volumes_pureAlcoholVolume", Seq("adjustmentVolume.error.noValue.pureAlcoholVolume"), Seq())
+      )
+    }
+
+    "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "999999999999.9999",
+        "volumes.pureAlcoholVolume" -> "-12323.234423"
+      )
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError(
+          "volumes_totalLitresVolume",
+          Seq("adjustmentVolume.error.decimalPlaces.totalLitresVolume"),
+          Seq()
+        ),
+        FormError("volumes_pureAlcoholVolume", Seq("adjustmentVolume.error.decimalPlaces.pureAlcoholVolume"), Seq())
+      )
+    }
+  }
 }

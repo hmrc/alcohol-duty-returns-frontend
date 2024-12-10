@@ -14,10 +14,9 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, Link, SubHeading}
-@import java.time.{Instant, LocalDate}
-@import models.checkAndSubmit.AdrReturnCreatedDetails
+@import components.{Link, PageHeading, Paragraph, SectionHeading, SubHeading}
 @import viewmodels.Money
+@import viewmodels.returns.ReturnSubmittedViewModel
 
 @this(
         layout: templates.Layout,
@@ -28,13 +27,14 @@
         govukPanel : GovukPanel,
         paragraph: Paragraph,
         link: Link,
+        govukWarningText : GovukWarningText
 )
 
-@(returnDetails: AdrReturnCreatedDetails, periodStartDate: String, periodEndDate: String, formattedProcessingDate: String, formattedPaymentDueDate: String, periodKey: String, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
+@(viewModel: ReturnSubmittedViewModel)(implicit request: Request[_], messages: Messages)
 
 @posPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", returnDetails.chargeReference.get.value), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} ${messages(Money.format(returnDetails.amount))}", classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.get.value), classes = "")
+    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} ${messages(Money.format(viewModel.returnDetails.amount))}", classes = "")
 }
 
 @nilPanelContent = {
@@ -42,35 +42,39 @@
 }
 
 @negPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", returnDetails.chargeReference.get.value), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.dutyOwed")} ${messages(Money.format(returnDetails.amount))}", classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.get.value), classes = "")
+    @paragraph(s"${messages("returnSubmitted.panel.body.dutyOwed")} ${messages(Money.format(viewModel.returnDetails.amount))}", classes = "")
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 
 @layout(pageTitle = titleNoForm(messages("returnSubmitted.title")), showBackLink = false) {
 
-    @if(returnDetails.amount > 0) {
+    @if(viewModel.returnDetails.isAmountGreaterThanZero) {
         @govukPanel(Panel(
             title = Text((messages("returnSubmitted.heading"))),
             content = HtmlContent(posPanelContent)
         ))
 
-        @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
+        @paragraph(messages("returnSubmitted.p1", viewModel.formattedProcessingDate, viewModel.periodStartDate, viewModel.periodEndDate))
 
         @paragraph( content =
             HtmlContent(
                 link(
                     id = "view-return-link",
                     text = messages("returnSubmitted.viewReturnLink.text"),
-                    href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+                    href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
         @subHeading(messages("returnSubmitted.positive.h1"))
 
-        @paragraph(messages("returnSubmitted.positive.p1", formattedPaymentDueDate))
-        @paragraph(messages("returnSubmitted.positive.p2", formattedPaymentDueDate))
+        @paragraph(messages("returnSubmitted.positive.p1", viewModel.formattedPaymentDueDate))
+        @paragraph(messages("returnSubmitted.positive.p2", viewModel.formattedPaymentDueDate))
 
-        @subHeading(messages("returnSubmitted.direct.debit.h2"))
+        @govukWarningText(viewModel.warningText)
+
+        @govukButton(
+            ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
+        )
 
         @paragraph( content =
             HtmlContent(
@@ -81,35 +85,29 @@
                     href = controllers.payments.routes.StartDirectDebitController.initiateAndRedirect().url
         )))
 
-
-        @govukButton(
-            ButtonViewModel("continueButton", messages("site.payNow")).asLink(controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
-        )
-
         @paragraph( content =
             HtmlContent(
                 link(
                     id = "business-tax-account-link",
                     text = messages("site.returnToBusinessAccount"),
-                    href = businessTaxAccountUrl
+                    href = viewModel.businessTaxAccountUrl
         )))
     }
 
-
-    @if(returnDetails.amount == 0) {
+    @if(viewModel.returnDetails.isAmountZero) {
         @govukPanel(Panel(
             title = Text((messages("returnSubmitted.heading"))),
             content = HtmlContent(nilPanelContent)
         ))
 
-        @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
+        @paragraph(messages("returnSubmitted.p1", viewModel.formattedProcessingDate, viewModel.periodStartDate, viewModel.periodEndDate))
 
         @paragraph( content =
             HtmlContent(
                 link(
                     id = "view-return-link",
                     text = messages("returnSubmitted.viewReturnLink.text"),
-                    href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+                    href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
         @paragraph( content =
@@ -117,25 +115,25 @@
                 link(
                     id = "business-tax-account-link",
                     text = messages("site.returnToBusinessAccount"),
-                    href = businessTaxAccountUrl
+                    href = viewModel.businessTaxAccountUrl
         )))
     }
 
 
-    @if(returnDetails.amount < 0) {
+    @if(viewModel.returnDetails.isAmountLessThanZero) {
         @govukPanel(Panel(
             title = Text((messages("returnSubmitted.heading"))),
             content = HtmlContent(negPanelContent)
         ))
 
-        @paragraph(messages("returnSubmitted.p1", formattedProcessingDate, periodStartDate, periodEndDate))
+        @paragraph(messages("returnSubmitted.p1", viewModel.formattedProcessingDate, viewModel.periodStartDate, viewModel.periodEndDate))
 
         @paragraph( content =
             HtmlContent(
                 link(
                     id = "view-return-link",
                     text = messages("returnSubmitted.viewReturnLink.text"),
-                    href = controllers.returns.routes.ViewReturnController.onPageLoad(periodKey).url
+                    href = controllers.returns.routes.ViewReturnController.onPageLoad(viewModel.periodKey).url
         )))
 
         @subHeading(messages("returnSubmitted.positive.h1"))
@@ -146,7 +144,7 @@
                 link(
                     id = "business-tax-account-link",
                     text = messages("site.returnToBusinessAccount"),
-                    href = businessTaxAccountUrl
+                    href = viewModel.businessTaxAccountUrl
         )))
     }
 }

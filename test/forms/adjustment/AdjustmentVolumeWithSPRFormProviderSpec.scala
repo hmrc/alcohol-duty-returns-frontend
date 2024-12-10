@@ -21,13 +21,10 @@ import forms.behaviours.StringFieldBehaviours
 import generators.ModelGenerators
 import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
 import play.api.data.FormError
-import play.api.i18n.Messages
 
 class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with ModelGenerators with SpecBase {
 
   val regime = regimeGen.sample.value
-
-  val messages = mock[Messages]
 
   val validTotalLitres = BigDecimal(10.23)
   val validPureAlcohol = BigDecimal(9.23)
@@ -40,7 +37,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
   )
 
   val adjustmentVolumeWithSPR = AdjustmentVolumeWithSPR(validTotalLitres, validPureAlcohol, validSPRDutyRate)
-  val form                    = new AdjustmentVolumeWithSPRFormProvider()()(messages)
+  val form                    = new AdjustmentVolumeWithSPRFormProvider()()
 
   ".volumes" - {
     "must bind valid data" in {
@@ -143,6 +140,40 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", Seq())
+      )
+    }
+
+    "fail to bind when pure alcohol volume is empty, total litres value exceeds maximum and sprDutyRate is invalid" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "9999999999999999",
+        "volumes.pureAlcoholVolume" -> "",
+        "volumes.sprDutyRate"       -> "abc"
+      )
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", Seq("adjustmentVolume.error.maximumValue.totalLitresVolume"), Seq()),
+        FormError("volumes_pureAlcoholVolume", Seq("adjustmentVolume.error.noValue.pureAlcoholVolume"), Seq()),
+        FormError("volumes_sprDutyRate", Seq("adjustmentVolume.error.invalid.sprDutyRate"), Seq())
+      )
+    }
+
+    "fail to bind with decimal places error when pure alcohol, total litres and sprDutyRate have more than expected decimals and are also out of range" in {
+      val data = Map(
+        "volumes.totalLitresVolume" -> "999999999999.9999",
+        "volumes.pureAlcoholVolume" -> "-12323.234423",
+        "volumes.sprDutyRate"       -> "99999999999.856"
+      )
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError(
+          "volumes_totalLitresVolume",
+          Seq("adjustmentVolume.error.decimalPlaces.totalLitresVolume"),
+          Seq()
+        ),
+        FormError(
+          "volumes_pureAlcoholVolume",
+          Seq("adjustmentVolume.error.decimalPlaces.pureAlcoholVolume"),
+          Seq()
+        ),
+        FormError("volumes_sprDutyRate", Seq("adjustmentVolume.error.decimalPlaces.sprDutyRate"), Seq())
       )
     }
   }

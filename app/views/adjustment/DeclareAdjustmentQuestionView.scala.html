@@ -14,7 +14,8 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
+@import components.{SectionHeading, SubHeading, PageHeading, Paragraph, BulletList}
+@import config.Constants.Css
 
 @this(
     layout: templates.Layout,
@@ -23,6 +24,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
+    subHeading: SubHeading,
     pageHeading: PageHeading,
     bulletList: BulletList,
     paragraph: Paragraph
@@ -59,6 +61,8 @@
         ))
 
         @formHelper(action = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @subHeading(messages("declareAdjustmentQuestion.question.h2"), classes = Css.headingMCssClass)
 
         @govukRadios(
             RadiosViewModel.yesNo(
