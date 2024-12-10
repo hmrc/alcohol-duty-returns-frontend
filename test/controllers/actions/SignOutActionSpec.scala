@@ -18,9 +18,10 @@ package controllers.actions
 
 import base.SpecBase
 import config.FrontendAppConfig
+import models.requests.RequestWithOptAppaId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import play.api.mvc.{BodyParsers, Request, Result}
+import play.api.mvc.{BodyParsers, Result}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -29,6 +30,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.allEnrolments
 import uk.gov.hmrc.http.UnauthorizedException
 
+import scala.collection.mutable
 import scala.concurrent.Future
 
 class SignOutActionSpec extends SpecBase {
@@ -42,6 +44,7 @@ class SignOutActionSpec extends SpecBase {
   val emptyEnrolments         = Enrolments(Set.empty)
   val enrolmentsWithoutAppaId = Enrolments(Set(Enrolment(enrolment, Seq.empty, state)))
   val signOutUrl: String      = "http://localhost:9553/bas-gateway/sign-out-without-state"
+  val appaIdStoreKey: String  = "AppaId"
 
   val appConfig: FrontendAppConfig           = mock[FrontendAppConfig]
   val defaultBodyParser: BodyParsers.Default = app.injector.instanceOf[BodyParsers.Default]
@@ -49,13 +52,17 @@ class SignOutActionSpec extends SpecBase {
 
   val signOutAction = new SignOutActionImpl(mockAuthConnector, appConfig, defaultBodyParser)
 
-  val testAction: Request[_] => Future[Result] = { _ =>
-    Future(Redirect(signOutUrl))
+  def testAction(appaIdStore: mutable.Map[String, Option[String]]): RequestWithOptAppaId[_] => Future[Result] = {
+    request =>
+      appaIdStore.synchronized {
+        appaIdStore.put(appaIdStoreKey, request.appaId)
+      }
+
+      Future(Redirect(signOutUrl))
   }
 
   "invokeBlock" - {
-
-    "execute the block and return OK if authorised" in {
+    "execute the block and return SEE_OTHER if authorised" in {
       when(appConfig.enrolmentServiceName).thenReturn(enrolment)
       when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
@@ -74,10 +81,16 @@ class SignOutActionSpec extends SpecBase {
       )
         .thenReturn(Future(enrolments))
 
-      val result: Future[Result] = signOutAction.invokeBlock(FakeRequest(), testAction)
+      val appaIdStore = mutable.Map[String, Option[String]]()
+
+      val result: Future[Result] = signOutAction.invokeBlock(FakeRequest(), testAction(appaIdStore))
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(signOutUrl)
+
+      appaIdStore.synchronized {
+        appaIdStore(appaIdStoreKey) mustBe Some(appaId)
+      }
     }
 
     "execute the block and throw IllegalStateException if cannot get the enrolment" in {
@@ -96,11 +109,12 @@ class SignOutActionSpec extends SpecBase {
             allEnrolments
           )
         )(any(), any())
-      )
-        .thenReturn(Future(emptyEnrolments))
+      ).thenReturn(Future(emptyEnrolments))
+
+      val appaIdStore = mutable.Map[String, Option[String]]()
 
       intercept[IllegalStateException] {
-        await(signOutAction.invokeBlock(FakeRequest(), testAction))
+        await(signOutAction.invokeBlock(FakeRequest(), testAction(appaIdStore)))
       }
     }
 
@@ -120,15 +134,16 @@ class SignOutActionSpec extends SpecBase {
             allEnrolments
           )
         )(any(), any())
-      )
-        .thenReturn(Future(enrolmentsWithoutAppaId))
+      ).thenReturn(Future(enrolmentsWithoutAppaId))
+
+      val appaIdStore = mutable.Map[String, Option[String]]()
 
       intercept[IllegalStateException] {
-        await(signOutAction.invokeBlock(FakeRequest(), testAction))
+        await(signOutAction.invokeBlock(FakeRequest(), testAction(appaIdStore)))
       }
     }
 
-    "redirect to the unauthorised page if not authorised and do not call" in {
+    "redirect to the sign out page and do not release locks if not authorised" in {
       List(
         InsufficientEnrolments(),
         InsufficientConfidenceLevel(),
@@ -141,10 +156,16 @@ class SignOutActionSpec extends SpecBase {
         when(appConfig.enrolmentServiceName).thenReturn(enrolment)
         when(mockAuthConnector.authorise[Unit](any(), any())(any(), any())).thenReturn(Future.failed(exception))
 
-        val result: Future[Result] = signOutAction.invokeBlock(FakeRequest(), testAction)
+        val appaIdStore = mutable.Map[String, Option[String]]()
+
+        val result: Future[Result] = signOutAction.invokeBlock(FakeRequest(), testAction(appaIdStore))
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(signOutUrl)
+
+        appaIdStore.synchronized {
+          appaIdStore(appaIdStoreKey) mustBe None
+        }
       }
     }
 
@@ -155,8 +176,10 @@ class SignOutActionSpec extends SpecBase {
       when(mockAuthConnector.authorise[Unit](any(), any())(any(), any()))
         .thenReturn(Future.failed(new RuntimeException(msg)))
 
+      val appaIdStore = mutable.Map[String, Option[String]]()
+
       val result = intercept[RuntimeException] {
-        await(signOutAction.invokeBlock(FakeRequest(), testAction))
+        await(signOutAction.invokeBlock(FakeRequest(), testAction(appaIdStore)))
       }
 
       result.getMessage mustBe msg
