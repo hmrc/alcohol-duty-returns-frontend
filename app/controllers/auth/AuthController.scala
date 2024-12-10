@@ -43,20 +43,16 @@ class AuthController @Inject() (
     request.appaId match {
       case Some(appaId) =>
         val a = request.session.get(periodKeySessionKey)
-        println("PPPPPPP" + a)
         a match {
           case Some(periodKey) =>
-            println("AAAAAAAAAAA")
             userAnswersConnector
               .releaseLock(ReturnId(appaId, periodKey))
               .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
           case None            =>
-            println("BBBBBBBBBBBB")
             logger.info("Period key not found during sign out")
             Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
         }
       case None         =>
-        println("CCCCCCCCC")
         Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
     }
   }

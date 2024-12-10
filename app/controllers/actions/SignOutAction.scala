@@ -61,11 +61,13 @@ class SignOutActionImpl @Inject() (
     authorised(predicate).retrieve(allEnrolments) { enrolments =>
       val appaId = getAppaId(enrolments)
       block(RequestWithOptAppaId(request, Some(appaId)))
-    } recoverWith { case e: AuthorisationException =>
-      // Only catching this error as we don't have anywhere to send users on other error.
-      // If they are sent to the UnauthorisedController, they will be stuck in a loop
-      logger.debug(s"Returning a request with AppaId set to None since there was AuthorisationException:", e)
-      block(RequestWithOptAppaId(request, None))
+    } recoverWith {
+      case e: AuthorisationException =>
+        logger.debug(s"Returning a request with AppaId set to None since there was an AuthorisationException:", e)
+        block(RequestWithOptAppaId(request, None))
+      case e: UnauthorizedException  =>
+        logger.debug(s"Returning a request with AppaId set to None since there was an UnauthorizedException:", e)
+        block(RequestWithOptAppaId(request, None))
     }
   }
 
