@@ -30,7 +30,6 @@ class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
     "volumes" -> seq(
       volumes(
         "return.journey.error.invalid",
-        "return.journey.error.allRequired",
         "return.journey.error.noValue",
         "return.journey.error.tooManyDecimalPlaces",
         "return.journey.error.minimumValue",

@@ -153,5 +153,41 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         "volumesWithRate_pureAlcohol" -> "return.journey.error.lessThanExpected"
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
+
+    "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum and and dutyRate is invalid" in {
+      val data = Map(
+        "volumesWithRate.taxType"     -> "aTaxType",
+        "volumesWithRate.totalLitres" -> "99999999999",
+        "volumesWithRate.pureAlcohol" -> "",
+        "volumesWithRate.dutyRate"    -> "abc"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError("volumesWithRate_totalLitres", List("return.journey.error.maximumValue.totalLitres"), List("")),
+        FormError("volumesWithRate_pureAlcohol", List("return.journey.error.noValue.pureAlcohol"), List("")),
+        FormError("volumesWithRate_dutyRate", List("return.journey.error.invalid.dutyRate"), List(""))
+      )
+    }
+
+    "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
+      val data = Map(
+        "volumesWithRate.taxType"     -> "taxType",
+        "volumesWithRate.totalLitres" -> "111111111111.234",
+        "volumesWithRate.pureAlcohol" -> "-2.45356",
+        "volumesWithRate.dutyRate"    -> "99999999999.546"
+      )
+      form.bind(data).errors must contain allElementsOf List(
+        FormError(
+          "volumesWithRate_totalLitres",
+          List("return.journey.error.tooManyDecimalPlaces.totalLitres"),
+          List("")
+        ),
+        FormError(
+          "volumesWithRate_pureAlcohol",
+          List("return.journey.error.tooManyDecimalPlaces.pureAlcohol"),
+          List("")
+        ),
+        FormError("volumesWithRate_dutyRate", List("return.journey.error.tooManyDecimalPlaces.dutyRate"), List(""))
+      )
+    }
   }
 }

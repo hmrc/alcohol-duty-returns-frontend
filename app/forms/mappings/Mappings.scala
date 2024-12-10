@@ -80,7 +80,6 @@ trait Mappings extends Formatters with Constraints {
 
   protected def adjustmentVolumes(
     invalidKey: String,
-    allRequiredKey: String,
     requiredKey: String,
     decimalPlacesKey: String,
     minimumValueKey: String,
@@ -91,7 +90,6 @@ trait Mappings extends Formatters with Constraints {
     of(
       new AdjustmentVolumesFormatter(
         invalidKey,
-        allRequiredKey,
         requiredKey,
         decimalPlacesKey,
         minimumValueKey,
@@ -124,7 +122,6 @@ trait Mappings extends Formatters with Constraints {
 
   protected def volumes(
     invalidKey: String,
-    allRequiredKey: String,
     requiredKey: String,
     decimalPlacesKey: String,
     minimumValueKey: String,
@@ -136,7 +133,6 @@ trait Mappings extends Formatters with Constraints {
     of(
       new VolumesFormatter(
         invalidKey,
-        allRequiredKey,
         requiredKey,
         decimalPlacesKey,
         minimumValueKey,
