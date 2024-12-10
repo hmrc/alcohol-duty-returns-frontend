@@ -78,8 +78,7 @@ class SignOutActionSpec extends SpecBase {
             allEnrolments
           )
         )(any(), any())
-      )
-        .thenReturn(Future(enrolments))
+      ).thenReturn(Future(enrolments))
 
       val appaIdStore = mutable.Map[String, Option[String]]()
 

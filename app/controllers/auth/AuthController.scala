@@ -42,8 +42,7 @@ class AuthController @Inject() (
   def signOut(): Action[AnyContent] = signOutAction.async { implicit request =>
     request.appaId match {
       case Some(appaId) =>
-        val a = request.session.get(periodKeySessionKey)
-        a match {
+        request.session.get(periodKeySessionKey) match {
           case Some(periodKey) =>
             userAnswersConnector
               .releaseLock(ReturnId(appaId, periodKey))
