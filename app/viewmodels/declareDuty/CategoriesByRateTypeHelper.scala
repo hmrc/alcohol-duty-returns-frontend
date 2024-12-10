@@ -16,7 +16,7 @@
 
 package viewmodels.declareDuty
 
-import models.{RateBand, RateType}
+import models.{AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
 
 case class CategoryViewModel(
@@ -32,7 +32,7 @@ case class CategoriesByRateTypeViewModel(
 )
 
 object CategoriesByRateTypeHelper {
-  def rateBandCategories(rateBands: Set[RateBand], isRecap: Boolean = false)(implicit
+  def rateBandCategories(rateBands: Set[RateBand], regime: AlcoholRegime, isRecap: Boolean = false)(implicit
     messages: Messages
   ): CategoriesByRateTypeViewModel = {
     val rateBandsByType = rateBands.toSeq
@@ -42,7 +42,8 @@ object CategoriesByRateTypeHelper {
         rateBands.sortBy(_.taxTypeCode).map { rateBand =>
           CategoryViewModel(
             category =
-              if (isRecap) RateBandHelper.rateBandRecap(rateBand) else RateBandHelper.rateBandContent(rateBand),
+              if (isRecap) RateBandHelper.rateBandRecap(rateBand, Some(regime))
+              else RateBandHelper.rateBandContent(rateBand, Some(regime)),
             id = rateBand.taxTypeCode
           )
         }

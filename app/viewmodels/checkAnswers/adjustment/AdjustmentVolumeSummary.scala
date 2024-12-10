@@ -40,8 +40,7 @@ object AdjustmentVolumeSummary {
         routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode).url
       } else { routes.AdjustmentVolumeController.onPageLoad(CheckMode).url }
       val value = HtmlFormat.escape(messages("site.2DP", totalLitres)).toString + " " + messages(
-        "adjustmentVolume.totalLitres",
-        messages(s"return.regime.$regime")
+        "adjustmentVolume.totalLitres"
       ) + "<br/>" + HtmlFormat.escape(messages("site.4DP", pureAlcohol)).toString + " " + messages(
         "adjustmentVolume.pureAlcohol"
       )

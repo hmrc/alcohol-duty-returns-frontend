@@ -37,7 +37,7 @@ object TellUsAboutSingleSPRRateSummary {
         .getOrElse(throw new IllegalArgumentException(s"Invalid tax type: ${dutyByTaxType.taxType}"))
       Seq(
         SummaryListRowViewModel(
-          key = KeyViewModel(rateBandRecap(rateBand)),
+          key = KeyViewModel(rateBandRecap(rateBand, Some(regime))),
           value = Value()
         ).withCssClass(Css.summaryListRowNoBorderCssClass),
         SummaryListRowViewModel(

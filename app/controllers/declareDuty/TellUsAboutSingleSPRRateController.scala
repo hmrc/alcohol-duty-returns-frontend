@@ -64,7 +64,7 @@ class TellUsAboutSingleSPRRateController @Inject() (
             case None        => form
             case Some(value) => form.fill(value)
           }
-          val categoriesByRateTypeHelper = CategoriesByRateTypeHelper.rateBandCategories(rateBands)
+          val categoriesByRateTypeHelper = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)
           Ok(view(preparedForm, regime, categoriesByRateTypeHelper, mode))
       }
     }
@@ -82,7 +82,12 @@ class TellUsAboutSingleSPRRateController @Inject() (
               formWithErrors =>
                 Future.successful(
                   BadRequest(
-                    view(formWithErrors, regime, CategoriesByRateTypeHelper.rateBandCategories(rateBands), mode)
+                    view(
+                      formWithErrors,
+                      regime,
+                      CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime),
+                      mode
+                    )
                   )
                 ),
               value => {

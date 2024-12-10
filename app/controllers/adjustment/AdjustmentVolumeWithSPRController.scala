@@ -61,7 +61,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     getRegime match {
       case Some(regime) =>
-        val form = formProvider(regime)
+        val form = formProvider()
         request.userAnswers.get(CurrentAdjustmentEntryPage) match {
 
           case Some(
@@ -87,7 +87,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
                 mode,
                 adjustmentType,
                 regime,
-                rateBandContent(rateBand)
+                rateBandContent(rateBand, None)
               )
             )
           case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
@@ -97,7 +97,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
                 mode,
                 adjustmentType,
                 regime,
-                rateBandContent(rateBand)
+                rateBandContent(rateBand, None)
               )
             )
           case _                                                                                            =>
@@ -117,7 +117,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
     implicit request =>
       getRegime match {
         case Some(regime) =>
-          val form = formProvider(regime)
+          val form = formProvider()
           form
             .bindFromRequest()
             .fold(
@@ -158,7 +158,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
               mode,
               adjustmentType,
               regime,
-              rateBandContent(rateBand)
+              rateBandContent(rateBand, None)
             )
           )
         )

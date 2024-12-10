@@ -43,17 +43,17 @@ object MultipleSPRListSummary {
         val totalLitres = dutiesByTaxType.map(_.totalLitres).sum
         val pureAlcohol = dutiesByTaxType.map(_.pureAlcohol).sum
 
-        createRow(rateBand, totalLitres, pureAlcohol)
+        createRow(rateBand, regime, totalLitres, pureAlcohol)
       }
     rows.getOrElse(Seq.empty)
   }
 
-  private def createRow(rateBand: RateBand, totalLitres: BigDecimal, pureAlcohol: BigDecimal)(implicit
-    messages: Messages
+  private def createRow(rateBand: RateBand, regime: AlcoholRegime, totalLitres: BigDecimal, pureAlcohol: BigDecimal)(
+    implicit messages: Messages
   ): Seq[SummaryListRow] =
     Seq(
       SummaryListRowViewModel(
-        key = KeyViewModel(rateBandRecap(rateBand)),
+        key = KeyViewModel(rateBandRecap(rateBand, Some(regime))),
         value = Value()
       ).withCssClass(Css.summaryListRowNoBorderCssClass),
       SummaryListRowViewModel(
