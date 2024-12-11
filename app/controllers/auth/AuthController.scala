@@ -53,7 +53,7 @@ class AuthController @Inject() (
         }
       case None         =>
         logger.info(
-          "AppaId was None in the request which means that this user was not authorised. No locks on their account have been released."
+          "No locks to release"
         )
         Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
     }
