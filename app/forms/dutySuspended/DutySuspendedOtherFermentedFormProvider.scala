@@ -46,17 +46,17 @@ class DutySuspendedOtherFermentedFormProvider @Inject() extends Mappings {
       "pureAlcoholInOtherFermented" -> bigDecimal(
         Constants.lpaMaximumDecimalPlaces,
         "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required",
-        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.nonNumeric",
-        "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.decimalPlaces"
+        "dutySuspended.error.pureAlcohol.nonNumeric",
+        "dutySuspended.error.pureAlcohol.decimalPlaces"
       ).verifying(
         minimumValue(
           Constants.dutySuspendedLpaMinimumValue,
-          "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.minimumRequired"
+          "dutySuspended.error.pureAlcohol.minimumRequired"
         )
       ).verifying(
         maximumValue(
           Constants.dutySuspendedLpaMaximumValue,
-          "dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.maximumRequired"
+          "dutySuspended.error.pureAlcohol.maximumRequired"
         )
       )
     )(DutySuspendedOtherFermented.apply)(DutySuspendedOtherFermented.unapply)

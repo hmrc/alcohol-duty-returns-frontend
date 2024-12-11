@@ -18,8 +18,6 @@ package controllers.auth
 
 import base.SpecBase
 import config.FrontendAppConfig
-import controllers.actions.FakeIsSignedIn
-import play.api.inject.bind
 import play.api.test.Helpers._
 import views.html.auth.NoAppaIdView
 

@@ -46,17 +46,17 @@ class DutySuspendedSpiritsFormProvider @Inject() extends Mappings {
       "pureAlcoholInSpirits" -> bigDecimal(
         Constants.lpaMaximumDecimalPlaces,
         "dutySuspendedSpirits.error.pureAlcoholInSpirits.required",
-        "dutySuspendedSpirits.error.pureAlcoholInSpirits.nonNumeric",
-        "dutySuspendedSpirits.error.pureAlcoholInSpirits.decimalPlaces"
+        "dutySuspended.error.pureAlcohol.nonNumeric",
+        "dutySuspended.error.pureAlcohol.decimalPlaces"
       ).verifying(
         minimumValue(
           Constants.dutySuspendedLpaMinimumValue,
-          "dutySuspendedSpirits.error.pureAlcoholInSpirits.minimumRequired"
+          "dutySuspended.error.pureAlcohol.minimumRequired"
         )
       ).verifying(
         maximumValue(
           Constants.dutySuspendedLpaMaximumValue,
-          "dutySuspendedSpirits.error.pureAlcoholInSpirits.maximumRequired"
+          "dutySuspended.error.pureAlcohol.maximumRequired"
         )
       )
     )(DutySuspendedSpirits.apply)(DutySuspendedSpirits.unapply)

@@ -17,7 +17,7 @@
 package controllers.actions
 
 import javax.inject.Inject
-import models.requests.{IdentifierRequest, SignedInRequest}
+import models.requests.SignedInRequest
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
