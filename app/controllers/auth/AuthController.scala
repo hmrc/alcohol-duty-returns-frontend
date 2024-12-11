@@ -53,7 +53,7 @@ class AuthController @Inject() (
         }
       case None         =>
         logger.info(
-          "No locks to release"
+          "User not authenticated. No locks to release."
         )
         Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
     }
