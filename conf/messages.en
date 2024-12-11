@@ -678,12 +678,12 @@ whisky.irishWhiskey.change.hidden = irish whiskey
 whisky.error.scotchWhisky.required = Enter the volume of Scotch Whisky produced
 whisky.error.scotchWhisky.nonNumeric = Scotch Whisky must be a number
 whisky.error.scotchWhisky.maximumRequired = Scotch Whisky must be less than 1 billion litres
-whisky.error.scotchWhisky.minimumRequired = Scotch Whisky must be more than 0.00
+whisky.error.scotchWhisky.minimumRequired = Scotch Whisky must be more than 0.00 litres
 whisky.error.scotchWhisky.decimalPlaces = Scotch Whisky must be a number up to 2 decimal places
 whisky.error.irishWhiskey.required = Enter the volume of Irish Whiskey produced
 whisky.error.irishWhiskey.nonNumeric = Irish Whiskey must be a number
 whisky.error.irishWhiskey.maximumRequired = Irish Whiskey must be less than 1 billion litres
-whisky.error.irishWhiskey.minimumRequired = Irish Whiskey must be more than 0.00
+whisky.error.irishWhiskey.minimumRequired = Irish Whiskey must be more than 0.00 litres
 whisky.error.irishWhiskey.decimalPlaces = Irish Whiskey must be a number up to 2 decimal places
 
 spiritType.title = Which of these spirits have you produced?
