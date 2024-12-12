@@ -31,12 +31,23 @@
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, if(adjustmentType == RepackagedDraughtProducts){
-            messages("adjustmentTaxType.repackaged.title")
-        } else {
-            messages("adjustmentTaxType.title")
-        }
-)) {
+@titleContent = @{
+    if(adjustmentType == RepackagedDraughtProducts){
+        messages("adjustmentTaxType.repackaged.title")
+    } else {
+        messages("adjustmentTaxType.title")
+    }
+}
+
+@headingContent = @{
+    if(adjustmentType == RepackagedDraughtProducts){
+        messages("adjustmentTaxType.repackaged.heading")
+    } else {
+        messages("adjustmentTaxType.heading")
+    }
+}
+
+@layout(pageTitle = title(form, titleContent)) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentTaxTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -49,13 +60,7 @@
             text = messages(s"section.adjustment.$adjustmentType")
         )
 
-        @pageHeading(
-            if(adjustmentType == RepackagedDraughtProducts){
-                messages("adjustmentTaxType.repackaged.heading")
-            } else {
-                messages("adjustmentTaxType.heading")
-            }
-        )
+        @pageHeading(headingContent)
 
         @govukInput(
             InputViewModel(
