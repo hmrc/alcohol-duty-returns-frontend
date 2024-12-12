@@ -17,7 +17,7 @@
 @import viewmodels.InputWidth._
 @import components.{SectionHeading, PageHeading}
 @import models.adjustment.AdjustmentType
-@import models.adjustment.AdjustmentType.Underdeclaration
+@import models.adjustment.AdjustmentType.{Underdeclaration, RepackagedDraughtProducts}
 
 @this(
     layout: templates.Layout,
@@ -25,12 +25,18 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("adjustmentTaxType.title"))) {
+@layout(pageTitle = title(form, if(adjustmentType == RepackagedDraughtProducts){
+            messages("adjustmentTaxType.repackaged.title")
+        } else {
+            messages("adjustmentTaxType.title")
+        }
+)) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentTaxTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -43,10 +49,18 @@
             text = messages(s"section.adjustment.$adjustmentType")
         )
 
+        @pageHeading(
+            if(adjustmentType == RepackagedDraughtProducts){
+                messages("adjustmentTaxType.repackaged.heading")
+            } else {
+                messages("adjustmentTaxType.heading")
+            }
+        )
+
         @govukInput(
             InputViewModel(
                 field = form("adjustment-tax-type-input"),
-                label = LabelViewModel(messages("adjustmentTaxType.heading")).asPageHeading()
+                label = LabelViewModel(messages("adjustmentTaxType.heading")).asVisuallyHidden()
             )
             .asNumeric()
             .withWidth(Fixed10)

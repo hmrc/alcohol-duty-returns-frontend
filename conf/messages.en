@@ -102,7 +102,7 @@ section.adjustment.spoilt = Adjust for spoilt alcohol
 section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
 section.adjustment.checkAnswers = Adjustment from previous return
-section.dutySuspended = Duty suspended alcoholic product deliveries
+section.dutySuspended = Duty suspended finished alcoholic product deliveries
 section.checkAndSubmit = Send return
 
 viewPastReturns.heading = Your returns
@@ -363,13 +363,12 @@ return.regime.OtherFermentedProduct = other fermented products
 whatDoYouNeedToDeclare.title = What do you need to declare?
 whatDoYouNeedToDeclare.heading = What do you need to declare?
 whatDoYouNeedToDeclare.hint = Select all that apply.
-whatDoYouNeedToDeclare.beer.heading = Beer (standard rate)
 whatDoYouNeedToDeclare.error.required.Beer = Select the beers you need to declare
 whatDoYouNeedToDeclare.error.required.Cider = Select the ciders you need to declare
 whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other fermented products you need to declare
 whatDoYouNeedToDeclare.error.required.Spirits = Select the spirits you need to declare
 whatDoYouNeedToDeclare.error.required.Wine = Select the wines you need to declare
-whatDoYouNeedToDeclare.core.heading = Non-draught {0} (standard rate)
+whatDoYouNeedToDeclare.core.heading = {0} (standard rate)
 whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)
 whatDoYouNeedToDeclare.smallProducerRelief.heading = Non-draught {0} eligible for Small Producer Relief
 whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = Draught {0} eligible for Small Producer Relief
@@ -410,7 +409,7 @@ doYouHaveMultipleSPRDutyRates.heading = If you have more than one Small Producer
 doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}, for example:
 doYouHaveMultipleSPRDutyRates.l1 = your Small Producer Relief duty rate has changed and you need to report production when a different rate applied
 doYouHaveMultipleSPRDutyRates.l2 = you bottle and pay duty on behalf of more than one small producer, each of whom have their own Small Producer Relief duty rate
-doYouHaveMultipleSPRDutyRates.l3 = you merged with another producer and are reporting pre-merger production using the producers'' own pre-merger Small Producer Relief duty rates
+doYouHaveMultipleSPRDutyRates.l3 = you merged with another producer and are reporting pre-merger production using the producer’s own pre-merger Small Producer Relief duty rates
 doYouHaveMultipleSPRDutyRates.p2 = If you have more than one Small Producer Relief duty rate for the same type of {0} you will need to input them individually. For each duty rate we need to know the total amount produced, the litres of pure alcohol and the applicable duty rate.
 doYouHaveMultipleSPRDutyRates.h2 = Do you have more than one Small Producer Relief duty rate for the same tax type code?
 doYouHaveMultipleSPRDutyRates.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare
@@ -436,8 +435,8 @@ tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Smal
 tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught {0} that is eligible for Small Producer Relief do you need to declare?
 tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught {0} that is eligible for Small Producer Relief do you need to declare?
 
-tellUsAboutMultipleSPRRate.title = Tell us about the {0} you need to declare that are eligible for Small Producer Relief
-tellUsAboutMultipleSPRRate.heading = Tell us about the {0} you need to declare that are eligible for Small Producer Relief
+tellUsAboutMultipleSPRRate.title = Tell us about the {0} that is eligible for Small Producer Relief
+tellUsAboutMultipleSPRRate.heading = Tell us about the {0} that is eligible for Small Producer Relief
 tellUsAboutMultipleSPRRate.radioHeading = What type of {0} do you need to declare?
 tellUsAboutMultipleSPRRate.p1 = For each {0} you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that {0} at the following Alcohol by Volume (ABV) strengths.
 tellUsAboutMultipleSPRRate.warning = If you have more than one duty rate for {0} in the same ABV range enter them one at a time.
@@ -496,20 +495,21 @@ productList.caption = Duty due
 
 # Beginning of duty suspended deliveries sub-journey
 
-declareDutySuspendedDeliveriesQuestion.title = Do you need to tell us about any duty suspended alcohol?
-declareDutySuspendedDeliveriesQuestion.heading = Do you need to tell us about any duty suspended alcohol?
+declareDutySuspendedDeliveriesQuestion.title = Have you delivered or received any duty suspended finished alcoholic product?
+declareDutySuspendedDeliveriesQuestion.heading = Have you delivered or received any duty suspended finished alcoholic product?
 declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to tell us about any duty suspended alcohol
-declareDutySuspendedDeliveriesQuestion.p1 = You need to tell us if you delivered alcohol to a duty suspended warehouse or received alcohol in duty suspense.
+declareDutySuspendedDeliveriesQuestion.p1 = You need to tell us if you delivered finished alcoholic product to a duty suspended warehouse or received finished alcoholic product in duty suspense.
 
-dutySuspendedDeliveriesGuidance.title = Calculate your duty suspended alcohol
-dutySuspendedDeliveriesGuidance.heading = Calculate your duty suspended alcohol
-dutySuspendedDeliveriesGuidance.p1 = You need to tell us the net total volume of duty suspended alcohol you have and the total litres of pure alcohol (LPA).
-dutySuspendedDeliveriesGuidance.p2 = To calculate the net total add together:
-dutySuspendedDeliveriesGuidance.para.list.1 = Quantity exported outside the UK (for example, ship stores)
-dutySuspendedDeliveriesGuidance.para.list.2 = Quantity delivered duty suspended to other UK registered premises and excise warehouses
-dutySuspendedDeliveriesGuidance.p3 = Then subtract:
-dutySuspendedDeliveriesGuidance.para.list.3 = Quantity received under duty suspense from registered premises, excise warehouses and importation
-dutySuspendedDeliveriesGuidance.p4 = Your answers may be positive or negative. They will not change your duty calculation.
+dutySuspendedDeliveriesGuidance.title = Calculate the volume of duty suspended finished alcoholic products
+dutySuspendedDeliveriesGuidance.heading = Calculate the volume of duty suspended finished alcoholic products
+dutySuspendedDeliveriesGuidance.p1 = For each type of alcohol you produce you need to tell us the volume of finished alcoholic products and the volume of pure alcohol in those finished alcoholic products.
+dutySuspendedDeliveriesGuidance.p2 = 1. Add together:
+dutySuspendedDeliveriesGuidance.para.list.1 = litres exported outside the UK (for example, ship stores)
+dutySuspendedDeliveriesGuidance.para.list.2 = litres delivered duty suspended to other UK registered premises and excise warehouses
+dutySuspendedDeliveriesGuidance.p3 = 2. Then subtract:
+dutySuspendedDeliveriesGuidance.para.list.3 = litres received under duty suspense from registered premises, excise warehouses and importation
+dutySuspendedDeliveriesGuidance.p4 = Use the same method to calculate the litres of pure alcohol in your duty suspended finished alcoholic products.
+dutySuspendedDeliveriesGuidance.p5 = Your answers will not change your duty calculation.
 
 dutySuspendedBeer.title = Tell us about your duty suspended beer
 dutySuspendedBeer.heading = Tell us about your duty suspended beer
@@ -804,7 +804,9 @@ whenDidYouPayDuty.change.hidden = original return period
 whenDidYouPayDuty.date.error.invalidYear.year = Year must include 4 numbers
 
 adjustmentTaxType.title = What is the tax type code for the alcohol you are adjusting?
+adjustmentTaxType.repackaged.title = What is the original tax type code for the alcohol you are repackaging?
 adjustmentTaxType.heading = What is the tax type code for the alcohol you are adjusting?
+adjustmentTaxType.repackaged.heading = What is the original tax type code for the alcohol you are repackaging?
 adjustmentTaxType.underDeclaration.hint = The 3 digit tax type code for the under-declared alcohol
 adjustmentTaxType.default.hint = The 3 digit tax type code used on your previous return
 adjustmentTaxType.checkYourAnswersLabel = Tax type
