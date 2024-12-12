@@ -91,7 +91,7 @@ object MultipleSPRListHelper {
     messages: Messages
   ): Seq[TableRowViewModel] =
     sprList.zipWithIndex.map { case (sprEntry, index) =>
-      val rateBandDescription = rateBandRecap(sprEntry.rateBand)
+      val rateBandDescription = rateBandRecap(sprEntry.rateBand, Some(regime))
       TableRowViewModel(
         cells = Seq(
           TableRow(Text(rateBandDescription)),

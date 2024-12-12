@@ -60,7 +60,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
       val form = formProvider(regime)
 
       getRateBands(request.userAnswers, request.returnPeriod, regime).map { rateBands: Seq[RateBand] =>
-        val taxBandsViewModel = TaxBandsViewModel(rateBands)
+        val taxBandsViewModel = TaxBandsViewModel(rateBands, regime)
         val preparedForm      = request.userAnswers.getByKey(currentPage, regime) match {
           case None        => form
           case Some(value) => form.fill(value.map(_.taxTypeCode))
@@ -78,7 +78,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
             .bindFromRequest()
             .fold(
               formWithErrors =>
-                Future.successful(BadRequest(view(formWithErrors, regime, TaxBandsViewModel(rateBands), mode))),
+                Future.successful(BadRequest(view(formWithErrors, regime, TaxBandsViewModel(rateBands, regime), mode))),
               value =>
                 for {
                   selectedRateBands         <- Future.fromTry(rateBandFromTaxType(value, rateBands))

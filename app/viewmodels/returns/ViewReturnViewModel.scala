@@ -112,7 +112,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   )(implicit messages: Messages): String =
     maybeRatePeriod
       .flatMap(ratePeriod => ratePeriodsAndTaxCodesToRateBands.get((ratePeriod, taxType)))
-      .map(rateBandRecap(_))
+      .map(rateBandRecap(_, None))
       .getOrElse(taxType)
 
   private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel] =

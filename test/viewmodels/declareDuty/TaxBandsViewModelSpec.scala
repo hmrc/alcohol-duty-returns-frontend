@@ -17,17 +17,18 @@
 package viewmodels.declareDuty
 
 import base.SpecBase
+import models.AlcoholRegime.Beer
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class TaxBandsViewModelSpec extends SpecBase {
   "TaxBandsViewModel" - {
     "should return an empty view model when no ratebands are passed" in new SetUp {
-      TaxBandsViewModel(Seq.empty) mustBe TaxBandsViewModel(Seq.empty, Seq.empty, Seq.empty, Seq.empty)
+      TaxBandsViewModel(Seq.empty, regime) mustBe TaxBandsViewModel(Seq.empty, Seq.empty, Seq.empty, Seq.empty)
     }
 
     "should return the model when all ratebands are passed" in new SetUp {
-      val result = TaxBandsViewModel(allRateBands.toSeq)
+      val result = TaxBandsViewModel(allRateBands.toSeq, regime)
       result.core.map(_.content) mustBe Seq(Text("Beer between 1% and 2% ABV (tax type code 123)"))
       result.draught.map(_.content) mustBe Seq(Text("Beer between 2% and 3% ABV (tax type code 124)"))
       result.smallProducerRelief.map(_.content) mustBe Seq(Text("Beer between 3% and 4% ABV (tax type code 125)"))
@@ -41,7 +42,7 @@ class TaxBandsViewModelSpec extends SpecBase {
     }
 
     "should return the model when all ratebands except core are passed" in new SetUp {
-      val result = TaxBandsViewModel((allRateBands - coreRateBand).toSeq)
+      val result = TaxBandsViewModel((allRateBands - coreRateBand).toSeq, regime)
       result.core.map(_.content) mustBe Seq.empty
       result.draught.map(_.content) mustBe Seq(Text("Beer between 2% and 3% ABV (tax type code 124)"))
       result.smallProducerRelief.map(_.content) mustBe Seq(Text("Beer between 3% and 4% ABV (tax type code 125)"))
@@ -55,7 +56,7 @@ class TaxBandsViewModelSpec extends SpecBase {
     }
 
     "should return the model when all ratebands except draught relief are passed" in new SetUp {
-      val result = TaxBandsViewModel((allRateBands - draughtReliefRateBand).toSeq)
+      val result = TaxBandsViewModel((allRateBands - draughtReliefRateBand).toSeq, regime)
       result.core.map(_.content) mustBe Seq(Text("Beer between 1% and 2% ABV (tax type code 123)"))
       result.draught.map(_.content) mustBe Seq.empty
       result.smallProducerRelief.map(_.content) mustBe Seq(Text("Beer between 3% and 4% ABV (tax type code 125)"))
@@ -69,7 +70,7 @@ class TaxBandsViewModelSpec extends SpecBase {
     }
 
     "should return the model when all ratebands except small producer relief are passed" in new SetUp {
-      val result = TaxBandsViewModel((allRateBands - smallProducerReliefRateBand).toSeq)
+      val result = TaxBandsViewModel((allRateBands - smallProducerReliefRateBand).toSeq, regime)
       result.core.map(_.content) mustBe Seq(Text("Beer between 1% and 2% ABV (tax type code 123)"))
       result.draught.map(_.content) mustBe Seq(Text("Beer between 2% and 3% ABV (tax type code 124)"))
       result.smallProducerRelief.map(_.content) mustBe Seq.empty
@@ -83,7 +84,7 @@ class TaxBandsViewModelSpec extends SpecBase {
     }
 
     "should return rate band description when all ratebands except draught and small roducer relief are passed" in new SetUp {
-      val result = TaxBandsViewModel((allRateBands - draughtAndSmallProducerReliefRateBand).toSeq)
+      val result = TaxBandsViewModel((allRateBands - draughtAndSmallProducerReliefRateBand).toSeq, regime)
       result.core.map(_.content) mustBe Seq(Text("Beer between 1% and 2% ABV (tax type code 123)"))
       result.draught.map(_.content) mustBe Seq(Text("Beer between 2% and 3% ABV (tax type code 124)"))
       result.smallProducerRelief.map(_.content) mustBe Seq(Text("Beer between 3% and 4% ABV (tax type code 125)"))
@@ -98,5 +99,7 @@ class TaxBandsViewModelSpec extends SpecBase {
   class SetUp {
     val application                 = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
+
+    val regime = Beer
   }
 }
