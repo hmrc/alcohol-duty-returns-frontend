@@ -79,7 +79,7 @@ object DutyCalculationHelper {
   ) =
     TableRowViewModel(
       cells = Seq(
-        TableRow(Text(rateBandRecap(rateBand))),
+        TableRow(Text(rateBandRecap(rateBand, Some(regime)))),
         TableRow(Text(messages("site.4DP", totalByTaxType.pureAlcohol)), format = Some(Format.numeric)),
         TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyRate)), format = Some(Format.numeric)),
         TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)), format = Some(Format.numeric))
@@ -88,7 +88,7 @@ object DutyCalculationHelper {
         TableRowActionViewModel(
           label = messages("site.change"),
           href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
-          visuallyHiddenText = Some(rateBandRecap(rateBand))
+          visuallyHiddenText = Some(rateBandRecap(rateBand, Some(regime)))
         )
       )
     )

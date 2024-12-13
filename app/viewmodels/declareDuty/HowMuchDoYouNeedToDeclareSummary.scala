@@ -37,7 +37,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       case Some(dutyByTaxTypes) =>
         Some(
           SummaryList(
-            rows = rows(rateBands, dutyByTaxTypes),
+            rows = rows(rateBands, regime, dutyByTaxTypes),
             card = Some(
               Card(
                 title = Some(
@@ -69,7 +69,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       case _                    => None
     }
 
-  def rows(rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
+  def rows(rateBands: Set[RateBand], regime: AlcoholRegime, dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
     val rateBandsByRateType = rateBands
@@ -78,14 +78,14 @@ object HowMuchDoYouNeedToDeclareSummary {
     val coreRows = rateBandsByRateType
       .get(Core)
       .map { coreRateBands =>
-        createRowValues(Core, coreRateBands, dutyByTaxTypes)
+        createRowValues(Core, coreRateBands, regime, dutyByTaxTypes)
       }
       .getOrElse(Seq.empty)
 
     val draughtReliefRows = rateBandsByRateType
       .get(DraughtRelief)
       .map { draughtReliefRateBands =>
-        createRowValues(DraughtRelief, draughtReliefRateBands, dutyByTaxTypes)
+        createRowValues(DraughtRelief, draughtReliefRateBands, regime, dutyByTaxTypes)
       }
       .getOrElse(Seq.empty)
 
@@ -95,6 +95,7 @@ object HowMuchDoYouNeedToDeclareSummary {
   def createRowValues(
     rateType: RateType,
     rateBands: Set[RateBand],
+    regime: AlcoholRegime,
     dutyByTaxTypes: Seq[VolumeAndRateByTaxType]
   )(implicit messages: Messages): Seq[SummaryListRow] = {
     val headRow = SummaryListRowViewModel(
@@ -107,7 +108,7 @@ object HowMuchDoYouNeedToDeclareSummary {
         case Some(dutyByTaxType) =>
           Seq(
             SummaryListRowViewModel(
-              key = KeyViewModel(rateBandRecap(rateBand)),
+              key = KeyViewModel(rateBandRecap(rateBand, Some(regime))),
               value = Value()
             ).withCssClass(Css.summaryListRowNoBorderCssClass),
             SummaryListRowViewModel(

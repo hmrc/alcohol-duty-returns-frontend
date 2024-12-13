@@ -89,8 +89,8 @@ class DutySuspendedBeerFormProviderSpec extends BigDecimalFieldBehaviours {
     behave like bigDecimalField(
       form,
       fieldName,
-      nonNumericError = FormError(fieldName, "dutySuspendedBeer.error.pureAlcoholInBeer.nonNumeric"),
-      decimalPlacesError = FormError(fieldName, "dutySuspendedBeer.error.pureAlcoholInBeer.decimalPlaces")
+      nonNumericError = FormError(fieldName, "dutySuspended.error.pureAlcohol.nonNumeric"),
+      decimalPlacesError = FormError(fieldName, "dutySuspended.error.pureAlcohol.decimalPlaces")
     )
 
     behave like bigDecimalFieldWithMinimum(
@@ -98,8 +98,7 @@ class DutySuspendedBeerFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       minimum = minimum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "dutySuspendedBeer.error.pureAlcoholInBeer.minimumRequired", ArraySeq(minimum))
+      expectedError = FormError(fieldName, "dutySuspended.error.pureAlcohol.minimumRequired", ArraySeq(minimum))
     )
 
     behave like bigDecimalFieldWithMaximum(
@@ -107,8 +106,7 @@ class DutySuspendedBeerFormProviderSpec extends BigDecimalFieldBehaviours {
       fieldName,
       maximum = maximum,
       decimal = decimal,
-      expectedError =
-        FormError(fieldName, "dutySuspendedBeer.error.pureAlcoholInBeer.maximumRequired", ArraySeq(maximum))
+      expectedError = FormError(fieldName, "dutySuspended.error.pureAlcohol.maximumRequired", ArraySeq(maximum))
     )
 
     behave like mandatoryField(

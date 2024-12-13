@@ -73,7 +73,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val expectedReturnSummaryList =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands)(getMessages(application))
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
         val form                      = formProvider(regime)(getMessages(application))
 
         status(result) mustEqual OK
@@ -96,7 +96,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val expectedReturnSummaryList =
-          CategoriesByRateTypeHelper.rateBandCategories(rateBands)(getMessages(application))
+          CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
         val form                      = formProvider(regime)(getMessages(application))
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -163,7 +163,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val summaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands)(getMessages(application))
+        val summaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, summaryList, NormalMode)(

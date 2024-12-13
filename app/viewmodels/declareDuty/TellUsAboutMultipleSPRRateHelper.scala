@@ -16,14 +16,14 @@
 
 package viewmodels.declareDuty
 
-import models.RateBand
+import models.{AlcoholRegime, RateBand}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 object TellUsAboutMultipleSPRRateHelper {
-  def radioItems(rateBands: Set[RateBand])(implicit messages: Messages): Seq[RadioItem] = {
-    val categoryViewModels                = CategoriesByRateTypeHelper.rateBandCategories(rateBands, isRecap = true)
+  def radioItems(rateBands: Set[RateBand], regime: AlcoholRegime)(implicit messages: Messages): Seq[RadioItem] = {
+    val categoryViewModels                = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime, isRecap = true)
     val smallProducerRadioItems           = categoryViewModels.smallProducer
       .map { category =>
         RadioItem(content = Text(category.category), value = Some(category.id))

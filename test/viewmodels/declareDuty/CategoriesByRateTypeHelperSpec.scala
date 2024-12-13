@@ -17,6 +17,7 @@
 package viewmodels.declareDuty
 
 import base.SpecBase
+import models.AlcoholRegime.Beer
 import models.RateBand
 import play.api.i18n.Messages
 
@@ -26,11 +27,16 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
   "CategoriesByRateTypeHelper" - {
     "should return an empty view model when no ratebands are passed" in new SetUp {
       CategoriesByRateTypeHelper
-        .rateBandCategories(Set.empty) mustBe CategoriesByRateTypeViewModel(Seq.empty, Seq.empty, Seq.empty, Seq.empty)
+        .rateBandCategories(Set.empty, regime) mustBe CategoriesByRateTypeViewModel(
+        Seq.empty,
+        Seq.empty,
+        Seq.empty,
+        Seq.empty
+      )
     }
 
     "should return rate band description when all ratebands are passed" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(allRateBands) mustBe CategoriesByRateTypeViewModel(
+      CategoriesByRateTypeHelper.rateBandCategories(allRateBands, regime) mustBe CategoriesByRateTypeViewModel(
         Seq(CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123")),
         Seq(CategoryViewModel("Beer between 2% and 3% ABV (tax type code 124)", "124")),
         Seq(CategoryViewModel("Beer between 3% and 4% ABV (tax type code 125)", "125")),
@@ -39,7 +45,11 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "should return rate band description when all ratebands are passed and recap" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(allRateBands, isRecap = true) mustBe CategoriesByRateTypeViewModel(
+      CategoriesByRateTypeHelper.rateBandCategories(
+        allRateBands,
+        regime,
+        isRecap = true
+      ) mustBe CategoriesByRateTypeViewModel(
         Seq(CategoryViewModel("Non-draught beer between 1% and 2% ABV (123)", "123")),
         Seq(CategoryViewModel("Draught beer between 2% and 3% ABV (124)", "124")),
         Seq(CategoryViewModel("Non-draught beer between 3% and 4% ABV (125 SPR)", "125")),
@@ -48,7 +58,10 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "should return rate band description when all ratebands except core are passed" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(allRateBands - coreRateBand) mustBe CategoriesByRateTypeViewModel(
+      CategoriesByRateTypeHelper.rateBandCategories(
+        allRateBands - coreRateBand,
+        regime
+      ) mustBe CategoriesByRateTypeViewModel(
         Seq.empty,
         Seq(CategoryViewModel("Beer between 2% and 3% ABV (tax type code 124)", "124")),
         Seq(CategoryViewModel("Beer between 3% and 4% ABV (tax type code 125)", "125")),
@@ -58,7 +71,8 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
 
     "should return rate band description when all ratebands except draught relief are passed" in new SetUp {
       CategoriesByRateTypeHelper.rateBandCategories(
-        allRateBands - draughtReliefRateBand
+        allRateBands - draughtReliefRateBand,
+        regime
       ) mustBe CategoriesByRateTypeViewModel(
         Seq(CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123")),
         Seq.empty,
@@ -69,7 +83,8 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
 
     "should return rate band description when all ratebands except small producer relief are passed" in new SetUp {
       CategoriesByRateTypeHelper.rateBandCategories(
-        allRateBands - smallProducerReliefRateBand
+        allRateBands - smallProducerReliefRateBand,
+        regime
       ) mustBe CategoriesByRateTypeViewModel(
         Seq(CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123")),
         Seq(CategoryViewModel("Beer between 2% and 3% ABV (tax type code 124)", "124")),
@@ -80,7 +95,8 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
 
     "should return rate band description when all ratebands except draught and small producer relief are passed" in new SetUp {
       CategoriesByRateTypeHelper.rateBandCategories(
-        allRateBands - draughtAndSmallProducerReliefRateBand
+        allRateBands - draughtAndSmallProducerReliefRateBand,
+        regime
       ) mustBe CategoriesByRateTypeViewModel(
         Seq(CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123")),
         Seq(CategoryViewModel("Beer between 2% and 3% ABV (tax type code 124)", "124")),
@@ -90,7 +106,10 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
     }
 
     "should group types and sort by tax code" in new SetUp {
-      CategoriesByRateTypeHelper.rateBandCategories(threeCoreRandBandsReversed) mustBe CategoriesByRateTypeViewModel(
+      CategoriesByRateTypeHelper.rateBandCategories(
+        threeCoreRandBandsReversed,
+        regime
+      ) mustBe CategoriesByRateTypeViewModel(
         Seq(
           CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123"),
           CategoryViewModel("Beer between 1% and 2% ABV (tax type code 124)", "124"),
@@ -106,6 +125,8 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
   class SetUp {
     val application                 = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
+
+    val regime = Beer
 
     val threeCoreRandBandsReversed = SortedSet(coreRateBand, coreRateBand2, coreRateBand3)((x: RateBand, y: RateBand) =>
       y.taxTypeCode(2) - x.taxTypeCode(2)
