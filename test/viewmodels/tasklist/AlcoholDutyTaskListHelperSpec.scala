@@ -34,20 +34,21 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
   "AlcoholDutyTaskListHelper" - {
     "must return an incomplete task list" in new SetUp {
       val expectedSections = Seq(
-        returnTaskListCreator.returnSection(emptyUserAnswers),
-        returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
-        returnTaskListCreator.returnDSDSection(emptyUserAnswers),
-        returnTaskListCreator.returnQSSection(emptyUserAnswers),
+        returnTaskListCreator.returnSection(userAnswers),
+        returnTaskListCreator.returnAdjustmentSection(userAnswers),
+        returnTaskListCreator.returnDSDSection(userAnswers),
+        returnTaskListCreator.returnQSSection(userAnswers),
         returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
       )
 
-      val result           =
-        taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodJan)(getMessages(application))
-      val validUntilString =
-        createDateTimeHelper().formatDateMonthYear(createDateTimeHelper().instantToLocalDate(validUntil))
+      val result =
+        taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)(getMessages(application))
 
       result mustBe AlcoholDutyTaskList(
         expectedSections,
+        fromDateString,
+        toDateString,
+        dueDateString,
         validUntilString
       )
 
@@ -57,7 +58,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
     }
 
     "must return an incomplete task list when all sections are completed except for check and submit" in new SetUp {
-      val userAnswers = emptyUserAnswers
+      val userAnswersAllOtherSectionsCompleted = userAnswers
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
         .value
@@ -73,20 +74,23 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
       val expectedSections =
         Seq(
-          returnTaskListCreator.returnSection(userAnswers),
-          returnTaskListCreator.returnAdjustmentSection(userAnswers),
-          returnTaskListCreator.returnDSDSection(userAnswers),
-          returnTaskListCreator.returnQSSection(userAnswers),
+          returnTaskListCreator.returnSection(userAnswersAllOtherSectionsCompleted),
+          returnTaskListCreator.returnAdjustmentSection(userAnswersAllOtherSectionsCompleted),
+          returnTaskListCreator.returnDSDSection(userAnswersAllOtherSectionsCompleted),
+          returnTaskListCreator.returnQSSection(userAnswersAllOtherSectionsCompleted),
           returnTaskListCreator.returnCheckAndSubmitSection(4, 4)
         )
 
-      val result           =
-        taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriodJan)(getMessages(application))
-      val validUntilString =
-        createDateTimeHelper().formatDateMonthYear(createDateTimeHelper().instantToLocalDate(validUntil))
+      val result =
+        taskListViewModel.getTaskList(userAnswersAllOtherSectionsCompleted, validUntil, returnPeriod)(
+          getMessages(application)
+        )
 
       result mustBe AlcoholDutyTaskList(
         expectedSections,
+        fromDateString,
+        toDateString,
+        dueDateString,
         validUntilString
       )
 
@@ -97,17 +101,17 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
 
     "must return a the quarter spirits task only in Jan, Apr, Jul and Oct" in new SetUp {
       val expectedSectionsWithQS = Seq(
-        returnTaskListCreator.returnSection(emptyUserAnswers),
-        returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
-        returnTaskListCreator.returnDSDSection(emptyUserAnswers),
-        returnTaskListCreator.returnQSSection(emptyUserAnswers),
+        returnTaskListCreator.returnSection(userAnswers),
+        returnTaskListCreator.returnAdjustmentSection(userAnswers),
+        returnTaskListCreator.returnDSDSection(userAnswers),
+        returnTaskListCreator.returnQSSection(userAnswers),
         returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
       )
 
       val expectedSectionsWithoutQS = Seq(
-        returnTaskListCreator.returnSection(emptyUserAnswers),
-        returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers),
-        returnTaskListCreator.returnDSDSection(emptyUserAnswers),
+        returnTaskListCreator.returnSection(userAnswers),
+        returnTaskListCreator.returnAdjustmentSection(userAnswers),
+        returnTaskListCreator.returnDSDSection(userAnswers),
         returnTaskListCreator.returnCheckAndSubmitSection(0, 3)
       )
 
@@ -115,7 +119,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         val returnPeriod = ReturnPeriod.fromPeriodKey(periodKey).get
 
         val result =
-          taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriod)(getMessages(application))
+          taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)(getMessages(application))
 
         val periodQuarterChars = Set('A', 'D', 'G', 'J')
         val lastChar           = periodKey.last
@@ -133,8 +137,19 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
     val additionalConfig             = Map("features.spirits-and-ingredients" -> true)
     val application: Application     = applicationBuilder().configure(additionalConfig).build()
     val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
-    val validUntil                   = Instant.now(clock)
     implicit val messages: Messages  = getMessages(application)
+    private val periodKey            = periodKeyJan
+    val userAnswers                  = emptyUserAnswers.copy(returnId = emptyUserAnswers.returnId.copy(periodKey = periodKey))
+    val returnPeriod                 = ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
+    private val dateTimeHelper       = createDateTimeHelper()
+    val fromDate                     = returnPeriod.periodFromDate()
+    val toDate                       = returnPeriod.periodToDate()
+    val dueDate                      = returnPeriod.periodDueDate()
+    val validUntil                   = Instant.now(clock)
+    val fromDateString               = dateTimeHelper.formatDateMonthYear(fromDate)
+    val toDateString                 = dateTimeHelper.formatDateMonthYear(toDate)
+    val dueDateString                = dateTimeHelper.formatDateMonthYear(dueDate)
+    val validUntilString             = dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
     val returnTaskListCreator        = new ReturnTaskListCreator()
     val taskListViewModel            = new TaskListViewModel(createDateTimeHelper(), returnTaskListCreator, appConfig)
   }

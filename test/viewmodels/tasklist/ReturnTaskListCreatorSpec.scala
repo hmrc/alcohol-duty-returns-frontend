@@ -21,8 +21,7 @@ import models.AlcoholRegime._
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Underdeclaration
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
-import models.{AlcoholRegime, AlcoholRegimes, CheckMode, NormalMode, UserAnswers}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import models.{AlcoholRegime, CheckMode, NormalMode, UserAnswers}
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import pages.dutySuspended._
 import pages.declareDuty.{AlcoholDutyPage, AlcoholTypePage, DeclareAlcoholDutyQuestionPage, WhatDoYouNeedToDeclarePage}
@@ -39,107 +38,431 @@ class ReturnTaskListCreatorSpec extends SpecBase {
   val pageNumber                  = 1
 
   "on calling returnSection" - {
-
-    "when the user answers object is empty, must return the not started section" in {
+    "when the user hasn't answered the DeclareAlcoholDuty question" - {
       val result = returnTaskListCreator.returnSection(emptyUserAnswers)
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.returns.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.returns.needToDeclare.notStarted")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
-      )
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.returns.heading")
+      }
+
+      "the task must not be completed" in {
+        result.completedTask mustBe false
+      }
+
+      "only one subtask must be available" in {
+        result.taskList.items.size mustBe 1
+      }
+
+      "the subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.returns.needToDeclare")
+        )
+      }
+
+      "the subtask must not be started" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+      }
+
+      "the subtask must link to the declare alcohol duty question" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
+        )
+      }
+
+      "no hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe None
+      }
     }
 
-    "when the user answers no to DeclareAlcoholDuty question, must return a complete section" in {
+    "when the user answers no to the DeclareAlcoholDuty question" - {
       val userAnswers = emptyUserAnswers
         .set(DeclareAlcoholDutyQuestionPage, false)
         .success
         .value
       val result      = returnTaskListCreator.returnSection(userAnswers)
 
-      result.completedTask                     shouldBe true
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.returns.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.returns.needToDeclare.no")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-      )
-    }
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.returns.heading")
+      }
 
-    "when the user answers yes to DeclareAlcoholDuty question, and the AlcoholType screen must return a In progress section" - {
-      val declaredAlcoholDutyUserAnswer = emptyUserAnswers
-        .set(DeclareAlcoholDutyQuestionPage, true)
-        .success
-        .value
+      "the task must be completed" in {
+        result.completedTask mustBe true
+      }
 
-      val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
+      "only one subtask must be available" in {
+        result.taskList.items.size mustBe 1
+      }
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.returns.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.returns.needToDeclare.yes")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-      )
-
-    }
-
-    "when the user answers yes to DeclareAlcoholDuty question, must return a complete section and the regime tasks" - {
-      val declaredAlcoholDutyUserAnswer = emptyUserAnswers
-        .set(DeclareAlcoholDutyQuestionPage, true)
-        .success
-        .value
-        .set(AlcoholTypePage, AlcoholRegime.values.toSet)
-        .success
-        .value
-
-      "must have a link to the 'What do you need to declare?' screen if the user has not answered any other question" in {
-        val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
-
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe AlcoholRegime.values.toSet.size + 1
-        result.title                             shouldBe messages("taskList.section.returns.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.returns.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-        )
-
-        AlcoholRegime.values.foreach(regime =>
-          result.taskList.items
-            .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
-            case Some(task) =>
-              task.status shouldBe AlcoholDutyTaskListItemStatus.notStarted
-              task.href   shouldBe Some(
-                controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
-              )
-            case None       => fail(s"Task for regime $regime not found")
-          }
+      "the subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.returns.needToDeclare")
         )
       }
 
-      "when return data is filled in it must return a completed section" in {
+      "the subtask must be completed" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+      }
 
-        val regime          = regimeGen.sample.value
-        val rateBands       = genListOfRateBandForRegime(regime).sample.value.toSet
-        val volumesAndRates = arbitraryVolumeAndRateByTaxType(
-          rateBands.toSeq
+      "the subtask must link to the declare alcohol duty question in CheckMode" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+        )
+      }
+
+      "no hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe None
+      }
+    }
+
+    "when the user answers yes to the DeclareAlcoholDuty question" - {
+      "but hasn't selected any regimes to declare duty on" - {
+        val declaredAlcoholDutyUserAnswer = emptyUserAnswers
+          .set(DeclareAlcoholDutyQuestionPage, true)
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.returns.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "only one subtask must be available" in {
+          result.taskList.items.size mustBe 1
+        }
+
+        "the subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.returns.needToDeclare")
+          )
+        }
+
+        "the subtask must be in progress" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.inProgress
+        }
+
+        "the subtask must link to the declare alcohol duty question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and has selected all regimes to declare duty on but not started any's task" - {
+        val declaredAlcoholDutyUserAnswer = emptyUserAnswers
+          .set(DeclareAlcoholDutyQuestionPage, true)
+          .success
+          .value
+          .set(AlcoholTypePage, AlcoholRegime.values.toSet)
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.returns.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for each regime must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 1 + AlcoholRegime.values.size
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.returns.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare alcohol duty question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        AlcoholRegime.values.foreach { regime =>
+          s"the subtask for ${regime.entryName} must be found and not be started" in {
+            val maybeTask = result.taskList.items.find(
+              _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
+            )
+
+            maybeTask mustBe defined
+            maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+          }
+
+          s"the subtask for ${regime.entryName} must link to the what do you need to declare page for that regime" in {
+            val maybeTask = result.taskList.items.find(
+              _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
+            )
+
+            maybeTask.get.href mustBe Some(
+              controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+            )
+          }
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and has selected a single regime to declare duty on but not started its task" - {
+        AlcoholRegime.values.foreach { regime =>
+          s"for ${regime.entryName}" - {
+            val declaredAlcoholDutyUserAnswer = emptyUserAnswers
+              .set(DeclareAlcoholDutyQuestionPage, true)
+              .success
+              .value
+              .set(AlcoholTypePage, Set(regime))
+              .success
+              .value
+
+            val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswer)
+
+            "the task's title must be correct" in {
+              result.title mustBe messages("taskList.section.returns.heading")
+            }
+
+            "the task must not be completed" in {
+              result.completedTask mustBe false
+            }
+
+            "a subtask for the regime must must be available in addition to the declaration subtask" in {
+              result.taskList.items.size mustBe 2
+            }
+
+            "the declaration subtask's title must be correct" in {
+              result.taskList.items.head.title.content mustBe Text(
+                messages("taskList.section.returns.needToDeclare")
+              )
+            }
+
+            "the declaration subtask must be completed" in {
+              result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+            }
+
+            "the declaration subtask must link to the declare alcohol duty question in CheckMode" in {
+              result.taskList.items.head.href mustBe Some(
+                controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+              )
+            }
+
+            s"the sub task for ${regime.entryName} must be found and not be started" in {
+              val maybeTask = result.taskList.items.find(
+                _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
+              )
+
+              maybeTask mustBe defined
+              maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+            }
+
+            s"the sub task for ${regime.entryName} must link to the what do you need to declare page for that regime" in {
+              val maybeTask = result.taskList.items.find(
+                _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
+              )
+
+              maybeTask.get.href mustBe Some(
+                controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+              )
+            }
+
+            "no hint must be displayed" in {
+              result.taskList.items.head.hint.map(_.content) mustBe None
+            }
+          }
+        }
+      }
+
+      "and has selected a single regime to declare duty on and started but not finished its task" - {
+        AlcoholRegime.values.foreach { regime =>
+          val rateBands                                            = genListOfRateBandForRegime(regime).sample.value
+          val declaredAlcoholDutyUserAnswerAndDeclarationForRegime = emptyUserAnswers
+            .set(DeclareAlcoholDutyQuestionPage, true)
+            .success
+            .value
+            .set(AlcoholTypePage, Set(regime))
+            .success
+            .value
+            .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
+            .success
+            .value
+
+          s"for ${regime.entryName}" - {
+            val result = returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswerAndDeclarationForRegime)
+
+            "the task's title must be correct" in {
+              result.title mustBe messages("taskList.section.returns.heading")
+            }
+
+            "the task must not be completed" in {
+              result.completedTask mustBe false
+            }
+
+            "a subtask for the regime must must be available in addition to the declaration subtask" in {
+              result.taskList.items.size mustBe 2
+            }
+
+            "the declaration subtask's title must be correct" in {
+              result.taskList.items.head.title.content mustBe Text(
+                messages("taskList.section.returns.needToDeclare")
+              )
+            }
+
+            "the declaration subtask must be completed" in {
+              result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+            }
+
+            "the declaration subtask must link to the declare alcohol duty question in CheckMode" in {
+              result.taskList.items.head.href mustBe Some(
+                controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+              )
+            }
+
+            s"the sub task for ${regime.entryName} must be found and be in progress" in {
+              val maybeTask = result.taskList.items.find(
+                _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
+              )
+
+              maybeTask mustBe defined
+              maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
+            }
+
+            s"the sub task for ${regime.entryName} must link to the what do you need to declare page for that regime" in {
+              val maybeTask = result.taskList.items.find(
+                _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
+              )
+
+              maybeTask.get.href mustBe Some(
+                controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
+              )
+            }
+
+            "no hint must be displayed" in {
+              result.taskList.items.head.hint.map(_.content) mustBe None
+            }
+          }
+        }
+      }
+
+      "and has selected a single regime to declare duty on and finished its task" - {
+        AlcoholRegime.values.foreach { regime =>
+          val rateBands       = genListOfRateBandForRegime(regime).sample.value
+          val volumesAndRates = arbitraryVolumeAndRateByTaxType(
+            rateBands
+          ).arbitrary.sample.value
+
+          val dutiesByTaxType = volumesAndRates.map { volumeAndRate =>
+            val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
+            DutyByTaxType(
+              taxType = volumeAndRate.taxType,
+              totalLitres = volumeAndRate.totalLitres,
+              pureAlcohol = volumeAndRate.pureAlcohol,
+              dutyRate = volumeAndRate.dutyRate,
+              dutyDue = totalDuty
+            )
+          }
+
+          val alcoholDuty = AlcoholDuty(
+            dutiesByTaxType = dutiesByTaxType,
+            totalDuty = dutiesByTaxType.map(_.dutyDue).sum
+          )
+
+          val declaredAlcoholDutyUserAnswerAndDeclarationAndDutyForRegime = emptyUserAnswers
+            .set(DeclareAlcoholDutyQuestionPage, true)
+            .success
+            .value
+            .set(AlcoholTypePage, Set(regime))
+            .success
+            .value
+            .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands.toSet)
+            .success
+            .value
+            .setByKey(AlcoholDutyPage, regime, alcoholDuty)
+            .success
+            .value
+
+          s"for ${regime.entryName}" - {
+            val result =
+              returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswerAndDeclarationAndDutyForRegime)
+
+            "the task's title must be correct" in {
+              result.title mustBe messages("taskList.section.returns.heading")
+            }
+
+            "the task must be completed" in {
+              result.completedTask mustBe true
+            }
+
+            "a subtask for the regime must must be available in addition to the declaration subtask" in {
+              result.taskList.items.size mustBe 2
+            }
+
+            "the declaration subtask's title must be correct" in {
+              result.taskList.items.head.title.content mustBe Text(
+                messages("taskList.section.returns.needToDeclare")
+              )
+            }
+
+            "the declaration subtask must be completed" in {
+              result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+            }
+
+            "the declaration subtask must link to the declare alcohol duty question in CheckMode" in {
+              result.taskList.items.head.href mustBe Some(
+                controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+              )
+            }
+
+            s"the sub task for ${regime.entryName} must be found and be completed" in {
+              val maybeTask = result.taskList.items.find(
+                _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
+              )
+
+              maybeTask mustBe defined
+              maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+            }
+
+            s"the sub task for ${regime.entryName} must link to the check your answers page for that regime" in {
+              val maybeTask = result.taskList.items.find(
+                _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
+              )
+
+              maybeTask.get.href mustBe Some(
+                controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url
+              )
+            }
+
+            "no hint must be displayed" in {
+              result.taskList.items.head.hint.map(_.content) mustBe None
+            }
+          }
+        }
+      }
+
+      "and has selected a two regimes to declare duty on and finished one of the tasks and started the other" - {
+        val rateBandsBeer = genListOfRateBandForRegime(Beer).sample.value
+
+        val rateBandsCider       = genListOfRateBandForRegime(Cider).sample.value
+        val volumesAndRatesCider = arbitraryVolumeAndRateByTaxType(
+          rateBandsCider
         ).arbitrary.sample.value
 
-        val dutiesByTaxType = volumesAndRates.map { volumeAndRate =>
+        val dutiesByTaxTypeCider = volumesAndRatesCider.map { volumeAndRate =>
           val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
           DutyByTaxType(
             taxType = volumeAndRate.taxType,
@@ -150,412 +473,1647 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           )
         }
 
-        val alcoholDuty = AlcoholDuty(
-          dutiesByTaxType = dutiesByTaxType,
-          totalDuty = dutiesByTaxType.map(_.dutyDue).sum
+        val alcoholDutyCider = AlcoholDuty(
+          dutiesByTaxType = dutiesByTaxTypeCider,
+          totalDuty = dutiesByTaxTypeCider.map(_.dutyDue).sum
         )
 
-        val result = returnTaskListCreator.returnSection(
-          declaredAlcoholDutyUserAnswer
-            .setByKey(AlcoholDutyPage, regime, alcoholDuty)
-            .success
-            .value
-            .set(AlcoholTypePage, Set(regime))
-            .success
-            .value
-        )
+        val regimes: Set[AlcoholRegime] = Set(Beer, Cider)
 
-        result.completedTask                     shouldBe true
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.returns.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.returns.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-        )
+        val declaredAlcoholDutyUserAnswerAndDeclarationAndDutyForRegime = emptyUserAnswers
+          .set(DeclareAlcoholDutyQuestionPage, true)
+          .success
+          .value
+          .set(AlcoholTypePage, regimes)
+          .success
+          .value
+          .setByKey(WhatDoYouNeedToDeclarePage, Beer, rateBandsBeer.toSet)
+          .success
+          .value
+          .setByKey(WhatDoYouNeedToDeclarePage, Cider, rateBandsCider.toSet)
+          .success
+          .value
+          .setByKey(AlcoholDutyPage, Cider, alcoholDutyCider)
+          .success
+          .value
 
-        result.taskList.items
-          .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
-          case Some(task) =>
-            task.status shouldBe AlcoholDutyTaskListItemStatus.completed
-            task.href   shouldBe Some(
-              controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url
-            )
-          case None       => fail(s"Task for regime $regime not found")
+        val result =
+          returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswerAndDeclarationAndDutyForRegime)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.returns.heading")
         }
 
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the regime must must be available in addition to the declaration subtasks" in {
+          result.taskList.items.size mustBe 3
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.returns.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare alcohol duty question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for Beer must be found and be in progress" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages(s"taskList.section.returns.${Beer.entryName}"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
+        }
+
+        "the sub task for Beer must link to the check your answers page for that regime" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages(s"taskList.section.returns.${Beer.entryName}"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, Beer).url
+          )
+        }
+
+        "the sub task for Cider must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages(s"taskList.section.returns.${Cider.entryName}"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for Cider must link to the check your answers page for that regime" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages(s"taskList.section.returns.${Cider.entryName}"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Cider).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
-      "when return data is not completely filled in it must return an In progress section" in {
+      "and has selected a two regimes to declare duty on and finished both tasks" - {
+        val rateBandsBeer       = genListOfRateBandForRegime(Beer).sample.value
+        val volumesAndRatesBeer = arbitraryVolumeAndRateByTaxType(
+          rateBandsBeer
+        ).arbitrary.sample.value
 
-        val regime = regimeGen.sample.value
-
-        val rateBandList = genListOfRateBandForRegime(regime).sample.value
-
-        val result = returnTaskListCreator.returnSection(
-          declaredAlcoholDutyUserAnswer
-            .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBandList.toSet)
-            .success
-            .value
-            .set(AlcoholTypePage, Set(regime))
-            .success
-            .value
-        )
-
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.returns.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.returns.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
-        )
-
-        result.taskList.items
-          .find(_.title.content == Text(messages(s"taskList.section.returns.${regime.toString}"))) match {
-          case Some(task) =>
-            task.status shouldBe AlcoholDutyTaskListItemStatus.inProgress
-            task.href   shouldBe Some(
-              controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
-            )
-          case None       => fail(s"Task for regime $regime not found")
+        val dutiesByTaxTypeBeer = volumesAndRatesBeer.map { volumeAndRate =>
+          val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
+          DutyByTaxType(
+            taxType = volumeAndRate.taxType,
+            totalLitres = volumeAndRate.totalLitres,
+            pureAlcohol = volumeAndRate.pureAlcohol,
+            dutyRate = volumeAndRate.dutyRate,
+            dutyDue = totalDuty
+          )
         }
 
+        val alcoholDutyBeer = AlcoholDuty(
+          dutiesByTaxType = dutiesByTaxTypeBeer,
+          totalDuty = dutiesByTaxTypeBeer.map(_.dutyDue).sum
+        )
+
+        val rateBandsCider       = genListOfRateBandForRegime(Cider).sample.value
+        val volumesAndRatesCider = arbitraryVolumeAndRateByTaxType(
+          rateBandsCider
+        ).arbitrary.sample.value
+
+        val dutiesByTaxTypeCider = volumesAndRatesCider.map { volumeAndRate =>
+          val totalDuty = volumeAndRate.dutyRate * volumeAndRate.pureAlcohol
+          DutyByTaxType(
+            taxType = volumeAndRate.taxType,
+            totalLitres = volumeAndRate.totalLitres,
+            pureAlcohol = volumeAndRate.pureAlcohol,
+            dutyRate = volumeAndRate.dutyRate,
+            dutyDue = totalDuty
+          )
+        }
+
+        val alcoholDutyCider = AlcoholDuty(
+          dutiesByTaxType = dutiesByTaxTypeCider,
+          totalDuty = dutiesByTaxTypeCider.map(_.dutyDue).sum
+        )
+
+        val regimes: Set[AlcoholRegime] = Set(Beer, Cider)
+
+        val declaredAlcoholDutyUserAnswerAndDeclarationAndDutyForRegime = emptyUserAnswers
+          .set(DeclareAlcoholDutyQuestionPage, true)
+          .success
+          .value
+          .set(AlcoholTypePage, regimes)
+          .success
+          .value
+          .setByKey(WhatDoYouNeedToDeclarePage, Beer, rateBandsBeer.toSet)
+          .success
+          .value
+          .setByKey(AlcoholDutyPage, Beer, alcoholDutyBeer)
+          .success
+          .value
+          .setByKey(WhatDoYouNeedToDeclarePage, Cider, rateBandsCider.toSet)
+          .success
+          .value
+          .setByKey(AlcoholDutyPage, Cider, alcoholDutyCider)
+          .success
+          .value
+
+        val result =
+          returnTaskListCreator.returnSection(declaredAlcoholDutyUserAnswerAndDeclarationAndDutyForRegime)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.returns.heading")
+        }
+
+        "the task must be completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the regime must must be available in addition to the declaration subtasks" in {
+          result.taskList.items.size mustBe 3
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.returns.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare alcohol duty question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for Beer must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages(s"taskList.section.returns.${Beer.entryName}"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for Beer must link to the check your answers page for that regime" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages(s"taskList.section.returns.${Beer.entryName}"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Beer).url
+          )
+        }
+
+        "the sub task for Cider must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages(s"taskList.section.returns.${Cider.entryName}"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for Cider must link to the check your answers page for that regime" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages(s"taskList.section.returns.${Cider.entryName}"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(Cider).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
     }
   }
 
   "on calling returnAdjustmentSection" - {
-
-    "when the user answers object is empty, must return a not started section" in {
+    "when the user hasn't answered the DeclareAdjustment question" - {
       val result = returnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.adjustment.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.adjustment.needToDeclare.notStarted")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url
-      )
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.adjustment.heading")
+      }
+
+      "the task must not be completed" in {
+        result.completedTask mustBe false
+      }
+
+      "only one subtask must be available" in {
+        result.taskList.items.size mustBe 1
+      }
+
+      "the subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.adjustment.needToDeclare")
+        )
+      }
+
+      "the subtask must not be started" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+      }
+
+      "the subtask must link to the declare adjustment question" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url
+        )
+      }
+
+      "no hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe None
+      }
     }
 
-    "when the user answers no to DeclareAdjustment question, must return a complete section" in {
+    "when the user answers no to the DeclareAdjustment question" - {
       val userAnswers = emptyUserAnswers
         .set(DeclareAdjustmentQuestionPage, false)
         .success
         .value
       val result      = returnTaskListCreator.returnAdjustmentSection(userAnswers)
 
-      result.completedTask                     shouldBe true
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.adjustment.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.adjustment.needToDeclare.no")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
-      )
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.adjustment.heading")
+      }
+
+      "the task must be completed" in {
+        result.completedTask mustBe true
+      }
+
+      "only one subtask must be available" in {
+        result.taskList.items.size mustBe 1
+      }
+
+      "the subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.adjustment.needToDeclare")
+        )
+      }
+
+      "the subtask must be completed" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+      }
+
+      "the subtask must link to the declare adjustment question in CheckMode" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+        )
+      }
+
+      "no hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe None
+      }
     }
 
-    "when the user answers yes to DeclareAdjustment question, must return a complete section and the other task" - {
-      val declaredAdjustmentUserAnswer = emptyUserAnswers
-        .set(DeclareAdjustmentQuestionPage, true)
-        .success
-        .value
+    "when the user answers yes to the DeclareAdjustment question" - {
+      "but not declared or declaring any adjustments" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
 
-      "must have a link to the 'Adjustment Type' screen if the user has not answered any other question and the task must be not started" in {
         val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
 
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.adjustment.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.adjustment.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.adjustment.notStarted")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
-        )
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and not be started" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+        }
+
+        "the sub task for the adjustments must link to the what do you need to declare page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
-      "must have a link to the 'Adjustment Type' screen if the user has at least one entry in the adjustment list, has answered some of the adjustment entry questions and the task must be in progress" in {
-        val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Underdeclaration))
-        val result          = returnTaskListCreator.returnAdjustmentSection(
-          declaredAdjustmentUserAnswer
-            .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
-            .success
-            .value
-            .set(CurrentAdjustmentEntryPage, adjustmentEntry)
-            .success
-            .value
-        )
+      "and are in the process of declaring a first adjustment" - {
+        val adjustmentEntry              = AdjustmentEntry(adjustmentType = Some(Underdeclaration))
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(CurrentAdjustmentEntryPage, adjustmentEntry)
+          .success
+          .value
 
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.adjustment.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.adjustment.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
-        )
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.adjustment.inProgress")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be in progress" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
+        }
+
+        "the sub task for the adjustments must link to the what do you need to declare page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
-      "must have a link to the 'Adjustment Type' screen if the user has answered some of the adjustment entry questions and the task must be in progress" in {
-        val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Underdeclaration))
-        val result          = returnTaskListCreator.returnAdjustmentSection(
-          declaredAdjustmentUserAnswer.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-        )
+      "and have declared an adjustment are in the process of declaring a second adjustment" - {
+        val adjustmentEntry              = AdjustmentEntry(adjustmentType = Some(Underdeclaration))
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(CurrentAdjustmentEntryPage, adjustmentEntry)
+          .success
+          .value
 
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.adjustment.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.adjustment.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
-        )
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.adjustment.inProgress")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be in progress" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
+        }
+
+        "the sub task for the adjustments must link to the what do you need to declare page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
-      "must have a link to the 'Adjustment List' screen if the user has at least one entry in the adjustment list with no other answered questions and the task must be in progress" in {
-        val result = returnTaskListCreator.returnAdjustmentSection(
-          declaredAdjustmentUserAnswer.set(AdjustmentEntryListPage, List(AdjustmentEntry())).success.value
-        )
+      "and have declared an adjustment, but have not answered that there are no more to declared" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
 
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.adjustment.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.adjustment.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
-        )
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.adjustment.inProgress")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be in progress" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
-      "must have a link to the 'Adjustment List' screen if the user has answered some questions and the task must be completed" in {
-        val result = returnTaskListCreator.returnAdjustmentSection(
-          declaredAdjustmentUserAnswer
-            .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
-            .success
-            .value
-            .set(AdjustmentListPage, false)
-            .success
-            .value
-        )
+      "and have declared an adjustment are have no more to declare, and need to add an under-declaration reason" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+          .set(UnderDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
 
-        result.completedTask                     shouldBe true
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.adjustment.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.adjustment.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
-        )
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.adjustment.completed")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments and under-declaration reason must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 3
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "the sub task for the under-declaration reason must be found and be not started" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+        }
+
+        "the sub task for the under-declaration reason must link to the under-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
-      "must have a link to the Under/Over declaration reason screens if the user has totals over 1000 and the task must be Not started" in {
-        val result = returnTaskListCreator.returnAdjustmentSection(
-          declaredAdjustmentUserAnswer
-            .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
-            .success
-            .value
-            .set(AdjustmentListPage, false)
-            .success
-            .value
-            .set(UnderDeclarationTotalPage, BigDecimal(1000))
-            .success
-            .value
-            .set(OverDeclarationTotalPage, BigDecimal(2000))
-            .success
-            .value
-        )
+      "and have declared an adjustment are have no more to declare, and need to add an over-declaration reason" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+          .set(OverDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
 
-        result.completedTask       shouldBe false
-        result.taskList.items.size shouldBe 4
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
 
-        result.taskList.items(2).title.content shouldBe Text(
-          messages("taskList.section.adjustment.under-declaration")
-        )
-        result.taskList.items(2).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-        result.taskList.items(2).href          shouldBe Some(
-          controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
 
-        result.taskList.items(3).title.content shouldBe Text(
-          messages("taskList.section.adjustment.over-declaration")
-        )
-        result.taskList.items(3).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-        result.taskList.items(3).href          shouldBe Some(
-          controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
-        )
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments and over-declaration reason must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 3
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "the sub task for the over-declaration reason must be found and be not started" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+        }
+
+        "the sub task for the over-declaration reason must link to the over-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
-      "and must have a link to the Under/OverDeclaration reason screens if user has totals over 1000 and reasons are completed then it must be Completed" in {
-        val result = returnTaskListCreator.returnAdjustmentSection(
-          declaredAdjustmentUserAnswer
-            .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
-            .success
-            .value
-            .set(AdjustmentListPage, false)
-            .success
-            .value
-            .set(UnderDeclarationTotalPage, BigDecimal(1000))
-            .success
-            .value
-            .set(OverDeclarationTotalPage, BigDecimal(2000))
-            .success
-            .value
-            .set(UnderDeclarationReasonPage, "test")
-            .success
-            .value
-            .set(OverDeclarationReasonPage, "test")
-            .success
-            .value
-        )
+      "and have declared an adjustment are have no more to declare, and need to add both an under and over-declaration reason" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+          .set(UnderDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(OverDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
 
-        result.taskList.items(2).title.content shouldBe Text(
-          messages("taskList.section.adjustment.under-declaration")
-        )
-        result.taskList.items(2).status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items(2).href          shouldBe Some(
-          controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
-        )
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
 
-        result.taskList.items(3).title.content shouldBe Text(
-          messages("taskList.section.adjustment.over-declaration")
-        )
-        result.taskList.items(3).status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items(3).href          shouldBe Some(
-          controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments and under and over-declaration reason must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 4
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "the sub task for the under-declaration reason must be found and be not started" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+        }
+
+        "the sub task for the under-declaration reason must link to the under-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "the sub task for the over-declaration reason must be found and be not started" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+        }
+
+        "the sub task for the over-declaration reason must link to the over-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
+      "and have declared an adjustment are have no more to declare, and need to add both an under and over-declaration reason, but just the under-declaration reason is added" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+          .set(UnderDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(OverDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(UnderDeclarationReasonPage, "reason")
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments and under and over-declaration reason must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 4
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "the sub task for the under-declaration reason must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for the under-declaration reason must link to the under-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "the sub task for the over-declaration reason must be found and be not started" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+        }
+
+        "the sub task for the over-declaration reason must link to the over-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and have declared an adjustment are have no more to declare, and need to add both an under and over-declaration reason, but just the over-declaration reason is added" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+          .set(UnderDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(OverDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(OverDeclarationReasonPage, "reason")
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the adjustments and under and over-declaration reason must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 4
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "the sub task for the under-declaration reason must be found and be not started" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+        }
+
+        "the sub task for the under-declaration reason must link to the under-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "the sub task for the over-declaration reason must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for the over-declaration reason must link to the over-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and have declared an adjustment are have no more to declare, but no extra reason tasks expected" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task mustt be completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the adjustments must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and have declared an adjustment are have no more to declare, and have added a required under-declaration reason" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+          .set(UnderDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(UnderDeclarationReasonPage, "reason")
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must be completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the adjustments and under-declaration reason must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 3
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "the sub task for the under-declaration reason must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for the under-declaration reason must link to the under-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and have declared an adjustment are have no more to declare, and have added a required over-declaration reason" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+          .set(OverDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(OverDeclarationReasonPage, "reason")
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must be completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the adjustments and over-declaration reason must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 3
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "the sub task for the over-declaration reason must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for the over-declaration reason must link to the over-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and have declared an adjustment are have no more to declare, and have added both a required under and over-declaration reason" - {
+        val declaredAdjustmentUserAnswer = emptyUserAnswers
+          .set(DeclareAdjustmentQuestionPage, true)
+          .success
+          .value
+          .set(AdjustmentEntryListPage, List(AdjustmentEntry()))
+          .success
+          .value
+          .set(AdjustmentListPage, false)
+          .success
+          .value
+          .set(UnderDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(OverDeclarationTotalPage, BigDecimal(1000))
+          .success
+          .value
+          .set(UnderDeclarationReasonPage, "reason")
+          .success
+          .value
+          .set(OverDeclarationReasonPage, "reason")
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnAdjustmentSection(declaredAdjustmentUserAnswer)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.adjustment.heading")
+        }
+
+        "the task must not completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the adjustments and under and over-declaration reason must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 4
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.adjustment.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare adjustment question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task for the adjustments must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        s"the sub task for the adjustments must link to the adjustment list controller on page $pageNumber" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+          )
+        }
+
+        "the sub task for the under-declaration reason must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for the under-declaration reason must link to the under-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.UnderDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "the sub task for the over-declaration reason must be found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task for the over-declaration reason must link to the over-declaration page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.adjustment.routes.OverDeclarationReasonController.onPageLoad(NormalMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
     }
   }
 
   "on calling returnDSDSection" - {
-    "when the user answers object is empty, must return a not started section" in {
+    "when the user hasn't answered the DSD question" - {
       val result = returnTaskListCreator.returnDSDSection(emptyUserAnswers)
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.dutySuspended.needToDeclare.notStarted")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
-      )
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.dutySuspended.heading")
+      }
+
+      "the task must not be completed" in {
+        result.completedTask mustBe false
+      }
+
+      "only one subtask must be available" in {
+        result.taskList.items.size mustBe 1
+      }
+
+      "the subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.dutySuspended.needToDeclare")
+        )
+      }
+
+      "the subtask must not be started" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+      }
+
+      "the subtask must link to the declare alcohol duty question" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
+        )
+      }
+
+      "no hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe None
+      }
     }
 
-    "when the user answers no to Declare DSD question, must return a complete section" in {
+    "when the user answers no to the DSD question" - {
       val userAnswers = emptyUserAnswers
         .set(DeclareDutySuspendedDeliveriesQuestionPage, false)
         .success
         .value
       val result      = returnTaskListCreator.returnDSDSection(userAnswers)
 
-      result.completedTask                     shouldBe true
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.dutySuspended.needToDeclare.no")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
-      )
-    }
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.dutySuspended.heading")
+      }
 
-    "when the user answers yes to Declare DSD question, must return a complete section and the DSD task" - {
-      val declaredDSDUserAnswer = emptyUserAnswers
-        .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
-        .success
-        .value
+      "the task must be completed" in {
+        result.completedTask mustBe true
+      }
 
-      "must have a link to DeclareDutySuspendedDeliveriesQuestionController if the user has not answered any other question" in {
-        val result = returnTaskListCreator.returnDSDSection(declaredDSDUserAnswer)
+      "only one subtask must be available" in {
+        result.taskList.items.size mustBe 1
+      }
 
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
-        )
-
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.notStarted")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url
+      "the subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.dutySuspended.needToDeclare")
         )
       }
 
-      "must have a link to DeclareDutySuspendedDeliveriesQuestionController if the user answers yes to DSD question and not all regime questions are answered" in {
-        val validTotal                                                = 42.34
-        val validPureAlcohol                                          = 34.23
-        val incompleteDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes
+      "the subtask must be completed" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+      }
+
+      "the subtask must link to the declare alcohol duty question in CheckMode" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+        )
+      }
+
+      "no hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe None
+      }
+    }
+
+    "when the user answers yes to the DeclareDutySuspendedDeliveriesQuestionPage question" - {
+      "but has not started the declaration task" - {
+        val userAnswers = emptyUserAnswers
+          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+          .success
+          .value
+        val result      = returnTaskListCreator.returnDSDSection(userAnswers)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.dutySuspended.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "only both subtasks must be available" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.dutySuspended.needToDeclare")
+          )
+        }
+
+        "the subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and has started the declaration task and answered for the only regime" - {
+        val validTotal                                 = 42.34
+        val validPureAlcohol                           = 34.23
+        val completeDutySuspendedDeliveriesUserAnswers = userAnswersWithOtherFermentedProduct
+          .copy(data =
+            Json.obj(
+              DutySuspendedOtherFermentedPage.toString -> Json.obj(
+                "totalOtherFermented"         -> validTotal,
+                "pureAlcoholInOtherFermented" -> validPureAlcohol
+              )
+            )
+          )
+          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
+          .success
+          .value
+
+        val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.dutySuspended.heading")
+        }
+
+        "the task must be completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.dutySuspended.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task must found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.dutySuspended"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task must link to the CYA duty suspended guidance controller" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.dutySuspended"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+      }
+
+      "and has started the declaration task but not answered for all the regimes" - {
+        val validTotal                                   = 42.34
+        val validPureAlcohol                             = 34.23
+        val incompleteDutySuspendedDeliveriesUserAnswers = userAnswersWithAllRegimes
           .copy(data =
             Json.obj(
               DutySuspendedBeerPage.toString    -> Json.obj(
@@ -582,30 +2140,62 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         val result = returnTaskListCreator.returnDSDSection(incompleteDutySuspendedDeliveriesUserAnswers)
 
-        result.completedTask                     shouldBe false
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.dutySuspended.heading")
+        }
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.inProgress")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url
-        )
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.dutySuspended.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task must found and be in progress" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.dutySuspended"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
+        }
+
+        "the sub task must link to the duty suspended guidance controller" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.dutySuspended"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onPageLoad().url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
 
-      "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime questions are answered" in {
-        val validTotal                                              = 42.34
-        val validPureAlcohol                                        = 34.23
-        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes
+      "and has started the declaration task and answered for all the regimes" - {
+        val validTotal                                 = 42.34
+        val validPureAlcohol                           = 34.23
+        val completeDutySuspendedDeliveriesUserAnswers = userAnswersWithAllRegimes
           .copy(data =
             Json.obj(
               DutySuspendedBeerPage.toString           -> Json.obj(
@@ -616,107 +2206,17 @@ class ReturnTaskListCreatorSpec extends SpecBase {
                 "totalCider"         -> validTotal,
                 "pureAlcoholInCider" -> validPureAlcohol
               ),
-              DutySuspendedSpiritsPage.toString        -> Json.obj(
-                "totalSpirits"         -> validTotal,
-                "pureAlcoholInSpirits" -> validPureAlcohol
-              ),
               DutySuspendedWinePage.toString           -> Json.obj(
                 "totalWine"         -> validTotal,
                 "pureAlcoholInWine" -> validPureAlcohol
               ),
-              DutySuspendedOtherFermentedPage.toString -> Json.obj(
-                "totalOtherFermented"         -> validTotal,
-                "pureAlcoholInOtherFermented" -> validPureAlcohol
-              )
-            )
-          )
-          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
-          .success
-          .value
-
-        val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
-
-        result.completedTask                     shouldBe true
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
-        )
-
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.completed")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-        )
-      }
-
-      "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime (Cider, OtherFermentedProduct) questions are answered" in {
-        val validTotal                                              = 42.34
-        val validPureAlcohol                                        = 34.23
-        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes
-          .copy(regimes = AlcoholRegimes(Set(Cider, OtherFermentedProduct)))
-          .copy(data =
-            Json.obj(
-              DutySuspendedCiderPage.toString          -> Json.obj(
-                "totalCider"         -> validTotal,
-                "pureAlcoholInCider" -> validPureAlcohol
-              ),
-              DutySuspendedOtherFermentedPage.toString -> Json.obj(
-                "totalOtherFermented"         -> validTotal,
-                "pureAlcoholInOtherFermented" -> validPureAlcohol
-              )
-            )
-          )
-          .set(DeclareDutySuspendedDeliveriesQuestionPage, true)
-          .success
-          .value
-
-        val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
-
-        result.completedTask                     shouldBe true
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
-        )
-
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.completed")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-        )
-      }
-
-      "must have a link to CYA DSD controller if the user answers yes to the Declare DSD question and all regime (Beer, Wine, Spirits) questions are answered" in {
-        val validTotal                                              = 42.34
-        val validPureAlcohol                                        = 34.23
-        val completeDutySuspendedDeliveriesUserAnswers: UserAnswers = userAnswersWithAllRegimes
-          .copy(regimes = AlcoholRegimes(Set(Beer, Wine, Spirits)))
-          .copy(data =
-            Json.obj(
-              DutySuspendedBeerPage.toString    -> Json.obj(
-                "totalBeer"         -> validTotal,
-                "pureAlcoholInBeer" -> validPureAlcohol
-              ),
-              DutySuspendedWinePage.toString    -> Json.obj(
-                "totalWine"         -> validTotal,
-                "pureAlcoholInWine" -> validPureAlcohol
-              ),
-              DutySuspendedSpiritsPage.toString -> Json.obj(
+              DutySuspendedSpiritsPage.toString        -> Json.obj(
                 "totalSpirits"         -> validTotal,
                 "pureAlcoholInSpirits" -> validPureAlcohol
+              ),
+              DutySuspendedOtherFermentedPage.toString -> Json.obj(
+                "totalOtherFermented"         -> validTotal,
+                "pureAlcoholInOtherFermented" -> validPureAlcohol
               )
             )
           )
@@ -726,228 +2226,511 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         val result = returnTaskListCreator.returnDSDSection(completeDutySuspendedDeliveriesUserAnswers)
 
-        result.completedTask                     shouldBe true
-        result.taskList.items.size               shouldBe 2
-        result.title                             shouldBe messages("taskList.section.dutySuspended.heading")
-        result.taskList.items.head.title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.needToDeclare.yes")
-        )
-        result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items.head.href          shouldBe Some(
-          controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
-        )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.dutySuspended.heading")
+        }
 
-        result.taskList.items(1).title.content shouldBe Text(
-          messages("taskList.section.dutySuspended.completed")
-        )
-        result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
-        result.taskList.items(1).href          shouldBe Some(
-          controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
-        )
+        "the task must be completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.dutySuspended.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the declaration subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task must found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.dutySuspended"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task must link to the CYA duty suspended guidance controller" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.dutySuspended"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+          )
+        }
+
+        "no hint must be displayed" in {
+          result.taskList.items.head.hint.map(_.content) mustBe None
+        }
       }
     }
   }
 
   "on calling returnQSSection" - {
-    "when the user answers object is empty, must return a not started section" in {
+    "when the user hasn't answered the quarterly spirits question" - {
       val result = returnTaskListCreator.returnQSSection(emptyUserAnswers)
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.spirits.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.spirits.needToDeclare.notStarted")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
-      )
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.spirits.heading")
+      }
+
+      "the task must not be completed" in {
+        result.completedTask mustBe false
+      }
+
+      "only one subtask must be available" in {
+        result.taskList.items.size mustBe 1
+      }
+
+      "the subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.spirits.needToDeclare")
+        )
+      }
+
+      "the subtask must not be started" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+      }
+
+      "the subtask must link to the declare quarterly spirits question" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
+        )
+      }
+
+      "a hint must be available and correct" in {
+        result.taskList.items.head.hint.map(_.content) mustBe Some(
+          Text(messages("taskList.section.spirits.hint"))
+        )
+      }
     }
 
-    "when the user answers no to Declare QS question, must return a complete section" in {
+    "when the user answers no to the quarterly spirits question" - {
       val userAnswers = emptyUserAnswers
         .set(DeclareQuarterlySpiritsPage, false)
         .success
         .value
       val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
-      result.completedTask                     shouldBe true
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.spirits.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.spirits.needToDeclare.no")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
-      )
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.spirits.heading")
+      }
+
+      "the task must be completed" in {
+        result.completedTask mustBe true
+      }
+
+      "only one subtask must be available" in {
+        result.taskList.items.size mustBe 1
+      }
+
+      "the subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.spirits.needToDeclare")
+        )
+      }
+
+      "the subtask must be completed" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+      }
+
+      "the subtask must link to the declare quarterly spirits in CheckMode" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
+        )
+      }
+
+      "a hint must be available and correct" in {
+        result.taskList.items.head.hint.map(_.content) mustBe Some(
+          Text(messages("taskList.section.spirits.hint"))
+        )
+      }
     }
 
-    "when the user answers yes to Declare QS question, must return a complete section and" - {
-      "the QS task must have a link to DeclareQuarterlySpiritsController and" - {
-        val declareQuarterleySpiritsPage = Json.obj(DeclareQuarterlySpiritsPage.toString -> true)
-        val declareSpiritsTotalPage      = Json.obj(DeclareSpiritsTotalPage.toString -> 10000)
-        val whiskyPage                   = Json.obj(WhiskyPage.toString -> Json.obj("scotchWhisky" -> 5000, "irishWhiskey" -> 2500))
-        val spiritTypePage               = Json.obj(SpiritTypePage.toString -> Seq("maltSpirits", "ciderOrPerry"))
-        val spiritTypePageWithOther      = Json.obj(SpiritTypePage.toString -> Seq("maltSpirits", "ciderOrPerry", "other"))
-        val otherSpiritsProducedPage     = Json.obj(OtherSpiritsProducedPage.toString -> "Coco Pops Vodka")
+    "when the user answers yes to the quarterly spirits question" - {
+      val declareQuarterlySpiritsPage = Json.obj(DeclareQuarterlySpiritsPage.toString -> true)
+      val declareSpiritsTotalPage     = Json.obj(DeclareSpiritsTotalPage.toString -> 10000)
+      val whiskyPage                  = Json.obj(WhiskyPage.toString -> Json.obj("scotchWhisky" -> 5000, "irishWhiskey" -> 2500))
+      val spiritTypePage              = Json.obj(SpiritTypePage.toString -> Seq("maltSpirits", "ciderOrPerry"))
+      val spiritTypePageWithOther     = Json.obj(SpiritTypePage.toString -> Seq("maltSpirits", "ciderOrPerry", "other"))
+      val otherSpiritsProducedPage    = Json.obj(OtherSpiritsProducedPage.toString -> "Coco Pops Vodka")
 
-        def setUserAnswers(pages: Seq[JsObject]): UserAnswers = emptyUserAnswers.copy(data = pages.reduce(_ ++ _))
+      def setUserAnswers(pages: Seq[JsObject]): UserAnswers = emptyUserAnswers.copy(data = pages.reduce(_ ++ _))
 
-        "not be started when no other questions are answered" in {
-          val userAnswers = setUserAnswers(Seq(declareQuarterleySpiritsPage))
-          val result      = returnTaskListCreator.returnQSSection(userAnswers)
+      "but has not started the declaration task" - {
+        val userAnswers = emptyUserAnswers
+          .set(DeclareQuarterlySpiritsPage, true)
+          .success
+          .value
+        val result      = returnTaskListCreator.returnQSSection(userAnswers)
 
-          result.completedTask                     shouldBe false
-          result.taskList.items.size               shouldBe 2
-          result.title                             shouldBe messages("taskList.section.spirits.heading")
-          result.taskList.items.head.title.content shouldBe Text(
-            messages("taskList.section.spirits.needToDeclare.yes")
-          )
-          result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-          result.taskList.items.head.href          shouldBe Some(
-            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
-          )
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.spirits.heading")
+        }
 
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.spirits.notStarted")
-          )
-          result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-          result.taskList.items(1).href          shouldBe Some(
-            controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "only both subtasks must be available" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.spirits.needToDeclare")
           )
         }
 
-        Seq(
-          ("whisky", declareSpiritsTotalPage),
-          ("spirits type", whiskyPage)
-        ).foldLeft(Seq(declareQuarterleySpiritsPage)) { case (completedBefore, (nextPageName, page)) =>
-          val completedPages = completedBefore :+ page
+        "the subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
 
-          s"be in progress when $nextPageName has just been completed" in {
-            val userAnswers = setUserAnswers(completedPages)
-            val result      = returnTaskListCreator.returnQSSection(userAnswers)
+        "the subtask must link to the declare quarterly spirits question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
+          )
+        }
 
-            result.completedTask                     shouldBe false
-            result.taskList.items.size               shouldBe 2
-            result.title                             shouldBe messages("taskList.section.spirits.heading")
-            result.taskList.items.head.title.content shouldBe Text(
-              messages("taskList.section.spirits.needToDeclare.yes")
-            )
-            result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-            result.taskList.items.head.href          shouldBe Some(
-              controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
-            )
+        "a hint must be available and correct" in {
+          result.taskList.items.head.hint.map(_.content) mustBe Some(
+            Text(messages("taskList.section.spirits.hint"))
+          )
+        }
+      }
 
-            result.taskList.items(1).title.content shouldBe Text(
-              messages("taskList.section.spirits.inProgress")
-            )
-            result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
-            result.taskList.items(1).href          shouldBe Some(
-              controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
+      Seq(
+        ("whisky", declareSpiritsTotalPage),
+        ("spirits type", whiskyPage)
+      ).foldLeft(Seq(declareQuarterlySpiritsPage)) { case (completedBefore, (nextPageName, page)) =>
+        val completedPages = completedBefore :+ page
+
+        s"and has started the declaration task when $nextPageName has just been completed" - {
+          val userAnswers = setUserAnswers(completedPages)
+          val result      = returnTaskListCreator.returnQSSection(userAnswers)
+
+          "the task's title must be correct" in {
+            result.title mustBe messages("taskList.section.spirits.heading")
+          }
+
+          "the task must not be completed" in {
+            result.completedTask mustBe false
+          }
+
+          "only both subtasks must be available" in {
+            result.taskList.items.size mustBe 2
+          }
+
+          "the subtask's title must be correct" in {
+            result.taskList.items.head.title.content mustBe Text(
+              messages("taskList.section.spirits.needToDeclare")
             )
           }
 
-          completedPages
+          "the subtask must be completed" in {
+            result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+          }
+
+          "the subtask must link to the declare quarterly spirits question in CheckMode" in {
+            result.taskList.items.head.href mustBe Some(
+              controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
+            )
+          }
+
+          "a hint must be available and correct" in {
+            result.taskList.items.head.hint.map(_.content) mustBe Some(
+              Text(messages("taskList.section.spirits.hint"))
+            )
+          }
         }
 
-        "be in progress when all but other spirits when declared have been completed" in {
-          val userAnswers = setUserAnswers(
-            Seq(
-              declareQuarterleySpiritsPage,
-              declareSpiritsTotalPage,
-              whiskyPage,
-              spiritTypePageWithOther
-            )
-          )
-          val result      = returnTaskListCreator.returnQSSection(userAnswers)
+        completedPages
+      }
 
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.spirits.inProgress")
+      "and has started the declaration task but other spirits needs to be completed and has not been" - {
+        val userAnswers = setUserAnswers(
+          Seq(
+            declareQuarterlySpiritsPage,
+            declareSpiritsTotalPage,
+            whiskyPage,
+            spiritTypePageWithOther
           )
-          result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.inProgress
-          result.taskList.items(1).href          shouldBe Some(
+        )
+        val result      = returnTaskListCreator.returnQSSection(userAnswers)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.spirits.heading")
+        }
+
+        "the task must not be completed" in {
+          result.completedTask mustBe false
+        }
+
+        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.spirits.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task must found and be in progress" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.spirits"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
+        }
+
+        "the sub task must link to the duty suspended guidance controller" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.spirits"))
+          )
+
+          maybeTask.get.href mustBe Some(
             controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode).url
           )
         }
 
-        "must have a link to CYA QS controller if the user answers yes to the Declare QS question and questions without other selections are answered" in {
-          val userAnswers = setUserAnswers(
-            Seq(
-              declareQuarterleySpiritsPage,
-              declareSpiritsTotalPage,
-              whiskyPage,
-              spiritTypePage
-            )
+        "a hint must be available and correct" in {
+          result.taskList.items.head.hint.map(_.content) mustBe Some(
+            Text(messages("taskList.section.spirits.hint"))
           )
-          val result      = returnTaskListCreator.returnQSSection(userAnswers)
+        }
+      }
 
-          result.completedTask                     shouldBe true
-          result.taskList.items.size               shouldBe 2
-          result.title                             shouldBe messages("taskList.section.spirits.heading")
-          result.taskList.items.head.title.content shouldBe Text(
-            messages("taskList.section.spirits.needToDeclare.yes")
+      "and has completed the declaration task but didn't need to declare other spirits" - {
+        val userAnswers = setUserAnswers(
+          Seq(
+            declareQuarterlySpiritsPage,
+            declareSpiritsTotalPage,
+            whiskyPage,
+            spiritTypePage
           )
-          result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.completed
-          result.taskList.items.head.href          shouldBe Some(
+        )
+
+        val result = returnTaskListCreator.returnQSSection(userAnswers)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.spirits.heading")
+        }
+
+        "the task must be completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.spirits.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
             controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
           )
+        }
 
-          result.taskList.items(1).title.content shouldBe Text(
-            messages("taskList.section.spirits.completed")
+        "the sub task must found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.spirits"))
           )
-          result.taskList.items(1).status        shouldBe AlcoholDutyTaskListItemStatus.completed
-          result.taskList.items(1).href          shouldBe Some(
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task must link to the CYA page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.spirits"))
+          )
+
+          maybeTask.get.href mustBe Some(
             controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
           )
         }
 
-        "must be complete if the user answers yes to the Declare QS question and all questions including spirits produced with other are answered" in {
-          val userAnswers = setUserAnswers(
-            Seq(
-              declareQuarterleySpiritsPage,
-              declareSpiritsTotalPage,
-              whiskyPage,
-              spiritTypePageWithOther,
-              otherSpiritsProducedPage
-            )
+        "a hint must be available and correct" in {
+          result.taskList.items.head.hint.map(_.content) mustBe Some(
+            Text(messages("taskList.section.spirits.hint"))
           )
-          val result      = returnTaskListCreator.returnQSSection(userAnswers)
+        }
+      }
 
-          result.taskList.items(1).status shouldBe AlcoholDutyTaskListItemStatus.completed
+      "and has completed the declaration task as well as other spirits" - {
+        val userAnswers = setUserAnswers(
+          Seq(
+            declareQuarterlySpiritsPage,
+            declareSpiritsTotalPage,
+            whiskyPage,
+            spiritTypePageWithOther,
+            otherSpiritsProducedPage
+          )
+        )
+        val result      = returnTaskListCreator.returnQSSection(userAnswers)
+
+        "the task's title must be correct" in {
+          result.title mustBe messages("taskList.section.spirits.heading")
+        }
+
+        "the task must be completed" in {
+          result.completedTask mustBe true
+        }
+
+        "a subtask for the regime must must be available in addition to the declaration subtask" in {
+          result.taskList.items.size mustBe 2
+        }
+
+        "the declaration subtask's title must be correct" in {
+          result.taskList.items.head.title.content mustBe Text(
+            messages("taskList.section.spirits.needToDeclare")
+          )
+        }
+
+        "the declaration subtask must be completed" in {
+          result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the subtask must link to the declare duty suspended deliveries question in CheckMode" in {
+          result.taskList.items.head.href mustBe Some(
+            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(CheckMode).url
+          )
+        }
+
+        "the sub task must found and be completed" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.spirits"))
+          )
+
+          maybeTask mustBe defined
+          maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
+        }
+
+        "the sub task must link to the CYA page" in {
+          val maybeTask = result.taskList.items.find(
+            _.title.content == Text(messages("taskList.section.spirits"))
+          )
+
+          maybeTask.get.href mustBe Some(
+            controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
+          )
+        }
+
+        "a hint must be available and correct" in {
+          result.taskList.items.head.hint.map(_.content) mustBe Some(
+            Text(messages("taskList.section.spirits.hint"))
+          )
         }
       }
     }
   }
 
   "on calling checkAndSubmitSection" - {
-
-    "when the other sections are incomplete, must return the cannot start section" in {
+    "and the other sections are incomplete, it should return the cannot start section" - {
       val result = returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.checkAndSubmit.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.checkAndSubmit.needToDeclare")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.cannotStart
-      result.taskList.items.head.href          shouldBe None
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.checkAndSubmit.heading")
+      }
+
+      "the task must not be completed" in {
+        result.completedTask mustBe false
+      }
+
+      "only the task must be available" in {
+        result.taskList.items.size mustBe 1
+      }
+
+      "the check and submit subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.checkAndSubmit.needToDeclare")
+        )
+      }
+
+      "the check and submit subtask must be cannot start" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.cannotStart
+      }
+
+      "the subtask must not have a link" in {
+        result.taskList.items.head.href mustBe None
+      }
+
+      "a hint must be available and correct" in {
+        result.taskList.items.head.hint.map(_.content) mustBe Some(
+          Text(messages("taskList.section.checkAndSubmit.hint"))
+        )
+      }
     }
 
-    "when the other sections are complete, must return the not started section" in {
+    "and the other sections are complete, it should return the task" - {
       val result = returnTaskListCreator.returnCheckAndSubmitSection(4, 4)
 
-      result.completedTask                     shouldBe false
-      result.taskList.items.size               shouldBe 1
-      result.title                             shouldBe messages("taskList.section.checkAndSubmit.heading")
-      result.taskList.items.head.title.content shouldBe Text(
-        messages("taskList.section.checkAndSubmit.needToDeclare")
-      )
-      result.taskList.items.head.status        shouldBe AlcoholDutyTaskListItemStatus.notStarted
-      result.taskList.items.head.href          shouldBe Some(
-        controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onPageLoad().url
-      )
+      "the task's title must be correct" in {
+        result.title mustBe messages("taskList.section.checkAndSubmit.heading")
+      }
+
+      "the task must not be completed" in {
+        result.completedTask mustBe false
+      }
+
+      "only the task must be available" in {
+        result.taskList.items.size mustBe 1
+      }
+
+      "the declaration subtask's title must be correct" in {
+        result.taskList.items.head.title.content mustBe Text(
+          messages("taskList.section.checkAndSubmit.needToDeclare")
+        )
+      }
+
+      "the check and submit subtask must be not started" in {
+        result.taskList.items.head.status mustBe AlcoholDutyTaskListItemStatus.notStarted
+      }
+
+      "the subtask must link to the duty due for this return page" in {
+        result.taskList.items.head.href mustBe Some(
+          controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onPageLoad().url
+        )
+      }
+
+      "no hint must be displayed" in {
+        result.taskList.items.head.hint.map(_.content) mustBe None
+      }
     }
   }
 }
