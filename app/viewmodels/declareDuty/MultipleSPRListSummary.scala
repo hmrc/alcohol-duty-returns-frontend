@@ -53,8 +53,8 @@ object MultipleSPRListSummary {
   ): Seq[SummaryListRow] =
     Seq(
       SummaryListRowViewModel(
-        key = KeyViewModel(rateBandRecap(rateBand, Some(regime))),
-        value = Value()
+        key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.taxTypeCodeDescription"),
+        value = ValueViewModel(rateBandRecap(rateBand, Some(regime)))
       ).withCssClass(Css.summaryListRowNoBorderCssClass),
       SummaryListRowViewModel(
         key = messages("checkYourAnswersLabel.row.totalLitres"),

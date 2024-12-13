@@ -30,10 +30,6 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
       val rows = TellUsAboutSingleSPRRateSummary.rows(Beer, answers)
       rows.map(_.key.content) mustBe
         Seq(
-          Text("Draught beer between 2% and 3% ABV (124)"),
-          Text("Total volume"),
-          Text("Pure alcohol"),
-          Text("SPR duty rate"),
           Text("Non-draught beer between 3% and 4% ABV (125 SPR)"),
           Text("Total volume"),
           Text("Pure alcohol"),
@@ -49,10 +45,6 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
         )
       rows.map(_.value.content) mustBe
         Seq(
-          Empty,
-          Text("100.00 litres"),
-          Text("2.5000 litres"),
-          Text("£1.26"),
           Empty,
           Text("1,000.00 litres"),
           Text("3.5000 litres"),

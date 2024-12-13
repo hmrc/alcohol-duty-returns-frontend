@@ -37,7 +37,7 @@ object HowMuchDoYouNeedToDeclareSummary {
       case Some(dutyByTaxTypes) =>
         Some(
           SummaryList(
-            rows = rows(rateBands, regime, dutyByTaxTypes),
+            rows = rows(regime, rateBands, dutyByTaxTypes),
             card = Some(
               Card(
                 title = Some(
@@ -69,8 +69,8 @@ object HowMuchDoYouNeedToDeclareSummary {
       case _                    => None
     }
 
-  def rows(rateBands: Set[RateBand], regime: AlcoholRegime, dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(implicit
-    messages: Messages
+  private def rows(regime: AlcoholRegime, rateBands: Set[RateBand], dutyByTaxTypes: Seq[VolumeAndRateByTaxType])(
+    implicit messages: Messages
   ): Seq[SummaryListRow] = {
     val rateBandsByRateType = rateBands
       .groupBy(_.rateType)
@@ -92,7 +92,7 @@ object HowMuchDoYouNeedToDeclareSummary {
     coreRows ++ draughtReliefRows
   }
 
-  def createRowValues(
+  private def createRowValues(
     rateType: RateType,
     rateBands: Set[RateBand],
     regime: AlcoholRegime,
@@ -108,8 +108,8 @@ object HowMuchDoYouNeedToDeclareSummary {
         case Some(dutyByTaxType) =>
           Seq(
             SummaryListRowViewModel(
-              key = KeyViewModel(rateBandRecap(rateBand, Some(regime))),
-              value = Value()
+              key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.taxTypeCodeDescription"),
+              value = ValueViewModel(rateBandRecap(rateBand, Some(regime)))
             ).withCssClass(Css.summaryListRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres"),
