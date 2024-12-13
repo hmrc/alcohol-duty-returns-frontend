@@ -41,7 +41,7 @@ object AdjustmentTaxTypeSummary {
         adjustmentEntry.rateBand.map { rateBand =>
           SummaryListRowViewModel(
             key = label,
-            value = ValueViewModel(rateBandRecap(rateBand)),
+            value = ValueViewModel(rateBandRecap(rateBand, None)),
             actions = Seq(
               ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
                 .withVisuallyHiddenText(messages(hiddenText))

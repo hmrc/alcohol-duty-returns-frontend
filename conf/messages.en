@@ -816,13 +816,13 @@ adjustmentVolume.error.minimumValue.sprDutyRate = Your Small Producer Relief dut
 adjustmentVolume.error.maximumValue.sprDutyRate = Your Small Producer Relief duty rate must be less than £1 billion
 adjustmentVolume.error.decimalPlaces.sprDutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
 adjustmentVolume.change.hidden = volume
-adjustmentVolume.totalLitresVolume.heading = Total litres of {0}
+adjustmentVolume.totalLitresVolume.heading = Total litres
 adjustmentVolume.totalLitresVolume.hint = In litres, up to 2 decimal places
 adjustmentVolume.pureAlcoholVolume.heading = Litres of pure alcohol
 adjustmentVolume.pureAlcoholVolume.hint = In litres, up to 4 decimal places
 adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief duty rate
 adjustmentVolume.pureAlcohol = litres of pure alcohol (LPA)
-adjustmentVolume.totalLitres = litres of {0}
+adjustmentVolume.totalLitres = litres
 
 adjustmentRepackagedTaxType.title = What is the tax type code for the newly repackaged products?
 adjustmentRepackagedTaxType.heading = What is the tax type code for the newly repackaged products?

@@ -21,13 +21,10 @@ import forms.behaviours.StringFieldBehaviours
 import generators.ModelGenerators
 import models.adjustment.{AdjustmentEntry, AdjustmentVolumeWithSPR}
 import play.api.data.FormError
-import play.api.i18n.Messages
 
 class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with ModelGenerators with SpecBase {
 
   val regime = regimeGen.sample.value
-
-  val messages = mock[Messages]
 
   val validTotalLitres = BigDecimal(10.23)
   val validPureAlcohol = BigDecimal(9.23)
@@ -40,7 +37,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
   )
 
   val adjustmentVolumeWithSPR = AdjustmentVolumeWithSPR(validTotalLitres, validPureAlcohol, validSPRDutyRate)
-  val form                    = new AdjustmentVolumeWithSPRFormProvider()(regime)(messages)
+  val form                    = new AdjustmentVolumeWithSPRFormProvider()()
 
   ".volumes" - {
     "must bind valid data" in {
@@ -63,10 +60,10 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq("")),
-        FormError("volumes_sprDutyRate", "adjustmentVolume.error.noValue.sprDutyRate", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq()),
+        FormError("volumes_sprDutyRate", "adjustmentVolume.error.noValue.sprDutyRate", Seq())
       )
     }
 
@@ -76,10 +73,10 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.pureAlcoholVolume" -> "",
         "volumes.sprDutyRate"       -> ""
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq("")),
-        FormError("volumes_sprDutyRate", "adjustmentVolume.error.noValue.sprDutyRate", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.noValue.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.noValue.pureAlcoholVolume", Seq()),
+        FormError("volumes_sprDutyRate", "adjustmentVolume.error.noValue.sprDutyRate", Seq())
       )
     }
 
@@ -89,10 +86,10 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.pureAlcoholVolume" -> "1.11234",
         "volumes.sprDutyRate"       -> "1.112"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.decimalPlaces.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", s"adjustmentVolume.error.decimalPlaces.pureAlcoholVolume", Seq("")),
-        FormError("volumes_sprDutyRate", "adjustmentVolume.error.decimalPlaces.sprDutyRate", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.decimalPlaces.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", s"adjustmentVolume.error.decimalPlaces.pureAlcoholVolume", Seq()),
+        FormError("volumes_sprDutyRate", "adjustmentVolume.error.decimalPlaces.sprDutyRate", Seq())
       )
     }
 
@@ -102,10 +99,10 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.pureAlcoholVolume" -> "invalid",
         "volumes.sprDutyRate"       -> "invalid"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.invalid.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.invalid.pureAlcoholVolume", List("")),
-        FormError("volumes_sprDutyRate", "adjustmentVolume.error.invalid.sprDutyRate", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.invalid.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.invalid.pureAlcoholVolume", Seq()),
+        FormError("volumes_sprDutyRate", "adjustmentVolume.error.invalid.sprDutyRate", Seq())
       )
     }
 
@@ -115,10 +112,10 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.pureAlcoholVolume" -> "0",
         "volumes.sprDutyRate"       -> "-21"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.minimumValue.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.minimumValue.pureAlcoholVolume", List("")),
-        FormError("volumes_sprDutyRate", "adjustmentVolume.error.minimumValue.sprDutyRate", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.minimumValue.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.minimumValue.pureAlcoholVolume", Seq()),
+        FormError("volumes_sprDutyRate", "adjustmentVolume.error.minimumValue.sprDutyRate", Seq())
       )
     }
 
@@ -128,10 +125,10 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.pureAlcoholVolume" -> "100000000000",
         "volumes.sprDutyRate"       -> "100000000000"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.maximumValue.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.maximumValue.pureAlcoholVolume", List("")),
-        FormError("volumes_sprDutyRate", "adjustmentVolume.error.maximumValue.sprDutyRate", Seq(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.maximumValue.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.maximumValue.pureAlcoholVolume", Seq()),
+        FormError("volumes_sprDutyRate", "adjustmentVolume.error.maximumValue.sprDutyRate", Seq())
       )
     }
 
@@ -141,8 +138,8 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.pureAlcoholVolume" -> "2",
         "volumes.sprDutyRate"       -> "0"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", List(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", Seq())
       )
     }
 
@@ -152,10 +149,10 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.pureAlcoholVolume" -> "",
         "volumes.sprDutyRate"       -> "abc"
       )
-      form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", List("adjustmentVolume.error.maximumValue.totalLitresVolume"), List("")),
-        FormError("volumes_pureAlcoholVolume", List("adjustmentVolume.error.noValue.pureAlcoholVolume"), List("")),
-        FormError("volumes_sprDutyRate", List("adjustmentVolume.error.invalid.sprDutyRate"), List(""))
+      form.bind(data).errors must contain allElementsOf Seq(
+        FormError("volumes_totalLitresVolume", Seq("adjustmentVolume.error.maximumValue.totalLitresVolume"), Seq()),
+        FormError("volumes_pureAlcoholVolume", Seq("adjustmentVolume.error.noValue.pureAlcoholVolume"), Seq()),
+        FormError("volumes_sprDutyRate", Seq("adjustmentVolume.error.invalid.sprDutyRate"), Seq())
       )
     }
 
@@ -165,18 +162,18 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.pureAlcoholVolume" -> "-12323.234423",
         "volumes.sprDutyRate"       -> "99999999999.856"
       )
-      form.bind(data).errors must contain allElementsOf List(
+      form.bind(data).errors must contain allElementsOf Seq(
         FormError(
           "volumes_totalLitresVolume",
-          List("adjustmentVolume.error.decimalPlaces.totalLitresVolume"),
-          List("")
+          Seq("adjustmentVolume.error.decimalPlaces.totalLitresVolume"),
+          Seq()
         ),
         FormError(
           "volumes_pureAlcoholVolume",
-          List("adjustmentVolume.error.decimalPlaces.pureAlcoholVolume"),
-          List("")
+          Seq("adjustmentVolume.error.decimalPlaces.pureAlcoholVolume"),
+          Seq()
         ),
-        FormError("volumes_sprDutyRate", List("adjustmentVolume.error.decimalPlaces.sprDutyRate"), List(""))
+        FormError("volumes_sprDutyRate", Seq("adjustmentVolume.error.decimalPlaces.sprDutyRate"), Seq())
       )
     }
   }
