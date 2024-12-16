@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, Link, Paragraph}
+@import components.{SectionHeading, PageHeading, Link, Paragraph, FormGroupWithError}
 @import models.adjustment.AdjustmentType
 
 @this(
@@ -27,7 +27,8 @@
     sectionHeading: SectionHeading,
     link: Link,
     paragraph: Paragraph,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
@@ -45,18 +46,20 @@
         text = messages(s"section.adjustment.$adjustmentType"),
         )
 
-        @pageHeading(messages("adjustmentSmallProducerReliefDutyRate.heading"))
+        @formGroupWithError(form.errors.nonEmpty){
+                @pageHeading(messages("adjustmentSmallProducerReliefDutyRate.heading"))
 
-         @govukInput(
-            InputViewModel(
-                field = form("adjustment-small-producer-relief-duty-rate-input"),
-                label = LabelViewModel(messages("adjustmentSmallProducerReliefDutyRate.heading")).asVisuallyHidden()
-            )
-            .asNumeric()
-            .withWidth(Fixed10)
-            .withPoundPrefix
-            .withHint(HintViewModel(messages("adjustmentSmallProducerReliefDutyRate.hint")))
-        )
+                 @govukInput(
+                    InputViewModel(
+                        field = form("adjustment-small-producer-relief-duty-rate-input"),
+                        label = LabelViewModel(messages("adjustmentSmallProducerReliefDutyRate.heading")).asVisuallyHidden()
+                    )
+                    .asNumeric()
+                    .withWidth(Fixed10)
+                    .withPoundPrefix
+                    .withHint(HintViewModel(messages("adjustmentSmallProducerReliefDutyRate.hint")))
+                )
+        }
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))

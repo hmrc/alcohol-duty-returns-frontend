@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph}
+@import components.{SectionHeading, PageHeading, Paragraph, FormGroupWithError}
 @import viewmodels.declareDuty.AlcoholTypeViewModel
 @import models.AlcoholRegimes
 
@@ -26,7 +26,8 @@
     govukButton: GovukButton,
     pageHeading: PageHeading,
     sectionHeading: SectionHeading,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], mode: Mode, regimes: AlcoholRegimes)(implicit request: Request[_], messages: Messages)
@@ -44,21 +45,22 @@
             text = messages("section.alcoholDutyReturn"),
         )
 
-        @pageHeading(messages("alcoholType.heading"))
+        @formGroupWithError(form.errors.nonEmpty){
+                @pageHeading(messages("alcoholType.heading"))
 
-        @paragraph(messages("alcoholType.p1"))
-        @paragraph(messages("alcoholType.p2"))
+                @paragraph(messages("alcoholType.p1"))
+                @paragraph(messages("alcoholType.p2"))
 
-        @govukCheckboxes(
-            CheckboxesViewModel(
-                form   = form,
-                name   = "value",
-                legend = LegendViewModel(messages("alcoholType.heading")).asVisuallyHidden(),
-                items  = AlcoholTypeViewModel.checkboxItems(regimes)
-            )
-            .withHint(Hint(content =  messages("alcoholType.hint")))
-        )
-
+                @govukCheckboxes(
+                    CheckboxesViewModel(
+                        form   = form,
+                        name   = "value",
+                        legend = LegendViewModel(messages("alcoholType.heading")).asVisuallyHidden(),
+                        items  = AlcoholTypeViewModel.checkboxItems(regimes)
+                    )
+                    .withHint(Hint(content =  messages("alcoholType.hint")))
+                )
+        }
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
         )

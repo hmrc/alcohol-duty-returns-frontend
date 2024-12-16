@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, SectionHeading, PageHeading}
+@import components.{Link, SectionHeading, PageHeading, FormGroupWithError}
 @import config.Constants.Css
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
@@ -27,11 +27,14 @@
     link: Link,
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
+    formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("declareDutySuspendedDeliveriesQuestion.title"))) {
+
+    @formHelper(action = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -42,22 +45,22 @@
         text = messages("section.alcoholDutyReturn"),
     )
 
-    @pageHeading(messages("declareDutySuspendedDeliveriesQuestion.heading"))
+    @formGroupWithError(form.errors.nonEmpty){
+        @pageHeading(messages("declareDutySuspendedDeliveriesQuestion.heading"))
 
-    <p class="@Css.bodyCssClass">
-        @messages("declareDutySuspendedDeliveriesQuestion.p1")
-    </p>
+        <p class="@Css.bodyCssClass">
+            @messages("declareDutySuspendedDeliveriesQuestion.p1")
+        </p>
 
-    @formHelper(action = controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
-
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("declare-duty-suspended-deliveries-input"),
-                legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestion.heading")).asVisuallyHidden()
+            @govukRadios(
+                RadiosViewModel.yesNo(
+                    field = form("declare-duty-suspended-deliveries-input"),
+                    legend = LegendViewModel(messages("declareDutySuspendedDeliveriesQuestion.heading")).asVisuallyHidden()
+                )
             )
-        )
+    }
 
-        @govukButton(
+    @govukButton(
             ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }

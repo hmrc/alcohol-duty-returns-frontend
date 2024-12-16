@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, SubHeading, PageHeading, Paragraph, BulletList}
+@import components.{SectionHeading, SubHeading, PageHeading, Paragraph, BulletList, FormGroupWithError}
 @import config.Constants.Css
 
 @this(
@@ -27,7 +27,8 @@
     subHeading: SubHeading,
     pageHeading: PageHeading,
     bulletList: BulletList,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -62,14 +63,16 @@
 
         @formHelper(action = controllers.adjustment.routes.DeclareAdjustmentQuestionController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
-        @subHeading(messages("declareAdjustmentQuestion.question.h2"), classes = Css.headingMCssClass)
+        @formGroupWithError(form.errors.nonEmpty){
+                @subHeading(messages("declareAdjustmentQuestion.question.h2"), classes = Css.headingMCssClass)
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("declare-adjustment-question-value"),
-                legend = LegendViewModel(messages("declareAdjustmentQuestion.heading")).asVisuallyHidden()
-            )
-        )
+                @govukRadios(
+                    RadiosViewModel.yesNo(
+                        field = form("declare-adjustment-question-value"),
+                        legend = LegendViewModel(messages("declareAdjustmentQuestion.heading")).asVisuallyHidden()
+                    )
+                )
+        }
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
