@@ -18,6 +18,7 @@
 @import components.{SectionHeading, PageHeading, Paragraph}
 @import components.Link
 @import config.FrontendAppConfig
+@import config.Constants.Css
 
 @this(
     layout: templates.Layout,
@@ -37,6 +38,15 @@
         @pageHeading(messages("noAppaId.heading"))
 
         @paragraph(messages("noAppaId.p"))
+
+        <p class="@Css.bodyCssClass">
+            @link(
+            id = "register-for-alcohol-duty",
+            text = messages("noAppaId.link.text"),
+            href = appConfig.appaIdRegisterUrl,
+            newTab = true
+            )
+        </p>
 
         @if(wasReferredFromBTA) {
             @govukButton(
