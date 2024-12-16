@@ -19,6 +19,7 @@ package controllers.auth
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.UserAnswersConnector
+import controllers.actions.{FakeAppaId, FakeSignOutAction, SignOutAction}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status.OK
@@ -33,39 +34,81 @@ class AuthControllerSpec extends SpecBase {
 
   "signOut" - {
 
-    "must clear user answers and redirect to sign out, specifying the exit survey as the continue URL" in {
+    "when user is authenticated but there is no period key in session" - {
+      "must redirect to sign out, specifying the exit survey as the continue URL and not try to clear the lock" in {
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+        val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-      val application =
-        applicationBuilder(None)
-          .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
-          .build()
+        val application =
+          applicationBuilder(None)
+            .overrides(
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+              bind[FakeAppaId].toInstance(FakeAppaId(Some(appaId))),
+              bind[SignOutAction].to[FakeSignOutAction]
+            )
+            .build()
 
-      running(application) {
+        running(application) {
 
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-        val request   = FakeRequestWithoutSession(GET, routes.AuthController.signOut().url)
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val request   = FakeRequestWithoutSession(GET, routes.AuthController.signOut().url)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
-        val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+          val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
+          val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual expectedRedirectUrl
+          verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
+        }
       }
     }
 
-    "must clear user answers, release the lock, and redirect to sign out, specifying the exit survey as the continue URL" in {
+    "when user is authenticated and there is a period key in session, " - {
+      "must release the lock, and redirect to sign out, specifying the exit survey as the continue URL" in {
+
+        val mockUserAnswersConnector = mock[UserAnswersConnector]
+        when(mockUserAnswersConnector.releaseLock(eqTo(returnId))(any()))
+          .thenReturn(Future.successful(HttpResponse(OK)))
+
+        val application =
+          applicationBuilder(None)
+            .overrides(
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+              bind[FakeAppaId].toInstance(FakeAppaId(Some(appaId))),
+              bind[SignOutAction].to[FakeSignOutAction]
+            )
+            .build()
+
+        running(application) {
+
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val request   = FakeRequest(GET, routes.AuthController.signOut().url)
+
+          val result = route(application, request).value
+
+          val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
+          val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual expectedRedirectUrl
+          verify(mockUserAnswersConnector, times(1)).releaseLock(eqTo(returnId))(any())
+        }
+      }
+    }
+
+    "when user is not authenticated, must NOT release the lock, but still redirect to sign out, specifying the exit survey as the continue URL" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
-      when(mockUserAnswersConnector.releaseLock(eqTo(returnId))(any())).thenReturn(Future.successful(HttpResponse(OK)))
 
       val application =
-        applicationBuilder(None)
-          .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
+        applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[FakeAppaId].toInstance(FakeAppaId(None)),
+            bind[SignOutAction].to[FakeSignOutAction]
+          )
           .build()
 
       running(application) {
@@ -80,7 +123,7 @@ class AuthControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockUserAnswersConnector, times(1)).releaseLock(eqTo(returnId))(any())
+        verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
       }
     }
   }
