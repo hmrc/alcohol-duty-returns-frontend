@@ -17,7 +17,7 @@
 @import components.{Link, PageHeading, Paragraph, SectionHeading, FormGroupWithError}
 @import config.Constants.Css
 @import models.adjustment.AdjustmentType
-@import models.adjustment.AdjustmentType.{Underdeclaration,Spoilt}
+@import models.adjustment.AdjustmentType.{Underdeclaration, Spoilt}
 
 @this(
     layout: templates.Layout,
@@ -34,14 +34,17 @@
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, exciseEnquiriesUrl: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, if(adjustmentType == Underdeclaration){
-                                    messages("whenDidYouPayDuty.under-declaration.title")
-                                    } else if(adjustmentType == Spoilt){
-                                    messages("whenDidYouPayDuty.spoilt.title")
-                                    } else {
-                                    messages("whenDidYouPayDuty.default.title")
-                                 }
-)) {
+@heading = @{
+    if(adjustmentType == Underdeclaration) {
+        messages("whenDidYouPayDuty.under-declaration.title")
+    } else if(adjustmentType == Spoilt) {
+        messages("whenDidYouPayDuty.spoilt.title")
+    } else {
+        messages("whenDidYouPayDuty.default.title")
+    }
+}
+
+@layout(pageTitle = title(form, heading)) {
 
     @formHelper(action = controllers.adjustment.routes.WhenDidYouPayDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -65,27 +68,26 @@
                             }
                             )
 
-                <p class="@Css.bodyCssClass">
-                    @link(
-                        id = "excise-enquiries-link",
-                        text =  messages("whenDidYouPayDuty.exciseEnquiries.link"),
-                        href = exciseEnquiriesUrl,
-                        newTab = true
-                    )
-                    @messages("whenDidYouPayDuty.paragraph")
-                </p>
+        <p class="@Css.bodyCssClass">
+            @link(
+                id = "excise-enquiries-link",
+                text = messages("whenDidYouPayDuty.exciseEnquiries.link"),
+                href = exciseEnquiriesUrl,
+                newTab = true
+            )
+            @messages("whenDidYouPayDuty.paragraph")
+        </p>
 
-                @govukDateInput(
-                    YearMonthDateViewModel(
-                        form  = form,
-                        id = "when-did-you-pay-duty-input",
-                        legend = LegendViewModel(messages("whenDidYouPayDuty.heading")).asVisuallyHidden(),
-                    ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
-                )
-        }
-
+        @govukDateInput(
+            YearMonthDateViewModel(
+                form = form,
+                id = "when-did-you-pay-duty-input",
+                legend = LegendViewModel(messages(heading)).asVisuallyHidden(),
+            ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
+        )
+    }
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }

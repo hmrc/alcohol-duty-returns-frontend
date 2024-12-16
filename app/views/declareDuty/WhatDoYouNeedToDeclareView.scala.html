@@ -52,7 +52,7 @@
                 @paragraph(messages("whatDoYouNeedToDeclare.hint"), classes = Css.hintCssClass)
 
                 @if(taxBandsViewModel.core.nonEmpty) {
-                  @subHeading(messages("whatDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
+                  @subHeading(messages("whatDoYouNeedToDeclare.core.heading", messages(s"alcoholType.$regime")), classes = Css.headingMCssClass)
                   @govukCheckboxes(CheckboxesViewModel(
                     form   = form,
                     name   = "value",
