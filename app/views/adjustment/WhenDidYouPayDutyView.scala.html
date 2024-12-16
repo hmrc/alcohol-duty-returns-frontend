@@ -17,30 +17,33 @@
 @import components.{Link, PageHeading, Paragraph, SectionHeading}
 @import config.Constants.Css
 @import models.adjustment.AdjustmentType
-@import models.adjustment.AdjustmentType.{Underdeclaration,Spoilt}
+@import models.adjustment.AdjustmentType.{Underdeclaration, Spoilt}
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukDateInput: GovukDateInput,
-    govukButton: GovukButton,
-    paragraph: Paragraph,
-    sectionHeading: SectionHeading,
-    pageHeading: PageHeading,
-    link: Link
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukDateInput: GovukDateInput,
+        govukButton: GovukButton,
+        paragraph: Paragraph,
+        sectionHeading: SectionHeading,
+        pageHeading: PageHeading,
+        link: Link
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, exciseEnquiriesUrl: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, if(adjustmentType == Underdeclaration){
-                                    messages("whenDidYouPayDuty.under-declaration.title")
-                                    } else if(adjustmentType == Spoilt){
-                                    messages("whenDidYouPayDuty.spoilt.title")
-                                    } else {
-                                    messages("whenDidYouPayDuty.default.title")
-                                 }
-)) {
+@heading = @{
+    if(adjustmentType == Underdeclaration) {
+        messages("whenDidYouPayDuty.under-declaration.title")
+    } else if(adjustmentType == Spoilt) {
+        messages("whenDidYouPayDuty.spoilt.title")
+    } else {
+        messages("whenDidYouPayDuty.default.title")
+    }
+}
+
+@layout(pageTitle = title(form, heading)) {
 
     @formHelper(action = controllers.adjustment.routes.WhenDidYouPayDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -54,19 +57,19 @@
         )
 
         @pageHeading(
-                    if(adjustmentType == Underdeclaration){
-                        messages("whenDidYouPayDuty.under-declaration.heading")
-                    } else if(adjustmentType == Spoilt){
-                        messages("whenDidYouPayDuty.spoilt.heading")
-                    } else {
-                        messages("whenDidYouPayDuty.default.heading")
-                    }
-                    )
+            if(adjustmentType == Underdeclaration) {
+                messages("whenDidYouPayDuty.under-declaration.heading")
+            } else if(adjustmentType == Spoilt) {
+                messages("whenDidYouPayDuty.spoilt.heading")
+            } else {
+                messages("whenDidYouPayDuty.default.heading")
+            }
+        )
 
         <p class="@Css.bodyCssClass">
             @link(
                 id = "excise-enquiries-link",
-                text =  messages("whenDidYouPayDuty.exciseEnquiries.link"),
+                text = messages("whenDidYouPayDuty.exciseEnquiries.link"),
                 href = exciseEnquiriesUrl,
                 newTab = true
             )
@@ -75,14 +78,14 @@
 
         @govukDateInput(
             YearMonthDateViewModel(
-                form  = form,
+                form = form,
                 id = "when-did-you-pay-duty-input",
-                legend = LegendViewModel(messages("whenDidYouPayDuty.heading")).asVisuallyHidden(),
+                legend = LegendViewModel(messages(heading)).asVisuallyHidden(),
             ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
         )
 
         @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+            ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )
     }
 }

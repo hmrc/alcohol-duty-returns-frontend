@@ -40,17 +40,17 @@ class DutySuspendedCiderFormProvider @Inject() extends Mappings {
       "pureAlcoholInCider" -> bigDecimal(
         Constants.lpaMaximumDecimalPlaces,
         "dutySuspendedCider.error.pureAlcoholInCider.required",
-        "dutySuspendedCider.error.pureAlcoholInCider.nonNumeric",
-        "dutySuspendedCider.error.pureAlcoholInCider.decimalPlaces"
+        "dutySuspended.error.pureAlcohol.nonNumeric",
+        "dutySuspended.error.pureAlcohol.decimalPlaces"
       ).verifying(
         minimumValue(
           Constants.dutySuspendedLpaMinimumValue,
-          "dutySuspendedCider.error.pureAlcoholInCider.minimumRequired"
+          "dutySuspended.error.pureAlcohol.minimumRequired"
         )
       ).verifying(
         maximumValue(
           Constants.dutySuspendedLpaMaximumValue,
-          "dutySuspendedCider.error.pureAlcoholInCider.maximumRequired"
+          "dutySuspended.error.pureAlcohol.maximumRequired"
         )
       )
     )(DutySuspendedCider.apply)(DutySuspendedCider.unapply)
