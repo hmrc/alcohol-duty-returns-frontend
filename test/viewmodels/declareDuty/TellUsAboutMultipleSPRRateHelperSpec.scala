@@ -17,6 +17,7 @@
 package viewmodels.declareDuty
 
 import base.SpecBase
+import models.AlcoholRegime.Beer
 import models.RateBand
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -34,7 +35,7 @@ class TellUsAboutMultipleSPRRateHelperSpec extends SpecBase {
         smallProducerReliefRateBand,
         draughtAndSmallProducerReliefRateBand
       )((x: RateBand, y: RateBand) => y.taxTypeCode(2) - x.taxTypeCode(2))
-      val result            = TellUsAboutMultipleSPRRateHelper.radioItems(rateBandsReversed)
+      val result            = TellUsAboutMultipleSPRRateHelper.radioItems(rateBandsReversed, regime)
 
       result.map(_.content) mustBe Seq(
         Text("Non-draught beer between 3% and 4% ABV (125 SPR)"),
@@ -49,5 +50,7 @@ class TellUsAboutMultipleSPRRateHelperSpec extends SpecBase {
   class SetUp {
     val application                 = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
+
+    val regime = Beer
   }
 }
