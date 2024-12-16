@@ -209,7 +209,7 @@ taskList.section.status.inProgress = In progress
 taskList.section.status.cannotStart = Cannot Start
 
 taskList.section.returns.heading = Declare alcoholic products for duty
-taskList.section.returns.needToDeclare = Tell us if you need to declare duty
+taskList.section.returns.needToDeclare = Tell us if you have alcoholic products to declare
 
 taskList.section.returns.Beer = Declare beer
 taskList.section.returns.Cider = Declare cider
