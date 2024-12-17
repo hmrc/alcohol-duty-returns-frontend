@@ -16,9 +16,11 @@
 
 package controllers.spiritsQuestions
 
+import config.FrontendAppConfig
 import connectors.UserAnswersConnector
 import controllers.actions._
 import forms.spiritsQuestions.DeclareSpiritsTotalFormProvider
+
 import javax.inject.Inject
 import models.Mode
 import navigation.QuarterlySpiritsQuestionsNavigator
@@ -41,7 +43,8 @@ class DeclareSpiritsTotalController @Inject() (
   checkSpiritsRegime: CheckSpiritsRegimeAction,
   checkSpiritsAndIngredientsToggle: CheckSpiritsAndIngredientsToggleAction,
   val controllerComponents: MessagesControllerComponents,
-  view: DeclareSpiritsTotalView
+  view: DeclareSpiritsTotalView,
+  appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -56,7 +59,9 @@ class DeclareSpiritsTotalController @Inject() (
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm, mode))
+        val declareSpiritsGuidanceUrl = appConfig.declareSpiritsGuidanceUrl
+
+        Ok(view(preparedForm, mode, declareSpiritsGuidanceUrl))
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =

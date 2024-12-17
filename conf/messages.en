@@ -75,7 +75,6 @@ unauthorised.heading = Sorry, you cannot access this service with this account
 unauthorised.p1 = Manage your alcohol duty is a service for approved businesses, such as limited companies, partnerships and sole traders producing alcoholic products.
 unauthorised.p2.first = To use this service you need to
 unauthorised.p2.link.text = sign in with an organisation Government Gateway account
-unauthorised.p2.link.url = https://www.gov.uk/log-in-register-hmrc-online-services/register
 unauthorised.p2.second =  and be enrolled in the service.
 
 doYouHaveAnAppaId.title = Do you have an Alcoholic Products Producer approval ID?
@@ -620,7 +619,6 @@ declareSpiritsTotal.title = What is the total of all spirits taken this quarter?
 declareSpiritsTotal.heading = What is the total of all spirits taken this quarter?
 declareSpiritsTotal.subheading1 = Regarding feints
 declareSpiritsTotal.p1 = Feints are the ‘foreshots’ or ‘heads’ and ‘feints’ or ‘tails’ that are conveyed into a feints receiver.
-declareSpiritsTotal.guidance.link.url = https://www.gov.uk/hmrc-internal-manuals/spirits-production/spir4100
 declareSpiritsTotal.guidance.link.text = View the Spirits Production Manual for more information (opens in a new window).
 declareSpiritsTotal.subheading2 = Total volume of all spirits taken
 declareSpiritsTotal.p2 = In telling us about the spirits you have produced:
