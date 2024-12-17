@@ -33,7 +33,7 @@
     bulletList: BulletList,
 )
 
-@(form: Form[_], mode: Mode, declareSpiritsTotalUrl: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, declareSpiritsGuidanceUrl: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("declareSpiritsTotal.title"))) {
 
@@ -56,7 +56,7 @@
             @link(
             id = "draught-relief-question-guidance-link",
             text = messages("declareSpiritsTotal.guidance.link.text"),
-            href = messages(declareSpiritsTotalUrl),
+            href = messages(declareSpiritsGuidanceUrl),
             newTab = true
             )
         </p>
