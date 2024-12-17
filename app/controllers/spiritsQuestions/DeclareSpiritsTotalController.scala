@@ -67,10 +67,12 @@ class DeclareSpiritsTotalController @Inject() (
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen checkSpiritsRegime andThen checkSpiritsAndIngredientsToggle)
       .async { implicit request =>
+        val declareSpiritsGuidanceUrl = appConfig.declareSpiritsGuidanceUrl
+
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, declareSpiritsGuidanceUrl))),
             value =>
               for {
                 updatedAnswers <-
