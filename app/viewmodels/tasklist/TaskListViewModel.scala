@@ -34,6 +34,9 @@ class TaskListViewModel @Inject() (
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
       sections(userAnswers, returnPeriod),
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodFromDate()),
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodToDate()),
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodDueDate()),
       dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
     )
 

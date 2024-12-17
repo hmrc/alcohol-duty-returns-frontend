@@ -200,52 +200,41 @@ viewPastPayments.historic.LPI.description = Cleared late payment interest charge
 viewPastPayments.historic.paragraph = Cleared payments are those where monies have been received by HMRC or an existing credit balance has been used to pay any applicable duty.
 
 taskList.title = Complete your Alcohol Duty Return
+taskList.period = This is your alcohol return for the period {0} to {1}.
+taskList.completion.date = Complete all the tasks and send this return on or before the {0}.
 taskList.expiry.date = We will save your answers until {0}.
 taskList.section.status.completed = Completed
 taskList.section.status.notStarted = Not yet started
 taskList.section.status.inProgress = In progress
 taskList.section.status.cannotStart = Cannot Start
-taskList.section.returns.heading = Declare duty on your alcoholic products
-taskList.section.returns.needToDeclare.notStarted = Tell us if you need to declare duty
-taskList.section.returns.needToDeclare.no = You told us you do not need to declare duty
-taskList.section.returns.needToDeclare.yes = You told us you need to declare duty
+
+taskList.section.returns.heading = Declare alcoholic products for duty
+taskList.section.returns.needToDeclare = Tell us if you have alcoholic products to declare
 
 taskList.section.returns.Beer = Declare beer
 taskList.section.returns.Cider = Declare cider
-taskList.section.returns.Wine = Declare  wine
+taskList.section.returns.Wine = Declare wine
 taskList.section.returns.Spirits = Declare spirits
 taskList.section.returns.OtherFermentedProduct = Declare other fermented products
 
-taskList.section.dutySuspended.heading = Report duty suspended alcohol deliveries
-taskList.section.dutySuspended.needToDeclare.notStarted = Tell us about your duty suspended deliveries
-taskList.section.dutySuspended.needToDeclare.no = You told us you do not have any duty suspended deliveries to report
-taskList.section.dutySuspended.needToDeclare.yes = You told us you have duty suspended deliveries to report
-taskList.section.dutySuspended.notStarted = Tell us about your duty suspended deliveries
-taskList.section.dutySuspended.inProgress = Change the entries you’ve told us about
-taskList.section.dutySuspended.completed = Change the entries you’ve told us about
-
-taskList.section.spirits.heading = Report spirits production in the last three months
-taskList.section.spirits.needToDeclare.notStarted = Have you produced spirits from raw materials?
-taskList.section.spirits.needToDeclare.no = You told us you have not produced spirits this quarter
-taskList.section.spirits.needToDeclare.yes = You told us you produced spirits this quarter
-taskList.section.spirits.notStarted = Tell us about your spirits and ingredients
-taskList.section.spirits.inProgress = Change the spirits and ingredients you’ve told us about
-taskList.section.spirits.completed = Change the spirits and ingredients you’ve told us about
-taskList.section.spirits.hint = You need to tell us about any spirits you have produced from raw materials each quarter.
-
 taskList.section.adjustment.heading = Declare adjustments from previous returns
-taskList.section.adjustment.needToDeclare.notStarted = Do you need to declare any adjustments?
-taskList.section.adjustment.needToDeclare.yes = You told us you need to declare one or more adjustments
-taskList.section.adjustment.needToDeclare.no = You told us you do not need to declare any adjustments
-taskList.section.adjustment.notStarted = Declare adjustments
-taskList.section.adjustment.completed = Declare adjustments
-taskList.section.adjustment.inProgress = Declare adjustments
-taskList.section.adjustment.under-declaration = Reason for under-declared alcoholic products
-taskList.section.adjustment.over-declaration = Reason for over-declared alcoholic products
+taskList.section.adjustment.needToDeclare = Tell us if you have adjustments to declare
+taskList.section.adjustment = Declare adjustments
+taskList.section.adjustment.under-declaration = Tell us why products were under-declared
+taskList.section.adjustment.over-declaration = Tell us why products were over-declared
+
+taskList.section.dutySuspended.heading = Report duty suspended alcohol deliveries
+taskList.section.dutySuspended.needToDeclare = Tell us about your duty suspended deliveries
+taskList.section.dutySuspended = Change the entries you''ve told us about
+
+taskList.section.spirits.heading = Report spirits production
+taskList.section.spirits.needToDeclare = Tell us about spirits produced in the past three months
+taskList.section.spirits = Change the spirits you''ve told us about
+taskList.section.spirits.hint = Every three months you must tell us about spirits you have produced from raw ingredients
 
 taskList.section.checkAndSubmit.heading = Send return
-taskList.section.checkAndSubmit.needToDeclare = Check how much duty is payable and send your return
-taskList.section.checkAndSubmit.hint = Complete all tasks
+taskList.section.checkAndSubmit.needToDeclare = Check duty payable and send your return
+taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start

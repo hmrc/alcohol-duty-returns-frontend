@@ -18,7 +18,13 @@ package viewmodels.tasklist
 
 import TaskListStatus.{Completed, Incomplete}
 
-case class AlcoholDutyTaskList(sections: Seq[Section], sessionExpiryDate: String) {
+case class AlcoholDutyTaskList(
+  sections: Seq[Section],
+  periodStartDate: String,
+  periodEndDate: String,
+  dueDate: String,
+  sessionExpiryDate: String
+) {
 
   def completedTasks: Int = sections.count(_.completedTask)
   def totalTasks: Int     = sections.size
