@@ -19,7 +19,7 @@ package viewmodels.declareDuty
 import models.{AlcoholRegime, RateBand, UserAnswers}
 import pages.declareDuty.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import RateBandHelper.rateBandRecap
 import config.Constants.Css
 import viewmodels.govuk.summarylist._
@@ -53,8 +53,8 @@ object MultipleSPRListSummary {
   ): Seq[SummaryListRow] =
     Seq(
       SummaryListRowViewModel(
-        key = KeyViewModel(rateBandRecap(rateBand, Some(regime))),
-        value = Value()
+        key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description"),
+        value = ValueViewModel(rateBandRecap(rateBand, Some(regime)))
       ).withCssClass(Css.summaryListRowNoBorderCssClass),
       SummaryListRowViewModel(
         key = messages("checkYourAnswersLabel.row.totalLitres"),

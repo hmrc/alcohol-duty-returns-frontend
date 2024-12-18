@@ -22,7 +22,7 @@ import models.{AlcoholRegime, RateBand, UserAnswers}
 import models.declareDuty.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
 import pages.adjustment.{AdjustmentTotalPage, DeclareAdjustmentQuestionPage}
 import pages.dutySuspended.{DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
-import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
+import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage, DoYouHaveMultipleSPRDutyRatesPage, HowMuchDoYouNeedToDeclarePage, MultipleSPRListPage, TellUsAboutMultipleSPRRatePage, TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 
 import scala.collection.immutable.SortedMap
 
@@ -158,6 +158,13 @@ trait TestPages extends TestData {
   ): UserAnswers =
     userAnswers.setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands).get
 
+  def howMuchDoYouNeedToDeclare(
+    userAnswers: UserAnswers,
+    regime: AlcoholRegime,
+    dutyByTaxType: Seq[VolumeAndRateByTaxType]
+  ): UserAnswers =
+    userAnswers.setByKey(HowMuchDoYouNeedToDeclarePage, regime, dutyByTaxType).get
+
   def doYouHaveMultipleSPRDutyRatesPage(
     userAnswers: UserAnswers,
     regime: AlcoholRegime,
@@ -186,19 +193,30 @@ trait TestPages extends TestData {
   ): UserAnswers =
     userAnswers.setByKey(TellUsAboutMultipleSPRRatePage, regime, dutyByTaxType).get
 
-  val allVolumeAndRateByTaxTypeUnsorted: Seq[VolumeAndRateByTaxType] =
-    allVolumeAndRateByTaxType.sorted((x: VolumeAndRateByTaxType, y: VolumeAndRateByTaxType) =>
+  val allNonSmallProducerReliefVolumeAndRateByTaxTypeUnsorted: Seq[VolumeAndRateByTaxType] =
+    allNonSmallProducerReliefVolumeAndRateByTaxType.sorted((x: VolumeAndRateByTaxType, y: VolumeAndRateByTaxType) =>
+      y.taxType.toInt - x.taxType.toInt
+    )
+
+  val allSmallProducerReliefVolumeAndRateByTaxTypeUnsorted: Seq[VolumeAndRateByTaxType] =
+    allSmallProducerReliefVolumeAndRateByTaxType.sorted((x: VolumeAndRateByTaxType, y: VolumeAndRateByTaxType) =>
       y.taxType.toInt - x.taxType.toInt
     )
 
   def specifyTellUsAboutAllSingleSPRRate(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
-    tellUsAboutSingleSPRRatePage(userAnswers, regime, allVolumeAndRateByTaxType)
+    tellUsAboutSingleSPRRatePage(userAnswers, regime, allSmallProducerReliefVolumeAndRateByTaxType)
+
+  def specifyAllHowMuchDoYouNeedToDeclare(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
+    howMuchDoYouNeedToDeclare(userAnswers, regime, allNonSmallProducerReliefVolumeAndRateByTaxType)
+
+  def specifyAllHowMuchDoYouNeedToDeclareUnsorted(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
+    howMuchDoYouNeedToDeclare(userAnswers, regime, allNonSmallProducerReliefVolumeAndRateByTaxTypeUnsorted)
 
   def specifyAllMultipleSPRList(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
-    multipleSPRListPage(userAnswers, regime, allVolumeAndRateByTaxType)
+    multipleSPRListPage(userAnswers, regime, allSmallProducerReliefVolumeAndRateByTaxType)
 
   def specifyAllMultipleSPRListUnsorted(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
-    multipleSPRListPage(userAnswers, regime, allVolumeAndRateByTaxTypeUnsorted)
+    multipleSPRListPage(userAnswers, regime, allSmallProducerReliefVolumeAndRateByTaxTypeUnsorted)
 
   def dutySuspendedBeerPage(userAnswers: UserAnswers, dutySuspendedBeer: DutySuspendedBeer): UserAnswers =
     userAnswers.set(DutySuspendedBeerPage, dutySuspendedBeer).get
