@@ -97,13 +97,8 @@ object HowMuchDoYouNeedToDeclareSummary {
     rateBands: Set[RateBand],
     regime: AlcoholRegime,
     dutyByTaxTypes: Seq[VolumeAndRateByTaxType]
-  )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val headRow = SummaryListRowViewModel(
-      key = messages(s"howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.${rateType.toString}"),
-      value = ValueViewModel("")
-    ).withCssClass(Css.summaryListRowNoBorderCssClass)
-
-    val dutyRows = rateBands.toSeq.sortBy(_.taxTypeCode).map { rateBand =>
+  )(implicit messages: Messages): Seq[SummaryListRow] =
+    rateBands.toSeq.sortBy(_.taxTypeCode).flatMap { rateBand =>
       dutyByTaxTypes.find(_.taxType == rateBand.taxTypeCode) match {
         case Some(dutyByTaxType) =>
           Seq(
@@ -127,6 +122,4 @@ object HowMuchDoYouNeedToDeclareSummary {
         case _                   => throw new IllegalArgumentException(s"Invalid tax type: ${rateBand.taxTypeCode}")
       }
     }
-    Seq(headRow) ++ dutyRows.flatten
-  }
 }

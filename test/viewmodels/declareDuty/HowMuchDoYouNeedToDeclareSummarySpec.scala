@@ -37,22 +37,18 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
       val summaryList = HowMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
       summaryList.get.rows.map(_.key.content) mustBe
         Seq(
-          Text("Standard rate"),
           Text("Tax type code description"),
           Text("Total volume"),
           Text("Pure alcohol"),
-          Text("Reduced rate"),
           Text("Tax type code description"),
           Text("Total volume"),
           Text("Pure alcohol")
         )
       summaryList.get.rows.map(_.value.content) mustBe
         Seq(
-          Text(""),
           Text("Non-draught beer between 1% and 2% ABV (123)"),
           Text("30,000.00 litres"),
           Text("4.1100 litres"),
-          Text(""),
           Text("Draught beer between 2% and 3% ABV (124)"),
           Text("100.00 litres"),
           Text("2.5000 litres")
