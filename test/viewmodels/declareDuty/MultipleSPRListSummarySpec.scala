@@ -33,10 +33,10 @@ class MultipleSPRListSummarySpec extends SpecBase {
       val rows = MultipleSPRListSummary.rows(Beer, answers)
       rows.map(_.key.content) mustBe
         Seq(
-          Text("Tax type code description"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol"),
-          Text("Tax type code description"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol")
         )

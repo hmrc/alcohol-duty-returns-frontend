@@ -390,7 +390,7 @@ howMuchDoYouNeedToDeclare.draught.heading = How much draught {0} (reduced rate) 
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced rate
-howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.taxTypeCodeDescription = Tax type code description
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description = Description
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total volume
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 

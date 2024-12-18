@@ -30,15 +30,15 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
       val rows = TellUsAboutSingleSPRRateSummary.rows(Beer, answers)
       rows.map(_.key.content) mustBe
         Seq(
-          Text("Tax type code description"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol"),
           Text("SPR duty rate"),
-          Text("Tax type code description"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol"),
           Text("SPR duty rate"),
-          Text("Tax type code description"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol"),
           Text("SPR duty rate")
