@@ -54,6 +54,7 @@ class AdjustmentVolumesAndRateFormatter(
     decimalPlaces = Constants.lpaMaximumDecimalPlaces,
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
+    exactDecimalPlacesRequired = true,
     args = args
   )
 

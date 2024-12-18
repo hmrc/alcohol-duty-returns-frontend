@@ -55,6 +55,7 @@ class VolumesFormatter(
     decimalPlaces = Constants.lpaMaximumDecimalPlaces,
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
+    exactDecimalPlacesRequired = true,
     args = args
   )
 

@@ -23,6 +23,13 @@ object Constants {
   val periodKeySessionKey: String     = "period-key"
   val pastPaymentsSessionKey: String  = "past-payment-amount"
 
+  object MappingFields {
+    val taxTypeField: String     = "taxType"
+    val totalLitresField: String = "totalLitres"
+    val pureAlcoholField: String = "pureAlcohol"
+    val dutyRateField: String    = "dutyRate"
+  }
+
   val maximumDecimalPlaces: Int                   = 2
   val volumeMinimumValueIncZero: BigDecimal       = BigDecimal(0.00)
   val volumeMinimumValue: BigDecimal              = BigDecimal(0.01)
@@ -52,9 +59,7 @@ object Constants {
   val minTaxType = 100 // Although the boundaries will not be valid codes
   val maxTaxType = 999
 
-  val otherIngredientsUsedMaxLength  = 120
-  val otherMaltedGrainsTypeMaxLength = 120
-  val otherSpiritsProducedMaxLength  = 150
+  val otherSpiritsProducedMaxLength = 150
 
   val rowsPerPage = 15
 
