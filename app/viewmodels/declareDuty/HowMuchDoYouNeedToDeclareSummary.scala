@@ -22,7 +22,7 @@ import models.{AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
 import pages.declareDuty.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow}
 import RateBandHelper.rateBandRecap
 import config.Constants.Css
 import viewmodels.govuk.summarylist._

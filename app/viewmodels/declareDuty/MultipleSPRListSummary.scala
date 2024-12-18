@@ -19,7 +19,7 @@ package viewmodels.declareDuty
 import models.{AlcoholRegime, RateBand, UserAnswers}
 import pages.declareDuty.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import RateBandHelper.rateBandRecap
 import config.Constants.Css
 import viewmodels.govuk.summarylist._
