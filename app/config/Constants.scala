@@ -190,5 +190,8 @@ object Constants {
     val jsVisibleCssClass = "hmrc-!-js-visible"
 
     val displayNonePrintCssClass = "govuk-!-display-none-print"
+
+    val formGroupCssClass      = "govuk-form-group"
+    val formGroupErrorCssClass = "govuk-form-group--error"
   }
 }

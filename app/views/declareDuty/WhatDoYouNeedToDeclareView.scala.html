@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading, FormGroupWithError}
 @import config.Constants.Css
 @import viewmodels.declareDuty.TaxBandsViewModel
 
@@ -27,7 +27,8 @@
     pageHeading: PageHeading,
     paragraph: Paragraph,
     sectionHeading: SectionHeading,
-    subHeading: SubHeading
+    subHeading: SubHeading,
+    formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], regime: AlcoholRegime, taxBandsViewModel: TaxBandsViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -45,50 +46,52 @@
             text = messages(s"section.return.$regime")
         )
 
-        @pageHeading(messages("whatDoYouNeedToDeclare.heading"))
+        @formGroupWithError(form.errors.nonEmpty){
+                @pageHeading(messages("whatDoYouNeedToDeclare.heading"))
 
-        @paragraph(messages("whatDoYouNeedToDeclare.hint"), classes = Css.hintCssClass)
+                @paragraph(messages("whatDoYouNeedToDeclare.hint"), classes = Css.hintCssClass)
 
-        @if(taxBandsViewModel.core.nonEmpty) {
-          @subHeading(messages("whatDoYouNeedToDeclare.core.heading", messages(s"alcoholType.$regime")), classes = Css.headingMCssClass)
-          @govukCheckboxes(CheckboxesViewModel(
-            form   = form,
-            name   = "value",
-            legend = LegendViewModel(messages("spiritType.heading")).asVisuallyHidden(),
-            items  = taxBandsViewModel.core
-          ))
+                @if(taxBandsViewModel.core.nonEmpty) {
+                  @subHeading(messages("whatDoYouNeedToDeclare.core.heading", messages(s"alcoholType.$regime")), classes = Css.headingMCssClass)
+                  @govukCheckboxes(CheckboxesViewModel(
+                    form   = form,
+                    name   = "value",
+                    legend = LegendViewModel(messages("spiritType.heading")).asVisuallyHidden(),
+                    items  = taxBandsViewModel.core
+                  ))
 
-        }
+                }
 
-        @if(taxBandsViewModel.draught.nonEmpty) {
-          @subHeading(messages("whatDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
-          @govukCheckboxes(CheckboxesViewModel(
-            form   = form,
-            name   = "value",
-            legend = LegendViewModel(messages("spiritType.heading")).asVisuallyHidden(),
-            items  = taxBandsViewModel.draught
-          ))
-        }
+                @if(taxBandsViewModel.draught.nonEmpty) {
+                  @subHeading(messages("whatDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
+                  @govukCheckboxes(CheckboxesViewModel(
+                    form   = form,
+                    name   = "value",
+                    legend = LegendViewModel(messages("spiritType.heading")).asVisuallyHidden(),
+                    items  = taxBandsViewModel.draught
+                  ))
+                }
 
-        @if(taxBandsViewModel.smallProducerRelief.nonEmpty) {
-          @subHeading(messages("whatDoYouNeedToDeclare.smallProducerRelief.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
-          @govukCheckboxes(CheckboxesViewModel(
-            form   = form,
-            name   = "value",
-            legend = LegendViewModel(messages("spiritType.heading")).asVisuallyHidden(),
-            items  = taxBandsViewModel.smallProducerRelief
-          ))
+                @if(taxBandsViewModel.smallProducerRelief.nonEmpty) {
+                  @subHeading(messages("whatDoYouNeedToDeclare.smallProducerRelief.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
+                  @govukCheckboxes(CheckboxesViewModel(
+                    form   = form,
+                    name   = "value",
+                    legend = LegendViewModel(messages("spiritType.heading")).asVisuallyHidden(),
+                    items  = taxBandsViewModel.smallProducerRelief
+                  ))
 
-        }
+                }
 
-        @if(taxBandsViewModel.draughtAndSmallProducerRelief.nonEmpty) {
-          @subHeading(messages("whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
-          @govukCheckboxes(CheckboxesViewModel(
-            form   = form,
-            name   = "value",
-            legend = LegendViewModel(messages("spiritType.heading")).asVisuallyHidden(),
-            items  = taxBandsViewModel.draughtAndSmallProducerRelief
-          ))
+                @if(taxBandsViewModel.draughtAndSmallProducerRelief.nonEmpty) {
+                  @subHeading(messages("whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
+                  @govukCheckboxes(CheckboxesViewModel(
+                    form   = form,
+                    name   = "value",
+                    legend = LegendViewModel(messages("spiritType.heading")).asVisuallyHidden(),
+                    items  = taxBandsViewModel.draughtAndSmallProducerRelief
+                  ))
+                }
         }
 
         @govukButton(

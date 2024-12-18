@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph}
+@import components.{SectionHeading, PageHeading, Paragraph, FormGroupWithError}
 
 @this(
     layout: templates.Layout,
@@ -24,7 +24,8 @@
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     paragraph: Paragraph,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], index: Int)(implicit request: Request[_], messages: Messages)
@@ -36,18 +37,18 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
+    @formGroupWithError(form.errors.nonEmpty){
+        @pageHeading(messages("deleteAdjustment.heading"))
 
-    @pageHeading(messages("deleteAdjustment.heading"))
+        @paragraph(messages("deleteAdjustment.paragraph"))
 
-    @paragraph(messages("deleteAdjustment.paragraph"))
-
-    @govukRadios(
-        RadiosViewModel.yesNo(
-        field = form("delete-adjustment-yes-no-value"),
-        legend = LegendViewModel(messages("deleteAdjustment.heading")).asVisuallyHidden()
+        @govukRadios(
+            RadiosViewModel.yesNo(
+            field = form("delete-adjustment-yes-no-value"),
+            legend = LegendViewModel(messages("deleteAdjustment.heading")).asVisuallyHidden()
+            )
         )
-    )
-
+    }
     @govukButton(
         ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
     )
