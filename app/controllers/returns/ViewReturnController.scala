@@ -18,7 +18,7 @@ package controllers.returns
 
 import connectors.{AlcoholDutyCalculatorConnector, AlcoholDutyReturnsConnector}
 import controllers.actions._
-import models.ReturnPeriod
+import models.{RateBand, ReturnPeriod}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,6 +27,7 @@ import viewmodels.DateTimeHelper
 import viewmodels.returns.ViewReturnViewModel
 import views.html.returns.ViewReturnView
 
+import java.time.YearMonth
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -73,7 +74,9 @@ class ViewReturnController @Inject() (
                                                    .fromPeriodKey(periodKey)
                                                    .map(returnPeriod => (returnPeriod.period, taxCode))
                                                }
-          ratePeriodsAndTaxCodesToRateBands <- calculatorConnector.rateBands(ratePeriodsAndTaxCodes)
+          ratePeriodsAndTaxCodesToRateBands <-
+            if (ratePeriodsAndTaxCodes.nonEmpty) { calculatorConnector.rateBands(ratePeriodsAndTaxCodes) }
+            else { Future.successful(Map.empty[(YearMonth, String), RateBand]) }
         } yield {
           val dutyToDeclareViewModel =
             viewModel.createAlcoholDeclaredViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
