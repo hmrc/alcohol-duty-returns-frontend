@@ -86,6 +86,7 @@ doYouHaveAnAppaId.error.required = Select yes if you have an Alcoholic Products 
 noAppaId.title = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
 noAppaId.heading = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
 noAppaId.p = If you were producing alcoholic products before 1 February 2025, you can find your APPA ID on the online service letter you received from HMRC.
+noAppaId.link.text = Read guidance on getting approval to produce alcoholic products (opens in a new tab)
 
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty Return
