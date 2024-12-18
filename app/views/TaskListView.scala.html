@@ -29,11 +29,15 @@
 
 )
 
-@(taskList:AlcoholDutyTaskList, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
+@(taskList: AlcoholDutyTaskList, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("taskList.title"))) {
 
 @heading(messages("taskList.title"))
+
+@paragraph(messages("taskList.period", taskList.periodStartDate, taskList.periodEndDate))
+
+@paragraph(messages("taskList.completion.date", taskList.dueDate))
 
 @paragraph(messages("taskList.expiry.date", taskList.sessionExpiryDate))
 

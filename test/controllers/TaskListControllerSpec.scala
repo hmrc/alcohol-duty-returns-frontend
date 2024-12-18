@@ -78,7 +78,7 @@ class TaskListControllerSpec extends SpecBase {
 
     def userAnswers: UserAnswers = emptyUserAnswers.copy(validUntil = Some(validUntil))
 
-    val taskList = AlcoholDutyTaskList(Seq.empty, "")
+    val taskList = AlcoholDutyTaskList(Seq.empty, "", "", "", "")
 
     val mockTaskListViewModel = mock[TaskListViewModel]
   }

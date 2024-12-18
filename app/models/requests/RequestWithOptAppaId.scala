@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,8 @@
  * limitations under the License.
  */
 
-package viewmodels.tasklist
+package models.requests
 
-import TaskListStatus.{Completed, Incomplete}
+import play.api.mvc.{Request, WrappedRequest}
 
-case class AlcoholDutyTaskList(
-  sections: Seq[Section],
-  periodStartDate: String,
-  periodEndDate: String,
-  dueDate: String,
-  sessionExpiryDate: String
-) {
-
-  def completedTasks: Int = sections.count(_.completedTask)
-  def totalTasks: Int     = sections.size
-
-  def status: TaskListStatus = if (completedTasks == totalTasks) {
-    Completed
-  } else {
-    Incomplete
-  }
-}
+case class RequestWithOptAppaId[A](request: Request[A], appaId: Option[String]) extends WrappedRequest[A](request)
