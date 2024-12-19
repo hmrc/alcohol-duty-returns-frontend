@@ -16,7 +16,6 @@
 
 package viewmodels.tasklist
 
-import config.Constants
 import config.Constants.Css
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -26,19 +25,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskListItemStatus
 object AlcoholDutyTaskListItemStatus {
   def completed(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
     content = Text(messages("taskList.section.status.completed")),
-    classes = Constants.textAlignRightCssClass
+    classes = Css.textAlignRightCssClass
   )
   def notStarted(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
     tag = Some(Tag(content = Text(messages("taskList.section.status.notStarted")), classes = Css.blueTagCssClass)),
-    classes = Constants.textAlignRightCssClass
+    classes = Css.textAlignRightCssClass
   )
 
   def inProgress(implicit messages: Messages): TaskListItemStatus  = TaskListItemStatus(
     tag = Some(Tag(content = Text(messages("taskList.section.status.inProgress")), classes = Css.lightBlueTagCssClass)),
-    classes = Constants.textAlignRightCssClass
+    classes = Css.textAlignRightCssClass
   )
   def cannotStart(implicit messages: Messages): TaskListItemStatus = TaskListItemStatus(
     tag = Some(Tag(content = Text(messages("taskList.section.status.cannotStart")), classes = Css.greyTagCssClass)),
-    classes = Constants.textAlignRightCssClass
+    classes = Css.textAlignRightCssClass
   )
 }

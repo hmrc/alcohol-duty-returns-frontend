@@ -43,7 +43,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
   def onwardRoute  = Call("GET", "/foo")
 
   val validTotalLitres = BigDecimal(10.23)
-  val validPureAlcohol = BigDecimal(9.23)
+  val validPureAlcohol = BigDecimal("9.2300")
   val validDuty        = BigDecimal(2)
   val period           = YearMonth.of(2024, 1)
 

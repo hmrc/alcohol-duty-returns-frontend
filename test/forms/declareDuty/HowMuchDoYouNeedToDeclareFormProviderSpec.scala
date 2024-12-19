@@ -38,7 +38,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].taxType"     -> "taxType",
         "volumes[0].totalLitres" -> "1",
-        "volumes[0].pureAlcohol" -> "1"
+        "volumes[0].pureAlcohol" -> "1.0000"
       )
       form.bind(data).value.value must contain theSameElementsAs List(
         VolumesByTaxType("taxType", 1, 1)
@@ -52,7 +52,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       form.fill(data).data must contain theSameElementsAs Map(
         "volumes[0].taxType"     -> "taxType",
         "volumes[0].totalLitres" -> "1",
-        "volumes[0].pureAlcohol" -> "1"
+        "volumes[0].pureAlcohol" -> "1.0000"
       )
     }
 
@@ -101,7 +101,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].taxType"     -> "taxType",
         "volumes[0].totalLitres" -> "0",
-        "volumes[0].pureAlcohol" -> "0"
+        "volumes[0].pureAlcohol" -> "0.0000"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_0_totalLitres", "return.journey.error.minimumValue.totalLitres", List("")),
@@ -113,7 +113,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].taxType"     -> "taxType",
         "volumes[0].totalLitres" -> "100000000000",
-        "volumes[0].pureAlcohol" -> "100000000000"
+        "volumes[0].pureAlcohol" -> "100000000000.0000"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_0_totalLitres", "return.journey.error.maximumValue.totalLitres", List("")),
@@ -125,7 +125,7 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
       val data = Map(
         "volumes[0].taxType"     -> "taxType",
         "volumes[0].totalLitres" -> "1",
-        "volumes[0].pureAlcohol" -> "2"
+        "volumes[0].pureAlcohol" -> "2.0000"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumes_0_totalLitres", "return.journey.error.moreThanExpected", List("")),

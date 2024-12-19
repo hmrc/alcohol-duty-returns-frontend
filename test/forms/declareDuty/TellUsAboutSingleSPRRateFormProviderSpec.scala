@@ -193,7 +193,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "100000000000",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100000000000",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100000000000.0000",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "100000000000"
           )
       }
@@ -230,7 +230,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "0",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "0",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "0.0000",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "-1"
           )
       }
@@ -267,7 +267,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "1.1",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100.1",
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100.1000",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.1"
           )
       }

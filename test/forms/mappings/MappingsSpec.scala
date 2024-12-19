@@ -410,7 +410,7 @@ class MappingsSpec extends SpecBase with Mappings {
     "must bind the smallest values" - {
       "totalLitresVolume" in {
         val result = testForm.bind(
-          Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0.001", "value.sprDutyRate" -> "0")
+          Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0.0001", "value.sprDutyRate" -> "0")
         )
         result.errors mustBe Seq.empty
       }
@@ -419,21 +419,25 @@ class MappingsSpec extends SpecBase with Mappings {
     "must not bind values that are too small" - {
       "totalLitresVolume" in {
         val result = testForm.bind(
-          Map("value.totalLitresVolume" -> "0", "value.pureAlcoholVolume" -> "0.001", "value.sprDutyRate" -> "0")
+          Map("value.totalLitresVolume" -> "0", "value.pureAlcoholVolume" -> "0.0001", "value.sprDutyRate" -> "0")
         )
         result.errors mustBe Seq(FormError("value_totalLitresVolume", "minimumValue.totalLitresVolume", Seq.empty))
       }
 
       "pureAlcoholVolume" in {
         val result = testForm.bind(
-          Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0", "value.sprDutyRate" -> "0")
+          Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0.0000", "value.sprDutyRate" -> "0")
         )
         result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "minimumValue.pureAlcoholVolume", Seq.empty))
       }
 
       "sprDutyRate" in {
         val result = testForm.bind(
-          Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0.001", "value.sprDutyRate" -> "-0.01")
+          Map(
+            "value.totalLitresVolume" -> "0.01",
+            "value.pureAlcoholVolume" -> "0.0001",
+            "value.sprDutyRate"       -> "-0.01"
+          )
         )
         result.errors mustBe Seq(FormError("value_sprDutyRate", "minimumValue.sprDutyRate", Seq.empty))
       }
@@ -470,7 +474,7 @@ class MappingsSpec extends SpecBase with Mappings {
         val result = testForm.bind(
           Map(
             "value.totalLitresVolume" -> "999999999.99",
-            "value.pureAlcoholVolume" -> "1000000000",
+            "value.pureAlcoholVolume" -> "1000000000.0000",
             "value.sprDutyRate"       -> "999999999.99"
           )
         )
@@ -492,19 +496,31 @@ class MappingsSpec extends SpecBase with Mappings {
     "when totalLitresVolume compared to pureAlcoholVolume" - {
       "is greater than or equal to it must bind" in {
         val result = testForm.bind(
-          Map("value.totalLitresVolume" -> "12.46", "value.pureAlcoholVolume" -> "12.45", "value.sprDutyRate" -> "5.31")
+          Map(
+            "value.totalLitresVolume" -> "12.46",
+            "value.pureAlcoholVolume" -> "12.4500",
+            "value.sprDutyRate"       -> "5.31"
+          )
         )
         result.errors mustBe Seq.empty
 
         val result2 = testForm.bind(
-          Map("value.totalLitresVolume" -> "12.45", "value.pureAlcoholVolume" -> "12.45", "value.sprDutyRate" -> "5.31")
+          Map(
+            "value.totalLitresVolume" -> "12.45",
+            "value.pureAlcoholVolume" -> "12.4500",
+            "value.sprDutyRate"       -> "5.31"
+          )
         )
         result2.errors mustBe Seq.empty
       }
 
       "is less than it must not bind" in {
         val result = testForm.bind(
-          Map("value.totalLitresVolume" -> "12.44", "value.pureAlcoholVolume" -> "12.45", "value.sprDutyRate" -> "5.31")
+          Map(
+            "value.totalLitresVolume" -> "12.44",
+            "value.pureAlcoholVolume" -> "12.4500",
+            "value.sprDutyRate"       -> "5.31"
+          )
         )
         result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "inconsistent", Seq.empty))
       }
@@ -574,19 +590,19 @@ class MappingsSpec extends SpecBase with Mappings {
 
     "must bind the smallest values" - {
       "totalLitresVolume" in {
-        val result = testForm.bind(Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0.001"))
+        val result = testForm.bind(Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0.0001"))
         result.errors mustBe Seq.empty
       }
     }
 
     "must not bind values that are too small" - {
       "totalLitresVolume" in {
-        val result = testForm.bind(Map("value.totalLitresVolume" -> "0", "value.pureAlcoholVolume" -> "0.001"))
+        val result = testForm.bind(Map("value.totalLitresVolume" -> "0", "value.pureAlcoholVolume" -> "0.0001"))
         result.errors mustBe Seq(FormError("value_totalLitresVolume", "minimumValue.totalLitresVolume", Seq.empty))
       }
 
       "pureAlcoholVolume" in {
-        val result = testForm.bind(Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0"))
+        val result = testForm.bind(Map("value.totalLitresVolume" -> "0.01", "value.pureAlcoholVolume" -> "0.0000"))
         result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "minimumValue.pureAlcoholVolume", Seq.empty))
       }
     }
@@ -610,22 +626,24 @@ class MappingsSpec extends SpecBase with Mappings {
 
       "pureAlcoholVolume" in {
         val result =
-          testForm.bind(Map("value.totalLitresVolume" -> "999999999.99", "value.pureAlcoholVolume" -> "1000000000"))
+          testForm.bind(
+            Map("value.totalLitresVolume" -> "999999999.99", "value.pureAlcoholVolume" -> "1000000000.0000")
+          )
         result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "maximumValue.pureAlcoholVolume", Seq.empty))
       }
     }
 
     "when totalLitresVolume compared to pureAlcoholVolume" - {
       "is greater than or equal to it must bind" in {
-        val result = testForm.bind(Map("value.totalLitresVolume" -> "12.46", "value.pureAlcoholVolume" -> "12.45"))
+        val result = testForm.bind(Map("value.totalLitresVolume" -> "12.46", "value.pureAlcoholVolume" -> "12.4500"))
         result.errors mustBe Seq.empty
 
-        val result2 = testForm.bind(Map("value.totalLitresVolume" -> "12.45", "value.pureAlcoholVolume" -> "12.45"))
+        val result2 = testForm.bind(Map("value.totalLitresVolume" -> "12.45", "value.pureAlcoholVolume" -> "12.4500"))
         result2.errors mustBe Seq.empty
       }
 
       "is less than it must not bind" in {
-        val result = testForm.bind(Map("value.totalLitresVolume" -> "12.44", "value.pureAlcoholVolume" -> "12.45"))
+        val result = testForm.bind(Map("value.totalLitresVolume" -> "12.44", "value.pureAlcoholVolume" -> "12.4500"))
         result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "inconsistent", Seq.empty))
       }
     }
@@ -789,13 +807,51 @@ class MappingsSpec extends SpecBase with Mappings {
       }
     }
 
+    "must not bind pureAlcohol values" - {
+      "with less than 4 decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.345",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty))
+      }
+
+      "with no decimal places and trailing decimal point" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty))
+      }
+
+      "with no decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty))
+      }
+    }
+
     "must bind the smallest values" - {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
             "value.taxType"     -> "123",
             "value.totalLitres" -> "0.01",
-            "value.pureAlcohol" -> "0.001",
+            "value.pureAlcohol" -> "0.0001",
             "value.dutyRate"    -> "0"
           )
         )
@@ -809,7 +865,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.taxType"     -> "123",
             "value.totalLitres" -> "0",
-            "value.pureAlcohol" -> "0.001",
+            "value.pureAlcohol" -> "0.0001",
             "value.dutyRate"    -> "0"
           )
         )
@@ -821,7 +877,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.taxType"     -> "123",
             "value.totalLitres" -> "0.01",
-            "value.pureAlcohol" -> "0",
+            "value.pureAlcohol" -> "0.0000",
             "value.dutyRate"    -> "0"
           )
         )
@@ -833,7 +889,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.taxType"     -> "123",
             "value.totalLitres" -> "0.01",
-            "value.pureAlcohol" -> "0.001",
+            "value.pureAlcohol" -> "0.0001",
             "value.dutyRate"    -> "-0.01"
           )
         )
@@ -876,7 +932,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.taxType"     -> "123",
             "value.totalLitres" -> "999999999.99",
-            "value.pureAlcohol" -> "1000000000",
+            "value.pureAlcohol" -> "1000000000.0000",
             "value.dutyRate"    -> "999999999.99"
           )
         )
@@ -902,7 +958,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.taxType"     -> "123",
             "value.totalLitres" -> "12.46",
-            "value.pureAlcohol" -> "12.45",
+            "value.pureAlcohol" -> "12.4500",
             "value.dutyRate"    -> "5.31"
           )
         )
@@ -912,7 +968,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.taxType"     -> "123",
             "value.totalLitres" -> "12.45",
-            "value.pureAlcohol" -> "12.45",
+            "value.pureAlcohol" -> "12.4500",
             "value.dutyRate"    -> "5.31"
           )
         )
@@ -924,7 +980,7 @@ class MappingsSpec extends SpecBase with Mappings {
           Map(
             "value.taxType"     -> "123",
             "value.totalLitres" -> "12.44",
-            "value.pureAlcohol" -> "12.45",
+            "value.pureAlcohol" -> "12.4500",
             "value.dutyRate"    -> "5.31"
           )
         )
@@ -1018,7 +1074,7 @@ class MappingsSpec extends SpecBase with Mappings {
     "must bind the smallest values" - {
       "totalLitres" in {
         val result =
-          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "0.01", "value.pureAlcohol" -> "0.001"))
+          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "0.01", "value.pureAlcohol" -> "0.0001"))
         result.errors mustBe Seq.empty
       }
     }
@@ -1026,13 +1082,13 @@ class MappingsSpec extends SpecBase with Mappings {
     "must not bind values that are too small" - {
       "totalLitres" in {
         val result =
-          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "0", "value.pureAlcohol" -> "0.001"))
+          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "0", "value.pureAlcohol" -> "0.0001"))
         result.errors mustBe Seq(FormError("value_totalLitres", "minimumValue.totalLitres", Seq.empty))
       }
 
       "pureAlcohol" in {
         val result =
-          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "0.01", "value.pureAlcohol" -> "0"))
+          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "0.01", "value.pureAlcohol" -> "0.0000"))
         result.errors mustBe Seq(FormError("value_pureAlcohol", "minimumValue.pureAlcohol", Seq.empty))
       }
     }
@@ -1059,7 +1115,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
       "pureAlcohol" in {
         val result = testForm.bind(
-          Map("value.taxType" -> "123", "value.totalLitres" -> "999999999.99", "value.pureAlcohol" -> "1000000000")
+          Map("value.taxType" -> "123", "value.totalLitres" -> "999999999.99", "value.pureAlcohol" -> "1000000000.0000")
         )
         result.errors mustBe Seq(FormError("value_pureAlcohol", "maximumValue.pureAlcohol", Seq.empty))
       }
@@ -1068,17 +1124,17 @@ class MappingsSpec extends SpecBase with Mappings {
     "when totalLitres compared to pureAlcohol" - {
       "is greater than or equal to it must bind" in {
         val result =
-          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "12.46", "value.pureAlcohol" -> "12.45"))
+          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "12.46", "value.pureAlcohol" -> "12.4500"))
         result.errors mustBe Seq.empty
 
         val result2 =
-          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "12.45", "value.pureAlcohol" -> "12.45"))
+          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "12.45", "value.pureAlcohol" -> "12.4500"))
         result2.errors mustBe Seq.empty
       }
 
       "is less than it must not bind" in {
         val result =
-          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "12.44", "value.pureAlcohol" -> "12.45"))
+          testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "12.44", "value.pureAlcohol" -> "12.4567"))
         result.errors mustBe Seq(
           FormError("value_totalLitres", "moreOrEqual", Seq.empty),
           FormError("value_pureAlcohol", "lessOrEqual", Seq.empty)

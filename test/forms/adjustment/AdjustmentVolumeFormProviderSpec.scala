@@ -29,7 +29,7 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
     "must bind valid data" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "1",
-        "volumes.pureAlcoholVolume" -> "1"
+        "volumes.pureAlcoholVolume" -> "1.0000"
       )
       form.bind(data).value.value mustBe AdjustmentVolume(1, 1)
     }
@@ -38,7 +38,7 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
       val data = AdjustmentVolume(1, 1)
       form.fill(data).data must contain theSameElementsAs Map(
         "volumes.totalLitresVolume" -> "1",
-        "volumes.pureAlcoholVolume" -> "1"
+        "volumes.pureAlcoholVolume" -> "1.0000"
       )
     }
 
@@ -86,7 +86,7 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
     "fail to bind when values below minimum are provided" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "0",
-        "volumes.pureAlcoholVolume" -> "0"
+        "volumes.pureAlcoholVolume" -> "0.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError("volumes_totalLitresVolume", "adjustmentVolume.error.minimumValue.totalLitresVolume", Seq()),
@@ -97,7 +97,7 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
     "fail to bind when values exceed maximum are provided" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "100000000000",
-        "volumes.pureAlcoholVolume" -> "100000000000"
+        "volumes.pureAlcoholVolume" -> "100000000000.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError("volumes_totalLitresVolume", "adjustmentVolume.error.maximumValue.totalLitresVolume", Seq()),
@@ -108,7 +108,7 @@ class AdjustmentVolumeFormProviderSpec extends BigDecimalFieldBehaviours with Mo
     "fail to bind when pure alcohol volume is higher than total litres value" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "1",
-        "volumes.pureAlcoholVolume" -> "2"
+        "volumes.pureAlcoholVolume" -> "2.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.lessThanExpected", Seq())
