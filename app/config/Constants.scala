@@ -19,7 +19,7 @@ package config
 import java.time.Month._
 
 object Constants {
-  val adrReturnCreatedDetails: String = "return-created-details"
+  val returnCreatedDetailsKey: String = "return-created-details"
   val periodKeySessionKey: String     = "period-key"
   val pastPaymentsSessionKey: String  = "past-payment-amount"
 

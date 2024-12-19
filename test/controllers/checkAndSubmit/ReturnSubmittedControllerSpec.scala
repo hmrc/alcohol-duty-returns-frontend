@@ -17,7 +17,7 @@
 package controllers.checkAndSubmit
 
 import base.SpecBase
-import config.Constants.adrReturnCreatedDetails
+import config.Constants.returnCreatedDetailsKey
 import config.FrontendAppConfig
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import org.mockito.ArgumentMatchers.any
@@ -49,7 +49,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
         .overrides(bind[ReturnSubmittedHelper].toInstance(mockReturnSubmittedHelper))
         .build()
       implicit val messages: Messages = getMessages(application)
-      val testViewModel               = testReturnSubmittedViewModel(application.injector.instanceOf[DateTimeHelper])
+      val testViewModel               = returnSubmittedViewModel(application.injector.instanceOf[DateTimeHelper])
       when(mockReturnSubmittedHelper.getReturnSubmittedViewModel(any())(any(), any()))
         .thenReturn(testViewModel)
 
@@ -60,7 +60,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
             .onPageLoad()
             .url
         ).withSession(
-          adrReturnCreatedDetails -> Json.toJson(returnDetails).toString()
+          returnCreatedDetailsKey -> Json.toJson(returnDetails).toString()
         )
 
         val result = route(application, request).value
@@ -135,7 +135,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
 
         val request =
           FakeRequest(GET, controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad().url)
-            .withSession(adrReturnCreatedDetails -> "{}")
+            .withSession(returnCreatedDetailsKey -> "{}")
         val result  = route(application, request).get
 
         status(result) mustEqual SEE_OTHER

@@ -18,7 +18,7 @@ package controllers.payments
 
 import base.SpecBase
 import cats.data.EitherT
-import config.Constants.{adrReturnCreatedDetails, pastPaymentsSessionKey}
+import config.Constants.{pastPaymentsSessionKey, returnCreatedDetailsKey}
 import connectors.PayApiConnector
 import models.OutstandingPayment
 import models.TransactionType.Return
@@ -83,7 +83,7 @@ class StartPaymentControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(GET, controllers.payments.routes.StartPaymentController.initiateAndRedirect().url).withSession(
-            adrReturnCreatedDetails -> Json.toJson(returnDetails).toString()
+            returnCreatedDetailsKey -> Json.toJson(returnDetails).toString()
           )
 
         val result = route(application, request).value
@@ -108,7 +108,7 @@ class StartPaymentControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(GET, controllers.payments.routes.StartPaymentController.initiateAndRedirect().url)
-            .withSession(adrReturnCreatedDetails -> Json.toJson(returnDetails).toString())
+            .withSession(returnCreatedDetailsKey -> Json.toJson(returnDetails).toString())
 
         val result  = route(application, request).value
 

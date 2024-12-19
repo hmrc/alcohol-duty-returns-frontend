@@ -40,26 +40,40 @@ class TaskListViewModel @Inject() (
       dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
     )
 
-  private def sections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
-    messages: Messages
-  ): Seq[Section] = {
-    val sections = Seq(
+  def hasSpiritsTask(userAnswers: UserAnswers, returnPeriod: ReturnPeriod): Boolean =
+    appConfig.spiritsAndIngredientsEnabled && userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits
+
+  private def getDeclarationSections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
+    message: Messages
+  ): Seq[Section] =
+    Seq(
       Some(returnTaskListCreator.returnSection(userAnswers)),
       Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
       Some(returnTaskListCreator.returnDSDSection(userAnswers)),
-      if (
-        appConfig.spiritsAndIngredientsEnabled && userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits
-      )
-        Some(returnTaskListCreator.returnQSSection(userAnswers))
-      else None
+      Some(returnTaskListCreator.returnQSSection(userAnswers)).filter(_ => hasSpiritsTask(userAnswers, returnPeriod))
     ).flatten
 
-    def completedTasks: Int = sections.count(_.completedTask)
-    def totalTasks: Int     = sections.size
+  private def sections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
+    messages: Messages
+  ): Seq[Section] = {
+    val declarationSections = getDeclarationSections(userAnswers, returnPeriod)
+
+    val completedTasks = declarationSections.count(_.completedTask)
+    val totalTasks     = declarationSections.size
 
     val checkAndSubmitSection = returnTaskListCreator.returnCheckAndSubmitSection(completedTasks, totalTasks)
 
-    sections :+ checkAndSubmitSection
+    declarationSections :+ checkAndSubmitSection
   }
 
+  def checkAllDeclarationSectionsCompleted(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
+    messages: Messages
+  ): Boolean = {
+    val declarationSections = getDeclarationSections(userAnswers, returnPeriod)
+
+    val completedTasks = declarationSections.count(_.completedTask)
+    val totalTasks     = declarationSections.size
+
+    completedTasks == totalTasks
+  }
 }

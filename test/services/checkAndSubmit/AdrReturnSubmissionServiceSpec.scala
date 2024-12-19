@@ -33,6 +33,7 @@ import play.api.Application
 import queries.Settable
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
+import viewmodels.tasklist.TaskListViewModel
 
 import scala.concurrent.Future
 
@@ -52,8 +53,10 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           .success
           .value
 
+        when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(false)
+
         whenReady(
-          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, notQuarterlySpiritsReturnPeriod).value
+          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
         ) { result =>
           result mustBe Right(nilReturn)
         }
@@ -74,9 +77,10 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           .success
           .value
 
-        whenReady(adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value) {
-          result =>
-            result mustBe Right(nilReturn.copy(spirits = Some(AdrSpirits(false, None))))
+        when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
+        whenReady(adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value) { result =>
+          result mustBe Right(nilReturn.copy(spirits = Some(AdrSpirits(false, None))))
         }
       }
     }
@@ -104,8 +108,10 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
 
         val expectedReturn = fullReturn.copy(adjustments = adjustments, totals = totals)
 
+        when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
         whenReady(
-          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
         ) { result =>
           result mustBe Right(expectedReturn)
         }
@@ -134,8 +140,10 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
 
         val expectedReturn = fullReturn.copy(adjustments = adjustments, totals = totals)
 
+        when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
         whenReady(
-          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+          adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
         ) { result =>
           result mustBe Right(expectedReturn)
         }
@@ -150,8 +158,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         ).foreach { page =>
           s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
             whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
             ) { result =>
               result mustBe Left(s"Value not found for page: $page")
             }
@@ -166,8 +177,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         ).foreach { page: Settable[_] =>
           s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
             whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
             ) { result =>
               result mustBe Left(s"Value not found for page: $page")
             }
@@ -178,9 +192,13 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           val incompleteAdjustment = fullRepackageAdjustmentEntry.copy(
             adjustmentType = None
           )
-          val userAnswers          = fullUserAnswers.addToSeq(AdjustmentEntryListPage, incompleteAdjustment).success.value
+
+          val userAnswers = fullUserAnswers.addToSeq(AdjustmentEntryListPage, incompleteAdjustment).success.value
+
+          when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
           whenReady(
-            adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+            adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
           ) { result =>
             result mustBe Left(s"Adjustment with no type found")
           }
@@ -199,8 +217,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         ).foreach { case (propertyName, adjustmentEntry) =>
           s"must return Left if $propertyName is None in one of the Repackaged Adjustment Entry" in new SetUp {
             val userAnswers = fullUserAnswers.addToSeq(AdjustmentEntryListPage, adjustmentEntry).success.value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
             whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
             ) { result =>
               result.isLeft mustBe true
               result.fold(
@@ -221,8 +242,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         ).foreach { case (propertyName, adjustmentEntry) =>
           s"must return Left if $propertyName is None in one of the Adjustment Entry" in new SetUp {
             val userAnswers = fullUserAnswers.addToSeq(AdjustmentEntryListPage, adjustmentEntry).success.value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
             whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
             ) { result =>
               result.isLeft mustBe true
               result.fold(
@@ -245,8 +269,11 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
         ).foreach { (page: Settable[_]) =>
           s"must return Left if $page is not present" in new SetUp {
             val userAnswers = fullUserAnswers.remove(page).success.value
+
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
             whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
             ) { result =>
               result mustBe Left(s"Value not found for page: $page")
             }
@@ -270,8 +297,10 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
               .success
               .value
 
+            when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
             whenReady(
-              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+              adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
             ) { result =>
               result.isRight mustBe true
               result.map { res =>
@@ -284,12 +313,15 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
       }
 
       "Spirits section" - {
-        "must return no spirits if the user doesn't have the spirits regime" in new SetUp {
+        "must return no spirits if the task is not expected" in new SetUp {
+
+          when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(false)
+
           whenReady(
             adrReturnSubmissionService
               .getAdrReturnSubmission(
                 fullUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct))),
-                quarterlySpiritsReturnPeriod
+                returnPeriod
               )
               .value
           ) { result =>
@@ -297,34 +329,23 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           }
         }
 
-        "must return no spirits if not a spirits quarter" in new SetUp {
-          whenReady(
-            adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, notQuarterlySpiritsReturnPeriod).value
-          ) { result =>
-            result.toOption.get.spirits mustBe None
-          }
-        }
-
-        "must return no spirits if the feature toggle is off" in new SetUp(false) {
-          whenReady(
-            adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
-          ) { result =>
-            result.toOption.get.spirits mustBe None
-          }
-        }
-
-        "must return an error if DeclareQuarterlySpiritsPage is not present" in new SetUp {
+        "must return an error if DeclareQuarterlySpiritsPage is not present when expected" in new SetUp {
           val userAnswers = fullUserAnswers.remove(DeclareQuarterlySpiritsPage).success.value
+
+          when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
           whenReady(
-            adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, quarterlySpiritsReturnPeriod).value
+            adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod).value
           ) { result =>
             result mustBe Left(s"Value not found for page: $DeclareQuarterlySpiritsPage")
           }
         }
 
-        "must return spirits otherwise" in new SetUp {
+        "must return spirits otherwise when expected" in new SetUp {
+          when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
+
           whenReady(
-            adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
+            adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, returnPeriod).value
           ) { result =>
             result.toOption.get.spirits.nonEmpty mustBe true
             result.toOption.get.spirits.get.spiritsDeclared mustBe true
@@ -344,10 +365,12 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           Future.failed(new Exception(errorMessage))
         )
 
-        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, appConfig)
+        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock, appConfig)
+
+        when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
         whenReady(
-          service.getAdrReturnSubmission(fullUserAnswers, quarterlySpiritsReturnPeriod).value
+          service.getAdrReturnSubmission(fullUserAnswers, returnPeriod).value
         ) { result =>
           result mustBe Left(s"Failed to calculate total duty: $errorMessage")
         }
@@ -358,6 +381,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
     class SetUp(spiritsAndIngredientsEnabledFeatureToggle: Boolean = true) {
       val additionalConfig             = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
       val application: Application     = applicationBuilder().configure(additionalConfig).build()
+      val taskListViewModelMock        = mock[TaskListViewModel]
       val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 
       case object CalculatorMock extends AlcoholDutyCalculatorConnector(appConfig, mock[HttpClientV2]) {
@@ -367,12 +391,8 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           Future.successful(AdjustmentDuty(duty = duties.sum))
       }
 
-      val adrReturnSubmissionService = new AdrReturnSubmissionServiceImpl(CalculatorMock, appConfig)
-
-      val notQuarterlySpiritsReturnPeriod = nonQuarterReturnPeriodGen.sample.value
-      val quarterlySpiritsReturnPeriod    = quarterReturnPeriodGen.sample.value
+      val adrReturnSubmissionService =
+        new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock, appConfig)
     }
-
   }
-
 }

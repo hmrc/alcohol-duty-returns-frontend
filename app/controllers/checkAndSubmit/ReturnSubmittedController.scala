@@ -16,7 +16,7 @@
 
 package controllers.checkAndSubmit
 
-import config.Constants.adrReturnCreatedDetails
+import config.Constants.returnCreatedDetailsKey
 import controllers.actions._
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import play.api.Logging
@@ -40,7 +40,7 @@ class ReturnSubmittedController @Inject() (
     with Logging {
 
   def onPageLoad(): Action[AnyContent] = identify { implicit request =>
-    request.session.get(adrReturnCreatedDetails) match {
+    request.session.get(returnCreatedDetailsKey) match {
       case None                       =>
         logger.warn("return details not present in session")
         Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
