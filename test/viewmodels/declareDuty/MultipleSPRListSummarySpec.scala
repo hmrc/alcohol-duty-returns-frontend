@@ -19,36 +19,33 @@ package viewmodels.declareDuty
 import base.SpecBase
 import models.AlcoholRegime.Beer
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Empty, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class MultipleSPRListSummarySpec extends SpecBase {
   "MultipleSPRListSummary" - {
-    "should summarise tax types" in new SetUp {
+    "should summarise declarations" in new SetUp {
       val answers =
-        specifyAllMultipleSPRListUnsorted(whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands), Beer)
+        specifyAllMultipleSPRListUnsorted(
+          whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allSmallProducerReliefRateBands),
+          Beer
+        )
 
       val rows = MultipleSPRListSummary.rows(Beer, answers)
       rows.map(_.key.content) mustBe
         Seq(
-          Text("Draught beer between 2% and 3% ABV (124)"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol"),
-          Text("Non-draught beer between 3% and 4% ABV (125 SPR)"),
-          Text("Total volume"),
-          Text("Pure alcohol"),
-          Text("Draught beer between 4% and 5% ABV (126 SPR)"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol")
         )
       rows.map(_.value.content) mustBe
         Seq(
-          Empty,
-          Text("100.00 litres"),
-          Text("2.5000 litres"),
-          Empty,
+          Text("Non-draught beer between 3% and 4% ABV (125 SPR)"),
           Text("1,000.00 litres"),
           Text("3.5000 litres"),
-          Empty,
+          Text("Draught beer between 4% and 5% ABV (126 SPR)"),
           Text("30,000.00 litres"),
           Text("9.3000 litres")
         )
@@ -60,7 +57,7 @@ class MultipleSPRListSummarySpec extends SpecBase {
       MultipleSPRListSummary.rows(Beer, answers) mustBe Seq.empty
     }
 
-    "should return no rows if MultipleSPRListPage page doesn't have an answer" in new SetUp {
+    "should return no rows if MultipleSPRList page doesn't have an answer" in new SetUp {
       val answers = whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands)
 
       MultipleSPRListSummary.rows(Beer, answers) mustBe Seq.empty
@@ -69,7 +66,6 @@ class MultipleSPRListSummarySpec extends SpecBase {
     "should throw an exception if a tax type is not found in the rateBands" in new SetUp {
       val badTaxCode                = "555"
       val badVolumeAndRateByTaxType = Seq(
-        volumeAndRateByTaxType1,
         volumeAndRateByTaxType2,
         volumeAndRateByTaxType3,
         volumeAndRateByTaxType4.copy(taxType = badTaxCode)
