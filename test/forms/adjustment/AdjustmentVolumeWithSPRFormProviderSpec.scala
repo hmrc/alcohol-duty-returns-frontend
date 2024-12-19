@@ -27,7 +27,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
   val regime = regimeGen.sample.value
 
   val validTotalLitres = BigDecimal(10.23)
-  val validPureAlcohol = BigDecimal(9.23)
+  val validPureAlcohol = BigDecimal("9.2300")
   val validSPRDutyRate = BigDecimal(2)
 
   val adjustmentEntry = AdjustmentEntry(
@@ -109,7 +109,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
     "fail to bind when values below minimum are provided" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "0",
-        "volumes.pureAlcoholVolume" -> "0",
+        "volumes.pureAlcoholVolume" -> "0.0000",
         "volumes.sprDutyRate"       -> "-21"
       )
       form.bind(data).errors must contain allElementsOf Seq(
@@ -122,7 +122,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
     "fail to bind when values exceed maximum are provided" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "100000000000",
-        "volumes.pureAlcoholVolume" -> "100000000000",
+        "volumes.pureAlcoholVolume" -> "100000000000.0000",
         "volumes.sprDutyRate"       -> "100000000000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
@@ -135,7 +135,7 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
     "fail to bind when pure alcohol volume is higher than total litres value" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "1",
-        "volumes.pureAlcoholVolume" -> "2",
+        "volumes.pureAlcoholVolume" -> "2.0000",
         "volumes.sprDutyRate"       -> "0"
       )
       form.bind(data).errors must contain allElementsOf Seq(

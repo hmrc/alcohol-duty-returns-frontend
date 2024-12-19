@@ -17,7 +17,7 @@ import connectors.UserAnswersConnector
 import uk.gov.hmrc.http.HttpResponse
 import views.html.$section$.$className$View
 
-import scala.concurrent.Future
+import scala..Future
 
 class $className$ControllerSpec extends SpecBase{
 

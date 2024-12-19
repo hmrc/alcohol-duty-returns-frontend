@@ -17,6 +17,7 @@
 package forms.mappings
 
 import config.Constants
+import config.Constants.MappingFields._
 import models.adjustment.AdjustmentVolumeWithSPR
 import play.api.data.FormError
 import play.api.data.format.Formatter
@@ -32,25 +33,25 @@ class AdjustmentVolumesAndRateFormatter(
 ) extends Formatter[AdjustmentVolumeWithSPR]
     with Formatters {
 
-  private def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private val totalLitresVolumeFormatter = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
-    fieldKey,
+    totalLitresVolumeField,
     maximumValue = Constants.volumeMaximumValue,
     minimumValue = Constants.volumeMinimumValue,
     args = args
   )
 
-  private def pureAlcoholVolumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private val pureAlcoholVolumeFormatter: BigDecimalFieldFormatter = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
-    fieldKey,
+    pureAlcoholVolumeField,
     decimalPlaces = Constants.lpaMaximumDecimalPlaces,
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
@@ -58,25 +59,25 @@ class AdjustmentVolumesAndRateFormatter(
     args = args
   )
 
-  private def dutyRateFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private val sprDutyRateFormatter = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
-    fieldKey,
+    sprDutyRateField,
     maximumValue = Constants.dutyMaximumValue,
     minimumValue = Constants.dutyMinimumValue,
     args = args
   )
 
   private def requiredFieldFormError(key: String, field: String): FormError =
-    FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
+    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", args)
 
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
-    val totalLitres = volumeFormatter("totalLitresVolume").bind(s"$key.totalLitresVolume", data)
-    val pureAlcohol = pureAlcoholVolumeFormatter("pureAlcoholVolume").bind(s"$key.pureAlcoholVolume", data)
-    val sprDutyRate = dutyRateFormatter("sprDutyRate").bind(s"$key.sprDutyRate", data)
+    val totalLitres = totalLitresVolumeFormatter.bind(s"$key.$totalLitresVolumeField", data)
+    val pureAlcohol = pureAlcoholVolumeFormatter.bind(s"$key.$pureAlcoholVolumeField", data)
+    val sprDutyRate = sprDutyRateFormatter.bind(s"$key.$sprDutyRateField", data)
 
     (totalLitres, pureAlcohol, sprDutyRate) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue), Right(sprDutyRate)) =>
@@ -95,16 +96,16 @@ class AdjustmentVolumesAndRateFormatter(
       errors => Left(errors),
       volumes =>
         if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
-          Left(Seq(FormError(nameToId(s"$key.pureAlcoholVolume"), inconsistentKey, args)))
+          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholVolumeField"), inconsistentKey, args)))
         } else {
           Right(volumes)
         }
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
-    val totalLitresResult = validateField("totalLitresVolume", key, data, volumeFormatter)
-    val pureAlcoholResult = validateField("pureAlcoholVolume", key, data, pureAlcoholVolumeFormatter)
-    val sprDutyRateResult = validateField("sprDutyRate", key, data, dutyRateFormatter)
+    val totalLitresResult = validateField(totalLitresVolumeField, key, data, totalLitresVolumeFormatter)
+    val pureAlcoholResult = validateField(pureAlcoholVolumeField, key, data, pureAlcoholVolumeFormatter)
+    val sprDutyRateResult = validateField(sprDutyRateField, key, data, sprDutyRateFormatter)
     val allErrors         =
       totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ sprDutyRateResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
@@ -114,22 +115,19 @@ class AdjustmentVolumesAndRateFormatter(
     }
   }
 
-  private def validateField(
+  private[mappings] def validateField[T](
     field: String,
     key: String,
     data: Map[String, String],
-    formatter: String => BigDecimalFieldFormatter
-  ): Either[Seq[FormError], BigDecimal] =
+    formatter: Formatter[T]
+  ): Either[Seq[FormError], T] =
     data.get(s"$key.$field").filter(_.nonEmpty) match {
-      case Some(_) => formatter(field).bind(s"$key.$field", data)
+      case Some(_) => formatter.bind(s"$key.$field", data)
       case None    => Left(Seq(requiredFieldFormError(key, field)))
     }
 
   override def unbind(key: String, value: AdjustmentVolumeWithSPR): Map[String, String] =
-    Map(
-      s"$key.totalLitresVolume" -> value.totalLitresVolume.toString,
-      s"$key.pureAlcoholVolume" -> value.pureAlcoholVolume.toString,
-      s"$key.sprDutyRate"       -> value.sprDutyRate.toString
-    )
-
+    totalLitresVolumeFormatter.unbind(s"$key.$totalLitresVolumeField", value.totalLitresVolume) ++
+      pureAlcoholVolumeFormatter.unbind(s"$key.$pureAlcoholVolumeField", value.pureAlcoholVolume) ++
+      sprDutyRateFormatter.unbind(s"$key.$sprDutyRateField", value.sprDutyRate)
 }

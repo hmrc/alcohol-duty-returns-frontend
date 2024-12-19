@@ -17,6 +17,7 @@
 package forms.mappings
 
 import config.Constants
+import config.Constants.MappingFields._
 import models.declareDuty.VolumesByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
@@ -33,25 +34,27 @@ class VolumesFormatter(
 ) extends Formatter[VolumesByTaxType]
     with Formatters {
 
-  private def volumeFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private val taxTypeFormatter = stringFormatter(s"$requiredKey.$taxTypeField")
+
+  private val volumeFormatter = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
-    fieldKey,
+    totalLitresField,
     maximumValue = Constants.volumeMaximumValue,
     minimumValue = Constants.volumeMinimumValue,
     args = args
   )
 
-  private def pureAlcoholBigDecimalFormatter(fieldKey: String) = new BigDecimalFieldFormatter(
+  private val pureAlcoholBigDecimalFormatter = new BigDecimalFieldFormatter(
     requiredKey,
     invalidKey,
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
-    fieldKey,
+    pureAlcoholField,
     decimalPlaces = Constants.lpaMaximumDecimalPlaces,
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
@@ -60,12 +63,12 @@ class VolumesFormatter(
   )
 
   private def requiredFieldFormError(key: String, field: String): FormError =
-    FormError(nameToId(s"${key}_$field"), s"$requiredKey.$field", args)
+    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", args)
 
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
-    val taxType     = stringFormatter(s"$requiredKey.taxType").bind(s"$key.taxType", data)
-    val totalLitres = volumeFormatter("totalLitres").bind(s"$key.totalLitres", data)
-    val pureAlcohol = pureAlcoholBigDecimalFormatter("pureAlcohol").bind(s"$key.pureAlcohol", data)
+    val taxType     = taxTypeFormatter.bind(s"$key.$taxTypeField", data)
+    val totalLitres = volumeFormatter.bind(s"$key.$totalLitresField", data)
+    val pureAlcohol = pureAlcoholBigDecimalFormatter.bind(s"$key.$pureAlcoholField", data)
 
     (taxType, totalLitres, pureAlcohol) match {
       case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue)) =>
@@ -86,8 +89,8 @@ class VolumesFormatter(
         if (volumesByTaxType.totalLitres < volumesByTaxType.pureAlcohol) {
           Left(
             Seq(
-              FormError(nameToId(s"$key.totalLitres"), moreOrEqualKey, args),
-              FormError(nameToId(s"$key.pureAlcohol"), lessOrEqualKey, args)
+              FormError(nameToId(s"$key.$totalLitresField"), moreOrEqualKey, args),
+              FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, args)
             )
           )
         } else {
@@ -96,10 +99,9 @@ class VolumesFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
-    val taxTypeResult     = validateField("taxType", key, data, stringFormatter("taxType"))
-    val totalLitresResult = validateField("totalLitres", key, data, volumeFormatter("totalLitres"))
-    val pureAlcoholResult =
-      validateField("pureAlcohol", key, data, pureAlcoholBigDecimalFormatter("pureAlcohol"))
+    val taxTypeResult     = validateField(taxTypeField, key, data, taxTypeFormatter)
+    val totalLitresResult = validateField(totalLitresField, key, data, volumeFormatter)
+    val pureAlcoholResult = validateField(pureAlcoholField, key, data, pureAlcoholBigDecimalFormatter)
 
     val allErrors =
       taxTypeResult.left.toSeq.flatten ++ totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
@@ -122,9 +124,7 @@ class VolumesFormatter(
     }
 
   override def unbind(key: String, value: VolumesByTaxType): Map[String, String] =
-    Map(
-      s"$key.taxType"     -> value.taxType,
-      s"$key.totalLitres" -> value.totalLitres.toString,
-      s"$key.pureAlcohol" -> value.pureAlcohol.toString
-    )
+    taxTypeFormatter.unbind(s"$key.$taxTypeField", value.taxType) ++
+      volumeFormatter.unbind(s"$key.$totalLitresField", value.totalLitres) ++
+      pureAlcoholBigDecimalFormatter.unbind(s"$key.$pureAlcoholField", value.pureAlcohol)
 }

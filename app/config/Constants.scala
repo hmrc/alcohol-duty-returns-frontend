@@ -24,10 +24,14 @@ object Constants {
   val pastPaymentsSessionKey: String  = "past-payment-amount"
 
   object MappingFields {
-    val taxTypeField: String     = "taxType"
-    val totalLitresField: String = "totalLitres"
-    val pureAlcoholField: String = "pureAlcohol"
-    val dutyRateField: String    = "dutyRate"
+    val taxTypeField: String           = "taxType"
+    val totalLitresField: String       = "totalLitres"
+    val totalLitresVolumeField: String = "totalLitresVolume"
+    val pureAlcoholField: String       = "pureAlcohol"
+    val pureAlcoholVolumeField: String = "pureAlcoholVolume"
+    val dutyField: String              = "duty"
+    val dutyRateField: String          = "dutyRate"
+    val sprDutyRateField: String       = "sprDutyRate"
   }
 
   val maximumDecimalPlaces: Int                   = 2

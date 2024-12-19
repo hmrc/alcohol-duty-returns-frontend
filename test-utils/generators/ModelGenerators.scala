@@ -263,7 +263,7 @@ trait ModelGenerators {
     } yield VolumeAndRateByTaxType(
       rateBand.taxTypeCode,
       totalLitres,
-      totalLitres * BigDecimal(0.1).setScale(1, BigDecimal.RoundingMode.UP),
+      (totalLitres * BigDecimal(0.1)).setScale(4, BigDecimal.RoundingMode.UP),
       rateBand.rate.getOrElse(sprDutyRate)
     )
   }

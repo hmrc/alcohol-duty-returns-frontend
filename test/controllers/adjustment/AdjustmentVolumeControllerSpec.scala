@@ -43,7 +43,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
   def onwardRoute  = Call("GET", "/foo")
 
   val validTotalLitres = BigDecimal(10.23)
-  val validPureAlcohol = BigDecimal(9.23)
+  val validPureAlcohol = BigDecimal("9.2300")
 
   lazy val adjustmentVolumeRoute       = controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode).url
   val rateBand                         = RateBand(

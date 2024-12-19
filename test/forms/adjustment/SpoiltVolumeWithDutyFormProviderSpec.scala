@@ -30,7 +30,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
   val messages = mock[Messages]
 
   val validTotalLitres = BigDecimal(10.23)
-  val validPureAlcohol = BigDecimal(9.23)
+  val validPureAlcohol = BigDecimal("9.2300")
   val validDuty        = BigDecimal(2)
 
   val adjustmentEntry = AdjustmentEntry(
@@ -112,7 +112,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
     "fail to bind when values below minimum are provided" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "0",
-        "volumes.pureAlcoholVolume" -> "0",
+        "volumes.pureAlcoholVolume" -> "0.0000",
         "volumes.duty"              -> "0"
       )
       form.bind(data).errors must contain allElementsOf List(
@@ -125,7 +125,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
     "fail to bind when values exceed maximum are provided" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "100000000000",
-        "volumes.pureAlcoholVolume" -> "100000000000",
+        "volumes.pureAlcoholVolume" -> "100000000000.0000",
         "volumes.duty"              -> "100000000000"
       )
       form.bind(data).errors must contain allElementsOf List(
@@ -138,7 +138,7 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
     "fail to bind when pure alcohol volume is higher than total litres value" in {
       val data = Map(
         "volumes.totalLitresVolume" -> "1",
-        "volumes.pureAlcoholVolume" -> "2",
+        "volumes.pureAlcoholVolume" -> "2.0000",
         "volumes.duty"              -> "0.01"
       )
       form.bind(data).errors must contain allElementsOf List(
