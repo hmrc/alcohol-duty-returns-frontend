@@ -33,12 +33,14 @@ import pages.dutySuspended._
 import pages.spiritsQuestions._
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
+import viewmodels.tasklist.TaskListViewModel
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AdrReturnSubmissionServiceImpl @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
+  taskListViewModel: TaskListViewModel,
   appConfig: FrontendAppConfig
 )(implicit
   ec: ExecutionContext
@@ -326,9 +328,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     ).flatten
 
   def getSpirits(userAnswers: UserAnswers, returnPeriod: ReturnPeriod): EitherT[Future, String, Option[AdrSpirits]] =
-    if (
-      userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits && appConfig.spiritsAndIngredientsEnabled
-    ) {
+    if (taskListViewModel.hasSpiritsTask(userAnswers, returnPeriod)) {
       for {
         declared        <- getValue(userAnswers, DeclareQuarterlySpiritsPage)
         spiritsProduced <- if (declared) getSpiritProduced(userAnswers) else EitherT.rightT[Future, String](None)

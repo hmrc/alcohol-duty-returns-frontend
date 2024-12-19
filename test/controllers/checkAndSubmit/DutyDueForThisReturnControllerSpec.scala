@@ -20,7 +20,6 @@ import base.SpecBase
 import cats.data.EitherT
 import connectors.AlcoholDutyReturnsConnector
 import models.audit.AuditReturnSubmitted
-import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.inject.bind
@@ -29,39 +28,22 @@ import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
 import viewmodels.TableViewModel
 import viewmodels.checkAnswers.checkAndSubmit.{DutyDueForThisReturnHelper, DutyDueForThisReturnViewModel}
+import viewmodels.tasklist.TaskListViewModel
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
-import java.time.{Clock, Instant, LocalDate}
+import java.time.{Clock, Instant}
 
 class DutyDueForThisReturnControllerSpec extends SpecBase {
-
-  val emptyDutiesBreakdownTable: TableViewModel = TableViewModel(
-    head = Seq.empty,
-    rows = Seq.empty
-  )
-
-  val emptyYouveAlsoDeclaredTable: TableViewModel = TableViewModel(
-    head = Seq.empty,
-    rows = Seq.empty
-  )
-
-  val viewModel = DutyDueForThisReturnViewModel(
-    dutiesBreakdownTable = emptyDutiesBreakdownTable,
-    youveAlsoDeclaredTable = emptyYouveAlsoDeclaredTable,
-    totalDue = BigDecimal(1)
-  )
-
-  val dutyDueForThisReturnHelper = mock[DutyDueForThisReturnHelper]
-
-  "DutyDueForThisReturn Controller" - {
-
-    "must return OK and the correct view for a GET if Yes is selected and there is alcohol to declare" in {
+  "onPageLoad" - {
+    "must return OK and the correct view if Yes is selected and there is alcohol to declare" in new SetUp {
+      when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
       when(dutyDueForThisReturnHelper.getDutyDueViewModel(any(), any())(any(), any())).thenReturn(
         EitherT.rightT(viewModel)
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
+        .overrides(bind[TaskListViewModel].toInstance(taskListViewModelMock))
         .build()
 
       running(application) {
@@ -77,13 +59,15 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect in the Journey Recovery screen if the dutyDueForThisReturnHelper return an error" in {
+    "must redirect in the Journey Recovery screen if any task is not complete" in new SetUp {
+      when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(false)
       when(dutyDueForThisReturnHelper.getDutyDueViewModel(any(), any())(any(), any())).thenReturn(
-        EitherT.leftT("Error message")
+        EitherT.rightT(viewModel)
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
+        .overrides(bind[TaskListViewModel].toInstance(taskListViewModelMock))
         .build()
 
       running(application) {
@@ -97,20 +81,32 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Check Your Answers page if the submission is successful" in {
-      val adrReturnCreatedDetails = AdrReturnCreatedDetails(
-        processingDate = Instant.now(),
-        amount = BigDecimal(1),
-        chargeReference = Some("1234567890"),
-        paymentDueDate = Some(LocalDate.now())
+    "must redirect in the Journey Recovery screen if the dutyDueForThisReturnHelper return an error" in new SetUp {
+      when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
+      when(dutyDueForThisReturnHelper.getDutyDueViewModel(any(), any())(any(), any())).thenReturn(
+        EitherT.leftT("Error message")
       )
 
-      val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
-      val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
-      val auditService                = mock[AuditService]
-      val submissionTime              = Instant.now(clock)
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
+        .overrides(bind[TaskListViewModel].toInstance(taskListViewModelMock))
+        .build()
 
-      val expectedAuditEvent = AuditReturnSubmitted(fullUserAnswers, fullReturn, submissionTime)
+      running(application) {
+        val request =
+          FakeRequest(GET, controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+  }
+
+  "onSubmit" - {
+    "must redirect to the Return Submitted page if the submission is successful" in new SetUp {
+      when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
 
       when(
         alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
@@ -126,6 +122,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
         .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[TaskListViewModel].toInstance(taskListViewModelMock))
         .overrides(bind[AuditService].toInstance(auditService))
         .overrides(bind[Clock].toInstance(clock))
         .build()
@@ -145,19 +142,24 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Journey Recovery page if mapping from UserAnswer to AdrReturnSubmission return an error" in {
-      val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
-      val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
-      val auditService                = mock[AuditService]
+    "must redirect in the Journey Recovery screen if any task is not complete" in new SetUp {
+      when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(false)
+
+      when(
+        alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
+      ).thenReturn(
+        EitherT.rightT(adrReturnCreatedDetails)
+      )
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
-        EitherT.leftT("Error message")
+        EitherT.rightT(fullReturn)
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
         .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[TaskListViewModel].toInstance(taskListViewModelMock))
         .overrides(bind[AuditService].toInstance(auditService))
         .build()
 
@@ -173,11 +175,35 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Journey Recovery page if the submission is not successful" in {
-      val adrReturnSubmission         = mock[AdrReturnSubmission]
-      val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
-      val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
-      val auditService                = mock[AuditService]
+    "must redirect to the Journey Recovery page if mapping from UserAnswers to AdrReturnSubmission return an error" in new SetUp {
+      when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
+
+      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
+        EitherT.leftT("Error message")
+      )
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
+        .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
+        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[TaskListViewModel].toInstance(taskListViewModelMock))
+        .overrides(bind[AuditService].toInstance(auditService))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        verify(auditService, times(0)).audit(any())(any(), any())
+      }
+    }
+
+    "must redirect to the Journey Recovery page if the submission is not successful" in new SetUp {
+      when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
 
       when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
         EitherT.rightT(adrReturnSubmission)
@@ -191,6 +217,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
         .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
         .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[TaskListViewModel].toInstance(taskListViewModelMock))
         .overrides(bind[AuditService].toInstance(auditService))
         .build()
 
@@ -205,5 +232,34 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
         verify(auditService, times(0)).audit(any())(any(), any())
       }
     }
+  }
+
+  class SetUp {
+    val dutyDueForThisReturnHelper  = mock[DutyDueForThisReturnHelper]
+    val taskListViewModelMock       = mock[TaskListViewModel]
+    val adrReturnSubmissionService  = mock[AdrReturnSubmissionService]
+    val alcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+    val auditService                = mock[AuditService]
+    val submissionTime              = Instant.now(clock)
+
+    val emptyDutiesBreakdownTable: TableViewModel = TableViewModel(
+      head = Seq.empty,
+      rows = Seq.empty
+    )
+
+    val emptyYouveAlsoDeclaredTable: TableViewModel = TableViewModel(
+      head = Seq.empty,
+      rows = Seq.empty
+    )
+
+    val viewModel = DutyDueForThisReturnViewModel(
+      dutiesBreakdownTable = emptyDutiesBreakdownTable,
+      youveAlsoDeclaredTable = emptyYouveAlsoDeclaredTable,
+      totalDue = BigDecimal(1)
+    )
+
+    val expectedAuditEvent = AuditReturnSubmitted(fullUserAnswers, fullReturn, submissionTime)
+
+    val adrReturnSubmission = fullReturn
   }
 }
