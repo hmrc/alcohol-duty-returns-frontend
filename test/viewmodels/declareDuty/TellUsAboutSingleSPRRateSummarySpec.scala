@@ -19,7 +19,7 @@ package viewmodels.declareDuty
 import base.SpecBase
 import models.AlcoholRegime.Beer
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Empty, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
   "TellUsAboutSingleSPRRateSummary" - {
@@ -30,38 +30,30 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
       val rows = TellUsAboutSingleSPRRateSummary.rows(Beer, answers)
       rows.map(_.key.content) mustBe
         Seq(
-          Text("Draught beer between 2% and 3% ABV (124)"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol"),
           Text("SPR duty rate"),
-          Text("Non-draught beer between 3% and 4% ABV (125 SPR)"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol"),
           Text("SPR duty rate"),
-          Text("Draught beer between 4% and 5% ABV (126 SPR)"),
-          Text("Total volume"),
-          Text("Pure alcohol"),
-          Text("SPR duty rate"),
-          Text("Draught beer between 4% and 5% ABV (126 SPR)"),
+          Text("Description"),
           Text("Total volume"),
           Text("Pure alcohol"),
           Text("SPR duty rate")
         )
       rows.map(_.value.content) mustBe
         Seq(
-          Empty,
-          Text("100.00 litres"),
-          Text("2.5000 litres"),
-          Text("£1.26"),
-          Empty,
+          Text("Non-draught beer between 3% and 4% ABV (125 SPR)"),
           Text("1,000.00 litres"),
           Text("3.5000 litres"),
           Text("£1.46"),
-          Empty,
+          Text("Draught beer between 4% and 5% ABV (126 SPR)"),
           Text("10,000.00 litres"),
           Text("4.5000 litres"),
           Text("£1.66"),
-          Empty,
+          Text("Draught beer between 4% and 5% ABV (126 SPR)"),
           Text("20,000.00 litres"),
           Text("4.8000 litres"),
           Text("£1.66")

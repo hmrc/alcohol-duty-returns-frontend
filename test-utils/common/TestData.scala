@@ -1121,8 +1121,13 @@ trait TestData extends ModelGenerators {
     )
   )
 
-  val allRateBands: Set[RateBand] =
-    Set(coreRateBand, draughtReliefRateBand, smallProducerReliefRateBand, draughtAndSmallProducerReliefRateBand)
+  val allNonSmallProducerReliefRateBands: Set[RateBand] =
+    Set(coreRateBand, draughtReliefRateBand)
+
+  val allSmallProducerReliefRateBands: Set[RateBand] =
+    Set(smallProducerReliefRateBand, draughtAndSmallProducerReliefRateBand)
+
+  val allRateBands: Set[RateBand] = allNonSmallProducerReliefRateBands ++ allSmallProducerReliefRateBands
 
   val volumeAndRateByTaxType1 = VolumeAndRateByTaxType(
     taxType = "124",
@@ -1148,9 +1153,18 @@ trait TestData extends ModelGenerators {
     pureAlcohol = BigDecimal(4.8),
     dutyRate = BigDecimal(1.66)
   )
+  val volumeAndRateByTaxType5 = VolumeAndRateByTaxType(
+    taxType = "123",
+    totalLitres = BigDecimal(30000),
+    pureAlcohol = BigDecimal(4.11),
+    dutyRate = BigDecimal(1.86)
+  )
 
-  val allVolumeAndRateByTaxType =
-    Seq(volumeAndRateByTaxType1, volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
+  val allNonSmallProducerReliefVolumeAndRateByTaxType =
+    Seq(volumeAndRateByTaxType1, volumeAndRateByTaxType5)
+
+  val allSmallProducerReliefVolumeAndRateByTaxType =
+    Seq(volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
 
   val testAdrReturnCreatedDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
