@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.checkAndSubmit
 
 import cats.data.EitherT
+import config.Constants
 import config.Constants.Css
 import connectors.AlcoholDutyCalculatorConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
@@ -295,7 +296,7 @@ class DutyDueForThisReturnHelper @Inject() (
           ),
           TableRow(
             Text(Money.format(totalAdjustment)),
-            classes = Css.summaryListValueCssClass
+            classes = s"${Css.summaryListValueCssClass} ${Constants.noWrap}"
           )
         ),
         actions = Seq(

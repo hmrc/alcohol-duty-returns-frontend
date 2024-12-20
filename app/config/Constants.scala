@@ -67,6 +67,7 @@ object Constants {
   val visuallyHiddenCssClass     = "govuk-visually-hidden"
   val textAlignRightWrapCssClass = "text-align-right-wrap"
   val numericCellClass           = "govuk-table__cell--numeric"
+  val noWrap                     = "no-wrap"
 
   val blueTagCssClass  = "govuk-tag--blue"
   val greenTagCssClass = "govuk-tag--green"

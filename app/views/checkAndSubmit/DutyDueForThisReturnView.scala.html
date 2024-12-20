@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, BulletList, SubHeading}
+@import components.{SectionHeading, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList, SubHeading}
 @import config.Constants.Css
 @import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnViewModel
 @import viewmodels.Money
@@ -25,6 +25,7 @@
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
+        pageHeadingWithMonetaryValue: PageHeadingWithMonetaryValue,
         paragraph: Paragraph,
         subHeading: SubHeading,
         bulletList: BulletList,
@@ -43,16 +44,24 @@
   }
 }
 
+@heading = @{
+    if (dutyDueViewModel.totalDue == 0) {
+        pageHeading(messages("dutyDueForThisReturn.nil.heading"))
+    } else {
+        pageHeadingWithMonetaryValue(messages("dutyDueForThisReturn.heading"), Money.format(dutyDueViewModel.totalDue))
+    }
+}
+
 @layout(pageTitle = titleNoForm(titleMessage)) {
   @formHelper(action = controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
-    @sectionHeading(
+      @sectionHeading(
       id = "dutyDueForThisReturn-section",
       text = messages("section.checkAndSubmit"),
     )
 
-    @if(dutyDueViewModel.totalDue == 0) {
-      @pageHeading(messages("dutyDueForThisReturn.nil.heading"))
+      @heading
 
+    @if(dutyDueViewModel.totalDue == 0) {
       @paragraph(messages("dutyDueForThisReturn.nil.p1"))
 
       @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
@@ -61,8 +70,6 @@
     }
 
     @if(dutyDueViewModel.totalDue > 0) {
-      @pageHeading(messages("dutyDueForThisReturn.heading", Money.format(dutyDueViewModel.totalDue)))
-
       @paragraph(messages("dutyDueForThisReturn.positive.p1"))
 
       @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
@@ -73,8 +80,6 @@
     }
 
     @if(dutyDueViewModel.totalDue < 0) {
-      @pageHeading(messages("dutyDueForThisReturn.heading", Money.format(dutyDueViewModel.totalDue)))
-
       @paragraph(messages("dutyDueForThisReturn.negative.p1"))
 
       @subHeading(messages("dutyDueForThisReturn.h2"), classes = Css.headingMCssClass)
