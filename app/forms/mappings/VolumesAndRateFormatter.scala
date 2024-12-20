@@ -126,7 +126,7 @@ class VolumesAndRateFormatter(
     }
   }
 
-  private[mappings] def validateField[T](
+  private def validateField[T](
     field: String,
     key: String,
     data: Map[String, String],

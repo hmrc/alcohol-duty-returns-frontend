@@ -72,7 +72,7 @@ class BigDecimalFieldFormatter(
       baseFormatter.unbind(
         key,
         value.setScale(decimalPlaces).toString
-      ) // TODO could we use the play implementation to do a tostring here?
+      )
     } else {
       baseFormatter.unbind(key, value.toString)
     }
