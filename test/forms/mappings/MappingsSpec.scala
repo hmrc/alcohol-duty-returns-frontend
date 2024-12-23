@@ -407,6 +407,41 @@ class MappingsSpec extends SpecBase with Mappings {
       }
     }
 
+    "must not bind pureAlcohol values" - {
+      "with less than 4 decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.345",
+            "value.sprDutyRate"       -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+
+      "with no decimal places and trailing decimal point" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.",
+            "value.sprDutyRate"       -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+
+      "with no decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12",
+            "value.sprDutyRate"       -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+    }
+
     "must bind the smallest values" - {
       "totalLitresVolume" in {
         val result = testForm.bind(
@@ -584,6 +619,41 @@ class MappingsSpec extends SpecBase with Mappings {
 
       "pureAlcoholVolume" in {
         val result = testForm.bind(Map("value.totalLitresVolume" -> "1234.45", "value.pureAlcoholVolume" -> "12.34567"))
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+    }
+
+    "must not bind pureAlcohol values" - {
+      "with less than 4 decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.345",
+            "value.dutyRate"          -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+
+      "with no decimal places and trailing decimal point" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.",
+            "value.dutyRate"          -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+
+      "with no decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12",
+            "value.dutyRate"          -> "5.31"
+          )
+        )
         result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
       }
     }
@@ -1066,6 +1136,44 @@ class MappingsSpec extends SpecBase with Mappings {
       "pureAlcohol" in {
         val result = testForm.bind(
           Map("value.taxType" -> "123", "value.totalLitres" -> "1234.45", "value.pureAlcohol" -> "12.34567")
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty))
+      }
+    }
+
+    "must not bind pureAlcohol values" - {
+      "with less than 4 decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.345",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty))
+      }
+
+      "with no decimal places and trailing decimal point" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty))
+      }
+
+      "with no decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12",
+            "value.dutyRate"    -> "5.31"
+          )
         )
         result.errors mustBe Seq(FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty))
       }
