@@ -19,7 +19,7 @@ package forms.mappings
 import base.SpecBase
 import play.api.data.{Form, FormError}
 import models.Enumerable
-import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR}
+import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR, SpoiltVolumeWithDuty}
 import models.declareDuty.{VolumeAndRateByTaxType, VolumesByTaxType}
 
 import java.time.YearMonth
@@ -311,7 +311,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     val testForm: Form[AdjustmentVolumeWithSPR] = Form("value" -> mapping)
 
-    "must bind a valid adjustment volume with SPR" in {
+    "must bind a valid AdjustmentVolumeWithSPR" in {
       val result = testForm.bind(
         Map(
           "value.totalLitresVolume" -> "1234.45",
@@ -407,7 +407,7 @@ class MappingsSpec extends SpecBase with Mappings {
       }
     }
 
-    "must not bind pureAlcohol values" - {
+    "must not bind pureAlcoholVolume values" - {
       "with less than 4 decimal places" in {
         val result = testForm.bind(
           Map(
@@ -582,7 +582,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     val testForm: Form[AdjustmentVolume] = Form("value" -> mapping)
 
-    "must bind a valid adjustment volume" in {
+    "must bind a valid AdjustmentVolume" in {
       val result = testForm.bind(Map("value.totalLitresVolume" -> "1234.45", "value.pureAlcoholVolume" -> "12.3456"))
       result.get mustBe AdjustmentVolume(BigDecimal(1234.45), BigDecimal(12.3456))
     }
@@ -623,7 +623,7 @@ class MappingsSpec extends SpecBase with Mappings {
       }
     }
 
-    "must not bind pureAlcohol values" - {
+    "must not bind pureAlcoholVolume values" - {
       "with less than 4 decimal places" in {
         val result = testForm.bind(
           Map(
@@ -739,7 +739,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     val testForm: Form[VolumeAndRateByTaxType] = Form("value" -> mapping)
 
-    "must bind a valid adjustment volume with Tax Type" in {
+    "must bind a valid VolumeAndRateByTaxType" in {
       val result = testForm.bind(
         Map(
           "value.taxType"     -> "123",
@@ -1009,7 +1009,7 @@ class MappingsSpec extends SpecBase with Mappings {
         result.errors mustBe Seq(FormError("value_pureAlcohol", "maximumValue.pureAlcohol", Seq.empty))
       }
 
-      "sprDutyRate" in {
+      "dutyRate" in {
         val result = testForm.bind(
           Map(
             "value.taxType"     -> "123",
@@ -1085,7 +1085,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     val testForm: Form[VolumesByTaxType] = Form("value" -> mapping)
 
-    "must bind a valid adjustment volume" in {
+    "must bind a valid VolumesByTaxType" in {
       val result =
         testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "1234.45", "value.pureAlcohol" -> "12.3456"))
       result.get mustBe VolumesByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456))
@@ -1255,6 +1255,312 @@ class MappingsSpec extends SpecBase with Mappings {
       result.get(".taxType") mustBe Some("123")
       result.get(".totalLitres") mustBe Some("1234.45")
       result.get(".pureAlcohol") mustBe Some("12.3456")
+    }
+  }
+
+  "spoiltVolumes" - {
+    val mapping = spoiltVolumesWithDuty(
+      "invalid",
+      "required",
+      "decimalPlaces",
+      "minimumValue",
+      "maximumValue",
+      "inconsistentKey",
+      Seq.empty
+    )
+
+    val testForm: Form[SpoiltVolumeWithDuty] = Form("value" -> mapping)
+
+    "must bind a validSpoiltVolumeWithDuty" in {
+      val result = testForm.bind(
+        Map(
+          "value.totalLitresVolume" -> "1234.45",
+          "value.pureAlcoholVolume" -> "12.3456",
+          "value.duty"              -> "5.31"
+        )
+      )
+      result.get mustBe SpoiltVolumeWithDuty(BigDecimal(1234.45), BigDecimal(12.3456), BigDecimal(5.31))
+    }
+
+    "must not bind an empty" - {
+      "totalLitresVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "",
+            "value.pureAlcoholVolume" -> "12.3456",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_totalLitresVolume", "required.totalLitresVolume", Seq.empty))
+      }
+
+      "pureAlcohol" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "required.pureAlcoholVolume", Seq.empty))
+      }
+
+      "duty" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.3456",
+            "value.duty"              -> ""
+          )
+        )
+        result.errors mustBe Seq(FormError("value_duty", "required.duty", Seq.empty))
+      }
+    }
+
+    "must not bind non-numeric value" - {
+      "totalLitresVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "a",
+            "value.pureAlcoholVolume" -> "12.3456",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_totalLitresVolume", "invalid.totalLitresVolume", Seq.empty))
+      }
+
+      "pureAlcoholVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "a",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "invalid.pureAlcoholVolume", Seq.empty))
+      }
+
+      "duty" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.3456",
+            "value.duty"              -> "a"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_duty", "invalid.duty", Seq.empty))
+      }
+    }
+
+    "must not bind values with too many decimal places" - {
+      "totalLitresVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.456",
+            "value.pureAlcoholVolume" -> "12.3456",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_totalLitresVolume", "decimalPlaces.totalLitresVolume", Seq.empty))
+      }
+
+      "pureAlcoholVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.34567",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+
+      "duty" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.3456",
+            "value.duty"              -> "5.312"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_duty", "decimalPlaces.duty", Seq.empty))
+      }
+    }
+
+    "must not bind pureAlcoholVolume values" - {
+      "with less than 4 decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.345",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+
+      "with no decimal places and trailing decimal point" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12.",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+
+      "with no decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1234.45",
+            "value.pureAlcoholVolume" -> "12",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "decimalPlaces.pureAlcoholVolume", Seq.empty))
+      }
+    }
+
+    "must bind the smallest values" - {
+      "totalLitresVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "0.01",
+            "value.pureAlcoholVolume" -> "0.0001",
+            "value.duty"              -> "0.01"
+          )
+        )
+        result.errors mustBe Seq.empty
+      }
+    }
+
+    "must not bind values that are too small" - {
+      "totalLitresVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "0",
+            "value.pureAlcoholVolume" -> "0.0001",
+            "value.duty"              -> "0.01"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_totalLitresVolume", "minimumValue.totalLitresVolume", Seq.empty))
+      }
+
+      "pureAlcoholVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "0.01",
+            "value.pureAlcoholVolume" -> "0.0000",
+            "value.duty"              -> "0.01"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "minimumValue.pureAlcoholVolume", Seq.empty))
+      }
+
+      "duty" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "0.01",
+            "value.pureAlcoholVolume" -> "0.0001",
+            "value.duty"              -> "0"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_duty", "minimumValue.duty", Seq.empty))
+      }
+    }
+
+    "must bind the largest values" - {
+      "totalLitresVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "999999999.99",
+            "value.pureAlcoholVolume" -> "999999999.9999",
+            "value.duty"              -> "99999999999.99"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcoholVolume", "inconsistentKey", Seq.empty)
+        ) // As pure alcohol volume exceeds total litres, but has already passed max check
+      }
+    }
+
+    "must not bind values that are too large" - {
+      "totalLitresVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "1000000000",
+            "value.pureAlcoholVolume" -> "999999999.9999",
+            "value.duty"              -> "99999999999.99"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_totalLitresVolume", "maximumValue.totalLitresVolume", Seq.empty))
+      }
+
+      "pureAlcoholVolume" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "999999999.99",
+            "value.pureAlcoholVolume" -> "1000000000.0000",
+            "value.duty"              -> "99999999999.99"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_pureAlcoholVolume", "maximumValue.pureAlcoholVolume", Seq.empty))
+      }
+
+      "duty" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "999999999.99",
+            "value.pureAlcoholVolume" -> "999999999.9999",
+            "value.duty"              -> "100000000000"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_duty", "maximumValue.duty", Seq.empty))
+      }
+    }
+
+    "when totalLitresVolume compared to pureAlcoholVolume" - {
+      "is greater than or equal to it must bind" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "12.46",
+            "value.pureAlcoholVolume" -> "12.4500",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq.empty
+
+        val result2 = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "12.45",
+            "value.pureAlcoholVolume" -> "12.4500",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result2.errors mustBe Seq.empty
+      }
+
+      "is less than it must not bind" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitresVolume" -> "12.44",
+            "value.pureAlcoholVolume" -> "12.4500",
+            "value.duty"              -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcoholVolume", "inconsistentKey", Seq.empty)
+        )
+      }
+    }
+
+    "can unbind" in {
+      val result =
+        mapping.unbind(SpoiltVolumeWithDuty(BigDecimal(1234.45), BigDecimal(12.3456), BigDecimal(5.31)))
+      result.get(".totalLitresVolume") mustBe Some("1234.45")
+      result.get(".pureAlcoholVolume") mustBe Some("12.3456")
+      result.get(".duty") mustBe Some("5.31")
     }
   }
 }
