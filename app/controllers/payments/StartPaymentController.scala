@@ -16,7 +16,7 @@
 
 package controllers.payments
 
-import config.Constants.{adrReturnCreatedDetails, pastPaymentsSessionKey}
+import config.Constants.{pastPaymentsSessionKey, returnCreatedDetailsKey}
 import config.FrontendAppConfig
 import connectors.PayApiConnector
 import controllers.actions.IdentifyWithEnrolmentAction
@@ -87,7 +87,7 @@ class StartPaymentController @Inject() (
 
   private def getReturnDetails(session: Session): Option[AdrReturnCreatedDetails] =
     session
-      .get(adrReturnCreatedDetails)
+      .get(returnCreatedDetailsKey)
       .flatMap(returnDetailsString => Json.parse(returnDetailsString).asOpt[AdrReturnCreatedDetails])
 
   private def startPayment(startPaymentRequest: StartPaymentRequest, appaId: String, credentialID: String)(implicit

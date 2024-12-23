@@ -17,7 +17,8 @@
 package controllers.checkAndSubmit
 
 import cats.data.EitherT
-import config.Constants.adrReturnCreatedDetails
+import cats.implicits._
+import config.Constants.returnCreatedDetailsKey
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
 import models.UserAnswers
@@ -34,6 +35,7 @@ import services.checkAndSubmit.AdrReturnSubmissionService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnHelper
+import viewmodels.tasklist.TaskListViewModel
 import views.html.checkAndSubmit.DutyDueForThisReturnView
 
 import java.time.{Clock, Instant}
@@ -49,6 +51,7 @@ class DutyDueForThisReturnController @Inject() (
   adrReturnSubmissionService: AdrReturnSubmissionService,
   val controllerComponents: MessagesControllerComponents,
   dutyDueForThisReturnHelper: DutyDueForThisReturnHelper,
+  taskListViewModel: TaskListViewModel,
   clock: Clock,
   view: DutyDueForThisReturnView
 )(implicit ec: ExecutionContext)
@@ -57,24 +60,50 @@ class DutyDueForThisReturnController @Inject() (
     with Logging {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    dutyDueForThisReturnHelper
-      .getDutyDueViewModel(request.userAnswers, request.returnPeriod)
-      .foldF(
-        error => {
-          logger.warn(error)
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-        },
-        result => Future.successful(Ok(view(result)))
-      )
+    val userAnswers  = request.userAnswers
+    val returnPeriod = request.returnPeriod
+
+    val dutyDueViewModelOrError = for {
+      _                <-
+        if (taskListViewModel.checkAllDeclarationSectionsCompleted(userAnswers, returnPeriod)) {
+          EitherT.pure[Future, String](())
+        } else {
+          EitherT.leftT[Future, Unit](
+            s"Check and submit page reached without completing all tasks ${userAnswers.returnId.appaId}/${userAnswers.returnId.periodKey}"
+          )
+        }
+      dutyDueViewModel <- dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod)
+    } yield dutyDueViewModel
+
+    dutyDueViewModelOrError.foldF(
+      error => {
+        logger.warn(error)
+        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      },
+      result => Future.successful(Ok(view(result)))
+    )
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val userAnswers  = request.userAnswers
+    val returnPeriod = request.returnPeriod
+    val appaId       = userAnswers.returnId.appaId
+    val periodKey    = userAnswers.returnId.periodKey
+
     val result = for {
+      // Recheck we have everything
+      // The user can have a duplicate tab open, change stuff then use it to submit
+      _                           <-
+        if (taskListViewModel.checkAllDeclarationSectionsCompleted(userAnswers, returnPeriod)) {
+          EitherT.pure[Future, String](())
+        } else {
+          EitherT.leftT[Future, Unit](s"Submission attempted without completing all tasks $appaId/$periodKey")
+        }
       adrReturnSubmission         <-
-        adrReturnSubmissionService.getAdrReturnSubmission(request.userAnswers, request.returnPeriod)
+        adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod)
       adrSubmissionCreatedDetails <-
-        alcoholDutyReturnsConnector.submitReturn(request.appaId, request.returnPeriod.toPeriodKey, adrReturnSubmission)
-      _                           <- EitherT.rightT[Future, String](auditReturnSubmitted(request.userAnswers, adrReturnSubmission))
+        alcoholDutyReturnsConnector.submitReturn(appaId, periodKey, adrReturnSubmission)
+      _                           <- EitherT.rightT[Future, String](auditReturnSubmitted(userAnswers, adrReturnSubmission))
     } yield adrSubmissionCreatedDetails
     result.foldF(
       error => {
@@ -84,7 +113,7 @@ class DutyDueForThisReturnController @Inject() (
       adrSubmissionCreatedDetails => {
         logger.info(s"Successfully submitted return")
         val session =
-          request.session + (adrReturnCreatedDetails -> Json.toJson(adrSubmissionCreatedDetails).toString)
+          request.session + (returnCreatedDetailsKey -> Json.toJson(adrSubmissionCreatedDetails).toString)
         Future.successful(
           Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedController.onPageLoad()).withSession(session)
         )
