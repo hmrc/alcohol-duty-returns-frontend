@@ -24,7 +24,7 @@ import viewmodels.tasklist.TaskListStatus.{Completed, Incomplete}
 class AlcoholDutyTaskListSpec extends SpecBase {
   "AlcoholDutyTaskList" - {
     "should classify the completed tasks when there aren't any" in new SetUp {
-      val taskList = AlcoholDutyTaskList(Seq.empty, "expiry")
+      val taskList = AlcoholDutyTaskList(Seq.empty, "", "", "", "")
 
       taskList.completedTasks mustBe 0
       taskList.totalTasks mustBe 0
@@ -60,7 +60,10 @@ class AlcoholDutyTaskListSpec extends SpecBase {
             AlcoholDutyTaskListItemStatus.completed
           )
         ),
-        "expiry"
+        "",
+        "",
+        "",
+        ""
       )
 
       taskList.completedTasks mustBe 1
@@ -97,7 +100,10 @@ class AlcoholDutyTaskListSpec extends SpecBase {
             AlcoholDutyTaskListItemStatus.completed
           )
         ),
-        "expiry"
+        "",
+        "",
+        "",
+        ""
       )
 
       taskList.completedTasks mustBe 3

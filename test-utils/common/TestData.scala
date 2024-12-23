@@ -77,12 +77,13 @@ trait TestData extends ModelGenerators {
     newDate.withDayOfMonth(adrPeriodStartDay)
   }
 
-  val quarterReturnPeriods    = Set(
+  val quarterReturnPeriods = Set(
     ReturnPeriod(YearMonth.of(2024, Month.JANUARY)),
     ReturnPeriod(YearMonth.of(2024, Month.APRIL)),
     ReturnPeriod(YearMonth.of(2024, Month.JULY)),
     ReturnPeriod(YearMonth.of(2024, Month.OCTOBER))
   )
+
   val nonQuarterReturnPeriods =
     Set(
       ReturnPeriod(YearMonth.of(2024, Month.FEBRUARY)),
@@ -1121,8 +1122,13 @@ trait TestData extends ModelGenerators {
     )
   )
 
-  val allRateBands: Set[RateBand] =
-    Set(coreRateBand, draughtReliefRateBand, smallProducerReliefRateBand, draughtAndSmallProducerReliefRateBand)
+  val allNonSmallProducerReliefRateBands: Set[RateBand] =
+    Set(coreRateBand, draughtReliefRateBand)
+
+  val allSmallProducerReliefRateBands: Set[RateBand] =
+    Set(smallProducerReliefRateBand, draughtAndSmallProducerReliefRateBand)
+
+  val allRateBands: Set[RateBand] = allNonSmallProducerReliefRateBands ++ allSmallProducerReliefRateBands
 
   val volumeAndRateByTaxType1 = VolumeAndRateByTaxType(
     taxType = "124",
@@ -1148,39 +1154,48 @@ trait TestData extends ModelGenerators {
     pureAlcohol = BigDecimal(4.8),
     dutyRate = BigDecimal(1.66)
   )
+  val volumeAndRateByTaxType5 = VolumeAndRateByTaxType(
+    taxType = "123",
+    totalLitres = BigDecimal(30000),
+    pureAlcohol = BigDecimal(4.11),
+    dutyRate = BigDecimal(1.86)
+  )
 
-  val allVolumeAndRateByTaxType =
-    Seq(volumeAndRateByTaxType1, volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
+  val allNonSmallProducerReliefVolumeAndRateByTaxType =
+    Seq(volumeAndRateByTaxType1, volumeAndRateByTaxType5)
 
-  val testAdrReturnCreatedDetails = AdrReturnCreatedDetails(
+  val allSmallProducerReliefVolumeAndRateByTaxType =
+    Seq(volumeAndRateByTaxType2, volumeAndRateByTaxType3, volumeAndRateByTaxType4)
+
+  val adrReturnCreatedDetails = AdrReturnCreatedDetails(
     processingDate = Instant.now(clock),
     amount = BigDecimal(1),
-    chargeReference = Some("1234567890"),
+    chargeReference = Some(chargeReference),
     paymentDueDate = Some(LocalDate.now(clock))
   )
 
-  val testWarningMessage = WarningText(
+  val warningMessage = WarningText(
     iconFallbackText = Some("Warning"),
     content =
       Text("Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.")
   )
 
-  def testReturnPeriodViewModel(dateTimeHelper: DateTimeHelper)(implicit messages: Messages): ReturnPeriodViewModel =
+  def returnPeriodViewModel(dateTimeHelper: DateTimeHelper)(implicit messages: Messages): ReturnPeriodViewModel =
     new ReturnPeriodViewModelFactory(dateTimeHelper).apply(
       ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
     )
 
-  def testReturnSubmittedViewModel(dateTimeHelper: DateTimeHelper)(implicit
+  def returnSubmittedViewModel(dateTimeHelper: DateTimeHelper)(implicit
     messages: Messages
   ): ReturnSubmittedViewModel = ReturnSubmittedViewModel(
-    returnDetails = testAdrReturnCreatedDetails,
-    periodStartDate = testReturnPeriodViewModel(dateTimeHelper).fromDate,
-    periodEndDate = testReturnPeriodViewModel(dateTimeHelper).toDate,
+    returnDetails = adrReturnCreatedDetails,
+    periodStartDate = returnPeriodViewModel(dateTimeHelper).fromDate,
+    periodEndDate = returnPeriodViewModel(dateTimeHelper).toDate,
     formattedProcessingDate = "27 August 2019",
     formattedPaymentDueDate = "27 August 2020",
     periodKey = periodKey,
     businessTaxAccountUrl = "http://localhost:9020/business-account/",
-    warningText = testWarningMessage
+    warningText = warningMessage
   )
 
   val spoiltRateBand = RateBand(

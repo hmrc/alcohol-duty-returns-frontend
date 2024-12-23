@@ -14,21 +14,22 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, SectionHeading}
+@import components.{Link, PageHeading, Paragraph, SectionHeading, FormGroupWithError}
 @import config.Constants.Css
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.{Underdeclaration, Spoilt}
 
 @this(
-        layout: templates.Layout,
-        formHelper: FormWithCSRF,
-        govukErrorSummary: GovukErrorSummary,
-        govukDateInput: GovukDateInput,
-        govukButton: GovukButton,
-        paragraph: Paragraph,
-        sectionHeading: SectionHeading,
-        pageHeading: PageHeading,
-        link: Link
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukDateInput: GovukDateInput,
+    govukButton: GovukButton,
+    paragraph: Paragraph,
+    sectionHeading: SectionHeading,
+    pageHeading: PageHeading,
+    link: Link,
+    formGroupWithError: FormGroupWithError
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, exciseEnquiriesUrl: String)(implicit request: Request[_], messages: Messages)
@@ -56,15 +57,16 @@
             messages(s"section.adjustment.$adjustmentType"),
         )
 
-        @pageHeading(
-            if(adjustmentType == Underdeclaration) {
-                messages("whenDidYouPayDuty.under-declaration.heading")
-            } else if(adjustmentType == Spoilt) {
-                messages("whenDidYouPayDuty.spoilt.heading")
-            } else {
-                messages("whenDidYouPayDuty.default.heading")
-            }
-        )
+        @formGroupWithError(form.errors.nonEmpty){
+                @pageHeading(
+                            if(adjustmentType == Underdeclaration){
+                                messages("whenDidYouPayDuty.under-declaration.heading")
+                            } else if(adjustmentType == Spoilt){
+                                messages("whenDidYouPayDuty.spoilt.heading")
+                            } else {
+                                messages("whenDidYouPayDuty.default.heading")
+                            }
+                            )
 
         <p class="@Css.bodyCssClass">
             @link(
@@ -83,7 +85,7 @@
                 legend = LegendViewModel(messages(heading)).asVisuallyHidden(),
             ).withHint(HintViewModel(messages("whenDidYouPayDuty.hint")))
         )
-
+    }
         @govukButton(
             ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))
         )

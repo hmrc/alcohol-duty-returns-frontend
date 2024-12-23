@@ -20,7 +20,7 @@ import base.SpecBase
 import TaskListStatus.Incomplete
 import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Wine}
-import models.AlcoholRegimes
+import models.{AlcoholRegimes, ReturnPeriod}
 import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem
@@ -30,18 +30,21 @@ import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
 
 class TaskListViewModelSpec extends SpecBase {
-  "TaskListViewModel" - {
+  "getTaskList" - {
     "must return an incomplete task list if not all sections are complete" in new SetUp {
-      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
-      when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
-      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
-      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnSection(userAnswers)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswers)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnDSDSection(userAnswers)).thenReturn(inProgressSection)
+      when(mockReturnTaskListCreator.returnQSSection(userAnswers)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnCheckAndSubmitSection(1, 4)).thenReturn(cannotStartSection)
 
-      val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodJan)
+      val result = taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)
 
       result mustBe AlcoholDutyTaskList(
         Seq(notStartedSection, notStartedSection, inProgressSection, completeSection, cannotStartSection),
+        fromDateString,
+        toDateString,
+        dueDateString,
         validUntilString
       )
 
@@ -51,16 +54,19 @@ class TaskListViewModelSpec extends SpecBase {
     }
 
     "must return an incomplete task list if all sections other than check and submit are complete" in new SetUp {
-      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(completeSection)
-      when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(completeSection)
-      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(completeSection)
-      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnSection(userAnswersWithSpirits)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswersWithSpirits)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnDSDSection(userAnswersWithSpirits)).thenReturn(completeSection)
+      when(mockReturnTaskListCreator.returnQSSection(userAnswersWithSpirits)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnCheckAndSubmitSection(4, 4)).thenReturn(notStartedSection)
 
-      val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodJan)
+      val result = taskListViewModel.getTaskList(userAnswersWithSpirits, validUntil, quarterReturnPeriods.head)
 
       result mustBe AlcoholDutyTaskList(
         Seq(completeSection, completeSection, completeSection, completeSection, notStartedSection),
+        fromDateString,
+        toDateString,
+        dueDateString,
         validUntilString
       )
 
@@ -69,86 +75,115 @@ class TaskListViewModelSpec extends SpecBase {
       result.completedTasks mustBe 4
     }
 
-    "must not return the QS section when the feature toggle is off" in new SetUp(false) {
-      when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
-      when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
-      when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
-      when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
+    "must not return the QS section when not expected" in new SetUp {
+      val userAnswersWithoutSpirits =
+        userAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct)))
+
+      when(mockReturnTaskListCreator.returnSection(userAnswersWithoutSpirits)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswersWithoutSpirits)).thenReturn(notStartedSection)
+      when(mockReturnTaskListCreator.returnDSDSection(userAnswersWithoutSpirits)).thenReturn(inProgressSection)
+      when(mockReturnTaskListCreator.returnQSSection(userAnswersWithoutSpirits)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnCheckAndSubmitSection(0, 3)).thenReturn(cannotStartSection)
 
-      val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriodJan)
+      val result = taskListViewModel.getTaskList(userAnswersWithoutSpirits, validUntil, returnPeriod)
 
       result mustBe AlcoholDutyTaskList(
         Seq(notStartedSection, notStartedSection, inProgressSection, cannotStartSection),
+        fromDateString,
+        toDateString,
+        dueDateString,
         validUntilString
       )
 
       result.totalTasks mustBe 4
+    }
+  }
 
-      verify(mockReturnTaskListCreator, never).returnQSSection(emptyUserAnswers)
+  "hasSpiritsTask" - {
+    "must return false if the the QS section when not expected" in new SetUp(
+      spiritsAndIngredientsEnabledFeatureToggle = false
+    ) {
+      taskListViewModel.hasSpiritsTask(userAnswersWithSpirits, quarterReturnPeriods.head) mustBe false
     }
 
-    quarterReturnPeriods.foreach { returnPeriod =>
-      s"must return the QS section as the period key $returnPeriod falls on a quarter and the producer has the regime 'Spirits'" in new SetUp {
-        when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
-        when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
-        when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
-        when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
-        when(mockReturnTaskListCreator.returnCheckAndSubmitSection(1, 4)).thenReturn(cannotStartSection)
-
-        val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, returnPeriod)
-
-        result mustBe AlcoholDutyTaskList(
-          Seq(notStartedSection, notStartedSection, inProgressSection, completeSection, cannotStartSection),
-          validUntilString
-        )
-
-        result.totalTasks mustBe 5
-
-        verify(mockReturnTaskListCreator, times(1)).returnQSSection(emptyUserAnswers)
+    nonQuarterReturnPeriods.foreach { returnPeriodUnderTest =>
+      val periodKeyUnderTest = returnPeriodUnderTest.toPeriodKey
+      s"must return false as the period key $periodKeyUnderTest doesn't falls a quarter" in new SetUp {
+        taskListViewModel.hasSpiritsTask(userAnswersWithSpirits, returnPeriodUnderTest) mustBe false
       }
     }
 
-    quarterReturnPeriods.foreach { returnPeriod =>
-      s"must not return the QS section as the period key $returnPeriod doesn't fall on a quarter" in new SetUp {
-        val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer, Cider, Wine, OtherFermentedProduct)))
+    "must return false if the producer doesn't have the 'Spirits' regime" in new SetUp {
+      taskListViewModel.hasSpiritsTask(userAnswersWithoutSpirits, quarterReturnPeriods.head) mustBe false
+    }
+
+    quarterReturnPeriods.foreach { returnPeriodUnderTest =>
+      val periodKeyUnderTest = returnPeriodUnderTest.toPeriodKey
+      s"must return true as the period key $periodKeyUnderTest falls a quarter, the toggle is on, and the producer has the 'Spirits' regime" in new SetUp {
+        taskListViewModel.hasSpiritsTask(userAnswersWithSpirits, returnPeriodUnderTest) mustBe true
+      }
+    }
+  }
+
+  "checkAllDeclarationSectionsCompleted" - {
+    "must return false" - {
+      "if the declare returns section is not complete" in new SetUp {
         when(mockReturnTaskListCreator.returnSection(userAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnDSDSection(userAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnQSSection(userAnswers)).thenReturn(completeSection)
+
+        taskListViewModel.checkAllDeclarationSectionsCompleted(userAnswers, returnPeriod) mustBe false
+      }
+
+      "if the declare adjustments section is not complete" in new SetUp {
+        when(mockReturnTaskListCreator.returnSection(userAnswers)).thenReturn(completeSection)
         when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswers)).thenReturn(notStartedSection)
+        when(mockReturnTaskListCreator.returnDSDSection(userAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnQSSection(userAnswers)).thenReturn(completeSection)
+
+        taskListViewModel.checkAllDeclarationSectionsCompleted(userAnswers, returnPeriod) mustBe false
+      }
+
+      "if the declare dsd section is not complete" in new SetUp {
+        when(mockReturnTaskListCreator.returnSection(userAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswers)).thenReturn(completeSection)
         when(mockReturnTaskListCreator.returnDSDSection(userAnswers)).thenReturn(inProgressSection)
         when(mockReturnTaskListCreator.returnQSSection(userAnswers)).thenReturn(completeSection)
-        when(mockReturnTaskListCreator.returnCheckAndSubmitSection(0, 3)).thenReturn(cannotStartSection)
 
-        val result = taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)
+        taskListViewModel.checkAllDeclarationSectionsCompleted(userAnswers, returnPeriod) mustBe false
+      }
 
-        result mustBe AlcoholDutyTaskList(
-          Seq(notStartedSection, notStartedSection, inProgressSection, cannotStartSection),
-          validUntilString
-        )
+      "if the declare spirits section is not complete and it should have been completed" in new SetUp {
+        when(mockReturnTaskListCreator.returnSection(userAnswersWithSpirits)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswersWithSpirits)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnDSDSection(userAnswersWithSpirits)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnQSSection(userAnswersWithSpirits)).thenReturn(notStartedSection)
 
-        result.totalTasks mustBe 4
-
-        verify(mockReturnTaskListCreator, never).returnQSSection(userAnswers)
+        taskListViewModel.checkAllDeclarationSectionsCompleted(
+          userAnswersWithSpirits,
+          quarterReturnPeriods.head
+        ) mustBe false
       }
     }
 
-    nonQuarterReturnPeriods.foreach { periodKey =>
-      s"must not return the QS section as the period key $periodKey fall on a quarter but the producer doesn't have the regime 'Spirits'" in new SetUp {
-        when(mockReturnTaskListCreator.returnSection(emptyUserAnswers)).thenReturn(notStartedSection)
-        when(mockReturnTaskListCreator.returnAdjustmentSection(emptyUserAnswers)).thenReturn(notStartedSection)
-        when(mockReturnTaskListCreator.returnDSDSection(emptyUserAnswers)).thenReturn(inProgressSection)
-        when(mockReturnTaskListCreator.returnQSSection(emptyUserAnswers)).thenReturn(completeSection)
-        when(mockReturnTaskListCreator.returnCheckAndSubmitSection(0, 3)).thenReturn(cannotStartSection)
+    "must return true" - {
+      "if the declare returns section is complete including spirits" in new SetUp {
+        when(mockReturnTaskListCreator.returnSection(userAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnDSDSection(userAnswers)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnQSSection(userAnswers)).thenReturn(completeSection)
 
-        val result = taskListViewModel.getTaskList(emptyUserAnswers, validUntil, periodKey)
+        taskListViewModel.checkAllDeclarationSectionsCompleted(userAnswers, returnPeriod) mustBe true
+      }
 
-        result mustBe AlcoholDutyTaskList(
-          Seq(notStartedSection, notStartedSection, inProgressSection, cannotStartSection),
-          validUntilString
-        )
+      "if the declare returns section is complete and declare spirits is not needed" in new SetUp {
+        when(mockReturnTaskListCreator.returnSection(userAnswersWithoutSpirits)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnAdjustmentSection(userAnswersWithoutSpirits)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnDSDSection(userAnswersWithoutSpirits)).thenReturn(completeSection)
+        when(mockReturnTaskListCreator.returnQSSection(userAnswersWithoutSpirits)).thenReturn(notStartedSection)
 
-        result.totalTasks mustBe 4
-
-        verify(mockReturnTaskListCreator, never).returnQSSection(emptyUserAnswers)
+        taskListViewModel.checkAllDeclarationSectionsCompleted(userAnswersWithoutSpirits, returnPeriod) mustBe true
       }
     }
   }
@@ -157,13 +192,25 @@ class TaskListViewModelSpec extends SpecBase {
     val additionalConfig             = Map("features.spirits-and-ingredients" -> spiritsAndIngredientsEnabledFeatureToggle)
     val application: Application     = applicationBuilder().configure(additionalConfig).build()
     val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
-    implicit val msgs: Messages      = getMessages(application)
+    implicit val messages: Messages  = getMessages(application)
+
+    val returnId       = emptyUserAnswers.returnId.copy(periodKey = periodKeyJan)
+    val userAnswers    = emptyUserAnswers.copy(returnId = returnId)
+    val returnPeriod   = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyJan)
+    val dateTimeHelper = createDateTimeHelper()
 
     private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
     private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
-    val validUntil           = Instant.now(clock)
-    val validUntilString     =
-      createDateTimeHelper().formatDateMonthYear(createDateTimeHelper().instantToLocalDate(validUntil))
+
+    val fromDate         = returnPeriod.periodFromDate()
+    val toDate           = returnPeriod.periodToDate()
+    val dueDate          = returnPeriod.periodDueDate()
+    val validUntil       = Instant.now(clock)
+    val fromDateString   = dateTimeHelper.formatDateMonthYear(fromDate)
+    val toDateString     = dateTimeHelper.formatDateMonthYear(toDate)
+    val dueDateString    = dateTimeHelper.formatDateMonthYear(dueDate)
+    val validUntilString =
+      dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
 
     val completedStatus = AlcoholDutyTaskListItemStatus.completed
 
@@ -178,6 +225,6 @@ class TaskListViewModelSpec extends SpecBase {
     val cannotStartSection = Section("title", cannotStartTaskList, AlcoholDutyTaskListItemStatus.notStarted)
 
     val mockReturnTaskListCreator = mock[ReturnTaskListCreator]
-    val taskListViewModel         = new TaskListViewModel(createDateTimeHelper(), mockReturnTaskListCreator, appConfig)
+    val taskListViewModel         = new TaskListViewModel(dateTimeHelper, mockReturnTaskListCreator, appConfig)
   }
 }

@@ -19,7 +19,7 @@ package config
 import java.time.Month._
 
 object Constants {
-  val adrReturnCreatedDetails: String = "return-created-details"
+  val returnCreatedDetailsKey: String = "return-created-details"
   val periodKeySessionKey: String     = "period-key"
   val pastPaymentsSessionKey: String  = "past-payment-amount"
 
@@ -169,5 +169,8 @@ object Constants {
     val jsVisibleCssClass = "hmrc-!-js-visible"
 
     val displayNonePrintCssClass = "govuk-!-display-none-print"
+
+    val formGroupCssClass      = "govuk-form-group"
+    val formGroupErrorCssClass = "govuk-form-group--error"
   }
 }

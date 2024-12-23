@@ -38,6 +38,8 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase {
   val userAnswersPreviouslyAnswered =
     emptyUserAnswers.set(DeclareSpiritsTotalPage, validAnswer).success.value
 
+  val spiritsGuidanceUrl: String = "https://www.gov.uk/hmrc-internal-manuals/spirits-production/spir4100"
+
   "DeclareSpiritsTotal Controller" - {
     "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers)) {
       running(application) {
@@ -48,7 +50,10 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DeclareSpiritsTotalView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, spiritsGuidanceUrl)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 
@@ -63,7 +68,7 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, spiritsGuidanceUrl)(
           request,
           getMessages(application)
         ).toString
@@ -109,7 +114,10 @@ class DeclareSpiritsTotalControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, spiritsGuidanceUrl)(
+          request,
+          getMessages(application)
+        ).toString
       }
     }
 

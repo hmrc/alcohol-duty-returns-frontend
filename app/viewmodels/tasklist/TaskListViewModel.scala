@@ -34,29 +34,46 @@ class TaskListViewModel @Inject() (
   ): AlcoholDutyTaskList =
     AlcoholDutyTaskList(
       sections(userAnswers, returnPeriod),
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodFromDate()),
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodToDate()),
+      dateTimeHelper.formatDateMonthYear(returnPeriod.periodDueDate()),
       dateTimeHelper.formatDateMonthYear(dateTimeHelper.instantToLocalDate(validUntil))
     )
+
+  def hasSpiritsTask(userAnswers: UserAnswers, returnPeriod: ReturnPeriod): Boolean =
+    appConfig.spiritsAndIngredientsEnabled && userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits
+
+  private def getDeclarationSections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
+    message: Messages
+  ): Seq[Section] =
+    Seq(
+      Some(returnTaskListCreator.returnSection(userAnswers)),
+      Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
+      Some(returnTaskListCreator.returnDSDSection(userAnswers)),
+      Some(returnTaskListCreator.returnQSSection(userAnswers)).filter(_ => hasSpiritsTask(userAnswers, returnPeriod))
+    ).flatten
 
   private def sections(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
     messages: Messages
   ): Seq[Section] = {
-    val sections = Seq(
-      Some(returnTaskListCreator.returnSection(userAnswers)),
-      Some(returnTaskListCreator.returnAdjustmentSection(userAnswers)),
-      Some(returnTaskListCreator.returnDSDSection(userAnswers)),
-      if (
-        appConfig.spiritsAndIngredientsEnabled && userAnswers.regimes.hasSpirits() && returnPeriod.hasQuarterlySpirits
-      )
-        Some(returnTaskListCreator.returnQSSection(userAnswers))
-      else None
-    ).flatten
+    val declarationSections = getDeclarationSections(userAnswers, returnPeriod)
 
-    def completedTasks: Int = sections.count(_.completedTask)
-    def totalTasks: Int     = sections.size
+    val completedTasks = declarationSections.count(_.completedTask)
+    val totalTasks     = declarationSections.size
 
     val checkAndSubmitSection = returnTaskListCreator.returnCheckAndSubmitSection(completedTasks, totalTasks)
 
-    sections :+ checkAndSubmitSection
+    declarationSections :+ checkAndSubmitSection
   }
 
+  def checkAllDeclarationSectionsCompleted(userAnswers: UserAnswers, returnPeriod: ReturnPeriod)(implicit
+    messages: Messages
+  ): Boolean = {
+    val declarationSections = getDeclarationSections(userAnswers, returnPeriod)
+
+    val completedTasks = declarationSections.count(_.completedTask)
+    val totalTasks     = declarationSections.size
+
+    completedTasks == totalTasks
+  }
 }

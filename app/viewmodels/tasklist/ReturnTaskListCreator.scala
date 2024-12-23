@@ -38,52 +38,53 @@ class ReturnTaskListCreator @Inject() () {
 
   private def createSection(
     declareQuestionAnswer: Option[Boolean],
-    createTaskListSection: () => Seq[TaskListItem],
+    additionalItems: Seq[TaskListItem],
     declarationController: Mode => String,
     section: TaskListSection
   )(implicit
     messages: Messages
   ): Section = {
-    val taskListItems = declareQuestionAnswer match {
+    val mainTaskListItem = declareQuestionAnswer match {
       case Some(true) =>
-        Seq(
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare.yes"))),
-            status = AlcoholDutyTaskListItemStatus.completed,
-            href = Some(declarationController(CheckMode))
-          )
-        ) ++ createTaskListSection()
+        TaskListItem(
+          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare"))),
+          hint = addHints(section),
+          status = AlcoholDutyTaskListItemStatus.completed,
+          href = Some(declarationController(CheckMode))
+        )
 
       case Some(false) =>
-        Seq(
-          TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare.no"))),
-            status = AlcoholDutyTaskListItemStatus.completed,
-            href = Some(declarationController(CheckMode))
-          )
+        TaskListItem(
+          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare"))),
+          hint = addHints(section),
+          status = AlcoholDutyTaskListItemStatus.completed,
+          href = Some(declarationController(CheckMode))
         )
 
       case None =>
-        Seq(
-          TaskListItem(
-            title = TaskListItemTitle(
-              content = Text(messages(s"taskList.section.${section.name}.needToDeclare.notStarted"))
-            ),
-            hint = addHintForSpiritsJourney(section),
-            status = AlcoholDutyTaskListItemStatus.notStarted,
-            href = Some(declarationController(NormalMode))
-          )
+        TaskListItem(
+          title = TaskListItemTitle(
+            content = Text(messages(s"taskList.section.${section.name}.needToDeclare"))
+          ),
+          hint = addHints(section),
+          status = AlcoholDutyTaskListItemStatus.notStarted,
+          href = Some(declarationController(NormalMode))
         )
     }
 
+    val additionalTasks = declareQuestionAnswer
+      .filter(identity)
+      .map(_ => additionalItems)
+      .getOrElse(Seq.empty)
+
     Section(
       title = messages(s"taskList.section.${section.name}.heading"),
-      taskList = TaskList(items = taskListItems),
+      taskList = TaskList(items = mainTaskListItem +: additionalTasks),
       statusCompleted = AlcoholDutyTaskListItemStatus.completed
     )
   }
 
-  private def addHintForSpiritsJourney(section: TaskListSection)(implicit
+  private def addHints(section: TaskListSection)(implicit
     messages: Messages
   ): Option[Hint] =
     section match {
@@ -104,19 +105,19 @@ class ReturnTaskListCreator @Inject() () {
     getDeclarationState() match {
       case NotStarted =>
         TaskListItem(
-          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.notStarted"))),
+          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}"))),
           status = AlcoholDutyTaskListItemStatus.notStarted,
           href = Some(notStartedUrl)
         )
       case InProgress =>
         TaskListItem(
-          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.inProgress"))),
+          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}"))),
           status = AlcoholDutyTaskListItemStatus.inProgress,
           href = Some(inProgressUrl)
         )
       case Completed  =>
         TaskListItem(
-          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.completed"))),
+          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}"))),
           status = AlcoholDutyTaskListItemStatus.completed,
           href = Some(startedOrCompleteUrl)
         )
@@ -160,14 +161,14 @@ class ReturnTaskListCreator @Inject() () {
   )(implicit messages: Messages): TaskListItem = {
     val getDeclarationState = () => {
       (
-        userAnswers.get(AdjustmentListPage),
-        userAnswers.get(AdjustmentEntryListPage),
-        userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.adjustmentType)
+        userAnswers.get(AdjustmentListPage), // No more adjustments to declare
+        userAnswers.get(AdjustmentEntryListPage), // Adjustments entered
+        userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.adjustmentType) // Adjustments in progress
       ) match {
-        case (Some(false), Some(_), _) => Completed
-        case (_, None, None)           =>
+        case (Some(false), Some(_), _) => Completed // Declared one and nothing more to declare
+        case (_, None, None)           => // Nothing declared and nothing in progress
           NotStarted
-        case (_, _, _)                 => InProgress
+        case (_, _, _)                 => InProgress // Something declared or in progress and unknown if more to declare
       }
     }
 
@@ -178,7 +179,6 @@ class ReturnTaskListCreator @Inject() () {
       ) match {
         case (Some(_), None) => controllers.adjustment.routes.AdjustmentListController.onPageLoad(1).url
         case (_, _)          => controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode).url
-
       }
 
     createDeclarationTask(
@@ -331,7 +331,7 @@ class ReturnTaskListCreator @Inject() () {
       case (Some(true), Some(alcoholType)) =>
         val declareAlcoholQuestionTask =
           TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
+            title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare"))),
             status = AlcoholDutyTaskListItemStatus.completed,
             href = Some(
               controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
@@ -343,7 +343,7 @@ class ReturnTaskListCreator @Inject() () {
       case (Some(true), None)              =>
         Seq(
           TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.yes"))),
+            title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare"))),
             status = AlcoholDutyTaskListItemStatus.inProgress,
             href = Some(
               controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
@@ -355,7 +355,7 @@ class ReturnTaskListCreator @Inject() () {
       case (Some(false), _)                =>
         Seq(
           TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.no"))),
+            title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare"))),
             status = AlcoholDutyTaskListItemStatus.completed,
             href = Some(
               controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
@@ -368,7 +368,7 @@ class ReturnTaskListCreator @Inject() () {
       case (_, _) =>
         Seq(
           TaskListItem(
-            title = TaskListItemTitle(content = Text(messages(s"taskList.section.returns.needToDeclare.notStarted"))),
+            title = TaskListItemTitle(content = Text(messages("taskList.section.returns.needToDeclare"))),
             status = AlcoholDutyTaskListItemStatus.notStarted,
             href = Some(
               controllers.declareDuty.routes.DeclareAlcoholDutyQuestionController
@@ -380,7 +380,7 @@ class ReturnTaskListCreator @Inject() () {
     }
 
     Section(
-      title = messages(s"taskList.section.returns.heading"),
+      title = messages("taskList.section.returns.heading"),
       taskList = TaskList(items = taskListItems),
       statusCompleted = AlcoholDutyTaskListItemStatus.completed
     )
@@ -401,7 +401,7 @@ class ReturnTaskListCreator @Inject() () {
     ).flatten
     createSection(
       userAnswers.get(DeclareAdjustmentQuestionPage),
-      () => taskListItems,
+      taskListItems,
       controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(_).url,
       section = AdjustmentSection
     )
@@ -410,7 +410,7 @@ class ReturnTaskListCreator @Inject() () {
   def returnDSDSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareDutySuspendedDeliveriesQuestionPage),
-      () => Seq(returnDSDJourneyTaskListItem(userAnswers)),
+      Seq(returnDSDJourneyTaskListItem(userAnswers)),
       controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(_).url,
       section = DutySuspendedSection
     )
@@ -418,7 +418,7 @@ class ReturnTaskListCreator @Inject() () {
   def returnQSSection(userAnswers: UserAnswers)(implicit messages: Messages): Section =
     createSection(
       userAnswers.get(DeclareQuarterlySpiritsPage),
-      () => Seq(returnQSJourneyTaskListItem(userAnswers)),
+      Seq(returnQSJourneyTaskListItem(userAnswers)),
       controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(_).url,
       section = SpiritsSection
     )
