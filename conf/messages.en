@@ -266,7 +266,6 @@ alcoholType.p2 = Types you do not select will have nil values in your return.
 alcoholType.hint = Select all that apply.
 
 return.journey.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
-return.journey.error.moreThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
 
 return.journey.error.allRequired = Select the type of {0}
 return.journey.error.noValue.taxType = Select the type of {0}

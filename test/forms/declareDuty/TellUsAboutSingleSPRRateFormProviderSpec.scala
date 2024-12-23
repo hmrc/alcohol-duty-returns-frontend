@@ -276,11 +276,6 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
         (volumeAndRateByTaxType, acc: List[FormError]) =>
           acc ++ List(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
-              "return.journey.error.moreThanExpected",
-              List("")
-            ),
-            FormError(
               s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
               "return.journey.error.lessThanExpected",
               List("")

@@ -126,7 +126,6 @@ trait Mappings extends Formatters with Constraints {
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    moreOrEqualKey: String,
     lessOrEqualKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[VolumesByTaxType] =
@@ -137,7 +136,6 @@ trait Mappings extends Formatters with Constraints {
         decimalPlacesKey,
         minimumValueKey,
         maximumValueKey,
-        moreOrEqualKey,
         lessOrEqualKey,
         args
       )
@@ -149,7 +147,6 @@ trait Mappings extends Formatters with Constraints {
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    moreOrEqualKey: String,
     lessOrEqualKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[VolumeAndRateByTaxType] =
@@ -160,7 +157,6 @@ trait Mappings extends Formatters with Constraints {
         decimalPlacesKey,
         minimumValueKey,
         maximumValueKey,
-        moreOrEqualKey,
         lessOrEqualKey,
         args
       )

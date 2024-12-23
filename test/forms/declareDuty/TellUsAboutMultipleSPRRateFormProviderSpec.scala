@@ -149,7 +149,6 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
       )
 
       result.errors must contain allElementsOf List(
-        "volumesWithRate_totalLitres" -> "return.journey.error.moreThanExpected",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.lessThanExpected"
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
