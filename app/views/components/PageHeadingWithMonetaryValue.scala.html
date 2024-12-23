@@ -15,10 +15,10 @@
  *@
 
 @import config.Constants.Css
-@import config.Constants
+@import viewmodels.Money
 
 @this()
 
-@(text: String, amount: String)
+@(text: String, amount: BigDecimal)(implicit messages: Messages)
 
-<h1 class="@Css.headingXLCssClass">@text <span class="@Constants.noWrap">@amount</span></h1>
+<h1 class="@Css.headingXLCssClass">@text <span class="@Css.noWrap">@Money.format(amount)</span></h1>

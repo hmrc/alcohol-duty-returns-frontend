@@ -48,7 +48,7 @@
     if (dutyDueViewModel.totalDue == 0) {
         pageHeading(messages("dutyDueForThisReturn.nil.heading"))
     } else {
-        pageHeadingWithMonetaryValue(messages("dutyDueForThisReturn.heading"), Money.format(dutyDueViewModel.totalDue))
+        pageHeadingWithMonetaryValue(messages("dutyDueForThisReturn.heading"), dutyDueViewModel.totalDue)
     }
 }
 

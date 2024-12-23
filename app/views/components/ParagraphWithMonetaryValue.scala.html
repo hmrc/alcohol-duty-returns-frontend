@@ -15,10 +15,10 @@
  *@
 
 @import config.Constants.Css
-@import config.Constants
+@import viewmodels.Money
 
 @this()
 
-@(content: Content, amount: String, classes: String = Css.bodyCssClass, id: Option[String] = None)
+@(content: Content, amount: BigDecimal, classes: String = Css.bodyCssClass, id: Option[String] = None)(implicit messages: Messages)
 
-<p class="@classes" @id.map{id => id="@id"}>@content.asHtml <span class=@Constants.noWrap>@amount</span></p>
+<p class="@classes" @id.map{id => id="@id"}>@content.asHtml <span class=@Css.noWrap>@Money.format(amount)</span></p>

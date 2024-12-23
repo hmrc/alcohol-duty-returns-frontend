@@ -29,13 +29,14 @@
         bulletList: BulletList
 )
 
-@(adjustmentType: AdjustmentType, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal, repackagedRate:BigDecimal, repackagedDuty:BigDecimal, newDuty:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentType: AdjustmentType, volume: BigDecimal, duty: BigDecimal, pureAlcoholVolume: BigDecimal, taxCode: String, rate: BigDecimal, repackagedRate: BigDecimal, repackagedDuty: BigDecimal, newDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
 
 @heading = @{
-    adjustmentType match {
-        case AdjustmentType.RepackagedDraughtProducts => pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), Money.format(newDuty))
-        case _ => pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), Money.format(duty))
+    val dutyToShow: BigDecimal = adjustmentType match {
+        case AdjustmentType.RepackagedDraughtProducts => newDuty
+        case _ => duty
     }
+    pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), dutyToShow)
 }
 
 @layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(duty)))) {
