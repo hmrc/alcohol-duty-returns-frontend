@@ -21,7 +21,7 @@ import models.AlcoholRegime
 package object declareDuty {
 
   def nextPages(currentPage: QuestionPage[_]): Seq[_ <: QuestionPage[Map[AlcoholRegime, _]]] =
-    sectionPages.dropWhile(_ != currentPage).tail
+    sectionPages.dropWhile(_ != currentPage).drop(1)
 
   val sectionPages: Seq[QuestionPage[Map[AlcoholRegime, _]]] = Seq(
     AlcoholTypePage,

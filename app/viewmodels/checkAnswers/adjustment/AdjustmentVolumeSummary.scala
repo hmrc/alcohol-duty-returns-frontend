@@ -32,7 +32,6 @@ object AdjustmentVolumeSummary {
     for {
       totalLitres <- adjustmentEntry.totalLitresVolume
       pureAlcohol <- adjustmentEntry.pureAlcoholVolume
-      regime      <- adjustmentEntry.rateBand.map(_.rangeDetails.map(_.alcoholRegime).head)
     } yield {
       val route = if (adjustmentEntry.spoiltRegime.isDefined) {
         routes.SpoiltVolumeWithDutyController.onPageLoad(CheckMode).url

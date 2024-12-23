@@ -29,15 +29,19 @@ object RateBandHelper {
   def rateBandContent(rateBand: RateBand, maybeByRegime: Option[AlcoholRegime])(implicit
     messages: Messages
   ): String =
-    abvRangesFromRateBand(rateBand, maybeByRegime) match {
-      case abvRanges if abvRanges.isEmpty   =>
+    abvRangesFromRateBand(rateBand, maybeByRegime).toList match {
+      case Nil                        =>
         throw new IllegalArgumentException(
           s"No ranges found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
         )
-      case abvRanges if abvRanges.size == 1 =>
-        singleInterval(abvRanges.head, rateBand.taxTypeCode)
-      case abvRanges                        =>
-        multipleIntervals(abvRanges, rateBand.taxTypeCode)
+      case List(abvRange)             =>
+        singleInterval(abvRange, rateBand.taxTypeCode)
+      case List(abvRange1, abvRange2) =>
+        multipleIntervals(abvRange1, abvRange2, rateBand.taxTypeCode)
+      case Nil                        =>
+        throw new IllegalArgumentException(
+          s"Only 2 ranges supported at present found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
+        )
 
     }
 
@@ -60,38 +64,38 @@ object RateBandHelper {
         ).capitalize
     }
 
-  private def multipleIntervals(intervals: Set[ABVRange], taxType: String)(implicit
+  private def multipleIntervals(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String)(implicit
     messages: Messages
-  ): String = {
-    val firstInterval = intervals.head
-    val lastInterval  = intervals.last
-
+  ): String =
     messages(
       "return.journey.abv.multi.interval",
-      messages(s"return.journey.abv.interval.label.${firstInterval.alcoholType}"),
-      firstInterval.minABV.value,
-      firstInterval.maxABV.value,
-      messages(s"return.journey.abv.interval.label.${lastInterval.alcoholType}"),
-      lastInterval.minABV.value,
-      lastInterval.maxABV.value,
+      messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
+      abvRange1.minABV.value,
+      abvRange1.maxABV.value,
+      messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
+      abvRange2.minABV.value,
+      abvRange2.maxABV.value,
       taxType
     ).capitalize
-  }
 
   def rateBandRecap(rateBand: RateBand, maybeByRegime: Option[AlcoholRegime])(implicit messages: Messages): String =
-    abvRangesFromRateBand(rateBand, maybeByRegime) match {
-      case abvRanges if abvRanges.isEmpty   =>
+    abvRangesFromRateBand(rateBand, maybeByRegime).toList match {
+      case Nil                        =>
         throw new IllegalArgumentException(
           s"No ranges found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
         )
-      case abvRanges if abvRanges.size == 1 =>
+      case List(abvRange)             =>
         singleIntervalRecap(
-          abvRanges.head,
+          abvRange,
           rateBand.taxTypeCode,
           rateBand.rateType
         )
-      case abvRanges                        =>
-        multipleIntervalsRecap(abvRanges, rateBand.taxTypeCode, rateBand.rateType)
+      case List(abvRange1, abvRange2) =>
+        multipleIntervalsRecap(abvRange1, abvRange2, rateBand.taxTypeCode, rateBand.rateType)
+      case Nil                        =>
+        throw new IllegalArgumentException(
+          s"Only 2 ranges supported at present found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
+        )
     }
 
   private def singleIntervalRecap(interval: ABVRange, taxType: String, rateType: RateType)(implicit
@@ -115,21 +119,17 @@ object RateBandHelper {
         ).capitalize
     }
 
-  private def multipleIntervalsRecap(intervals: Set[ABVRange], taxType: String, rateType: RateType)(implicit
-    messages: Messages
-  ): String = {
-    val firstInterval = intervals.head
-    val lastInterval  = intervals.last
-
+  private def multipleIntervalsRecap(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String, rateType: RateType)(
+    implicit messages: Messages
+  ): String =
     messages(
       s"return.journey.abv.recap.multi.interval.$rateType",
-      messages(s"return.journey.abv.interval.label.${firstInterval.alcoholType}"),
-      firstInterval.minABV.value,
-      firstInterval.maxABV.value,
-      messages(s"return.journey.abv.interval.label.${lastInterval.alcoholType}"),
-      lastInterval.minABV.value,
-      lastInterval.maxABV.value,
+      messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
+      abvRange1.minABV.value,
+      abvRange1.maxABV.value,
+      messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
+      abvRange2.maxABV.value,
+      abvRange2.maxABV.value,
       taxType
     ).capitalize
-  }
 }

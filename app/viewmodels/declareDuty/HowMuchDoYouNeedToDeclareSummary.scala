@@ -78,14 +78,14 @@ object HowMuchDoYouNeedToDeclareSummary {
     val coreRows = rateBandsByRateType
       .get(Core)
       .map { coreRateBands =>
-        createRowValues(Core, coreRateBands, regime, dutyByTaxTypes)
+        createRowValues(coreRateBands, regime, dutyByTaxTypes)
       }
       .getOrElse(Seq.empty)
 
     val draughtReliefRows = rateBandsByRateType
       .get(DraughtRelief)
       .map { draughtReliefRateBands =>
-        createRowValues(DraughtRelief, draughtReliefRateBands, regime, dutyByTaxTypes)
+        createRowValues(draughtReliefRateBands, regime, dutyByTaxTypes)
       }
       .getOrElse(Seq.empty)
 
@@ -93,7 +93,6 @@ object HowMuchDoYouNeedToDeclareSummary {
   }
 
   private def createRowValues(
-    rateType: RateType,
     rateBands: Set[RateBand],
     regime: AlcoholRegime,
     dutyByTaxTypes: Seq[VolumeAndRateByTaxType]

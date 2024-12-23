@@ -71,7 +71,7 @@ object WhatDoYouNeedToDeclareSummary {
             + "</ul>"
         )
       ),
-      actions = Seq()
+      actions = Seq.empty
     )
 
 }
