@@ -128,7 +128,6 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         "volumes[0].pureAlcohol" -> "2"
       )
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_0_totalLitres", "return.journey.error.moreThanExpected", List("")),
         FormError("volumes_0_pureAlcohol", "return.journey.error.lessThanExpected", List(""))
       )
     }
