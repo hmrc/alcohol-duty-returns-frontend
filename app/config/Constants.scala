@@ -58,15 +58,14 @@ object Constants {
 
   val rowsPerPage = 15
 
-  val bodyCssClass               = "govuk-body"
-  val oneQuarterCssClass         = "govuk-!-width-one-quarter"
-  val oneHalfCssClass            = "govuk-!-width-one-half"
-  val threeQuartersCssClass      = "govuk-!-width-three-quarters"
-  val textAlignRightCssClass     = "text-align-right"
-  val boldFontCssClass           = "govuk-!-font-weight-bold"
-  val visuallyHiddenCssClass     = "govuk-visually-hidden"
-  val textAlignRightWrapCssClass = "text-align-right-wrap"
-  val numericCellClass           = "govuk-table__cell--numeric"
+  val bodyCssClass           = "govuk-body"
+  val oneQuarterCssClass     = "govuk-!-width-one-quarter"
+  val oneHalfCssClass        = "govuk-!-width-one-half"
+  val threeQuartersCssClass  = "govuk-!-width-three-quarters"
+  val textAlignRightCssClass = "text-align-right"
+  val boldFontCssClass       = "govuk-!-font-weight-bold"
+  val visuallyHiddenCssClass = "govuk-visually-hidden"
+  val numericCellClass       = "govuk-table__cell--numeric"
 
   val blueTagCssClass  = "govuk-tag--blue"
   val greenTagCssClass = "govuk-tag--green"
@@ -111,6 +110,7 @@ object Constants {
 
     val textAlignRightCssClass     = "text-align-right"
     val textAlignRightWrapCssClass = "text-align-right-wrap"
+    val noWrap                     = "no-wrap"
 
     val boldFontCssClass = "govuk-!-font-weight-bold"
 
