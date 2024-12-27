@@ -17,6 +17,7 @@
 package common
 
 import models.AlcoholRegime._
+import models.adjustment.AdjustmentEntry
 import models.dutySuspended.{DutySuspendedBeer, DutySuspendedCider, DutySuspendedOtherFermented, DutySuspendedSpirits, DutySuspendedWine}
 import models.{AlcoholRegime, RateBand, UserAnswers}
 import models.declareDuty.{AlcoholDuty, DutyByTaxType, VolumeAndRateByTaxType}
@@ -217,6 +218,9 @@ trait TestPages extends TestData {
 
   def specifyAllMultipleSPRListUnsorted(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
     multipleSPRListPage(userAnswers, regime, allSmallProducerReliefVolumeAndRateByTaxTypeUnsorted)
+
+  def specifyWhatDoYouNeedToDeclare(userAnswers: UserAnswers, regime: AlcoholRegime): UserAnswers =
+    whatDoYouNeedToDeclarePage(userAnswers, regime, allRateBands)
 
   def dutySuspendedBeerPage(userAnswers: UserAnswers, dutySuspendedBeer: DutySuspendedBeer): UserAnswers =
     userAnswers.set(DutySuspendedBeerPage, dutySuspendedBeer).get

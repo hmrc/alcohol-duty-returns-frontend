@@ -41,17 +41,17 @@ case class AdjustmentEntry(
     adjustmentType.isDefined && period.isDefined && rateBand.isDefined &&
       totalLitresVolume.isDefined && pureAlcoholVolume.isDefined && duty.isDefined && (rateBand
         .flatMap(_.rate)
-        .isDefined || sprDutyRate.isDefined) && repackagedCheck && spoiltCheck
+        .isDefined || sprDutyRate.isDefined) && noRepackagedAdjustmentOrIsComplete && noSpoiltAdjustmentOrIsComplete
 
-  private def repackagedCheck: Boolean = {
-    val isRepackagedAdjustment = adjustmentType.isDefined && adjustmentType.get.equals(RepackagedDraughtProducts)
+  private def noRepackagedAdjustmentOrIsComplete: Boolean = {
+    val isRepackagedAdjustment = adjustmentType.contains(RepackagedDraughtProducts)
 
     !isRepackagedAdjustment || (repackagedRateBand.isDefined &&
       (repackagedRateBand.flatMap(_.rate).isDefined || repackagedSprDutyRate.isDefined) && repackagedDuty.isDefined)
   }
 
-  private def spoiltCheck: Boolean = {
-    val isSpoiltAdjustment = adjustmentType.isDefined && adjustmentType.get.equals(Spoilt)
+  private def noSpoiltAdjustmentOrIsComplete: Boolean = {
+    val isSpoiltAdjustment = adjustmentType.contains(Spoilt)
 
     !isSpoiltAdjustment || spoiltRegime.isDefined
   }

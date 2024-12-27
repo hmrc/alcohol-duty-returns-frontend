@@ -26,13 +26,12 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdjustmentVolumeSummary {
+class AdjustmentVolumeSummary {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     for {
       totalLitres <- adjustmentEntry.totalLitresVolume
       pureAlcohol <- adjustmentEntry.pureAlcoholVolume
-      regime      <- adjustmentEntry.rateBand.map(_.rangeDetails.map(_.alcoholRegime).head)
     } yield {
       val route = if (adjustmentEntry.spoiltRegime.isDefined) {
         routes.SpoiltVolumeWithDutyController.onPageLoad(CheckMode).url

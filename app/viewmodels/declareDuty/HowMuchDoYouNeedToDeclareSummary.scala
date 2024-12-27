@@ -18,7 +18,7 @@ package viewmodels.declareDuty
 
 import models.RateType.{Core, DraughtRelief}
 import models.declareDuty.VolumeAndRateByTaxType
-import models.{AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholRegime, CheckMode, RateBand, UserAnswers}
 import pages.declareDuty.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -28,7 +28,7 @@ import config.Constants.Css
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object HowMuchDoYouNeedToDeclareSummary {
+class HowMuchDoYouNeedToDeclareSummary {
 
   def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand], userAnswers: UserAnswers)(implicit
     messages: Messages
@@ -78,14 +78,14 @@ object HowMuchDoYouNeedToDeclareSummary {
     val coreRows = rateBandsByRateType
       .get(Core)
       .map { coreRateBands =>
-        createRowValues(Core, coreRateBands, regime, dutyByTaxTypes)
+        createRowValues(coreRateBands, regime, dutyByTaxTypes)
       }
       .getOrElse(Seq.empty)
 
     val draughtReliefRows = rateBandsByRateType
       .get(DraughtRelief)
       .map { draughtReliefRateBands =>
-        createRowValues(DraughtRelief, draughtReliefRateBands, regime, dutyByTaxTypes)
+        createRowValues(draughtReliefRateBands, regime, dutyByTaxTypes)
       }
       .getOrElse(Seq.empty)
 
@@ -93,7 +93,6 @@ object HowMuchDoYouNeedToDeclareSummary {
   }
 
   private def createRowValues(
-    rateType: RateType,
     rateBands: Set[RateBand],
     regime: AlcoholRegime,
     dutyByTaxTypes: Seq[VolumeAndRateByTaxType]

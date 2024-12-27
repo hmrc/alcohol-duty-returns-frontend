@@ -33,6 +33,7 @@ class CheckYourAnswersController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
+  checkYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper,
   view: CheckYourAnswersView
 ) extends FrontendBaseController
     with I18nSupport
@@ -40,10 +41,12 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(regime: AlcoholRegime): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      CheckYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
+      checkYourAnswersSummaryListHelper.createSummaryList(regime, request.userAnswers) match {
         case Some(summaryList) => Ok(view(regime, summaryList))
         case None              =>
-          logger.warn("Impossible to retrieve summary list rows")
+          logger.warn(
+            s"Unable to retrieve summary list rows during declare duty CYA onPageLoad ${request.userAnswers.returnId.appaId}/${request.userAnswers.returnId.periodKey}"
+          )
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
   }

@@ -365,7 +365,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           Future.failed(new Exception(errorMessage))
         )
 
-        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock, appConfig)
+        val service = new AdrReturnSubmissionServiceImpl(failingCalculator, taskListViewModelMock)
 
         when(taskListViewModelMock.hasSpiritsTask(any(), any())).thenReturn(true)
 
@@ -392,7 +392,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
       }
 
       val adrReturnSubmissionService =
-        new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock, appConfig)
+        new AdrReturnSubmissionServiceImpl(CalculatorMock, taskListViewModelMock)
     }
   }
 }
