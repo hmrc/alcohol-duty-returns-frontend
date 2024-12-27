@@ -24,7 +24,7 @@ import RateBandHelper.rateBandRecap
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object WhatDoYouNeedToDeclareSummary {
+class WhatDoYouNeedToDeclareSummary {
 
   def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryList =
     SummaryList(
@@ -55,7 +55,7 @@ object WhatDoYouNeedToDeclareSummary {
       )
     )
 
-  def row(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
+  private def row(regime: AlcoholRegime, rateBands: Set[RateBand])(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = messages(
         s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row",
@@ -66,7 +66,7 @@ object WhatDoYouNeedToDeclareSummary {
           "<ul>" +
             rateBands.toSeq
               .sortBy(_.taxTypeCode)
-              .map(answer => s"<li>${rateBandRecap(answer, Some(regime))}</li>")
+              .map(rateBand => s"<li>${rateBandRecap(rateBand, Some(regime))}</li>")
               .mkString("")
             + "</ul>"
         )

@@ -26,12 +26,11 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 import viewmodels.declareDuty.RateBandHelper.rateBandRecap
 
-object AdjustmentTaxTypeSummary {
+class AdjustmentTaxTypeSummary {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     adjustmentEntry.adjustmentType match {
-      case Some(Spoilt)         => None
-      case Some(adjustmentType) =>
+      case Some(adjustmentType) if adjustmentType != Spoilt =>
         val (label, hiddenText) = adjustmentType match {
           case RepackagedDraughtProducts =>
             ("adjustmentTaxType.repackaged.checkYourAnswersLabel", "adjustmentTaxType.repackaged.change.hidden")

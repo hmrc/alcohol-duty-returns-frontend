@@ -18,7 +18,7 @@ package viewmodels.declareDuty
 
 import models.RateType.{Core, DraughtRelief}
 import models.declareDuty.VolumeAndRateByTaxType
-import models.{AlcoholRegime, CheckMode, RateBand, RateType, UserAnswers}
+import models.{AlcoholRegime, CheckMode, RateBand, UserAnswers}
 import pages.declareDuty.HowMuchDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -28,7 +28,7 @@ import config.Constants.Css
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object HowMuchDoYouNeedToDeclareSummary {
+class HowMuchDoYouNeedToDeclareSummary {
 
   def summaryList(regime: AlcoholRegime, rateBands: Set[RateBand], userAnswers: UserAnswers)(implicit
     messages: Messages

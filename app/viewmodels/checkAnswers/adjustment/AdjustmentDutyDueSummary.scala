@@ -25,7 +25,7 @@ import viewmodels.Money
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdjustmentDutyDueSummary {
+class AdjustmentDutyDueSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] = {
     val action    = adjustmentEntry.adjustmentType match {
       case Some(Spoilt) =>
@@ -38,7 +38,9 @@ object AdjustmentDutyDueSummary {
         )
       case _            => Seq.empty
     }
+
     val dutyValue = adjustmentEntry.newDuty.orElse(adjustmentEntry.duty)
+
     dutyValue.map(duty =>
       SummaryListRowViewModel(
         key = "adjustmentDutyDue.duty.checkYourAnswersLabel",

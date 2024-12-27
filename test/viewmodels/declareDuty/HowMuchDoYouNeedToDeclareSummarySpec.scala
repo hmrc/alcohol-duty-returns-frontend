@@ -24,7 +24,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
   "HowMuchDoYouNeedToDeclareSummary" - {
     "should return None if HowMuchDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
-      HowMuchDoYouNeedToDeclareSummary.summaryList(
+      howMuchDoYouNeedToDeclareSummary.summaryList(
         Beer,
         allNonSmallProducerReliefRateBands,
         userAnswersWithBeer
@@ -34,7 +34,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
     "should summarise declarations" in new SetUp {
       val answers = specifyAllHowMuchDoYouNeedToDeclareUnsorted(userAnswersWithBeer, Beer)
 
-      val summaryList = HowMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
+      val summaryList = howMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
       summaryList.get.rows.map(_.key.content) mustBe
         Seq(
           Text("Description"),
@@ -58,7 +58,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
     "should return no rows if no ratebands" in new SetUp {
       val answers = specifyAllHowMuchDoYouNeedToDeclareUnsorted(userAnswersWithBeer, Beer)
 
-      val sumamryList = HowMuchDoYouNeedToDeclareSummary.summaryList(Beer, Set.empty, answers)
+      val sumamryList = howMuchDoYouNeedToDeclareSummary.summaryList(Beer, Set.empty, answers)
       sumamryList.get.rows.map(_.key.content) mustBe Seq.empty
       sumamryList.get.rows.map(_.value.content) mustBe Seq.empty
     }
@@ -73,7 +73,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
       val answers = howMuchDoYouNeedToDeclare(userAnswersWithBeer, Beer, badVolumeAndRateByTaxType)
 
       an[IllegalArgumentException] shouldBe thrownBy(
-        HowMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
+        howMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
       )
     }
   }
@@ -81,5 +81,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
   class SetUp {
     val application                 = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
+
+    val howMuchDoYouNeedToDeclareSummary = new HowMuchDoYouNeedToDeclareSummary
   }
 }

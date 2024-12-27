@@ -36,7 +36,6 @@ import java.time.YearMonth
 import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
-
   val rate              = BigDecimal(9.27)
   val pureAlcoholVolume = BigDecimal(3.69)
   val totalLitresVolume = BigDecimal(3.69)

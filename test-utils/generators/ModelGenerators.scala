@@ -225,7 +225,12 @@ trait ModelGenerators {
   def regimeGen: Gen[AlcoholRegime] = Gen.oneOf(AlcoholRegime.values)
 
   def arbitraryRateBandList(regime: AlcoholRegime): Arbitrary[List[RateBand]] = Arbitrary {
-    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.rangeDetails.exists(_.alcoholRegime == regime)))
+    Gen.listOfN(
+      10,
+      arbitrary[RateBand]
+        .suchThat(_.rangeDetails.exists(_.alcoholRegime == regime))
+        .map(rateBand => rateBand.copy(rangeDetails = rateBand.rangeDetails.take(2)))
+    )
   }
 
   def genAlcoholRegime(alcoholRegime: AlcoholRegime): Gen[RangeDetailsByRegime] =

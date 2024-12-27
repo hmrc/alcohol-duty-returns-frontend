@@ -38,9 +38,9 @@ object RateBandHelper {
         singleInterval(abvRange, rateBand.taxTypeCode)
       case List(abvRange1, abvRange2) =>
         multipleIntervals(abvRange1, abvRange2, rateBand.taxTypeCode)
-      case Nil                        =>
+      case _                          =>
         throw new IllegalArgumentException(
-          s"Only 2 ranges supported at present found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
+          s"Only 2 ranges supported at present, more found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
         )
 
     }
@@ -92,9 +92,9 @@ object RateBandHelper {
         )
       case List(abvRange1, abvRange2) =>
         multipleIntervalsRecap(abvRange1, abvRange2, rateBand.taxTypeCode, rateBand.rateType)
-      case Nil                        =>
+      case _                          =>
         throw new IllegalArgumentException(
-          s"Only 2 ranges supported at present found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
+          s"Only 2 ranges supported at present, more found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
         )
     }
 
@@ -128,7 +128,7 @@ object RateBandHelper {
       abvRange1.minABV.value,
       abvRange1.maxABV.value,
       messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
-      abvRange2.maxABV.value,
+      abvRange2.minABV.value,
       abvRange2.maxABV.value,
       taxType
     ).capitalize
