@@ -295,7 +295,7 @@ class DutyDueForThisReturnHelper @Inject() (
           ),
           TableRow(
             Text(Money.format(totalAdjustment)),
-            classes = Css.summaryListValueCssClass
+            classes = s"${Css.summaryListValueCssClass} ${Css.noWrap}"
           )
         ),
         actions = Seq(

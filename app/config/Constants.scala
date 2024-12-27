@@ -34,7 +34,7 @@ object Constants {
     val sprDutyRateField: String       = "sprDutyRate"
   }
 
-  val maximumDecimalPlaces: Int                   = 2
+  val maximumTwoDecimalPlaces: Int                = 2
   val volumeMinimumValueIncZero: BigDecimal       = BigDecimal(0.00)
   val volumeMinimumValue: BigDecimal              = BigDecimal(0.01)
   val volumeMaximumValue: BigDecimal              = BigDecimal(999999999.99)
@@ -90,6 +90,7 @@ object Constants {
 
     val textAlignRightCssClass     = "text-align-right"
     val textAlignRightWrapCssClass = "text-align-right-wrap"
+    val noWrap                     = "no-wrap"
 
     val boldFontCssClass = "govuk-!-font-weight-bold"
 

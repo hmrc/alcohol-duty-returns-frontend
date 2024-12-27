@@ -266,7 +266,6 @@ alcoholType.p2 = Types you do not select will have nil values in your return.
 alcoholType.hint = Select all that apply
 
 return.journey.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
-return.journey.error.moreThanExpected = Litres of {0} must be the same or more than the litres of pure alcohol
 
 return.journey.error.allRequired = Select the type of {0}
 return.journey.error.noValue.taxType = Select the type of {0}
@@ -836,7 +835,7 @@ adjustmentSmallProducerReliefDutyRate.error.decimalPlaces = Your Small Producer 
 adjustmentSmallProducerReliefDutyRate.change.hidden = SPR duty rate
 
 adjustmentDutyDue.title = The duty value for this adjustment is {0}
-adjustmentDutyDue.heading = The duty value for this adjustment is {0}
+adjustmentDutyDue.heading = The duty value for this adjustment is
 adjustmentDutyDue.paragraph1 = This is because:
 adjustmentDutyDue.bulletList.1 = you declared {0} litres of pure alcohol (LPA)
 adjustmentDutyDue.bulletList.2 = the duty rate is {0} per litre of pure alcohol
@@ -884,7 +883,7 @@ overDeclarationReason.error.length = The reason must be {0} characters or less
 
 dutyDueForThisReturn.title = The duty due for this return is {0}
 dutyDueForThisReturn.nil.title = No duty due
-dutyDueForThisReturn.heading = The duty due for this return is {0}
+dutyDueForThisReturn.heading = The duty due for this return is
 dutyDueForThisReturn.nil.heading = No duty due
 dutyDueForThisReturn.positive.p1 = You will be liable for this amount once you send your return.
 dutyDueForThisReturn.negative.p1 = Your return has a negative duty value. You will be able to claim this back after sending your return. If you do not claim it back we will automatically deduct it from your next return.

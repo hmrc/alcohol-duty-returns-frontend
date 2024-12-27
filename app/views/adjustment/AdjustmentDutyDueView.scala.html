@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
+@import components.{SectionHeading, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList}
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 @import viewmodels.Money
@@ -23,12 +23,21 @@
         layout: templates.Layout,
         govukButton: GovukButton,
         sectionHeading: SectionHeading,
+        pageHeadingWithMonetaryValue: PageHeadingWithMonetaryValue,
         pageHeading: PageHeading,
         paragraph: Paragraph,
         bulletList: BulletList
 )
 
-@(adjustmentType: AdjustmentType, volume:BigDecimal, duty:BigDecimal, pureAlcoholVolume:BigDecimal, taxCode:String, rate:BigDecimal, repackagedRate:BigDecimal, repackagedDuty:BigDecimal, newDuty:BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentType: AdjustmentType, volume: BigDecimal, duty: BigDecimal, pureAlcoholVolume: BigDecimal, taxCode: String, rate: BigDecimal, repackagedRate: BigDecimal, repackagedDuty: BigDecimal, newDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
+
+@heading = @{
+    val dutyToShow: BigDecimal = adjustmentType match {
+        case AdjustmentType.RepackagedDraughtProducts => newDuty
+        case _ => duty
+    }
+    pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), dutyToShow)
+}
 
 @layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(duty)))) {
 
@@ -37,13 +46,8 @@
         text = messages(s"section.adjustment.$adjustmentType"),
     )
 
-    @if(adjustmentType != RepackagedDraughtProducts) {
-        @pageHeading(messages("adjustmentDutyDue.heading", Money.format(duty)))
-    }
+    @heading
 
-    @if(adjustmentType == RepackagedDraughtProducts) {
-        @pageHeading(messages("adjustmentDutyDue.heading", Money.format(newDuty)))
-    }
     @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
     @if(adjustmentType != RepackagedDraughtProducts) {
@@ -71,4 +75,4 @@
         .asLink(controllers.adjustment.routes.CheckYourAnswersController.onPageLoad().url)
     )
 
-}
+}@import views.html.components.PageHeadingWithMonetaryValue

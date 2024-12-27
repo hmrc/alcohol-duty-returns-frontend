@@ -732,7 +732,6 @@ class MappingsSpec extends SpecBase with Mappings {
       "decimalPlaces",
       "minimumValue",
       "maximumValue",
-      "moreOrEqual",
       "lessOrEqual",
       Seq.empty
     )
@@ -978,7 +977,6 @@ class MappingsSpec extends SpecBase with Mappings {
           )
         )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "moreOrEqual", Seq.empty),
           FormError("value_pureAlcohol", "lessOrEqual", Seq.empty)
         ) // As pure alcohol volume exceeds total litres, but has already passed max check
       }
@@ -1055,7 +1053,6 @@ class MappingsSpec extends SpecBase with Mappings {
           )
         )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "moreOrEqual", Seq.empty),
           FormError("value_pureAlcohol", "lessOrEqual", Seq.empty)
         )
       }
@@ -1078,7 +1075,6 @@ class MappingsSpec extends SpecBase with Mappings {
       "decimalPlaces",
       "minimumValue",
       "maximumValue",
-      "moreOrEqual",
       "lessOrEqual",
       Seq.empty
     )
@@ -1207,7 +1203,6 @@ class MappingsSpec extends SpecBase with Mappings {
           Map("value.taxType" -> "123", "value.totalLitres" -> "999999999.99", "value.pureAlcohol" -> "999999999.9999")
         )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "moreOrEqual", Seq.empty),
           FormError("value_pureAlcohol", "lessOrEqual", Seq.empty)
         ) // As pure alcohol volume exceeds total litres, but has already passed max check
       }
@@ -1244,7 +1239,6 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(Map("value.taxType" -> "123", "value.totalLitres" -> "12.44", "value.pureAlcohol" -> "12.4567"))
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "moreOrEqual", Seq.empty),
           FormError("value_pureAlcohol", "lessOrEqual", Seq.empty)
         )
       }
@@ -1271,7 +1265,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     val testForm: Form[SpoiltVolumeWithDuty] = Form("value" -> mapping)
 
-    "must bind a validSpoiltVolumeWithDuty" in {
+    "must bind a valid SpoiltVolumeWithDuty" in {
       val result = testForm.bind(
         Map(
           "value.totalLitresVolume" -> "1234.45",

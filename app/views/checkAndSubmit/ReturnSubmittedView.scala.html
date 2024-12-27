@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, SectionHeading, SubHeading}
+@import components.{Link, PageHeading, Paragraph, ParagraphWithMonetaryValue, SectionHeading, SubHeading}
 @import viewmodels.Money
 @import viewmodels.returns.ReturnSubmittedViewModel
 
@@ -26,6 +26,7 @@
         pageHeading: PageHeading,
         govukPanel : GovukPanel,
         paragraph: Paragraph,
+        paragraphWithMonetaryValue: ParagraphWithMonetaryValue,
         link: Link,
         govukWarningText : GovukWarningText
 )
@@ -34,7 +35,7 @@
 
 @posPanelContent = {
     @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.get.value), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} ${messages(Money.format(viewModel.returnDetails.amount))}", classes = "")
+    @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} ${Money.format(viewModel.returnDetails.amount)}", classes = "")
 }
 
 @nilPanelContent = {
@@ -43,7 +44,7 @@
 
 @negPanelContent = {
     @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.get.value), classes = "")
-    @paragraph(s"${messages("returnSubmitted.panel.body.dutyOwed")} ${messages(Money.format(viewModel.returnDetails.amount))}", classes = "")
+    @paragraphWithMonetaryValue(s"${messages("returnSubmitted.panel.body.dutyOwed")}", viewModel.returnDetails.amount, classes = "")
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }
 

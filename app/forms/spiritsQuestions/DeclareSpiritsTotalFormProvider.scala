@@ -26,7 +26,7 @@ class DeclareSpiritsTotalFormProvider @Inject() extends Mappings {
   def apply(): Form[BigDecimal] =
     Form(
       "declare-spirits-total-input" -> bigDecimal(
-        Constants.maximumDecimalPlaces,
+        Constants.maximumTwoDecimalPlaces,
         "declareSpiritsTotal.error.required",
         "declareSpiritsTotal.error.nonNumeric",
         "declareSpiritsTotal.error.decimalPlaces"

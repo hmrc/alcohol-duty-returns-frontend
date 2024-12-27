@@ -30,7 +30,7 @@ class BigDecimalFieldFormatter(
   maximumValueKey: String,
   fieldKey: String,
   args: Seq[String] = Seq.empty,
-  decimalPlaces: Int = Constants.maximumDecimalPlaces,
+  decimalPlaces: Int = Constants.maximumTwoDecimalPlaces,
   maximumValue: BigDecimal = BigDecimal(999999999.99),
   minimumValue: BigDecimal = BigDecimal(0.01),
   exactDecimalPlacesRequired: Boolean = false

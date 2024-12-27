@@ -28,7 +28,6 @@ class VolumesAndRateFormatter(
   decimalPlacesKey: String,
   minimumValueKey: String,
   maximumValueKey: String,
-  moreOrEqualKey: String,
   lessOrEqualKey: String,
   args: Seq[String]
 ) extends Formatter[VolumeAndRateByTaxType]
@@ -103,7 +102,6 @@ class VolumesAndRateFormatter(
         if (dutyByTaxType.totalLitres < dutyByTaxType.pureAlcohol) {
           Left(
             Seq(
-              FormError(nameToId(s"$key.$totalLitresField"), moreOrEqualKey, args),
               FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, args)
             )
           )
