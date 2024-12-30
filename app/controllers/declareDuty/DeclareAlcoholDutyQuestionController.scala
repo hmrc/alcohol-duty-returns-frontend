@@ -77,12 +77,16 @@ class DeclareAlcoholDutyQuestionController @Inject() (
         )
   }
 
-  private def checkIfOneRegimeAndUpdateUserAnswer(userAnswer: UserAnswers): Try[UserAnswers] =
-    if (userAnswer.regimes.regimes.size == 1) {
+  private def checkIfOneRegimeAndUpdateUserAnswer(userAnswer: UserAnswers): Try[UserAnswers] = {
+    val a = userAnswer.regimes
+    val b = a.regimes
+    val c = b.size
+    if (c == 1) {
       userAnswer.set(AlcoholTypePage, userAnswer.regimes.regimes)
     } else {
       Try(userAnswer)
     }
+  }
 
   private def filterAlcoholDutyQuestionAnswer(userAnswer: UserAnswers, value: Boolean): Try[UserAnswers] =
     if (value) {
