@@ -28,7 +28,7 @@ class DutySuspendedCiderFormProvider @Inject() extends Mappings {
   def apply(): Form[DutySuspendedCider] = Form(
     mapping(
       "totalCider"         -> bigDecimal(
-        Constants.maximumDecimalPlaces,
+        Constants.maximumTwoDecimalPlaces,
         "dutySuspendedCider.error.totalCider.required",
         "dutySuspendedCider.error.totalCider.nonNumeric",
         "dutySuspendedCider.error.totalCider.decimalPlaces"

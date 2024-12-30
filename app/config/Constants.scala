@@ -23,13 +23,21 @@ object Constants {
   val periodKeySessionKey: String     = "period-key"
   val pastPaymentsSessionKey: String  = "past-payment-amount"
 
-  val maximumDecimalPlaces: Int                   = 2
+  object MappingFields {
+    val taxTypeField: String           = "taxType"
+    val totalLitresField: String       = "totalLitres"
+    val totalLitresVolumeField: String = "totalLitresVolume"
+    val pureAlcoholField: String       = "pureAlcohol"
+    val pureAlcoholVolumeField: String = "pureAlcoholVolume"
+    val dutyField: String              = "duty"
+    val dutyRateField: String          = "dutyRate"
+    val sprDutyRateField: String       = "sprDutyRate"
+  }
+
+  val maximumTwoDecimalPlaces: Int                = 2
   val volumeMinimumValueIncZero: BigDecimal       = BigDecimal(0.00)
   val volumeMinimumValue: BigDecimal              = BigDecimal(0.01)
   val volumeMaximumValue: BigDecimal              = BigDecimal(999999999.99)
-  val quantityMinimumValueIncZero: BigDecimal     = BigDecimal(0.00)
-  val quantityMinimumValue: BigDecimal            = BigDecimal(0.01)
-  val quantityMaximumValue: BigDecimal            = BigDecimal(999999999.99)
   val dutySuspendedVolumeMinimumValue: BigDecimal = BigDecimal(-999999999.99)
   val dutySuspendedVolumeMaximumValue: BigDecimal = BigDecimal(999999999.99)
   val lpaMaximumDecimalPlaces: Int                = 4
@@ -52,37 +60,9 @@ object Constants {
   val minTaxType = 100 // Although the boundaries will not be valid codes
   val maxTaxType = 999
 
-  val otherIngredientsUsedMaxLength  = 120
-  val otherMaltedGrainsTypeMaxLength = 120
-  val otherSpiritsProducedMaxLength  = 150
+  val otherSpiritsProducedMaxLength = 150
 
   val rowsPerPage = 15
-
-  val bodyCssClass           = "govuk-body"
-  val oneQuarterCssClass     = "govuk-!-width-one-quarter"
-  val oneHalfCssClass        = "govuk-!-width-one-half"
-  val threeQuartersCssClass  = "govuk-!-width-three-quarters"
-  val textAlignRightCssClass = "text-align-right"
-  val boldFontCssClass       = "govuk-!-font-weight-bold"
-  val visuallyHiddenCssClass = "govuk-visually-hidden"
-  val numericCellClass       = "govuk-table__cell--numeric"
-
-  val blueTagCssClass  = "govuk-tag--blue"
-  val greenTagCssClass = "govuk-tag--green"
-  val redTagCssClass   = "govuk-tag--red"
-  val greyTagCssClass  = "govuk-tag--grey"
-
-  val headingMCssClass = "govuk-heading-m"
-  val headingLCssClass = "govuk-heading-l"
-
-  val summaryListKey    = "govuk-summary-list__key"
-  val summaryListValue  = "govuk-summary-list__value"
-  val summaryListAction = "govuk-summary-list__actions"
-
-  val tableCaptionMCssClass    = "govuk-table__caption--m"
-  val tableRowNoBorderCssClass = "govuk-summary-list__row--no-border"
-
-  val paddingBottomCssClass = "govuk-body govuk-!-padding-bottom-3"
 
   val quarterlySpiritsMonths = Set(JANUARY, APRIL, JULY, OCTOBER)
 

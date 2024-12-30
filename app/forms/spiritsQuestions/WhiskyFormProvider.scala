@@ -28,14 +28,14 @@ class WhiskyFormProvider @Inject() extends Mappings {
   def apply(): Form[Whisky] = Form(
     mapping(
       "scotchWhisky" -> bigDecimal(
-        Constants.maximumDecimalPlaces,
+        Constants.maximumTwoDecimalPlaces,
         "whisky.error.scotchWhisky.required",
         "whisky.error.scotchWhisky.nonNumeric",
         "whisky.error.scotchWhisky.decimalPlaces"
       ).verifying(minimumValue(Constants.volumeMinimumValueIncZero, "whisky.error.scotchWhisky.minimumRequired"))
         .verifying(maximumValue(Constants.volumeMaximumValue, "whisky.error.scotchWhisky.maximumRequired")),
       "irishWhiskey" -> bigDecimal(
-        Constants.maximumDecimalPlaces,
+        Constants.maximumTwoDecimalPlaces,
         "whisky.error.irishWhiskey.required",
         "whisky.error.irishWhiskey.nonNumeric",
         "whisky.error.irishWhiskey.decimalPlaces"

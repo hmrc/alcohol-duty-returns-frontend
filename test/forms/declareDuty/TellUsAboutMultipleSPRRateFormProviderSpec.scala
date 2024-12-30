@@ -108,7 +108,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         Map(
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "100000000000",
-          "volumesWithRate.pureAlcohol" -> "100000000000",
+          "volumesWithRate.pureAlcohol" -> "100000000000.0000",
           "volumesWithRate.dutyRate"    -> "100000000000"
         )
       )
@@ -125,7 +125,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         Map(
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "0",
-          "volumesWithRate.pureAlcohol" -> "0",
+          "volumesWithRate.pureAlcohol" -> "0.0000",
           "volumesWithRate.dutyRate"    -> "-1"
         )
       )
@@ -142,7 +142,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         Map(
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "1.1",
-          "volumesWithRate.pureAlcohol" -> "100.1",
+          "volumesWithRate.pureAlcohol" -> "100.1000",
           "volumesWithRate.dutyRate"    -> "1.1",
           "volumesWithRate.extra"       -> "extra"
         )

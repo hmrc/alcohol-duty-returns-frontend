@@ -28,7 +28,7 @@ class DutySuspendedWineFormProvider @Inject() extends Mappings {
   def apply(): Form[DutySuspendedWine] = Form(
     mapping(
       "totalWine"         -> bigDecimal(
-        Constants.maximumDecimalPlaces,
+        Constants.maximumTwoDecimalPlaces,
         "dutySuspendedWine.error.totalWine.required",
         "dutySuspendedWine.error.totalWine.nonNumeric",
         "dutySuspendedWine.error.totalWine.decimalPlaces"

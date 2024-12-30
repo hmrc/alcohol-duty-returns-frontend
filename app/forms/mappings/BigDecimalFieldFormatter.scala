@@ -30,13 +30,19 @@ class BigDecimalFieldFormatter(
   maximumValueKey: String,
   fieldKey: String,
   args: Seq[String] = Seq.empty,
-  decimalPlaces: Int = Constants.maximumDecimalPlaces,
+  decimalPlaces: Int = Constants.maximumTwoDecimalPlaces,
   maximumValue: BigDecimal = BigDecimal(999999999.99),
-  minimumValue: BigDecimal = BigDecimal(0.01)
+  minimumValue: BigDecimal = BigDecimal(0.01),
+  exactDecimalPlacesRequired: Boolean = false
 ) extends Formatter[BigDecimal]
     with Formatters {
-
-  val decimalRegexp = s"""^[+-]?[0-9]*(\\.[0-9]{0,$decimalPlaces})?$$"""
+  private val decimalRegexp = {
+    if (exactDecimalPlacesRequired) {
+      s"""^[+-]?[0-9]*\\.[0-9]{$decimalPlaces}$$"""
+    } else {
+      s"""^[+-]?[0-9]*(\\.[0-9]{0,$decimalPlaces})?$$"""
+    }
+  }
 
   private val baseFormatter = stringFormatter(s"$requiredKey.$fieldKey", args)
 
@@ -62,5 +68,12 @@ class BigDecimalFieldFormatter(
       }
 
   override def unbind(key: String, value: BigDecimal): Map[String, String] =
-    baseFormatter.unbind(key, value.toString)
+    if (exactDecimalPlacesRequired) {
+      baseFormatter.unbind(
+        key,
+        value.setScale(decimalPlaces).toString
+      )
+    } else {
+      baseFormatter.unbind(key, value.toString)
+    }
 }

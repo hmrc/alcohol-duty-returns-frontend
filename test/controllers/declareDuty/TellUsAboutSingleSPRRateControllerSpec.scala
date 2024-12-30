@@ -125,7 +125,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
             .withFormUrlEncodedBody(
               "volumesWithRate[0].totalLitres" -> "1000",
-              "volumesWithRate[0].pureAlcohol" -> "500",
+              "volumesWithRate[0].pureAlcohol" -> "500.0000",
               "volumesWithRate[0].dutyRate"    -> "10",
               "volumesWithRate[0].taxType"     -> "371"
             )
