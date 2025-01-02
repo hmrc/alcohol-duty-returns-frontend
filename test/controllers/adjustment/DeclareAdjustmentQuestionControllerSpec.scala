@@ -21,7 +21,7 @@ import forms.adjustment.DeclareAdjustmentQuestionFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -45,7 +45,9 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
     CurrentAdjustmentEntryPage,
     AdjustmentTotalPage,
     UnderDeclarationTotalPage,
-    OverDeclarationTotalPage
+    OverDeclarationTotalPage,
+    UnderDeclarationReasonPage,
+    OverDeclarationReasonPage
   )
 
   lazy val declareAdjustmentQuestionRoute = routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url
