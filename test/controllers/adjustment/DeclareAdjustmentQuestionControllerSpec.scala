@@ -18,25 +18,37 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.DeclareAdjustmentQuestionFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.DeclareAdjustmentQuestionPage
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import org.mockito.ArgumentMatchersSugar.eqTo
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.DeclareAdjustmentQuestionView
 
+import scala.util.Success
 import scala.concurrent.Future
 
 class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DeclareAdjustmentQuestionFormProvider()
-  val form         = formProvider()
+  val formProvider  = new DeclareAdjustmentQuestionFormProvider()
+  val form          = formProvider()
+  val pagesToDelete = List(
+    AdjustmentEntryListPage,
+    AdjustmentListPage,
+    CurrentAdjustmentEntryPage,
+    AdjustmentTotalPage,
+    UnderDeclarationTotalPage,
+    OverDeclarationTotalPage,
+    UnderDeclarationReasonPage,
+    OverDeclarationReasonPage
+  )
 
   lazy val declareAdjustmentQuestionRoute = routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode).url
 
@@ -102,14 +114,23 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Task list  when valid question is answered as No" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+    "must redirect to the Task list and clear user answers when valid question is answered as No" in {
+      val mockUserAnswersConnector     = mock[UserAnswersConnector]
+      val mockUserAnswers: UserAnswers = mock[UserAnswers]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockUserAnswers.set(eqTo(DeclareAdjustmentQuestionPage), eqTo(false))(any())
+      ) thenReturn Success(
+        mockUserAnswers
+      )
+      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
+        DeclareAdjustmentQuestionPage,
+        false
+      )
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(mockUserAnswers))
           .overrides(
             bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -125,6 +146,10 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockUserAnswers, times(1)).set(eqTo(DeclareAdjustmentQuestionPage), eqTo(false))(any())
+        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
       }
     }
 

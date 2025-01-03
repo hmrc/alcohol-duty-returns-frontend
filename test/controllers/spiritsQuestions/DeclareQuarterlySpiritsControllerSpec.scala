@@ -37,6 +37,12 @@ import scala.util.Success
 class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
   val userAnswersPreviouslyAnswered = emptyUserAnswers.set(DeclareQuarterlySpiritsPage, true).success.value
   val mockUserAnswers: UserAnswers  = mock[UserAnswers]
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockUserAnswers)
+  }
+
   "DeclareQuarterlySpirits Controller" - {
     "must return OK and the correct view for a GET" in new SetUp(Some(emptyUserAnswers), true) {
       running(application) {
