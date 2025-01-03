@@ -175,8 +175,8 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeWithSPRRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString()),
               ("volumes.sprDutyRate", validSPRDutyRate.toString())
             )
 
@@ -220,8 +220,8 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeWithSPRRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString()),
               ("volumes.sprDutyRate", validSPRDutyRate.toString())
             )
 
@@ -265,8 +265,8 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeWithSPRRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString()),
               ("volumes.sprDutyRate", validSPRDutyRate.toString())
             )
 
@@ -285,16 +285,16 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeWithSPRRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", "invalid value"),
-              ("volumes.pureAlcoholVolume", "invalid value"),
+              ("volumes.totalLitres", "invalid value"),
+              ("volumes.pureAlcohol", "invalid value"),
               ("volumes.sprDutyRate", "invalid value")
             )
 
         val boundForm = form.bind(
           Map(
-            "volumes.totalLitresVolume" -> "invalid value",
-            "volumes.pureAlcoholVolume" -> "invalid value",
-            "volumes.sprDutyRate"       -> "invalid value"
+            "volumes.totalLitres" -> "invalid value",
+            "volumes.pureAlcohol" -> "invalid value",
+            "volumes.sprDutyRate" -> "invalid value"
           )
         )
 
@@ -317,8 +317,8 @@ class AdjustmentVolumeWithSPRControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeWithSPRRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", "invalid value"),
-              ("volumes.pureAlcoholVolume", "invalid value"),
+              ("volumes.totalLitres", "invalid value"),
+              ("volumes.pureAlcohol", "invalid value"),
               ("volumes.sprDutyRate", "invalid value")
             )
 

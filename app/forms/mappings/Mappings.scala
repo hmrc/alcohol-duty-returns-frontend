@@ -105,7 +105,7 @@ trait Mappings extends Formatters with Constraints {
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    inconsistentKey: String,
+    lessOrEqualKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[AdjustmentVolumeWithSPR] =
     of(
@@ -115,7 +115,7 @@ trait Mappings extends Formatters with Constraints {
         decimalPlacesKey,
         minimumValueKey,
         maximumValueKey,
-        inconsistentKey,
+        lessOrEqualKey,
         args
       )
     )

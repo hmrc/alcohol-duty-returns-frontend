@@ -44,7 +44,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
             "volumesWithRate.totalLitres" -> volumeAndRateByTaxType.totalLitres.toString,
             "volumesWithRate.pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString,
             "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType,
-            "volumesWithRate.dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString
+            "volumesWithRate.sprDutyRate" -> volumeAndRateByTaxType.dutyRate.toString
           )
         )
         result.value.value mustEqual volumeAndRateByTaxType
@@ -57,7 +57,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         result("volumesWithRate.totalLitres") mustBe volumeAndRateByTaxType.totalLitres.toString
         result("volumesWithRate.pureAlcohol") mustBe volumeAndRateByTaxType.pureAlcohol.toString
         result("volumesWithRate.taxType") mustBe volumeAndRateByTaxType.taxType
-        result("volumesWithRate.dutyRate") mustBe volumeAndRateByTaxType.dutyRate.toString
+        result("volumesWithRate.sprDutyRate") mustBe volumeAndRateByTaxType.dutyRate.toString
       }
     }
 
@@ -67,7 +67,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         "volumesWithRate_totalLitres" -> "return.journey.error.noValue.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.noValue.pureAlcohol",
         "volumesWithRate_taxType"     -> "return.journey.error.noValue.taxType",
-        "volumesWithRate_dutyRate"    -> "return.journey.error.noValue.dutyRate"
+        "volumesWithRate_sprDutyRate" -> "return.journey.error.noValue.sprDutyRate"
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
 
@@ -77,13 +77,13 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "invalid",
           "volumesWithRate.pureAlcohol" -> "invalid",
-          "volumesWithRate.dutyRate"    -> "invalid"
+          "volumesWithRate.sprDutyRate" -> "invalid"
         )
       )
       result.errors must contain allElementsOf List(
         "volumesWithRate_totalLitres" -> "return.journey.error.invalid.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.invalid.pureAlcohol",
-        "volumesWithRate_dutyRate"    -> "return.journey.error.invalid.dutyRate"
+        "volumesWithRate_sprDutyRate" -> "return.journey.error.invalid.sprDutyRate"
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
 
@@ -93,13 +93,13 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "1.123",
           "volumesWithRate.pureAlcohol" -> "1.12345",
-          "volumesWithRate.dutyRate"    -> "1.123"
+          "volumesWithRate.sprDutyRate" -> "1.123"
         )
       )
       result.errors must contain allElementsOf List(
         "volumesWithRate_totalLitres" -> "return.journey.error.tooManyDecimalPlaces.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.tooManyDecimalPlaces.pureAlcohol",
-        "volumesWithRate_dutyRate"    -> "return.journey.error.tooManyDecimalPlaces.dutyRate"
+        "volumesWithRate_sprDutyRate" -> "return.journey.error.tooManyDecimalPlaces.sprDutyRate"
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
 
@@ -109,14 +109,14 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "100000000000",
           "volumesWithRate.pureAlcohol" -> "100000000000.0000",
-          "volumesWithRate.dutyRate"    -> "100000000000"
+          "volumesWithRate.sprDutyRate" -> "100000000000"
         )
       )
 
       result.errors must contain allElementsOf List(
         "volumesWithRate_totalLitres" -> "return.journey.error.maximumValue.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.maximumValue.pureAlcohol",
-        "volumesWithRate_dutyRate"    -> "return.journey.error.maximumValue.dutyRate"
+        "volumesWithRate_sprDutyRate" -> "return.journey.error.maximumValue.sprDutyRate"
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
 
@@ -126,14 +126,14 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "0",
           "volumesWithRate.pureAlcohol" -> "0.0000",
-          "volumesWithRate.dutyRate"    -> "-1"
+          "volumesWithRate.sprDutyRate" -> "-1"
         )
       )
 
       result.errors must contain allElementsOf List(
         "volumesWithRate_totalLitres" -> "return.journey.error.minimumValue.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.minimumValue.pureAlcohol",
-        "volumesWithRate_dutyRate"    -> "return.journey.error.minimumValue.dutyRate"
+        "volumesWithRate_sprDutyRate" -> "return.journey.error.minimumValue.sprDutyRate"
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
 
@@ -143,7 +143,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
           "volumesWithRate.taxType"     -> "aTaxType",
           "volumesWithRate.totalLitres" -> "1.1",
           "volumesWithRate.pureAlcohol" -> "100.1000",
-          "volumesWithRate.dutyRate"    -> "1.1",
+          "volumesWithRate.sprDutyRate" -> "1.1",
           "volumesWithRate.extra"       -> "extra"
         )
       )
@@ -153,17 +153,17 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
       ).map { case (k, v) => FormError(k, v, List("")) }
     }
 
-    "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum and and dutyRate is invalid" in {
+    "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum and and sprDutyRate is invalid" in {
       val data = Map(
         "volumesWithRate.taxType"     -> "aTaxType",
         "volumesWithRate.totalLitres" -> "99999999999",
         "volumesWithRate.pureAlcohol" -> "",
-        "volumesWithRate.dutyRate"    -> "abc"
+        "volumesWithRate.sprDutyRate" -> "abc"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError("volumesWithRate_totalLitres", List("return.journey.error.maximumValue.totalLitres"), List("")),
         FormError("volumesWithRate_pureAlcohol", List("return.journey.error.noValue.pureAlcohol"), List("")),
-        FormError("volumesWithRate_dutyRate", List("return.journey.error.invalid.dutyRate"), List(""))
+        FormError("volumesWithRate_sprDutyRate", List("return.journey.error.invalid.sprDutyRate"), List(""))
       )
     }
 
@@ -172,7 +172,7 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         "volumesWithRate.taxType"     -> "taxType",
         "volumesWithRate.totalLitres" -> "111111111111.234",
         "volumesWithRate.pureAlcohol" -> "-2.45356",
-        "volumesWithRate.dutyRate"    -> "99999999999.546"
+        "volumesWithRate.sprDutyRate" -> "99999999999.546"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError(
@@ -185,7 +185,11 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
           List("return.journey.error.tooManyDecimalPlaces.pureAlcohol"),
           List("")
         ),
-        FormError("volumesWithRate_dutyRate", List("return.journey.error.tooManyDecimalPlaces.dutyRate"), List(""))
+        FormError(
+          "volumesWithRate_sprDutyRate",
+          List("return.journey.error.tooManyDecimalPlaces.sprDutyRate"),
+          List("")
+        )
       )
     }
   }

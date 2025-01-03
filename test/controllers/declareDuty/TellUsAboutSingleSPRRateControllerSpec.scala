@@ -126,7 +126,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               "volumesWithRate[0].totalLitres" -> "1000",
               "volumesWithRate[0].pureAlcohol" -> "500.0000",
-              "volumesWithRate[0].dutyRate"    -> "10",
+              "volumesWithRate[0].sprDutyRate" -> "10",
               "volumesWithRate[0].taxType"     -> "371"
             )
 
@@ -189,7 +189,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               "volumesWithRate[0].totalLitres" -> "1000",
               "volumesWithRate[0].pureAlcohol" -> "500",
-              "volumesWithRate[0].dutyRate"    -> "10",
+              "volumesWithRate[0].sprDutyRate" -> "10",
               "volumesWithRate[0].taxType"     -> "371"
             )
 

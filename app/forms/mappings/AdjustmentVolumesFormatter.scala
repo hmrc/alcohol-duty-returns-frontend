@@ -39,7 +39,7 @@ class AdjustmentVolumesFormatter(
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
-    totalLitresVolumeField,
+    totalLitresField,
     maximumValue = Constants.volumeMaximumValue,
     minimumValue = Constants.volumeMinimumValue,
     args = args
@@ -51,7 +51,7 @@ class AdjustmentVolumesFormatter(
     decimalPlacesKey,
     minimumValueKey,
     maximumValueKey,
-    pureAlcoholVolumeField,
+    pureAlcoholField,
     decimalPlaces = Constants.lpaMaximumDecimalPlaces,
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
@@ -62,8 +62,8 @@ class AdjustmentVolumesFormatter(
     FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", args)
 
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolume] = {
-    val totalLitres = totalLitresVolumeFormatter.bind(s"$key.$totalLitresVolumeField", data)
-    val pureAlcohol = pureAlcoholVolumeFormatter.bind(s"$key.$pureAlcoholVolumeField", data)
+    val totalLitres = totalLitresVolumeFormatter.bind(s"$key.$totalLitresField", data)
+    val pureAlcohol = pureAlcoholVolumeFormatter.bind(s"$key.$pureAlcoholField", data)
 
     (totalLitres, pureAlcohol) match {
       case (Right(totalLitresValue), Right(pureAlcoholValue)) =>
@@ -81,15 +81,15 @@ class AdjustmentVolumesFormatter(
       errors => Left(errors),
       volumes =>
         if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
-          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholVolumeField"), inconsistentKey, args)))
+          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholField"), inconsistentKey, args)))
         } else {
           Right(volumes)
         }
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolume] = {
-    val totalLitresResult = validateField(totalLitresVolumeField, key, data, totalLitresVolumeFormatter)
-    val pureAlcoholResult = validateField(pureAlcoholVolumeField, key, data, pureAlcoholVolumeFormatter)
+    val totalLitresResult = validateField(totalLitresField, key, data, totalLitresVolumeFormatter)
+    val pureAlcoholResult = validateField(pureAlcoholField, key, data, pureAlcoholVolumeFormatter)
     val allErrors         = totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
@@ -110,6 +110,6 @@ class AdjustmentVolumesFormatter(
     }
 
   override def unbind(key: String, value: AdjustmentVolume): Map[String, String] =
-    totalLitresVolumeFormatter.unbind(s"$key.$totalLitresVolumeField", value.totalLitresVolume) ++
-      pureAlcoholVolumeFormatter.unbind(s"$key.$pureAlcoholVolumeField", value.pureAlcoholVolume)
+    totalLitresVolumeFormatter.unbind(s"$key.$totalLitresField", value.totalLitresVolume) ++
+      pureAlcoholVolumeFormatter.unbind(s"$key.$pureAlcoholField", value.pureAlcoholVolume)
 }

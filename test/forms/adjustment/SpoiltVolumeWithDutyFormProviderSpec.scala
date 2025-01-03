@@ -45,9 +45,9 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
   ".volumes" - {
     "must bind valid data" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> validTotalLitres.toString(),
-        "volumes.pureAlcoholVolume" -> validPureAlcohol.toString(),
-        "volumes.duty"              -> validDuty.toString()
+        "volumes.totalLitres" -> validTotalLitres.toString(),
+        "volumes.pureAlcohol" -> validPureAlcohol.toString(),
+        "volumes.duty"        -> validDuty.toString()
       )
       form.bind(data).value.value mustBe SpoiltVolumeWithDuty(validTotalLitres, validPureAlcohol, validDuty)
     }
@@ -55,129 +55,129 @@ class SpoiltVolumeWithDutyFormProviderSpec extends StringFieldBehaviours with Mo
     "must unbind valid data" in {
       val data = SpoiltVolumeWithDuty(validTotalLitres, validPureAlcohol, validDuty)
       form.fill(data).data must contain theSameElementsAs Map(
-        "volumes.totalLitresVolume" -> validTotalLitres.toString(),
-        "volumes.pureAlcoholVolume" -> validPureAlcohol.toString(),
-        "volumes.duty"              -> validDuty.toString()
+        "volumes.totalLitres" -> validTotalLitres.toString(),
+        "volumes.pureAlcohol" -> validPureAlcohol.toString(),
+        "volumes.duty"        -> validDuty.toString()
       )
     }
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.noValue.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", "spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume", Seq("")),
+        FormError("volumes_totalLitres", "spoiltVolumeWithDuty.error.noValue.totalLitres", Seq("")),
+        FormError("volumes_pureAlcohol", "spoiltVolumeWithDuty.error.noValue.pureAlcohol", Seq("")),
         FormError("volumes_duty", "spoiltVolumeWithDuty.error.noValue.duty", Seq(""))
       )
     }
 
     "fail to bind when blank answer provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "",
-        "volumes.pureAlcoholVolume" -> "",
-        "volumes.duty"              -> ""
+        "volumes.totalLitres" -> "",
+        "volumes.pureAlcohol" -> "",
+        "volumes.duty"        -> ""
       )
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.noValue.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", "spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume", Seq("")),
+        FormError("volumes_totalLitres", "spoiltVolumeWithDuty.error.noValue.totalLitres", Seq("")),
+        FormError("volumes_pureAlcohol", "spoiltVolumeWithDuty.error.noValue.pureAlcohol", Seq("")),
         FormError("volumes_duty", "spoiltVolumeWithDuty.error.noValue.duty", Seq(""))
       )
     }
 
     "fail to bind when values with too many decimal places are provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "1.112",
-        "volumes.pureAlcoholVolume" -> "1.11234",
-        "volumes.duty"              -> "1.112"
+        "volumes.totalLitres" -> "1.112",
+        "volumes.pureAlcohol" -> "1.11234",
+        "volumes.duty"        -> "1.112"
       )
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", s"spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume", Seq("")),
-        FormError("volumes_pureAlcoholVolume", s"spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume", Seq("")),
+        FormError("volumes_totalLitres", s"spoiltVolumeWithDuty.error.decimalPlaces.totalLitres", Seq("")),
+        FormError("volumes_pureAlcohol", s"spoiltVolumeWithDuty.error.decimalPlaces.pureAlcohol", Seq("")),
         FormError("volumes_duty", "spoiltVolumeWithDuty.error.decimalPlaces.duty", Seq(""))
       )
     }
 
     "fail to bind when invalid values are provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "invalid",
-        "volumes.pureAlcoholVolume" -> "invalid",
-        "volumes.duty"              -> "invalid"
+        "volumes.totalLitres" -> "invalid",
+        "volumes.pureAlcohol" -> "invalid",
+        "volumes.duty"        -> "invalid"
       )
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.invalid.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "spoiltVolumeWithDuty.error.invalid.pureAlcoholVolume", List("")),
+        FormError("volumes_totalLitres", "spoiltVolumeWithDuty.error.invalid.totalLitres", List("")),
+        FormError("volumes_pureAlcohol", "spoiltVolumeWithDuty.error.invalid.pureAlcohol", List("")),
         FormError("volumes_duty", "spoiltVolumeWithDuty.error.invalid.duty", Seq(""))
       )
     }
 
     "fail to bind when values below minimum are provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "0",
-        "volumes.pureAlcoholVolume" -> "0.0000",
-        "volumes.duty"              -> "0"
+        "volumes.totalLitres" -> "0",
+        "volumes.pureAlcohol" -> "0.0000",
+        "volumes.duty"        -> "0"
       )
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "spoiltVolumeWithDuty.error.minimumValue.pureAlcoholVolume", List("")),
+        FormError("volumes_totalLitres", "spoiltVolumeWithDuty.error.minimumValue.totalLitres", List("")),
+        FormError("volumes_pureAlcohol", "spoiltVolumeWithDuty.error.minimumValue.pureAlcohol", List("")),
         FormError("volumes_duty", "spoiltVolumeWithDuty.error.minimumValue.duty", Seq(""))
       )
     }
 
     "fail to bind when values exceed maximum are provided" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "100000000000",
-        "volumes.pureAlcoholVolume" -> "100000000000.0000",
-        "volumes.duty"              -> "100000000000"
+        "volumes.totalLitres" -> "100000000000",
+        "volumes.pureAlcohol" -> "100000000000.0000",
+        "volumes.duty"        -> "100000000000"
       )
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_totalLitresVolume", "spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume", List("")),
-        FormError("volumes_pureAlcoholVolume", "spoiltVolumeWithDuty.error.maximumValue.pureAlcoholVolume", List("")),
+        FormError("volumes_totalLitres", "spoiltVolumeWithDuty.error.maximumValue.totalLitres", List("")),
+        FormError("volumes_pureAlcohol", "spoiltVolumeWithDuty.error.maximumValue.pureAlcohol", List("")),
         FormError("volumes_duty", "spoiltVolumeWithDuty.error.maximumValue.duty", Seq(""))
       )
     }
 
     "fail to bind when pure alcohol volume is higher than total litres value" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "1",
-        "volumes.pureAlcoholVolume" -> "2.0000",
-        "volumes.duty"              -> "0.01"
+        "volumes.totalLitres" -> "1",
+        "volumes.pureAlcohol" -> "2.0000",
+        "volumes.duty"        -> "0.01"
       )
       form.bind(data).errors must contain allElementsOf List(
-        FormError("volumes_pureAlcoholVolume", "spoiltVolumeWithDuty.error.lessThanExpected", List(""))
+        FormError("volumes_pureAlcohol", "spoiltVolumeWithDuty.error.lessThanExpected", List(""))
       )
     }
 
     "fail to bind when pure alcohol volume is empty, total litres value exceeds maximum and duty is invalid" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "9999999999999999",
-        "volumes.pureAlcoholVolume" -> "",
-        "volumes.duty"              -> "abc"
+        "volumes.totalLitres" -> "9999999999999999",
+        "volumes.pureAlcohol" -> "",
+        "volumes.duty"        -> "abc"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError(
-          "volumes_totalLitresVolume",
-          List("spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume"),
+          "volumes_totalLitres",
+          List("spoiltVolumeWithDuty.error.maximumValue.totalLitres"),
           List("")
         ),
-        FormError("volumes_pureAlcoholVolume", List("spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume"), List("")),
+        FormError("volumes_pureAlcohol", List("spoiltVolumeWithDuty.error.noValue.pureAlcohol"), List("")),
         FormError("volumes_duty", List("spoiltVolumeWithDuty.error.invalid.duty"), List(""))
       )
     }
 
     "fail to bind with decimal places error when pure alcohol, total litres and duty have more than expected decimals and are also out of range" in {
       val data = Map(
-        "volumes.totalLitresVolume" -> "999999999999.9999",
-        "volumes.pureAlcoholVolume" -> "-12323.234423",
-        "volumes.duty"              -> "99999999999.856"
+        "volumes.totalLitres" -> "999999999999.9999",
+        "volumes.pureAlcohol" -> "-12323.234423",
+        "volumes.duty"        -> "99999999999.856"
       )
       form.bind(data).errors must contain allElementsOf List(
         FormError(
-          "volumes_totalLitresVolume",
-          List("spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume"),
+          "volumes_totalLitres",
+          List("spoiltVolumeWithDuty.error.decimalPlaces.totalLitres"),
           List("")
         ),
         FormError(
-          "volumes_pureAlcoholVolume",
-          List("spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume"),
+          "volumes_pureAlcohol",
+          List("spoiltVolumeWithDuty.error.decimalPlaces.pureAlcohol"),
           List("")
         ),
         FormError("volumes_duty", List("spoiltVolumeWithDuty.error.decimalPlaces.duty"), List(""))

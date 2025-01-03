@@ -157,8 +157,8 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString()),
               ("volumes.duty", validDuty.toString())
             )
 
@@ -202,8 +202,8 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString()),
               ("volumes.duty", validDuty.toString())
             )
 
@@ -247,8 +247,8 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString()),
               ("volumes.duty", validDuty.toString())
             )
 
@@ -267,16 +267,16 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, spoiltVolumeWithDutyRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", "invalid value"),
-              ("volumes.pureAlcoholVolume", "invalid value"),
+              ("volumes.totalLitres", "invalid value"),
+              ("volumes.pureAlcohol", "invalid value"),
               ("volumes.duty", "invalid value")
             )
 
         val boundForm = form.bind(
           Map(
-            "volumes.totalLitresVolume" -> "invalid value",
-            "volumes.pureAlcoholVolume" -> "invalid value",
-            "volumes.duty"              -> "invalid value"
+            "volumes.totalLitres" -> "invalid value",
+            "volumes.pureAlcohol" -> "invalid value",
+            "volumes.duty"        -> "invalid value"
           )
         )
 
@@ -339,8 +339,8 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
       running(application) {
         val request = FakeRequest(POST, spoiltVolumeWithDutyRoute)
           .withFormUrlEncodedBody(
-            ("volumes.totalLitresVolume", validTotalLitres.toString()),
-            ("volumes.pureAlcoholVolume", validPureAlcohol.toString()),
+            ("volumes.totalLitres", validTotalLitres.toString()),
+            ("volumes.pureAlcohol", validPureAlcohol.toString()),
             ("volumes.duty", validDuty.toString())
           )
         val result  = route(application, request).value
