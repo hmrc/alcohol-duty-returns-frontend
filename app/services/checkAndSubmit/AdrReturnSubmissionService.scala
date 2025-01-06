@@ -75,7 +75,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
     )
 
   private def getDutyDeclaredItems(userAnswers: UserAnswers): EitherT[Future, String, Seq[AdrDutyDeclaredItem]] =
-    getValue(userAnswers, AlcoholDutyPage).map { alcoholDuties: Map[AlcoholRegime, AlcoholDuty] =>
+    getValue(userAnswers, AlcoholDutyPage).map { (alcoholDuties: Map[AlcoholRegime, AlcoholDuty]) =>
       alcoholDuties
         .flatMap(_._2.dutiesByTaxType)
         .toSeq

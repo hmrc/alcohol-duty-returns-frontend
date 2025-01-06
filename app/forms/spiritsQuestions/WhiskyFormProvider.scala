@@ -41,6 +41,6 @@ class WhiskyFormProvider @Inject() extends Mappings {
         "whisky.error.irishWhiskey.decimalPlaces"
       ).verifying(minimumValue(Constants.volumeMinimumValueIncZero, "whisky.error.irishWhiskey.minimumRequired"))
         .verifying(maximumValue(Constants.volumeMaximumValue, "whisky.error.irishWhiskey.maximumRequired"))
-    )(Whisky.apply)(Whisky.unapply)
+    )(Whisky.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

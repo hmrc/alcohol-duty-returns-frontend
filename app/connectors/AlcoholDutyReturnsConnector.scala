@@ -23,6 +23,7 @@ import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import models.returns.{ReturnDetails}
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
