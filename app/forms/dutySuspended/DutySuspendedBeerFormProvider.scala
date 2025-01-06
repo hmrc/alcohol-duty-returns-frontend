@@ -53,6 +53,6 @@ class DutySuspendedBeerFormProvider @Inject() extends Mappings {
           "dutySuspended.error.pureAlcohol.maximumRequired"
         )
       )
-    )(DutySuspendedBeer.apply)(DutySuspendedBeer.unapply)
+    )(DutySuspendedBeer.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

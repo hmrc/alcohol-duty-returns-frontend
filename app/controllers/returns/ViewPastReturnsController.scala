@@ -45,7 +45,7 @@ class ViewPastReturnsController @Inject() (
   def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
     alcoholDutyReturnsConnector
       .obligationDetails(request.appaId)
-      .map { obligations: Seq[ObligationData] =>
+      .map { (obligations: Seq[ObligationData]) =>
         val fulfilledObligations    = obligations.filter(_.status == Fulfilled)
         val openObligations         = obligations.filter(_.status == Open)
         val outstandingReturnsTable = viewModelHelper.getReturnsTable(openObligations)
