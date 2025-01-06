@@ -21,83 +21,38 @@ import config.Constants.MappingFields._
 import models.declareDuty.VolumeAndRateByTaxType
 import play.api.data.FormError
 import play.api.data.format.Formatter
+import cats.implicits._
 
 class VolumesAndRateFormatter(
   invalidKey: String,
-  requiredKey: String,
-  decimalPlacesKey: String,
-  minimumValueKey: String,
-  maximumValueKey: String,
   lessOrEqualKey: String,
+  taxTypeFormatter: Formatter[String],
+  volumeFormatter: BigDecimalFieldFormatter,
+  pureAlcoholVolumeFormatter: BigDecimalFieldFormatter,
+  sprDutyRateFormatter: BigDecimalFieldFormatter,
   args: Seq[String]
 ) extends Formatter[VolumeAndRateByTaxType]
     with Formatters {
-
-  private val taxTypeFormatter = stringFormatter(s"$requiredKey.$taxTypeField")
-
-  private val volumeFormatter = new BigDecimalFieldFormatter(
-    requiredKey,
-    invalidKey,
-    decimalPlacesKey,
-    minimumValueKey,
-    maximumValueKey,
-    totalLitresField,
-    maximumValue = Constants.volumeMaximumValue,
-    minimumValue = Constants.volumeMinimumValue,
-    args = args
-  )
-
-  private val pureAlcoholVolumeFormatter: BigDecimalFieldFormatter = new BigDecimalFieldFormatter(
-    requiredKey,
-    invalidKey,
-    decimalPlacesKey,
-    minimumValueKey,
-    maximumValueKey,
-    pureAlcoholField,
-    decimalPlaces = Constants.lpaMaximumDecimalPlaces,
-    maximumValue = Constants.lpaMaximumValue,
-    minimumValue = Constants.lpaMinimumValue,
-    exactDecimalPlacesRequired = true,
-    args = args
-  )
-
-  private val sprDutyRateFormatter = new BigDecimalFieldFormatter(
-    requiredKey,
-    invalidKey,
-    decimalPlacesKey,
-    minimumValueKey,
-    maximumValueKey,
-    sprDutyRateField,
-    maximumValue = Constants.dutyMaximumValue,
-    minimumValue = Constants.dutyMinimumValue,
-    args = args
-  )
 
   private def validateVolumesAndRate(
     key: String,
     data: Map[String, String]
   ): Either[Seq[FormError], VolumeAndRateByTaxType] = {
-    val fields  = Seq(
-      (taxTypeField, taxTypeFormatter),
-      (totalLitresField, volumeFormatter),
-      (pureAlcoholField, pureAlcoholVolumeFormatter),
-      (sprDutyRateField, sprDutyRateFormatter)
+    val fieldsWithFormatters = Seq(
+      taxTypeField     -> taxTypeFormatter,
+      totalLitresField -> volumeFormatter,
+      pureAlcoholField -> pureAlcoholVolumeFormatter,
+      sprDutyRateField -> sprDutyRateFormatter
     )
-    val results = fields.map { case (fieldsKey, formatter) =>
-      bindField(key, fieldsKey, formatter, data)
+    val results              = fieldsWithFormatters.map { case (fieldKey, formatter) =>
+      bindField(key, fieldKey, formatter, data)
     }
-    val errors  = results.collect { case Left(error) => error }.flatten
+    val errors               = results.collect { case Left(error) => error }.flatten
     if (errors.nonEmpty) {
       Left(errors)
     } else {
-      val Seq(taxTypeResult, totalLitresResult, pureAlcoholResult, sprDutyRateResult) = results
-      (taxTypeResult, totalLitresResult, pureAlcoholResult, sprDutyRateResult) match {
-        case (
-              Right(taxType: String),
-              Right(totalLitres: BigDecimal),
-              Right(pureAlcohol: BigDecimal),
-              Right(sprDutyRate: BigDecimal)
-            ) =>
+      results.sequence match {
+        case Right(Seq(taxType: String, totalLitres: BigDecimal, pureAlcohol: BigDecimal, sprDutyRate: BigDecimal)) =>
           if (totalLitres < pureAlcohol) {
             Left(
               Seq(
@@ -107,8 +62,8 @@ class VolumesAndRateFormatter(
           } else {
             Right(VolumeAndRateByTaxType(taxType, totalLitres, pureAlcohol, sprDutyRate))
           }
-        case _ =>
-          Left(Seq(FormError(nameToId(s"$key"), invalidKey, args)))
+        case _                                                                                                      =>
+          Left(Seq(FormError(nameToId(s"$key"), invalidKey, args))) //unreachable code
       }
     }
   }

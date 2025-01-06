@@ -26,7 +26,6 @@ trait Formatters {
 
   private[mappings] def stringFormatter(errorKey: String, args: Seq[String] = Seq.empty): Formatter[String] =
     new Formatter[String] {
-
       override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
         data.get(key) match {
           case None                      =>
@@ -152,4 +151,5 @@ trait Formatters {
     data: Map[String, String]
   ): Either[Seq[FormError], T] =
     formatter.bind(s"$key.$field", data)
+
 }

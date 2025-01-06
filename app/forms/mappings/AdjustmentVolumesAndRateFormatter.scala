@@ -21,6 +21,7 @@ import config.Constants.MappingFields._
 import models.adjustment.AdjustmentVolumeWithSPR
 import play.api.data.FormError
 import play.api.data.format.Formatter
+import cats.implicits._
 
 class AdjustmentVolumesAndRateFormatter(
   invalidKey: String,
