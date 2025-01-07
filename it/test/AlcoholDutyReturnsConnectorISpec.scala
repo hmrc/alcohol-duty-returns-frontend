@@ -105,6 +105,32 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
+      "should fail when a return is submitted, but something other than a CREATED (202) Status code is returned" in new SetUp {
+        val adrReturnCreatedDetails = AdrReturnCreatedDetails(
+          processingDate = Instant.now(clock),
+          amount = BigDecimal(1),
+          chargeReference = Some("1234567890"),
+          paymentDueDate = Some(LocalDate.now(clock))
+        )
+        val jsonResponse = Json.toJson(adrReturnCreatedDetails).toString()
+
+        val expectedErrorString = s"Unable to submit return. Unexpected status code: $OK"
+
+        server.stubFor(
+          post(urlMatching(submitReturnUrl))
+            .willReturn(aResponse()
+              .withStatus(OK)
+              .withBody(jsonResponse)))
+
+        whenReady(connector.submitReturn(appaId, periodKey, fullReturn).value) { result =>
+          result match {
+            case Left(errorString) =>
+              errorString shouldBe expectedErrorString
+            case _ => fail("Test failed: result did not match expected value")
+          }
+        }
+      }
+
       "should fail when invalid JSON is returned" in new SetUp {
         val invalidJsonResponse = """{ "invalid": "json" }"""
         server.stubFor(

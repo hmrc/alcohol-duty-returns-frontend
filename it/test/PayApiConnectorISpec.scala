@@ -22,15 +22,15 @@ import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
 import play.api.libs.json.Json
 import org.scalatest.RecoverMethods.recoverToExceptionIf
 
-
 class PayApiConnectorISpec extends ISpecBase with WireMockHelper {
-  override def fakeApplication(): Application = applicationBuilder(None).configure("microservice.services.pay-api.port" -> server.port()).build()
+  override def fakeApplication(): Application =
+    applicationBuilder(None).configure("microservice.services.pay-api.port" -> server.port()).build()
 
   "startPayment" - {
 
-    "successfully retrieve a start payment response" in new SetUp{
+    "successfully retrieve a start payment response" in new SetUp {
       val startPaymentResponse = StartPaymentResponse("journey-id", "/next-url")
-      val jsonResponse = Json.toJson(startPaymentResponse).toString()
+      val jsonResponse         = Json.toJson(startPaymentResponse).toString()
       server.stubFor(
         post(urlMatching(url))
           .withRequestBody(equalToJson(Json.stringify(Json.toJson(startPaymentRequest))))
@@ -39,6 +39,22 @@ class PayApiConnectorISpec extends ISpecBase with WireMockHelper {
 
       whenReady(connector.startPayment(startPaymentRequest).value) { result =>
         result mustBe Right(startPaymentResponse)
+      }
+    }
+
+    "return an error when the HttpResponse cannot be parsed as a StartDirectDebitResponse" in new SetUp {
+
+      val jsonResponse = """{ "test": "not start direct debit response" }"""
+
+      server.stubFor(
+        post(urlMatching(url))
+          .withRequestBody(equalToJson(Json.stringify(Json.toJson(startPaymentRequest))))
+          .willReturn(aResponse().withBody(jsonResponse).withStatus(CREATED))
+      )
+
+      whenReady(connector.startPayment(startPaymentRequest).value) { result =>
+        val resultErrorString = result.swap.toOption.get
+        resultErrorString.contains("Invalid JSON format when starting payment") mustBe true
       }
     }
 
@@ -72,10 +88,10 @@ class PayApiConnectorISpec extends ISpecBase with WireMockHelper {
 
     "fail when an unexpected status code is returned" in new SetUp {
       server.stubFor(
-          post(urlMatching(url))
-            .withRequestBody(equalToJson(Json.stringify(Json.toJson(startPaymentRequest))))
-            .willReturn(aResponse().withBody("invalidStatusCodeResponse").withStatus(BAD_REQUEST))
-        )
+        post(urlMatching(url))
+          .withRequestBody(equalToJson(Json.stringify(Json.toJson(startPaymentRequest))))
+          .willReturn(aResponse().withBody("invalidStatusCodeResponse").withStatus(BAD_REQUEST))
+      )
       recoverToExceptionIf[Exception] {
         connector.startPayment(startPaymentRequest).value
       } map { ex =>
@@ -85,8 +101,8 @@ class PayApiConnectorISpec extends ISpecBase with WireMockHelper {
 
   }
   class SetUp {
-    val url = "/pay-api/alcohol-duty/journey/start"
-    val connector = app.injector.instanceOf[PayApiConnector]
+    val url                 = "/pay-api/alcohol-duty/journey/start"
+    val connector           = app.injector.instanceOf[PayApiConnector]
     val startPaymentRequest =
       StartPaymentRequest("referenceNumber", BigInt(1000), "chargeReferenceNumber", "/return/url", "/back/url")
   }
