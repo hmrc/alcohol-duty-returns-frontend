@@ -95,8 +95,6 @@ class YearMonthFormatter(
   }
 
   override def unbind(key: String, value: YearMonth): Map[String, String] =
-    Map(
-      s"$key.month" -> value.getMonthValue.toString,
-      s"$key.year"  -> value.getYear.toString
-    )
+    monthIntFormatter.unbind(s"$key.month", value.getMonthValue) ++
+      yearIntFormatter.unbind(s"$key.year", value.getYear)
 }

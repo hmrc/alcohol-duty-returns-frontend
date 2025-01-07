@@ -16,15 +16,12 @@
 
 package forms.mappings
 
-import config.Constants
 import config.Constants.MappingFields._
 import models.adjustment.AdjustmentVolumeWithSPR
 import play.api.data.FormError
 import play.api.data.format.Formatter
-import cats.implicits._
 
 class AdjustmentVolumesAndRateFormatter(
-  invalidKey: String,
   lessOrEqualKey: String,
   volumeFormatter: BigDecimalFieldFormatter,
   pureAlcoholVolumeFormatter: BigDecimalFieldFormatter,
@@ -33,48 +30,48 @@ class AdjustmentVolumesAndRateFormatter(
 ) extends Formatter[AdjustmentVolumeWithSPR]
     with Formatters {
 
-  private def validateVolumesAndRate(
+  private def bindFormatters(
     key: String,
     data: Map[String, String]
   ): Either[Seq[FormError], AdjustmentVolumeWithSPR] = {
-    val fields  = Seq(
-      (totalLitresField, volumeFormatter),
-      (pureAlcoholField, pureAlcoholVolumeFormatter),
-      (sprDutyRateField, sprDutyRateFormatter)
-    )
-    val results = fields.map { case (fieldsKey, formatter) =>
-      bindField(key, fieldsKey, formatter, data)
-    }
-    val errors  = results.collect { case Left(error) => error }.flatten
-
-    if (errors.nonEmpty) {
-      Left(errors)
-    } else {
-      val Seq(totalLitresResult, pureAlcoholResult, sprDutyRateResult) = results
-      (totalLitresResult, pureAlcoholResult, sprDutyRateResult) match {
-        case (
-              Right(totalLitres: BigDecimal),
-              Right(pureAlcohol: BigDecimal),
-              Right(sprDutyRate: BigDecimal)
-            ) =>
-          if (totalLitres < pureAlcohol) {
-            Left(
-              Seq(
-                FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, args)
-              )
-            )
-
-          } else {
-            Right(AdjustmentVolumeWithSPR(totalLitres, pureAlcohol, sprDutyRate))
-          }
-        case _ =>
-          Left(Seq(FormError(nameToId(s"$key"), invalidKey, args)))
-      }
+    val totalLitresEither = bindField(key, totalLitresField, volumeFormatter, data)
+    val pureAlcoholEither = bindField(key, pureAlcoholField, pureAlcoholVolumeFormatter, data)
+    val sprDutyRateEither = bindField(key, sprDutyRateField, sprDutyRateFormatter, data)
+    (totalLitresEither, pureAlcoholEither, sprDutyRateEither) match {
+      case (Right(totalLitres), Right(pureAlcohol), Right(sprDutyRate)) =>
+        Right(AdjustmentVolumeWithSPR(totalLitres, pureAlcohol, sprDutyRate))
+      case _                                                            =>
+        Left(Seq(totalLitresEither, pureAlcoholEither, sprDutyRateEither).collect { case Left(error) =>
+          error
+        }.flatten)
     }
   }
 
+  private def checkPureAlcoholIsNotGreaterThanTotalLitres(
+    key: String,
+    adjustmentVolumeWithSPR: AdjustmentVolumeWithSPR
+  ): Either[Seq[FormError], AdjustmentVolumeWithSPR] =
+    if (adjustmentVolumeWithSPR.totalLitresVolume < adjustmentVolumeWithSPR.pureAlcoholVolume) {
+      Left(
+        Seq(
+          FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, args)
+        )
+      )
+    } else {
+      Right(
+        AdjustmentVolumeWithSPR(
+          adjustmentVolumeWithSPR.totalLitresVolume,
+          adjustmentVolumeWithSPR.pureAlcoholVolume,
+          adjustmentVolumeWithSPR.sprDutyRate
+        )
+      )
+    }
+
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], AdjustmentVolumeWithSPR] =
-    validateVolumesAndRate(key, data)
+    for {
+      adjustmentVolumeWithSPR <- bindFormatters(key, data)
+      _                       <- checkPureAlcoholIsNotGreaterThanTotalLitres(key, adjustmentVolumeWithSPR)
+    } yield adjustmentVolumeWithSPR
 
   override def unbind(key: String, value: AdjustmentVolumeWithSPR): Map[String, String] =
     volumeFormatter.unbind(s"$key.$totalLitresField", value.totalLitresVolume) ++

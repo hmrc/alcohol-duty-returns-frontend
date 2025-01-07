@@ -25,7 +25,7 @@ object Constants {
 
   object MappingFields {
     val taxTypeField: String     = "taxType"
-    val totalLitresField: String = "totalLitres"//bring back the totalLitresVolume
+    val totalLitresField: String = "totalLitres"
     val pureAlcoholField: String = "pureAlcohol"
     val dutyField: String        = "duty"
     val sprDutyRateField: String = "sprDutyRate"
