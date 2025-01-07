@@ -19,25 +19,28 @@ package controllers.declareDuty
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
-import models.AlcoholRegime.Beer
-import models.{AlcoholRegimes, NormalMode}
+import models.AlcoholRegime.{Beer, Cider, Wine}
+import models.{AlcoholRegimes, NormalMode, UserAnswers}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.declareDuty.DeclareAlcoholDutyQuestionPage
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.declareDuty.{DeclareAlcoholDutyQuestionPage, sectionPages}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.declareDuty.DeclareAlcoholDutyQuestionView
 
+import scala.util.Success
 import scala.concurrent.Future
 
 class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new DeclareAlcoholDutyQuestionFormProvider()
-  val form         = formProvider()
+  val formProvider  = new DeclareAlcoholDutyQuestionFormProvider()
+  val form          = formProvider()
+  val pagesToDelete = sectionPages.toList
 
   lazy val declareAlcoholDutyQuestionRoute = routes.DeclareAlcoholDutyQuestionController.onPageLoad(NormalMode).url
 
@@ -135,13 +138,25 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
     }
 
     "must redirect to the index page when valid question is answered as No" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector              = mock[UserAnswersConnector]
+      val mockUserAnswers: UserAnswers          = mock[UserAnswers]
+      val mockAlcoholRegimesSet: AlcoholRegimes = mock[AlcoholRegimes]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockUserAnswers.set(eqTo(DeclareAlcoholDutyQuestionPage), eqTo(false))(any())
+      ) thenReturn Success(
+        mockUserAnswers
+      )
+      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
+        DeclareAlcoholDutyQuestionPage,
+        false
+      )
+      when(mockUserAnswers.regimes) thenReturn mockAlcoholRegimesSet
+      when(mockAlcoholRegimesSet.regimes) thenReturn Set(Cider, Wine)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(mockUserAnswers))
           .overrides(
             bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
@@ -157,6 +172,12 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockUserAnswers, times(1)).set(eqTo(DeclareAlcoholDutyQuestionPage), eqTo(false))(any())
+        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
+        verify(mockUserAnswers, times(1)).regimes
+        verify(mockAlcoholRegimesSet, times(1)).regimes
       }
     }
 

@@ -22,7 +22,7 @@ import forms.adjustment.DeclareAdjustmentQuestionFormProvider
 import javax.inject.Inject
 import models.{Mode, UserAnswers}
 import navigation.AdjustmentNavigator
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import connectors.UserAnswersConnector
@@ -77,7 +77,16 @@ class DeclareAdjustmentQuestionController @Inject() (
       Try(userAnswer)
     } else {
       userAnswer.remove(
-        List(AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage, AdjustmentTotalPage)
+        List(
+          AdjustmentEntryListPage,
+          AdjustmentListPage,
+          CurrentAdjustmentEntryPage,
+          AdjustmentTotalPage,
+          UnderDeclarationTotalPage,
+          OverDeclarationTotalPage,
+          UnderDeclarationReasonPage,
+          OverDeclarationReasonPage
+        )
       )
     }
 }

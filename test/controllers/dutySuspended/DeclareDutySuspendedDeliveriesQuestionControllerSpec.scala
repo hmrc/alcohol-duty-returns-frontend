@@ -19,10 +19,11 @@ package controllers.dutySuspended
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
-import models.NormalMode
+import models.{NormalMode, UserAnswers}
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.dutySuspended.DeclareDutySuspendedDeliveriesQuestionPage
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.dutySuspended.{DeclareDutySuspendedDeliveriesQuestionPage, DutySuspendedBeerPage, DutySuspendedCiderPage, DutySuspendedOtherFermentedPage, DutySuspendedSpiritsPage, DutySuspendedWinePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
@@ -30,6 +31,7 @@ import uk.gov.hmrc.http.HttpResponse
 import views.html.dutySuspended.DeclareDutySuspendedDeliveriesQuestionView
 
 import scala.concurrent.Future
+import scala.util.Success
 
 class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
@@ -37,6 +39,14 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
   val formProvider = new DeclareDutySuspendedDeliveriesQuestionFormProvider()
   val form         = formProvider()
+
+  val pagesToDelete = List(
+    DutySuspendedBeerPage,
+    DutySuspendedCiderPage,
+    DutySuspendedWinePage,
+    DutySuspendedSpiritsPage,
+    DutySuspendedOtherFermentedPage
+  )
 
   lazy val declareDutySuspendedDeliveriesQuestionRoute =
     routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
@@ -155,17 +165,29 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Task list when declare duty suspended deliveries question is answered as No" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+    "must redirect to the Task list and clear user answers when declare duty suspended deliveries question is answered as No" in {
+      val mockUserAnswersConnector     = mock[UserAnswersConnector]
+      val mockUserAnswers: UserAnswers = mock[UserAnswers]
+
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val application              =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[DeclareDutySuspendedDeliveriesNavigator]
-              .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+      when(
+        mockUserAnswers.set(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(false))(any())
+      ) thenReturn Success(
+        mockUserAnswers
+      )
+      when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
+        DeclareDutySuspendedDeliveriesQuestionPage,
+        false
+      )
+
+      val application = applicationBuilder(userAnswers = Some(mockUserAnswers))
+        .overrides(
+          bind[DeclareDutySuspendedDeliveriesNavigator]
+            .toInstance(new FakeDeclareDutySuspendedDeliveriesNavigator(onwardRoute)),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+        )
+        .build()
+
       running(application) {
         val request =
           FakeRequest(POST, declareDutySuspendedDeliveriesQuestionRoute).withFormUrlEncodedBody(
@@ -174,6 +196,10 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
         val result  = route(application, request).value
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockUserAnswers, times(1)).set(eqTo(DeclareDutySuspendedDeliveriesQuestionPage), eqTo(false))(any())
+        verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
       }
     }
   }
