@@ -71,7 +71,7 @@ class VolumesAndRateFormatter(
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] =
     validateVolumesAndRate(key, data)
 
-  override def unbind(key: String, value: VolumeAndRateByTaxType): Map[String, String] =
+  override def unbind(key: String, value: VolumeAndRateByTaxType): Map[String, String] =//check if they all are working the same
     taxTypeFormatter.unbind(s"$key.$taxTypeField", value.taxType) ++
       volumeFormatter.unbind(s"$key.$totalLitresField", value.totalLitres) ++
       pureAlcoholVolumeFormatter.unbind(s"$key.$pureAlcoholField", value.pureAlcohol) ++

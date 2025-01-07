@@ -115,11 +115,42 @@ trait Mappings extends Formatters with Constraints {
     of(
       new AdjustmentVolumesAndRateFormatter(
         invalidKey,
-        requiredKey,
-        decimalPlacesKey,
-        minimumValueKey,
-        maximumValueKey,
         lessOrEqualKey,
+        new BigDecimalFieldFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          totalLitresField,
+          maximumValue = Constants.volumeMaximumValue,
+          minimumValue = Constants.volumeMinimumValue,
+          args = args
+        ),
+        new BigDecimalFieldFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          pureAlcoholField,
+          decimalPlaces = Constants.lpaMaximumDecimalPlaces,
+          maximumValue = Constants.lpaMaximumValue,
+          minimumValue = Constants.lpaMinimumValue,
+          exactDecimalPlacesRequired = true,
+          args = args
+        ),
+        new BigDecimalFieldFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          sprDutyRateField,
+          maximumValue = dutyMaximumValue,
+          minimumValue = dutyMinimumValue,
+          args = args
+        ),
         args
       )
     )
@@ -158,8 +189,8 @@ trait Mappings extends Formatters with Constraints {
       new VolumesAndRateFormatter(
         invalidKey,
         lessOrEqualKey,
-        stringFormatter(requiredKey, taxTypeField, args),
-        new BigDecimalFieldFormatter(
+        stringFormatter(s"$requiredKey.$taxTypeField", args),
+        new BigDecimalFieldFormatter(// create a def to create each type of formatter
           requiredKey,
           invalidKey,
           decimalPlacesKey,
@@ -219,6 +250,4 @@ trait Mappings extends Formatters with Constraints {
       )
     )
 
-  private def stringFormatter(requiredKey: String, fieldKey: String, args: Seq[String]): Formatter[String] =
-    stringFormatter(s"$requiredKey.$fieldKey", args)
 }

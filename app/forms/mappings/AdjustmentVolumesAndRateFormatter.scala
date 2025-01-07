@@ -25,52 +25,13 @@ import cats.implicits._
 
 class AdjustmentVolumesAndRateFormatter(
   invalidKey: String,
-  requiredKey: String,
-  decimalPlacesKey: String,
-  minimumValueKey: String,
-  maximumValueKey: String,
   lessOrEqualKey: String,
+  volumeFormatter: BigDecimalFieldFormatter,
+  pureAlcoholVolumeFormatter: BigDecimalFieldFormatter,
+  sprDutyRateFormatter: BigDecimalFieldFormatter,
   args: Seq[String]
 ) extends Formatter[AdjustmentVolumeWithSPR]
     with Formatters {
-
-  private val volumeFormatter = new BigDecimalFieldFormatter(
-    requiredKey,
-    invalidKey,
-    decimalPlacesKey,
-    minimumValueKey,
-    maximumValueKey,
-    totalLitresField,
-    maximumValue = Constants.volumeMaximumValue,
-    minimumValue = Constants.volumeMinimumValue,
-    args = args
-  )
-
-  private val pureAlcoholVolumeFormatter: BigDecimalFieldFormatter = new BigDecimalFieldFormatter(
-    requiredKey,
-    invalidKey,
-    decimalPlacesKey,
-    minimumValueKey,
-    maximumValueKey,
-    pureAlcoholField,
-    decimalPlaces = Constants.lpaMaximumDecimalPlaces,
-    maximumValue = Constants.lpaMaximumValue,
-    minimumValue = Constants.lpaMinimumValue,
-    exactDecimalPlacesRequired = true,
-    args = args
-  )
-
-  private val sprDutyRateFormatter = new BigDecimalFieldFormatter(
-    requiredKey,
-    invalidKey,
-    decimalPlacesKey,
-    minimumValueKey,
-    maximumValueKey,
-    sprDutyRateField,
-    maximumValue = Constants.dutyMaximumValue,
-    minimumValue = Constants.dutyMinimumValue,
-    args = args
-  )
 
   private def validateVolumesAndRate(
     key: String,
