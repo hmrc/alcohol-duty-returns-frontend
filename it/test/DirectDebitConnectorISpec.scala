@@ -24,6 +24,7 @@ import play.api.libs.json.Json
 
 class DirectDebitConnectorISpec extends ISpecBase with WireMockHelper {
   override def fakeApplication(): Application = applicationBuilder(None).configure("microservice.services.direct-debit.port" -> server.port()).build()
+
   "DirectDebitConnector" - {
     "successfully retrieve a start direct debit response" in new SetUp {
       val startDirectDebitResponse = StartDirectDebitResponse("/next-url")
@@ -37,6 +38,22 @@ class DirectDebitConnectorISpec extends ISpecBase with WireMockHelper {
 
       whenReady(connector.startDirectDebit(startDirectDebitRequest).value) { result =>
         result mustBe Right(startDirectDebitResponse)
+      }
+    }
+
+    "return an error when the HttpResponse cannot be parsed as a StartPaymentResponse" in new SetUp {
+
+      val jsonResponse = """{ "test": "not start payment response" }"""
+
+      server.stubFor(
+        post(urlMatching(url))
+          .withRequestBody(equalToJson(Json.stringify(Json.toJson(startDirectDebitRequest))))
+          .willReturn(aResponse().withBody(jsonResponse).withStatus(CREATED))
+      )
+
+      whenReady(connector.startDirectDebit(startDirectDebitRequest).value) { result =>
+        val resultErrorString = result.swap.toOption.get
+        resultErrorString.contains("Invalid JSON format when starting direct debit") mustBe true
       }
     }
 
