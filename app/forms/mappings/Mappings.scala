@@ -18,7 +18,7 @@ package forms.mappings
 
 import models.declareDuty.{VolumeAndRateByTaxType, VolumesByTaxType}
 
-import java.time.{LocalDate, YearMonth}
+import java.time.YearMonth
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
 import models.Enumerable
@@ -97,7 +97,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         createPureAlcoholVolumeFormatter(
           requiredKey,
@@ -105,7 +105,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         args
       )
@@ -129,7 +129,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         createPureAlcoholVolumeFormatter(
           requiredKey,
@@ -137,7 +137,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         createSPRDutyRateFormatter(
           requiredKey,
@@ -145,7 +145,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         args
       )
@@ -170,7 +170,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         createPureAlcoholVolumeFormatter(
           requiredKey,
@@ -178,7 +178,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         args
       )
@@ -203,7 +203,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         createPureAlcoholVolumeFormatter(
           requiredKey,
@@ -211,7 +211,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         createSPRDutyRateFormatter(
           requiredKey,
@@ -219,7 +219,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         args
       )
@@ -243,7 +243,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         createPureAlcoholVolumeFormatter(
           requiredKey,
@@ -251,7 +251,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         createDutyFormatter(
           requiredKey,
@@ -259,7 +259,7 @@ trait Mappings extends Formatters with Constraints {
           decimalPlacesKey,
           minimumValueKey,
           maximumValueKey,
-          args = args
+          args
         ),
         args
       )
