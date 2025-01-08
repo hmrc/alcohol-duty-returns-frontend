@@ -27,7 +27,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.{Form, FormError}
 
 class DateMappingsSpec
-  extends AnyFreeSpec
+    extends AnyFreeSpec
     with Matchers
     with ScalaCheckPropertyChecks
     with Generators
