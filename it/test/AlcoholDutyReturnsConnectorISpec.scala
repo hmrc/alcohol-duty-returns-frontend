@@ -105,7 +105,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when a return is submitted, but something other than a CREATED (202) Status code is returned" in new SetUp {
+      "submission should fail when JSON is parsed successfully, but an unexpected status code was returned" in new SetUp {
         val adrReturnCreatedDetails = AdrReturnCreatedDetails(
           processingDate = Instant.now(clock),
           amount = BigDecimal(1),
