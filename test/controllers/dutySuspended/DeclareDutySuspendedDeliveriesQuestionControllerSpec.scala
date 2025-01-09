@@ -19,7 +19,7 @@ package controllers.dutySuspended
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.dutySuspended.DeclareDutySuspendedDeliveriesQuestionFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, ReturnId, UserAnswers}
 import navigation.{DeclareDutySuspendedDeliveriesNavigator, FakeDeclareDutySuspendedDeliveriesNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -175,6 +175,9 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
       ) thenReturn Success(
         mockUserAnswers
       )
+      val mockReturnId = mock[ReturnId]
+      when(mockReturnId.periodKey) thenReturn "2025-01"
+      when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswers.remove(eqTo(pagesToDelete))) thenReturn emptyUserAnswers.set(
         DeclareDutySuspendedDeliveriesQuestionPage,
         false

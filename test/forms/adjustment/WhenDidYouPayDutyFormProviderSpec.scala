@@ -24,7 +24,8 @@ import java.time.{Clock, LocalDate, YearMonth, ZoneOffset}
 class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBehaviours {
 
   private val clock               = Clock.fixed(LocalDate.of(2024, 2, 1).atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
-  val form                        = new WhenDidYouPayDutyFormProvider()()
+  val returnPeriod                = returnPeriodGen.sample.get
+  val form                        = new WhenDidYouPayDutyFormProvider()(returnPeriod.period)
   val invalidYearMonth: YearMonth = YearMonth.of(2023, 7)
   val inputKey                    = "when-did-you-pay-duty-input"
 
@@ -57,6 +58,7 @@ class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBeha
     behave like yearMonthFieldInFuture(
       form,
       inputKey,
+      returnPeriod.period,
       FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.future")
     )
 
