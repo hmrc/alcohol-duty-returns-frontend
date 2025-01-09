@@ -80,7 +80,8 @@ class DutyDueForThisReturnHelper @Inject() (
   ): EitherT[Future, String, Seq[Tuple2[AlcoholRegime, AlcoholDuty]]] =
     (userAnswers.get(DeclareAlcoholDutyQuestionPage), userAnswers.get(AlcoholDutyPage)) match {
       case (Some(false), _)                  => EitherT.rightT(Seq.empty)
-      case (Some(true), Some(alcoholDuties)) => EitherT.rightT(alcoholDuties.toSeq.sortBy(dutyDueOrder.indexOf(_)))
+      case (Some(true), Some(alcoholDuties)) =>
+        EitherT.rightT(alcoholDuties.toSeq.sortBy { case (regime, _) => dutyDueOrder.indexOf(regime) })
       case (_, _)                            => EitherT.leftT("Unable to get duties due when calculating duty due")
     }
 
