@@ -32,7 +32,6 @@ import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.WhenDidYouPayDutyView
 
-import java.time.YearMonth
 import scala.concurrent.Future
 
 class WhenDidYouPayDutyControllerSpec extends SpecBase {
@@ -40,7 +39,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider          = new WhenDidYouPayDutyFormProvider()
-  val returnPeriodYearMonth = YearMonth.of(2025, 1)
+  val returnPeriodYearMonth = returnPeriod.period
   val form                  = formProvider(returnPeriodYearMonth)
 
   lazy val whenDidYouPayDutyRoute = routes.WhenDidYouPayDutyController.onPageLoad(NormalMode).url
