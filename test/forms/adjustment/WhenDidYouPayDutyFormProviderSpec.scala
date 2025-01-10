@@ -19,20 +19,19 @@ package forms.adjustment
 import forms.behaviours.{DateBehaviours, IntFieldBehaviours}
 import play.api.data.FormError
 
-import java.time.{Clock, LocalDate, YearMonth, ZoneOffset}
+import java.time.{LocalDate, YearMonth}
 
 class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBehaviours {
 
-  private val clock               = Clock.fixed(LocalDate.of(2024, 2, 1).atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
-  val returnPeriod                = returnPeriodGen.sample.get
-  val form                        = new WhenDidYouPayDutyFormProvider()(returnPeriod.period)
+  val returnPeriod                = returnPeriodGen.sample.get.period
+  val form                        = new WhenDidYouPayDutyFormProvider()(returnPeriod)
   val invalidYearMonth: YearMonth = YearMonth.of(2023, 7)
   val inputKey                    = "when-did-you-pay-duty-input"
 
   "input" - {
     val validData = datesBetween(
       min = LocalDate.of(2023, 9, 1),
-      max = LocalDate.now(clock).minusMonths(1)
+      max = returnPeriod.minusMonths(1).atEndOfMonth()
     ).map(YearMonth.from(_))
 
     behave like yearMonthField(form, inputKey, validData)
@@ -58,7 +57,7 @@ class WhenDidYouPayDutyFormProviderSpec extends DateBehaviours with IntFieldBeha
     behave like yearMonthFieldInFuture(
       form,
       inputKey,
-      returnPeriod.period,
+      returnPeriod,
       FormError(inputKey, "whenDidYouPayDuty.date.error.invalid.future")
     )
 
