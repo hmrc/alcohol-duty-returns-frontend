@@ -17,7 +17,6 @@
 package controllers.adjustment
 
 import base.SpecBase
-import config.Constants.periodKeySessionKey
 import config.FrontendAppConfig
 import forms.adjustment.WhenDidYouPayDutyFormProvider
 import models.NormalMode
@@ -33,6 +32,7 @@ import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.WhenDidYouPayDutyView
 
+import java.time.YearMonth
 import scala.concurrent.Future
 
 class WhenDidYouPayDutyControllerSpec extends SpecBase {
@@ -40,7 +40,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider          = new WhenDidYouPayDutyFormProvider()
-  val returnPeriodYearMonth = returnPeriod.period
+  val returnPeriodYearMonth = YearMonth.of(2025, 1)
   val form                  = formProvider(returnPeriodYearMonth)
 
   lazy val whenDidYouPayDutyRoute = routes.WhenDidYouPayDutyController.onPageLoad(NormalMode).url
@@ -132,7 +132,6 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       running(application) {
         val request =
           FakeRequest(POST, whenDidYouPayDutyRoute)
-            .withSession((periodKeySessionKey, periodKey))
             .withFormUrlEncodedBody(
               ("when-did-you-pay-duty-input.month", monthString),
               ("when-did-you-pay-duty-input.year", yearString)
