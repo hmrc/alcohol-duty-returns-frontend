@@ -17,33 +17,20 @@
 package controllers.declareDuty
 
 import base.SpecBase
-import models.AlcoholRegime
-import org.scalacheck.Arbitrary._
-import pages.declareDuty.{HowMuchDoYouNeedToDeclarePage, WhatDoYouNeedToDeclarePage}
+import models.AlcoholRegime.Beer
+import play.api.i18n.Messages
+import play.api.inject.bind
 import play.api.test.Helpers._
-import viewmodels.declareDuty.CheckYourAnswersSummaryListHelper
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow, Value}
+import viewmodels.declareDuty.{CheckYourAnswersSummaryListHelper, ReturnSummaryList}
 import views.html.declareDuty.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends SpecBase {
-
   "CheckYourAnswers Controller" - {
-
-    val regime = arbitrary[AlcoholRegime].sample.value
-
-    val rateBands      = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
-    val dutyByTaxTypes = rateBands.map(genVolumeAndRateByTaxTypeRateBand(_).arbitrary.sample.value).toSeq
-
-    val userAnswers = emptyUserAnswers
-      .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
-      .success
-      .value
-      .setByKey(HowMuchDoYouNeedToDeclarePage, regime, dutyByTaxTypes)
-      .success
-      .value
-
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+    "must return OK and the correct view for a GET" in new SetUp {
+      when(mockCheckYourAnswersSummaryListHelper.createSummaryList(regime, emptyUserAnswers))
+        .thenReturn(Some(returnSummaryList))
 
       running(application) {
         val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
@@ -52,38 +39,16 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
-        val expectedReturnSummaryList =
-          CheckYourAnswersSummaryListHelper.createSummaryList(regime, userAnswers)(getMessages(application)).get
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(regime, expectedReturnSummaryList)(
+        contentAsString(result) mustEqual view(regime, returnSummaryList)(
           request,
           getMessages(application)
         ).toString
       }
     }
 
-    "must return an exception empty dutyByTaxTypes" in {
-      val userAnswers = emptyUserAnswers
-        .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
-        .success
-        .value
-        .setByKey(HowMuchDoYouNeedToDeclarePage, regime, Seq.empty)
-        .success
-        .value
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val exception = intercept[IllegalArgumentException] {
-          CheckYourAnswersSummaryListHelper.createSummaryList(regime, userAnswers)(getMessages(application)).get
-        }
-        exception.getMessage.startsWith("Invalid tax type:") mustBe true
-      }
-    }
-
-    "must redirect to the Journey Recovery page when there is no data" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
+    "must redirect to the Journey Recovery page when no summary can be returned" in new SetUp {
+      when(mockCheckYourAnswersSummaryListHelper.createSummaryList(regime, emptyUserAnswers)).thenReturn(None)
 
       running(application) {
         val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
@@ -95,18 +60,32 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the Journey Recovery page when there is an empty user-answer" in {
+    class SetUp {
+      val mockCheckYourAnswersSummaryListHelper: CheckYourAnswersSummaryListHelper =
+        mock[CheckYourAnswersSummaryListHelper]
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application                 = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper))
+        .build()
+      implicit val messages: Messages = getMessages(application)
 
-      running(application) {
-        val request = FakeRequest(GET, controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime).url)
+      val regime = Beer
 
-        val result = route(application, request).value
+      val summaryList1 = SummaryList(rows =
+        Seq(SummaryListRow(key = Key(content = Text("Key1")), value = Value(content = Text("Value1"))))
+      )
+      val summaryList2 = SummaryList(rows =
+        Seq(SummaryListRow(key = Key(content = Text("Key2")), value = Value(content = Text("Value2"))))
+      )
+      val summaryList3 = SummaryList(rows =
+        Seq(SummaryListRow(key = Key(content = Text("Key3")), value = Value(content = Text("Value3"))))
+      )
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
+      val returnSummaryList = ReturnSummaryList(
+        whatDoYouNeedToDeclareSummary = summaryList1,
+        howMuchDoYouNeedToDeclareSummary = Some(summaryList2),
+        smallProducerReliefSummary = Some(summaryList3)
+      )
     }
   }
 }

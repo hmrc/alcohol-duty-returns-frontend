@@ -18,7 +18,6 @@ package services.checkAndSubmit
 
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
-import config.FrontendAppConfig
 import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
@@ -40,8 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdrReturnSubmissionServiceImpl @Inject() (
   calculatorConnector: AlcoholDutyCalculatorConnector,
-  taskListViewModel: TaskListViewModel,
-  appConfig: FrontendAppConfig
+  taskListViewModel: TaskListViewModel
 )(implicit
   ec: ExecutionContext
 ) extends AdrReturnSubmissionService {

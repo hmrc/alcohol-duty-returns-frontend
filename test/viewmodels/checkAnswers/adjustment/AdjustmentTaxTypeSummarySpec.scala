@@ -26,7 +26,7 @@ class AdjustmentTaxTypeSummarySpec extends SpecBase {
   "AdjustmentTaxTypeSummary" - {
     "should create the summary list row view model from the rateBands" in new SetUp {
       val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Drawback), rateBand = Some(coreRateBand))
-      val result          = AdjustmentTaxTypeSummary.row(adjustmentEntry).get
+      val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry).get
 
       result.key.content mustBe Text("Tax type")
       result.value.content mustBe Text("Non-draught beer between 1% and 2% ABV (123)")
@@ -35,7 +35,7 @@ class AdjustmentTaxTypeSummarySpec extends SpecBase {
     "should create the summary list row view model from the rateBands where adjustmentType is RepackagedDraughtProducts" in new SetUp {
       val adjustmentEntry =
         AdjustmentEntry(adjustmentType = Some(RepackagedDraughtProducts), rateBand = Some(coreRateBand))
-      val result          = AdjustmentTaxTypeSummary.row(adjustmentEntry).get
+      val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry).get
 
       result.key.content mustBe Text("Original tax type")
       result.value.content mustBe Text("Non-draught beer between 1% and 2% ABV (123)")
@@ -43,14 +43,14 @@ class AdjustmentTaxTypeSummarySpec extends SpecBase {
 
     "should not create the summary list row view model from the rateBands for Spoilt adjustment" in new SetUp {
       val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt), rateBand = Some(coreRateBand))
-      val result          = AdjustmentTaxTypeSummary.row(adjustmentEntry)
+      val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry)
 
       result mustBe None
     }
 
     "should throw an exception if unable to get the adjustment type" in new SetUp {
       val adjustmentEntry = AdjustmentEntry(adjustmentType = None, rateBand = Some(coreRateBand))
-      a[RuntimeException] mustBe thrownBy(AdjustmentTaxTypeSummary.row(adjustmentEntry).get)
+      a[RuntimeException] mustBe thrownBy(new AdjustmentTaxTypeSummary().row(adjustmentEntry).get)
     }
   }
 
