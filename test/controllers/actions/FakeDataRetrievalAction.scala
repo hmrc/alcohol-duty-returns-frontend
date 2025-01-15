@@ -23,7 +23,8 @@ import play.api.mvc.Result
 import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
+class FakeDataRetrievalAction(maybeUserAnswers: Option[UserAnswers]) extends DataRetrievalAction {
+  private val defaultReturnPeriod = ReturnPeriod(YearMonth.of(2025, 1))
 
   override protected def refine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] =
     Future(
@@ -33,8 +34,10 @@ class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRet
           request.appaId,
           request.groupId,
           request.userId,
-          returnPeriod = Some(ReturnPeriod(YearMonth.of(24, 1))),
-          dataToReturn
+          maybeUserAnswers
+            .flatMap(userAnswers => ReturnPeriod.fromPeriodKey(userAnswers.returnId.periodKey))
+            .orElse(Some(defaultReturnPeriod)),
+          maybeUserAnswers
         )
       )
     )

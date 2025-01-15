@@ -125,10 +125,25 @@ class DateBehaviours extends FieldBehaviours {
       }
     }
 
-  def yearMonthFieldInFuture(form: Form[_], key: String, formError: FormError): Unit =
+  def yearMonthFieldInFuture(form: Form[_], key: String, returnPeriod: YearMonth, formError: FormError): Unit =
     "fail to bind a date in the future" in {
 
-      val futureDate = YearMonth.now().plusMonths(1)
+      val futureDate = returnPeriod.plusMonths(1)
+
+      val data = Map(
+        s"$key.month" -> futureDate.getMonthValue.toString,
+        s"$key.year"  -> futureDate.getYear.toString
+      )
+
+      val result = form.bind(data)
+
+      result.errors must contain only formError
+    }
+
+  def yearMonthFieldForCurrentPeriod(form: Form[_], key: String, returnPeriod: YearMonth, formError: FormError): Unit =
+    "fail to bind a date in the future" in {
+
+      val futureDate = returnPeriod
 
       val data = Map(
         s"$key.month" -> futureDate.getMonthValue.toString,

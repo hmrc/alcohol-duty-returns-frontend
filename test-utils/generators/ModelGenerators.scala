@@ -206,7 +206,7 @@ trait ModelGenerators {
   }
 
   def periodKeyGen: Gen[String] = for {
-    year  <- Gen.chooseNum(23, 50)
+    year  <- Gen.chooseNum(24, 50)
     month <- Gen.chooseNum(0, 11)
   } yield s"${year}A${(month + 'A').toChar}"
 

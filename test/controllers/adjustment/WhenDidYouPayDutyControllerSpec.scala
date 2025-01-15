@@ -32,20 +32,20 @@ import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.WhenDidYouPayDutyView
 
-import java.time.YearMonth
 import scala.concurrent.Future
 
 class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new WhenDidYouPayDutyFormProvider()
-  val form         = formProvider()
+  val formProvider          = new WhenDidYouPayDutyFormProvider()
+  val returnPeriodYearMonth = returnPeriod.period
+  val form                  = formProvider(returnPeriodYearMonth)
 
   lazy val whenDidYouPayDutyRoute = routes.WhenDidYouPayDutyController.onPageLoad(NormalMode).url
 
   val adjustmentType = AdjustmentType.Overdeclaration
-  val period         = YearMonth.of(2024, 1)
+  val validPeriod    = returnPeriodYearMonth.minusMonths(1)
 
   val validEmptyUserAnswers = emptyUserAnswers
     .set(CurrentAdjustmentEntryPage, AdjustmentEntry(adjustmentType = Some(AdjustmentType.Overdeclaration)))
@@ -57,11 +57,14 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
       CurrentAdjustmentEntryPage,
       AdjustmentEntry(
         adjustmentType = Some(adjustmentType),
-        period = Some(period)
+        period = Some(validPeriod)
       )
     )
     .success
     .value
+
+  val monthString = validPeriod.getMonthValue.toString
+  val yearString  = validPeriod.getYear.toString
 
   "WhenDidYouPayDuty Controller" - {
 
@@ -101,7 +104,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(period),
+          form.fill(validPeriod),
           NormalMode,
           adjustmentType,
           appConfig.exciseEnquiriesUrl
@@ -129,8 +132,8 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, whenDidYouPayDutyRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", "1"),
-              ("when-did-you-pay-duty-input.year", "2024")
+              ("when-did-you-pay-duty-input.month", monthString),
+              ("when-did-you-pay-duty-input.year", yearString)
             )
 
         val result = route(application, request).value
@@ -158,8 +161,8 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, whenDidYouPayDutyRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", "1"),
-              ("when-did-you-pay-duty-input.year", "2024")
+              ("when-did-you-pay-duty-input.month", monthString),
+              ("when-did-you-pay-duty-input.year", yearString)
             )
 
         val result = route(application, request).value
@@ -176,7 +179,7 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
             CurrentAdjustmentEntryPage,
             AdjustmentEntry(
               adjustmentType = Some(Spoilt),
-              period = Some(YearMonth.of(2024, 1))
+              period = Some(validPeriod)
             )
           )
           .success
@@ -198,8 +201,8 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, whenDidYouPayDutyRoute)
             .withFormUrlEncodedBody(
-              ("when-did-you-pay-duty-input.month", "1"),
-              ("when-did-you-pay-duty-input.year", "2024")
+              ("when-did-you-pay-duty-input.month", monthString),
+              ("when-did-you-pay-duty-input.year", yearString)
             )
 
         val result = route(application, request).value

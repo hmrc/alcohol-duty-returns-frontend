@@ -51,9 +51,9 @@ class WhenDidYouPayDutyController @Inject() (
     with I18nSupport
     with Logging {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val returnPeriod = request.returnPeriod.period
+    val form         = formProvider(returnPeriod)
     request.userAnswers.get(CurrentAdjustmentEntryPage) match {
       case Some(AdjustmentEntry(_, Some(adjustmentType), Some(period), _, _, _, _, _, _, _, _, _, _)) =>
         Ok(
@@ -83,6 +83,8 @@ class WhenDidYouPayDutyController @Inject() (
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val returnPeriod = request.returnPeriod.period
+      val form         = formProvider(returnPeriod)
       form
         .bindFromRequest()
         .fold(

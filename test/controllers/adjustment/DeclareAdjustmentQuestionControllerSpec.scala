@@ -18,7 +18,7 @@ package controllers.adjustment
 
 import base.SpecBase
 import forms.adjustment.DeclareAdjustmentQuestionFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, ReturnId, UserAnswers}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage, DeclareAdjustmentQuestionPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
@@ -117,7 +117,9 @@ class DeclareAdjustmentQuestionControllerSpec extends SpecBase {
     "must redirect to the Task list and clear user answers when valid question is answered as No" in {
       val mockUserAnswersConnector     = mock[UserAnswersConnector]
       val mockUserAnswers: UserAnswers = mock[UserAnswers]
-
+      val mockReturnId                 = mock[ReturnId]
+      when(mockReturnId.periodKey) thenReturn "2025-01"
+      when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
         mockUserAnswers.set(eqTo(DeclareAdjustmentQuestionPage), eqTo(false))(any())

@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, Wine}
-import models.{AlcoholRegimes, NormalMode, UserAnswers}
+import models.{AlcoholRegimes, NormalMode, ReturnId, UserAnswers}
 import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -141,7 +141,9 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
       val mockUserAnswersConnector              = mock[UserAnswersConnector]
       val mockUserAnswers: UserAnswers          = mock[UserAnswers]
       val mockAlcoholRegimesSet: AlcoholRegimes = mock[AlcoholRegimes]
-
+      val mockReturnId                          = mock[ReturnId]
+      when(mockReturnId.periodKey) thenReturn "2025-01"
+      when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(
         mockUserAnswers.set(eqTo(DeclareAlcoholDutyQuestionPage), eqTo(false))(any())
