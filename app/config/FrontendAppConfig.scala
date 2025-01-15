@@ -70,6 +70,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val exciseEnquiriesUrl: String        = configuration.get[String]("urls.exciseEnquiries")
   val unauthorisedUrl: String           = configuration.get[String]("urls.unauthorisedLink")
   val declareSpiritsGuidanceUrl: String = configuration.get[String]("urls.declareSpiritsGuidance")
+  val claimRefundGformUrlBase: String   = configuration.get[String]("urls.claimRefundGformLink")
 
   val fromBusinessAccountPath: String = configuration.get[String]("fromBusinessAccountPath")
 
@@ -81,6 +82,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val spiritsAndIngredientsEnabled: Boolean =
     configuration.get[Boolean]("features.spirits-and-ingredients")
+
+  val claimARefundGformEnabled: Boolean =
+    configuration.get[Boolean]("features.claim-a-refund-gform")
 
   val enrolmentServiceName   = configuration.get[String]("enrolment.serviceName")
   val enrolmentIdentifierKey = configuration.get[String]("enrolment.identifierKey")
@@ -122,6 +126,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrGetHistoricPaymentsUrl(appaId: String, year: Int): String =
     s"$adrAccountHost/alcohol-duty-account/producers/$appaId/payments/historic/$year"
+
+  def claimRefundGformUrl(amount: String): String =
+    s"$claimRefundGformUrlBase$amount"
 
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart
