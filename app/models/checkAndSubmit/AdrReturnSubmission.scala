@@ -17,7 +17,7 @@
 package models.checkAndSubmit
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
-import models.{SpiritType, UnitsOfMeasure}
+import models.SpiritType
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.{Instant, LocalDate}
@@ -170,66 +170,10 @@ object AdrTypeOfSpirit extends Enum[AdrTypeOfSpirit] with PlayJsonEnum[AdrTypeOf
   }
 }
 
-case class AdrSpiritsGrainsQuantities(
-  maltedBarley: Option[BigDecimal],
-  otherMaltedGrain: Option[BigDecimal],
-  wheat: Option[BigDecimal],
-  maize: Option[BigDecimal],
-  rye: Option[BigDecimal],
-  unmaltedGrain: Option[BigDecimal]
-)
-
-object AdrSpiritsGrainsQuantities {
-  implicit val format: OFormat[AdrSpiritsGrainsQuantities] = Json.format[AdrSpiritsGrainsQuantities]
-}
-
-case class AdrSpiritsIngredientsVolumes(
-  ethylene: Option[BigDecimal],
-  molasses: Option[BigDecimal],
-  beer: Option[BigDecimal],
-  wine: Option[BigDecimal],
-  madeWine: Option[BigDecimal],
-  ciderOrPerry: Option[BigDecimal]
-)
-
-object AdrSpiritsIngredientsVolumes {
-  implicit val format: OFormat[AdrSpiritsIngredientsVolumes] = Json.format[AdrSpiritsIngredientsVolumes]
-}
-
-sealed trait AdrUnitOfMeasure extends EnumEntry
-
-object AdrUnitOfMeasure extends Enum[AdrUnitOfMeasure] with PlayJsonEnum[AdrUnitOfMeasure] {
-  val values = findValues
-
-  case object Tonnes extends AdrUnitOfMeasure
-  case object Litres extends AdrUnitOfMeasure
-
-  def apply(unit: UnitsOfMeasure): AdrUnitOfMeasure =
-    unit match {
-      case UnitsOfMeasure.Tonnes => Tonnes
-      case UnitsOfMeasure.Litres => Litres
-    }
-}
-
-case class AdrOtherIngredient(
-  quantity: BigDecimal,
-  unitOfMeasure: AdrUnitOfMeasure,
-  ingredientName: String
-)
-
-object AdrOtherIngredient {
-  implicit val format: OFormat[AdrOtherIngredient] = Json.format[AdrOtherIngredient]
-}
-
 case class AdrSpiritsProduced(
   spiritsVolumes: AdrSpiritsVolumes,
   typesOfSpirit: Set[AdrTypeOfSpirit],
-  otherSpiritTypeName: Option[String],
-  hasOtherMaltedGrain: Option[Boolean],
-  grainsQuantities: AdrSpiritsGrainsQuantities,
-  otherMaltedGrainType: Option[String],
-  ingredientsVolumes: AdrSpiritsIngredientsVolumes,
-  otherIngredient: Option[AdrOtherIngredient]
+  otherSpiritTypeName: Option[String]
 )
 
 object AdrSpiritsProduced {
