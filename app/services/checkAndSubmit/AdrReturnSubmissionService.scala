@@ -351,26 +351,7 @@ class AdrReturnSubmissionServiceImpl @Inject() (
       AdrSpiritsProduced(
         spiritsVolumes = spiritVolumes,
         typesOfSpirit = typesOfSpirit,
-        otherSpiritTypeName = otherSpiritTypeName,
-        hasOtherMaltedGrain = None,
-        grainsQuantities = AdrSpiritsGrainsQuantities(
-          maltedBarley = None,
-          otherMaltedGrain = None,
-          wheat = None,
-          maize = None,
-          rye = None,
-          unmaltedGrain = None
-        ),
-        otherMaltedGrainType = None,
-        ingredientsVolumes = AdrSpiritsIngredientsVolumes(
-          ethylene = None,
-          molasses = None,
-          beer = None,
-          wine = None,
-          madeWine = None,
-          ciderOrPerry = None
-        ),
-        otherIngredient = None
+        otherSpiritTypeName = otherSpiritTypeName
       )
     )
 

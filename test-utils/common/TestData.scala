@@ -22,23 +22,22 @@ import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.RateType.Core
 import models.TransactionType.{LPI, RPI, Return}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import models.checkAndSubmit._
 import models.declareDuty._
 import models.returns._
 import models._
-import models.checkAndSubmit.{AdrAdjustmentItem, AdrAdjustments, AdrAlcoholQuantity, AdrDuty, AdrDutyDeclared, AdrDutyDeclaredItem, AdrDutySuspended, AdrDutySuspendedAlcoholRegime, AdrDutySuspendedProduct, AdrRepackagedDraughtAdjustmentItem, AdrReturnCreatedDetails, AdrReturnSubmission, AdrSpirits, AdrSpiritsGrainsQuantities, AdrSpiritsIngredientsVolumes, AdrSpiritsProduced, AdrSpiritsVolumes, AdrTotals, AdrTypeOfSpirit}
 import org.scalacheck.Gen
 import pages.adjustment._
 import pages.declareDuty.{AlcoholDutyPage, DeclareAlcoholDutyQuestionPage}
 import pages.dutySuspended._
 import pages.spiritsQuestions._
-import play.api.libs.json.Json
-import models.{AlcoholRegimes, ObligationData, ObligationStatus, OpenPayments, OutstandingPayment, ReturnId, ReturnPeriod, UnallocatedPayment, UserAnswers}
 import play.api.i18n.Messages
+import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
-import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
 import viewmodels.returns.ReturnSubmittedViewModel
+import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelFactory}
 
 import java.time._
 
@@ -944,12 +943,7 @@ trait TestData extends ModelGenerators {
                 AdrTypeOfSpirit.Beer,
                 AdrTypeOfSpirit.Malt
               ),
-              otherSpiritTypeName = Some("Other Type of Spirit"),
-              hasOtherMaltedGrain = None,
-              grainsQuantities = AdrSpiritsGrainsQuantities(None, None, None, None, None, None),
-              otherMaltedGrainType = None,
-              ingredientsVolumes = AdrSpiritsIngredientsVolumes(None, None, None, None, None, None),
-              otherIngredient = None
+              otherSpiritTypeName = Some("Other Type of Spirit")
             )
           )
         )
