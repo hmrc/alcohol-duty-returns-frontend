@@ -26,11 +26,12 @@ trait Formatters {
 
   private[mappings] def stringFormatter(errorKey: String, args: Seq[String] = Seq.empty): Formatter[String] =
     new Formatter[String] {
-
       override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
         data.get(key) match {
-          case None                      => Left(Seq(FormError(key, errorKey, args)))
-          case Some(s) if s.trim.isEmpty => Left(Seq(FormError(key, errorKey, args)))
+          case None                      =>
+            Left(Seq(FormError(nameToId(key), errorKey, args)))
+          case Some(s) if s.trim.isEmpty =>
+            Left(Seq(FormError(nameToId(key), errorKey, args)))
           case Some(s)                   => Right(s)
         }
 
@@ -142,4 +143,13 @@ trait Formatters {
     }
 
   private[mappings] def nameToId(name: String): String = name.replace("[", "_").replace("]", "").replace(".", "_")
+
+  private[mappings] def bindField[T](
+    key: String,
+    field: String,
+    formatter: Formatter[T],
+    data: Map[String, String]
+  ): Either[Seq[FormError], T] =
+    formatter.bind(s"$key.$field", data)
+
 }

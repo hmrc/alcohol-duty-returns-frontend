@@ -52,7 +52,7 @@ trait CheckboxFieldBehaviours extends FormSpec {
       val data = Map(
         s"$fieldName[0]" -> ""
       )
-      form.bind(data).errors must contain(FormError(s"$fieldName[0]", requiredKey))
+      form.bind(data).errors must contain(FormError(s"${fieldName}_0", requiredKey))
     }
   }
 }

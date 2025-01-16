@@ -53,29 +53,29 @@
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key = "totalLitresVolume",
-                label = LabelViewModel(messages("adjustmentVolume.totalLitresVolume.heading")),
-                errorMessageField = form("volumes_totalLitresVolume"),
-                value = form("volumes.totalLitresVolume").value
+                key = "totalLitres",
+                label = LabelViewModel(messages("adjustmentVolume.totalLitres.heading")),
+                errorMessageField = form("volumes_totalLitres"),
+                value = form("volumes.totalLitres").value
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            .withHint(Hint(content = messages("adjustmentVolume.totalLitresVolume.hint")))
+            .withHint(Hint(content = messages("adjustmentVolume.totalLitres.hint")))
         )
 
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key = "pureAlcoholVolume",
-                label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading")),
-                errorMessageField = form("volumes_pureAlcoholVolume"),
-                value = form("volumes.pureAlcoholVolume").value
+                key = "pureAlcohol",
+                label = LabelViewModel(messages("adjustmentVolume.pureAlcohol.heading")),
+                errorMessageField = form("volumes_pureAlcohol"),
+                value = form("volumes.pureAlcohol").value
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            .withHint(Hint(content = messages("adjustmentVolume.pureAlcoholVolume.hint")))
+            .withHint(Hint(content = messages("adjustmentVolume.pureAlcohol.hint")))
         )
 
 
