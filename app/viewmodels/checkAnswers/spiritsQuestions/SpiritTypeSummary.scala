@@ -28,8 +28,8 @@ import viewmodels.implicits._
 
 object SpiritTypeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SpiritTypePage).flatMap { answers =>
+  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    userAnswers.get(SpiritTypePage).flatMap { answers =>
       val rowValue = answers.map(spiritType => HtmlFormat.escape(messages(s"spiritType.$spiritType")).toString)
 
       val value = ValueViewModel(HtmlContent(s"""<span aria-label=${messages(
