@@ -26,8 +26,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object SpoiltAlcoholicProductTypeSummary {
-
+class SpoiltAlcoholicProductTypeSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     adjustmentEntry.spoiltRegime.map { spoiltRegime =>
       val value = ValueViewModel(

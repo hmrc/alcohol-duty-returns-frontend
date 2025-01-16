@@ -25,7 +25,7 @@ import viewmodels.declareDuty.RateBandHelper.rateBandRecap
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdjustmentRepackagedTaxTypeSummary {
+class AdjustmentRepackagedTaxTypeSummary {
 
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     adjustmentEntry.repackagedRateBand.map { repackagedRateBand =>

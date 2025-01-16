@@ -17,278 +17,98 @@
 package controllers.adjustment
 
 import base.SpecBase
-import cats.data.NonEmptySeq
 import connectors.UserAnswersConnector
 import generators.ModelGenerators
-import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt, Underdeclaration}
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
+import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.adjustment._
 import play.api.inject.bind
 import play.api.test.Helpers._
+import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.http.HttpResponse
-import viewmodels.checkAnswers.adjustment.{CheckYourAnswersSummaryListHelper, WhenDidYouPayDutySummary}
+import viewmodels.checkAnswers.adjustment.CheckYourAnswersSummaryListHelper
 import views.html.adjustment.CheckYourAnswersView
 
-import java.time.YearMonth
 import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
-
-  val rate              = BigDecimal(9.27)
-  val pureAlcoholVolume = BigDecimal(3.69)
-  val totalLitresVolume = BigDecimal(3.69)
-  val taxCode           = "311"
-  val repackagedRate    = BigDecimal(10)
-  val repackagedDuty    = BigDecimal(33.2)
-  val newDuty           = BigDecimal(1)
-  val rateBand          = RateBand(
-    "310",
-    "some band",
-    RateType.DraughtRelief,
-    Some(BigDecimal(10.99)),
-    Set(
-      RangeDetailsByRegime(
-        AlcoholRegime.Beer,
-        NonEmptySeq.one(
-          ABVRange(
-            AlcoholType.Beer,
-            AlcoholByVolume(0.1),
-            AlcoholByVolume(5.8)
-          )
-        )
-      )
-    )
-  )
-
-  val duty = BigDecimal(100)
-
-  val currentAdjustmentEntry = AdjustmentEntry(
-    adjustmentType = Some(Spoilt),
-    spoiltRegime = Some(Beer),
-    pureAlcoholVolume = Some(pureAlcoholVolume),
-    totalLitresVolume = Some(totalLitresVolume),
-    rateBand = Some(rateBand),
-    period = Some(YearMonth.of(24, 1)),
-    duty = Some(duty)
-  )
-
-  val savedAdjustmentEntry =
-    currentAdjustmentEntry.copy(pureAlcoholVolume = Some(BigDecimal(10)), totalLitresVolume = Some(BigDecimal(11)))
-
-  val repackagedAdjustmentEntry =
-    currentAdjustmentEntry.copy(
-      adjustmentType = Some(Overdeclaration),
-      spoiltRegime = None,
-      repackagedRateBand = Some(rateBand),
-      repackagedSprDutyRate = Some(rate)
-    )
-
-  val repackagedAdjustmentEntryWithSPR =
-    currentAdjustmentEntry.copy(
-      adjustmentType = Some(Overdeclaration),
-      sprDutyRate = Some(rate),
-      spoiltRegime = None,
-      repackagedRateBand = Some(rateBand),
-      repackagedSprDutyRate = Some(rate)
-    )
-
-  val underdeclaredAdjustmentEntry =
-    currentAdjustmentEntry.copy(spoiltRegime = None, adjustmentType = Some(Underdeclaration), sprDutyRate = Some(rate))
-
-  val completeAdjustmentEntryUserAnswers: UserAnswers = emptyUserAnswers
-    .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry)
-    .success
-    .value
-    .set(AdjustmentEntryListPage, Seq(savedAdjustmentEntry))
-    .success
-    .value
-
-  val pageNumber = 1
-
-  lazy val checkYourAnswersRoute = controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url
-
-  "CheckYourAnswers Controller" - {
-
-    "must return OK and the correct view for a GET if all necessary questions are answered" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val userAnswers1 = emptyUserAnswers
-        .set(CurrentAdjustmentEntryPage, repackagedAdjustmentEntry)
-        .success
-        .value
-
-      val userAnswers2 = emptyUserAnswers
-        .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry)
-        .success
-        .value
-
-      val userAnswers3 = emptyUserAnswers
-        .set(CurrentAdjustmentEntryPage, repackagedAdjustmentEntryWithSPR)
-        .success
-        .value
-
-      val userAnswers4 = emptyUserAnswers
-        .set(CurrentAdjustmentEntryPage, underdeclaredAdjustmentEntry)
-        .success
-        .value
-
-      val completeUserAnswersList = Seq(
-        userAnswers1,
-        userAnswers2,
-        userAnswers3,
-        userAnswers4
-      )
-
-      completeUserAnswersList.foreach { (completeUserAnswers: UserAnswers) =>
-        val application = applicationBuilder(Some(completeUserAnswers))
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
-
-        running(application) {
-          val request = FakeRequest(GET, checkYourAnswersRoute)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[CheckYourAnswersView]
-
-          val list = new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
-            .currentAdjustmentEntrySummaryList(completeUserAnswers.get(CurrentAdjustmentEntryPage).get)(
-              getMessages(app)
-            )
-            .get
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
-        }
-      }
-    }
-
-    "must return OK and load the saved adjustment entry from the user answers if index is defined" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val application = applicationBuilder(userAnswers = Some(completeAdjustmentEntryUserAnswers))
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
-
-      running(application) {
-        val request =
-          FakeRequest(GET, controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(index = Some(0)).url)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[CheckYourAnswersView]
-
-        val list = new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
-          .currentAdjustmentEntrySummaryList(savedAdjustmentEntry)(getMessages(app))
-          .get
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
-      }
-    }
-
-    "must return OK and load the saved adjustment entry from the user answers if index is defined inside the current adjustment entry" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val userAnswers =
-        completeAdjustmentEntryUserAnswers
-          .set(CurrentAdjustmentEntryPage, savedAdjustmentEntry.copy(index = Some(0)))
-          .success
-          .value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
-
-      running(application) {
-        val request =
-          FakeRequest(GET, checkYourAnswersRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[CheckYourAnswersView]
-
-        val list = new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
-          .currentAdjustmentEntrySummaryList(savedAdjustmentEntry)(getMessages(app))
-          .get
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
-      }
-    }
-
-    "must return OK and the correct view for a GET if any optional questions are not answered" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      Seq(
-        currentAdjustmentEntry.copy(repackagedRateBand = None),
-        currentAdjustmentEntry.copy(repackagedSprDutyRate = None)
-      ).foreach { incompleteAdjustmentEntry =>
-        val userAnswers = completeAdjustmentEntryUserAnswers
-          .set(CurrentAdjustmentEntryPage, incompleteAdjustmentEntry)
-          .success
-          .value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
-
-        running(application) {
-          val request = FakeRequest(GET, checkYourAnswersRoute)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[CheckYourAnswersView]
-
-          val list = new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
-            .currentAdjustmentEntrySummaryList(incompleteAdjustmentEntry)(getMessages(app))
-            .get
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
-        }
-      }
-    }
-
-    "must return OK and the correct view for a GET if all necessary questions are answered, the TaxType contains a rate and SPR duty relief is absent" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val adjustmentEntry = currentAdjustmentEntry.copy(
-        sprDutyRate = None,
-        repackagedSprDutyRate = None
-      )
-
-      val userAnswers = completeAdjustmentEntryUserAnswers
+  "CheckYourAnswersController" - {
+    "must display answers when no index is supplied and update current adjustment entry" in new SetUp {
+      val userAnswers: UserAnswers = emptyUserAnswers
         .set(CurrentAdjustmentEntryPage, adjustmentEntry)
         .success
         .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
+      val application = applicationBuilder(Some(userAnswers))
         .overrides(
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper),
+          bind[CheckYourAnswersView].toInstance(mockView),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+        )
+        .build()
+
+      when(mockCheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(eqTo(adjustmentEntry))(any()))
+        .thenReturn(Some(summaryList))
+
+      when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future(HttpResponse(OK)))
+
+      running(application) {
+        val request = FakeRequest(GET, checkYourAnswersRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual content.body
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswers))(any())
+      }
+    }
+
+    "must display answers when an index is supplied and update current adjustment entry" in new SetUp {
+      val userAnswers: UserAnswers = emptyUserAnswers
+        .set(AdjustmentEntryListPage, Seq(adjustmentEntry))
+        .success
+        .value
+
+      val userAnswersWithCurrentAdjustmentSet: UserAnswers = userAnswers
+        .set(CurrentAdjustmentEntryPage, adjustmentEntryWithIndex)
+        .success
+        .value
+
+      val application = applicationBuilder(Some(userAnswers))
+        .overrides(
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper),
+          bind[CheckYourAnswersView].toInstance(mockView),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+        )
+        .build()
+
+      when(
+        mockCheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(eqTo(adjustmentEntryWithIndex))(any())
+      ).thenReturn(Some(summaryList))
+
+      when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future(HttpResponse(OK)))
+
+      running(application) {
+        val request = FakeRequest(GET, checkYourAnswersRouteWithIndex)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual content.body
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswersWithCurrentAdjustmentSet))(any())
+      }
+    }
+
+    "must redirect to journey recovery when unable to get a page" in new SetUp {
+      val application = applicationBuilder(Some(emptyUserAnswers))
+        .overrides(
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper),
+          bind[CheckYourAnswersView].toInstance(mockView),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -298,140 +118,53 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[CheckYourAnswersView]
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-        val list =
-          new CheckYourAnswersSummaryListHelper(new WhenDidYouPayDutySummary(createDateTimeHelper()))
-            .currentAdjustmentEntrySummaryList(adjustmentEntry)(getMessages(app))
-            .get
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, getMessages(app)).toString
+        verify(mockUserAnswersConnector, never).set(any())(any())
       }
     }
 
-    "must redirect to Journey Recovery for a GET" - {
+    "must redirect to journey recovery when a problem getting the summary list" in new SetUp {
+      val userAnswers: UserAnswers = emptyUserAnswers
+        .set(AdjustmentEntryListPage, Seq(adjustmentEntry))
+        .success
+        .value
 
-      "if no existing data is found" in {
-
-        val application = applicationBuilder(Some(emptyUserAnswers)).build()
-
-        running(application) {
-          val request = FakeRequest(GET, checkYourAnswersRoute)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
-      }
-
-      "if no existing data is found for a given index" in {
-
-        val application = applicationBuilder(userAnswers = Some(completeAdjustmentEntryUserAnswers)).build()
-
-        running(application) {
-          val request = FakeRequest(
-            GET,
-            controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(index = Some(100)).url
-          )
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
-      }
-
-      "if all necessary questions are not answered" in {
-        val incompleteUserAnswers1 =
-          completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(rateBand = None, sprDutyRate = None))
-            .success
-            .value
-        val incompleteUserAnswers2 =
-          completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(adjustmentType = None))
-            .success
-            .value
-        val incompleteUserAnswers3 =
-          completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(pureAlcoholVolume = None))
-            .success
-            .value
-        val incompleteUserAnswers4 =
-          completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(totalLitresVolume = None))
-            .success
-            .value
-        val incompleteUserAnswers5 =
-          completeAdjustmentEntryUserAnswers
-            .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(duty = None))
-            .success
-            .value
-
-        val incompleteUserAnswersList = Seq(
-          incompleteUserAnswers1,
-          incompleteUserAnswers2,
-          incompleteUserAnswers3,
-          incompleteUserAnswers4,
-          incompleteUserAnswers5
+      val application = applicationBuilder(Some(userAnswers))
+        .overrides(
+          bind[CheckYourAnswersSummaryListHelper].toInstance(mockCheckYourAnswersSummaryListHelper),
+          bind[CheckYourAnswersView].toInstance(mockView),
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
+        .build()
 
-        incompleteUserAnswersList.foreach { (incompleteUserAnswers: UserAnswers) =>
-          val application = applicationBuilder(Some(incompleteUserAnswers)).build()
-
-          running(application) {
-            val request = FakeRequest(GET, checkYourAnswersRoute)
-
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-          }
-        }
-      }
-    }
-
-    "must redirect to the next page when valid data is submitted" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val application =
-        applicationBuilder(userAnswers = Some(completeAdjustmentEntryUserAnswers))
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+      when(
+        mockCheckYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(eqTo(adjustmentEntryWithIndex))(any())
+      ).thenReturn(None)
 
       running(application) {
-        val request =
-          FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
+        val request = FakeRequest(GET, checkYourAnswersRouteWithIndex)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
-          .onPageLoad(pageNumber)
-          .url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockUserAnswersConnector, never).set(any())(any())
       }
     }
 
-    "must redirect to the next page when valid data is submitted and the adjustment entry has an index" in {
+    "must redirect to the next page when valid data is submitted and no index" in new SetUp {
+      val userAnswers: UserAnswers = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, completedAdjustmentEntry)
+        .success
+        .value
 
-      val userAnswers =
-        completeAdjustmentEntryUserAnswers
-          .set(CurrentAdjustmentEntryPage, savedAdjustmentEntry.copy(index = Some(0)))
-          .success
-          .value
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val userAnswersWithAdjustmentEntryListPage: UserAnswers = emptyUserAnswers
+        .set(AdjustmentEntryListPage, Seq(completedAdjustmentEntry))
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -440,6 +173,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           )
           .build()
 
+      when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future.successful(mock[HttpResponse]))
+
       running(application) {
         val request =
           FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
@@ -448,30 +183,32 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
-          .onPageLoad(pageNumber)
+          .onPageLoad(1)
           .url
 
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswersWithAdjustmentEntryListPage))(any())
       }
     }
 
-    "must redirect to the Journey Recovery page when uncompleted data is submitted" in {
+    "must redirect to the next page when valid data is submitted and an index" in new SetUp {
+      val userAnswers: UserAnswers = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, completedAdjustmentEntryWithIndex)
+        .success
+        .value
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val incompleteAdjustmentEntryUserAnswers: UserAnswers = emptyUserAnswers
-        .set(CurrentAdjustmentEntryPage, currentAdjustmentEntry.copy(adjustmentType = None))
+      val userAnswersWithAdjustmentEntryListPage: UserAnswers = emptyUserAnswers
+        .set(AdjustmentEntryListPage, Seq(completedAdjustmentEntry))
         .success
         .value
 
       val application =
-        applicationBuilder(userAnswers = Some(incompleteAdjustmentEntryUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
+
+      when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future.successful(mock[HttpResponse]))
 
       running(application) {
         val request =
@@ -480,18 +217,15 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
+          .onPageLoad(1)
+          .url
 
-        verify(mockUserAnswersConnector, times(0)).set(any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswersWithAdjustmentEntryListPage))(any())
       }
     }
 
-    "must redirect to the Journey Recovery page when adjustment entry is absent" in {
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
+    "must redirect to journey recovery no CurrentAdjustmentEntry page found" in new SetUp {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
@@ -499,6 +233,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
           )
           .build()
 
+      when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future.successful(mock[HttpResponse]))
+
       running(application) {
         val request =
           FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
@@ -508,9 +244,62 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-        verify(mockUserAnswersConnector, times(0)).set(any())(any())
+        verify(mockUserAnswersConnector, never).set(any())(any())
       }
     }
 
+    "must redirect to journey recovery when submitting an incomplete entry" in new SetUp {
+      val userAnswers: UserAnswers = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, adjustmentEntry)
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future.successful(mock[HttpResponse]))
+
+      running(application) {
+        val request =
+          FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockUserAnswersConnector, never).set(any())(any())
+      }
+    }
+  }
+
+  class SetUp {
+    val index = 0
+
+    val adjustmentEntry = AdjustmentEntry()
+    val summaryList     = SummaryList()
+
+    val completedAdjustmentEntry = fullRepackageAdjustmentEntry.copy(index = None)
+
+    val adjustmentEntryWithIndex          = adjustmentEntry.copy(index = Some(index))
+    val completedAdjustmentEntryWithIndex = fullRepackageAdjustmentEntry
+
+    val checkYourAnswersRoute          = controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url
+    val checkYourAnswersRouteWithIndex =
+      controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(index = Some(index)).url
+
+    val mockCheckYourAnswersSummaryListHelper = mock[CheckYourAnswersSummaryListHelper]
+
+    val mockView = mock[CheckYourAnswersView]
+
+    val content = Html("blah")
+
+    when(mockView.apply(any())(any(), any())).thenReturn(content)
+
+    val mockUserAnswersConnector = mock[UserAnswersConnector]
   }
 }

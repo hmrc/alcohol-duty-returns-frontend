@@ -18,20 +18,18 @@ package viewmodels.declareDuty
 
 import base.SpecBase
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
-import models.AlcoholRegime
-import org.scalacheck.Arbitrary.arbitrary
+import models.AlcoholRegime.Beer
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.declareDuty.WhatDoYouNeedToDeclarePage
 
 class DutyCalculationHelperSpec extends SpecBase {
 
   "dutyDueTableViewModel" - {
-    val regime = arbitrary[AlcoholRegime].sample.value
+    val regime = Beer
     "should return a TableViewModel with correct rows when user answers are valid" in {
 
-      val rateBands       = arbitraryRateBandList(regime).arbitrary.sample.value.toSet
       val volumesAndRates = arbitraryVolumeAndRateByTaxType(
-        rateBands.toSeq
+        allRateBands.toSeq
       ).arbitrary.sample.value
 
       val dutiesByTaxType = volumesAndRates.map { volumeAndRate =>
@@ -51,7 +49,7 @@ class DutyCalculationHelperSpec extends SpecBase {
       )
 
       val userAnswers = emptyUserAnswers
-        .setByKey(WhatDoYouNeedToDeclarePage, regime, rateBands)
+        .setByKey(WhatDoYouNeedToDeclarePage, regime, allRateBands)
         .success
         .value
 
@@ -61,7 +59,7 @@ class DutyCalculationHelperSpec extends SpecBase {
 
       val tableViewModel = result.getOrElse(fail("Expected Right(TableViewModel) but got Left"))
       tableViewModel.head.size shouldBe 5
-      tableViewModel.rows.size shouldBe 10
+      tableViewModel.rows.size shouldBe allRateBands.size
     }
 
     "should return a Left with error message when no rate bands found" in {
