@@ -68,7 +68,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     }
   }
 
-  "AlcoholRate" - {
+  "AlcoholByVolume" - {
     "when creating an instance" - {
       "should successfully save the BigDecimal value when the value is in range" in {
         forAll(genAlcoholByVolumeValue) { validValue: BigDecimal =>
@@ -122,6 +122,16 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
           result mustBe a[JsError]
         }
       }
+    }
+  }
+
+  "AlcoholType" - {
+    "should convert AlcoholRegimes to AlcoholTypes" in {
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.Beer) mustBe AlcoholType.Beer
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.Cider) mustBe AlcoholType.Cider
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.Wine) mustBe AlcoholType.Wine
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.Spirits) mustBe AlcoholType.Spirits
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.OtherFermentedProduct) mustBe AlcoholType.OtherFermentedProduct
     }
   }
 
