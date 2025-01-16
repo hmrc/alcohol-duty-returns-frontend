@@ -179,7 +179,7 @@ class AdjustmentNavigator @Inject() () {
     } yield adjustmentType
     adjustmentTypeOpt match {
       case Some(Spoilt) if userAnswers.regimes.regimes.size > 1 =>
-        controllers.adjustment.routes.AlcoholicProductTypeController.onPageLoad(mode)
+        controllers.adjustment.routes.SpoiltAlcoholicProductTypeController.onPageLoad(mode)
       case Some(Spoilt)                                         =>
         controllers.adjustment.routes.SpoiltVolumeWithDutyController
           .onPageLoad(mode)

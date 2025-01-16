@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.adjustment
 
 import cats.data.NonEmptySeq
 import config.FrontendAppConfig
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.RateType.Core
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholRegimes, AlcoholType, RangeDetailsByRegime, RateBand}
 import play.api.Logging
@@ -29,20 +28,14 @@ import viewmodels.AlcoholRegimesViewOrder.regimesInViewOrder
 
 import javax.inject.Inject
 
-class AlcoholicProductTypeHelper @Inject() (
+class SpoiltAlcoholicProductTypeHelper @Inject() (
   appConfig: FrontendAppConfig
 ) extends Logging {
+  private val rangeMinABV = BigDecimal(0)
+  private val rangeMaxABV = BigDecimal(100)
+
   def createRateBandFromRegime(regime: AlcoholRegime)(implicit messages: Messages): RateBand = {
-
-    val alcoholType = regime match {
-      case Beer                  => AlcoholType.Beer
-      case Cider                 => AlcoholType.Cider
-      case Wine                  => AlcoholType.Wine
-      case Spirits               => AlcoholType.Spirits
-      case OtherFermentedProduct => AlcoholType.OtherFermentedProduct
-    }
-
-    val rate: BigDecimal = appConfig.spoiltRate
+    val rate = appConfig.spoiltRate
 
     RateBand(
       appConfig.getTaxTypeCodeByRegime(regime),
@@ -50,19 +43,24 @@ class AlcoholicProductTypeHelper @Inject() (
       Core,
       Some(rate),
       Set(
-        RangeDetailsByRegime(regime, NonEmptySeq.one(ABVRange(alcoholType, AlcoholByVolume(0), AlcoholByVolume(100))))
+        RangeDetailsByRegime(
+          regime,
+          NonEmptySeq.one(
+            ABVRange(AlcoholType.fromAlcoholRegime(regime), AlcoholByVolume(rangeMinABV), AlcoholByVolume(rangeMaxABV))
+          )
+        )
       )
     )
   }
 
-  def radioOptions(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[RadioItem] = {
-    val orderedRegimes = regimesInViewOrder(regimes)
-    orderedRegimes.zipWithIndex.map { case (value, _) =>
+  def radioOptions(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[RadioItem] =
+    regimesInViewOrder(regimes).map { regime =>
+      val regimeName = regime.entryName
+
       RadioItem(
-        content = Text(messages(s"alcoholType.$value")),
-        value = Some(value.toString),
-        id = Some(value.toString)
+        content = Text(messages(s"alcoholType.$regimeName")),
+        value = Some(regimeName),
+        id = Some(regimeName)
       )
     }
-  }
 }

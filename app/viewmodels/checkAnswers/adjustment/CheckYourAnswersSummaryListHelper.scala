@@ -32,7 +32,7 @@ class CheckYourAnswersSummaryListHelper @Inject() (whenDidYouPayDutySummary: Whe
     val newTaxType        = getOptionalRow(AdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry))
     val sprDutyRate       = getOptionalRow(AdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry))
     val returnPeriod      = getOptionalRow(whenDidYouPayDutySummary.row(adjustmentEntry))
-    val spoiltAlcoholType = getOptionalRow(AlcoholicProductTypeSummary.row(adjustmentEntry))
+    val spoiltAlcoholType = getOptionalRow(SpoiltAlcoholicProductTypeSummary.row(adjustmentEntry))
     val taxType           = getOptionalRow(AdjustmentTaxTypeSummary.row(adjustmentEntry))
     for {
       adjustmentType <- AdjustmentTypeSummary.row(adjustmentEntry)

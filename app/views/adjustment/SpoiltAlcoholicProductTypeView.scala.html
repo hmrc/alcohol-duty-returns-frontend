@@ -16,7 +16,7 @@
 
 @import components.{SectionHeading, PageHeading, Paragraph, FormGroupWithError}
 @import models.AlcoholRegimes
-@import viewmodels.checkAnswers.adjustment.AlcoholicProductTypeHelper
+@import viewmodels.checkAnswers.adjustment.SpoiltAlcoholicProductTypeHelper
 
 @this(
     layout: templates.Layout,
@@ -27,7 +27,7 @@
     sectionHeading: SectionHeading,
     paragraph: Paragraph,
     pageHeading: PageHeading,
-    helper: AlcoholicProductTypeHelper,
+    helper: SpoiltAlcoholicProductTypeHelper,
     formGroupWithError: FormGroupWithError
 )
 
@@ -35,7 +35,7 @@
 
 @layout(pageTitle = title(form, messages("alcoholicProductType.title"))) {
 
-    @formHelper(action = controllers.adjustment.routes.AlcoholicProductTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.adjustment.routes.SpoiltAlcoholicProductTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("alcoholic-product-type-value" -> helper.radioOptions(regimes).headOption.flatMap(_.id).getOrElse(""))))
