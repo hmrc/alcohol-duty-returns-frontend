@@ -24,7 +24,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, Ca
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object SmallProducerReliefSummary {
+class SmallProducerReliefSummary {
   def summaryList(regime: AlcoholRegime, userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[SummaryList] =
