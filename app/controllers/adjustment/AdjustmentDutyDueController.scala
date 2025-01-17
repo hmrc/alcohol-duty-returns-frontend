@@ -29,6 +29,8 @@ import services.adjustment.AdjustmentEntryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.AdjustmentDutyDueView
 
+import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelFactory
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentDutyDueController @Inject() (
@@ -39,7 +41,8 @@ class AdjustmentDutyDueController @Inject() (
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   adjustmentEntryService: AdjustmentEntryService,
-  view: AdjustmentDutyDueView
+  view: AdjustmentDutyDueView,
+  viewModelFactory: AdjustmentDutyDueViewModelFactory
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -67,6 +70,7 @@ class AdjustmentDutyDueController @Inject() (
       newDuty            = adjustmentEntry.newDuty.getOrElse(BigDecimal(0))
     } yield Ok(
       view(
+        viewModelFactory(adjustmentType, duty, newDuty),
         adjustmentType,
         volume,
         duty,

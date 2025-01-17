@@ -18,6 +18,7 @@
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 @import viewmodels.Money
+@import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModel
 
 @this(
         layout: templates.Layout,
@@ -29,17 +30,26 @@
         bulletList: BulletList
 )
 
-@(adjustmentType: AdjustmentType, volume: BigDecimal, duty: BigDecimal, pureAlcoholVolume: BigDecimal, taxCode: String, rate: BigDecimal, repackagedRate: BigDecimal, repackagedDuty: BigDecimal, newDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentDutyDueViewModel: AdjustmentDutyDueViewModel, adjustmentType: AdjustmentType, volume: BigDecimal, duty: BigDecimal, pureAlcoholVolume: BigDecimal, taxCode: String, rate: BigDecimal, repackagedRate: BigDecimal, repackagedDuty: BigDecimal, newDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@heading = @{
-    val dutyToShow: BigDecimal = adjustmentType match {
+@*
+@dutyToShow: BigDecimal = @{
+    adjustmentType match {
         case AdjustmentType.RepackagedDraughtProducts => newDuty
         case _ => duty
     }
-    pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), dutyToShow)
 }
 
-@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(duty)))) {
+@heading = @{
+    pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), dutyToShow)
+}
+*@
+
+@heading = @{
+    pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), adjustmentDutyDueViewModel.dutyToShow)
+}
+
+@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(adjustmentDutyDueViewModel.dutyToShow)))) {
 
     @sectionHeading(
         id = "adjustment-duty-due-section",

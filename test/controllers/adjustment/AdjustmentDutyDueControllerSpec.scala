@@ -29,6 +29,7 @@ import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.bind
 import services.adjustment.AdjustmentEntryService
+import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelFactory
 
 import java.time.YearMonth
 import scala.concurrent.Future
@@ -106,8 +107,10 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentDutyDueView]
 
+        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelFactory()(Overdeclaration, dutyDue, newDuty)
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
+          adjustmentDutyDueViewModel,
           Overdeclaration,
           volume,
           dutyDue,
@@ -143,8 +146,10 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentDutyDueView]
 
+        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelFactory()(Spoilt, dutyDue, newDuty)
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
+          adjustmentDutyDueViewModel,
           Spoilt,
           volume,
           dutyDue,
