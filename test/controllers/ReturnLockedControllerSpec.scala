@@ -17,13 +17,10 @@
 package controllers
 
 import base.SpecBase
-import config.FrontendAppConfig
 import play.api.test.Helpers._
 import views.html.ReturnLockedView
 
 class ReturnLockedControllerSpec extends SpecBase {
-  val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
-
   "ReturnLocked Controller" - {
 
     "must return OK and the correct view for a GET" in {

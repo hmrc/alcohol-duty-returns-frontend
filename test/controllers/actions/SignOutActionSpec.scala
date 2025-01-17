@@ -46,11 +46,11 @@ class SignOutActionSpec extends SpecBase {
   val signOutUrl: String      = "http://localhost:9553/bas-gateway/sign-out-without-state"
   val appaIdStoreKey: String  = "AppaId"
 
-  val appConfig: FrontendAppConfig           = mock[FrontendAppConfig]
+  val mockAppConfig: FrontendAppConfig       = mock[FrontendAppConfig]
   val defaultBodyParser: BodyParsers.Default = app.injector.instanceOf[BodyParsers.Default]
   val mockAuthConnector: AuthConnector       = mock[AuthConnector]
 
-  val signOutAction = new SignOutActionImpl(mockAuthConnector, appConfig, defaultBodyParser)
+  val signOutAction = new SignOutActionImpl(mockAuthConnector, mockAppConfig, defaultBodyParser)
 
   def testAction(appaIdStore: mutable.Map[String, Option[String]]): RequestWithOptAppaId[_] => Future[Result] = {
     request =>
@@ -63,8 +63,8 @@ class SignOutActionSpec extends SpecBase {
 
   "invokeBlock" - {
     "execute the block and return SEE_OTHER if authorised" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -93,8 +93,8 @@ class SignOutActionSpec extends SpecBase {
     }
 
     "execute the block and throw IllegalStateException if cannot get the enrolment" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -118,8 +118,8 @@ class SignOutActionSpec extends SpecBase {
     }
 
     "execute the block and throw IllegalStateException if cannot get the APPAID enrolment" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -152,7 +152,7 @@ class SignOutActionSpec extends SpecBase {
         IncorrectCredentialStrength(),
         new UnauthorizedException("")
       ).foreach { exception =>
-        when(appConfig.enrolmentServiceName).thenReturn(enrolment)
+        when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
         when(mockAuthConnector.authorise[Unit](any(), any())(any(), any())).thenReturn(Future.failed(exception))
 
         val appaIdStore = mutable.Map[String, Option[String]]()
@@ -171,7 +171,7 @@ class SignOutActionSpec extends SpecBase {
     "return the exception if there is any other exception" in {
       val msg = "Test Exception"
 
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
       when(mockAuthConnector.authorise[Unit](any(), any())(any(), any()))
         .thenReturn(Future.failed(new RuntimeException(msg)))
 

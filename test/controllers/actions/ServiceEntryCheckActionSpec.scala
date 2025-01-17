@@ -40,10 +40,10 @@ class ServiceEntryCheckActionSpec extends SpecBase {
   val emptyEnrolments         = Enrolments(Set.empty)
   val enrolmentsWithoutAppaId = Enrolments(Set(Enrolment(enrolment, Seq.empty, state)))
 
-  val appConfig: FrontendAppConfig     = mock[FrontendAppConfig]
+  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
-  val enrolmentAction = new ServiceEntryCheckActionImpl(mockAuthConnector, appConfig)
+  val enrolmentAction = new ServiceEntryCheckActionImpl(mockAuthConnector, mockAppConfig)
 
   val request = IdentifierWithoutEnrolmentRequest(FakeRequest(), groupId, internalId)
 
@@ -53,8 +53,8 @@ class ServiceEntryCheckActionSpec extends SpecBase {
 
   "invokeBlock" - {
     "execute the block and return OK if authorised" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any())).thenReturn(Future(enrolments))
 
       val result: Future[Result] = enrolmentAction.invokeBlock(request, testAction)
@@ -64,8 +64,8 @@ class ServiceEntryCheckActionSpec extends SpecBase {
     }
 
     "should redirect to enrolment request page if not adr appaId is present" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
         .thenReturn(Future(enrolmentsWithoutAppaId))
 
@@ -76,8 +76,8 @@ class ServiceEntryCheckActionSpec extends SpecBase {
     }
 
     "should redirect to enrolment request page if not there are no enrolments" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any())).thenReturn(Future(emptyEnrolments))
 
       val result: Future[Result] = enrolmentAction.invokeBlock(request, testAction)
@@ -87,8 +87,8 @@ class ServiceEntryCheckActionSpec extends SpecBase {
     }
 
     "should redirect to enrolment request page if the AppaId is an empty string" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       val enrolmentsWithEmptyAppaId =
         Enrolments(Set(Enrolment(enrolment, Seq(EnrolmentIdentifier(appaIdKey, "")), state)))
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
@@ -101,8 +101,8 @@ class ServiceEntryCheckActionSpec extends SpecBase {
     }
 
     "should redirect Unauthorised if the authorization method throw an exception" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
         .thenReturn(Future.failed(new Exception()))
 
@@ -113,8 +113,8 @@ class ServiceEntryCheckActionSpec extends SpecBase {
     }
 
     "should redirect request access url if the authorization method throw an InsufficientEnrolments exception" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
         .thenReturn(Future.failed(InsufficientEnrolments()))
 

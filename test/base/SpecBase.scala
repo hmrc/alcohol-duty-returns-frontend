@@ -18,6 +18,7 @@ package base
 
 import common.{TestData, TestPages}
 import config.Constants.periodKeySessionKey
+import config.FrontendAppConfig
 import controllers.actions._
 import generators.ModelGenerators
 import models.UserAnswers
@@ -76,6 +77,8 @@ trait SpecBase
     play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
   def FakeRequestWithoutSession()                            = play.api.test.FakeRequest()
   def FakeRequestWithoutSession(verb: String, route: String) = play.api.test.FakeRequest(verb, route)
+
+  lazy val appConfig: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
 
   def createDateTimeHelper(): DateTimeHelper =
     new DateTimeHelper(app.injector.instanceOf[LanguageUtils])

@@ -29,13 +29,12 @@ import connectors.UserAnswersConnector
 import models.adjustment.AdjustmentEntry
 import play.api.Logging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.adjustment.AlcoholicProductTypeHelper
-import views.html.adjustment.AlcoholicProductTypeView
+import viewmodels.checkAnswers.adjustment.SpoiltAlcoholicProductTypeHelper
+import views.html.adjustment.SpoiltAlcoholicProductTypeView
 
-import java.time.YearMonth
 import scala.concurrent.{ExecutionContext, Future}
 
-class AlcoholicProductTypeController @Inject() (
+class SpoiltAlcoholicProductTypeController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersConnector: UserAnswersConnector,
   navigator: AdjustmentNavigator,
@@ -44,8 +43,8 @@ class AlcoholicProductTypeController @Inject() (
   requireData: DataRequiredAction,
   formProvider: AlcoholicProductTypeFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: AlcoholicProductTypeView,
-  helper: AlcoholicProductTypeHelper
+  view: SpoiltAlcoholicProductTypeView,
+  helper: SpoiltAlcoholicProductTypeHelper
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -54,11 +53,12 @@ class AlcoholicProductTypeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val spoiltRegimeOpt = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.spoiltRegime)
-    val preparedForm    = spoiltRegimeOpt match {
-      case None        => form
-      case Some(value) => form.fill(value.toString)
+    val maybeSpoiltRegime = request.userAnswers.get(CurrentAdjustmentEntryPage).flatMap(_.spoiltRegime)
+    val preparedForm      = maybeSpoiltRegime match {
+      case None         => form
+      case Some(regime) => form.fill(regime.entryName)
     }
+
     Ok(view(preparedForm, mode, request.userAnswers.regimes))
   }
 
@@ -74,7 +74,7 @@ class AlcoholicProductTypeController @Inject() (
                 val rateBand                        = helper.createRateBandFromRegime(regime)
                 val adjustment                      = request.userAnswers.get(CurrentAdjustmentEntryPage).getOrElse(AdjustmentEntry())
                 val (updatedAdjustment, hasChanged) = updateAlcoholicProductType(adjustment, regime)
-                val currentYearMonth                = YearMonth.now()
+
                 for {
                   updatedAnswers <- Future.fromTry(
                                       request.userAnswers.set(
@@ -82,14 +82,14 @@ class AlcoholicProductTypeController @Inject() (
                                         updatedAdjustment.copy(
                                           spoiltRegime = Some(regime),
                                           rateBand = Some(rateBand),
-                                          period = Some(currentYearMonth.minusMonths(1))
+                                          period = Some(request.returnPeriod.period.minusMonths(1))
                                         )
                                       )
                                     )
                   _              <- userAnswersConnector.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(AlcoholicProductTypePage, mode, updatedAnswers, hasChanged))
               case _            =>
-                logger.warn("Couldn't retrieve regime")
+                logger.warn(s"Couldn't parse regime $value")
                 Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             }
         )

@@ -23,10 +23,10 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Key, SummaryListRow, Value}
 
-class AlcoholicProductTypeSummarySpec extends SpecBase {
-  "AlcoholicProductTypeSummary" - {
+class SpoiltAlcoholicProductTypeSummarySpec extends SpecBase {
+  "SpoiltAlcoholicProductTypeSummary" - {
     "must return a row if the spoilt regime can be fetched" in new SetUp(true) {
-      alcoholicProductTypeSummary.row(adjustmentEntry) mustBe Some(
+      spoiltAlcoholicProductTypeSummary.row(adjustmentEntry) mustBe Some(
         SummaryListRow(
           Key(Text("Description")),
           Value(HtmlContent("Beer")),
@@ -47,7 +47,7 @@ class AlcoholicProductTypeSummarySpec extends SpecBase {
     }
 
     "must return no row if no spoilt regime can be fetched" in new SetUp(false) {
-      alcoholicProductTypeSummary.row(adjustmentEntry) mustBe None
+      spoiltAlcoholicProductTypeSummary.row(adjustmentEntry) mustBe None
     }
   }
 
@@ -63,6 +63,6 @@ class AlcoholicProductTypeSummarySpec extends SpecBase {
 
     val adjustmentEntry = AdjustmentEntry(spoiltRegime = maybeSpoiltRegime)
 
-    val alcoholicProductTypeSummary = new AlcoholicProductTypeSummary()
+    val spoiltAlcoholicProductTypeSummary = new SpoiltAlcoholicProductTypeSummary()
   }
 }

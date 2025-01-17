@@ -78,6 +78,15 @@ object AlcoholType extends Enum[AlcoholType] with PlayEnum[AlcoholType] {
   case object Wine extends AlcoholType
   case object Spirits extends AlcoholType
   case object OtherFermentedProduct extends AlcoholType
+
+  def fromAlcoholRegime(regime: AlcoholRegime): AlcoholType =
+    regime match {
+      case AlcoholRegime.Beer                  => Beer
+      case AlcoholRegime.Cider                 => Cider
+      case AlcoholRegime.Wine                  => Wine
+      case AlcoholRegime.Spirits               => Spirits
+      case AlcoholRegime.OtherFermentedProduct => OtherFermentedProduct
+    }
 }
 
 case class ABVRange(alcoholType: AlcoholType, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)

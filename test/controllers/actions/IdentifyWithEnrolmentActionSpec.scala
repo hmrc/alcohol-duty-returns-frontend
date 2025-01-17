@@ -44,11 +44,11 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
   val emptyEnrolments         = Enrolments(Set.empty)
   val enrolmentsWithoutAppaId = Enrolments(Set(Enrolment(enrolment, Seq.empty, state)))
 
-  val appConfig: FrontendAppConfig           = mock[FrontendAppConfig]
+  val mockAppConfig: FrontendAppConfig       = mock[FrontendAppConfig]
   val defaultBodyParser: BodyParsers.Default = app.injector.instanceOf[BodyParsers.Default]
   val mockAuthConnector: AuthConnector       = mock[AuthConnector]
 
-  val identifierAction = new IdentifyWithEnrolmentActionImpl(mockAuthConnector, appConfig, defaultBodyParser)
+  val identifierAction = new IdentifyWithEnrolmentActionImpl(mockAuthConnector, mockAppConfig, defaultBodyParser)
 
   val testAction: Request[_] => Future[Result] = { _ =>
     Future(Ok(testContent))
@@ -57,8 +57,8 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
   "invokeBlock" - {
 
     "execute the block and return OK if authorised" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -82,8 +82,8 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
     }
 
     "execute the block and throw IllegalStateException if cannot get the internalId" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -106,8 +106,8 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
     }
 
     "execute the block and throw IllegalStateException if cannot get the groupId" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -130,8 +130,8 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
     }
 
     "execute the block and throw IllegalStateException if cannot get the enrolment" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -154,8 +154,8 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
     }
 
     "execute the block and throw IllegalStateException if cannot get the APPAID enrolment" in {
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-      when(appConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(
         mockAuthConnector.authorise(
           eqTo(
@@ -187,7 +187,7 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
         IncorrectCredentialStrength(),
         new UnauthorizedException("")
       ).foreach { exception =>
-        when(appConfig.enrolmentServiceName).thenReturn(enrolment)
+        when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
         when(mockAuthConnector.authorise[Unit](any(), any())(any(), any())).thenReturn(Future.failed(exception))
 
         val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
@@ -204,9 +204,9 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
         InvalidBearerToken(),
         SessionRecordNotFound()
       ).foreach { exception =>
-        when(appConfig.enrolmentServiceName).thenReturn(enrolment)
-        when(appConfig.loginUrl).thenReturn(loginUrl)
-        when(appConfig.loginContinueUrl).thenReturn(loginContinueUrl)
+        when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
+        when(mockAppConfig.loginUrl).thenReturn(loginUrl)
+        when(mockAppConfig.loginContinueUrl).thenReturn(loginContinueUrl)
         when(mockAuthConnector.authorise[Unit](any(), any())(any(), any())).thenReturn(Future.failed(exception))
 
         val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
@@ -219,7 +219,7 @@ class IdentifyWithEnrolmentActionSpec extends SpecBase {
     "return the exception if there is any other exception" in {
       val msg = "Test Exception"
 
-      when(appConfig.enrolmentServiceName).thenReturn(enrolment)
+      when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
       when(mockAuthConnector.authorise[Unit](any(), any())(any(), any()))
         .thenReturn(Future.failed(new RuntimeException(msg)))
 

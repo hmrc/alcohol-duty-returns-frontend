@@ -38,12 +38,12 @@ class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
   val loginContinueUrl = "continueUrl"
   val testContent      = "Test"
 
-  val appConfig: FrontendAppConfig           = mock[FrontendAppConfig]
+  val mockAppConfig: FrontendAppConfig       = mock[FrontendAppConfig]
   val defaultBodyParser: BodyParsers.Default = app.injector.instanceOf[BodyParsers.Default]
   val mockAuthConnector: AuthConnector       = mock[AuthConnector]
 
   val identifierAction =
-    new IdentifyWithoutEnrolmentActionImpl(mockAuthConnector, appConfig, defaultBodyParser)
+    new IdentifyWithoutEnrolmentActionImpl(mockAuthConnector, mockAppConfig, defaultBodyParser)
 
   val testAction: Request[_] => Future[Result] = { _ =>
     Future(Ok(testContent))
@@ -141,8 +141,8 @@ class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
         InvalidBearerToken(),
         SessionRecordNotFound()
       ).foreach { exception =>
-        when(appConfig.loginUrl).thenReturn(loginUrl)
-        when(appConfig.loginContinueUrl).thenReturn(loginContinueUrl)
+        when(mockAppConfig.loginUrl).thenReturn(loginUrl)
+        when(mockAppConfig.loginContinueUrl).thenReturn(loginContinueUrl)
         when(mockAuthConnector.authorise[Unit](any(), any())(any(), any())).thenReturn(Future.failed(exception))
 
         val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)

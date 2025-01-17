@@ -18,7 +18,6 @@ package controllers.checkAndSubmit
 
 import base.SpecBase
 import config.Constants.returnCreatedDetailsKey
-import config.FrontendAppConfig
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import org.mockito.ArgumentMatchers.any
 import play.api.i18n.Messages
@@ -39,7 +38,6 @@ class ReturnSubmittedControllerSpec extends SpecBase {
     Some(paymentDueDate)
   )
 
-  val appConfig: FrontendAppConfig                     = app.injector.instanceOf[FrontendAppConfig]
   val mockReturnSubmittedHelper: ReturnSubmittedHelper = mock[ReturnSubmittedHelper]
 
   "ReturnSubmitted Controller" - {

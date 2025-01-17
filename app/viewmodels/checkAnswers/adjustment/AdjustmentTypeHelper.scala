@@ -27,7 +27,7 @@ import javax.inject.Inject
 import scala.util.Try
 
 class AdjustmentTypeHelper @Inject() (
-  helper: AlcoholicProductTypeHelper
+  helper: SpoiltAlcoholicProductTypeHelper
 ) {
   def updateIfSingleRegimeAndSpoilt(
     userAnswer: UserAnswers,
