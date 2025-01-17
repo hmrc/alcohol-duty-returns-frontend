@@ -45,23 +45,14 @@ class ReturnTaskListCreator @Inject() () {
     messages: Messages
   ): Section = {
     val mainTaskListItem = declareQuestionAnswer match {
-      case Some(true) =>
+      case Some(_) =>
         TaskListItem(
           title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare"))),
           hint = addHints(section),
           status = AlcoholDutyTaskListItemStatus.completed,
           href = Some(declarationController(CheckMode))
         )
-
-      case Some(false) =>
-        TaskListItem(
-          title = TaskListItemTitle(content = Text(messages(s"taskList.section.${section.name}.needToDeclare"))),
-          hint = addHints(section),
-          status = AlcoholDutyTaskListItemStatus.completed,
-          href = Some(declarationController(CheckMode))
-        )
-
-      case None =>
+      case None    =>
         TaskListItem(
           title = TaskListItemTitle(
             content = Text(messages(s"taskList.section.${section.name}.needToDeclare"))
@@ -219,7 +210,7 @@ class ReturnTaskListCreator @Inject() () {
     val title  = TaskListItemTitle(content = Text(messages(s"taskList.section.adjustment.$adjustmentType")))
     val status = userAnswers
       .get(AdjustmentListPage)
-      .filter(_ == false)
+      .filter(!_)
       .flatMap(_ => userAnswers.get(reasonPage))
       .fold(AlcoholDutyTaskListItemStatus.notStarted)(_ => AlcoholDutyTaskListItemStatus.completed)
 
@@ -273,12 +264,13 @@ class ReturnTaskListCreator @Inject() () {
         )
       val pagesCompleted      = Seq(declareSpiritsTotal, whisky, spiritsType)
 
-      if (pagesCompleted.forall(_ == false))
+      if (pagesCompleted.forall(!_)) {
         NotStarted
-      else if (pagesCompleted.forall(_ == true))
+      } else if (pagesCompleted.forall(_ == true)) {
         Completed
-      else
+      } else {
         InProgress
+      }
     }
 
     createDeclarationTask(

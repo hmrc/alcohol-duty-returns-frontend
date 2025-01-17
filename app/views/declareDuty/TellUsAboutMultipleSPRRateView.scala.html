@@ -70,7 +70,7 @@
         }
 
         @if(rateBandRadioItems.size == 1){
-            @subHeading(rateBandRadioItems.head.content.asHtml.toString(), classes = Css.headingMCssClass)
+            @subHeading(rateBandRadioItems.headOption.map(_.content.asHtml.toString()).getOrElse(""), classes = Css.headingMCssClass)
 
             @govukInput(
                 InputViewModel(
@@ -78,7 +78,7 @@
                     key = "taxType",
                     label = LabelViewModel(Text("")),
                     errorMessageField = form("volumesWithRate_taxType"),
-                    value = rateBandRadioItems.head.value
+                    value = rateBandRadioItems.headOption.flatMap(_.value)
                 ).hidden
             )
         }

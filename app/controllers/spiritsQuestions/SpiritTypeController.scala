@@ -90,7 +90,16 @@ class SpiritTypeController @Inject() (
     if (isNowSelected(oldValue, newValue)) {
       (answers, true)
     } else if (isNowUnselected(oldValue, newValue)) {
-      (answers.remove(OtherSpiritsProducedPage).get, false)
+      (
+        answers
+          .remove(OtherSpiritsProducedPage)
+          .getOrElse(
+            throw new RuntimeException(
+              s"Couldn't successfully remove the OtherSpiritsProduced page ${answers.returnId.appaId}/${answers.returnId.periodKey}"
+            )
+          ),
+        false
+      )
     } else {
       (answers, false)
     }

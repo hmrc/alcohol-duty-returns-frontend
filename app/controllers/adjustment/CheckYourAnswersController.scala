@@ -16,6 +16,7 @@
 
 package controllers.adjustment
 
+import cats.data.OptionT
 import connectors.UserAnswersConnector
 import controllers.actions._
 import models.UserAnswers
@@ -25,7 +26,7 @@ import play.api.Logging
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.CheckYourAnswersSummaryListHelper
@@ -50,13 +51,16 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(index: Option[Int] = None): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val result = for {
-        adjustmentEntry <- getAdjustmentEntry(request.userAnswers, index)
-        summaryList     <- checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
-      } yield setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList)
+        adjustmentEntry <- OptionT.fromOption[Future](getAdjustmentEntry(request.userAnswers, index))
+        summaryList     <- OptionT.fromOption[Future](
+                             checkYourAnswersSummaryListHelper.currentAdjustmentEntrySummaryList(adjustmentEntry)
+                           )
+        _               <- OptionT.liftF(setCurrentAdjustmentEntry(request.userAnswers, adjustmentEntry, summaryList))
+      } yield Ok(view(summaryList))
 
       result.getOrElse {
         logger.warn("Couldn't create the summaryList from user answers")
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
       }
   }
 
@@ -102,14 +106,9 @@ class CheckYourAnswersController @Inject() (
     summaryList: SummaryList
   )(implicit
     request: Request[_]
-  ): Future[Result] =
+  ): Future[Unit] =
     for {
       updateUserAnswers <- Future.fromTry(userAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry))
       _                 <- userAnswersConnector.set(updateUserAnswers)
-    } yield Ok(
-      view(
-        summaryList
-      )
-    )
-
+    } yield ()
 }

@@ -81,7 +81,7 @@
             )
         }
 
-        @if(outstandingReturns.rows.size == 0 && completedReturns.rows.size == 0) {
+        @if(outstandingReturns.rows.isEmpty && completedReturns.rows.isEmpty) {
             @subHeading(messages("viewPastReturns.noReturns"))
         }
 
