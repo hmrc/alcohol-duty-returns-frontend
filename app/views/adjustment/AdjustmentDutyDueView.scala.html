@@ -32,19 +32,6 @@
 
 @(adjustmentDutyDueViewModel: AdjustmentDutyDueViewModel, adjustmentType: AdjustmentType, volume: BigDecimal, duty: BigDecimal, pureAlcoholVolume: BigDecimal, taxCode: String, rate: BigDecimal, repackagedRate: BigDecimal, repackagedDuty: BigDecimal, newDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
 
-@*
-@dutyToShow: BigDecimal = @{
-    adjustmentType match {
-        case AdjustmentType.RepackagedDraughtProducts => newDuty
-        case _ => duty
-    }
-}
-
-@heading = @{
-    pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), dutyToShow)
-}
-*@
-
 @heading = @{
     pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), adjustmentDutyDueViewModel.dutyToShow)
 }
