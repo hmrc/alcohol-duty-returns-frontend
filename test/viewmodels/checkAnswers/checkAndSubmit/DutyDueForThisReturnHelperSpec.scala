@@ -28,6 +28,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Call
 import services.checkAndSubmit.AdrReturnSubmissionService
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import viewmodels.TableViewModel
 
 import scala.concurrent.Future
 
@@ -348,6 +349,39 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           .futureValue
       result mustBe Left(s"Failed to calculate total duty due: $errorMessage")
     }
+    "when everything is declared" - {
+      "the duties should be shown in the correct order (Beer, Cider, Wine, Spirits, OTP, Adjustments)" in new SetUp {
+        val userAnswers: UserAnswers = declareAdjustmentTotalPage(
+          declareAdjustmentQuestionPage(
+            declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
+            true
+          ),
+          adjustmentTotal
+        )
+
+        when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(totalDutiesAndAdjustments))(any))
+          .thenReturn(Future.successful(totalDuty))
+
+        when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(dutySuspendedDeclaredModel)
+        when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(spiritsDeclaredModel)
+
+        val result: TableViewModel = dutyDueForThisReturnHelper
+          .getDutyDueViewModel(userAnswers, returnPeriod)
+          .value
+          .futureValue
+          .toOption
+          .get
+          .dutiesBreakdownTable
+
+        result.rows.size mustBe 6
+        result.rows.head.cells.head.content mustBe Text("Beer declared")
+        result.rows(1).cells.head.content mustBe Text("Cider declared")
+        result.rows(2).cells.head.content mustBe Text("Wine declared")
+        result.rows(3).cells.head.content mustBe Text("Spirits declared")
+        result.rows(4).cells.head.content mustBe Text("Other fermented products declared")
+        result.rows(5).cells.head.content mustBe Text("Adjustments to previous returns")
+      }
+    }
   }
 
   class SetUp {
@@ -356,7 +390,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
     val adjustmentTotal = BigDecimal(2400)
 
-    val totalDuties               = Seq(spiritsDuty, wineDuty, ciderDuty, otherFermentedProductDuty, beerDuty).map(_.totalDuty)
+    val totalDuties               = Seq(beerDuty, ciderDuty, wineDuty, spiritsDuty, otherFermentedProductDuty).map(_.totalDuty)
     val totalDutiesNoAdjustments  = totalDuties :+ BigDecimal(0)
     val adjustmentsNoDuties       = Seq(adjustmentTotal)
     val totalDutiesAndAdjustments =
