@@ -70,16 +70,16 @@ class AdjustmentDutyDueController @Inject() (
       newDuty            = adjustmentEntry.newDuty.getOrElse(BigDecimal(0))
     } yield Ok(
       view(
-        viewModelFactory(adjustmentType, duty, newDuty),
-        adjustmentType,
-        volume,
-        duty,
-        pureAlcoholVolume,
-        rateBand.taxTypeCode,
-        rate,
-        repackagedRate,
-        repackagedDuty,
-        newDuty
+        viewModelFactory(
+          adjustmentType,
+          duty,
+          newDuty,
+          pureAlcoholVolume,
+          rate,
+          repackagedRate,
+          repackagedDuty
+        ),
+        adjustmentType
       )
     )
     result.getOrElse {

@@ -17,30 +17,67 @@
 package viewmodels.checkAnswers.adjustment
 
 import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelFactory
-
 import base.SpecBase
+import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{Overdeclaration, RepackagedDraughtProducts, Spoilt}
+import play.api.i18n.Messages
 
 class AdjustmentDutyDueModelSpec extends SpecBase {
-  val dutyDue = BigDecimal(34.2)
-  val newDuty = BigDecimal(1)
+
   "AdjustmentDutyDueModel" - {
-    "must return a Duty amount of dutyDue when AdjustmentType is Overdeclaration" in {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(Overdeclaration, dutyDue, newDuty)
+
+    val dutyDue           = BigDecimal(34.2)
+    val rate              = BigDecimal(9.27)
+    val pureAlcoholVolume = BigDecimal(3.69)
+    val repackagedRate    = BigDecimal(10)
+    val repackagedDuty    = BigDecimal(33.2)
+    val newDuty           = BigDecimal(1)
+
+    "must return a Duty amount of dutyDue when AdjustmentType is Overdeclaration" in new SetUp() {
+      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+        Overdeclaration,
+        dutyDue,
+        newDuty,
+        pureAlcoholVolume,
+        rate,
+        repackagedRate,
+        repackagedDuty
+      )
 
       dutyDueModel.dutyToShow mustBe dutyDue
     }
 
-    "must return a Duty amount of dutyDue when AdjustmentType is Spoilt" in {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(Spoilt, dutyDue, newDuty)
+    "must return a Duty amount of dutyDue when AdjustmentType is Spoilt" in new SetUp() {
+      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+        Spoilt,
+        dutyDue,
+        newDuty,
+        pureAlcoholVolume,
+        rate,
+        repackagedRate,
+        repackagedDuty
+      )
 
       dutyDueModel.dutyToShow mustBe dutyDue
     }
 
-    "must return a Duty amount of newDuty when AdjustmentType is RepackagedDraughtProducts" in {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(RepackagedDraughtProducts, dutyDue, newDuty)
+    "must return a Duty amount of newDuty when AdjustmentType is RepackagedDraughtProducts" in new SetUp() {
+      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+        RepackagedDraughtProducts,
+        dutyDue,
+        newDuty,
+        pureAlcoholVolume,
+        rate,
+        repackagedRate,
+        repackagedDuty
+      )
 
       dutyDueModel.dutyToShow mustBe newDuty
     }
+  }
+
+  class SetUp() {
+    val application                 = applicationBuilder(userAnswers = None).build()
+    implicit val messages: Messages = getMessages(application)
   }
 }
