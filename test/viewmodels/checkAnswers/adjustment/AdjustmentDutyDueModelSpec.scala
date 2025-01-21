@@ -89,15 +89,15 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
       )
 
       dutyDueModel.dutyDueInfo mustBe
-      Seq(
-        Text(messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate))),
-        Text(messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume))),
-        Text(messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(dutyDue))),
-        Text(messages("adjustmentDutyDue.repackaged.bulletList.3", Money.format(dutyDue))),
-        Text(messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate))),
-        Text(messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty))),
-        Text(messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty)))
-      )
+        Seq(
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate))),
+          Text(messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume))),
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(dutyDue))),
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.3", Money.format(dutyDue))),
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate))),
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty))),
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty)))
+        )
     }
 
     "if adjustmentType is not RepackagedDraughtProducts show correct values in list" in new SetUp() {
@@ -112,9 +112,11 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
       )
 
       dutyDueModel.dutyDueInfo mustBe
-          Seq(
-            Text("adjustmentDutyDue.bulletList.1"), Text("adjustmentDutyDue.bulletList.2"), Text("adjustmentDutyDue.bulletList.3")
-          )
+        Seq(
+          Text(messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume))),
+          Text(messages("adjustmentDutyDue.bulletList.2", Money.format(rate))),
+          Text(messages("adjustmentDutyDue.bulletList.3", Money.format(dutyDue)))
+        )
     }
   }
 
