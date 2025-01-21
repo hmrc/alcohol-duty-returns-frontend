@@ -21,6 +21,8 @@ import base.SpecBase
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{Overdeclaration, RepackagedDraughtProducts, Spoilt}
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import viewmodels.Money
 
 class AdjustmentDutyDueModelSpec extends SpecBase {
 
@@ -73,6 +75,46 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
       )
 
       dutyDueModel.dutyToShow mustBe newDuty
+    }
+
+    "if adjustmentType is RepackagedDraughtProducts show correct values in list" in new SetUp() {
+      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+        RepackagedDraughtProducts,
+        dutyDue,
+        newDuty,
+        pureAlcoholVolume,
+        rate,
+        repackagedRate,
+        repackagedDuty
+      )
+
+      dutyDueModel.dutyDueInfo mustBe
+      Seq(
+        Text(messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate))),
+        Text(messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume))),
+        Text(messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(dutyDue))),
+        Text(messages("adjustmentDutyDue.repackaged.bulletList.3", Money.format(dutyDue))),
+        Text(messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate))),
+        Text(messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty))),
+        Text(messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty)))
+      )
+    }
+
+    "if adjustmentType is not RepackagedDraughtProducts show correct values in list" in new SetUp() {
+      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+        Overdeclaration,
+        dutyDue,
+        newDuty,
+        pureAlcoholVolume,
+        rate,
+        repackagedRate,
+        repackagedDuty
+      )
+
+      dutyDueModel.dutyDueInfo mustBe
+          Seq(
+            Text("adjustmentDutyDue.bulletList.1"), Text("adjustmentDutyDue.bulletList.2"), Text("adjustmentDutyDue.bulletList.3")
+          )
     }
   }
 
