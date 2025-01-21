@@ -17,10 +17,13 @@
 package controllers.payments
 
 import base.SpecBase
+import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import org.mockito.ArgumentMatchers.any
+import play.api.Configuration
 import play.api.inject.bind
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import viewmodels.payments.ViewPastPaymentsViewModel
 import views.html.payments.ViewPastPaymentsView
 
@@ -30,8 +33,64 @@ import scala.concurrent.Future
 class ViewPastPaymentsControllerSpec extends SpecBase {
 
   "ViewPastPaymentsController Controller" - {
-    "must return OK and the correct view for a GET" in {
-      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper())
+    "must return OK and the correct view for a GET when the feature switch is disabled" in {
+      val testConfiguration  = app.injector.instanceOf[Configuration]
+      val testServicesConfig = app.injector.instanceOf[ServicesConfig]
+
+      val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
+        override val claimARefundGformEnabled = false
+      }
+
+      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig)
+      val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
+      when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
+        openPaymentsData
+      )
+      when(mockAlcoholDutyAccountsConnector.historicPayments(any(), any())(any())) thenReturn Future.successful(
+        historicPayments
+      )
+      val application                      = applicationBuilder(userAnswers = None)
+        .overrides(bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector))
+        .overrides(bind[FrontendAppConfig].toInstance(testAppConfig))
+        .build()
+      running(application) {
+        val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
+        val result  = route(application, request).value
+
+        val view                          = application.injector.instanceOf[ViewPastPaymentsView]
+        val sortedOutstandingPaymentsData =
+          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+        val outstandingPaymentsTable      =
+          viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
+        val unallocatedPaymentsTable      =
+          viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
+        val historicPaymentsTable         =
+          viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          outstandingPaymentsTable,
+          unallocatedPaymentsTable,
+          openPaymentsData.totalOpenPaymentsAmount,
+          historicPaymentsTable,
+          2024,
+          claimARefundGformEnabled = false
+        )(
+          request,
+          getMessages(application)
+        ).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when the feature switch is enabled" in {
+      val testConfiguration  = app.injector.instanceOf[Configuration]
+      val testServicesConfig = app.injector.instanceOf[ServicesConfig]
+
+      val testAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
+        override val claimARefundGformEnabled = true
+      }
+
+      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig)
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
@@ -61,7 +120,8 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
           unallocatedPaymentsTable,
           openPaymentsData.totalOpenPaymentsAmount,
           historicPaymentsTable,
-          2024
+          2024,
+          claimARefundGformEnabled = true
         )(
           request,
           getMessages(application)
