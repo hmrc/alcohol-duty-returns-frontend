@@ -17,6 +17,7 @@
 package controllers.payments
 
 import config.Constants.pastPaymentsSessionKey
+import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifyWithEnrolmentAction
 import models.payments.OutstandingPayments
@@ -37,7 +38,8 @@ class ViewPastPaymentsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   viewPastPaymentsModel: ViewPastPaymentsViewModel,
   view: ViewPastPaymentsView,
-  alcoholDutyAccountConnector: AlcoholDutyAccountConnector
+  alcoholDutyAccountConnector: AlcoholDutyAccountConnector,
+  frontendAppConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -51,10 +53,11 @@ class ViewPastPaymentsController @Inject() (
           outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         val updatedSession                =
           request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
-        val outstandingPaymentsTable = viewPastPaymentsModel.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
+        val outstandingPaymentsTable =
+          viewPastPaymentsModel.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
+        val unallocatedPaymentsTable = viewPastPaymentsModel
+          .getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
 
-        val unallocatedPaymentsTable =
-          viewPastPaymentsModel.getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
         OutstandingPayments(
           outstandingPaymentsTable,
           unallocatedPaymentsTable,
@@ -78,7 +81,8 @@ class ViewPastPaymentsController @Inject() (
         pastPaymentsData.unallocatedPaymentsTable,
         pastPaymentsData.totalOpenPaymentsAmount,
         historicPaymentsTable,
-        year
+        year,
+        frontendAppConfig.claimARefundGformEnabled
       )
     ).withSession(pastPaymentsData.session)
 
