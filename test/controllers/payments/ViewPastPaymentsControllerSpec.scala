@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class ViewPastPaymentsControllerSpec extends SpecBase {
 
   "ViewPastPaymentsController Controller" - {
-    "must return OK and the correct view for a GET when the feature switch is disabled" in {
+    "must return OK and the correct view for a GET when the claim refund gform feature toggle is disabled" in {
       val testConfiguration  = app.injector.instanceOf[Configuration]
       val testServicesConfig = app.injector.instanceOf[ServicesConfig]
 
@@ -82,7 +82,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
       }
     }
 
-    "must return OK and the correct view for a GET when the feature switch is enabled" in {
+    "must return OK and the correct view for a GET when the claim refund gform feature toggle is enabled" in {
       val testConfiguration  = app.injector.instanceOf[Configuration]
       val testServicesConfig = app.injector.instanceOf[ServicesConfig]
 
