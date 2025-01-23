@@ -83,10 +83,10 @@
           @govukInput(
             InputViewModel(
               field = form(s"volumesWithRate[$index]"),
-              key = "dutyRate",
-              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
-              value = form(s"volumesWithRate[$index].dutyRate").value
+              key = "sprDutyRate",
+              label = LabelViewModel(messages("return.journey.sprDutyRate", messages(s"return.regime.$regime"))),
+              errorMessageField = form(s"volumesWithRate_${index}_sprDutyRate"),
+              value = form(s"volumesWithRate[$index].sprDutyRate").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -139,10 +139,10 @@
           @govukInput(
             InputViewModel(
               field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
-              key = "dutyRate",
-              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
-              value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
+              key = "sprDutyRate",
+              label = LabelViewModel(messages("return.journey.sprDutyRate", messages(s"return.regime.$regime"))),
+              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_sprDutyRate"),
+              value = form(s"volumesWithRate[${index + categories.smallProducer.size}].sprDutyRate").value
             )
             .asNumeric()
             .withWidth(Fixed10)

@@ -200,7 +200,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               "volumesWithRate.totalLitres" -> "1000",
               "volumesWithRate.pureAlcohol" -> "500.0000",
-              "volumesWithRate.dutyRate"    -> "10",
+              "volumesWithRate.sprDutyRate" -> "10",
               "volumesWithRate.taxType"     -> "371"
             )
 
@@ -246,7 +246,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               "volumesWithRate.totalLitres" -> "10000",
               "volumesWithRate.pureAlcohol" -> "5000.0000",
-              "volumesWithRate.dutyRate"    -> "100",
+              "volumesWithRate.sprDutyRate" -> "100",
               "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType
             )
 
@@ -292,7 +292,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               "volumesWithRate.totalLitres" -> "10000",
               "volumesWithRate.pureAlcohol" -> "5000.0000",
-              "volumesWithRate.dutyRate"    -> "100",
+              "volumesWithRate.sprDutyRate" -> "100",
               "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType
             )
 
@@ -338,7 +338,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               "volumesWithRate.totalLitres" -> volumeAndRateByTaxType.totalLitres.toString(),
               "volumesWithRate.pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString(),
-              "volumesWithRate.dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString(),
+              "volumesWithRate.sprDutyRate" -> volumeAndRateByTaxType.dutyRate.toString(),
               "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType
             )
 
@@ -381,7 +381,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               "volumesWithRate.totalLitres" -> volumeAndRateByTaxType.totalLitres.toString(),
               "volumesWithRate.pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString(),
-              "volumesWithRate.dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString(),
+              "volumesWithRate.sprDutyRate" -> volumeAndRateByTaxType.dutyRate.toString(),
               "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType
             )
 
@@ -466,7 +466,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(
               "volumesWithRate[0].totalLitres" -> "1000",
               "volumesWithRate[0].pureAlcohol" -> "500",
-              "volumesWithRate[0].dutyRate"    -> "10",
+              "volumesWithRate[0].sprDutyRate" -> "10",
               "volumesWithRate[0].taxType"     -> "371"
             )
 

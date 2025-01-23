@@ -23,7 +23,8 @@ import play.api.data.FieldMapping
 import play.api.data.Forms.of
 import models.Enumerable
 import models.adjustment.{AdjustmentVolume, AdjustmentVolumeWithSPR, SpoiltVolumeWithDuty}
-
+import config.Constants.MappingFields._
+import config.Constants.{dutyMaximumValue, dutyMinimumValue, lpaMaximumDecimalPlaces, lpaMaximumValue, lpaMinimumValue, spoiltDutyMaximumValue, spoiltDutyMinimumValue, volumeMaximumValue, volumeMinimumValue}
 trait Mappings extends Formatters with Constraints {
 
   protected def text(errorKey: String = "error.required", args: Seq[String] = Seq.empty): FieldMapping[String] =
@@ -84,17 +85,28 @@ trait Mappings extends Formatters with Constraints {
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    inconsistentKey: String,
+    lessOrEqualKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[AdjustmentVolume] =
     of(
       new AdjustmentVolumesFormatter(
-        invalidKey,
-        requiredKey,
-        decimalPlacesKey,
-        minimumValueKey,
-        maximumValueKey,
-        inconsistentKey,
+        lessOrEqualKey,
+        createVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
+        createPureAlcoholVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
         args
       )
     )
@@ -105,17 +117,36 @@ trait Mappings extends Formatters with Constraints {
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    inconsistentKey: String,
+    lessOrEqualKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[AdjustmentVolumeWithSPR] =
     of(
       new AdjustmentVolumesAndRateFormatter(
-        invalidKey,
-        requiredKey,
-        decimalPlacesKey,
-        minimumValueKey,
-        maximumValueKey,
-        inconsistentKey,
+        lessOrEqualKey,
+        createVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
+        createPureAlcoholVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
+        createSPRDutyRateFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
         args
       )
     )
@@ -131,12 +162,24 @@ trait Mappings extends Formatters with Constraints {
   ): FieldMapping[VolumesByTaxType] =
     of(
       new VolumesFormatter(
-        invalidKey,
-        requiredKey,
-        decimalPlacesKey,
-        minimumValueKey,
-        maximumValueKey,
         lessOrEqualKey,
+        stringFormatter(s"$requiredKey.$taxTypeField", args),
+        createVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
+        createPureAlcoholVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
         args
       )
     )
@@ -152,12 +195,32 @@ trait Mappings extends Formatters with Constraints {
   ): FieldMapping[VolumeAndRateByTaxType] =
     of(
       new VolumesAndRateFormatter(
-        invalidKey,
-        requiredKey,
-        decimalPlacesKey,
-        minimumValueKey,
-        maximumValueKey,
         lessOrEqualKey,
+        stringFormatter(s"$requiredKey.$taxTypeField", args),
+        createVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
+        createPureAlcoholVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
+        createSPRDutyRateFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
         args
       )
     )
@@ -168,18 +231,119 @@ trait Mappings extends Formatters with Constraints {
     decimalPlacesKey: String,
     minimumValueKey: String,
     maximumValueKey: String,
-    inconsistentKey: String,
+    lessOrEqualKey: String,
     args: Seq[String] = Seq.empty
   ): FieldMapping[SpoiltVolumeWithDuty] =
     of(
       new SpoiltVolumesAndDutyFormatter(
-        invalidKey,
-        requiredKey,
-        decimalPlacesKey,
-        minimumValueKey,
-        maximumValueKey,
-        inconsistentKey,
+        lessOrEqualKey,
+        createVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
+        createPureAlcoholVolumeFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
+        createDutyFormatter(
+          requiredKey,
+          invalidKey,
+          decimalPlacesKey,
+          minimumValueKey,
+          maximumValueKey,
+          args
+        ),
         args
       )
+    )
+
+  private def createVolumeFormatter(
+    requiredKey: String,
+    invalidKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    args: Seq[String]
+  ): BigDecimalFieldFormatter =
+    new BigDecimalFieldFormatter(
+      requiredKey,
+      invalidKey,
+      decimalPlacesKey,
+      minimumValueKey,
+      maximumValueKey,
+      totalLitresField,
+      maximumValue = volumeMaximumValue,
+      minimumValue = volumeMinimumValue,
+      args = args
+    )
+
+  private def createPureAlcoholVolumeFormatter(
+    requiredKey: String,
+    invalidKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    args: Seq[String]
+  ): BigDecimalFieldFormatter =
+    new BigDecimalFieldFormatter(
+      requiredKey,
+      invalidKey,
+      decimalPlacesKey,
+      minimumValueKey,
+      maximumValueKey,
+      pureAlcoholField,
+      decimalPlaces = lpaMaximumDecimalPlaces,
+      maximumValue = lpaMaximumValue,
+      minimumValue = lpaMinimumValue,
+      exactDecimalPlacesRequired = true,
+      args = args
+    )
+
+  private def createSPRDutyRateFormatter(
+    requiredKey: String,
+    invalidKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    args: Seq[String]
+  ): BigDecimalFieldFormatter =
+    new BigDecimalFieldFormatter(
+      requiredKey,
+      invalidKey,
+      decimalPlacesKey,
+      minimumValueKey,
+      maximumValueKey,
+      sprDutyRateField,
+      maximumValue = dutyMaximumValue,
+      minimumValue = dutyMinimumValue,
+      args = args
+    )
+
+  private def createDutyFormatter(
+    requiredKey: String,
+    invalidKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    args: Seq[String]
+  ): BigDecimalFieldFormatter =
+    new BigDecimalFieldFormatter(
+      requiredKey,
+      invalidKey,
+      decimalPlacesKey,
+      minimumValueKey,
+      maximumValueKey,
+      dutyField,
+      maximumValue = spoiltDutyMaximumValue,
+      minimumValue = spoiltDutyMinimumValue,
+      args = args
     )
 }

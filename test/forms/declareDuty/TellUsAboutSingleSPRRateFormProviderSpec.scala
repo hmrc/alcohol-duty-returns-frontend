@@ -40,7 +40,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> volumeAndRateByTaxType.totalLitres.toString,
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString,
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> volumeAndRateByTaxType.taxType,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> volumeAndRateByTaxType.dutyRate.toString
           )
       }
 
@@ -61,7 +61,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
           s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"
         ) mustBe volumeAndRateByTaxType.taxType
         result(
-          s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"
+          s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate"
         ) mustBe volumeAndRateByTaxType.dutyRate.toString
       }
     }
@@ -78,7 +78,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> "",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> ""
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> ""
           )
       }
 
@@ -101,8 +101,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               List("")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
-              "return.journey.error.noValue.dutyRate",
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_sprDutyRate",
+              "return.journey.error.noValue.sprDutyRate",
               List("")
             )
           )
@@ -120,7 +120,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "invalid",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "invalid",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "invalid"
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> "invalid"
           )
       }
 
@@ -138,8 +138,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               List("")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
-              "return.journey.error.invalid.dutyRate",
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_sprDutyRate",
+              "return.journey.error.invalid.sprDutyRate",
               List("")
             )
           )
@@ -157,7 +157,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "1.123",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "1.12345",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.123"
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> "1.123"
           )
       }
 
@@ -175,8 +175,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               List("")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
-              "return.journey.error.tooManyDecimalPlaces.dutyRate",
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_sprDutyRate",
+              "return.journey.error.tooManyDecimalPlaces.sprDutyRate",
               List("")
             )
           )
@@ -194,7 +194,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "100000000000",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100000000000.0000",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "100000000000"
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> "100000000000"
           )
       }
 
@@ -212,8 +212,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               List("")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
-              "return.journey.error.maximumValue.dutyRate",
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_sprDutyRate",
+              "return.journey.error.maximumValue.sprDutyRate",
               List("")
             )
           )
@@ -231,7 +231,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "0",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "0.0000",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "-1"
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> "-1"
           )
       }
 
@@ -249,8 +249,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               List("")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
-              "return.journey.error.minimumValue.dutyRate",
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_sprDutyRate",
+              "return.journey.error.minimumValue.sprDutyRate",
               List("")
             )
           )
@@ -268,7 +268,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "1.1",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100.1000",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.1"
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> "1.1"
           )
       }
 
@@ -287,7 +287,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       result.errors must contain allElementsOf expectedErrors
     }
 
-    "must fail when pure alcohol volume is empty and total litres value exceeds maximum and and dutyRate is invalid" in {
+    "must fail when pure alcohol volume is empty and total litres value exceeds maximum and and sprDutyRate is invalid" in {
       val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
         (volumeAndRateByTaxType, acc: Map[String, String]) =>
           acc ++ Map(
@@ -295,7 +295,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "999999999999",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.1abc"
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> "1.1abc"
           )
       }
 
@@ -313,8 +313,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               List("")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
-              "return.journey.error.invalid.dutyRate",
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_sprDutyRate",
+              "return.journey.error.invalid.sprDutyRate",
               List("")
             )
           )
@@ -332,7 +332,7 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               .indexOf(volumeAndRateByTaxType)}",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "9999999999.123",
             s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "-671.12345",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "99999999999.546"
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].sprDutyRate" -> "99999999999.546"
           )
       }
 
@@ -350,8 +350,8 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
               List("")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
-              "return.journey.error.tooManyDecimalPlaces.dutyRate",
+              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_sprDutyRate",
+              "return.journey.error.tooManyDecimalPlaces.sprDutyRate",
               List("")
             )
           )
