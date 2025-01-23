@@ -27,8 +27,10 @@ import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetai
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
 import org.mockito.ArgumentMatchers.any
+import play.api.i18n.Messages
 import play.api.inject.bind
 import services.adjustment.AdjustmentEntryService
+import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelCreator
 
 import java.time.YearMonth
 import scala.concurrent.Future
@@ -92,12 +94,13 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
       val adjustmentEntryService = mock[AdjustmentEntryService]
       when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(adjustmentEntry)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application                 = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
           bind[AdjustmentEntryService].toInstance(adjustmentEntryService),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
+      implicit val messages: Messages = getMessages(application)
 
       running(application) {
         val request = FakeRequest(GET, adjustmentDutyDueRoute)
@@ -106,17 +109,19 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentDutyDueView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
+        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
           Overdeclaration,
-          volume,
           dutyDue,
+          newDuty,
           pureAlcoholVolume,
-          taxCode,
           rate,
           repackagedRate,
-          repackagedDuty,
-          newDuty
+          repackagedDuty
+        )
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          adjustmentDutyDueViewModel,
+          Overdeclaration
         )(
           request,
           getMessages(application)
@@ -129,12 +134,13 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
       val adjustmentEntryService = mock[AdjustmentEntryService]
       when(adjustmentEntryService.createAdjustment(any())(any())) thenReturn Future.successful(spoiltAdjustmentEntry)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application                 = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
           bind[AdjustmentEntryService].toInstance(adjustmentEntryService),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
+      implicit val messages: Messages = getMessages(application)
 
       running(application) {
         val request = FakeRequest(GET, adjustmentDutyDueRoute)
@@ -143,17 +149,20 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentDutyDueView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
+        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
           Spoilt,
-          volume,
           dutyDue,
+          newDuty,
           pureAlcoholVolume,
-          taxCode,
           rate,
           repackagedRate,
-          repackagedDuty,
-          newDuty
+          repackagedDuty
+        )
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          adjustmentDutyDueViewModel,
+          Spoilt
         )(
           request,
           getMessages(application)
