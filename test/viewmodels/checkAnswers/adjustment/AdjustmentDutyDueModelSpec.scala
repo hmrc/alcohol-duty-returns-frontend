@@ -16,12 +16,10 @@
 
 package viewmodels.checkAnswers.adjustment
 
-import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelFactory
 import base.SpecBase
-import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{Overdeclaration, RepackagedDraughtProducts, Spoilt}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.Money
 
 class AdjustmentDutyDueModelSpec extends SpecBase {
@@ -93,7 +91,7 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
           Text(messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate))),
           Text(messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume))),
           Text(messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(dutyDue))),
-          Text(messages("adjustmentDutyDue.repackaged.bulletList.3", Money.format(dutyDue))),
+          Text(messages("adjustmentDutyDue.repackaged.bulletList.3")),
           Text(messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate))),
           Text(messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty))),
           Text(messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty)))
@@ -139,7 +137,7 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
     }
   }
 
-  class SetUp() {
+  class SetUp {
     val application                 = applicationBuilder(userAnswers = None).build()
     implicit val messages: Messages = getMessages(application)
   }

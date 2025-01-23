@@ -158,6 +158,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
           repackagedRate,
           repackagedDuty
         )
+
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           adjustmentDutyDueViewModel,
