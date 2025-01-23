@@ -99,10 +99,10 @@ POST       /complete-return/adjustments/adjustment/declare/type                 
 GET        /complete-return/adjustments/adjustment/change/type                  controllers.adjustment.AdjustmentTypeController.onPageLoad(mode: Mode = CheckMode)
 POST       /complete-return/adjustments/adjustment/change/type                  controllers.adjustment.AdjustmentTypeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /complete-return/adjustments/adjustment/declare/spoilt-product/alcohol-type                        controllers.adjustment.AlcoholicProductTypeController.onPageLoad(mode: Mode = NormalMode)
-POST       /complete-return/adjustments/adjustment/declare/spoilt-product/alcohol-type                       controllers.adjustment.AlcoholicProductTypeController.onSubmit(mode: Mode = NormalMode)
-GET        /complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type                  controllers.adjustment.AlcoholicProductTypeController.onPageLoad(mode: Mode = CheckMode)
-POST       /complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type                  controllers.adjustment.AlcoholicProductTypeController.onSubmit(mode: Mode = CheckMode)
+GET        /complete-return/adjustments/adjustment/declare/spoilt-product/alcohol-type                        controllers.adjustment.SpoiltAlcoholicProductTypeController.onPageLoad(mode: Mode = NormalMode)
+POST       /complete-return/adjustments/adjustment/declare/spoilt-product/alcohol-type                       controllers.adjustment.SpoiltAlcoholicProductTypeController.onSubmit(mode: Mode = NormalMode)
+GET        /complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type                  controllers.adjustment.SpoiltAlcoholicProductTypeController.onPageLoad(mode: Mode = CheckMode)
+POST       /complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type                  controllers.adjustment.SpoiltAlcoholicProductTypeController.onSubmit(mode: Mode = CheckMode)
 
 GET        /complete-return/adjustments/adjustment/declare/return-period                        controllers.adjustment.WhenDidYouPayDutyController.onPageLoad(mode: Mode = NormalMode)
 POST       /complete-return/adjustments/adjustment/declare/return-period                        controllers.adjustment.WhenDidYouPayDutyController.onSubmit(mode: Mode = NormalMode)

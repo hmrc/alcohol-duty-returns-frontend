@@ -18,26 +18,36 @@ package viewmodels.checkAnswers.adjustment
 
 import models.adjustment.AdjustmentEntry
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class CheckYourAnswersSummaryListHelper @Inject() (whenDidYouPayDutySummary: WhenDidYouPayDutySummary) {
+class CheckYourAnswersSummaryListHelper @Inject() (
+  adjustmentRepackagedTaxTypeSummary: AdjustmentRepackagedTaxTypeSummary,
+  adjustmentSmallProducerReliefDutyRateSummary: AdjustmentSmallProducerReliefDutyRateSummary,
+  whenDidYouPayDutySummary: WhenDidYouPayDutySummary,
+  spoiltAlcoholicProductTypeSummary: SpoiltAlcoholicProductTypeSummary,
+  adjustmentTaxTypeSummary: AdjustmentTaxTypeSummary,
+  adjustmentTypeSummary: AdjustmentTypeSummary,
+  adjustmentVolumeSummary: AdjustmentVolumeSummary,
+  adjustmentDutyDueSummary: AdjustmentDutyDueSummary
+) {
 
   def currentAdjustmentEntrySummaryList(
     adjustmentEntry: AdjustmentEntry
   )(implicit messages: Messages): Option[SummaryList] = {
 
-    val newTaxType        = getOptionalRow(AdjustmentRepackagedTaxTypeSummary.row(adjustmentEntry))
-    val sprDutyRate       = getOptionalRow(AdjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry))
-    val returnPeriod      = getOptionalRow(whenDidYouPayDutySummary.row(adjustmentEntry))
-    val spoiltAlcoholType = getOptionalRow(AlcoholicProductTypeSummary.row(adjustmentEntry))
-    val taxType           = getOptionalRow(AdjustmentTaxTypeSummary.row(adjustmentEntry))
+    val newTaxType        = adjustmentRepackagedTaxTypeSummary.row(adjustmentEntry).toList
+    val sprDutyRate       = adjustmentSmallProducerReliefDutyRateSummary.row(adjustmentEntry).toList
+    val returnPeriod      = whenDidYouPayDutySummary.row(adjustmentEntry).toList
+    val spoiltAlcoholType = spoiltAlcoholicProductTypeSummary.row(adjustmentEntry).toList
+    val taxType           = adjustmentTaxTypeSummary.row(adjustmentEntry).toList
+
     for {
-      adjustmentType <- AdjustmentTypeSummary.row(adjustmentEntry)
-      volume         <- AdjustmentVolumeSummary.row(adjustmentEntry)
-      duty           <- AdjustmentDutyDueSummary.row(adjustmentEntry)
+      adjustmentType <- adjustmentTypeSummary.row(adjustmentEntry)
+      volume         <- adjustmentVolumeSummary.row(adjustmentEntry)
+      duty           <- adjustmentDutyDueSummary.row(adjustmentEntry)
     } yield SummaryListViewModel(
       rows = Seq(adjustmentType) ++
         spoiltAlcoholType ++
@@ -49,10 +59,4 @@ class CheckYourAnswersSummaryListHelper @Inject() (whenDidYouPayDutySummary: Whe
         Seq(duty)
     )
   }
-
-  private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
-    row match {
-      case Some(row) => Seq(row)
-      case None      => Seq.empty
-    }
 }

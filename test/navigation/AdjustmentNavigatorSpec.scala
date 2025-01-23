@@ -97,7 +97,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .success
             .value
         ) mustBe
-          controllers.adjustment.routes.AlcoholicProductTypeController.onPageLoad(NormalMode)
+          controllers.adjustment.routes.SpoiltAlcoholicProductTypeController.onPageLoad(NormalMode)
       }
 
       "must go from the Adjustment Type Page to the Spoilt Volume With Duty page if user has only 1 approval" in {

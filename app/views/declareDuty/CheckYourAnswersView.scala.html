@@ -16,7 +16,6 @@
 
 @import components.{SectionHeading, PageHeading}
 @import viewmodels.declareDuty.ReturnSummaryList
-@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
         layout: templates.Layout,
@@ -40,11 +39,11 @@
 
     @govukSummaryList(summaryList.whatDoYouNeedToDeclareSummary)
     @if(summaryList.howMuchDoYouNeedToDeclareSummary.isDefined) {
-      @govukSummaryList(summaryList.howMuchDoYouNeedToDeclareSummary.get)
+      @govukSummaryList(summaryList.howMuchDoYouNeedToDeclareSummary.getOrElse(throw new RuntimeException("Expected a summary list - this shouldn't happen")))
     }
 
     @if(summaryList.smallProducerReliefSummary.isDefined) {
-      @govukSummaryList(summaryList.smallProducerReliefSummary.get)
+      @govukSummaryList(summaryList.smallProducerReliefSummary.getOrElse(throw new RuntimeException("Expected a summary list - this shouldn't happen")))
     }
   
     @govukButton(

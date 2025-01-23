@@ -26,8 +26,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AlcoholicProductTypeSummary {
-
+class SpoiltAlcoholicProductTypeSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     adjustmentEntry.spoiltRegime.map { spoiltRegime =>
       val value = ValueViewModel(
@@ -40,7 +39,7 @@ object AlcoholicProductTypeSummary {
         key = "alcoholicProductType.checkYourAnswersLabel",
         value = value,
         actions = Seq(
-          ActionItemViewModel("site.change", routes.AlcoholicProductTypeController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.SpoiltAlcoholicProductTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("alcoholicProductType.change.hidden"))
         )
       )

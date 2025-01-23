@@ -19,7 +19,7 @@ package controllers.spiritsQuestions
 import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
-import models.{AlcoholRegimes, NormalMode, UserAnswers}
+import models.{AlcoholRegimes, NormalMode, ReturnId, UserAnswers}
 import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -107,7 +107,9 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
       val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
       val mockAlcoholRegimesSet: AlcoholRegimes          = mock[AlcoholRegimes]
-
+      val mockReturnId                                   = mock[ReturnId]
+      when(mockReturnId.periodKey) thenReturn "2025-01"
+      when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       when(mockUserAnswers.set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())) thenReturn Success(
         mockUserAnswers

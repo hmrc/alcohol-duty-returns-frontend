@@ -25,10 +25,10 @@ import viewmodels.Money
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdjustmentSmallProducerReliefDutyRateSummary {
+class AdjustmentSmallProducerReliefDutyRateSummary {
   def row(adjustmentEntry: AdjustmentEntry)(implicit messages: Messages): Option[SummaryListRow] =
     (adjustmentEntry.sprDutyRate, adjustmentEntry.repackagedSprDutyRate) match {
-      case (Some(_), Some(repackagedSprDutyRate)) =>
+      case (_, Some(repackagedSprDutyRate)) =>
         Some(
           SummaryListRowViewModel(
             key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
@@ -41,7 +41,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
             )
           )
         )
-      case (Some(sprDutyRate), _)                 =>
+      case (Some(sprDutyRate), None)        =>
         Some(
           SummaryListRowViewModel(
             key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
@@ -54,20 +54,7 @@ object AdjustmentSmallProducerReliefDutyRateSummary {
             )
           )
         )
-      case (_, Some(repackagedSprDutyRate))       =>
-        Some(
-          SummaryListRowViewModel(
-            key = "adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel",
-            value = ValueViewModel(Money.format(repackagedSprDutyRate)),
-            actions = Seq(
-              ActionItemViewModel(
-                "site.change",
-                routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode).url
-              ).withVisuallyHiddenText(messages("adjustmentSmallProducerReliefDutyRate.change.hidden"))
-            )
-          )
-        )
-      case _                                      =>
+      case _                                =>
         None
     }
 }

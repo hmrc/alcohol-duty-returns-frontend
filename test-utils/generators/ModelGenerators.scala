@@ -206,7 +206,7 @@ trait ModelGenerators {
   }
 
   def periodKeyGen: Gen[String] = for {
-    year  <- Gen.chooseNum(23, 50)
+    year  <- Gen.chooseNum(24, 50)
     month <- Gen.chooseNum(0, 11)
   } yield s"${year}A${(month + 'A').toChar}"
 
@@ -223,10 +223,6 @@ trait ModelGenerators {
   def appaIdGen: Gen[String] = Gen.listOfN(10, Gen.numChar).map(id => s"XMADP${id.mkString}")
 
   def regimeGen: Gen[AlcoholRegime] = Gen.oneOf(AlcoholRegime.values)
-
-  def arbitraryRateBandList(regime: AlcoholRegime): Arbitrary[List[RateBand]] = Arbitrary {
-    Gen.listOfN(10, arbitrary[RateBand].suchThat(_.rangeDetails.exists(_.alcoholRegime == regime)))
-  }
 
   def genAlcoholRegime(alcoholRegime: AlcoholRegime): Gen[RangeDetailsByRegime] =
     arbitraryABVIntervals.arbitrary.map(abvRanges =>

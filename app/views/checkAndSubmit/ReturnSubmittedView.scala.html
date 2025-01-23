@@ -34,7 +34,7 @@
 @(viewModel: ReturnSubmittedViewModel)(implicit request: Request[_], messages: Messages)
 
 @posPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.get.value), classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.map(_.value).getOrElse("")), classes = "")
     @paragraph(s"${messages("returnSubmitted.panel.body.balanceDue")} ${Money.format(viewModel.returnDetails.amount)}", classes = "")
 }
 
@@ -43,7 +43,7 @@
 }
 
 @negPanelContent = {
-    @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.get.value), classes = "")
+    @paragraph(messages("returnSubmitted.panel.body.reference", viewModel.returnDetails.chargeReference.map(_.value).getOrElse("")), classes = "")
     @paragraphWithMonetaryValue(s"${messages("returnSubmitted.panel.body.dutyOwed")}", viewModel.returnDetails.amount, classes = "")
     @paragraph(messages("returnSubmitted.panel.body.nil"), classes = "")
 }

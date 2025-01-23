@@ -21,13 +21,19 @@ import pages.declareDuty.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
+import javax.inject.Inject
+
 case class ReturnSummaryList(
   whatDoYouNeedToDeclareSummary: SummaryList,
   howMuchDoYouNeedToDeclareSummary: Option[SummaryList],
   smallProducerReliefSummary: Option[SummaryList]
 )
 
-object CheckYourAnswersSummaryListHelper {
+class CheckYourAnswersSummaryListHelper @Inject() (
+  howMuchDoYouNeedToDeclareSummary: HowMuchDoYouNeedToDeclareSummary,
+  smallProducerReliefSummary: SmallProducerReliefSummary,
+  whatDoYouNeedToDeclareSummary: WhatDoYouNeedToDeclareSummary
+) {
   def createSummaryList(regime: AlcoholRegime, userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[ReturnSummaryList] =
@@ -35,10 +41,10 @@ object CheckYourAnswersSummaryListHelper {
       case Some(whatDoYouNeedToDeclare) =>
         Some(
           ReturnSummaryList(
-            whatDoYouNeedToDeclareSummary = WhatDoYouNeedToDeclareSummary.summaryList(regime, whatDoYouNeedToDeclare),
+            whatDoYouNeedToDeclareSummary = whatDoYouNeedToDeclareSummary.summaryList(regime, whatDoYouNeedToDeclare),
             howMuchDoYouNeedToDeclareSummary =
-              HowMuchDoYouNeedToDeclareSummary.summaryList(regime, whatDoYouNeedToDeclare, userAnswers),
-            smallProducerReliefSummary = SmallProducerReliefSummary.summaryList(regime, userAnswers)
+              howMuchDoYouNeedToDeclareSummary.summaryList(regime, whatDoYouNeedToDeclare, userAnswers),
+            smallProducerReliefSummary = smallProducerReliefSummary.summaryList(regime, userAnswers)
           )
         )
       case _                            => None

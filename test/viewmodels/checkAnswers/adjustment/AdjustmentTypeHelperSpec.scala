@@ -24,7 +24,7 @@ import pages.adjustment.CurrentAdjustmentEntryPage
 import play.api.i18n.Messages
 
 import java.time.YearMonth
-import scala.util.{Success}
+import scala.util.Success
 
 class AdjustmentTypeHelperSpec extends SpecBase {
   "AdjustmentTypeHelper" - {
@@ -63,7 +63,7 @@ class AdjustmentTypeHelperSpec extends SpecBase {
   }
 
   class SetUp {
-    val alcoholicProductTypeHelper  = mock[AlcoholicProductTypeHelper]
+    val alcoholicProductTypeHelper  = mock[SpoiltAlcoholicProductTypeHelper]
     val helper                      = new AdjustmentTypeHelper(alcoholicProductTypeHelper)
     implicit val messages: Messages = getMessages(applicationBuilder().build())
     val regime                      = Beer
