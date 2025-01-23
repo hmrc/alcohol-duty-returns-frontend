@@ -113,43 +113,50 @@ govukFieldset : GovukFieldset
         @if(howMuchDoYouNeedToDeclareHelper.draught.nonEmpty) {
           @subHeading(messages("howMuchDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
-            @subHeading(quantityViewModel.category, classes = Css.headingSCssClass)
-            @govukInput(
-              InputViewModel(
-                field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
-                key = "totalLitres",
-                label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
-                errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_totalLitres"),
-                value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].totalLitres").value
-              )
-              .asNumeric()
-              .withWidth(Fixed10)
-              .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-              .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.hint")))
-            )
-            @govukInput(
-              InputViewModel(
-                field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
-                key = "pureAlcohol",
-                label = LabelViewModel(messages("return.journey.pureAlcohol")),
-                errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_pureAlcohol"),
-                value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].pureAlcohol").value
-              )
-              .asNumeric()
-              .withWidth(Fixed10)
-              .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-              .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.pureAlcohol.hint")))
-            )
-
-            @govukInput(
-              InputViewModel(
-                field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
-                key = "taxType",
-                label = LabelViewModel(Text("")),
-                errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_taxType"),
-                value = Some(quantityViewModel.id)
-              ).hidden
-            )
+            @govukFieldset(Fieldset(
+                legend = Some(Legend(
+                content = Text(quantityViewModel.category),
+                classes = "govuk-fieldset__legend--s",
+                isPageHeading = false
+              )),
+              html = HtmlFormat.fill(List(
+                govukInput(
+                  InputViewModel(
+                    field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
+                    key = "totalLitres",
+                    label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
+                    errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_totalLitres"),
+                    value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].totalLitres").value
+                  )
+                  .asNumeric()
+                  .withWidth(Fixed10)
+                  .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+                  .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.hint")))
+                ),
+                govukInput(
+                  InputViewModel(
+                    field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
+                    key = "pureAlcohol",
+                    label = LabelViewModel(messages("return.journey.pureAlcohol")),
+                    errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_pureAlcohol"),
+                    value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].pureAlcohol").value
+                  )
+                  .asNumeric()
+                  .withWidth(Fixed10)
+                  .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+                  .withHint(Hint(content = messages("howMuchDoYouNeedToDeclare.pureAlcohol.hint")))
+                ),
+                govukInput(
+                  InputViewModel(
+                    field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
+                    key = "taxType",
+                    label = LabelViewModel(Text("")),
+                    errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_taxType"),
+                    value = Some(quantityViewModel.id)
+                  ).hidden
+                )
+              ))
+            ))
           }
         }
 
