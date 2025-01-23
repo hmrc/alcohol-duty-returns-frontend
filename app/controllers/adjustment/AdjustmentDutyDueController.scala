@@ -29,7 +29,7 @@ import services.adjustment.AdjustmentEntryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.adjustment.AdjustmentDutyDueView
 
-import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelFactory
+import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelCreator
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,7 +42,7 @@ class AdjustmentDutyDueController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   adjustmentEntryService: AdjustmentEntryService,
   view: AdjustmentDutyDueView,
-  viewModelFactory: AdjustmentDutyDueViewModelFactory
+  viewModelFactory: AdjustmentDutyDueViewModelCreator
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport

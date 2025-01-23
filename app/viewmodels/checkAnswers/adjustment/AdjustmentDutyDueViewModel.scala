@@ -28,7 +28,7 @@ case class AdjustmentDutyDueViewModel(
   dutyDueInfo: Seq[Content]
 )
 
-class AdjustmentDutyDueViewModelFactory {
+class AdjustmentDutyDueViewModelCreator {
   def apply(
     adjustmentType: AdjustmentType,
     duty: BigDecimal,

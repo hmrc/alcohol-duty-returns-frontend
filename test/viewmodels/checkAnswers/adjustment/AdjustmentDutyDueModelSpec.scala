@@ -34,7 +34,7 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
     val newDuty           = BigDecimal(1)
 
     "must return a Duty amount of dutyDue when AdjustmentType is Overdeclaration" in new SetUp() {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+      val dutyDueModel = new AdjustmentDutyDueViewModelCreator()(
         Overdeclaration,
         dutyDue,
         newDuty,
@@ -48,7 +48,7 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
     }
 
     "must return a Duty amount of dutyDue when AdjustmentType is Spoilt" in new SetUp() {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+      val dutyDueModel = new AdjustmentDutyDueViewModelCreator()(
         Spoilt,
         dutyDue,
         newDuty,
@@ -62,7 +62,7 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
     }
 
     "must return a Duty amount of newDuty when AdjustmentType is RepackagedDraughtProducts" in new SetUp() {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+      val dutyDueModel = new AdjustmentDutyDueViewModelCreator()(
         RepackagedDraughtProducts,
         dutyDue,
         newDuty,
@@ -76,7 +76,7 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
     }
 
     "if adjustmentType is RepackagedDraughtProducts show correct values in list" in new SetUp() {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+      val dutyDueModel = new AdjustmentDutyDueViewModelCreator()(
         RepackagedDraughtProducts,
         dutyDue,
         newDuty,
@@ -99,7 +99,7 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
     }
 
     "if adjustmentType is Overdeclaration show correct values in list" in new SetUp() {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+      val dutyDueModel = new AdjustmentDutyDueViewModelCreator()(
         Overdeclaration,
         dutyDue,
         newDuty,
@@ -118,7 +118,7 @@ class AdjustmentDutyDueModelSpec extends SpecBase {
     }
 
     "if adjustmentType is Spoilt show correct values in list" in new SetUp() {
-      val dutyDueModel = new AdjustmentDutyDueViewModelFactory()(
+      val dutyDueModel = new AdjustmentDutyDueViewModelCreator()(
         Spoilt,
         dutyDue,
         newDuty,

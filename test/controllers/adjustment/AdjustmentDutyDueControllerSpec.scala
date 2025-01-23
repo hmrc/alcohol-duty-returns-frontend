@@ -30,7 +30,7 @@ import org.mockito.ArgumentMatchers.any
 import play.api.i18n.Messages
 import play.api.inject.bind
 import services.adjustment.AdjustmentEntryService
-import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelFactory
+import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModelCreator
 
 import java.time.YearMonth
 import scala.concurrent.Future
@@ -109,7 +109,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentDutyDueView]
 
-        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelFactory()(
+        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
           Overdeclaration,
           dutyDue,
           newDuty,
@@ -149,7 +149,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentDutyDueView]
 
-        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelFactory()(
+        val adjustmentDutyDueViewModel = new AdjustmentDutyDueViewModelCreator()(
           Spoilt,
           dutyDue,
           newDuty,
