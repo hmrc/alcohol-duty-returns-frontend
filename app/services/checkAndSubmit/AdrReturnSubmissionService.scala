@@ -374,8 +374,22 @@ class AdrReturnSubmissionServiceImpl @Inject() (
   ): EitherT[Future, String, Map[AdjustmentType, Seq[BigDecimal]]] =
     getValue(userAnswers, AdjustmentEntryListPage).map { adjustmentEntries =>
       adjustmentEntries.groupBy(_.adjustmentType).collect {
-        case (Some(RepackagedDraughtProducts), entries) => RepackagedDraughtProducts -> entries.map(_.newDuty.get)
-        case (Some(adjustmentType), entries)            => adjustmentType            -> entries.map(_.duty.get)
+        case (Some(RepackagedDraughtProducts), entries) =>
+          RepackagedDraughtProducts -> entries.map(
+            _.newDuty.getOrElse(
+              throw new RuntimeException(
+                s"Expected RepackagedDraughtProducts to contain newDuty ${userAnswers.returnId.appaId}/${userAnswers.returnId.periodKey}"
+              )
+            )
+          )
+        case (Some(adjustmentType), entries)            =>
+          adjustmentType -> entries.map(
+            _.duty.getOrElse(
+              throw new RuntimeException(
+                s"Expected $adjustmentType to contain duty ${userAnswers.returnId.appaId}/${userAnswers.returnId.periodKey}"
+              )
+            )
+          )
       }
     }
 

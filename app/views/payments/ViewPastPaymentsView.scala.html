@@ -58,7 +58,7 @@
 
 
 
-    @if(outstandingPaymentsTable.rows.size > 0) {
+    @if(outstandingPaymentsTable.rows.nonEmpty) {
         @govukTable(Table(
             caption = Some(messages("viewPastPayments.outstandingPayments.caption")),
             captionClasses = Css.tableCaptionMCssClass,
@@ -80,7 +80,7 @@
         )
     }
 
-    @if(unallocatedPaymentsTable.rows.size > 0) {
+    @if(unallocatedPaymentsTable.rows.nonEmpty) {
         @govukTable(Table(
             caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
             captionClasses = Css.tableCaptionMCssClass,
@@ -91,7 +91,7 @@
     }
 
 
-    @if(historicPaymentsTable.rows.size > 0) {
+    @if(historicPaymentsTable.rows.nonEmpty) {
         @govukTable(Table(
             caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", year))),
             captionClasses = Css.tableCaptionMCssClass,
@@ -101,7 +101,7 @@
         @paragraph(messages("viewPastPayments.historic.paragraph"))
     }
 
-    @if(historicPaymentsTable.rows.size == 0) {
+    @if(historicPaymentsTable.rows.isEmpty) {
             @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", year)), Css.headingMCssClass)
             @paragraph(messages("viewPastPayments.historic.noPayments"))
     }
