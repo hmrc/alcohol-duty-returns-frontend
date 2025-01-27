@@ -71,7 +71,10 @@
 
         @govukFieldset(Fieldset(
           legend = Some(Legend(
-            content = Text { if (rateBandRadioItems.size > 1) { messages(s"tellUsAboutMultipleSPRRate.h3.$regime") } else { rateBandRadioItems.head.content.asHtml.toString } },
+            content = rateBandRadioItems match {
+              case Seq(onlyButton) => Text(onlyButton.content.asHtml.toString)
+              case _ => Text(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"))
+            },
             classes = Css.fieldsetLegendSCssClass
           )),
           html = HtmlFormat.fill(List(
@@ -115,20 +118,19 @@
                 .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
             )),
 
-            { if (rateBandRadioItems.size == 1) {
+            rateBandRadioItems match {
+              case Seq(onlyButton) =>
                 Some(govukInput(
                   InputViewModel(
                     field = form("volumesWithRate"),
                     key = "taxType",
                     label = LabelViewModel(Text("")),
                     errorMessageField = form("volumesWithRate_taxType"),
-                    value = rateBandRadioItems.head.value
+                    value = onlyButton.value
                   ).hidden))
-                } else {
-                  None
-                }
-             }
-           ).flatten)
+               case _ => None
+            }
+          ).flatten)
         ))
 
         @govukButton(
