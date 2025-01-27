@@ -31,7 +31,7 @@
     pageHeading: PageHeading,
     paragraph: Paragraph,
     govukWarningText: GovukWarningText,
-govukFieldset : GovukFieldset
+    govukFieldset: GovukFieldset
 )
 
 @(form: Form[_], regime: AlcoholRegime, howMuchDoYouNeedToDeclareHelper: CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -64,10 +64,9 @@ govukFieldset : GovukFieldset
           @subHeading(messages("howMuchDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
             @govukFieldset(Fieldset(
-                legend = Some(Legend(
+              legend = Some(Legend(
                 content = Text(quantityViewModel.category),
-                classes = "govuk-fieldset__legend--s",
-                isPageHeading = false
+                classes = Css.fieldsetLegendSCssClass
               )),
               html = HtmlFormat.fill(List(
                 govukInput(
@@ -114,10 +113,9 @@ govukFieldset : GovukFieldset
           @subHeading(messages("howMuchDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
             @govukFieldset(Fieldset(
-                legend = Some(Legend(
+              legend = Some(Legend(
                 content = Text(quantityViewModel.category),
-                classes = "govuk-fieldset__legend--s",
-                isPageHeading = false
+                classes = Css.fieldsetLegendSCssClass
               )),
               html = HtmlFormat.fill(List(
                 govukInput(
