@@ -1,7 +1,7 @@
 # Welsh translation process
 
 This is instructions for translating the English messages file (../conf/messages.en) to the Welsh messages file (../conf/messages.cy).
-All file paths will be relative to this directory.
+All file paths will be relative to the scripts directory where the discussed scripts are located.
 
 ## Welsh translation spreadsheet
 
