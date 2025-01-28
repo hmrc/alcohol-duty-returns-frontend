@@ -1,0 +1,21 @@
+,English text,Welsh text,,
+401: Not authorised,,,,
+Title/H1,"Sorry, you cannot access this service with this account",Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn,,No screenshot available
+P,"Manage your alcohol duty is a service for approved businesses, such as limited companies, partnerships and sole traders producing alcoholic products.","Mae’r gwasanaeth Rheoli’ch Toll Alcohol yn wasanaeth ar gyfer busnesau cymeradwy, megis cwmnïau cyfyngedig, partneriaethau ac unig fasnachwyr sy’n cynhyrchu cynhyrchion alcoholaidd.",,
+P,To use this service you need to sign in with an organisation Government Gateway account and be enrolled in the service.,"Er mwyn defnyddio’r gwasanaeth hwn, bydd angen i chi fewngofnodi gan ddefnyddio cyfrif sefydliad ar gyfer Porth y Llywodraeth, a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.",,
+,,,,
+500: Problem with the service,,,,
+Title/H1,"Sorry, there is a problem with the service",Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth,,No screenshot available
+P,Try again later.,Rhowch gynnig arall arni yn nes ymlaen.,,
+P,We saved your answers. They will be available for 30 days.,Gwnaethom gadw’ch atebion. Byddant ar gael am 30 diwrnod.,,
+,,,,
+503: Service is unavailable (shuttered),,,,
+Title/H1,"Sorry, the service is unavailable",Mae’n ddrwg gennym – nid yw’r gwasanaeth ar gael,,No screenshot available
+P,You will be able to use the service later.,Byddwch yn gallu defnyddio’r gwasanaeth yn nes ymlaen.,,
+P,We saved your answers. They will be available for 30 days.,Gwnaethom gadw’ch atebion. Byddant ar gael am 30 diwrnod.,,
+,,,,
+Locked return,,,,
+Title/H1,This return is temporarily locked,Mae’r Datganiad hwn wedi’i gloi dros dro,,No screenshot available
+P,This return has been temporarily locked because someone else is editing it.,"Mae’r Datganiad hwn wedi cael ei gloi dros dro, oherwydd bod rhywun arall yn ei olygu.",,
+P,Please try again in a few minutes.,Rhowch gynnig arall arni mewn ychydig o funudau.,,
+Link,Return to business tax account,Yn ôl i’r Cyfrif Treth Busnes,,

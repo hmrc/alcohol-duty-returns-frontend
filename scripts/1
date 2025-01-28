@@ -1,0 +1,534 @@
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 9.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 55.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 88.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 93.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 94.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 97.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 100.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 134.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 148.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 151.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 214.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 217.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 218.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 246.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 249.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 252.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 253.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 316.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 317.
+No entry in messages.en found: At or above 22.1% - Welsh was: 22.1% neu’n uwch
+No entry in messages.en found: small Producer Relief - Welsh was: Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Select all that apply. - Welsh was: Dewiswch bob un sy’n berthnasol.
+No entry in messages.en found: Select all that apply. - Welsh was: Dewiswch bob un sy’n berthnasol.
+No entry in messages.en found: Beer (standard rate) - Welsh was: Cwrw (cyfradd safonol)
+No entry in messages.en found: Beer between 1.3% and 3.4% ABV (tax type code 311) - Welsh was: Cwrw rhwng 1.3% a 3.4% ABV (cod y math o dreth: 311)
+No entry in messages.en found: Beer between 3.5% and 8.4% ABV (tax type code 321) - Welsh was: Cwrw rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 321)
+No entry in messages.en found: Beer between 8.5% and 22% ABV (tax type code 331) - Welsh was: Cwrw rhwng 8.5% a 22% ABV (cod y math o dreth: 331)
+No entry in messages.en found: Beer at or above 22.1% ABV (tax type code 341) - Welsh was: Cwrw ar 22.1% ABV neu’n uwch (cod y math o dreth: 341)
+No entry in messages.en found: Draught beer (reduced rate) - Welsh was: Cwrw o’r gasgen (cyfradd is)
+No entry in messages.en found: Beer between 1.3% and 3.4% ABV (tax type code 351) - Welsh was: Cwrw rhwng 1.3% a 3.4% ABV (cod y math o dreth: 351)
+No entry in messages.en found: Beer between 3.5% and 8.4% ABV (tax type code 356) - Welsh was: Cwrw rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 356)
+No entry in messages.en found: Non-draught beer eligible for Small Producer Relief - Welsh was: Cwrw nad yw’n dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Beer between 1.3% and 3.4% ABV (tax type code 361) - Welsh was: Cwrw rhwng 1.3% a 3.4% ABV (cod y math o dreth: 361)
+No entry in messages.en found: Beer between 3.5% and 8.4% ABV (tax type code 366) - Welsh was: Cwrw rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 366)
+No entry in messages.en found: Draught beer eligible for Small Producer Relief - Welsh was: Cwrw o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Beer between 1.3% and 3.4% ABV (tax type code 371) - Welsh was: Cwrw rhwng 1.3% a 3.4% ABV (cod y math o dreth: 371)
+No entry in messages.en found: Beer between 3.5% and 8.4% ABV (tax type code 376) - Welsh was: Cwrw rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 376)
+No entry in messages.en found: Select the {0} you need to declare - Welsh was: Dewiswch y {0} y mae angen i chi ei ddatgan
+No entry in messages.en found: We will ask about beer eligible for Small Producer Relief on the next page. - Welsh was: Byddwn yn gofyn ynghylch cwrw sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
+No entry in messages.en found: How much beer (standard rate) do you need to declare? - Welsh was: Faint o gwrw (cyfradd safonol) y mae angen i chi ei ddatgan?
+No entry in messages.en found: Beer between 1.3% and 3.4% ABV (tax type code 311) - Welsh was: Cwrw rhwng 1.3% a 3.4% ABV (cod y math o dreth: 311)
+No entry in messages.en found: Total litres of beer {0} - Welsh was: Cyfanswm y litrau o gwrw {0}
+No entry in messages.en found: To 2 decimal places - Welsh was: Dylid nodi 2 le degol
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: To 4 decimal places - Welsh was: Dylid nodi 4 lle degol
+No entry in messages.en found: Beer between 3.5% and 8.4% ABV (tax type code 321) - Welsh was: Cwrw rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 321)
+No entry in messages.en found: Total litres of beer {0} - Welsh was: Cyfanswm y litrau o gwrw {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Beer between 8.5% and 22% ABV (tax type code 331) - Welsh was: Cwrw rhwng 8.5% a 22% ABV (cod y math o dreth: 331)
+No entry in messages.en found: Total litres of beer {0} - Welsh was: Cyfanswm y litrau o gwrw {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Beer at or above 22.1% ABV (tax type code 341) - Welsh was: Cwrw ar 22.1% ABV neu’n uwch (cod y math o dreth: 341)
+No entry in messages.en found: Total litres of beer {0} - Welsh was: Cyfanswm y litrau o gwrw {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: How much draught beer (reduced rate) do you need to declare? - Welsh was: Faint o gwrw o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
+No entry in messages.en found: Beer between 1.3% and 3.4% ABV (tax type 351) - Welsh was: Cwrw rhwng 1.3% a 3.4% ABV (math o dreth: 351)
+No entry in messages.en found: Total litres of beer {0} - Welsh was: Cyfanswm y litrau o gwrw {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Beer between 3.5% and 8.4% ABV (tax type 356) - Welsh was: Cwrw rhwng 3.5% ac 8.4% ABV (math o dreth: 356)
+No entry in messages.en found: Total litres of beer {0} - Welsh was: Cyfanswm y litrau o gwrw {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: You may need to declare beer with more than one Small Producer Relief duty rate for the same type of beer, for example: - Welsh was: Efallai y bydd angen i chi ddatgan cwrw sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o gwrw – er enghraifft os yw un o’r canlynol yn wir:
+No entry in messages.en found: you merged with another producer and are reporting pre-merger production using the producers' own pre-merger Small Producer Relief duty rates - Welsh was: gwnaethoch uno â chynhyrchydd arall, ac rydych chi’n rhoi gwybod am waith cynhyrchu cyn uno – a hynny gan ddefnyddio’r cyfraddau toll yn sgil Rhyddhad i Gynhyrchwyr Bach a oedd gan y cynhyrchwyr eu hunain cyn uno
+No entry in messages.en found: If you have more than one Small Producer Relief duty rate for the same type of beer you will need to input them individually. For each duty rate we need to know the the total amount produced, the litres of pure alcohol and the applicable duty rate. - Welsh was: Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o gwrw, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
+No entry in messages.en found: How much non-draught beer that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o gwrw nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+No entry in messages.en found: Your Small Producer Relief Duty rate for this beer - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cwrw hwn
+No entry in messages.en found: How much draught beer that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o gwrw o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+No entry in messages.en found: Your Small Producer Relief duty rate must be less than £1 billion - Welsh was: Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn llai nag £1 biliwn
+No entry in messages.en found: Your Small Producer Relief duty rate must be £0.00 or more - Welsh was: Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
+No entry in messages.en found: Tell us about the beer you need to declare that is eligible for Small Producer Relief - Welsh was: Rhoi gwybod i ni am y cwrw y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: For each beer you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that beer at the following Alcohol by Volume (ABV) strengths. - Welsh was: Ar gyfer pob cwrw y mae angen i chi ei dWide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 320.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 321.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 322.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 323.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 325.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 385.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 386.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 393.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 552.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 574.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 578.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 582.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 586.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 623.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 624.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 634.
+datgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y cwrw hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
+No entry in messages.en found: If you have more than one duty rate for beer in the same ABV range enter them one at a time. - Welsh was: Os oes gennych fwy nag un gyfradd doll ar gyfer cwrw sydd yn yr un ystod ABV, nodwch nhw un ar y tro.
+No entry in messages.en found: What type of beer do you need to declare? - Welsh was: Pa fath o gwrw y mae angen i chi ei ddatgan?
+No entry in messages.en found: Non-draught beer between 1.3% and 3.4% ABV (tax type code 361) - Welsh was: Cwrw nad yw’n dod o’r gasgen rhwng 1.3% a 3.4% ABV (cod y math o dreth: 361)
+No entry in messages.en found: Non-draught beer between 3.5% and 8.4% ABV (tax type code 366) - Welsh was: Cwrw nad yw’n dod o’r gasgen rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 366)
+No entry in messages.en found: Draught beer between 1.2% and 3.4% ABV (tax type code 371) - Welsh was: Cwrw o’r gasgen rhwng 1.2% a 3.4% ABV (cod y math o dreth: 371)
+No entry in messages.en found: Draught beer between 3.5% and 8.4.% ABV (tax type code 376) - Welsh was: Cwrw o’r gasgen rhwng 3.5% ac 8.4.% ABV (cod y math o dreth: 376)
+No entry in messages.en found: Total litres of this beer - Welsh was: Cyfanswm y litrau o’r cwrw hwn
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Your Small Producer Relief Duty rate for this beer - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cwrw hwn
+No entry in messages.en found: Total beer - Welsh was: Cyfanswm y cwrw
+No entry in messages.en found: Beer with Small Producer Relief duty to declare - Welsh was: Cwrw i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Do you want to declare beer eligible for Small Producer Relief? - Welsh was: A ydych chi eisiau datgan cwrw sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach?
+No entry in messages.en found: Select yes if you have another Small Producer Relief duty rate to declare - Welsh was: Dewiswch ‘Iawn’ os oes gennych gyfradd doll arall yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
+No entry in messages.en found: You will owe �{0} - Welsh was: Bydd arnoch �{0}
+No entry in messages.en found: Remove this beer entry? - Welsh was: Tynnu’r cofnod cwrw hwn?
+No entry in messages.en found: This alcoholic product entry will be removed from your return. - Welsh was: Bydd y cofnod cynnyrch alcoholaidd hwn yn cael ei dynnu oddi wrth eich Datganiad.
+No entry in messages.en found: Non-draught cider (standard rate) - Welsh was: Seidr nad yw’n dod o’r gasgen (cyfradd safonol)
+No entry in messages.en found: Cider between 1.3% and 3.4% ABV (tax type code 312) - Welsh was: Seidr rhwng 1.3% a 3.4% ABV (cod y math o dreth: 312)
+No entry in messages.en found: Cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (tax type code 322) - Welsh was: Seidr rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (cod y math o dreth: 322)
+No entry in messages.en found: Sparkling cider between 5.6% and 8.4% ABV (tax type code 324) - Welsh was: Seidr pefriog rhwng 5.6% ac 8.4% ABV (cod y math o dreth: 324)
+No entry in messages.en found: Draught cider (reduced rate) - Welsh was: Seidr o’r gasgen (cyfradd is)
+No entry in messages.en found: Cider between 1.3% and 3.4% ABV (tax type code 352) - Welsh was: Seidr rhwng 1.3% a 3.4% ABV (cod y math o dreth: 352)
+No entry in messages.en found: Cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (tax type code 357) - Welsh was: Seidr rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (cod y math o dreth: 357)
+No entry in messages.en found: Sparkling cider between 5.6% and 8.4% ABV (tax type code 359) - Welsh was: Seidr pefriog rhwng 5.6% ac 8.4% ABV (cod y math o dreth: 359)
+No entry in messages.en found: Non-draught cider eligible for Small Producer Relief - Welsh was: Seidr nad yw’n dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Cider between 1.3% and 3.4% ABV (tax type code 362) - Welsh was: Seidr rhwng 1.3% a 3.4% ABV (cod y math o dreth: 362)
+No entry in messages.en found: Cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (tax type code 367) - Welsh was: Seidr rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (cod y math o dreth: 367)
+No entry in messages.en found: Sparkling cider between 5.6% and 8.4% ABV (tax type code 369) - Welsh was: Seidr pefriog rhwng 5.6% ac 8.4% ABV (cod y math o dreth: 369)
+No entry in messages.en found: Draught cider eligible for Small Producer Relief - Welsh was: Seidr o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Cider between 1.3% and 3.4% ABV (tax type code 372) - Welsh was: Seidr rhwng 1.3% a 3.4% ABV (cod y math o dreth: 372)
+No entry in messages.en found: Cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (tax type code 377) - Welsh was: Seidr rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (cod y math o dreth: 377)
+No entry in messages.en found: Sparkling cider between 5.6% and 8.4% ABV (tax type code 379) - Welsh was: Seidr pefriog rhwng 5.6% ac 8.4% ABV (cod y math o dreth: 379)
+No entry in messages.en found: Select the {0} you need to declare - Welsh was: Dewiswch y {0} y mae angen i chi ei ddatgan
+No entry in messages.en found: We will ask about wine eligible for Small Producer Relief on the next page. - Welsh was: Byddwn yn gofyn ynghylch gwin sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
+No entry in messages.en found: How much non-draught cider (standard rate) do you need to declare? - Welsh was: Faint o seidr nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
+No entry in messages.en found: Cider between 1.3% and 3.4% ABV (tax type code 312) - Welsh was: Seidr rhwng 1.3% a 3.4% ABV (cod y math o dreth: 312)
+No entry in messages.en found: Total litres of cider {0} - Welsh was: Cyfanswm y litrau o seidr {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (tax type code 322) - Welsh was: Seidr rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (cod y math o dreth: 322)
+No entry in messages.en found: Total litres of cider {0} and sparkling cider {1} - Welsh was: Cyfanswm y litrau o seidr {0} a seidr pefriog {1}
+No entry in messages.en found: Litres of pure alcohol {0} and sparkling cider {1} - Welsh was: Litrau o alcohol pur {0} a seidr pefriog {1}
+No entry in messages.en found: Sparkling cider between 5.6% and 8.4% ABV (tax type code 324) - Welsh was: Seidr pefriog rhwng 5.6% ac 8.4% ABV (cod y math o dreth: 324)
+No entry in messages.en found: Total litres of sparkling cider {0} - Welsh was: Cyfanswm y litrau o seidr pefriog {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: How much draught cider (reduced rate) do you need to declare? - Welsh was: Faint o seidr o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
+No entry in messages.en found: Cider between 1.3% and 3.4% ABV (tax type code 352) - Welsh was: Seidr rhwng 1.3% a 3.4% ABV (cod y math o dreth: 352)
+No entry in messages.en found: Total litres of cider {0} - Welsh was: Cyfanswm y litrau o seidr {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (tax type code 357) - Welsh was: Seidr rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (cod y math o dreth: 357)
+No entry in messages.en found: Total litres of cider {0} and sparkling cider {1} - Welsh was: Cyfanswm y litrau o seidr {0} a seidr pefriog {1}
+No entry Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 698.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 699.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 735.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 737.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 831.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 832.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 835.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 836.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 837.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 838.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 839.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 840.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 842.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 903.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 934.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 935.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 936.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 937.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 938.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 939.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 940.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 941.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 942.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 943.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 944.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 945.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 946.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 947.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 949.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 950.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1086.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1109.
+in messages.en found: Litres of pure alcohol {0} and sparkling cider {1} - Welsh was: Litrau o alcohol pur {0} a seidr pefriog {1}
+No entry in messages.en found: Sparkling cider between 5.6% and 8.4% ABV (tax type code 359) - Welsh was: Seidr pefriog rhwng 5.6% ac 8.4% ABV (cod y math o dreth: 359)
+No entry in messages.en found: Total litres of sparkling cider {0} - Welsh was: Cyfanswm y litrau o seidr pefriog {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: You may need to declare cider with more than one Small Producer Relief duty rate for the same type of cider, for example: - Welsh was: Efallai y bydd angen i chi ddatgan seidr sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o seidr – er enghraifft os yw un o’r canlynol yn wir:
+No entry in messages.en found: If you have more than one Small Producer Relief duty rate for the same type of cider you will need to input them individually. For each duty rate we need to know the the total amount produced, the litres of pure alcohol and the applicable duty rate. - Welsh was: Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o seidr, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
+No entry in messages.en found: How much non-draught cider that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o seidr nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+No entry in messages.en found: Your Small Producer Relief Duty rate for this cider - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y seidr hwn
+No entry in messages.en found: How much draught cider that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o seidr o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+No entry in messages.en found: Tell us about the cider you need to declare that is eligible for Small Producer Relief - Welsh was: Rhoi gwybod i ni am y seidr y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: For each cider you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that cider at the following Alcohol by Volume (ABV) strengths. - Welsh was: Ar gyfer pob seidr y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y seidr hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
+No entry in messages.en found: If you have more than one duty rate for cider in the same ABV range enter them one at a time. - Welsh was: Os oes gennych fwy nag un gyfradd doll ar gyfer seidr sydd yn yr un ystod ABV, nodwch nhw un ar y tro.
+No entry in messages.en found: What type of cider do you need to declare? - Welsh was: Pa fath o seidr y mae angen i chi ei ddatgan?
+No entry in messages.en found: Non-draught cider between 1.3% and 3.4% ABV (362 SPR) - Welsh was: Seidr nad yw’n dod o’r gasgen rhwng 1.3% a 3.4% ABV (362 SPR)
+No entry in messages.en found: Non-draught cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (367 SPR) - Welsh was: Seidr nad yw’n dod o’r gasgen rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (367 SPR)
+No entry in messages.en found: Non-draught sparkling cider between 5.6% and 8.4% ABV (369 SPR) - Welsh was: Seidr pefriog nad yw’n dod o’r gasgen rhwng 5.6% ac 8.4% ABV (369 SPR)
+No entry in messages.en found: Draught cider between 1.3% and 3.4% ABV (372 SPR) - Welsh was: Seidr o’r gasgen rhwng 1.3% a 3.4% ABV (372 SPR)
+No entry in messages.en found: Draught cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (377 SPR) - Welsh was: Seidr o’r gasgen rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (377 SPR)
+No entry in messages.en found: Draught sparkling cider between 5.6% and 8.4% ABV (379 SPR) - Welsh was: Seidr pefriog o’r gasgen rhwng 5.6% ac 8.4% ABV (379 SPR)
+No entry in messages.en found: Total litres of this cider - Welsh was: Cyfanswm y litrau o’r seidr hwn
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Your Small Producer Relief Duty rate for this cider - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y seidr hwn
+No entry in messages.en found: Total cider - Welsh was: Cyfanswm y seidr
+No entry in messages.en found: Cider with Small Producer Relief duty to declare - Welsh was: Seidr i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Cider to declare - Welsh was: Seidr i’w ddatgan
+No entry in messages.en found: Selected Cider to declare - Welsh was: Seidr a ddewiswyd i’w ddatgan
+No entry in messages.en found: Non-draught cider between 1.3% and 3.4% ABV (312) - Welsh was: Seidr nad yw’n dod o’r gasgen rhwng 1.3% a 3.4% ABV (312)
+No entry in messages.en found: Non-draught cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (322) - Welsh was: Seidr nad yw’n dod o’r gasgen rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (322)
+No entry in messages.en found: Non-draught sparkling cider between 5.6% and 8.4% ABV (324) - Welsh was: Seidr pefriog nad yw’n dod o’r gasgen rhwng 5.6% ac 8.4% ABV (324)
+No entry in messages.en found: Draught cider between 1.3% and 3.4% ABV (352) - Welsh was: Seidr o’r gasgen rhwng 1.3% a 3.4% ABV (352)
+No entry in messages.en found: Draught cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (357) - Welsh was: Seidr o’r gasgen rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (357)
+No entry in messages.en found: Draught sparkling cider between 5.6% and 8.4% ABV (359) - Welsh was: Seidr pefriog o’r gasgen rhwng 5.6% ac 8.4% ABV (359)
+No entry in messages.en found: Non-draught cider between 1.3% and 3.4% ABV (362 SPR) - Welsh was: Seidr nad yw’n dod o’r gasgen rhwng 1.3% a 3.4% ABV (362 SPR)
+No entry in messages.en found: Non-draught cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (367 SPR) - Welsh was: Seidr nad yw’n dod o’r gasgen rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (367 SPR)
+No entry in messages.en found: Non-draught sparkling cider between 5.6% and 8.4% ABV (369 SPR) - Welsh was: Seidr pefriog nad yw’n dod o’r gasgen rhwng 5.6% ac 8.4% ABV (369 SPR)
+No entry in messages.en found: Draught cider between 1.3% and 3.4% ABV (372 SPR) - Welsh was: Seidr o’r gasgen rhwng 1.3% a 3.4% ABV (372 SPR)
+No entry in messages.en found: Draught cider between 3.5% and 8.4% ABV and sparkling cider between 3.5% and 5.5% ABV (377 SPR) - Welsh was: Seidr o’r gasgen rhwng 3.5% ac 8.4% ABV a seidr pefriog rhwng 3.5% a 5.5% ABV (377 SPR)
+No entry in messages.en found: Draught sparkling cider between 5.6% and 8.4% ABV (379 SPR) - Welsh was: Seidr pefriog o’r gasgen rhwng 5.6% ac 8.4% ABV (379 SPR)
+No entry in messages.en found: Cider duty - Welsh was: Toll seidr
+No entry in messages.en found: Cider eligible for Small Producer Relief - Welsh was: Seidr sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Cider eligible for Small Producer Relief (multiple duty rates) - Welsh was: Seidr sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
+No entry in messages.en found: Remove this cider entry? - Welsh was: Tynnu’r cofnod seidr hwn?
+No entry in messages.en found: Non-draught wine (standard rate) - Welsh was: Gwin nad yw’n dod o’r gasgen (cyfradd safonol)
+No entry in messages.en found: Wine between 1.3% and 3.4% ABV (tax type code 313) - Welsh was: Gwin rhwng 1.3% a 3.4% ABV (cod y math o dreth: 313)
+No entry in messages.en founWide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1113.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1114.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1117.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1120.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1155.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1156.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1166.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1169.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1235.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1236.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1269.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1271.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1339.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1340.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1343.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1344.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1345.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1346.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1348.
+d: Wine between 3.5% and 8.4% ABV (tax type code 323) - Welsh was: Gwin rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 323)
+No entry in messages.en found: Wine between 8.5% and 22% ABV (tax type code 333) - Welsh was: Gwin rhwng 8.5% a 22% ABV (cod y math o dreth: 333)
+No entry in messages.en found: Wine at or above 22.1% ABV (tax type code 343) - Welsh was: Gwin ar 22.1% ABV neu’n uwch (cod y math o dreth: 343)
+No entry in messages.en found: Draught wine (reduced rate) - Welsh was: Gwin o’r gasgen (cyfradd is)
+No entry in messages.en found: Wine between 1.3% and 3.4% ABV (tax type code 353) - Welsh was: Gwin rhwng 1.3% a 3.4% ABV (cod y math o dreth: 353)
+No entry in messages.en found: Wine between 3.5% and 8.4% ABV (tax type code 358) - Welsh was: Gwin rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 358)
+No entry in messages.en found: Non-draught wine eligible for Small Producer Relief - Welsh was: Gwin nad yw’n dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Wine between 1.3% and 3.4% ABV (tax type code 363) - Welsh was: Gwin rhwng 1.3% a 3.4% ABV (cod y math o dreth: 363)
+No entry in messages.en found: Wine between 3.5% and 8.4% ABV (tax type code 368) - Welsh was: Gwin rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 368)
+No entry in messages.en found: Draught wine eligible for Small Producer Relief - Welsh was: Gwin o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Wine between 1.3% and 3.4% ABV (tax type code 373) - Welsh was: Gwin rhwng 1.3% a 3.4% ABV (cod y math o dreth: 373)
+No entry in messages.en found: Wine between 3.5% and 8.4% ABV (tax type code 378) - Welsh was: Gwin rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 378)
+No entry in messages.en found: Select the {0} you need to declare - Welsh was: Dewiswch y {0} y mae angen i chi ei ddatgan
+No entry in messages.en found: We will ask about wine eligible for Small Producer Relief on the next page. - Welsh was: Byddwn yn gofyn ynghylch gwin sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
+No entry in messages.en found: How much non-draught wine (standard rate) do you need to declare? - Welsh was: Faint o win nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
+No entry in messages.en found: Wine between 1.3% and 3.4% ABV (tax type code 313) - Welsh was: Gwin rhwng 1.3% a 3.4% ABV (cod y math o dreth: 313)
+No entry in messages.en found: Total litres of wine {0} - Welsh was: Cyfanswm y litrau o win {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Wine between 3.5% and 8.4% ABV (tax type code 323) - Welsh was: Gwin rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 323)
+No entry in messages.en found: Total litres of wine {0} - Welsh was: Cyfanswm y litrau o win {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Wine between 8.5% and 22% ABV (tax type code 333) - Welsh was: Gwin rhwng 8.5% a 22% ABV (cod y math o dreth: 333)
+No entry in messages.en found: Total litres of wine {0} - Welsh was: Cyfanswm y litrau o win {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Wine at or above 22.1% ABV (tax type code 343) - Welsh was: Gwin ar 22.1% ABV neu’n uwch (cod y math o dreth: 343)
+No entry in messages.en found: Total litres of wine {0} - Welsh was: Cyfanswm y litrau o win {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: How much draught wine (reduced rate) do you need to declare? - Welsh was: Faint o win o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
+No entry in messages.en found: Wine between 1.3% and 3.4% ABV (tax type code 353) - Welsh was: Gwin rhwng 1.3% a 3.4% ABV (cod y math o dreth: 353)
+No entry in messages.en found: Total litres of wine {0} - Welsh was: Cyfanswm y litrau o win {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Wine between 3.5% and 8.4% ABV (tax type code 358) - Welsh was: Gwin rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 358)
+No entry in messages.en found: Total litres of wine {0} - Welsh was: Cyfanswm y litrau o win {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: You may need to declare wine with more than one Small Producer Relief duty rate for the same type of wine, for example: - Welsh was: Efallai y bydd angen i chi ddatgan gwin sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o win – er enghraifft os yw un o’r canlynol yn wir:
+No entry in messages.en found: If you have more than one Small Producer Relief duty rate for the same type of wine you will need to input them individually. For each duty rate we need to know the the total amount produced, the litres of pure alcohol and the applicable duty rate. - Welsh was: Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o win, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
+No entry in messages.en found: How much non-draught wine that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o win nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+No entry in messages.en found: Your Small Producer Relief Duty rate for this wine - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y gwin hwn
+No entry in messages.en found: How much draught wine that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o win o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+No entry in messages.en found: Tell us about the wine you need to declare that is eligible for Small Producer Relief - Welsh was: Rhoi gwybod i ni am y gwin y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: For each wine you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that cider at the following Alcohol by Volume (ABV) strengths. - Welsh was: Ar gyfer pob gwin y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y gwin hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
+No entry in messages.en found: If you have more than one duty rate for wine in the same ABV range enter them one at a time. - Welsh was: Os oes gennych fwy nag un gyfradd doll ar gyfer gwin sydd yn yr un ystod ABV, nodwch nhw un ar y tro.
+No entry in messages.en found: What type of wine do you need to declare? - Welsh was: Pa fath o win y mae angen i chi ei ddatgan?
+No entry in messages.en found: Non-draught wine between 1.3% and 3.4% ABV (363 SPR) - Welsh was: Gwin nad yw’n dod o’r gasgen rhwng 1.3% a 3.4% ABV (363 SPR)
+No entry in messages.en found: Non-draught wine between 3.5% and 8.4% ABV (368 SPR) - Welsh was: Gwin nad yw’n dod o’r gasgen rhwng 3.5% ac 8.4% ABV (368 SPR)
+No entry in messages.en found: Draught wine between 1.3% and 3.4% ABV (373 SPR) - Welsh was: Gwin o’r gasgen rhwng 1.3% a 3.4% ABV (373 SPR)
+No entry in messages.en found: Draught wine between 3.5% and 8.4% ABV (378 SPR) - Welsh was: Gwin o’r gasgen rhwng 3.5% ac 8.4% ABV (378 SPR)
+No entry in messages.en found: Total litres of this wine - Welsh was: Cyfanswm y litrau o’r gwin hwn
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Your Small Producer Relief Duty rate for this wine - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y gwin hWide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1407.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1437.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1438.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1439.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1440.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1441.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1442.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1443.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1444.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1445.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1446.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1447.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1448.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1450.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1451.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1577.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1600.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1604.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1605.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1608.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1611.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1645.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1646.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1647.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1657.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1660.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1726.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1727.
+wn
+No entry in messages.en found: Total wine - Welsh was: Cyfanswm y gwin
+No entry in messages.en found: Wine with Small Producer Relief duty to declare - Welsh was: Gwin i’w ddatgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Wine to declare - Welsh was: Gwin i’w ddatgan
+No entry in messages.en found: Selected Wine to declare - Welsh was: Gwin a ddewiswyd i’w ddatgan
+No entry in messages.en found: Non-draught wine between 1.3% and 3.4% ABV (313) - Welsh was: Gwin nad yw’n dod o’r gasgen rhwng 1.3% a 3.4% ABV (313)
+No entry in messages.en found: Non-draught wine between 3.5% and 8.4% ABV (323) - Welsh was: Gwin nad yw’n dod o’r gasgen rhwng 3.5% ac 8.4% ABV (323)
+No entry in messages.en found: Non-draught wine between 8.5% and 22% ABV (333) - Welsh was: Gwin nad yw’n dod o’r gasgen rhwng 8.5% a 22% ABV (333)
+No entry in messages.en found: Non-draught wine at or above 22.1% ABV (343) - Welsh was: Gwin nad yw’n dod o’r gasgen ar 22.1% ABV neu’n uwch (343)
+No entry in messages.en found: Draught wine between 1.3% and 3.4% ABV (353) - Welsh was: Gwin o’r gasgen rhwng 1.3% a 3.4% ABV (353)
+No entry in messages.en found: Draught wine between 3.5% and 8.4% ABV (358) - Welsh was: Gwin o’r gasgen rhwng 3.5% ac 8.4% ABV (358)
+No entry in messages.en found: Non-draught wine between 1.3% and 3.4% ABV (363 SPR) - Welsh was: Gwin nad yw’n dod o’r gasgen rhwng 1.3% a 3.4% ABV (363 SPR)
+No entry in messages.en found: Non-draught wine between 3.5% and 8.4% ABV (368 SPR) - Welsh was: Gwin nad yw’n dod o’r gasgen rhwng 3.5% ac 8.4% ABV (368 SPR)
+No entry in messages.en found: Draught wine between 1.3% and 3.4% ABV (373 SPR) - Welsh was: Gwin o’r gasgen rhwng 1.3% a 3.4% ABV (373 SPR)
+No entry in messages.en found: Draught wine between 3.5% and 8.4% ABV (378 SPR) - Welsh was: Gwin o’r gasgen rhwng 3.5% ac 8.4% ABV (378 SPR)
+No entry in messages.en found: Wine duty - Welsh was: Toll gwin
+No entry in messages.en found: Wine eligible for Small Producer Relief - Welsh was: Gwin sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Wine eligible for Small Producer Relief (multiple duty rates) - Welsh was: Gwin sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
+No entry in messages.en found: Remove this wine entry? - Welsh was: Tynnu’r cofnod gwin hwn?
+No entry in messages.en found: Non-draught spirits (standard rate) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen (cyfradd safonol)
+No entry in messages.en found: Spirits between 1.3% and 3.4% ABV (tax type code 315) - Welsh was: Gwirodydd rhwng 1.3% a 3.4% ABV (cod y math o dreth: 315)
+No entry in messages.en found: Spirits between 3.5% and 8.4% ABV (tax type code 325) - Welsh was: Gwirodydd rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 325)
+No entry in messages.en found: Spirits between 8.5% and 22% ABV (tax type code 335) - Welsh was: Gwirodydd rhwng 8.5% a 22% ABV (cod y math o dreth: 335)
+No entry in messages.en found: Spirits at or above 22.1% ABV (tax type code 345) - Welsh was: Gwirodydd ar 22.1% ABV neu’n uwch (cod y math o dreth: 345)
+No entry in messages.en found: Draught spirits (reduced rate) - Welsh was: Gwirodydd o’r gasgen (cyfradd is)
+No entry in messages.en found: Spirits between 1.3% and 3.4% ABV (tax type code 355) - Welsh was: Gwirodydd rhwng 1.3% a 3.4% ABV (cod y math o dreth: 355)
+No entry in messages.en found: Spirits between 3.5% and 8.4% ABV (tax type code 360) - Welsh was: Gwirodydd rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 360)
+No entry in messages.en found: Non-draught spirits eligible for Small Producer Relief - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Spirits between 1.3% and 3.4% ABV (tax type code 365) - Welsh was: Gwirodydd rhwng 1.3% a 3.4% ABV (cod y math o dreth: 365)
+No entry in messages.en found: Spirits between 3.5% and 8.4% ABV (tax type code 370) - Welsh was: Gwirodydd rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 370)
+No entry in messages.en found: Draught spirits eligible for Small Producer Relief - Welsh was: Gwirodydd o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Spirits between 1.3% and 3.4% ABV (tax type code 375) - Welsh was: Gwirodydd rhwng 1.3% a 3.4% ABV (cod y math o dreth: 375)
+No entry in messages.en found: Spirits between 3.5% and 8.4% ABV (tax type code 380) - Welsh was: Gwirodydd rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 380)
+No entry in messages.en found: Select the {0} you need to declare - Welsh was: Dewiswch y {0} y mae angen i chi eu datgan
+No entry in messages.en found: Tell us about the spirits you need to declare and the pure alcohol in that spirits at the following Alcohol by Volume (ABV) strengths. - Welsh was: Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan a’r alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
+No entry in messages.en found: We will ask about spirits eligible for Small Producer Relief on the next page. - Welsh was: Byddwn yn gofyn ynghylch gwirodydd sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
+No entry in messages.en found: How much non-draught spirits (standard rate) do you need to declare? - Welsh was: Faint o wirodydd nad ydynt yn dod o’r gasgen (cyfradd safonol) y mae angen i chi eu datgan?
+No entry in messages.en found: Spirits between 1.3% and 3.4% ABV (tax type code 315) - Welsh was: Gwirodydd rhwng 1.3% a 3.4% ABV (cod y math o dreth: 315)
+No entry in messages.en found: Total litres of spirits {0} - Welsh was: Cyfanswm y litrau o wirodydd {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Spirits between 3.5% and 8.4% ABV (tax type code 325) - Welsh was: Gwirodydd rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 325)
+No entry in messages.en found: Total litres of spirits {0} - Welsh was: Cyfanswm y litrau o wirodydd {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Spirits between 8.5% and 22% ABV (tax type code 335) - Welsh was: Gwirodydd rhwng 8.5% a 22% ABV (cod y math o dreth: 335)
+No entry in messages.en found: Total litres of spirits {0} - Welsh was: Cyfanswm y litrau o wirodydd {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Spirits at or above 22.1% ABV (tax type code 345) - Welsh was: Gwirodydd ar 22.1% ABV neu’n uwch (cod y math o dreth: 345)
+No entry in messages.en found: Total litres of spirits {0} - Welsh was: Cyfanswm y litrau o wirodydd {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: How much draught spirits (reduced rate) do you need to declare? - Welsh was: Faint o wirodydd o’r gasgen (cyfradd is) y mae angen i chi eu datgan?
+No entry in messages.en found: Spirits between 1.3% and 3.4% ABV (tax type code 355) - Welsh was: Gwirodydd rhwng 1.3% a 3.4% ABV (cod y math o dreth: 355)
+No entry in messages.en found: Total litres of spirits {0} - Welsh was: Cyfanswm y litrau o wirodydd {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Spirits between 3.5% and 8.4% ABV (tax type code 360) - Welsh was: Gwirodydd rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 360)
+No entry in messages.en found: Total litres of spirits {0} - Welsh was: Cyfanswm y litrau o wirodydd {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: You may need to declare spirits with more than one Small Producer Relief duty rate for the same type of spirits, for example: - Welsh was: Efallai y bydd angen i chi ddatgan gwirodydd sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o wirodydd – er enghraifft os yw un o’r canlynol yn wir:
+No entry in messages.en found: IWide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1761.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1762.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1764.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1831.
+Unable to parse translation csv on line 1832 EIQ - Quoted field not terminated: P,For each spirits you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that cider at the following Alcohol by Volume (ABV) strengths.,"Ar gyfer pob gwirod y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y gwirod hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.","We have translated ""in that spirit"", instead of ""in that cider"". Please update the English version to match. at ./create_translated_message_file.pl line 114, <$translationInput> line 1832.
+Unable to parse translation csv on line 1833 EIF - Loose unescaped quote: We have also translated ""For each spirit"" instead of ""For each spirits""." at ./create_translated_message_file.pl line 114, <$translationInput> line 1833.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1836.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1837.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1838.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1839.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1841.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1900.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1930.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1931.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1932.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1933.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1934.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1935.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1936.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1937.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1938.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1939.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1940.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1941.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1943.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 1944.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2070.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2093.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2097.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2098.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2102.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2106.
+f you have more than one Small Producer Relief duty rate for the same type of spirits you will need to input them individually. For each duty rate we need to know the the total amount produced, the litres of pure alcohol and the applicable duty rate. - Welsh was: Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o wirodydd, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
+No entry in messages.en found: Tell us about the spirits you need to declare that is eligible for Small Producer Relief, and the pure alcohol in that spirits at the following Alcohol by Volume (ABV) strengths. - Welsh was: Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
+No entry in messages.en found: How much non-draught spirits that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o wirodydd nad ydynt yn dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi eu datgan?
+No entry in messages.en found: Your Small Producer Relief Duty rate for this spirits - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y gwirodydd hyn
+No entry in messages.en found: How much draught spirits that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o wirodydd o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi eu datgan?
+No entry in messages.en found: Tell us about the spirits you need to declare that are eligible for Small Producer Relief - Welsh was: Rhoi gwybod i ni am y gwirodydd y mae angen i chi eu datgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: If you have more than one duty rate for spirits in the same ABV range enter them one at a time. - Welsh was: Os oes gennych fwy nag un gyfradd doll ar gyfer gwirodydd sydd yn yr un ystod ABV, nodwch nhw un ar y tro.
+No entry in messages.en found: What type of spirits do you need to declare? - Welsh was: Pa fath o wirodydd y mae angen i chi eu datgan?
+No entry in messages.en found: Non-draught spirits between 1.3% and 3.4% ABV (365 SPR) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen rhwng 1.3% a 3.4% ABV (365 SPR)
+No entry in messages.en found: Non-draught spirits between 3.5% and 8.4% ABV (370 SPR) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen rhwng 3.5% ac 8.4% ABV (370 SPR)
+No entry in messages.en found: Draught spirits between 1.3% and 3.4% ABV (375 SPR) - Welsh was: Gwirodydd o’r gasgen rhwng 1.3% a 3.4% ABV (375 SPR)
+No entry in messages.en found: Draught spirits between 3.5% and 8.4% ABV (380 SPR) - Welsh was: Gwirodydd o’r gasgen rhwng 3.5% ac 8.4% ABV (380 SPR)
+No entry in messages.en found: Total litres of this spirits - Welsh was: Cyfanswm y litrau o’r gwirodydd hyn
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Your Small Producer Relief Duty rate for this spirits - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y gwirodydd hyn
+No entry in messages.en found: Total spirits - Welsh was: Cyfanswm y gwirodydd
+No entry in messages.en found: Spirits with Small Producer Relief duty to declare - Welsh was: Gwirodydd i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Spirits to declare - Welsh was: Gwirodydd i’w datgan
+No entry in messages.en found: Selected Spirits to declare - Welsh was: Gwirodydd a ddewiswyd i’w datgan
+No entry in messages.en found: Non-draught spirits between 1.3% and 3.4% ABV (315) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen rhwng 1.3% a 3.4% ABV (315)
+No entry in messages.en found: Non-draught spirits between 3.5% and 8.4% ABV (325) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen rhwng 3.5% ac 8.4% ABV (325)
+No entry in messages.en found: Non-draught spirits between 8.5% and 22% ABV (335) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen rhwng 8.5% a 22% ABV (335)
+No entry in messages.en found: Non-draught spirits at or above 22.1% ABV (345) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen ar 22.1% ABV neu’n uwch (345)
+No entry in messages.en found: Draught spirits between 1.3% and 3.4% ABV (355) - Welsh was: Gwirodydd o’r gasgen rhwng 1.3% a 3.4% ABV (355)
+No entry in messages.en found: Draught spirits between 3.5% and 8.4% ABV (360) - Welsh was: Gwirodydd o’r gasgen rhwng 3.5% ac 8.4% ABV (360)
+No entry in messages.en found: Non-draught spirits between 1.3% and 3.4% ABV (365 SPR) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen rhwng 1.3% a 3.4% ABV (365 SPR)
+No entry in messages.en found: Non-draught spirits between 3.5% and 8.4% ABV (370 SPR) - Welsh was: Gwirodydd nad ydynt yn dod o’r gasgen rhwng 3.5% ac 8.4% ABV (370 SPR)
+No entry in messages.en found: Draught spirits between 1.3% and 3.4% ABV (375 SPR) - Welsh was: Gwirodydd o’r gasgen rhwng 1.3% a 3.4% ABV (375 SPR)
+No entry in messages.en found: Draught spirits between 3.5% and 8.4% ABV (380 SPR) - Welsh was: Gwirodydd o’r gasgen rhwng 3.5% ac 8.4% ABV (380 SPR)
+No entry in messages.en found: Spirits duty - Welsh was: Toll gwirodydd
+No entry in messages.en found: Spirits eligible for Small Producer Relief - Welsh was: Gwirodydd sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Spirits eligible for Small Producer Relief (multiple duty rates) - Welsh was: Gwirodydd sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
+No entry in messages.en found: Remove this spirits entry? - Welsh was: Tynnu’r cofnod gwirodydd hwn?
+No entry in messages.en found: Non-draught other fermented products (standard rate) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen (cyfradd safonol)
+No entry in messages.en found: Other fermented products between 1.3% and 3.4% ABV (tax type code 314) - Welsh was: Cynhyrchion eplesedig eraill rhwng 1.3% a 3.4% ABV (cod y math o dreth: 314)
+No entry in messages.en found: Other fermented products between 3.5% and 8.4% ABV (tax type code 324) - Welsh was: Cynhyrchion eplesedig eraill rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 324)
+No entry in messages.en found: Other fermented products between 8.5% and 22% ABV (tax type code 334) - Welsh was: Cynhyrchion eplesedig eraill rhwng 8.5% a 22% ABV (cod y math o dreth: 334)
+No entry in messages.en found: Other fermented products at or above 22.1% ABV (tax type code 344) - Welsh was: Cynhyrchion eplesedig eraill ar 22.1% ABV neu’n uwch (cod y math o dreth: 344)
+No entry in messages.en found: Draught other fermented products (reduced rate) - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen (cyfradd is)
+No entry in messages.en found: Other fermented products between 1.3% and 3.4% ABV (tax type code 354) - Welsh was: Cynhyrchion eplesedig eraill rhwng 1.3% a 3.4% ABV (cod y math o dreth: 354)
+No entry in messages.en found: Other fermented products between 3.5% and 8.4% ABV (tax type code 359) - Welsh was: Cynhyrchion eplesedig eraill rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 359)
+No entry in messages.en found: Non-draught other fermented products eligible for Small Producer Relief - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Other fermented products between 1.3% and 3.4% ABV (tax type code 364) - Welsh was: Cynhyrchion eplesedig eraill rhwng 1.3% a 3.4% ABV (cod y math o dreth: 364)
+No entry in messages.en found: Other fermented products between 3.5% and 8.4% ABV (tax type code 369) - Welsh was: Cynhyrchion eplesedig eraill rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 369)
+No entry in messages.en found: Draught other fermented products eligible for Small Producer Relief - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry inWide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2149.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2150.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2160.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2163.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2234.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2235.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2270.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2272.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2343.
+Unable to parse translation csv on line 2344 EIQ - Quoted field not terminated: P,"For each other fermented products you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that other fermented products at the following Alcohol by Volume (ABV) strengths. at ./create_translated_message_file.pl line 114, <$translationInput> line 2344.
+Unable to parse translation csv on line 2345 EIQ - QUO character not allowed: ","Ar gyfer pob cynnyrch eplesedig arall y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, mae angen i chi roi gwybod i ni beth yw cyfanswm y cyfaint, a faint o alcohol pur sydd yn y cynnyrch eplesedig arall hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.","We have translated ""product...that is"" and ""alcohol in that…product"", instead of ""products...that is"" and ""alcohol in that…products""." at ./create_translated_message_file.pl line 114, <$translationInput> line 2345.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2348.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2349.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2350.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2351.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2352.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2418.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2451.
+ messages.en found: Other fermented products between 1.3% and 3.4% ABV (tax type code 374) - Welsh was: Cynhyrchion eplesedig eraill rhwng 1.3% a 3.4% ABV (cod y math o dreth: 374)
+No entry in messages.en found: Other fermented products between 3.5% and 8.4% ABV (tax type code 379) - Welsh was: Cynhyrchion eplesedig eraill rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 379)
+No entry in messages.en found: Select the {0} you need to declare - Welsh was: Dewiswch y {0} y mae angen i chi eu datgan
+No entry in messages.en found: We will ask about other fermented products eligible for Small Producer Relief on the next page. - Welsh was: Byddwn yn gofyn ynghylch cynhyrchion eplesedig eraill sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
+No entry in messages.en found: How much non-draught other fermented products (standard rate) do you need to declare? - Welsh was: Faint o gynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen (cyfradd safonol) y mae angen i chi eu datgan?
+No entry in messages.en found: Other fermented products between 1.3% and 3.4% ABV (tax type code 314) - Welsh was: Cynhyrchion eplesedig eraill rhwng 1.3% a 3.4% ABV (cod y math o dreth: 314)
+No entry in messages.en found: Total litres of other fermented products {0} - Welsh was: Cyfanswm y litrau o gynhyrchion eplesedig eraill {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Other fermented products between 3.5% and 8.4% ABV (tax type code 324) - Welsh was: Cynhyrchion eplesedig eraill rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 324)
+No entry in messages.en found: Total litres of other fermented products {0} - Welsh was: Cyfanswm y litrau o gynhyrchion eplesedig eraill {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Other fermented products between 8.5% and 22% ABV (tax type code 334) - Welsh was: Cynhyrchion eplesedig eraill rhwng 8.5% a 22% ABV (cod y math o dreth: 334)
+No entry in messages.en found: Total litres of other fermented products {0} - Welsh was: Cyfanswm y litrau o gynhyrchion eplesedig eraill {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Other fermented products at or above 22.1% ABV (tax type code 344) - Welsh was: Cynhyrchion eplesedig eraill ar 22.1% ABV neu’n uwch (cod y math o dreth: 344)
+No entry in messages.en found: Total litres of other fermented products {0} - Welsh was: Cyfanswm y litrau o gynhyrchion eplesedig eraill {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: How much draught other fermented products (reduced rate) do you need to declare? - Welsh was: Faint o gynhyrchion eplesedig eraill o’r gasgen (cyfradd is) y mae angen i chi eu datgan?
+No entry in messages.en found: Other fermented products between 1.3% and 3.4% ABV (tax type code 354) - Welsh was: Cynhyrchion eplesedig eraill rhwng 1.3% a 3.4% ABV (cod y math o dreth: 354)
+No entry in messages.en found: Total litres of other fermented products {0} - Welsh was: Cyfanswm y litrau o gynhyrchion eplesedig eraill {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Other fermented products between 3.5% and 8.4% ABV (tax type code 359) - Welsh was: Cynhyrchion eplesedig eraill rhwng 3.5% ac 8.4% ABV (cod y math o dreth: 359)
+No entry in messages.en found: Total litres of other fermented products {0} - Welsh was: Cyfanswm y litrau o gynhyrchion eplesedig eraill {0}
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: You may need to declare other fermented products with more than one Small Producer Relief duty rate for the same type of other fermented products, for example: - Welsh was: Efallai y bydd angen i chi ddatgan cynhyrchion eplesedig eraill sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o gynhyrchion eplesedig eraill – er enghraifft os yw un o’r canlynol yn wir:
+No entry in messages.en found: If you have more than one Small Producer Relief duty rate for the same type of other fermented products you will need to input them individually. For each duty rate we need to know the total amount produced, the litres of pure alcohol and the applicable duty rate. - Welsh was: Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o gynhyrchion eplesedig eraill, bydd angen i chi eu nodi ar wahân. Ar gyfer pob cyfradd doll, mae angen i ni wybod y cyfanswm a gynhyrchwyd, y litrau o alcohol pur a’r gyfradd doll sy’n berthnasol.
+No entry in messages.en found: How much non-draught other fermented products that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o gynnyrch eplesedig arall nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+No entry in messages.en found: Your Small Producer Relief Duty rate for this other fermented products - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynnyrch eplesedig arall hwn
+No entry in messages.en found: How much draught other fermented products that is eligible for Small Producer Relief do you need to declare? - Welsh was: Faint o gynnyrch eplesedig arall o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
+No entry in messages.en found: Tell us about the other fermented products you need to declare that are eligible for Small Producer Relief - Welsh was: Rhoi gwybod i ni am y cynhyrchion eplesedig eraill y mae angen i chi eu datgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: If you have more than one duty rate for other fermented products in the same ABV range enter them one at a time. - Welsh was: Os oes gennych fwy nag un gyfradd doll ar gyfer cynhyrchion eplesedig eraill sydd yn yr un ystod ABV, nodwch nhw un ar y tro.
+No entry in messages.en found: What type of other fermented products do you need to declare? - Welsh was: Pa fath o gynhyrchion eplesedig eraill y mae angen i chi eu datgan?
+No entry in messages.en found: Non-draught other fermented products between 1.3% and 3.4% ABV (364 SPR) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen rhwng 1.3% a 3.4% ABV (364 SPR)
+No entry in messages.en found: Non-draught other fermented products between 3.5% and 8.4% ABV (369 SPR) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen rhwng 3.5% ac 8.4% ABV (369 SPR)
+No entry in messages.en found: Draught other fermented products between 1.3% and 3.4% ABV (374 SPR) - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen rhwng 1.3% a 3.4% ABV (374 SPR)
+No entry in messages.en found: Draught other fermented products between 1.3% and 3.4% ABV (374 SPR) - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen rhwng 1.3% a 3.4% ABV (374 SPR)
+No entry in messages.en found: Draught other fermented products between 3.5% and 8.4% ABV (379 SPR) - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen rhwng 3.5% ac 8.4% ABV (379 SPR)
+No entry in messages.en found: Total litres of other fermented products - Welsh was: Cyfanswm y litrau o gynhyrchion eplesedig eraill
+No entry in messages.en found: Litres of pure alcohol {0} - Welsh was: Litrau o alcohol pur {0}
+No entry in messages.en found: Your Small Producer Relief Duty rate for this other fermented products - Welsh was: Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynnyrch eplesedig arall hwn
+No entry in messages.en found: Total other fermented products - Welsh was: Cyfanswm y cynhyrchion eplesedig eraill
+No entry in messages.en found: Other fermented products with Small Producer Relief duty to declare - Welsh was: Cynhyrchion eplesedig eraill i’w datgan, sydd â tholl yn sgil Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Other fermented products to declare - Welsh wasWide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2452.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2453.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2454.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2455.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2456.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2457.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2458.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2459.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2460.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2461.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2462.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2464.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2465.
+Wide character in print at ./create_translated_message_file.pl line 99, <$translationInput> line 2602.
+: Cynhyrchion eplesedig eraill i’w datgan
+No entry in messages.en found: Selected Other fermented products to declare - Welsh was: Cynhyrchion eplesedig eraill a ddewiswyd i’w datgan
+No entry in messages.en found: Non-draught other fermented products between 1.3% and 3.4% ABV (314) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen rhwng 1.3% a 3.4% ABV (314)
+No entry in messages.en found: Non-draught other fermented products between 3.5% and 8.4% ABV (324) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen rhwng 3.5% ac 8.4% ABV (324)
+No entry in messages.en found: Non-draught other fermented products between 8.5% and 22% ABV (334) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen rhwng 8.5% a 22% ABV (334)
+No entry in messages.en found: Non-draught other fermented products at or above 22.1% ABV (344) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen ar 22.1% ABV neu’n uwch (344)
+No entry in messages.en found: Draught other fermented products between 1.3% and 3.4% ABV (354) - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen rhwng 1.3% a 3.4% ABV (354)
+No entry in messages.en found: Draught other fermented products between 3.5% and 8.4% ABV (359) - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen rhwng 3.5% ac 8.4% ABV (359)
+No entry in messages.en found: Non-draught other fermented products between 1.3% and 3.4% ABV (364 SPR) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen rhwng 1.3% a 3.4% ABV (364 SPR)
+No entry in messages.en found: Non-draught other fermented products between 3.5% and 8.4% ABV (369 SPR) - Welsh was: Cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen rhwng 3.5% ac 8.4% ABV (369 SPR)
+No entry in messages.en found: Draught other fermented products between 1.3% and 3.4% ABV (374 SPR) - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen rhwng 1.3% a 3.4% ABV (374 SPR)
+No entry in messages.en found: Draught other fermented products between 3.5% and 8.4% ABV (379 SPR) - Welsh was: Cynhyrchion eplesedig eraill o’r gasgen rhwng 3.5% ac 8.4% ABV (379 SPR)
+No entry in messages.en found: Other fermented products duty - Welsh was: Toll cynhyrchion eplesedig eraill
+No entry in messages.en found: Other fermented products eligible for Small Producer Relief - Welsh was: Cynhyrchion eplesedig eraill sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
+No entry in messages.en found: Other fermented products eligible for Small Producer Relief (multiple duty rates) - Welsh was: Cynhyrchion eplesedig eraill sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
+No entry in messages.en found: Remove this other fermented products entry? - Welsh was: Tynnu’r cofnod cynhyrchion eplesedig eraill hwn?
+Processed 490 lines: 135 successes (written 165), 355 not matched, 0 dynamic problems
