@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import connectors.UserAnswersConnector
+import connectors.{AlcoholDutyReturnsConnector, UserAnswersConnector}
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegimes, ObligationData, ReturnPeriod, UserAnswers}
 import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
@@ -37,12 +37,14 @@ import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
   "BeforeStartReturn Controller" - {
+    // TODO: split first test into different cases for fetching subscription and obligation and checking against existing user answers
     "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in new SetUp {
       when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
 
       val application = applicationBuilder()
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
           bind[AuditService].toInstance(mockAuditService),
           bind(classOf[Clock]).toInstance(clock)
         )
@@ -263,9 +265,10 @@ class BeforeStartReturnControllerSpec extends SpecBase {
   }
 
   class SetUp {
-    val mockUserAnswersConnector       = mock[UserAnswersConnector]
-    val mockAuditService: AuditService = mock[AuditService]
-    val mockUpstreamErrorResponse      = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector        = mock[UserAnswersConnector]
+    val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+    val mockAuditService: AuditService  = mock[AuditService]
+    val mockUpstreamErrorResponse       = mock[UpstreamErrorResponse]
 
     implicit val messages: Messages = getMessages(app)
 

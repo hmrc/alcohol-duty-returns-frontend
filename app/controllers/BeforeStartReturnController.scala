@@ -16,11 +16,12 @@
 
 package controllers
 
+import cats.data.EitherT
 import config.Constants.periodKeySessionKey
-import connectors.UserAnswersConnector
+import connectors.{AlcoholDutyReturnsConnector, UserAnswersConnector}
 import controllers.actions._
 import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
-import models.{ObligationData, ReturnId, ReturnPeriod, UserAnswers}
+import models.{AlcoholRegime, ObligationData, ReturnId, ReturnPeriod, UserAnswers}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -37,6 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BeforeStartReturnController @Inject() (
   userAnswersConnector: UserAnswersConnector,
+  alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   auditService: AuditService,
@@ -63,20 +65,44 @@ class BeforeStartReturnController @Inject() (
         val currentDate = LocalDate.now(clock)
         val viewModel   = beforeStartReturnViewModelFactory(returnPeriod, currentDate)
         val session     = request.session + (periodKeySessionKey, periodKey)
-        userAnswersConnector.get(request.appaId, periodKey).map {
+        userAnswersConnector.get(request.appaId, periodKey).flatMap {
           case Right(ua)                                    =>
             logger.info(s"Return $appaId/$periodKey retrieved by the user")
-            auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
-            Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+            val subscriptionAndObligation: EitherT[Future, String, (Set[AlcoholRegime], ObligationData)] = for {
+              subscriptionRegimes <- alcoholDutyReturnsConnector.getValidSubscriptionRegimes(appaId)
+              obligationData      <- alcoholDutyReturnsConnector.getOpenObligation(appaId, periodKey)
+            } yield (subscriptionRegimes, obligationData)
+
+            subscriptionAndObligation.value.map {
+              case Right((subscriptionRegimes, _))                                      =>
+                if (ua.regimes equals subscriptionRegimes) {
+                  auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
+                  Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+                } else {
+                  Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+                  // TODO: new view - onPageLoad() will clear answers and release lock, onSubmit() does the same as the one below
+                }
+              // TODO: clear user answers and release lock for first 2 error cases
+              // TODO: new delete() method in backend UserAnswersController?
+              case Left("Forbidden: Subscription status is not Approved or Insolvent.") =>
+                logger.warn("Forbidden: Subscription status is not Approved or Insolvent.")
+                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+              case Left("No open obligation found.")                                    =>
+                logger.warn("No open obligation found.")
+                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+              case Left(e)                                                              =>
+                logger.warn(s"Error: $e")
+                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            }
           case Left(error) if error.statusCode == NOT_FOUND =>
             logger.info(s"Return $appaId/$periodKey not found")
-            Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session)
+            Future.successful(Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session))
           case Left(error) if error.statusCode == LOCKED    =>
             logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
-            Redirect(controllers.routes.ReturnLockedController.onPageLoad())
+            Future.successful(Redirect(controllers.routes.ReturnLockedController.onPageLoad()))
           case _                                            =>
             logger.warn(s"Error retrieving the return $appaId/$periodKey for the user")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
         }
     }
   }
