@@ -3,6 +3,8 @@
 This is instructions for translating the English messages file (../conf/messages.en) to the Welsh messages file (../conf/messages.cy).
 All file paths will be relative to the scripts directory where the discussed scripts are located.
 
+To run the scripts you'll need perl installed (and the path to be /usr/bin/perl) as well as the Text::CSV library/module.
+
 ## Welsh translation spreadsheet
 
 This is provided by the Welsh translation team and is 'all' the screen messages in both English and Welsh.
