@@ -57,6 +57,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateRepackagedDutyChangeUrl")
   private val adrCalculatorCalculateTotalAdjustmentUrlPart: String      =
     configuration.get[String]("microservice.services.alcohol-duty-calculator.calculateTotalAdjustmentUrl")
+  private val gformPrefix: String                                       =
+    configuration.get[String]("microservice.services.gform.prefix")
+  private val gformClaimARefundUrl: String                              =
+    configuration.get[String]("microservice.services.gform.claimARefundUrl")
 
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
@@ -81,6 +85,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val spiritsAndIngredientsEnabled: Boolean =
     configuration.get[Boolean]("features.spirits-and-ingredients")
+
+  val claimARefundGformEnabled: Boolean =
+    configuration.get[Boolean]("features.claim-a-refund-gform")
 
   val enrolmentServiceName   = configuration.get[String]("enrolment.serviceName")
   val enrolmentIdentifierKey = configuration.get[String]("enrolment.identifierKey")
@@ -128,6 +135,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def adrGetHistoricPaymentsUrl(appaId: String, year: Int): String =
     s"$adrAccountHost/alcohol-duty-account/producers/$appaId/payments/historic/$year"
+
+  def claimRefundGformUrl(amount: String): String =
+    s"$gformPrefix$gformClaimARefundUrl$amount"
 
   def adrCalculatorRatesUrl(): String =
     adrCalculatorHost + adrCalculatorRootUrl + adrCalculatorRatesUrlPart
