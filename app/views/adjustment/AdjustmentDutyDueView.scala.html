@@ -18,6 +18,7 @@
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 @import viewmodels.Money
+@import viewmodels.checkAnswers.adjustment.AdjustmentDutyDueViewModel
 
 @this(
         layout: templates.Layout,
@@ -29,17 +30,13 @@
         bulletList: BulletList
 )
 
-@(adjustmentType: AdjustmentType, volume: BigDecimal, duty: BigDecimal, pureAlcoholVolume: BigDecimal, taxCode: String, rate: BigDecimal, repackagedRate: BigDecimal, repackagedDuty: BigDecimal, newDuty: BigDecimal)(implicit request: Request[_], messages: Messages)
+@(adjustmentDutyDueViewModel: AdjustmentDutyDueViewModel, adjustmentType: AdjustmentType)(implicit request: Request[_], messages: Messages)
 
 @heading = @{
-    val dutyToShow: BigDecimal = adjustmentType match {
-        case AdjustmentType.RepackagedDraughtProducts => newDuty
-        case _ => duty
-    }
-    pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), dutyToShow)
+    pageHeadingWithMonetaryValue(messages("adjustmentDutyDue.heading"), adjustmentDutyDueViewModel.dutyToShow)
 }
 
-@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(duty)))) {
+@layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(adjustmentDutyDueViewModel.dutyToShow)))) {
 
     @sectionHeading(
         id = "adjustment-duty-due-section",
@@ -50,25 +47,7 @@
 
     @paragraph(messages("adjustmentDutyDue.paragraph1"))
 
-    @if(adjustmentType != RepackagedDraughtProducts) {
-        @bulletList(Seq(
-        messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume)),
-        messages("adjustmentDutyDue.bulletList.2", Money.format(rate)),
-        messages("adjustmentDutyDue.bulletList.3", Money.format(duty))
-        ))
-    }
-
-    @if(adjustmentType == RepackagedDraughtProducts) {
-        @bulletList(Seq(
-        messages("adjustmentDutyDue.repackaged.bulletList.1", Money.format(rate)),
-        messages("adjustmentDutyDue.bulletList.1", messages("site.4DP", pureAlcoholVolume)),
-        messages("adjustmentDutyDue.repackaged.bulletList.2", Money.format(duty)),
-        messages("adjustmentDutyDue.repackaged.bulletList.3", Money.format(duty)),
-        messages("adjustmentDutyDue.repackaged.bulletList.4", Money.format(repackagedRate)),
-        messages("adjustmentDutyDue.repackaged.bulletList.5", Money.format(repackagedDuty)),
-        messages("adjustmentDutyDue.repackaged.bulletList.6", Money.format(newDuty))
-))
-    }
+    @bulletList(adjustmentDutyDueViewModel.dutyDueInfo)
 
     @govukButton(
         ButtonViewModel("continueButton", messages("site.continue"))
