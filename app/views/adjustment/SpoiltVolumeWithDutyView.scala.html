@@ -49,10 +49,10 @@
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key="totalLitresVolume",
-                label = LabelViewModel(messages("spoiltVolumeWithDuty.totalLitresVolume.heading", messages(s"return.regime.$regime"))),
-                errorMessageField = form(s"volumes_totalLitresVolume"),
-                value = form(s"volumes.totalLitresVolume").value
+                key="totalLitres",
+                label = LabelViewModel(messages("spoiltVolumeWithDuty.totalLitres.heading", messages(s"return.regime.$regime"))),
+                errorMessageField = form(s"volumes_totalLitres"),
+                value = form(s"volumes.totalLitres").value
             )
             .asNumeric()
             .withWidth(Fixed10)
@@ -63,15 +63,15 @@
         @govukInput(
             InputViewModel(
                 field = form("volumes"),
-                key="pureAlcoholVolume",
-                label = LabelViewModel(visibleText = messages("spoiltVolumeWithDuty.pureAlcoholVolume.heading"), hiddenText = messages("spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText", messages(s"return.regime.$regime"))),
-                errorMessageField = form(s"volumes_pureAlcoholVolume"),
-                value = form(s"volumes.pureAlcoholVolume").value
+                key="pureAlcohol",
+                label = LabelViewModel(visibleText = messages("spoiltVolumeWithDuty.pureAlcohol.heading"), hiddenText = messages("spoiltVolumeWithDuty.pureAlcohol.hiddenText", messages(s"return.regime.$regime"))),
+                errorMessageField = form(s"volumes_pureAlcohol"),
+                value = form(s"volumes.pureAlcohol").value
             )
             .asNumeric()
             .withWidth(Fixed10)
             .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            .withHint(Hint(content = messages("adjustmentVolume.pureAlcoholVolume.hint")))
+            .withHint(Hint(content = messages("adjustmentVolume.pureAlcohol.hint")))
         )
 
 

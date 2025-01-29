@@ -112,10 +112,10 @@
         @govukInput(
             InputViewModel(
               field = form("volumesWithRate"),
-              key = "dutyRate",
-              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form("volumesWithRate_dutyRate"),
-              value = form("volumesWithRate.dutyRate").value
+              key = "sprDutyRate",
+              label = LabelViewModel(messages("return.journey.sprDutyRate", messages(s"return.regime.$regime"))),
+              errorMessageField = form("volumesWithRate_sprDutyRate"),
+              value = form("volumesWithRate.sprDutyRate").value
             )
             .withWidth(Fixed10)
             .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))

@@ -169,8 +169,8 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString())
             )
 
         val result = route(application, request).value
@@ -212,8 +212,8 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString())
             )
 
         val result = route(application, request).value
@@ -255,8 +255,8 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", validTotalLitres.toString()),
-              ("volumes.pureAlcoholVolume", validPureAlcohol.toString())
+              ("volumes.totalLitres", validTotalLitres.toString()),
+              ("volumes.pureAlcohol", validPureAlcohol.toString())
             )
 
         val result = route(application, request).value
@@ -274,12 +274,12 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", "invalid value"),
-              ("volumes.pureAlcoholVolume", "invalid value")
+              ("volumes.totalLitres", "invalid value"),
+              ("volumes.pureAlcohol", "invalid value")
             )
 
         val boundForm =
-          form.bind(Map("volumes.totalLitresVolume" -> "invalid value", "volumes.pureAlcoholVolume" -> "invalid value"))
+          form.bind(Map("volumes.totalLitres" -> "invalid value", "volumes.pureAlcohol" -> "invalid value"))
 
         val view      = application.injector.instanceOf[AdjustmentVolumeView]
 
@@ -300,8 +300,8 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, adjustmentVolumeRoute)
             .withFormUrlEncodedBody(
-              ("volumes.totalLitresVolume", "invalid value"),
-              ("volumes.pureAlcoholVolume", "invalid value")
+              ("volumes.totalLitres", "invalid value"),
+              ("volumes.pureAlcohol", "invalid value")
             )
 
         val result = route(application, request).value
