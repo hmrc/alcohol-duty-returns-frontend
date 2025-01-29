@@ -36,38 +36,22 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ServiceUpdatedController @Inject() (
-  appConfig: FrontendAppConfig,
   val controllerComponents: MessagesControllerComponents,
   userAnswersConnector: UserAnswersConnector,
   auditService: AuditService,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
-  view: ServiceUpdatedView,
-  taskListViewModel: TaskListViewModel
+  view: ServiceUpdatedView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    // TODO: change the below - clear answers and release lock, then go to new view
-    val businessTaxAccountUrl = appConfig.businessTaxAccountUrl
-    request.userAnswers.validUntil match {
-      case Some(validUntil) =>
-        Ok(
-          view(
-            taskListViewModel.getTaskList(request.userAnswers, validUntil, request.returnPeriod),
-            businessTaxAccountUrl
-          )
-        )
-      case None             =>
-        logger.warn("'Valid until' property not defined in User Answers")
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-    }
+  def onPageLoad: Action[AnyContent] = (identify andThen getData) { implicit request =>
+    Ok(view())
   }
 
-  // same as BeforeStartReturnController?
+  // same as BeforeStartReturnController
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case None            =>

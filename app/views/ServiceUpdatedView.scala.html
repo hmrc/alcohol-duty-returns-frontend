@@ -15,10 +15,6 @@
  *@
 
 @import components.{SectionHeading, PageHeading}
-@import config.Constants.Css
-@import viewmodels.tasklist.AlcoholDutyTaskList
-
-@import java.time.LocalDate
 
 @this(
         layout: templates.Layout,
@@ -30,7 +26,7 @@
         govukWarningText: GovukWarningText
 )
 
-@(taskList: AlcoholDutyTaskList, businessTaxAccountUrl: String)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("serviceUpdated.title"))) {
     @formHelper(action = controllers.routes.ServiceUpdatedController.onSubmit(), Symbol("autoComplete") -> "off") {

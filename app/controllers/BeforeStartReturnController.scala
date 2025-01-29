@@ -73,26 +73,20 @@ class BeforeStartReturnController @Inject() (
               obligationData      <- alcoholDutyReturnsConnector.getOpenObligation(appaId, periodKey)
             } yield (subscriptionRegimes, obligationData)
 
-            subscriptionAndObligation.value.map {
-              case Right((subscriptionRegimes, _))                                      =>
+            subscriptionAndObligation.value.flatMap {
+              case Right((subscriptionRegimes, _)) =>
                 if (ua.regimes equals subscriptionRegimes) {
                   auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
-                  Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+                  Future.successful(Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session))
                 } else {
-                  Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-                  // TODO: new view - onPageLoad() will clear answers and release lock, onSubmit() does the same as the one below
+                  for {
+                    _ <- userAnswersConnector.delete(appaId, periodKey)
+                    _ <- userAnswersConnector.releaseLock(ReturnId(appaId, periodKey))
+                  } yield Redirect(controllers.routes.ServiceUpdatedController.onPageLoad)
                 }
-              // TODO: clear user answers and release lock for first 2 error cases
-              // TODO: new delete() method in backend UserAnswersController?
-              case Left("Forbidden: Subscription status is not Approved or Insolvent.") =>
-                logger.warn("Forbidden: Subscription status is not Approved or Insolvent.")
-                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-              case Left("No open obligation found.")                                    =>
-                logger.warn("No open obligation found.")
-                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-              case Left(e)                                                              =>
-                logger.warn(s"Error: $e")
-                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+              case Left(err)                       =>
+                logger.warn(s"Error: $err")
+                Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
             }
           case Left(error) if error.statusCode == NOT_FOUND =>
             logger.info(s"Return $appaId/$periodKey not found")

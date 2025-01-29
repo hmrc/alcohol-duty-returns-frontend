@@ -36,6 +36,7 @@ GET         /before-you-start-your-return/:periodKey     controllers.BeforeStart
 POST        /before-you-start-your-return                controllers.BeforeStartReturnController.onSubmit()
 
 GET         /service-updated                             controllers.ServiceUpdatedController.onPageLoad
+POST        /service-updated                             controllers.ServiceUpdatedController.onSubmit()
 
 GET         /start                                       controllers.ServiceEntryController.onPageLoad
 
