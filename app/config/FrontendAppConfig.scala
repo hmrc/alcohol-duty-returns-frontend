@@ -115,6 +115,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrUserAnswersClearAllUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/user-answers/clear-all"
 
+  def adrUserAnswersTestOnlyCreateUrl(regimes: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/test-only/user-answers/$regimes"
+
   def adrGetObligationDetailsUrl(appaId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/$appaId"
 

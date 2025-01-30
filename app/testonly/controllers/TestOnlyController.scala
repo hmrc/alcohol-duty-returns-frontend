@@ -16,21 +16,47 @@
 
 package testonly.controllers
 
+import controllers.actions.{DataRetrievalAction, IdentifyWithEnrolmentAction}
+import models.{ReturnId, ReturnPeriod}
+import play.api.Logging
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import testonly.connectors.TestOnlyUserAnswersConnector
+import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class TestOnlyController @Inject() (
   val controllerComponents: MessagesControllerComponents,
+  identify: IdentifyWithEnrolmentAction,
   testOnlyConnector: TestOnlyUserAnswersConnector
 )(implicit val ec: ExecutionContext)
-    extends FrontendBaseController {
+    extends FrontendBaseController
+    with Logging {
 
   def clearAllData(): Action[AnyContent] = Action.async { implicit request =>
     testOnlyConnector.clearAllData().map(httpResponse => Ok(httpResponse.body))
   }
 
+  // regimes input should be a 2-digit number like in stubs
+  def createUserAnswers(periodKey: String, regimes: String): Action[AnyContent] = identify.async { implicit request =>
+    ReturnPeriod.fromPeriodKey(periodKey) match {
+      case None    => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case Some(_) =>
+        val returnAndUserDetails =
+          ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
+        testOnlyConnector
+          .createUserAnswers(returnAndUserDetails, regimes)
+          .map {
+            case Right(userAnswers) =>
+              logger.info(s"Test userAnswers for ${request.appaId}/$periodKey created")
+              // TODO: Another page that confirms user answers were created and has a button to Before you start
+              Redirect(controllers.routes.BeforeStartReturnController.onPageLoad(periodKey))
+            case Left(error)        =>
+              logger.warn(s"Unable to create test userAnswers: $error")
+              Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+          }
+    }
+  }
 }

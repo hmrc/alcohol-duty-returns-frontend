@@ -1,1 +1,2 @@
-GET         /clear-all        testonly.controllers.TestOnlyController.clearAllData()
+GET        /clear-all                                      testonly.controllers.TestOnlyController.clearAllData()
+GET        /create-user-answers/:periodKey/:regimes        testonly.controllers.TestOnlyController.createUserAnswers(periodKey: String, regimes: String)
