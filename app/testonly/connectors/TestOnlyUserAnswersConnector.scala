@@ -37,10 +37,14 @@ class TestOnlyUserAnswersConnector @Inject() (
 
   def createUserAnswers(
     returnAndUserDetails: ReturnAndUserDetails,
-    regimes: String
+    beer: Boolean,
+    cider: Boolean,
+    wine: Boolean,
+    spirits: Boolean,
+    OFP: Boolean
   )(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, UserAnswers]] =
     httpClient
-      .post(url"${appConfig.adrUserAnswersTestOnlyCreateUrl(regimes)}")
+      .post(url"${appConfig.adrUserAnswersTestOnlyCreateUrl(beer, cider, wine, spirits, OFP)}")
       .withBody(Json.toJson(returnAndUserDetails))
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[Either[UpstreamErrorResponse, UserAnswers]]

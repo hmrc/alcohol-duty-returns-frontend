@@ -39,20 +39,27 @@ class TestOnlyController @Inject() (
     testOnlyConnector.clearAllData().map(httpResponse => Ok(httpResponse.body))
   }
 
-  // regimes input should be a 2-digit number like in stubs
-  def createUserAnswers(periodKey: String, regimes: String): Action[AnyContent] = identify.async { implicit request =>
+  def createUserAnswers(
+    periodKey: String,
+    beer: Boolean,
+    cider: Boolean,
+    wine: Boolean,
+    spirits: Boolean,
+    OFP: Boolean
+  ): Action[AnyContent] = identify.async { implicit request =>
     ReturnPeriod.fromPeriodKey(periodKey) match {
       case None    => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(_) =>
         val returnAndUserDetails =
           ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
         testOnlyConnector
-          .createUserAnswers(returnAndUserDetails, regimes)
+          .createUserAnswers(returnAndUserDetails, beer, cider, wine, spirits, OFP)
           .map {
             case Right(userAnswers) =>
               logger.info(s"Test userAnswers for ${request.appaId}/$periodKey created")
               // TODO: Another page that confirms user answers were created and has a button to Before you start
-              Redirect(controllers.routes.BeforeStartReturnController.onPageLoad(periodKey))
+//              Redirect(controllers.routes.BeforeStartReturnController.onPageLoad(periodKey))
+              Ok("Created user answers")
             case Left(error)        =>
               logger.warn(s"Unable to create test userAnswers: $error")
               Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
