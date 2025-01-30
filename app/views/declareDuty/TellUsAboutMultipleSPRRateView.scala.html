@@ -30,7 +30,8 @@
     sectionHeading: SectionHeading,
     subHeading: SubHeading,
     pageHeading: PageHeading,
-    govukWarningText: GovukWarningText
+    govukWarningText: GovukWarningText,
+    govukFieldset: GovukFieldset
 )
 
 @(form: Form[_], mode: Mode, regime: AlcoholRegime, rateBandRadioItems: Seq[RadioItem], index:Option[Int])(implicit request: Request[_], messages: Messages)
@@ -66,62 +67,71 @@
                     errorMessageField = form("volumesWithRate_taxType")
                 )
             )
-            @subHeading(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"), classes = Css.headingMCssClass)
         }
 
-        @if(rateBandRadioItems.size == 1){
-            @subHeading(rateBandRadioItems.headOption.map(_.content.asHtml.toString()).getOrElse(""), classes = Css.headingMCssClass)
-
-            @govukInput(
+        @govukFieldset(Fieldset(
+          legend = Some(Legend(
+            content = rateBandRadioItems match {
+              case Seq(onlyButton) => Text(onlyButton.content.asHtml.toString)
+              case _ => Text(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"))
+            },
+            classes = Css.fieldsetLegendSCssClass
+          )),
+          html = HtmlFormat.fill(List(
+            Some(govukInput(
                 InputViewModel(
+                  field = form("volumesWithRate"),
+                  key = "totalLitres",
+                  label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
+                  errorMessageField = form("volumesWithRate_totalLitres"),
+                  value = form("volumesWithRate.totalLitres").value
+                )
+                .withWidth(Fixed10)
+                .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
+                .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            )),
+
+            Some(govukInput(
+                InputViewModel(
+                  field = form("volumesWithRate"),
+                  key = "pureAlcohol",
+                  label = LabelViewModel(messages("return.journey.pureAlcohol", messages(s"return.regime.$regime"))),
+                  errorMessageField = form("volumesWithRate_pureAlcohol"),
+                  value = form("volumesWithRate.pureAlcohol").value
+                )
+                .withWidth(Fixed10)
+                .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.pureAlcohol.hint")))
+                .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+            )),
+
+            Some(govukInput(
+                InputViewModel(
+                  field = form("volumesWithRate"),
+                  key = "dutyRate",
+                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
+                  errorMessageField = form("volumesWithRate_dutyRate"),
+                  value = form("volumesWithRate.dutyRate").value
+                )
+                .withWidth(Fixed10)
+                .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
+                .withPoundPrefix
+                .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
+            )),
+
+            rateBandRadioItems match {
+              case Seq(onlyButton) =>
+                Some(govukInput(
+                  InputViewModel(
                     field = form("volumesWithRate"),
                     key = "taxType",
                     label = LabelViewModel(Text("")),
                     errorMessageField = form("volumesWithRate_taxType"),
-                    value = rateBandRadioItems.headOption.flatMap(_.value)
-                ).hidden
-            )
-        }
-
-        @govukInput(
-            InputViewModel(
-              field = form("volumesWithRate"),
-              key = "totalLitres",
-              label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
-              errorMessageField = form("volumesWithRate_totalLitres"),
-              value = form("volumesWithRate.totalLitres").value
-            )
-            .withWidth(Fixed10)
-            .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.litres")))
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-        )
-
-        @govukInput(
-            InputViewModel(
-              field = form("volumesWithRate"),
-              key = "pureAlcohol",
-              label = LabelViewModel(messages("return.journey.pureAlcohol", messages(s"return.regime.$regime"))),
-              errorMessageField = form("volumesWithRate_pureAlcohol"),
-              value = form("volumesWithRate.pureAlcohol").value
-            )
-            .withWidth(Fixed10)
-            .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.pureAlcohol.hint")))
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-        )
-
-        @govukInput(
-            InputViewModel(
-              field = form("volumesWithRate"),
-              key = "dutyRate",
-              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form("volumesWithRate_dutyRate"),
-              value = form("volumesWithRate.dutyRate").value
-            )
-            .withWidth(Fixed10)
-            .withHint(Hint(content = messages("tellUsAboutMultipleSPRRate.hint.currency")))
-            .withPoundPrefix
-            .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
-        )
+                    value = onlyButton.value
+                  ).hidden))
+               case _ => None
+            }
+          ).flatten)
+        ))
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))

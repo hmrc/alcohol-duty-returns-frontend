@@ -28,7 +28,8 @@
     sectionHeading: SectionHeading,
     pageHeading: PageHeading,
     paragraph: Paragraph,
-    subHeading: SubHeading
+    subHeading: SubHeading,
+    govukFieldset: GovukFieldset
 )
 
 @(form: Form[_], mode: Mode, adjustmentType: AdjustmentType, regime: AlcoholRegime, rateBandContent: String)(implicit request: Request[_], messages: Messages)
@@ -48,35 +49,41 @@
 
         @pageHeading(messages("adjustmentVolume.heading"))
 
-        @subHeading(rateBandContent, Css.headingSCssClass)
-
-        @govukInput(
-            InputViewModel(
+        @govukFieldset(Fieldset(
+          legend = Some(Legend(
+            content = Text(rateBandContent),
+            classes = Css.fieldsetLegendSCssClass
+          )),
+          html = HtmlFormat.fill(List(
+            govukInput(
+              InputViewModel(
                 field = form("volumes"),
                 key="totalLitresVolume",
                 label = LabelViewModel(messages("adjustmentVolume.totalLitresVolume.heading")),
                 errorMessageField = form("volumes_totalLitresVolume"),
                 value = form("volumes.totalLitresVolume").value
-            )
-            .asNumeric()
-            .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-            .withHint(Hint(content = messages("adjustmentVolume.totalLitresVolume.hint")))
-        )
+              )
+              .asNumeric()
+              .withWidth(Fixed10)
+              .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              .withHint(Hint(content = messages("adjustmentVolume.totalLitresVolume.hint")))
+            ),
 
-        @govukInput(
-        InputViewModel(
-            field = form("volumes"),
-            key="pureAlcoholVolume",
-            label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading")),
-            errorMessageField = form("volumes_pureAlcoholVolume"),
-            value = form("volumes.pureAlcoholVolume").value
-        )
-        .asNumeric()
-        .withWidth(Fixed10)
-        .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-        .withHint(Hint(content = messages("adjustmentVolume.pureAlcoholVolume.hint")))
-        )
+            govukInput(
+              InputViewModel(
+                field = form("volumes"),
+                key="pureAlcoholVolume",
+                label = LabelViewModel(messages("adjustmentVolume.pureAlcoholVolume.heading")),
+                errorMessageField = form("volumes_pureAlcoholVolume"),
+                value = form("volumes.pureAlcoholVolume").value
+              )
+              .asNumeric()
+              .withWidth(Fixed10)
+              .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              .withHint(Hint(content = messages("adjustmentVolume.pureAlcoholVolume.hint")))
+            )
+          ))
+        ))
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton", messages("site.saveAndContinue"))

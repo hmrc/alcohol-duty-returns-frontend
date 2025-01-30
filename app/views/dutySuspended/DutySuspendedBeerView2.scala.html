@@ -14,9 +14,8 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, SubHeading}
-@import config.Constants.Css
 @import viewmodels.InputWidth._
+@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -25,6 +24,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
+    paragraph: Paragraph,
     pageHeading: PageHeading,
     subHeading: SubHeading,
     govukFieldset: GovukFieldset
@@ -32,49 +32,47 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whisky.title"))) {
+@layout(pageTitle = title(form, messages("dutySuspendedBeer.title"))) {
 
-    @formHelper(action = controllers.spiritsQuestions.routes.WhiskyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = controllers.dutySuspended.routes.DutySuspendedBeerController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @sectionHeading(
-            id = "whisky-section",
-            text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
+            id = "duty-suspended-beer-section",
+            text = messages("section.dutySuspended"),
         )
 
+        @pageHeading(messages("dutySuspendedBeer.heading"))
+
+        @paragraph(messages("dutySuspendedBeer.p1"))
+
         @govukFieldset(Fieldset(
-          legend = Some(Legend(
-            content = Text(messages("whisky.heading")),
-            classes = Css.fieldsetLegendXLCssClass,
-            isPageHeading = true
-          )),
           html = HtmlFormat.fill(List(
             govukInput(
               InputViewModel(
-                field = form("scotchWhisky"),
-                label = LabelViewModel(messages("whisky.scotchWhisky.subheading1")).asSubheading,
+                field = form("totalBeer"),
+                label = LabelViewModel(messages("dutySuspendedBeer.subheading1")).asSubheading,
               )
-              .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
-              .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              .asNumeric()
               .withWidth(Fixed10)
+              .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.1"))))
             ),
-
             govukInput(
               InputViewModel(
-                field = form("irishWhiskey"),
-                label = LabelViewModel(messages("whisky.irishWhiskey.subheading2")).asSubheading
+                field = form("pureAlcoholInBeer"),
+                label = LabelViewModel(messages("dutySuspendedBeer.subheading2")).asSubheading,
               )
-              .withHint(Hint(content = HtmlContent(messages("whisky.hint"))))
-              .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              .asNumeric()
               .withWidth(Fixed10)
+              .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              .withHint(Hint(content = HtmlContent(messages("dutySuspendedBeer.hint.2"))))
             )
           ))
         ))
-
-        <br>
 
         @govukButton(
             ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
