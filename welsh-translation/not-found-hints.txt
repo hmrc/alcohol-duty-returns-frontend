@@ -1,0 +1,419 @@
+# Note: Where we see "# In translation spreadsheet needs manual copy" it means the text exists somewhere in the translations spready!
+#       Might be nested in another sentence!
+
+service.name = Manage your Alcohol Duty
+
+# Site specific items
+site.back = Back                                                    # Generic content so can likely take this from another service that is in live
+site.remove = Remove                                                # Generic content so can likely take this from another service that is in live
+site.saveAndReturn = Save and return to your Business Tax Account   # Missing translation
+site.start = Start now                                              # Generic content so can likely take this from another service that is in live
+site.startAgain = Start again                                       # Generic content so can likely take this from another service that is in live
+site.signIn = Sign in                                               # Generic content so can likely take this from another service that is in live
+site.govuk = GOV.UK                                                 # Generic content so can likely take this from another service that is in live
+site.unit.percentage = %                                            # Direct copy
+site.2DP = {0,number,#,##0.00}                                      # Direct copy
+site.4DP = {0,number,#,##0.0000##}                                  # Direct copy
+site.currency.2DP = £{0,number,#,##0.00}                            # Direct copy
+site.year = {0,number,####}                                         # Direct copy
+site.nil = Nil                                                      # Missing translation
+
+# Date specific items
+date.day = Day  # Generic content so can likely take this from another service that is in live
+
+# Generic timeout items
+timeout.title = You’re about to be signed out                                           # Generic content so can likely take this from another service that is in live
+timeout.message = For security reasons, you will be signed out of this service in       # Generic content so can likely take this from another service that is in live
+timeout.keepAlive = Stay signed in                                                      # Generic content so can likely take this from another service that is in live
+timeout.signOut = Sign out                                                              # Generic content so can likely take this from another service that is in live
+
+# Generic error items
+error.browser.title.prefix = Error:                                         # Generic content so can likely take this from another service that is in live
+error.boolean = Please give an answer                                       # Generic content so can likely take this from another service that is in live
+error.invalid_date = Give a correct date                                    # Generic content so can likely take this from another service that is in live
+error.date.day_blank = Enter a day                                          # Generic content so can likely take this from another service that is in live
+error.date.day_invalid = Give a correct day using numbers 1 to 31           # Generic content so can likely take this from another service that is in live
+error.date.month_blank = Enter a month                                      # Generic content so can likely take this from another service that is in live
+error.date.month_invalid = Give a correct month using numbers 1 to 12       # Generic content so can likely take this from another service that is in live
+error.date.year_blank = Enter a year                                        # Generic content so can likely take this from another service that is in live
+error.date.year_invalid = Give a correct year                               # Generic content so can likely take this from another service that is in live
+error.integer = Give an answer in whole numbers                             # Generic content so can likely take this from another service that is in live
+error.non_numeric = Give a value using only numbers                         # Generic content so can likely take this from another service that is in live
+error.number = Please enter a valid number                                  # Generic content so can likely take this from another service that is in live
+error.required = Please enter a value                                       # Generic content so can likely take this from another service that is in live
+error.summary.title = There is a problem                                    # Generic content so can likely take this from another service that is in live
+
+# Generic signed out items
+signedOut.title = For your security, we signed you out                      # Generic content so can likely take this from another service that is in live
+signedOut.heading = For your security, we signed you out                    # Generic content so can likely take this from another service that is in live
+signedOut.guidance = We did not save your answers.                          # Generic content so can likely take this from another service that is in live
+
+# 401: Not
+unauthorised.p2.first = To use this service you need to                                 # In translation spreadsheet needs manual copy
+unauthorised.p2.link.text = sign in with an organisation Government Gateway account     # In translation spreadsheet needs manual copy
+unauthorised.p2.second =  and be enrolled in the service.                               # In translation spreadsheet needs manual copy
+
+# Do you have an APPAID page?
+doYouHaveAnAppaId.title = Do you have an Alcoholic Products Producer approval ID?                       # Missing translation
+doYouHaveAnAppaId.heading = Do you have an Alcoholic Products Producer approval ID?                     # Missing translation
+doYouHaveAnAppaId.hint = This is 15 characters, for example XMADP0123456789                             # Missing translation
+doYouHaveAnAppaId.error.required = Select yes if you have an Alcoholic Products Producer approval ID    # Missing translation
+
+# No APPAID page
+noAppaId.title = You need an Alcoholic Products Producer approval ID to access Alcohol Duty                                                                     # Missing translation
+noAppaId.heading = You need an Alcoholic Products Producer approval ID to access Alcohol Duty                                                                   # Missing translation
+noAppaId.p = If you were producing alcoholic products before 1 February 2025, you can find your APPA ID on the online service letter you received from HMRC.    # Missing translation
+noAppaId.link.text = Read guidance on getting approval to produce alcoholic products (opens in a new tab)                                                       # Missing translation
+
+section.visuallyHidden = This section is:   # Generic content so can likely take this from another service that is in live
+
+# View past returns
+viewPastReturns.submitReturn = Submit Return                # Has changed as per confluence so need to update and check translation with UCD and Welsh team
+viewPastReturns.submitReturn.hidden = Submit {0} Return     # Has changed as per confluence so need to update and check translation with UCD and Welsh team
+viewPastReturns.viewReturn = View Return                    # Has changed as per confluence so need to update and check translation with UCD and Welsh team
+viewPastReturns.viewReturn.hidden = View {0} Return         # Has changed as per confluence so need to update and check translation with UCD and Welsh team
+viewPastReturns.noReturns = No outstanding returns          # Has changed as per confluence so need to update and check translation with UCD and Welsh team
+
+# View return
+viewReturn.chargeReference = Reference: {0}                                             # In translation spreadsheet needs manual copy
+viewReturn.alcoholDuty.noneDeclared = No alcohol declared                               # Missing translation
+viewReturn.adjustments.noneDeclared = No adjustments declared                           # Missing translation
+viewReturn.netDutySuspension.noneDeclared = Nothing declared                            # Missing translation
+viewReturn.spirits.scotchWhisky = Scotch whisky                                         # In translation spreadsheet needs manual copy (case)
+viewReturn.spirits.irishWhiskey = Irish whiskey                                         # In translation spreadsheet needs manual copy (case)
+viewReturn.spirits.type.malt = Malt spirit                                              # Missing translation
+viewReturn.spirits.type.grain = Grain spirit                                            # Missing translation
+viewReturn.spirits.type.neutralAgricultural = Neutral spirit (agricultural origin)      # Missing translation
+viewReturn.spirits.type.neutralIndustrial = Neutral spirit (industrial origin)          # Missing translation
+viewReturn.spirits.type.beer = Beer-based spirit                                        # Missing translation
+viewReturn.spirits.type.wine = Wine or made-wine-based spirit                           # Missing translation
+viewReturn.spirits.type.cider = Cider or perry-based spirit                             # Missing translation
+viewReturn.spirits.noneDeclared = Nothing declared                                      # Missing translation
+viewReturn.table.totalVolume.lpa.legend = Total volume (LPA)                            # Missing translation
+viewReturn.printYourReturn = Print your return                                          # Missing translation
+viewReturn.notApplicable = not applicable                                               # Missing translation
+
+# View past payments
+viewPastPayments.youOwe = You owe                                                       # In translation spreadsheet needs manual copy
+viewPastPayments.youAre = You are                                                       # Missing translation
+viewPastPayments.negative.duty.value = {0} in credit                                    # Missing translation
+viewPastPayments.credit.paragraph = You have nothing to pay. You can request a refund or we will use the credit toward future payments. # Missing translation
+viewPastPayments.zeroBalance.paragraph = You have nothing to pay.                       # Missing translation
+viewPastPayments.Return.description = Payment for Alcohol Duty return                   # In translation spreadsheet needs manual copy
+viewPastPayments.RPI.description = 	Refund payment interest charge                      # In translation spreadsheet needs manual copy
+viewPastPayments.LPI.description = 	Late payment interest charge                        # In translation spreadsheet needs manual copy
+viewPastPayments.credit.description = Credit for Alcohol Duty return                    # In translation spreadsheet needs manual copy
+viewPastPayments.ref = (ref: {0})                                                       # In translation spreadsheet needs manual copy
+viewPastPayments.payNow.secondPart.hidden = Pay {0} now                                 # Missing translation
+viewPastPayments.unallocatedPayments.paragraph = An unallocated payment is when you have overpaid or made a payment without a reference so it hasn’t been allocated to a specific return. Unallocated payments will be used to pay any due or overdue payments.     # In translation spreadsheet needs manual copy
+viewPastPayments.historic.noPayments = You have no cleared returns payments or late payment interest charge payments this year.     # Missing translation
+viewPastPayments.historic.LPI.description = Cleared late payment interest charge payments                                           # In translation spreadsheet needs manual copy
+
+# Task list
+taskList.completion.date = Complete all the tasks and send this return on or before the {0}.                                # In translation spreadsheet needs manual copy
+taskList.section.status.cannotStart = Cannot Start                                                                          # In translation spreadsheet needs manual copy
+taskList.section.dutySuspended.needToDeclare = Tell us about your duty suspended deliveries                                 # Missing translation
+taskList.section.spirits = Change the spirits you''ve told us about                                                         # Missing translation
+taskList.section.spirits.hint = Every three months you must tell us about spirits you have produced from raw ingredients    # Missing translation
+taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return                      # Missing translation
+
+# Before you start
+beforeStartReturn.text.guidance4 = After you tell us this information, we will calculate how much duty you owe for this period. # Missing translation
+beforeStartReturn.text.dueWarning = The deadline for completing this return is today                                            # In translation spreadsheet needs manual copy
+beforeStartReturn.text.overdueWarning = The deadline for completing this return was {0}                                         # In translation spreadsheet needs manual copy
+beforeStartReturn.text.dueDateWarning = The deadline for completing this return is {0}                                          # In translation spreadsheet needs manual copy
+
+alcoholType.error.required = Select the types of alcoholic products you need to declare     # In translation spreadsheet needs manual copy
+alcoholType.hint = Select all that apply                                                    # In translation spreadsheet needs manual copy
+
+return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate must be less than £1 billion                  # In translation spreadsheet needs manual copy (case)
+return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more                         # In translation spreadsheet needs manual copy (case)
+return.journey.abv.interval.label.Beer = beer                                                                                   # In translation spreadsheet needs manual copy (case)
+return.journey.abv.interval.label.Cider = cider                                                                                 # In translation spreadsheet needs manual copy (case)
+return.journey.abv.interval.label.SparklingCider = sparkling cider                                                              # In translation spreadsheet needs manual copy (case)
+return.journey.abv.interval.label.Wine = wine                                                                                   # In translation spreadsheet needs manual copy (case)
+return.journey.abv.interval.label.Spirits = spirits                                                                             # In translation spreadsheet needs manual copy (case)
+return.journey.abv.interval.label.OtherFermentedProduct = other fermented products                                              # In translation spreadsheet needs manual copy (case)
+
+# ABV stuff (dynamic)
+return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV (tax type code {2})                                                                        # In translation spreadsheet (maybe subject to change)
+return.journey.abv.single.interval = {0} between {1}% and {2}% ABV (tax type code {3})                                                                          # In translation spreadsheet (maybe subject to change)
+return.journey.abv.multi.interval = {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV (tax type code {6})                                         # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.interval.exceeding.max.Core = Non-draught {0} at or above {1}% ABV ({2})                                                               # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})                                                                 # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})                                # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.interval.exceeding.max.DraughtRelief = Draught {0} at or above {1}% ABV ({2})                                                          # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})                                                            # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})                           # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = Non-draught {0} at or above {1}% ABV ({2} SPR)                                            # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)                                              # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)             # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} at or above {1}% ABV ({2} SPR)                                      # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)                                        # In translation spreadsheet (maybe subject to change)
+return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)       # In translation spreadsheet (maybe subject to change)
+
+# More return journey
+return.journey.totalLitres = Total litres of {0}                                                        # Missing translation
+return.journey.totalLitres.hint = In litres, up to 2 decimal places                                     # In translation spreadsheet needs manual copy (might be subject to change)
+return.journey.pureAlcohol.hint = In litres, to 4 decimal places                                        # In translation spreadsheet needs manual copy
+return.journey.spr.dutyRate = Your Small Producer Relief Duty rate for this {0}                         # In translation spreadsheet needs manual copy (might be subject to change)
+declareAlcoholDutyQuestion.p1.l4 = at or above 22.1%                                                    # In translation spreadsheet needs manual copy (case)
+declareAlcoholDutyQuestion.p2.l2 = Small Producer Relief                                                # In translation spreadsheet needs manual copy (case)
+declareAlcoholDutyQuestion.error.required = Select yes if you need to declare any alcoholic products    # In translation spreadsheet needs manual copy (case)
+return.regime.Beer = beer                                                                               # In translation spreadsheet needs manual copy (case)
+return.regime.Cider = cider                                                                             # In translation spreadsheet needs manual copy (case)
+return.regime.Wine = wine                                                                               # In translation spreadsheet needs manual copy (case)
+return.regime.Spirits = spirits                                                                         # In translation spreadsheet needs manual copy (case)
+return.regime.OtherFermentedProduct = other fermented products                                          # In translation spreadsheet needs manual copy (case)
+
+# What you need to declare
+whatDoYouNeedToDeclare.hint = Select all that apply                                                                         # In translation spreadsheet needs manual copy
+whatDoYouNeedToDeclare.error.required.Beer = Select the beers you need to declare                                           # In translation spreadsheet needs manual copy (dynamic might change)
+whatDoYouNeedToDeclare.error.required.Cider = Select the ciders you need to declare                                         # In translation spreadsheet needs manual copy (dynamic might change)
+whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other fermented products you need to declare       # In translation spreadsheet needs manual copy (dynamic might change)
+whatDoYouNeedToDeclare.error.required.Spirits = Select the spirits you need to declare                                      # In translation spreadsheet needs manual copy (dynamic might change)
+whatDoYouNeedToDeclare.error.required.Wine = Select the wines you need to declare                                           # In translation spreadsheet needs manual copy (dynamic might change)
+whatDoYouNeedToDeclare.core.heading = {0} (standard rate)                                                                   # In translation spreadsheet needs manual copy
+whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)                                                         # In translation spreadsheet needs manual copy
+whatDoYouNeedToDeclare.smallProducerRelief.heading = Non-draught {0} eligible for Small Producer Relief                     # In translation spreadsheet needs manual copy
+whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading = Draught {0} eligible for Small Producer Relief               # In translation spreadsheet needs manual copy
+whatDoYouNeedToDeclare.checkYourAnswersLabel.card = {0} to declare                                                          # In translation spreadsheet needs manual copy
+whatDoYouNeedToDeclare.checkYourAnswersLabel.row = Selected {0} to declare                                                  # In translation spreadsheet needs manual copy
+
+# How much you need to declare
+howMuchDoYouNeedToDeclare.title.OtherFermentedProduct = Tell us about other fermented products you need to declare                                                                  # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.heading.OtherFermentedProduct = Tell us about other fermented products you need to declare                                                                # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.p1.Spirits = Tell us about the spirits you need to declare and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.      # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.warning = We will ask about {0} eligible for Small Producer Relief on the next page.                                                                      # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.hint = In litres, up to 2 decimal places                                                                                                                  # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.pureAlcohol.hint = In litres, to 4 decimal places                                                                                                         # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.core.heading = How much non-draught {0} (standard rate) do you need to declare?                                                                           # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.draught.heading = How much draught {0} (reduced rate) do you need to declare?                                                                             # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty                                                                                                                # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate                                                                                                       # In translation spreadsheet needs manual copy
+howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced rate                                                                                               # In translation spreadsheet needs manual copy
+
+# Multiple SPR
+doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?                                                                                                  # Missing translation
+doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}, for example:                              # In translation spreadsheet needs manual copy
+doYouHaveMultipleSPRDutyRates.l3 = you merged with another producer and are reporting pre-merger production using the producer’s own pre-merger Small Producer Relief duty rates      # In translation spreadsheet needs manual copy
+doYouHaveMultipleSPRDutyRates.p2 = If you have more than one Small Producer Relief duty rate for the same type of {0} you will need to input them individually. For each duty rate we need to know the total amount produced, the litres of pure alcohol and the applicable duty rate. # In translation spreadsheet needs manual copy (dynamic)
+doYouHaveMultipleSPRDutyRates.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare                                                        # In translation spreadsheet needs manual copy
+
+# Tell us about single
+tellUsAboutSingleSPRRate.p1.Spirits = Tell us about the spirits you need to declare that is eligible for Small Producer Relief, and the pure alcohol in those spirits at the following Alcohol by Volume (ABV) strengths.   # In translation spreadsheet needs manual copy
+tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief (multiple duty rates)                                                                                                     # In translation spreadsheet needs manual copy
+tellUsAboutSingleSPRRate.smallProducer.heading = How much non-draught {0} that is eligible for Small Producer Relief do you need to declare?                                                                                # In translation spreadsheet needs manual copy
+tellUsAboutSingleSPRRate.draughtSmallProducer.heading = How much draught {0} that is eligible for Small Producer Relief do you need to declare?                                                                             # In translation spreadsheet needs manual copy
+
+# Multiple
+tellUsAboutMultipleSPRRate.title = Tell us about the {0} that is eligible for Small Producer Relief                                     # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.heading = Tell us about the {0} that is eligible for Small Producer Relief                                   # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.radioHeading = What type of {0} do you need to declare?                                                      # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.p1 = For each {0} you need to declare that is eligible for Small Producer Relief you need to tell us the total volume and the pure alcohol in that {0} at the following Alcohol by Volume (ABV) strengths.   # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.warning = If you have more than one duty rate for {0} in the same ABV range enter them one at a time.        # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.hint.litres = In litres, up to 2 decimal places                                                              # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.pureAlcohol.hint = In litres, to 4 decimal places                                                            # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.cardTitle = {0} eligible for Small Producer Relief                                     # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label = Total {0}                                                          # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.value = {0} litres                                                         # In translation spreadsheet needs manual copy
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value = {0} LPA                                                            # Direct copy as same in Welsh
+tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,##0.00} per litre                                        # Direct copy as same in Welsh
+multipleSPRList.title = {0} with Small Producer Relief duty to declare                                                                  # Direct copy as same in Welsh
+multipleSPRList.heading = {0} with Small Producer Relief duty to declare                                                                # In translation spreadsheet needs manual copy
+multipleSPRList.error.required = Select yes if you have more than one Small Producer Relief duty rate to declare                        # In translation spreadsheet needs manual copy
+multipleSPRList.totalLitres.label = Total volume declared (litres)                                                                      # Missing translation
+deleteMultipleSPREntry.title = Remove this {0} entry?                                                                                   # In translation spreadsheet needs manual copy
+deleteMultipleSPREntry.heading = Remove this {0} entry?                                                                                 # In translation spreadsheet needs manual copy
+deleteMultipleSPREntry.hint = This alcoholic product entry will be removed from your return                                             # In translation spreadsheet needs manual copy
+deleteMultipleSPREntry.error.required = Select yes to remove this entry                                                                 # In translation spreadsheet needs manual copy
+
+dutyCalculation.title = You will owe £{0,number,#,##0.00}                                                                               # In translation spreadsheet needs manual copy (keep formatter same)
+dutyCalculation.heading = You will owe £{0,number,#,##0.00}                                                                             # In translation spreadsheet needs manual copy (keep formatter same)
+declareDutySuspendedDeliveriesQuestion.error.required = Select yes if you need to tell us about any duty suspended alcohol              # In translation spreadsheet needs manual copy (keep formatter same)
+
+# Duty suspended
+dutySuspendedDeliveriesGuidance.p2 = 1. Add together:        # In translation spreadsheet needs manual copy
+dutySuspendedDeliveriesGuidance.p3 = 2. Then subtract:       # In translation spreadsheet needs manual copy
+
+# Beer
+dutySuspendedBeer.hint.1 = In litres, up to 2 decimal places                                                                    # In translation spreadsheet needs manual copy
+dutySuspendedBeer.error.totalBeer.required = Enter the total net quantity of beer                                               # In translation spreadsheet needs manual copy
+dutySuspendedBeer.error.pureAlcoholInBeer.required = Enter the total net quantity of pure alcohol in beer                       # In translation spreadsheet (dynamic and subject to change)
+dutySuspendedBeer.totalBeer.change.hidden = total net quantity of duty suspended beer                                           # In translation spreadsheet needs manual copy (case)
+dutySuspendedBeer.pureAlcoholInBeer.change.hidden = total net quantity of pure alcohol in this beer                             # In translation spreadsheet needs manual copy (case)
+dutySuspendedBeer.error.totalBeer.nonNumeric = Total net quantity of beer must be a number                                      # In translation spreadsheet needs manual copy (case)
+dutySuspendedBeer.error.totalBeer.maximumRequired = Total net quantity of beer must be less than 1 billion litres               # In translation spreadsheet needs manual copy
+dutySuspendedBeer.error.totalBeer.minimumRequired = Total net quantity of beer must be more than −1 billion litres              # In translation spreadsheet needs manual copy
+dutySuspendedBeer.error.totalBeer.decimalPlaces = Total net quantity of beer must be a number up to 2 decimal places            # In translation spreadsheet needs manual copy
+dutySuspended.error.pureAlcohol.minimumRequired = Total net quantity of pure alcohol must be more than −1 billion litres        # In translation spreadsheet needs manual copy
+
+dutySuspendedCider.hint.1 = In litres, up to 2 decimal places
+dutySuspendedCider.error.totalCider.required = Enter the total net quantity of cider                                            # In translation spreadsheet needs manual copy
+dutySuspendedCider.error.pureAlcoholInCider.required = Enter the total net quantity of pure alcohol in cider                    # In translation spreadsheet (dynamic and subject to change)
+dutySuspendedCider.totalCider.change.hidden = total net quantity of duty suspended cider                                        # In translation spreadsheet needs manual copy (case)
+dutySuspendedCider.pureAlcoholInCider.change.hidden = total net quantity of pure alcohol in this cider                          # In translation spreadsheet needs manual copy (case)
+dutySuspendedCider.error.totalCider.nonNumeric = Total net quantity of cider must be a number                                   # In translation spreadsheet needs manual copy
+dutySuspendedCider.error.totalCider.maximumRequired = Total net quantity of cider must be less than 1 billion litres            # In translation spreadsheet needs manual copy
+dutySuspendedCider.error.totalCider.minimumRequired = Total net quantity of cider must be more than −1 billion litres           # In translation spreadsheet needs manual copy
+dutySuspendedCider.error.totalCider.decimalPlaces = Total net quantity of cider must be a number up to 2 decimal places         # In translation spreadsheet needs manual copy
+
+dutySuspendedWine.hint.1 = In litres, up to 2 decimal places
+dutySuspendedWine.error.totalWine.required = Enter the total net quantity of wine                                              # In translation spreadsheet needs manual copy
+dutySuspendedWine.error.pureAlcoholInWine.required = Enter the total net quantity of pure alcohol in wine                      # In translation spreadsheet (dynamic and subject to change)
+dutySuspendedWine.totalWine.change.hidden = total net quantity of duty suspended wine                                          # In translation spreadsheet needs manual copy (case)
+dutySuspendedWine.pureAlcoholInWine.change.hidden = total net quantity of pure alcohol in this wine                            # In translation spreadsheet needs manual copy (case)
+dutySuspendedWine.error.totalWine.nonNumeric = Total net quantity of wine must be a number                                     # In translation spreadsheet needs manual copy (case)
+dutySuspendedWine.error.totalWine.maximumRequired = Total net quantity of wine must be less than 1 billion litres              # In translation spreadsheet needs manual copy
+dutySuspendedWine.error.totalWine.minimumRequired = Total net quantity of wine must be more than −1 billion litres             # In translation spreadsheet needs manual copy
+dutySuspendedWine.error.totalWine.decimalPlaces = Total net quantity of wine must be a number up to 2 decimal places           # In translation spreadsheet needs manual copy
+
+dutySuspendedSpirits.hint.1 = In litres, up to 2 decimal places
+dutySuspendedSpirits.error.totalSpirits.required = Enter the total net quantity of spirits                                          # In translation spreadsheet needs manual copy
+dutySuspendedSpirits.error.pureAlcoholInSpirits.required = Enter the total net quantity of pure alcohol in spirits                  # In translation spreadsheet (dynamic and subject to change)
+dutySuspendedSpirits.totalSpirits.change.hidden = total net quantity of duty suspended spirits                                      # In translation spreadsheet needs manual copy (case)
+dutySuspendedSpirits.pureAlcoholInSpirits.change.hidden = total net quantity of pure alcohol in these spirits                       # In translation spreadsheet needs manual copy (case)
+dutySuspendedSpirits.error.totalSpirits.nonNumeric = Total net quantity of spirits must be a number                                 # In translation spreadsheet needs manual copy (case)
+dutySuspendedSpirits.error.totalSpirits.maximumRequired = Total net quantity of spirits must be less than 1 billion litres          # In translation spreadsheet needs manual copy
+dutySuspendedSpirits.error.totalSpirits.minimumRequired = Total net quantity of spirits must be more than −1 billion litres         # In translation spreadsheet needs manual copy
+dutySuspendedSpirits.error.totalSpirits.decimalPlaces = Total net quantity of spirits must be a number up to 2 decimal places       # In translation spreadsheet needs manual copy
+
+dutySuspendedOtherFermented.hint.1 = In litres, up to 2 decimal places
+dutySuspendedOtherFermented.error.totalOtherFermented.required = Enter the total net quantity of other fermented products                                           # In translation spreadsheet needs manual copy
+dutySuspendedOtherFermented.error.pureAlcoholInOtherFermented.required = Enter the total net quantity of pure alcohol in other fermented products                   # In translation spreadsheet (dynamic and subject to change)
+dutySuspendedOtherFermented.totalOtherFermented.change.hidden = total net quantity of duty suspended other fermented products                                       # In translation spreadsheet needs manual copy (case)
+dutySuspendedOtherFermented.pureAlcoholInOtherFermented.change.hidden = total net quantity of pure alcohol in these other fermented products                        # In translation spreadsheet needs manual copy (case)
+dutySuspendedOtherFermented.error.totalOtherFermented.nonNumeric = Total net quantity of other fermented products must be a number                                  # In translation spreadsheet needs manual copy (case)
+dutySuspendedOtherFermented.error.totalOtherFermented.maximumRequired = Total net quantity of other fermented products must be less than 1 billion litres           # In translation spreadsheet needs manual copy
+dutySuspendedOtherFermented.error.totalOtherFermented.minimumRequired = Total net quantity of other fermented products must be more than −1 billion litres          # In translation spreadsheet needs manual copy
+dutySuspendedOtherFermented.error.totalOtherFermented.decimalPlaces = Total net quantity of other fermented products must be a number up to 2 decimal places        # In translation spreadsheet needs manual copy
+
+# Declaration
+declareQuarterlySpirits.checkYourAnswersLabel = declareQuarterlySpirits                                                             # Is this right?
+declareQuarterlySpirits.error.required = Select yes if you have made any spirits from raw ingredients in the past 3 months          # In translation spreadsheet needs manual copy
+declareSpiritsTotal.p1 = Feints are the ‘foreshots’ or ‘heads’ and ‘feints’ or ‘tails’ that are conveyed into a feints receiver.    # In translation spreadsheet needs manual copy
+declareSpiritsTotal.guidance.link.text = View the Spirits Production Manual for more information (opens in a new window).           # Missing translation
+declareSpiritsTotal.error.required = Enter the total volume of spirits taken in litres of pure alcohol                              # In translation spreadsheet needs manual copy
+declareSpiritsTotal.change.hidden = the total volume of spirits you made this quarter                                               # In translation spreadsheet needs manual copy
+
+# Whiskey
+whisky.scotchWhisky.change.hidden = scotch whisky       # In translation spreadsheet needs manual copy (case)
+whisky.irishWhiskey.change.hidden = irish whiskey       # In translation spreadsheet needs manual copy (case)
+
+# Spirits
+spiritType.checkYourAnswersLabel = Type of spirits                                                      # Missing translation
+spiritType.error.required = Select the spirits you have produced                                        # In translation spreadsheet needs manual copy
+spiritType.change.hidden = which of these spirits you have made                                         # In translation spreadsheet needs manual copy
+spiritType.hint = Select all you have produced in the past 3 months                                     # Missing translation
+otherSpiritsProduced.error.required = Enter the other types of spirits you have produced                # In translation spreadsheet needs manual copy
+otherSpiritsProduced.change.hidden = what other types of spirits have you produced this quarter         # In translation spreadsheet needs manual copy
+spiritsQuestions.checkYourAnswersLabel.card1 = Spirits you’ve produced                                  # In translation spreadsheet needs manual copy
+spiritsQuestions.checkYourAnswersLabel.card2 = Grain ingredients you’ve used                            # Missing translation
+spiritsQuestions.checkYourAnswersLabel.card3 = Alcohol ingredients you’ve used                          # Missing translation
+spiritsQuestions.checkYourAnswersLabel.card4 = Other ingredients you’ve used                            # Missing translation
+
+# Adjustment
+declareAdjustmentQuestion.error.required = Select yes if you have adjustments to declare        # In translation spreadsheet needs manual copy
+adjustmentType.error.required = Select the type of adjustment                                   # In translation spreadsheet needs manual copy
+adjustmentType.change.hidden = adjustment                                                       # In translation spreadsheet needs manual copy
+
+# Product type
+alcoholicProductType.error.required = Select the type of alcoholic product you are declaring spoilt     # In translation spreadsheet needs manual copy
+alcoholicProductType.change.hidden = Alcoholic product type                                             # Missing translation
+
+# Spoilt
+spoiltVolumeWithDuty.title = Tell us about your spoilt {0}                                              # In translation spreadsheet needs manual copy
+spoiltVolumeWithDuty.heading = Tell us about your spoilt {0}                                            # In translation spreadsheet needs manual copy
+spoiltVolumeWithDuty.totalLitresVolume.heading = Total litres of spoilt {0}                             # In translation spreadsheet needs manual copy
+spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Litres of spoilt {0} must be a number            # In translation spreadsheet needs manual copy (missing 2dp)
+spoiltVolumeWithDuty.error.maximumValue.duty = The amount of duty paid must be less than £1 trillion    # In translation spreadsheet needs correcting as wrong (pull main)
+spoiltVolumeWithDuty.error.minimumValue.duty = The amount of duty paid must be more than £0.00          # In translation spreadsheet needs manual copy
+spoiltVolumeWithDuty.change.hidden = duty value                                                         # In translation spreadsheet needs manual copy
+spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText = in spoilt {0}                                       # In translation spreadsheet needs manual copy
+
+# Duty paid
+whenDidYouPayDuty.spoilt.title = To the nearest month, when did you pay duty on this?                   # Missing translation
+whenDidYouPayDuty.spoilt.heading = To the nearest month, when did you pay duty on this?                 # Missing translation
+whenDidYouPayDuty.exciseEnquiries.link = Call or contact HMRC by post (opens in new tab)                # In translation spreadsheet needs manual copy
+whenDidYouPayDuty.paragraph = if this was originally declared before August 2023.                       # In translation spreadsheet needs manual copy
+whenDidYouPayDuty.date.error.required = The date you paid duty must include a {0}                       # In translation spreadsheet needs manual copy
+whenDidYouPayDuty.change.hidden = original return period                                                # In translation spreadsheet needs manual copy (case)
+
+# Adjustment tax type
+adjustmentTaxType.repackaged.title = What is the original tax type code for the alcohol you are repackaging?        # Missing translation
+adjustmentTaxType.repackaged.heading = What is the original tax type code for the alcohol you are repackaging?      # Missing translation
+adjustmentTaxType.default.hint = The 3 digit tax type code used on your previous return                             # Missing translation
+adjustmentTaxType.checkYourAnswersLabel = Tax type                                                                  # In translation spreadsheet needs manual copy
+adjustmentTaxType.error.required = Enter the tax type code                                                          # In translation spreadsheet needs manual copy
+adjustmentTaxType.error.notDraught = Tax type code must be for a draught alcoholic product                          # Missing translation
+adjustmentTaxType.repackaged.change.hidden = original tax type                                                      # In translation spreadsheet needs manual copy
+adjustmentTaxType.change.hidden = tax type                                                                          # In translation spreadsheet needs manual copy
+
+# Adjustment volume
+adjustmentVolume.error.maximumValue.totalLitresVolume = Total litres must be less than 1 billion                        # Missing translation
+adjustmentVolume.error.minimumValue.sprDutyRate = Your Small Producer Relief duty rate must be £0.00 or more            # In translation spreadsheet needs manual copy
+adjustmentVolume.error.maximumValue.sprDutyRate = Your Small Producer Relief duty rate must be less than £1 billion     # In translation spreadsheet needs manual copy
+adjustmentVolume.change.hidden = volume                                                                                 # In translation spreadsheet needs manual copy
+adjustmentVolume.totalLitresVolume.hint = In litres, up to 2 decimal places                                             # In translation spreadsheet needs manual copy
+adjustmentVolume.pureAlcoholVolume.hint = In litres, to 4 decimal places                                                # In translation spreadsheet needs manual copy
+adjustmentVolume.smallProducerReliefDutyRate.heading = Small Producer Relief duty rate                                  # In translation spreadsheet needs manual copy
+
+# Adjustments
+adjustmentRepackagedTaxType.error.required = Enter the new tax type code                                                                # Missing translation
+adjustmentRepackagedTaxType.error.nonDraught = Tax type code must be the non-draught tax type code                                      # Missing translation
+adjustmentRepackagedTaxType.change.hidden = new tax type                                                                                # In translation spreadsheet needs manual copy
+adjustmentSmallProducerReliefDutyRate.title = What is your Small Producer Relief Duty rate for the newly repackaged products?           # Missing translation
+adjustmentSmallProducerReliefDutyRate.heading = What is your Small Producer Relief Duty rate for the newly repackaged products?         # Missing translation
+adjustmentSmallProducerReliefDutyRate.error.required = Enter your Small Producer Relief duty rate                                       # In translation spreadsheet needs manual copy
+adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Your Small Producer Relief duty rate must be £0.00 or more                # In translation spreadsheet needs manual copy
+adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Your Small Producer Relief duty rate must be less than £1 billion         # In translation spreadsheet needs manual copy
+
+# Adjustment duty due
+adjustmentDutyDue.title = The duty value for this adjustment is {0}                                                     # In translation spreadsheet needs manual copy
+adjustmentDutyDue.heading = The duty value for this adjustment is                                                       # In translation spreadsheet needs manual copy
+adjustmentDutyDue.bulletList.1 = you declared {0} litres of pure alcohol (LPA)                                          # In translation spreadsheet needs manual copy
+adjustmentDutyDue.bulletList.2 = the duty rate is {0} per litre of pure alcohol                                         # In translation spreadsheet needs manual copy
+adjustmentDutyDue.bulletList.3 = the duty is {0} (duty rate multiplied by the litres of pure alcohol)                   # In translation spreadsheet needs manual copy
+adjustmentDutyDue.repackaged.bulletList.1 = the reduced duty rate was {0} per litre of pure alcohol                     # In translation spreadsheet needs manual copy
+adjustmentDutyDue.repackaged.bulletList.2 = you originally paid {0}                                                     # In translation spreadsheet needs manual copy
+adjustmentDutyDue.repackaged.bulletList.4 = the standard duty rate is {0} per litre of pure alcohol                     # In translation spreadsheet needs manual copy
+adjustmentDutyDue.repackaged.bulletList.5 = the new duty value at the standard duty rate is {0}                         # In translation spreadsheet needs manual copy
+adjustmentDutyDue.repackaged.bulletList.6 = the duty to pay is {0}: the new duty value minus the old duty value         # In translation spreadsheet needs manual copy
+
+# Error
+adjustmentList.error.required = Select yes if you have another adjustment to declare                   # In translation spreadsheet needs manual copy
+adjustmentEntryList.change.hidden = {0} adjustment with duty value {1}                                 # Missing translation
+adjustmentEntryList.remove.hidden = {0} adjustment with duty value {1}                                 # Missing translation
+deleteAdjustment.error.required = Select yes to remove this adjustment                                              # In translation spreadsheet needs manual copy
+underDeclarationReason.error.required = Enter the reason why the alcoholic products were not declared until now     # In translation spreadsheet needs manual copy
+underDeclarationReason.error.length = The reason must be {0} characters or less                                     # Missing translation
+overDeclarationReason.error.required = Enter the reason why alcoholic products were over-declared?                  # In translation spreadsheet needs manual copy
+overDeclarationReason.error.length = The reason must be {0} characters or less                                      # Missing translation
+
+# Duty due
+dutyDueForThisReturn.title = The duty due for this return is {0}                                                                            # Missing translation
+dutyDueForThisReturn.nil.title = No duty due                                                                                                # Missing translation
+dutyDueForThisReturn.heading = The duty due for this return is                                                                              # Missing translation
+dutyDueForThisReturn.nil.heading = No duty due                                                                                              # Missing translation
+dutyDueForThisReturn.negative.p1 = Your return has a negative duty value. You will be able to claim this back after sending your return. If you do not claim it back we will automatically deduct it from your next return.     # Missing translation
+dutyDueForThisReturn.nil.p1 = There is no duty to pay on this return.                                                                       # Missing translation
+dutyDueForThisReturn.bulletList.3 = You told us you do not have any duty applicable alcoholic products or adjustments to declare            # Missing translation
+dutyDueForThisReturn.table.dutyDue = {0} declared                                                                                           # In translation spreadsheet needs manual copy
+dutyDueForThisReturn.table.nil.label = Declared duty                                                                                        # In translation spreadsheet needs manual copy
+dutyDueForThisReturn.table.nil.value = Nil                                                                                                  # Missing translation (dupe of site.nil?)
+dutyDueForThisReturn.h4 = Declaration                                                                                                       # Missing translation
+dutyDueForThisReturn.p3 = By sending this return, I agree that the information I have given is complete and correct.                        # Missing translation
+dutyDueForThisReturn.youveAlsoAnswered = You’ve also answered                                                                               # Missing translation
+dutyDueForThisReturn.dutySuspended.nothingToDeclare = Nothing to declare                                                                    # Missing translation
+dutyDueForThisReturn.spirits.nothingToDeclare = Nothing to declare                                                                          # Missing translation
+
+# Return submitted
+returnSubmitted.panel.body.reference = Your return reference is {0}                                 # In translation spreadsheet needs manual copy
+returnSubmitted.panel.body.balanceDue = You need to pay                                             # In translation spreadsheet needs manual copy
+returnSubmitted.panel.body.dutyOwed = You are owed                                                  # In translation spreadsheet needs manual copy
+returnSubmitted.p1 = You sent your return for Alcohol Duty on {0} for the period {1} to {2}.        # In translation spreadsheet needs manual copy
+returnSubmitted.viewReturnLink.text = View your return                                              # Missing translation
+returnSubmitted.direct.debit.h2 = Direct Debit                                                      # Missing translation
+returnSubmitted.direct.debit.p1 = You can also pay duty automatically by direct debit.              # In translation spreadsheet needs manual copy
+returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit            # In translation spreadsheet needs manual copy
+returnSubmitted.warningFallbackText = Warning                                                       # Missing translation
