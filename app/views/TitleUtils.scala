@@ -24,7 +24,7 @@ object TitleUtils {
   /**
     * Call this one if you have a validated form on your page since it'll prefix the browser title with Error: if one
     *
-    * title should already been looked up
+    * title should have already been looked up
     */
   def title(form: Form[_], title: String)(implicit messages: Messages): String =
     titleNoForm(s"${errorPrefix(form)} $title")
@@ -32,7 +32,7 @@ object TitleUtils {
   /**
     * Call this one on a page without a validated form
     *
-    * title should already been looked up
+    * title should have already been looked up
     */
   def titleNoForm(title: String)(implicit messages: Messages): String =
     s"$title - ${messages("service.name")} - ${messages("site.govuk")}"
