@@ -92,6 +92,29 @@ class UserAnswersConnectorSpec extends SpecBase {
     }
   }
 
+  "DELETE" - {
+    "successfully clear user answers" in new SetUp {
+      val deleteUrl = s"http://alcohol-duty-account/user-answers/$appaId/$periodKey"
+
+      when(mockConfig.adrUserAnswersGetUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(deleteUrl)
+
+      when(connector.httpClient.delete(any())(any())).thenReturn(requestBuilder)
+
+      when(requestBuilder.setHeader("Csrf-Token" -> "nocheck"))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(mockHttpResponse))
+
+      whenReady(connector.delete(appaId, periodKey)) { response =>
+        response mustBe mockHttpResponse
+      }
+
+      verify(connector.httpClient, atLeastOnce)
+        .delete(eqTo(url"$deleteUrl"))(any())
+    }
+  }
+
   "releaseLock" - {
     "should call the release lock endpoint" in new SetUp {
       val releaseLockUrl = "http://user-answers/release-lock"

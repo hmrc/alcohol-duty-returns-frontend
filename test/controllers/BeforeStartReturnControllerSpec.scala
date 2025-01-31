@@ -27,7 +27,7 @@ import play.api.http.Status.LOCKED
 import play.api.i18n.Messages
 import play.api.test.Helpers._
 import play.api.inject.bind
-import services.AuditService
+import services.{AuditService, BeforeStartReturnService}
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
@@ -37,12 +37,14 @@ import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
   "BeforeStartReturn Controller" - {
+    // TODO: split first test into different cases for fetching subscription and obligation and checking against existing user answers
     "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in new SetUp {
       when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
 
       val application = applicationBuilder()
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
           bind[AuditService].toInstance(mockAuditService),
           bind(classOf[Clock]).toInstance(clock)
         )
@@ -263,9 +265,10 @@ class BeforeStartReturnControllerSpec extends SpecBase {
   }
 
   class SetUp {
-    val mockUserAnswersConnector       = mock[UserAnswersConnector]
-    val mockAuditService: AuditService = mock[AuditService]
-    val mockUpstreamErrorResponse      = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector        = mock[UserAnswersConnector]
+    val mockBeforeStartReturnService    = mock[BeforeStartReturnService]
+    val mockAuditService: AuditService  = mock[AuditService]
+    val mockUpstreamErrorResponse       = mock[UpstreamErrorResponse]
 
     implicit val messages: Messages = getMessages(app)
 

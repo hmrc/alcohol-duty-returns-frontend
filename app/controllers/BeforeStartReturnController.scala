@@ -20,13 +20,13 @@ import config.Constants.periodKeySessionKey
 import connectors.UserAnswersConnector
 import controllers.actions._
 import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
-import models.{ObligationData, ReturnId, ReturnPeriod, UserAnswers}
+import models.{ErrorModel, ObligationData, ReturnId, ReturnPeriod, UserAnswers}
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.AuditService
+import play.api.mvc._
+import services.{AuditService, BeforeStartReturnService}
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
@@ -37,6 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BeforeStartReturnController @Inject() (
   userAnswersConnector: UserAnswersConnector,
+  beforeStartReturnService: BeforeStartReturnService,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   auditService: AuditService,
@@ -60,25 +61,45 @@ class BeforeStartReturnController @Inject() (
         logger.warn("Period key is not valid")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(returnPeriod) =>
-        val currentDate = LocalDate.now(clock)
-        val viewModel   = beforeStartReturnViewModelFactory(returnPeriod, currentDate)
-        val session     = request.session + (periodKeySessionKey, periodKey)
-        userAnswersConnector.get(request.appaId, periodKey).map {
-          case Right(ua)                                    =>
+        val session = request.session + (periodKeySessionKey, periodKey)
+        userAnswersConnector.get(request.appaId, periodKey).flatMap {
+          case Right(ua)   =>
             logger.info(s"Return $appaId/$periodKey retrieved by the user")
-            auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
-            Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
-          case Left(error) if error.statusCode == NOT_FOUND =>
-            logger.info(s"Return $appaId/$periodKey not found")
-            Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session)
-          case Left(error) if error.statusCode == LOCKED    =>
-            logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
-            Redirect(controllers.routes.ReturnLockedController.onPageLoad())
-          case _                                            =>
-            logger.warn(s"Error retrieving the return $appaId/$periodKey for the user")
-            Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            beforeStartReturnService.handleExistingUserAnswers(ua).map {
+              case Right(_)                            =>
+                auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
+                Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
+              case Left(ErrorModel(CONFLICT, message)) =>
+                logger.warn(s"Conflict: $message")
+                Redirect(controllers.routes.ServiceUpdatedController.onPageLoad).withSession(session)
+              case Left(ErrorModel(_, message))        =>
+                logger.warn(s"Unexpected error: $message")
+                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            }
+          case Left(error) =>
+            Future.successful(handleGetUserAnswersError(appaId, periodKey, returnPeriod, session, error))
         }
     }
+  }
+
+  private def handleGetUserAnswersError(
+    appaId: String,
+    periodKey: String,
+    returnPeriod: ReturnPeriod,
+    session: Session,
+    error: UpstreamErrorResponse
+  )(implicit request: Request[_]): Result = error match {
+    case err if err.statusCode == NOT_FOUND =>
+      logger.info(s"Return $appaId/$periodKey not found")
+      val currentDate = LocalDate.now(clock)
+      val viewModel   = beforeStartReturnViewModelFactory(returnPeriod, currentDate)
+      Ok(view(returnPeriodViewModelFactory(returnPeriod), viewModel)).withSession(session)
+    case err if err.statusCode == LOCKED    =>
+      logger.warn(s"Return $appaId/$periodKey locked for the user")
+      Redirect(controllers.routes.ReturnLockedController.onPageLoad())
+    case _                                  =>
+      logger.warn(s"Error retrieving the return $appaId/$periodKey for the user")
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
