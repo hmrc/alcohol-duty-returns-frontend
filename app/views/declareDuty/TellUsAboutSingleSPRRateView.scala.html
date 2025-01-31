@@ -28,7 +28,8 @@
     paragraph: Paragraph,
     sectionHeading: SectionHeading,
     subHeading: SubHeading,
-    pageHeading: PageHeading
+    pageHeading: PageHeading,
+    govukFieldset: GovukFieldset
 )
 
 @(form: Form[_], regime:AlcoholRegime, categories:CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -53,117 +54,129 @@
       @if(categories.smallProducer.nonEmpty) {
         @subHeading(messages("tellUsAboutSingleSPRRate.smallProducer.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.smallProducer.zipWithIndex) {
-          @subHeading(categoryViewModel.category, classes = Css.headingSCssClass)
-          @govukInput(
-            InputViewModel(
-              field = form(s"volumesWithRate[$index]"),
-              key = "totalLitres",
-              label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index}_totalLitres"),
-              value = form(s"volumesWithRate[$index].totalLitres").value
-            )
-            .asNumeric()
-            .withWidth(Fixed10)
-            .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-          )
-          @govukInput(
-            InputViewModel(
-              field = form(s"volumesWithRate[$index]"),
-              key = "pureAlcohol",
-              label = LabelViewModel(messages("return.journey.pureAlcohol")),
-              errorMessageField = form(s"volumesWithRate_${index}_pureAlcohol"),
-              value = form(s"volumesWithRate[$index].pureAlcohol").value
-            )
-            .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
-            .asNumeric()
-            .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-          )
-          @govukInput(
-            InputViewModel(
-              field = form(s"volumesWithRate[$index]"),
-              key = "dutyRate",
-              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
-              value = form(s"volumesWithRate[$index].dutyRate").value
-            )
-            .asNumeric()
-            .withWidth(Fixed10)
-            .withPoundPrefix
-            .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
-          )
-
-          @govukInput(
-            InputViewModel(
-              field = form(s"volumesWithRate[$index]"),
-              key = "taxType",
-              label = LabelViewModel(Text("")),
-              errorMessageField = form(s"volumesWithRate_${index}_taxType"),
-              value = Some(categoryViewModel.id)
-            ).hidden
-          )
+          @govukFieldset(Fieldset(
+            legend = Some(Legend(
+              content = Text(categoryViewModel.category),
+              classes = Css.fieldsetLegendSCssClass
+            )),
+            html = HtmlFormat.fill(List(
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[$index]"),
+                  key = "totalLitres",
+                  label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
+                  errorMessageField = form(s"volumesWithRate_${index}_totalLitres"),
+                  value = form(s"volumesWithRate[$index].totalLitres").value
+                )
+                .asNumeric()
+                .withWidth(Fixed10)
+                .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
+                .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[$index]"),
+                  key = "pureAlcohol",
+                  label = LabelViewModel(messages("return.journey.pureAlcohol")),
+                  errorMessageField = form(s"volumesWithRate_${index}_pureAlcohol"),
+                  value = form(s"volumesWithRate[$index].pureAlcohol").value
+                )
+                .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
+                .asNumeric()
+                .withWidth(Fixed10)
+                .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[$index]"),
+                  key = "dutyRate",
+                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
+                  errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
+                  value = form(s"volumesWithRate[$index].dutyRate").value
+                )
+                .asNumeric()
+                .withWidth(Fixed10)
+                .withPoundPrefix
+                .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[$index]"),
+                  key = "taxType",
+                  label = LabelViewModel(Text("")),
+                  errorMessageField = form(s"volumesWithRate_${index}_taxType"),
+                  value = Some(categoryViewModel.id)
+                ).hidden
+              )
+            ))
+          ))
         }
       }
 
       @if(categories.draughtAndSmallProducer.nonEmpty) {
         @subHeading(messages("tellUsAboutSingleSPRRate.draughtSmallProducer.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.draughtAndSmallProducer.zipWithIndex) {
-          @subHeading(categoryViewModel.category, classes = Css.headingSCssClass)
-          @govukInput(
-            InputViewModel(
-              field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
-              key = "totalLitres",
-              label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_totalLitres"),
-              value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
-            )
-            .asNumeric()
-            .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
-            .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-          )
-          @govukInput(
-            InputViewModel(
-              field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
-              key = "pureAlcohol",
-              label = LabelViewModel(messages("return.journey.pureAlcohol")),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_pureAlcohol"),
-              value = form(s"volumesWithRate[${index + categories.smallProducer.size}].pureAlcohol").value
-            )
-            .asNumeric()
-            .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
-            .withWidth(Fixed10)
-            .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
-          )
-          @govukInput(
-            InputViewModel(
-              field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
-              key = "dutyRate",
-              label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
-              value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
-            )
-            .asNumeric()
-            .withWidth(Fixed10)
-            .withPoundPrefix
-            .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
-          )
-
-          @govukInput(
-            InputViewModel(
-              field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
-              key = "taxType",
-              label = LabelViewModel(Text("")),
-              errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_taxType"),
-              value = Some(categoryViewModel.id)
-            ).hidden
-          )
+          @govukFieldset(Fieldset(
+            legend = Some(Legend(
+              content = Text(categoryViewModel.category),
+              classes = Css.fieldsetLegendSCssClass
+            )),
+            html = HtmlFormat.fill(List(
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+                  key = "totalLitres",
+                  label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
+                  errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_totalLitres"),
+                  value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
+                )
+                .asNumeric()
+                .withHint(Hint(content = messages("return.journey.totalLitres.hint")))
+                .withWidth(Fixed10)
+                .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+                  key = "pureAlcohol",
+                  label = LabelViewModel(messages("return.journey.pureAlcohol")),
+                  errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_pureAlcohol"),
+                  value = form(s"volumesWithRate[${index + categories.smallProducer.size}].pureAlcohol").value
+                )
+                .asNumeric()
+                .withHint(Hint(content = messages("return.journey.pureAlcohol.hint")))
+                .withWidth(Fixed10)
+                .withSuffix(PrefixOrSuffix(content = messages("site.unit.litres")))
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+                  key = "dutyRate",
+                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"return.regime.$regime"))),
+                  errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
+                  value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
+                )
+                .asNumeric()
+                .withWidth(Fixed10)
+                .withPoundPrefix
+                .withSuffix(PrefixOrSuffix(content = messages("site.rate.litre")))
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+                  key = "taxType",
+                  label = LabelViewModel(Text("")),
+                  errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_taxType"),
+                  value = Some(categoryViewModel.id)
+                ).hidden
+              )
+            ))
+          ))
         }
       }
 
-        @govukButton(
-            ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
-        )
+      @govukButton(
+        ButtonViewModel("saveAndContinueButton",messages("site.saveAndContinue"))
+      )
     }
 }
