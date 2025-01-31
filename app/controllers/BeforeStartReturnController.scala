@@ -75,7 +75,7 @@ class BeforeStartReturnController @Inject() (
 
             subscriptionAndObligation.value.flatMap {
               case Right((subscriptionRegimes, _)) =>
-                if (ua.regimes equals subscriptionRegimes) {
+                if (ua.regimes.regimes equals subscriptionRegimes) {
                   auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
                   Future.successful(Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session))
                 } else {
