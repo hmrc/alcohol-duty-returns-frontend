@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import connectors.{AlcoholDutyReturnsConnector, UserAnswersConnector}
+import connectors.UserAnswersConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegimes, ObligationData, ReturnPeriod, UserAnswers}
 import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
@@ -27,7 +27,7 @@ import play.api.http.Status.LOCKED
 import play.api.i18n.Messages
 import play.api.test.Helpers._
 import play.api.inject.bind
-import services.AuditService
+import services.{AuditService, BeforeStartReturnService}
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
@@ -44,7 +44,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       val application = applicationBuilder()
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
+          bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
           bind[AuditService].toInstance(mockAuditService),
           bind(classOf[Clock]).toInstance(clock)
         )
@@ -266,7 +266,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
   class SetUp {
     val mockUserAnswersConnector        = mock[UserAnswersConnector]
-    val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
+    val mockBeforeStartReturnService    = mock[BeforeStartReturnService]
     val mockAuditService: AuditService  = mock[AuditService]
     val mockUpstreamErrorResponse       = mock[UpstreamErrorResponse]
 

@@ -48,7 +48,7 @@ class ServiceUpdatedController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData) { implicit request =>
-    Ok(view())
+    Ok(view()).withSession(request.session)
   }
 
   // same as BeforeStartReturnController
