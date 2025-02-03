@@ -22,7 +22,7 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWit
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.AdjustmentNavigator
 import models.{NormalMode, UserAnswers}
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage}
 import views.html.adjustment.AdjustmentListView
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,6 +30,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.adjustment.{AdjustmentListSummaryHelper, AdjustmentOverUnderDeclarationCalculationHelper}
 import play.api.Logging
 import viewmodels.PaginatedViewModel
+
+import scala.util.{Failure, Success}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -55,6 +57,15 @@ class AdjustmentListController @Inject() (
 
   def onPageLoad(pageNumber: Int = 1): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      request.userAnswers.get(CurrentAdjustmentEntryPage) match {
+        case Some(_) =>
+          for {
+            cleanedAnswers <- Future.fromTry(request.userAnswers.remove(CurrentAdjustmentEntryPage))
+            result         <- userAnswersConnector.set(cleanedAnswers)
+          } yield {}
+        case None    =>
+      }
+
       val duties = request.userAnswers
         .get(AdjustmentEntryListPage)
         .getOrElse(Seq.empty)
