@@ -102,7 +102,7 @@ section.adjustment.spoilt = Adjust for spoilt alcohol
 section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
 section.adjustment.checkAnswers = Adjustment from previous return
-section.dutySuspended = Duty suspended finished alcoholic product deliveries
+section.dutySuspended = Report duty suspended alcohol deliveries
 section.checkAndSubmit = Send return
 
 viewPastReturns.heading = Your returns
