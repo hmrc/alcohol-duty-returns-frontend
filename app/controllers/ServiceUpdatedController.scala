@@ -17,19 +17,15 @@
 package controllers
 
 import config.Constants.periodKeySessionKey
-import config.FrontendAppConfig
 import connectors.UserAnswersConnector
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWithEnrolmentAction}
-import models.audit.{AuditObligationData, AuditReturnStarted}
-import models.{ObligationData, ReturnId, UserAnswers}
+import controllers.actions.{DataRetrievalAction, IdentifyWithEnrolmentAction}
+import models.ReturnId
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.AuditService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.tasklist.TaskListViewModel
+import utils.UserAnswersAuditHelper
 import views.html.ServiceUpdatedView
 
 import javax.inject.Inject
@@ -38,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ServiceUpdatedController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   userAnswersConnector: UserAnswersConnector,
-  auditService: AuditService,
+  userAnswersAuditHelper: UserAnswersAuditHelper,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
   view: ServiceUpdatedView
@@ -63,7 +59,7 @@ class ServiceUpdatedController @Inject() (
         userAnswersConnector.createUserAnswers(returnAndUserDetails).map {
           case Right(userAnswer) =>
             logger.info(s"Return ${request.appaId}/$periodKey created")
-            auditReturnStarted(userAnswer)
+            userAnswersAuditHelper.auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
           case Left(error)       =>
             logger.warn(s"Unable to create userAnswers: $error")
@@ -72,21 +68,4 @@ class ServiceUpdatedController @Inject() (
     }
   }
 
-  private def auditReturnStarted(
-    userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier): Unit =
-    userAnswers.get(ObligationData) match {
-      case Some(obligationData) =>
-        val auditReturnStarted = AuditReturnStarted(
-          appaId = userAnswers.returnId.appaId,
-          periodKey = userAnswers.returnId.periodKey,
-          credentialId = userAnswers.internalId,
-          groupId = userAnswers.groupId,
-          obligationData = AuditObligationData(obligationData),
-          returnStartedTime = userAnswers.startedTime,
-          returnValidUntilTime = userAnswers.validUntil
-        )
-        auditService.audit(auditReturnStarted)
-      case None                 => logger.warn("Impossible to create Return Started Audit Event, unable to retrieve obligation data")
-    }
 }

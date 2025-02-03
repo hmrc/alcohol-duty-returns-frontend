@@ -18,19 +18,16 @@ package controllers
 
 import base.SpecBase
 import connectors.UserAnswersConnector
-import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.audit.{AuditObligationData, AuditReturnStarted}
-import models.{AlcoholRegimes, ObligationData, UserAnswers}
+import models.ObligationData
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.Helpers._
-import services.AuditService
 import uk.gov.hmrc.http.UpstreamErrorResponse
+import utils.UserAnswersAuditHelper
 import views.html.ServiceUpdatedView
 
-import java.time.Instant
 import scala.concurrent.Future
 
 class ServiceUpdatedControllerSpec extends SpecBase {
@@ -69,7 +66,7 @@ class ServiceUpdatedControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AuditService].toInstance(mockAuditService)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
           )
           .build()
 
@@ -80,31 +77,8 @@ class ServiceUpdatedControllerSpec extends SpecBase {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
-          verify(mockAuditService).audit(eqTo(expectedReturnStartedAuditEvent))(any(), any())
+          verify(mockUserAnswersAuditHelper).auditReturnStarted(eqTo(userAnswers))(any())
         }
-      }
-
-      "must redirect to the TaskList Page when a userAnswers is successfully created for a POST without sending the audit event if the obligation is not available" in new SetUp {
-        val userAnswers = emptyUserAnswers.remove(ObligationData).success.value
-        when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
-
-        val application = applicationBuilder()
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AuditService].toInstance(mockAuditService)
-          )
-          .build()
-
-        running(application) {
-          val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
-        }
-
-        verify(mockAuditService, times(0)).audit(any())(any(), any())
       }
 
       "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in new SetUp {
@@ -116,7 +90,7 @@ class ServiceUpdatedControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AuditService].toInstance(mockAuditService)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
           )
           .build()
 
@@ -128,7 +102,7 @@ class ServiceUpdatedControllerSpec extends SpecBase {
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-          verify(mockAuditService, times(0)).audit(any())(any(), any())
+          verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
         }
       }
 
@@ -140,7 +114,7 @@ class ServiceUpdatedControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AuditService].toInstance(mockAuditService)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
           )
           .build()
 
@@ -152,37 +126,17 @@ class ServiceUpdatedControllerSpec extends SpecBase {
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-          verify(mockAuditService, times(0)).audit(any())(any(), any())
+          verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
         }
       }
     }
   }
 
   class SetUp {
-    val mockUserAnswersConnector       = mock[UserAnswersConnector]
-    val mockAuditService: AuditService = mock[AuditService]
-    val mockUpstreamErrorResponse      = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector   = mock[UserAnswersConnector]
+    val mockUserAnswersAuditHelper = mock[UserAnswersAuditHelper]
+    val mockUpstreamErrorResponse  = mock[UpstreamErrorResponse]
 
     implicit val messages: Messages = getMessages(app)
-
-    val emptyUserAnswers: UserAnswers = UserAnswers(
-      returnId,
-      groupId,
-      internalId,
-      regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)),
-      startedTime = Instant.now(clock),
-      lastUpdated = Instant.now(clock),
-      validUntil = Some(Instant.now(clock))
-    )
-
-    val expectedReturnStartedAuditEvent = AuditReturnStarted(
-      appaId = returnId.appaId,
-      periodKey = returnId.periodKey,
-      credentialId = emptyUserAnswers.internalId,
-      groupId = emptyUserAnswers.groupId,
-      obligationData = AuditObligationData(obligationDataSingleOpen),
-      returnStartedTime = Instant.now(clock),
-      returnValidUntilTime = Some(Instant.now(clock))
-    )
   }
 }

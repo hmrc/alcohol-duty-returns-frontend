@@ -19,19 +19,19 @@ package controllers
 import config.Constants.periodKeySessionKey
 import connectors.UserAnswersConnector
 import controllers.actions._
-import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
-import models.{ErrorModel, ObligationData, ReturnId, ReturnPeriod, UserAnswers}
+import models.{ErrorModel, ReturnId, ReturnPeriod}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.{AuditService, BeforeStartReturnService}
+import services.BeforeStartReturnService
 import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.UserAnswersAuditHelper
 import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
 
-import java.time.{Clock, Instant, LocalDate}
+import java.time.{Clock, LocalDate}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,7 +40,7 @@ class BeforeStartReturnController @Inject() (
   beforeStartReturnService: BeforeStartReturnService,
   identify: IdentifyWithEnrolmentAction,
   getData: DataRetrievalAction,
-  auditService: AuditService,
+  userAnswersAuditHelper: UserAnswersAuditHelper,
   clock: Clock,
   val controllerComponents: MessagesControllerComponents,
   view: BeforeStartReturnView,
@@ -67,7 +67,7 @@ class BeforeStartReturnController @Inject() (
             logger.info(s"Return $appaId/$periodKey retrieved by the user")
             beforeStartReturnService.handleExistingUserAnswers(ua).map {
               case Right(_)                            =>
-                auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
+                userAnswersAuditHelper.auditContinueReturn(ua, periodKey, appaId, credentialId, groupId)
                 Redirect(controllers.routes.TaskListController.onPageLoad).withSession(session)
               case Left(ErrorModel(CONFLICT, message)) =>
                 logger.warn(s"Conflict: $message")
@@ -113,7 +113,7 @@ class BeforeStartReturnController @Inject() (
         userAnswersConnector.createUserAnswers(returnAndUserDetails).map {
           case Right(userAnswer) =>
             logger.info(s"Return ${request.appaId}/$periodKey created")
-            auditReturnStarted(userAnswer)
+            userAnswersAuditHelper.auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
           case Left(error)       =>
             logger.warn(s"Unable to create userAnswers: $error")
@@ -121,45 +121,5 @@ class BeforeStartReturnController @Inject() (
         }
     }
   }
-
-  private def auditContinueReturn(
-    userAnswers: UserAnswers,
-    periodKey: String,
-    appaId: String,
-    credentialId: String,
-    groupId: String
-  )(implicit
-    hc: HeaderCarrier
-  ): Unit = {
-    val returnContinueTime = Instant.now(clock)
-    val eventDetail        = AuditContinueReturn(
-      appaId = appaId,
-      periodKey = periodKey,
-      credentialId = credentialId,
-      groupId = groupId,
-      returnContinueTime = returnContinueTime,
-      returnStartedTime = userAnswers.startedTime,
-      returnValidUntilTime = userAnswers.validUntil
-    )
-    auditService.audit(eventDetail)
-  }
-
-  private def auditReturnStarted(
-    userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier): Unit =
-    userAnswers.get(ObligationData) match {
-      case Some(obligationData) =>
-        val auditReturnStarted = AuditReturnStarted(
-          appaId = userAnswers.returnId.appaId,
-          periodKey = userAnswers.returnId.periodKey,
-          credentialId = userAnswers.internalId,
-          groupId = userAnswers.groupId,
-          obligationData = AuditObligationData(obligationData),
-          returnStartedTime = userAnswers.startedTime,
-          returnValidUntilTime = userAnswers.validUntil
-        )
-        auditService.audit(auditReturnStarted)
-      case None                 => logger.warn("Impossible to create Return Started Audit Event, unable to retrieve obligation data")
-    }
 
 }

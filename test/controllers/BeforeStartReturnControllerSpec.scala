@@ -20,15 +20,14 @@ import base.SpecBase
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegimes, ErrorModel, ObligationData, ReturnPeriod, UserAnswers}
-import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import play.api.http.Status.LOCKED
 import play.api.i18n.Messages
-import play.api.test.Helpers._
 import play.api.inject.bind
-import services.{AuditService, BeforeStartReturnService}
+import play.api.test.Helpers._
+import services.BeforeStartReturnService
 import uk.gov.hmrc.http.UpstreamErrorResponse
+import utils.UserAnswersAuditHelper
 import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
 
@@ -52,7 +51,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
             .overrides(
               bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
               bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
-              bind[AuditService].toInstance(mockAuditService),
+              bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
               bind(classOf[Clock]).toInstance(clock)
             )
             .build()
@@ -67,7 +66,13 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
             status(result) mustEqual SEE_OTHER
 
-            verify(mockAuditService).audit(eqTo(expectedContinueReturnAuditEvent))(any(), any())
+            verify(mockUserAnswersAuditHelper).auditContinueReturn(
+              eqTo(emptyUserAnswers),
+              eqTo(periodKey),
+              eqTo(appaId),
+              eqTo(internalId),
+              eqTo(groupId)
+            )(any())
             redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
           }
         }
@@ -239,7 +244,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AuditService].toInstance(mockAuditService)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
           )
           .build()
 
@@ -250,31 +255,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
-          verify(mockAuditService).audit(eqTo(expectedReturnStartedAuditEvent))(any(), any())
+          verify(mockUserAnswersAuditHelper).auditReturnStarted(eqTo(userAnswers))(any())
         }
-      }
-
-      "must redirect to the TaskList Page when a userAnswers is successfully created for a POST without sending the audit event if the obligation is not available" in new SetUp {
-        val userAnswers = emptyUserAnswers.remove(ObligationData).success.value
-        when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
-
-        val application = applicationBuilder()
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AuditService].toInstance(mockAuditService)
-          )
-          .build()
-
-        running(application) {
-          val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
-        }
-
-        verify(mockAuditService, times(0)).audit(any())(any(), any())
       }
 
       "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in new SetUp {
@@ -286,7 +268,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AuditService].toInstance(mockAuditService)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
           )
           .build()
 
@@ -298,7 +280,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-          verify(mockAuditService, times(0)).audit(any())(any(), any())
+          verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
         }
       }
 
@@ -310,7 +292,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[AuditService].toInstance(mockAuditService)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
           )
           .build()
 
@@ -322,17 +304,17 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
-          verify(mockAuditService, times(0)).audit(any())(any(), any())
+          verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
         }
       }
     }
   }
 
   class SetUp {
-    val mockUserAnswersConnector       = mock[UserAnswersConnector]
-    val mockBeforeStartReturnService   = mock[BeforeStartReturnService]
-    val mockAuditService: AuditService = mock[AuditService]
-    val mockUpstreamErrorResponse      = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector     = mock[UserAnswersConnector]
+    val mockBeforeStartReturnService = mock[BeforeStartReturnService]
+    val mockUserAnswersAuditHelper   = mock[UserAnswersAuditHelper]
+    val mockUpstreamErrorResponse    = mock[UpstreamErrorResponse]
 
     implicit val messages: Messages = getMessages(app)
 
@@ -344,26 +326,6 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       startedTime = Instant.now(clock),
       lastUpdated = Instant.now(clock),
       validUntil = Some(Instant.now(clock))
-    )
-
-    val expectedContinueReturnAuditEvent = AuditContinueReturn(
-      appaId = returnId.appaId,
-      periodKey = returnId.periodKey,
-      credentialId = emptyUserAnswers.internalId,
-      groupId = emptyUserAnswers.groupId,
-      returnContinueTime = Instant.now(clock),
-      returnStartedTime = Instant.now(clock),
-      returnValidUntilTime = Some(Instant.now(clock))
-    )
-
-    val expectedReturnStartedAuditEvent = AuditReturnStarted(
-      appaId = returnId.appaId,
-      periodKey = returnId.periodKey,
-      credentialId = emptyUserAnswers.internalId,
-      groupId = emptyUserAnswers.groupId,
-      obligationData = AuditObligationData(obligationDataSingleOpen),
-      returnStartedTime = Instant.now(clock),
-      returnValidUntilTime = Some(Instant.now(clock))
     )
 
     val currentDate = LocalDate.now(clock)
