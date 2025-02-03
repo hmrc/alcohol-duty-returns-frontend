@@ -21,7 +21,7 @@ import connectors.UserAnswersConnector
 import controllers.actions._
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
-import pages.adjustment.{AdjustmentEntryListPage, CurrentAdjustmentEntryPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, CurrentAdjustmentEntryPage}
 import play.api.Logging
 
 import javax.inject.Inject
@@ -69,8 +69,8 @@ class CheckYourAnswersController @Inject() (
       case Some(adjustmentEntry) if adjustmentEntry.isComplete =>
         for {
           updatedAnswers <- saveAdjustmentEntry(request.userAnswers, adjustmentEntry)
-          cleanedAnswers <- Future.fromTry(updatedAnswers.remove(CurrentAdjustmentEntryPage))
-          _              <- userAnswersConnector.set(cleanedAnswers)
+          cleanedAnswers <- Future.fromTry(updatedAnswers.remove(List(CurrentAdjustmentEntryPage, AdjustmentListPage)))
+          _             <- userAnswersConnector.set(cleanedAnswers)
         } yield Redirect(
           controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
         )
