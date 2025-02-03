@@ -35,8 +35,8 @@ class BeforeStartReturnService @Inject() (
   def handleExistingUserAnswers(userAnswers: UserAnswers)(implicit
     hc: HeaderCarrier
   ): Future[Either[ErrorModel, Unit]] = {
-    val appaId = userAnswers.returnId.appaId
-    val periodKey = userAnswers.returnId.periodKey
+    val appaId                                                                                   = userAnswers.returnId.appaId
+    val periodKey                                                                                = userAnswers.returnId.periodKey
     val subscriptionAndObligation: EitherT[Future, String, (Set[AlcoholRegime], ObligationData)] = for {
       subscriptionRegimes <- alcoholDutyReturnsConnector.getValidSubscriptionRegimes(appaId)
       obligationData      <- alcoholDutyReturnsConnector.getOpenObligation(appaId, periodKey)

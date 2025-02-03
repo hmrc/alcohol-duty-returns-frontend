@@ -160,7 +160,7 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       whenReady(connector.getOpenObligation(appaId, periodKey).value) { result =>
         result match {
           case Left(err) => err must include("Invalid JSON format")
-          case Right(_) => fail("Expected a Left")
+          case Right(_)  => fail("Expected a Left")
         }
 
         verify(connector.httpClient, times(1))
@@ -244,8 +244,8 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
 
     "successfully retrieve subscription regimes" in new SetUp {
       val alcoholRegimes = Set(Beer, Cider)
-      val jsonResponse = Json.toJson(alcoholRegimes).toString()
-      val httpResponse = HttpResponse(OK, jsonResponse)
+      val jsonResponse   = Json.toJson(alcoholRegimes).toString()
+      val httpResponse   = HttpResponse(OK, jsonResponse)
 
       when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
 
@@ -277,7 +277,7 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       whenReady(connector.getValidSubscriptionRegimes(appaId).value) { result =>
         result match {
           case Left(err) => err must include("Invalid JSON format")
-          case Right(_) => fail("Expected a Left")
+          case Right(_)  => fail("Expected a Left")
         }
 
         verify(connector.httpClient, times(1))
