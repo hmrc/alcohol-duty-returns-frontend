@@ -19,7 +19,18 @@
 )
 
 
-@(periodKey: String, userAnswers: UserAnswers)
-    <p>Created user answers for @userAnswers.returnId.appaId/@userAnswers.returnId.periodKey</p>
-    <p>Regimes: @userAnswers.regimes.regimes.mkString(", ")</p>
+@(appaId: String, periodKey: String, beer: Boolean, cider: Boolean, wine: Boolean, spirits: Boolean, OFP: Boolean)
+    <p>Created user answers for
+        <br> APPA ID: @appaId
+        <br> Period key: @periodKey
+    </p>
+    <p>Regimes:</p>
+    <ul>
+        <li> Beer: @beer </li>
+        <li> Cider: @cider</li>
+        <li> Wine: @wine</li>
+        <li> Spirits: @spirits</li>
+        <li> OFP: @OFP</li>
+    </ul>
+
     <a href="@routes.BeforeStartReturnController.onPageLoad(periodKey)">Go to 'Before you start your return'</a>

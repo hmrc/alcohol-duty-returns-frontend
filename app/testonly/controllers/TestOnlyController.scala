@@ -60,10 +60,13 @@ class TestOnlyController @Inject() (
           testOnlyConnector
             .createUserAnswers(returnAndUserDetails, beer, cider, wine, spirits, OFP)
             .map {
-              case Right(userAnswers) =>
+              case Right(_)                                  =>
                 logger.info(s"Test userAnswers for ${request.appaId}/$periodKey created")
-                Ok(createdUserAnswersView(periodKey, userAnswers))
-              case Left(error)        =>
+                Ok(createdUserAnswersView(request.appaId, periodKey, beer, cider, wine, spirits, OFP))
+              case Left(error) if error.statusCode == LOCKED =>
+                logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
+                Redirect(controllers.routes.ReturnLockedController.onPageLoad())
+              case Left(error)                               =>
                 logger.warn(s"Unable to create test userAnswers: $error")
                 Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
             }
