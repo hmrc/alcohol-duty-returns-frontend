@@ -22,7 +22,7 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWit
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.AdjustmentNavigator
 import models.{NormalMode, UserAnswers}
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage}
 import views.html.adjustment.AdjustmentListView
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -67,11 +67,15 @@ class AdjustmentListController @Inject() (
         .flatMap { total =>
           val paginatedViewModel = getPaginatedViewModel(pageNumber, request.userAnswers, total.duty)
           if (pageNumber < 1 || pageNumber > paginatedViewModel.totalPages) {
-            Future.successful(Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)))
+            for {
+              cleanCurrentAdjustment <- Future.fromTry(request.userAnswers.remove(CurrentAdjustmentEntryPage))
+              _                      <- userAnswersConnector.set(cleanCurrentAdjustment)
+            } yield Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1))
           } else {
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
-              _              <- userAnswersConnector.set(updatedAnswers)
+              updatedAnswers         <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
+              cleanCurrentAdjustment <- Future.fromTry(updatedAnswers.remove(CurrentAdjustmentEntryPage))
+              _                      <- userAnswersConnector.set(cleanCurrentAdjustment)
             } yield Ok(view(preparedForm, paginatedViewModel.tableViewModel, paginatedViewModel.totalPages, pageNumber))
           }
         }
