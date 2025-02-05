@@ -97,8 +97,11 @@ class AdjustmentListController @Inject() (
             ),
           value =>
             for {
-              cleanCurrentAdjustment         <-
-                Future.fromTry(request.userAnswers.remove(CurrentAdjustmentEntryPage))
+              cleanCurrentAdjustment         <- Future.fromTry(
+                                                  request.userAnswers.remove(
+                                                    CurrentAdjustmentEntryPage
+                                                  )
+                                                )
               updatedAnswers                 <- Future.fromTry(cleanCurrentAdjustment.set(AdjustmentListPage, value))
               userAnswersWithOverUnderTotals <-
                 adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers, value)
