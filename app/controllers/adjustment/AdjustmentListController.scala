@@ -67,15 +67,11 @@ class AdjustmentListController @Inject() (
         .flatMap { total =>
           val paginatedViewModel = getPaginatedViewModel(pageNumber, request.userAnswers, total.duty)
           if (pageNumber < 1 || pageNumber > paginatedViewModel.totalPages) {
-            for {
-              cleanCurrentAdjustment <- Future.fromTry(request.userAnswers.remove(CurrentAdjustmentEntryPage))
-              _                      <- userAnswersConnector.set(cleanCurrentAdjustment)
-            } yield Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1))
+            Future.successful(Redirect(controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)))
           } else {
             for {
-              updatedAnswers         <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
-              cleanCurrentAdjustment <- Future.fromTry(updatedAnswers.remove(CurrentAdjustmentEntryPage))
-              _                      <- userAnswersConnector.set(cleanCurrentAdjustment)
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(AdjustmentTotalPage, total.duty))
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Ok(view(preparedForm, paginatedViewModel.tableViewModel, paginatedViewModel.totalPages, pageNumber))
           }
         }
@@ -101,7 +97,9 @@ class AdjustmentListController @Inject() (
             ),
           value =>
             for {
-              updatedAnswers                 <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
+              cleanCurrentAdjustment         <-
+                Future.fromTry(request.userAnswers.remove(CurrentAdjustmentEntryPage))
+              updatedAnswers                 <- Future.fromTry(cleanCurrentAdjustment.set(AdjustmentListPage, value))
               userAnswersWithOverUnderTotals <-
                 adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers, value)
               _                              <- userAnswersConnector.set(userAnswersWithOverUnderTotals)
