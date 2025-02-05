@@ -24,6 +24,12 @@ site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
 site.year = {0,number,####}
 
+#Welsh helpers - in Welsh y and w are also vowels
+
+#Used in dynamic content ranges "between x% and y%". Vowel form used when y's whole number is 1 or 8
+welsh.and.consonant = and
+welsh.and.vowel = and
+
 date.day = Day
 date.month = Month
 date.year = Year
@@ -297,21 +303,21 @@ return.journey.abv.interval.label.Spirits = spirits
 return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
 
 return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV (tax type code {2})
-return.journey.abv.single.interval = {0} between {1}% and {2}% ABV (tax type code {3})
-return.journey.abv.multi.interval = {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV (tax type code {6})
+return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV (tax type code {4})
+return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV (tax type code {8})
 
 return.journey.abv.recap.interval.exceeding.max.Core = Non-draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
-return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
 return.journey.abv.recap.interval.exceeding.max.DraughtRelief = Draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})
-return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
 return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = Non-draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% {2} {3}% ABV ({4} SPR)
+return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
 return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% {2} {3}% ABV ({4} SPR)
+return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
 
 return.journey.totalLitres = Total litres of {0}
 return.journey.totalLitres.hint = In litres, up to 2 decimal places

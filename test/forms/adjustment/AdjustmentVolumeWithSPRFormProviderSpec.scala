@@ -87,8 +87,8 @@ class AdjustmentVolumeWithSPRFormProviderSpec extends StringFieldBehaviours with
         "volumes.sprDutyRate"       -> "1.112"
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_totalLitresVolume", s"adjustmentVolume.error.decimalPlaces.totalLitresVolume", Seq()),
-        FormError("volumes_pureAlcoholVolume", s"adjustmentVolume.error.decimalPlaces.pureAlcoholVolume", Seq()),
+        FormError("volumes_totalLitresVolume", "adjustmentVolume.error.decimalPlaces.totalLitresVolume", Seq()),
+        FormError("volumes_pureAlcoholVolume", "adjustmentVolume.error.decimalPlaces.pureAlcoholVolume", Seq()),
         FormError("volumes_sprDutyRate", "adjustmentVolume.error.decimalPlaces.sprDutyRate", Seq())
       )
     }
