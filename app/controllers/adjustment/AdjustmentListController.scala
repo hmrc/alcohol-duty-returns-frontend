@@ -22,7 +22,7 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifyWit
 import forms.adjustment.AdjustmentListFormProvider
 import navigation.AdjustmentNavigator
 import models.{NormalMode, UserAnswers}
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage}
 import views.html.adjustment.AdjustmentListView
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -97,7 +97,12 @@ class AdjustmentListController @Inject() (
             ),
           value =>
             for {
-              updatedAnswers                 <- Future.fromTry(request.userAnswers.set(AdjustmentListPage, value))
+              cleanCurrentAdjustment         <- Future.fromTry(
+                                                  request.userAnswers.remove(
+                                                    CurrentAdjustmentEntryPage
+                                                  )
+                                                )
+              updatedAnswers                 <- Future.fromTry(cleanCurrentAdjustment.set(AdjustmentListPage, value))
               userAnswersWithOverUnderTotals <-
                 adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers, value)
               _                              <- userAnswersConnector.set(userAnswersWithOverUnderTotals)
