@@ -24,6 +24,12 @@ site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
 site.year = {0,number,####}
 
+#Welsh helpers - in Welsh y and w are also vowels
+
+#Used in dynamic content ranges "between x% and y%". Vowel form used when y's whole number is 1 or 8
+welsh.and.consonant = and
+welsh.and.vowel = and
+
 date.day = Day
 date.month = Month
 date.year = Year
@@ -75,7 +81,7 @@ unauthorised.heading = Sorry, you cannot access this service with this account
 unauthorised.p1 = Manage your alcohol duty is a service for approved businesses, such as limited companies, partnerships and sole traders producing alcoholic products.
 unauthorised.p2.first = To use this service you need to
 unauthorised.p2.link.text = sign in with an organisation Government Gateway account
-unauthorised.p2.second =  and be enrolled in the service.
+unauthorised.p2.second = and be enrolled in the service.
 
 doYouHaveAnAppaId.title = Do you have an Alcoholic Products Producer approval ID?
 doYouHaveAnAppaId.heading = Do you have an Alcoholic Products Producer approval ID?
@@ -112,10 +118,10 @@ viewPastReturns.completedReturns.caption = Completed returns
 viewPastReturns.period = Period
 viewPastReturns.status = Status
 viewPastReturns.action = Action
-viewPastReturns.submitReturn = Submit Return
-viewPastReturns.submitReturn.hidden = Submit {0} Return
-viewPastReturns.viewReturn = View Return
-viewPastReturns.viewReturn.hidden = View {0} Return
+viewPastReturns.submitReturn = Complete return
+viewPastReturns.submitReturn.hidden = Complete return for {0}
+viewPastReturns.viewReturn = View return
+viewPastReturns.viewReturn.hidden = View return for {0}
 viewPastReturns.status.due = Due
 viewPastReturns.status.overdue = Overdue
 viewPastReturns.status.completed = Completed
@@ -182,8 +188,8 @@ viewPastPayments.credit.paragraph = You have nothing to pay. You can request a r
 viewPastPayments.zeroBalance.paragraph = You have nothing to pay.
 viewPastPayments.outstandingPayments.paragraph = Payments take up to 7 working days to show, depending on how you pay. After you complete your return your tax calculation will take up to 2 days.
 viewPastPayments.Return.description = Payment for Alcohol Duty return
-viewPastPayments.RPI.description = 	Refund payment interest charge
-viewPastPayments.LPI.description = 	Late payment interest charge
+viewPastPayments.RPI.description = Refund payment interest charge
+viewPastPayments.LPI.description = Late payment interest charge
 viewPastPayments.credit.description = Credit for Alcohol Duty return
 viewPastPayments.ref = (ref: {0})
 viewPastPayments.status.nothingToPay = Nothing to pay
@@ -226,11 +232,11 @@ taskList.section.adjustment.over-declaration = Tell us why products were over-de
 
 taskList.section.dutySuspended.heading = Report duty suspended alcohol deliveries
 taskList.section.dutySuspended.needToDeclare = Tell us about your duty suspended deliveries
-taskList.section.dutySuspended = Change the entries you''ve told us about
+taskList.section.dutySuspended = Change the entries you’ve told us about
 
 taskList.section.spirits.heading = Report spirits production
 taskList.section.spirits.needToDeclare = Tell us about spirits produced in the past three months
-taskList.section.spirits = Change the spirits you''ve told us about
+taskList.section.spirits = Change the spirits you’ve told us about
 taskList.section.spirits.hint = Every three months you must tell us about spirits you have produced from raw ingredients
 
 taskList.section.checkAndSubmit.heading = Send return
@@ -297,21 +303,21 @@ return.journey.abv.interval.label.Spirits = spirits
 return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
 
 return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV (tax type code {2})
-return.journey.abv.single.interval = {0} between {1}% and {2}% ABV (tax type code {3})
-return.journey.abv.multi.interval = {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV (tax type code {6})
+return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV (tax type code {4})
+return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV (tax type code {8})
 
 return.journey.abv.recap.interval.exceeding.max.Core = Non-draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
-return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
 return.journey.abv.recap.interval.exceeding.max.DraughtRelief = Draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})
-return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
 return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = Non-draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% {2} {3}% ABV ({4} SPR)
+return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
 return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% {2} {3}% ABV ({4} SPR)
+return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
 
 return.journey.totalLitres = Total litres of {0}
 return.journey.totalLitres.hint = In litres, up to 2 decimal places
@@ -321,12 +327,12 @@ return.journey.spr.dutyRate = Your Small Producer Relief Duty rate for this {0}
 
 declareAlcoholDutyQuestion.title = Declaring alcoholic products for duty
 declareAlcoholDutyQuestion.heading = Declaring alcoholic products for duty
-declareAlcoholDutyQuestion.p1 = 	If you need to declare alcoholic products for alcohol duty, we will need to know the total amount you have produced and the litres of pure alcohol in that production across the following ABV bandings:
+declareAlcoholDutyQuestion.p1 = If you need to declare alcoholic products for alcohol duty, we will need to know the total amount you have produced and the litres of pure alcohol in that production across the following ABV bandings:
 declareAlcoholDutyQuestion.p1.l1 = between 1.3% and 3.4%
 declareAlcoholDutyQuestion.p1.l2 = between 3.5% and 8.4%
 declareAlcoholDutyQuestion.p1.l3 = between 8.5% and 22%
 declareAlcoholDutyQuestion.p1.l4 = at or above 22.1%
-declareAlcoholDutyQuestion.cider.p1 = You will also need to know the same information for  any cider in the following ABV bandings:
+declareAlcoholDutyQuestion.cider.p1 = You will also need to know the same information for any cider in the following ABV bandings:
 declareAlcoholDutyQuestion.cider.p1.l1 = sparkling cider between 3.5% and 5.5%
 declareAlcoholDutyQuestion.cider.p1.l2 = sparkling cider between 5.6% and 8.4%
 declareAlcoholDutyQuestion.h3 = Alcoholic products eligible for reliefs
@@ -448,8 +454,8 @@ tellUsAboutMultipleSPRRate.checkYourAnswersLabel.pureAlcohol.value = {0} LPA
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.label = Duty rate
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.dutyRate.value = £{0,number,#,##0.00} per litre
 
-checkYourAnswers.title =  Check your answers
-checkYourAnswers.heading =  Check your answers
+checkYourAnswers.title = Check your answers
+checkYourAnswers.heading = Check your answers
 
 multipleSPRList.title = {0} with Small Producer Relief duty to declare
 multipleSPRList.heading = {0} with Small Producer Relief duty to declare
@@ -519,7 +525,7 @@ dutySuspendedBeer.error.totalBeer.maximumRequired = Total net quantity of beer m
 dutySuspendedBeer.error.totalBeer.minimumRequired = Total net quantity of beer must be more than −1 billion litres
 dutySuspendedBeer.error.totalBeer.decimalPlaces = Total net quantity of beer must be a number up to 2 decimal places
 
-dutySuspended.error.pureAlcohol.nonNumeric =  Total net quantity of pure alcohol must be a number
+dutySuspended.error.pureAlcohol.nonNumeric = Total net quantity of pure alcohol must be a number
 dutySuspended.error.pureAlcohol.maximumRequired = Total net quantity of pure alcohol must be less than 1 billion litres
 dutySuspended.error.pureAlcohol.minimumRequired = Total net quantity of pure alcohol must be more than −1 billion litres
 dutySuspended.error.pureAlcohol.decimalPlaces = Total net quantity of pure alcohol must be a number up to 4 decimal places
@@ -707,11 +713,11 @@ adjustmentType.heading = What type of adjustment are you declaring?
 adjustmentType.under-declaration = Under-declaration
 adjustmentType.under-declaration.hint = You under-declared alcohol on a previous return and have not paid enough duty.
 adjustmentType.over-declaration = Over-declaration
-adjustmentType.over-declaration.hint = 	You over-declared alcohol on a previous return and paid too much duty.
+adjustmentType.over-declaration.hint = You over-declared alcohol on a previous return and paid too much duty.
 adjustmentType.spoilt = Spoilt
 adjustmentType.spoilt.hint = You have paid duty on alcohol and it is now spoilt and cannot be consumed.
 adjustmentType.drawback = Drawback
-adjustmentType.drawback.hint = You exported alcohol you already paid duty on in an earlier return. You need an approved ''notice of intention to claim drawback'' (NOI) before you tell us about it.
+adjustmentType.drawback.hint = You exported alcohol you already paid duty on in an earlier return. You need an approved ‘notice of intention to claim drawback’ (NOI) before you tell us about it.
 adjustmentType.repackaged-draught-products = Repackaged draught products
 adjustmentType.repackaged-draught-products.hint = You have paid duty on alcohol at the reduced rate (draught relief) and have now repackaged it so it is no longer eligible for the reduced rate.
 adjustmentType.checkYourAnswersLabel = Adjustment
@@ -743,7 +749,7 @@ spoiltVolumeWithDuty.error.invalid.pureAlcoholVolume = Litres of pure alcohol mu
 spoiltVolumeWithDuty.error.invalid.duty = The amount of duty paid must be a number
 spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Litres of spoilt {0} must be less than 1 billion
 spoiltVolumeWithDuty.error.maximumValue.pureAlcoholVolume = Litres of pure alcohol must be less than 1 billion
-spoiltVolumeWithDuty.error.maximumValue.duty = The amount of duty paid must be less than £1 trillion
+spoiltVolumeWithDuty.error.maximumValue.duty = The amount of duty paid must be less than £100 billion
 spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Litres of spoilt {0} must be more than 0.00
 spoiltVolumeWithDuty.error.minimumValue.pureAlcoholVolume = Litres of pure alcohol must be more than 0.0000
 spoiltVolumeWithDuty.error.minimumValue.duty = The amount of duty paid must be more than £0.00

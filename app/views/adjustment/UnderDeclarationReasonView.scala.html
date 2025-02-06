@@ -26,7 +26,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
-    govukCharacterCount: GovukCharacterCount
+    hmrcCharacterCount: HmrcCharacterCount
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -40,11 +40,11 @@
         }
 
         @sectionHeading(
-        id = "under-declaration-reason-section",
-        text = messages("section.adjustment.under-declaration"),
+            id = "under-declaration-reason-section",
+            text = messages("section.adjustment.under-declaration"),
         )
 
-        @govukCharacterCount(
+        @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("under-declaration-reason-input"),
                 label = LabelViewModel(messages("underDeclarationReason.heading")).asPageHeading()

@@ -18,9 +18,10 @@ package viewmodels.govuk
 
 import play.api.data.Field
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.charactercount.CharacterCount
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.Language
 import viewmodels.{ErrorMessageAwareness, InputWidth}
 
 object charactercount extends CharacterCountFluency
@@ -74,28 +75,13 @@ trait CharacterCountFluency {
     def withCountMessageClasses(newClass: String): CharacterCount =
       characterCount.copy(countMessageClasses = s"${characterCount.classes} $newClass")
 
-    def withCharactersUnderLimitText(text: Map[String, String]): CharacterCount =
-      characterCount.copy(charactersUnderLimitText = Some(text))
-
-    def withCharactersAtLimitText(text: String): CharacterCount =
-      characterCount.copy(charactersAtLimitText = Some(text))
-
-    def withCharactersOverLimitText(text: Map[String, String]): CharacterCount =
-      characterCount.copy(charactersOverLimitText = Some(text))
-
-    def withWordsUnderLimitText(text: Map[String, String]): CharacterCount =
-      characterCount.copy(wordsUnderLimitText = Some(text))
-
-    def withWordsAtLimitText(text: String): CharacterCount =
-      characterCount.copy(wordsAtLimitText = Some(text))
-
-    def withWordsOverLimitText(text: Map[String, String]): CharacterCount =
-      characterCount.copy(wordsOverLimitText = Some(text))
-
-    def withTextareaDescriptionText(text: String): CharacterCount =
-      characterCount.copy(textareaDescriptionText = Some(text))
-
     def withWidth(inputWidth: InputWidth): CharacterCount =
       characterCount.withCssClass(inputWidth.toString)
+
+    def withSpellcheck(spellcheck: Boolean): CharacterCount =
+      characterCount.copy(spellcheck = Some(spellcheck))
+
+    def withLanguage(language: Language): CharacterCount =
+      characterCount.copy(language = language)
   }
 }

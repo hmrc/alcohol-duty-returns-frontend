@@ -46,6 +46,7 @@ class RateBandHelperSpec extends SpecBase {
             "return.journey.abv.single.interval",
             alcoholLabel.capitalize,
             lowerLimit,
+            andText,
             upperLimit,
             taxType
           )
@@ -61,6 +62,7 @@ class RateBandHelperSpec extends SpecBase {
               "return.journey.abv.single.interval",
               alcoholLabel.capitalize,
               lowerLimit,
+              andText,
               upperLimit,
               taxType
             )
@@ -103,9 +105,11 @@ class RateBandHelperSpec extends SpecBase {
             "return.journey.abv.multi.interval",
             alcoholLabel.capitalize,
             lowerLimit1,
+            andText,
             upperLimit1,
             secondaryAlcoholLabel,
             lowerLimit2,
+            andText,
             upperLimit2,
             taxType
           )
@@ -121,6 +125,7 @@ class RateBandHelperSpec extends SpecBase {
             "return.journey.abv.single.interval",
             alcoholLabel.capitalize,
             lowerLimit1,
+            andText,
             upperLimit1,
             taxType
           )
@@ -144,6 +149,7 @@ class RateBandHelperSpec extends SpecBase {
                 s"return.journey.abv.recap.single.interval.$rateType",
                 alcoholLabel,
                 lowerLimit,
+                andText,
                 upperLimit,
                 taxType
               )
@@ -161,6 +167,7 @@ class RateBandHelperSpec extends SpecBase {
                   s"return.journey.abv.recap.single.interval.$rateType",
                   alcoholLabel,
                   lowerLimit,
+                  andText,
                   upperLimit,
                   taxType
                 )
@@ -207,9 +214,11 @@ class RateBandHelperSpec extends SpecBase {
                 s"return.journey.abv.recap.multi.interval.$rateType",
                 alcoholLabel,
                 lowerLimit1,
+                andText,
                 upperLimit1,
                 secondaryAlcoholLabel,
                 lowerLimit2,
+                andText,
                 upperLimit2,
                 taxType
               )
@@ -227,6 +236,7 @@ class RateBandHelperSpec extends SpecBase {
                 s"return.journey.abv.recap.single.interval.$rateType",
                 alcoholLabel,
                 lowerLimit1,
+                andText,
                 upperLimit1,
                 taxType
               )
@@ -246,6 +256,7 @@ class RateBandHelperSpec extends SpecBase {
     val alcoholLabel          = messages(s"return.journey.abv.interval.label.$label")
     val secondaryLabel        = AlcoholType.SparklingCider
     val secondaryAlcoholLabel = messages(s"return.journey.abv.interval.label.$secondaryLabel")
+    val andText               = "and"
 
     val rateTypeStandard = Gen.oneOf(Core, DraughtRelief).sample.value
 

@@ -23,7 +23,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukCharacterCount: GovukCharacterCount,
+    hmrcCharacterCount: HmrcCharacterCount,
     govukButton: GovukButton,
     sectionHeading: SectionHeading,
     subHeading: SubHeading
@@ -44,7 +44,7 @@
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
-        @govukCharacterCount(
+        @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("otherSpiritsProduced"),
                 label = LabelViewModel(messages("otherSpiritsProduced.heading")).asPageHeading()
