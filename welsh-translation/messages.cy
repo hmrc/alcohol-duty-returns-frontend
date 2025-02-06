@@ -26,7 +26,7 @@ site.year = {0,number,####}
  
 #Welsh helpers - in Welsh y and w are also vowels 
  
-#Used in dynamic content ranges "between x% and y%". Vowel form used when y starts with 1 or 8 
+#Used in dynamic content ranges "between x% and y%". Vowel form used when y's whole number is 1 or 8 
 welsh.and.consonant = a
 welsh.and.vowel = ac
  
@@ -176,6 +176,7 @@ viewPastPayments.outstandingPayments.caption = Taliadau sy’n ddyledus
 viewPastPayments.outstandingPayments.dueDate = I’w dalu erbyn
 viewPastPayments.description = Disgrifiad
 viewPastPayments.totalAmount = Swm
+viewPastPayments.action = NOT_FOUND
 viewPastPayments.outstandingPayments.remainingAmount = Yn weddill i’w dalu
 viewPastPayments.outstandingPayments.status = Statws
 viewPastPayments.outstandingPayments.action = Camau
@@ -192,12 +193,12 @@ viewPastPayments.LPI.description = Llog am dalu’n hwyr
 viewPastPayments.credit.description = Credyd ar gyfer Datganiad Toll Alcohol
 viewPastPayments.ref = (cyf: {0})
 viewPastPayments.status.nothingToPay = Dim byd i’w dalu
-viewPastPayments.payNow.firstPart.hidden = Talu nawr
-viewPastPayments.payNow.secondPart.hidden = NOT_FOUND
+viewPastPayments.payNow.linkText = NOT_FOUND
 viewPastPayments.unallocatedPayments.caption = Taliadau heb eu dyrannu
 viewPastPayments.unallocated.payments.paymentDate = Dyddiad talu
 viewPastPayments.unallocatedPayments.description = Taliad
 viewPastPayments.unallocatedPayments.paragraph = NOT_FOUND
+viewPastPayments.claimRefund.linkText = NOT_FOUND
 viewPastPayments.historic.payments.paymentDate = Cyfnod y datganiad
 viewPastPayments.historic.caption = Taliadau wedi’u clirio yn ystod {0}
 viewPastPayments.historic.noPayments = NOT_FOUND
