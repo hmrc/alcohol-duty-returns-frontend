@@ -23,10 +23,8 @@ import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.{AlcoholRegime, AlcoholRegimes, ErrorModel, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status._
-import uk.gov.hmrc.http.HttpResponse
 
 import java.time.Instant
-import scala.concurrent.Future
 
 class BeforeStartReturnServiceSpec extends SpecBase {
 
@@ -54,9 +52,6 @@ class BeforeStartReturnServiceSpec extends SpecBase {
         when(mockAlcoholDutyReturnsConnector.getOpenObligation(any(), any())(any())) thenReturn EitherT.rightT(
           obligationDataSingleOpen
         )
-
-        when(mockUserAnswersConnector.delete(any(), any())(any())) thenReturn Future.successful(mockHttpResponse)
-        when(mockUserAnswersConnector.releaseLock(any())(any())) thenReturn Future.successful(mockHttpResponse)
 
         whenReady(beforeStartReturnService.handleExistingUserAnswers(emptyUserAnswers)) { result =>
           result mustBe Left(
@@ -105,7 +100,6 @@ class BeforeStartReturnServiceSpec extends SpecBase {
   class SetUp {
     val mockUserAnswersConnector        = mock[UserAnswersConnector]
     val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
-    val mockHttpResponse: HttpResponse  = mock[HttpResponse]
 
     val beforeStartReturnService =
       new BeforeStartReturnService(mockUserAnswersConnector, mockAlcoholDutyReturnsConnector)

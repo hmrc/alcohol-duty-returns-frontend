@@ -47,22 +47,26 @@ class ServiceUpdatedController @Inject() (
     Ok(view()).withSession(request.session)
   }
 
-  // same as BeforeStartReturnController
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     request.session.get(periodKeySessionKey) match {
       case None            =>
         logger.warn("Period key not present in session")
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
       case Some(periodKey) =>
-        val returnAndUserDetails =
-          ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
-        userAnswersConnector.createUserAnswers(returnAndUserDetails).map {
+        val returnId             = ReturnId(request.appaId, periodKey)
+        val returnAndUserDetails = ReturnAndUserDetails(returnId, request.groupId, request.userId)
+        val newUserAnswers       = for {
+          _          <- userAnswersConnector.delete(request.appaId, periodKey)
+          _          <- userAnswersConnector.releaseLock(returnId)
+          newAnswers <- userAnswersConnector.createUserAnswers(returnAndUserDetails)
+        } yield newAnswers
+        newUserAnswers.map {
           case Right(userAnswer) =>
             logger.info(s"Return ${request.appaId}/$periodKey created")
             userAnswersAuditHelper.auditReturnStarted(userAnswer)
             Redirect(controllers.routes.TaskListController.onPageLoad)
           case Left(error)       =>
-            logger.warn(s"Unable to create userAnswers: $error")
+            logger.warn(s"Unable to create new userAnswers: $error")
             Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         }
     }

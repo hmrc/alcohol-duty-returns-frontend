@@ -42,18 +42,15 @@ class BeforeStartReturnService @Inject() (
       obligationData      <- alcoholDutyReturnsConnector.getOpenObligation(appaId, periodKey)
     } yield (subscriptionRegimes, obligationData)
 
-    subscriptionAndObligation.value.flatMap {
+    subscriptionAndObligation.value.map {
       case Right((subscriptionRegimes, _)) =>
         if (userAnswers.regimes.regimes equals subscriptionRegimes) {
-          Future.successful(Right())
+          Right()
         } else {
-          for {
-            _ <- userAnswersConnector.delete(appaId, periodKey)
-            _ <- userAnswersConnector.releaseLock(userAnswers.returnId)
-          } yield Left(ErrorModel(CONFLICT, "Alcohol regimes in existing user answers do not match those from API"))
+          Left(ErrorModel(CONFLICT, "Alcohol regimes in existing user answers do not match those from API"))
         }
       case Left(err)                       =>
-        Future.successful(Left(ErrorModel(INTERNAL_SERVER_ERROR, err)))
+        Left(ErrorModel(INTERNAL_SERVER_ERROR, err))
     }
   }
 

@@ -24,7 +24,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.UpstreamErrorResponse
+import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
 import utils.UserAnswersAuditHelper
 import views.html.ServiceUpdatedView
 
@@ -59,8 +59,10 @@ class ServiceUpdatedControllerSpec extends SpecBase {
 
     "onSubmit" - {
 
-      "must redirect to the TaskList Page when a userAnswers is successfully created for a POST" in new SetUp {
+      "must redirect to the TaskList Page when a new userAnswers is successfully created for a POST" in new SetUp {
         val userAnswers = emptyUserAnswers.set(ObligationData, obligationDataSingleOpen).success.value
+        when(mockUserAnswersConnector.delete(any(), any())(any())) thenReturn Future.successful(mockHttpResponse)
+        when(mockUserAnswersConnector.releaseLock(any())(any())) thenReturn Future.successful(mockHttpResponse)
         when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
 
         val application = applicationBuilder()
@@ -71,17 +73,22 @@ class ServiceUpdatedControllerSpec extends SpecBase {
           .build()
 
         running(application) {
-          val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
+          val request = FakeRequest(POST, controllers.routes.ServiceUpdatedController.onSubmit().url)
 
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+
+          verify(mockUserAnswersConnector).delete(eqTo(appaId), eqTo(periodKey))(any())
+          verify(mockUserAnswersConnector).releaseLock(eqTo(returnId))(any())
           verify(mockUserAnswersAuditHelper).auditReturnStarted(eqTo(userAnswers))(any())
         }
       }
 
-      "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in new SetUp {
+      "must redirect to the JourneyRecovery Page when a new userAnswers cannot be created for a POST" in new SetUp {
+        when(mockUserAnswersConnector.delete(any(), any())(any())) thenReturn Future.successful(mockHttpResponse)
+        when(mockUserAnswersConnector.releaseLock(any())(any())) thenReturn Future.successful(mockHttpResponse)
         when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(
           Left(mockUpstreamErrorResponse)
         )
@@ -95,22 +102,20 @@ class ServiceUpdatedControllerSpec extends SpecBase {
           .build()
 
         running(application) {
-          val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
+          val request = FakeRequest(POST, controllers.routes.ServiceUpdatedController.onSubmit().url)
 
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
+          verify(mockUserAnswersConnector).delete(eqTo(appaId), eqTo(periodKey))(any())
+          verify(mockUserAnswersConnector).releaseLock(eqTo(returnId))(any())
           verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
         }
       }
 
       "must redirect to the journey recovery controller if the period key is not in the session for a POST" in new SetUp {
-        when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(
-          Right(emptyUserAnswers)
-        )
-
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
@@ -119,13 +124,16 @@ class ServiceUpdatedControllerSpec extends SpecBase {
           .build()
 
         running(application) {
-          val request = play.api.test.FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
+          val request = play.api.test.FakeRequest(POST, controllers.routes.ServiceUpdatedController.onSubmit().url)
 
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
+          verify(mockUserAnswersConnector, times(0)).delete(any(), any())(any())
+          verify(mockUserAnswersConnector, times(0)).releaseLock(any())(any())
+          verify(mockUserAnswersConnector, times(0)).createUserAnswers(any())(any())
           verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
         }
       }
@@ -133,9 +141,10 @@ class ServiceUpdatedControllerSpec extends SpecBase {
   }
 
   class SetUp {
-    val mockUserAnswersConnector   = mock[UserAnswersConnector]
-    val mockUserAnswersAuditHelper = mock[UserAnswersAuditHelper]
-    val mockUpstreamErrorResponse  = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector       = mock[UserAnswersConnector]
+    val mockUserAnswersAuditHelper     = mock[UserAnswersAuditHelper]
+    val mockUpstreamErrorResponse      = mock[UpstreamErrorResponse]
+    val mockHttpResponse: HttpResponse = mock[HttpResponse]
 
     implicit val messages: Messages = getMessages(app)
   }
