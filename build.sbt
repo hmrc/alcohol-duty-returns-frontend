@@ -26,7 +26,7 @@ lazy val root = Project(appName, file("."))
       "uk.gov.hmrc.hmrcfrontend.views.html.components._",
       "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
       "uk.gov.hmrc.hmrcfrontend.views.config._",
-      "views.ViewUtils._",
+      "views.TitleUtils._",
       "models.Mode",
       "controllers.routes._",
       "viewmodels.govuk.all._"
