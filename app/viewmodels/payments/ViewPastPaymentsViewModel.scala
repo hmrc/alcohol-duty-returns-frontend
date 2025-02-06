@@ -17,6 +17,7 @@
 package viewmodels.payments
 
 import config.Constants.Css
+import config.FrontendAppConfig
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
 import models.TransactionType.RPI
 import models.{HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
@@ -26,11 +27,13 @@ import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, TableRow, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import viewmodels._
+import play.api.mvc.Call
 
 import java.time.{LocalDate, YearMonth}
 import javax.inject.Inject
 
-class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) extends Logging {
+class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, frontendAppConfig: FrontendAppConfig)
+    extends Logging {
 
   def getOutstandingPaymentsTable(
     outstandingPaymentsData: Seq[OutstandingPayment]
@@ -63,7 +66,6 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
     outstandingPaymentsData.zipWithIndex.map { case (outstandingPaymentsData, index) =>
       val status    = getOutstandingPaymentStatus(outstandingPaymentsData)
       val statusTag = createStatusTag(status)
-      val amount    = Money.format(outstandingPaymentsData.remainingAmount)
       TableRowViewModel(
         cells = Seq(
           TableRow(content = Text(formatDateYearMonth(outstandingPaymentsData.dueDate))),
@@ -82,7 +84,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
           ),
           TableRow(content = HtmlContent(statusTag))
         ),
-        actions = getAction(status, index, amount)
+        actions = getActionOutstandingPayments(status, index, outstandingPaymentsData.remainingAmount)
       )
     }
 
@@ -92,7 +94,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
     val sortedUnallocatedPaymentsData = unallocatedPaymentsData.sortBy(_.paymentDate)(Ordering[LocalDate].reverse)
     if (sortedUnallocatedPaymentsData.nonEmpty) {
       TableViewModel(
-        head = getHistoricOrUnallocatedPaymentsHeader("unallocated"),
+        head = getUnallocatedPaymentsHeader("unallocated", frontendAppConfig.claimARefundGformEnabled),
         rows = getUnallocatedPaymentsDataTableRows(sortedUnallocatedPaymentsData),
         total = None
       )
@@ -101,7 +103,25 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
     }
   }
 
-  private def getHistoricOrUnallocatedPaymentsHeader(paymentType: String)(implicit messages: Messages): Seq[HeadCell] =
+  private def getUnallocatedPaymentsHeader(paymentType: String, claimARefundGformEnabled: Boolean)(implicit
+    messages: Messages
+  ): Seq[HeadCell] =
+    if (claimARefundGformEnabled) {
+      Seq(
+        HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
+        HeadCell(content = Text(messages("viewPastPayments.description"))),
+        HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Css.textAlignRightCssClass),
+        HeadCell(content = Text(messages("viewPastPayments.action")))
+      )
+    } else {
+      Seq(
+        HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
+        HeadCell(content = Text(messages("viewPastPayments.description"))),
+        HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Css.textAlignRightCssClass)
+      )
+    }
+
+  private def getHistoricPaymentsHeader(paymentType: String)(implicit messages: Messages): Seq[HeadCell] =
     Seq(
       HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
       HeadCell(content = Text(messages("viewPastPayments.description"))),
@@ -112,16 +132,30 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
     unallocatedPaymentsData: Seq[UnallocatedPayment]
   )(implicit messages: Messages): Seq[TableRowViewModel] =
     unallocatedPaymentsData.map { unallocatedPaymentData =>
-      TableRowViewModel(
-        cells = Seq(
-          TableRow(content = Text(formatDateYearMonth(unallocatedPaymentData.paymentDate))),
-          TableRow(content = Text(messages("viewPastPayments.unallocatedPayments.description"))),
-          TableRow(
-            content = Text(Money.format(unallocatedPaymentData.unallocatedAmount)),
-            classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
+      if (frontendAppConfig.claimARefundGformEnabled) {
+        TableRowViewModel(
+          cells = Seq(
+            TableRow(content = Text(formatDateYearMonth(unallocatedPaymentData.paymentDate))),
+            TableRow(content = Text(messages("viewPastPayments.unallocatedPayments.description"))),
+            TableRow(
+              content = Text(Money.format(unallocatedPaymentData.unallocatedAmount)),
+              classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
+            )
+          ),
+          actions = getActionUnallocatedPayments(unallocatedPaymentData.unallocatedAmount.abs.toString)
+        )
+      } else {
+        TableRowViewModel(
+          cells = Seq(
+            TableRow(content = Text(formatDateYearMonth(unallocatedPaymentData.paymentDate))),
+            TableRow(content = Text(messages("viewPastPayments.unallocatedPayments.description"))),
+            TableRow(
+              content = Text(Money.format(unallocatedPaymentData.unallocatedAmount)),
+              classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
+            )
           )
         )
-      )
+      }
     }
 
   def getHistoricPaymentsTable(
@@ -130,7 +164,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
     val sortedHistoricPaymentsData = historicPaymentsData.sortBy(_.period.period)(Ordering[YearMonth].reverse)
     if (sortedHistoricPaymentsData.nonEmpty) {
       TableViewModel(
-        head = getHistoricOrUnallocatedPaymentsHeader("historic"),
+        head = getHistoricPaymentsHeader("historic"),
         rows = getHistoricPaymentsDataTableRows(sortedHistoricPaymentsData),
         total = None
       )
@@ -163,19 +197,37 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper) exten
       )
     }
 
-  private def getAction(
-    status: OutstandingPaymentStatusToDisplay,
-    index: Int,
+  private def getActionUnallocatedPayments(
     amount: String
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
+    Seq(
+      TableRowActionViewModel(
+        label = messages("viewPastPayments.claimRefund.linkText"),
+        href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount))
+      )
+    )
+
+  private def getActionOutstandingPayments(
+    status: OutstandingPaymentStatusToDisplay,
+    index: Int,
+    amount: BigDecimal
+  )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
-      Seq.empty
+      if (frontendAppConfig.claimARefundGformEnabled) {
+        Seq(
+          TableRowActionViewModel(
+            label = messages("viewPastPayments.claimRefund.linkText"),
+            href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString))
+          )
+        )
+      } else {
+        Seq.empty
+      }
     } else {
       Seq(
         TableRowActionViewModel(
-          label = messages("viewPastPayments.payNow.firstPart.hidden"),
-          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
-          visuallyHiddenText = Some(messages("viewPastPayments.payNow.secondPart.hidden", amount))
+          label = messages("viewPastPayments.payNow.linkText"),
+          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index)
         )
       )
     }
