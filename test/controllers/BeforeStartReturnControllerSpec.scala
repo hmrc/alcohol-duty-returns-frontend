@@ -44,7 +44,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         "must redirect to the TaskList Page with audit event if subscription and obligation status are valid and regimes match the API" in new SetUp {
           when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
           when(mockBeforeStartReturnService.handleExistingUserAnswers(any())(any())) thenReturn Future.successful(
-            Right()
+            Right((): Unit)
           )
 
           val application = applicationBuilder()

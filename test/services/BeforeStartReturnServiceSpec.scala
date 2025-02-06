@@ -41,7 +41,7 @@ class BeforeStartReturnServiceSpec extends SpecBase {
         )
 
         whenReady(beforeStartReturnService.handleExistingUserAnswers(emptyUserAnswers)) { result =>
-          result mustBe Right()
+          result mustBe Right((): Unit)
         }
       }
 
@@ -101,8 +101,7 @@ class BeforeStartReturnServiceSpec extends SpecBase {
     val mockUserAnswersConnector        = mock[UserAnswersConnector]
     val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
 
-    val beforeStartReturnService =
-      new BeforeStartReturnService(mockUserAnswersConnector, mockAlcoholDutyReturnsConnector)
+    val beforeStartReturnService = new BeforeStartReturnService(mockAlcoholDutyReturnsConnector)
 
     val allRegimes: Set[AlcoholRegime] = Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)
     val emptyUserAnswers: UserAnswers  = UserAnswers(

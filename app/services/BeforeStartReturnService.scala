@@ -18,9 +18,8 @@ package services
 
 import cats.data.EitherT
 import com.google.inject.{Inject, Singleton}
-import connectors.{AlcoholDutyReturnsConnector, UserAnswersConnector}
-import models.{AlcoholRegime, ObligationData, UserAnswers}
-import models.ErrorModel
+import connectors.AlcoholDutyReturnsConnector
+import models.{AlcoholRegime, ErrorModel, ObligationData, UserAnswers}
 import play.api.http.Status._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -28,7 +27,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class BeforeStartReturnService @Inject() (
-  userAnswersConnector: UserAnswersConnector,
   alcoholDutyReturnsConnector: AlcoholDutyReturnsConnector
 )(implicit ec: ExecutionContext) {
 
@@ -45,7 +43,7 @@ class BeforeStartReturnService @Inject() (
     subscriptionAndObligation.value.map {
       case Right((subscriptionRegimes, _)) =>
         if (userAnswers.regimes.regimes equals subscriptionRegimes) {
-          Right()
+          Right((): Unit)
         } else {
           Left(ErrorModel(CONFLICT, "Alcohol regimes in existing user answers do not match those from API"))
         }
