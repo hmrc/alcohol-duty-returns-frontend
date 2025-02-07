@@ -16,6 +16,7 @@
 
 package config
 
+import java.time.Month
 import java.time.Month._
 
 object Constants {
@@ -64,7 +65,8 @@ object Constants {
 
   val rowsPerPage = 15
 
-  val quarterlySpiritsMonths = Set(JANUARY, APRIL, JULY, OCTOBER)
+  //val quarterlySpiritsMonths = Set(JANUARY, APRIL, JULY, OCTOBER)
+  val quarterlySpiritsMonths: Set[Month] = Set(DECEMBER, MARCH, JUNE, SEPTEMBER)
 
   object Format {
     val numeric = "numeric"
