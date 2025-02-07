@@ -99,7 +99,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       result.completedTasks mustBe 4
     }
 
-    "must return a the quarter spirits task only in Dec, Mar, Jun and Sept" in new SetUp {
+    "must return a the quarter spirits task only in Mar, Jun, Sept and December" in new SetUp {
       val expectedSectionsWithQS = Seq(
         returnTaskListCreator.returnSection(userAnswers),
         returnTaskListCreator.returnAdjustmentSection(userAnswers),
