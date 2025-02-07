@@ -65,8 +65,7 @@ object Constants {
 
   val rowsPerPage = 15
 
-  //val quarterlySpiritsMonths = Set(JANUARY, APRIL, JULY, OCTOBER)
-  val quarterlySpiritsMonths: Set[Month] = Set(DECEMBER, MARCH, JUNE, SEPTEMBER)
+  val quarterlySpiritsMonths: Set[Month] = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
 
   object Format {
     val numeric = "numeric"
