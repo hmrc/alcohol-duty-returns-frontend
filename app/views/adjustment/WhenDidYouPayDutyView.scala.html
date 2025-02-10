@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, PageHeading, Paragraph, SectionHeading, FormGroupWithError}
+@import components.{Link, PageHeading, Paragraph, Caption, FormGroupWithError}
 @import config.Constants.Css
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.{Underdeclaration, Spoilt}
@@ -26,7 +26,7 @@
     govukDateInput: GovukDateInput,
     govukButton: GovukButton,
     paragraph: Paragraph,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     link: Link,
     formGroupWithError: FormGroupWithError
@@ -52,7 +52,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("when-did-you-pay-duty-input" -> "when-did-you-pay-duty-input.month")))
         }
 
-        @sectionHeading(
+        @caption(
             id = "when-did-you-pay-duty-section",
             messages(s"section.adjustment.$adjustmentType"),
         )

@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, Link, Paragraph, FormGroupWithError}
+@import components.{Caption, PageHeading, Link, Paragraph, FormGroupWithError}
 @import models.adjustment.AdjustmentType
 
 @this(
@@ -24,7 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     link: Link,
     paragraph: Paragraph,
     pageHeading: PageHeading,
@@ -41,7 +41,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
         id = "adjustment-small-producer-relief-duty-rate-section",
         text = messages(s"section.adjustment.$adjustmentType"),
         )

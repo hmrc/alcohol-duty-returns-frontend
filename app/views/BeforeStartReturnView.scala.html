@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 @import config.Constants.Css
 @import viewmodels.BeforeStartReturnViewModel
 @import viewmodels.ReturnPeriodViewModel
@@ -25,7 +25,7 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
+        caption: Caption,
         pageHeading: PageHeading,
         paragraph: components.Paragraph,
         govukWarningText: GovukWarningText
@@ -36,7 +36,7 @@
 
 @layout(pageTitle = titleNoForm(messages("beforeStartReturn.title"))) {
     @formHelper(action = controllers.routes.BeforeStartReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
-        @sectionHeading(
+        @caption(
             id = "before-start-return-section",
             text = messages("section.alcoholDutyReturn"),
         )

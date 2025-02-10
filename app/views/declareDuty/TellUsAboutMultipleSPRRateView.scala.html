@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{Caption, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
 @import viewmodels.InputWidth._
 @import viewmodels.LegendSize
@@ -27,7 +27,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     paragraph: Paragraph,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     subHeading: SubHeading,
     pageHeading: PageHeading,
     govukWarningText: GovukWarningText,
@@ -44,7 +44,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "tellUsAboutMultipleSPRRate-section",
             text = messages(s"section.return.$regime")
         )
