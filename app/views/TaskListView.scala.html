@@ -43,7 +43,7 @@
 
     @for(section <- taskList.sections) {
         @subheading(section.title, classes = Css.headingMCssClass)
-        @govukTaskList(section.taskList, ariaDescribedBy = None)
+        @govukTaskList(section.taskList)
     }
 
 @paragraph( content =
