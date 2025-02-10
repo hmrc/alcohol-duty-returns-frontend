@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, SectionHeading, Paragraph, BulletList}
+@import components.{PageHeading, SectionHeading, Paragraph, NestedOrderedUnorderedList}
 
 @this(
         layout: templates.Layout,
@@ -23,7 +23,7 @@
         sectionHeading: SectionHeading,
         pageHeading: PageHeading,
         paragraph: Paragraph,
-        bulletList: BulletList
+        nestedOrderedUnorderedList: NestedOrderedUnorderedList
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -42,17 +42,14 @@
 
         @paragraph(messages("dutySuspendedDeliveriesGuidance.p1"))
 
-        @paragraph(messages("dutySuspendedDeliveriesGuidance.p2"))
-
-        @bulletList(Seq(
-            messages("dutySuspendedDeliveriesGuidance.para.list.1"),
-            messages("dutySuspendedDeliveriesGuidance.para.list.2"),
-        ))
-
-        @paragraph(messages("dutySuspendedDeliveriesGuidance.p3"))
-
-        @bulletList(Seq(
-        messages("dutySuspendedDeliveriesGuidance.para.list.3")
+        @nestedOrderedUnorderedList(Seq(
+            (messages("dutySuspendedDeliveriesGuidance.p2"), Seq(
+                messages("dutySuspendedDeliveriesGuidance.para.list.1"),
+                messages("dutySuspendedDeliveriesGuidance.para.list.2"),
+            )),
+            (messages("dutySuspendedDeliveriesGuidance.p3"), Seq(
+                messages("dutySuspendedDeliveriesGuidance.para.list.3"),
+            )),
         ))
 
         @paragraph(messages("dutySuspendedDeliveriesGuidance.p4"))
