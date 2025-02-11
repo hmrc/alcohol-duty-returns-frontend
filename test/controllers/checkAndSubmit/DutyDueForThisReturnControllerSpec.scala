@@ -26,6 +26,7 @@ import play.api.inject.bind
 import play.api.test.Helpers._
 import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.TableViewModel
 import viewmodels.checkAnswers.checkAndSubmit.{DutyDueForThisReturnHelper, DutyDueForThisReturnViewModel}
 import viewmodels.tasklist.TaskListViewModel
@@ -242,19 +243,17 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
     val auditService                = mock[AuditService]
     val submissionTime              = Instant.now(clock)
 
-    val emptyDutiesBreakdownTable: TableViewModel = TableViewModel(
-      head = Seq.empty,
+    val emptyDutiesBreakdownSummaryList: SummaryList = SummaryList(
       rows = Seq.empty
     )
 
-    val emptyYouveAlsoDeclaredTable: TableViewModel = TableViewModel(
-      head = Seq.empty,
+    val emptyYouveAlsoDeclaredSummaryList: SummaryList = SummaryList(
       rows = Seq.empty
     )
 
     val viewModel = DutyDueForThisReturnViewModel(
-      dutiesBreakdownTable = emptyDutiesBreakdownTable,
-      youveAlsoDeclaredTable = emptyYouveAlsoDeclaredTable,
+      dutiesBreakdownSummaryList = emptyDutiesBreakdownSummaryList,
+      youveAlsoDeclaredSummaryList = emptyYouveAlsoDeclaredSummaryList,
       totalDue = BigDecimal(1)
     )
 
