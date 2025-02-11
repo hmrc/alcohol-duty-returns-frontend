@@ -66,10 +66,7 @@
                 @govukInput(
                     InputViewModel(
                         field = form("adjustment-tax-type-input"),
-                        label = if (adjustmentType == RepackagedDraughtProducts)
-                        LabelViewModel(messages("adjustmentTaxType.repackaged.heading")).asVisuallyHidden()
-                        else
-                        LabelViewModel(messages("adjustmentTaxType.heading")).asVisuallyHidden()
+                        label = LabelViewModel(headingContent).asVisuallyHidden()
                     )
                     .asNumeric()
                     .withWidth(Fixed10)
