@@ -324,8 +324,8 @@ class ViewReturnControllerSpec extends SpecBase {
 
   abstract class SetUp {
     implicit val messages: Messages = getMessages(app)
-    val periodKeyForSpirits         = periodKeyJan
-    val periodKeyNotForSpirits      = periodKeyFeb
+    val periodKeyForSpirits         = periodKeyDec23
+    val periodKeyNotForSpirits      = periodKeyJan
     def periodKeyUnderTest: String
 
     val dateTimeHelper = createDateTimeHelper()
