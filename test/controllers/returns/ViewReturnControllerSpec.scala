@@ -24,9 +24,8 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.Helpers._
-import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
+import viewmodels.{TableViewModel, TotalsTableViewModel}
 import viewmodels.returns.ViewReturnViewModel
-import viewmodels.{TableTotalViewModel, TableViewModel}
 import views.html.returns.ViewReturnView
 
 import java.time.Instant
@@ -343,7 +342,7 @@ class ViewReturnControllerSpec extends SpecBase {
     val rateBands             = exampleRateBands(periodKeyUnderTest)
 
     val tableModel              = TableViewModel.empty()
-    val totalTableModel         = TableTotalViewModel(HeadCell(), HeadCell())
+    val totalTableModel         = TotalsTableViewModel("", "")
     val mockReturnsConnector    = mock[AlcoholDutyReturnsConnector]
     val mockCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
     val mockViewModel           = mock[ViewReturnViewModel]

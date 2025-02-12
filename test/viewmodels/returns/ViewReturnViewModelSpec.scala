@@ -35,8 +35,9 @@ class ViewReturnViewModelSpec extends SpecBase {
           viewModel.createAlcoholDeclaredViewModel(returnDetails, exampleRateBands(periodKey))
 
         alcoholDeclaredViewModel.rows.size mustBe returnDetails.alcoholDeclared.alcoholDeclaredDetails.get.size
-        alcoholDeclaredViewModel.total.get.total.content mustBe Text(
-          messages("site.currency.2DP", returnDetails.alcoholDeclared.total)
+        alcoholDeclaredViewModel.total.get.value mustBe messages(
+          "site.currency.2DP",
+          returnDetails.alcoholDeclared.total
         )
         alcoholDeclaredViewModel.rows.head.cells.head.content mustBe Text("311")
         alcoholDeclaredViewModel.rows(3).cells.head.content mustBe Text(
@@ -64,9 +65,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey3))
 
         adjustmentsViewModel.rows.size mustBe 5
-        adjustmentsViewModel.total.get.total.content mustBe Text(
-          s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
-        )
+        adjustmentsViewModel.total.get.value mustBe s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
 
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text("321")
         adjustmentsViewModel.rows(4).cells(1).content mustBe Text("Non-draught beer between 1% and 2% ABV (125)")
@@ -82,9 +81,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
 
         adjustmentsViewModel.rows.size mustBe 2
-        adjustmentsViewModel.total.get.total.content mustBe Text(
-          s"$minus${messages("site.currency.2DP", returnDetailWithSpoilt.adjustments.total.abs)}"
-        )
+        adjustmentsViewModel.total.get.value mustBe s"$minus${messages("site.currency.2DP", returnDetailWithSpoilt.adjustments.total.abs)}"
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text("123")
         adjustmentsViewModel.rows.head.cells(3).content mustBe Text("not applicable")
         adjustmentsViewModel.rows(1).cells(1).content mustBe Text("Wine")
@@ -110,13 +107,13 @@ class ViewReturnViewModelSpec extends SpecBase {
       "should return a model with a total when a total exists" in new SetUp {
         val totalViewModel = viewModel.createTotalDueViewModel(returnDetails)
 
-        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
+        totalViewModel.value mustBe messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
       }
 
       "should return a model with no entries when a nil return" in new SetUp {
         val totalViewModel = viewModel.createTotalDueViewModel(nilReturn)
 
-        totalViewModel.total.content mustBe Text(messages("site.nil"))
+        totalViewModel.value mustBe messages("site.nil")
       }
 
       "should return a model with a total when a total exists even if no declarations" in new SetUp {
@@ -124,7 +121,7 @@ class ViewReturnViewModelSpec extends SpecBase {
           emptyReturnDetails.copy(totalDutyDue = ReturnTotalDutyDue(totalDue = nonZeroAmount))
         )
 
-        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", nonZeroAmount))
+        totalViewModel.value mustBe messages("site.currency.2DP", nonZeroAmount)
       }
 
       "should return a model with a total when a total exists even if no alcohol is declared" in new SetUp {
@@ -134,7 +131,7 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
+        totalViewModel.value mustBe messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
       }
 
       "should return a model with a total when a total exists when no adjustments exist" in new SetUp {
@@ -144,7 +141,7 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
+        totalViewModel.value mustBe messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
       }
 
       "should return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {
