@@ -27,6 +27,7 @@ import play.api.test.Helpers._
 import services.AuditService
 import services.checkAndSubmit.AdrReturnSubmissionService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.TableViewModel
 import viewmodels.checkAnswers.checkAndSubmit.{DutyDueForThisReturnHelper, DutyDueForThisReturnViewModel}
 import viewmodels.tasklist.TaskListViewModel
 import views.html.checkAndSubmit.DutyDueForThisReturnView
