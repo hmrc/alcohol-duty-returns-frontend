@@ -179,7 +179,7 @@ object Constants {
     val govTableCaptionClass    = "govuk-table__caption govuk-table__caption--m"
     val govTableBodyClass       = "govuk-table__body"
     val govTableRowClass        = "govuk-table__row"
-    val govTableTotalsHeadClass = "govuk-table__header"
+    val govTableTotalsHeadClass = "govuk-table__header govuk-!-width-three-quarters"
     val govTableTotalsCellClass =
       "govuk-table__cell govuk-!-width-one-quarter text-align-right govuk-table__cell--numeric"
   }
