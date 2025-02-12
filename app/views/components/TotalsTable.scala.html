@@ -22,9 +22,9 @@
 @(viewModel: TotalsTableViewModel, captionText: Option[String] = None)
 
 <table class="@Css.govTableClass">
-    @captionText.map( caption =>
-       <caption class="@Css.govTableCaptionClass">caption</caption>
-    )
+    @captionText.map { caption =>
+       <caption class="@Css.govTableCaptionClass">@caption</caption>
+    }
     <tbody class="@Css.govTableBodyClass">
     <tr class="@Css.govTableRowClass">
         <th scope="row" class="@Css.govTableTotalsHeadClass">@viewModel.label</th>

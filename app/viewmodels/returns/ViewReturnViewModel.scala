@@ -243,14 +243,14 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         returnDetails.alcoholDeclared.alcoholDeclaredDetails.toSeq.flatten.isEmpty &&
         returnDetails.adjustments.adjustmentDetails.toSeq.flatten.isEmpty
       ) {
-        Text(messages("site.nil"))
+        messages("site.nil")
       } else {
-        Text(Money.format(returnDetails.totalDutyDue.totalDue))
+        Money.format(returnDetails.totalDutyDue.totalDue)
       }
 
     TotalsTableViewModel(
       messages("viewReturn.dutyDue.total.legend"),
-      content.toString
+      content
     )
   }
 
