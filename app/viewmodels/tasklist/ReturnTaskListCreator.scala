@@ -70,7 +70,7 @@ class ReturnTaskListCreator @Inject() () {
 
     Section(
       title = messages(s"taskList.section.${section.name}.heading"),
-      taskList = TaskList(items = mainTaskListItem +: additionalTasks),
+      taskList = TaskList(items = mainTaskListItem +: additionalTasks, idPrefix = section.name),
       statusCompleted = AlcoholDutyTaskListItemStatus.completed
     )
   }
@@ -313,7 +313,7 @@ class ReturnTaskListCreator @Inject() () {
       }
     Section(
       title = messages("taskList.section.checkAndSubmit.heading"),
-      taskList = TaskList(items = Seq(item)),
+      taskList = TaskList(items = Seq(item), idPrefix = "checkAndSubmit"),
       statusCompleted = status
     )
   }
@@ -373,7 +373,7 @@ class ReturnTaskListCreator @Inject() () {
 
     Section(
       title = messages("taskList.section.returns.heading"),
-      taskList = TaskList(items = taskListItems),
+      taskList = TaskList(items = taskListItems, idPrefix = "returns"),
       statusCompleted = AlcoholDutyTaskListItemStatus.completed
     )
   }
