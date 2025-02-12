@@ -82,7 +82,7 @@ class ViewReturnController @Inject() (
             viewModel.createAlcoholDeclaredViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
           val adjustmentsViewModel   =
             viewModel.createAdjustmentsViewModel(returnDetails, ratePeriodsAndTaxCodesToRateBands)
-          val totalDueSummaryList    = viewModel.createTotalDueSummaryList(returnDetails)
+          val totalDueViewModel      = viewModel.createTotalDueViewModel(returnDetails)
           val netDutySuspension      = viewModel.createNetDutySuspensionViewModel(returnDetails)
           val spirits                = if (returnPeriod.hasQuarterlySpirits) {
             viewModel.createSpiritsViewModels(returnDetails)
@@ -103,7 +103,7 @@ class ViewReturnController @Inject() (
               submittedTimeStr,
               dutyToDeclareViewModel,
               adjustmentsViewModel,
-              totalDueSummaryList,
+              totalDueViewModel,
               netDutySuspension,
               spirits
             )

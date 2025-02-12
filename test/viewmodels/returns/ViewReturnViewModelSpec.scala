@@ -108,49 +108,43 @@ class ViewReturnViewModelSpec extends SpecBase {
 
     "createTotalDueViewModel" - {
       "should return a model with a total when a total exists" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueSummaryList(returnDetails)
+        val totalViewModel = viewModel.createTotalDueViewModel(returnDetails)
 
-        totalViewModel.rows.head.value.content mustBe Text(
-          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
-        )
+        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
       }
 
       "should return a model with no entries when a nil return" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueSummaryList(nilReturn)
+        val totalViewModel = viewModel.createTotalDueViewModel(nilReturn)
 
-        totalViewModel.rows.head.value.content mustBe Text(messages("site.nil"))
+        totalViewModel.total.content mustBe Text(messages("site.nil"))
       }
 
       "should return a model with a total when a total exists even if no declarations" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueSummaryList(
+        val totalViewModel = viewModel.createTotalDueViewModel(
           emptyReturnDetails.copy(totalDutyDue = ReturnTotalDutyDue(totalDue = nonZeroAmount))
         )
 
-        totalViewModel.rows.head.value.content mustBe Text(messages("site.currency.2DP", nonZeroAmount))
+        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", nonZeroAmount))
       }
 
       "should return a model with a total when a total exists even if no alcohol is declared" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueSummaryList(
+        val totalViewModel = viewModel.createTotalDueViewModel(
           returnDetails.copy(alcoholDeclared =
             ReturnAlcoholDeclared(alcoholDeclaredDetails = None, total = returnDetails.alcoholDeclared.total)
           )
         )
 
-        totalViewModel.rows.head.value.content mustBe Text(
-          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
-        )
+        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
       }
 
       "should return a model with a total when a total exists when no adjustments exist" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueSummaryList(
+        val totalViewModel = viewModel.createTotalDueViewModel(
           returnDetails.copy(adjustments =
             ReturnAdjustments(adjustmentDetails = None, total = returnDetails.adjustments.total)
           )
         )
 
-        totalViewModel.rows.head.value.content mustBe Text(
-          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
-        )
+        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
       }
 
       "should return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {

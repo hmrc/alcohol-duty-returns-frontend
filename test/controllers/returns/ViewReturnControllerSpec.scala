@@ -24,9 +24,9 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.Helpers._
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
-import viewmodels.TableViewModel
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.HeadCell
 import viewmodels.returns.ViewReturnViewModel
+import viewmodels.{TableTotalViewModel, TableViewModel}
 import views.html.returns.ViewReturnView
 
 import java.time.Instant
@@ -50,7 +50,7 @@ class ViewReturnControllerSpec extends SpecBase {
       running(application) {
         implicit val messages = getMessages(application)
 
-        when(mockViewModel.createTotalDueSummaryList(returnDetails)).thenReturn(totalDueSummaryList)
+        when(mockViewModel.createTotalDueViewModel(returnDetails)).thenReturn(totalTableModel)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
@@ -76,7 +76,7 @@ class ViewReturnControllerSpec extends SpecBase {
           submittedAtTimeStr,
           tableModel,
           tableModel,
-          totalDueSummaryList,
+          totalTableModel,
           tableModel,
           Seq(tableModel)
         )(
@@ -106,7 +106,7 @@ class ViewReturnControllerSpec extends SpecBase {
       running(application) {
         implicit val messages = getMessages(application)
 
-        when(mockViewModel.createTotalDueSummaryList(returnDetails)).thenReturn(totalDueSummaryList)
+        when(mockViewModel.createTotalDueViewModel(returnDetails)).thenReturn(totalTableModel)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(returnDetails), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(returnDetails), any())(any()))
@@ -132,7 +132,7 @@ class ViewReturnControllerSpec extends SpecBase {
           submittedAtTimeStr,
           tableModel,
           tableModel,
-          totalDueSummaryList,
+          totalTableModel,
           tableModel,
           Seq.empty
         )(
@@ -159,7 +159,7 @@ class ViewReturnControllerSpec extends SpecBase {
       running(application) {
         implicit val messages = getMessages(application)
 
-        when(mockViewModel.createTotalDueSummaryList(nilReturn)).thenReturn(totalDueSummaryList)
+        when(mockViewModel.createTotalDueViewModel(nilReturn)).thenReturn(totalTableModel)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(nilReturn), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(nilReturn), any())(any()))
@@ -185,7 +185,7 @@ class ViewReturnControllerSpec extends SpecBase {
           submittedAtTimeStr,
           tableModel,
           tableModel,
-          totalDueSummaryList,
+          totalTableModel,
           tableModel,
           Seq(tableModel)
         )(
@@ -213,7 +213,7 @@ class ViewReturnControllerSpec extends SpecBase {
       running(application) {
         implicit val messages = getMessages(application)
 
-        when(mockViewModel.createTotalDueSummaryList(nilReturn)).thenReturn(totalDueSummaryList)
+        when(mockViewModel.createTotalDueViewModel(nilReturn)).thenReturn(totalTableModel)
         when(mockViewModel.createAlcoholDeclaredViewModel(eqTo(nilReturn), any())(any()))
           .thenReturn(tableModel)
         when(mockViewModel.createAdjustmentsViewModel(eqTo(nilReturn), any())(any()))
@@ -239,7 +239,7 @@ class ViewReturnControllerSpec extends SpecBase {
           submittedAtTimeStr,
           tableModel,
           tableModel,
-          totalDueSummaryList,
+          totalTableModel,
           tableModel,
           Seq(tableModel)
         )(
@@ -343,7 +343,7 @@ class ViewReturnControllerSpec extends SpecBase {
     val rateBands             = exampleRateBands(periodKeyUnderTest)
 
     val tableModel              = TableViewModel.empty()
-    val totalDueSummaryList     = SummaryList(Seq(SummaryListRow()))
+    val totalTableModel         = TableTotalViewModel(HeadCell(), HeadCell())
     val mockReturnsConnector    = mock[AlcoholDutyReturnsConnector]
     val mockCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
     val mockViewModel           = mock[ViewReturnViewModel]

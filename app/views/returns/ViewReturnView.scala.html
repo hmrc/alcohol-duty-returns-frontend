@@ -14,19 +14,17 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, PrintPage, SubHeading}
+@import components.{PageHeading, Paragraph, PrintPage}
 @import config.Constants.Css
-@import viewmodels.TableViewModel
+@import viewmodels.{TableTotalViewModel, TableViewModel}
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     pageHeading: PageHeading,
-    subHeading: SubHeading,
     paragraph: Paragraph,
     govukTable: GovukTable,
-    govukSummaryList : GovukSummaryList,
     printPage: PrintPage
 )
 
@@ -37,7 +35,7 @@
    submittedAtTime: String,
    dutyToDeclare: TableViewModel,
    adjustments: TableViewModel,
-   totalDue: SummaryList,
+   totalDue: TableTotalViewModel,
    netDutySuspension: TableViewModel,
    spirits: Seq[TableViewModel]
 )(implicit request: Request[_], messages: Messages)
@@ -84,8 +82,11 @@
 
     <br>
 
-    @subHeading(messages("viewReturn.dutyDue.caption"), classes = Css.headingMCssClass)
-    @govukSummaryList(totalDue)
+    @govukTable(Table(
+        caption = Some(messages("viewReturn.dutyDue.caption")),
+        captionClasses = Css.tableCaptionMCssClass,
+        head = Some(totalDue.toHeadCells())
+    ))
 
     <br>
 
