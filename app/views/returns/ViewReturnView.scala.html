@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, PrintPage}
+@import components.{PageHeading, Paragraph, PrintPage, TotalsTable}
 @import config.Constants.Css
-@import viewmodels.{TableTotalViewModel, TableViewModel}
+@import viewmodels.{TotalsTableViewModel, TableViewModel}
 
 @this(
     layout: templates.Layout,
@@ -25,7 +25,8 @@
     pageHeading: PageHeading,
     paragraph: Paragraph,
     govukTable: GovukTable,
-    printPage: PrintPage
+    printPage: PrintPage,
+    totalsTable: TotalsTable
 )
 
 @(
@@ -35,7 +36,7 @@
    submittedAtTime: String,
    dutyToDeclare: TableViewModel,
    adjustments: TableViewModel,
-   totalDue: TableTotalViewModel,
+   totalDue: TotalsTableViewModel,
    netDutySuspension: TableViewModel,
    spirits: Seq[TableViewModel]
 )(implicit request: Request[_], messages: Messages)
@@ -60,9 +61,7 @@
     ))
 
     @{dutyToDeclare.total.map { total =>
-        govukTable(Table(
-            head = Some(total.toHeadCells())
-        ))
+        totalsTable(total)
     }}
 
     <br>
@@ -75,19 +74,11 @@
     ))
 
     @{adjustments.total.map { total =>
-        govukTable(Table(
-            head = Some(total.toHeadCells())
-        ))
+         totalsTable(total)
     }}
 
     <br>
-
-    @govukTable(Table(
-        caption = Some(messages("viewReturn.dutyDue.caption")),
-        captionClasses = Css.tableCaptionMCssClass,
-        head = Some(totalDue.toHeadCells())
-    ))
-
+        @totalsTable(totalDue, Some(messages("viewReturn.dutyDue.caption")))
     <br>
 
     @govukTable(Table(

@@ -173,5 +173,14 @@ object Constants {
 
     val formGroupCssClass      = "govuk-form-group"
     val formGroupErrorCssClass = "govuk-form-group--error"
+
+    // Totals table styles
+    val govTableClass           = "govuk-table"
+    val govTableCaptionClass    = "govuk-table__caption govuk-table__caption--m"
+    val govTableBodyClass       = "govuk-table__body"
+    val govTableRowClass        = "govuk-table__row"
+    val govTableTotalsHeadClass = "govuk-table__header"
+    val govTableTotalsCellClass =
+      "govuk-table__cell govuk-!-width-one-quarter text-align-right govuk-table__cell--numeric"
   }
 }

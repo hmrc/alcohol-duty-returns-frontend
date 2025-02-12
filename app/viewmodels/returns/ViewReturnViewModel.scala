@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.declareDuty.RateBandHelper.rateBandRecap
-import viewmodels.{Money, TableRowViewModel, TableTotalViewModel, TableViewModel}
+import viewmodels.{Money, TableRowViewModel, TableViewModel, TotalsTableViewModel}
 
 import java.time.YearMonth
 import javax.inject.Inject
@@ -130,15 +130,10 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
 
   private def dutyToDeclareTotal(alcoholDeclared: ReturnAlcoholDeclared)(implicit
     messages: Messages
-  ): TableTotalViewModel =
-    TableTotalViewModel(
-      HeadCell(
-        content = Text(messages("viewReturn.alcoholDuty.total.legend"))
-      ),
-      HeadCell(
-        content = Text(Money.format(alcoholDeclared.total)),
-        classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
-      )
+  ): TotalsTableViewModel =
+    TotalsTableViewModel(
+      messages("viewReturn.alcoholDuty.total.legend"),
+      Money.format(alcoholDeclared.total)
     )
 
   def createAdjustmentsViewModel(
@@ -235,18 +230,13 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       )
     )
 
-  private def adjustmentsTotal(adjustments: ReturnAdjustments)(implicit messages: Messages): TableTotalViewModel =
-    TableTotalViewModel(
-      HeadCell(
-        content = Text(messages("viewReturn.adjustments.total.legend"))
-      ),
-      HeadCell(
-        content = Text(Money.format(adjustments.total)),
-        classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
-      )
+  private def adjustmentsTotal(adjustments: ReturnAdjustments)(implicit messages: Messages): TotalsTableViewModel =
+    TotalsTableViewModel(
+      messages("viewReturn.adjustments.total.legend"),
+      Money.format(adjustments.total)
     )
 
-  def createTotalDueViewModel(returnDetails: ReturnDetails)(implicit messages: Messages): TableTotalViewModel = {
+  def createTotalDueViewModel(returnDetails: ReturnDetails)(implicit messages: Messages): TotalsTableViewModel = {
     val content =
       if (
         returnDetails.totalDutyDue.totalDue == BigDecimal(0) &&
@@ -258,11 +248,9 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         Text(Money.format(returnDetails.totalDutyDue.totalDue))
       }
 
-    TableTotalViewModel(
-      HeadCell(
-        content = Text(messages("viewReturn.dutyDue.total.legend"))
-      ),
-      HeadCell(content = content, classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}")
+    TotalsTableViewModel(
+      messages("viewReturn.dutyDue.total.legend"),
+      content.toString
     )
   }
 
