@@ -114,10 +114,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         val totalSummaryList = viewModel.createTotalDueSummaryList(returnDetails)
 
         totalSummaryList.rows.head.value.content mustBe Text(
-          messages(
-            "site.currency.2DP",
-            returnDetails.totalDutyDue.totalDue
-          )
+          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
         )
       }
 
@@ -143,10 +140,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
 
         totalSummaryList.rows.head.value.content mustBe Text(
-          messages(
-            "site.currency.2DP",
-            returnDetails.totalDutyDue.totalDue
-          )
+          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
         )
       }
 
@@ -158,10 +152,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
 
         totalSummaryList.rows.head.value.content mustBe Text(
-          messages(
-            "site.currency.2DP",
-            returnDetails.totalDutyDue.totalDue
-          )
+          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
         )
       }
     }
