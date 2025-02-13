@@ -14,13 +14,13 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 @import viewmodels.declareDuty.ReturnSummaryList
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
+        caption: Caption,
         pageHeading: PageHeading,
         govukSummaryList : GovukSummaryList
 )
@@ -30,7 +30,7 @@
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-    @sectionHeading(
+    @caption(
         id = "checkYourAnswers-section",
         text = messages(s"section.return.$regime")
     )

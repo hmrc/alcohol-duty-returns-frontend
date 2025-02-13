@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList, SubHeading}
+@import components.{Caption, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList, SubHeading}
 @import config.Constants.Css
 @import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnViewModel
 
@@ -22,7 +22,7 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
+        caption: Caption,
         pageHeading: PageHeading,
         pageHeadingWithMonetaryValue: PageHeadingWithMonetaryValue,
         paragraph: Paragraph,
@@ -51,7 +51,7 @@
 
 @layout(pageTitle = titleNoForm(titleMessage)) {
   @formHelper(action = controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
-      @sectionHeading(
+      @caption(
       id = "dutyDueForThisReturn-section",
       text = messages("section.checkAndSubmit"),
     )

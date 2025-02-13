@@ -14,17 +14,15 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading, Link}
+@import components.{Link, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
-@import viewmodels.TableViewModel
-@import viewmodels.Money
+@import viewmodels.{Money, TableViewModel}
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
         pageHeading: PageHeading,
         govukTable: GovukTable,
         paragraph: Paragraph,

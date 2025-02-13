@@ -1,9 +1,9 @@
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
+        caption: Caption,
         pageHeading: PageHeading
 )
 
@@ -11,7 +11,7 @@
 
 @layout(pageTitle = titleNoForm(messages("$className;format="decap"$.title"))) {
 
-    @sectionHeading(
+    @caption(
         id = "$className;format="decap"$-section",
         text = messages("section.$section$"),
     )

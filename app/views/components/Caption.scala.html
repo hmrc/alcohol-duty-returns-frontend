@@ -20,7 +20,7 @@
 
 @(id: String, text: String)(implicit request: Request[_], messages: Messages)
 
-<h2 id = @id class="@Css.captionXLCssClass @Css.hmrcCaptionXLCssClass @Css.marginTop0CssClass">
+<span id = @id class="@Css.captionXLCssClass">
   <span class="@Css.visuallyHiddenCssClass">@messages("section.visuallyHidden")</span>
   @text
-</h2>
+</span>

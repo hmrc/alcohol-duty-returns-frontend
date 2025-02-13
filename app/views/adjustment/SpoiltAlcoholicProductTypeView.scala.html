@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, FormGroupWithError}
+@import components.{Caption, PageHeading, Paragraph, FormGroupWithError}
 @import models.AlcoholRegimes
 @import viewmodels.checkAnswers.adjustment.SpoiltAlcoholicProductTypeHelper
 
@@ -24,7 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     paragraph: Paragraph,
     pageHeading: PageHeading,
     helper: SpoiltAlcoholicProductTypeHelper,
@@ -41,7 +41,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("alcoholic-product-type-value" -> helper.radioOptions(regimes).headOption.flatMap(_.id).getOrElse(""))))
         }
 
-        @sectionHeading(
+        @caption(
             id = "alcoholic-product-type-section",
             text = messages("section.adjustment")
         )

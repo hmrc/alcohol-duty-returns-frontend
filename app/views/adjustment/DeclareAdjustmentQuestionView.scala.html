@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, SubHeading, PageHeading, Paragraph, BulletList, FormGroupWithError}
+@import components.{Caption, SubHeading, PageHeading, Paragraph, BulletList, FormGroupWithError}
 @import config.Constants.Css
 
 @this(
@@ -23,7 +23,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     subHeading: SubHeading,
     pageHeading: PageHeading,
     bulletList: BulletList,
@@ -38,7 +38,7 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @sectionHeading(
+        @caption(
             id = "declare-adjustment-question-section",
             text = messages("section.adjustment"),
         )

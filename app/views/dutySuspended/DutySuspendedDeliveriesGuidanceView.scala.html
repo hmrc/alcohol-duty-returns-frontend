@@ -14,13 +14,13 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, SectionHeading, Paragraph, NestedOrderedUnorderedList}
+@import components.{NestedOrderedUnorderedList, PageHeading, Paragraph, Caption}
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
+        caption: Caption,
         pageHeading: PageHeading,
         paragraph: Paragraph,
         nestedOrderedUnorderedList: NestedOrderedUnorderedList
@@ -33,7 +33,7 @@
         action = controllers.dutySuspended.routes.DutySuspendedDeliveriesGuidanceController.onSubmit(),
         Symbol("autoComplete") -> "off") {
 
-        @sectionHeading(
+        @caption(
             id = "duty-suspended-deliveries-guidance-section",
             text = messages("section.dutySuspended"),
         )

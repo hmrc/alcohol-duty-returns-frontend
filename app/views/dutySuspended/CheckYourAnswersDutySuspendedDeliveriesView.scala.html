@@ -14,14 +14,14 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 @import config.Constants.Css
 
 @this(
     layout: templates.Layout,
     govukSummaryList: GovukSummaryList,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading
 )
 
@@ -29,7 +29,7 @@
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-    @sectionHeading(
+    @caption(
         id = "alcohol-by-volume-question-section",
         text = messages("section.dutySuspended"),
     )
