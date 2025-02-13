@@ -23,9 +23,11 @@ import models.adjustment.AdjustmentType.Spoilt
 import pages.adjustment.AdjustmentEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
-import viewmodels.declareDuty.RateBandHelper.rateBandRecap
 import viewmodels._
+import viewmodels.declareDuty.RateBandHelper.rateBandRecap
+import viewmodels.govuk.summarylist._
 
 object AdjustmentListSummaryHelper {
 
@@ -119,12 +121,11 @@ object AdjustmentListSummaryHelper {
       )
     }
 
-  private def adjustmentsTotal(total: BigDecimal)(implicit
-    messages: Messages
-  ): TotalsTableViewModel =
-    TotalsTableViewModel(
-      messages("adjustmentList.total"),
-      Money.format(total)
+  private def adjustmentsTotal(total: BigDecimal)(implicit messages: Messages): SummaryList =
+    SummaryListViewModel(
+      rows = Seq(
+        TotalsSummary.row(messages("adjustmentList.total"), Money.format(total))
+      )
     )
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, TotalsTable}
+@import components.{SectionHeading, PageHeading}
 @import config.Constants.Css
 @import viewmodels.{TableViewModel, PaginationViewModel}
 
@@ -30,7 +30,7 @@
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
     govukPagination: GovukPagination,
-    totalsTable: TotalsTable
+    govukSummaryList : GovukSummaryList
 )
 
 
@@ -78,8 +78,8 @@
                 )
     }
 
-    @{adjustmentTable.total.map { totalModel =>
-        totalsTable(totalModel)
+    @{adjustmentTable.total.map { totalSummaryList =>
+        govukSummaryList(totalSummaryList)
     }}
 
     @govukRadios(
