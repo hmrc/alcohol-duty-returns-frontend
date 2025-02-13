@@ -26,12 +26,12 @@ object TellUsAboutMultipleSPRRateHelper {
     val categoryViewModels                = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime, isRecap = true)
     val smallProducerRadioItems           = categoryViewModels.smallProducer
       .map { category =>
-        RadioItem(content = Text(category.category), value = Some(category.id))
+        RadioItem(content = Text(category.category.capitalize), value = Some(category.id))
       }
       .sortBy(_.id)
     val draughtAndSmallProducerRadioItems = categoryViewModels.draughtAndSmallProducer
       .map { category =>
-        RadioItem(content = Text(category.category), value = Some(category.id))
+        RadioItem(content = Text(category.category.capitalize), value = Some(category.id))
       }
       .sortBy(_.id)
 

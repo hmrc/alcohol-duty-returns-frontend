@@ -39,7 +39,7 @@ class SpoiltAlcoholicProductTypeHelper @Inject() (
 
     RateBand(
       appConfig.getTaxTypeCodeByRegime(regime),
-      messages(s"alcoholType.$regime"),
+      messages(s"alcoholType.$regime").capitalize,
       Core,
       Some(rate),
       Set(
@@ -58,7 +58,7 @@ class SpoiltAlcoholicProductTypeHelper @Inject() (
       val regimeName = regime.entryName
 
       RadioItem(
-        content = Text(messages(s"alcoholType.$regimeName")),
+        content = Text(messages(s"alcoholType.$regimeName").capitalize),
         value = Some(regimeName),
         id = Some(regimeName)
       )

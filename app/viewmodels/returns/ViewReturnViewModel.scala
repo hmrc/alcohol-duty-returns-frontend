@@ -112,7 +112,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   )(implicit messages: Messages): String =
     maybeRatePeriod
       .flatMap(ratePeriod => ratePeriodsAndTaxCodesToRateBands.get((ratePeriod, taxType)))
-      .map(rateBandRecap(_, None))
+      .map(rateBandRecap(_, None).capitalize)
       .getOrElse(taxType)
 
   private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel] =
@@ -194,7 +194,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       val (description, dutyRate) = if (returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)) {
         (
           appConfig.getRegimeNameByTaxTypeCode(taxType) match {
-            case Some(regime) => messages(s"alcoholType.$regime")
+            case Some(regime) => messages(s"alcoholType.$regime").capitalize
             case _            => taxType
           },
           messages("viewReturn.notApplicable")
@@ -302,27 +302,27 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   ): Seq[TableRowViewModel] =
     Seq(
       netDutySuspensionCell(
-        "return.regime.Beer",
+        "alcoholType.Beer",
         netDutySuspension.totalLtsBeer,
         netDutySuspension.totalLtsPureAlcoholBeer
       ),
       netDutySuspensionCell(
-        "return.regime.Cider",
+        "alcoholType.Cider",
         netDutySuspension.totalLtsCider,
         netDutySuspension.totalLtsPureAlcoholCider
       ),
       netDutySuspensionCell(
-        "return.regime.Spirits",
+        "alcoholType.Spirits",
         netDutySuspension.totalLtsSpirit,
         netDutySuspension.totalLtsPureAlcoholSpirit
       ),
       netDutySuspensionCell(
-        "return.regime.Wine",
+        "alcoholType.Wine",
         netDutySuspension.totalLtsWine,
         netDutySuspension.totalLtsPureAlcoholWine
       ),
       netDutySuspensionCell(
-        "return.regime.OtherFermentedProduct",
+        "alcoholType.OtherFermentedProduct",
         netDutySuspension.totalLtsOtherFermented,
         netDutySuspension.totalLtsPureAlcoholOtherFermented
       )

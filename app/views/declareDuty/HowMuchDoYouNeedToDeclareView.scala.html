@@ -64,7 +64,7 @@
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
-                content = Text(quantityViewModel.category),
+                content = Text(quantityViewModel.category.capitalize),
                 classes = Css.fieldsetLegendSCssClass
               )),
               html = HtmlFormat.fill(List(
@@ -113,7 +113,7 @@
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
-                content = Text(quantityViewModel.category),
+                content = Text(quantityViewModel.category.capitalize),
                 classes = Css.fieldsetLegendSCssClass
               )),
               html = HtmlFormat.fill(List(
