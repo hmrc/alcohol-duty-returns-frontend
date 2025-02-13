@@ -25,10 +25,9 @@ import models.checkAndSubmit.{AdrDutySuspended, AdrDutySuspendedProduct, AdrSpir
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.i18n.Messages
-import play.api.mvc.Call
 import services.checkAndSubmit.AdrReturnSubmissionService
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import viewmodels.TableViewModel
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
 import scala.concurrent.Future
 
@@ -51,8 +50,8 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalDuty.duty
-        result.toOption.get.dutiesBreakdownTable.rows.map(
-          _.cells(1).content.toString.filter(c => c.isDigit || c == '.')
+        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
+          _.value.content.toString.filter(c => c.isDigit || c == '.')
         ) mustBe totalDutiesAndAdjustments.map(total => f"$total%.2f")
       }
     }
@@ -72,8 +71,8 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalDutyWithoutAdjustments.duty
-        result.toOption.get.dutiesBreakdownTable.rows.map(
-          _.cells(1).content.toString.filter(c => c.isDigit || c == '.')
+        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
+          _.value.content.toString.filter(c => c.isDigit || c == '.')
         ) mustBe totalDuties.map(total => f"$total%.2f") :+ ""
       }
     }
@@ -95,8 +94,8 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalAdjustments.duty
-        result.toOption.get.dutiesBreakdownTable.rows.map(
-          _.cells(1).content.toString.filter(c => c.isDigit || c == '.')
+        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
+          _.value.content.toString.filter(c => c.isDigit || c == '.')
         ) mustBe "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
       }
     }
@@ -112,8 +111,8 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             adjustmentTotal
           )
 
-          val expectedDutySuspendedDeliveriesRedirectUrl: Call =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
+          val expectedDutySuspendedDeliveriesRedirectUrl: String =
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -127,11 +126,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .futureValue
             .toOption
             .get
-            .youveAlsoDeclaredTable
+            .youveAlsoDeclaredSummaryList
 
           result.rows.size mustBe 1
-          result.rows.head.actions.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows.head.cells(1).content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows.head.actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
+          result.rows.head.value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
         }
 
         "and DSD not declared, with the correct label, nothing to declare content, and redirect to the appropriate declaration page" in new SetUp {
@@ -143,8 +142,8 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             adjustmentTotal
           )
 
-          val expectedDutySuspendedDeliveriesRedirectUrl: Call =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode)
+          val expectedDutySuspendedDeliveriesRedirectUrl: String =
+            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -158,11 +157,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .futureValue
             .toOption
             .get
-            .youveAlsoDeclaredTable
+            .youveAlsoDeclaredSummaryList
 
           result.rows.size mustBe 1
-          result.rows.head.actions.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows.head.cells(1).content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows.head.actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
+          result.rows.head.value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
         }
       }
 
@@ -176,10 +175,10 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             adjustmentTotal
           )
 
-          val expectedDutySuspendedDeliveriesRedirectUrl: Call =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
-          val expectedSpiritsRedirectUrl: Call                 =
-            controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+          val expectedDutySuspendedDeliveriesRedirectUrl: String =
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+          val expectedSpiritsRedirectUrl: String                 =
+            controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -193,13 +192,13 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .futureValue
             .toOption
             .get
-            .youveAlsoDeclaredTable
+            .youveAlsoDeclaredSummaryList
 
           result.rows.size mustBe 2
-          result.rows(0).actions.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).cells(1).content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
-          result.rows(1).actions.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).cells(1).content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
+          result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
+          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
+          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
         }
 
         "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate pages" in new SetUp {
@@ -211,10 +210,10 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             adjustmentTotal
           )
 
-          val expectedDutySuspendedDeliveriesRedirectUrl: Call =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode)
-          val expectedSpiritsRedirectUrl: Call                 =
-            controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
+          val expectedDutySuspendedDeliveriesRedirectUrl: String =
+            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
+          val expectedSpiritsRedirectUrl: String                 =
+            controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -228,13 +227,13 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .futureValue
             .toOption
             .get
-            .youveAlsoDeclaredTable
+            .youveAlsoDeclaredSummaryList
 
           result.rows.size mustBe 2
-          result.rows(0).actions.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).cells(1).content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
-          result.rows(1).actions.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).cells(1).content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
+          result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
+          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
+          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
         }
       }
 
@@ -248,10 +247,10 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             adjustmentTotal
           )
 
-          val expectedDutySuspendedDeliveriesRedirectUrl: Call =
-            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad()
-          val expectedSpiritsRedirectUrl: Call                 =
-            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode)
+          val expectedDutySuspendedDeliveriesRedirectUrl: String =
+            controllers.dutySuspended.routes.CheckYourAnswersDutySuspendedDeliveriesController.onPageLoad().url
+          val expectedSpiritsRedirectUrl: String                 =
+            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -265,13 +264,13 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .futureValue
             .toOption
             .get
-            .youveAlsoDeclaredTable
+            .youveAlsoDeclaredSummaryList
 
           result.rows.size mustBe 2
-          result.rows(0).actions.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).cells(1).content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
-          result.rows(1).actions.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).cells(1).content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
+          result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
+          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
+          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
         }
 
         "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate declarations pages" in new SetUp {
@@ -283,10 +282,10 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             adjustmentTotal
           )
 
-          val expectedDutySuspendedDeliveriesRedirectUrl: Call =
-            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode)
-          val expectedSpiritsRedirectUrl: Call                 =
-            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode)
+          val expectedDutySuspendedDeliveriesRedirectUrl: String =
+            controllers.dutySuspended.routes.DeclareDutySuspendedDeliveriesQuestionController.onPageLoad(NormalMode).url
+          val expectedSpiritsRedirectUrl: String                 =
+            controllers.spiritsQuestions.routes.DeclareQuarterlySpiritsController.onPageLoad(NormalMode).url
 
           when(mockCalculatorConnector.calculateTotalAdjustment(eqTo(adjustmentsNoDuties))(any))
             .thenReturn(Future.successful(totalAdjustments))
@@ -300,13 +299,13 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .futureValue
             .toOption
             .get
-            .youveAlsoDeclaredTable
+            .youveAlsoDeclaredSummaryList
 
           result.rows.size mustBe 2
-          result.rows(0).actions.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).cells(1).content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
-          result.rows(1).actions.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).cells(1).content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
+          result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
+          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
+          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
         }
       }
     }
@@ -365,21 +364,21 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
         when(mockAdrReturnSubmissionService.getDutySuspended(any())).thenReturn(dutySuspendedDeclaredModel)
         when(mockAdrReturnSubmissionService.getSpirits(any(), any())).thenReturn(spiritsDeclaredModel)
 
-        val result: TableViewModel = dutyDueForThisReturnHelper
+        val result: SummaryList = dutyDueForThisReturnHelper
           .getDutyDueViewModel(userAnswers, returnPeriod)
           .value
           .futureValue
           .toOption
           .get
-          .dutiesBreakdownTable
+          .dutiesBreakdownSummaryList
 
         result.rows.size mustBe 6
-        result.rows.head.cells.head.content mustBe Text("Beer declared")
-        result.rows(1).cells.head.content mustBe Text("Cider declared")
-        result.rows(2).cells.head.content mustBe Text("Wine declared")
-        result.rows(3).cells.head.content mustBe Text("Spirits declared")
-        result.rows(4).cells.head.content mustBe Text("Other fermented products declared")
-        result.rows(5).cells.head.content mustBe Text("Adjustments to previous returns")
+        result.rows.head.key.content mustBe Text("Beer declared")
+        result.rows(1).key.content mustBe Text("Cider declared")
+        result.rows(2).key.content mustBe Text("Wine declared")
+        result.rows(3).key.content mustBe Text("Spirits declared")
+        result.rows(4).key.content mustBe Text("Other fermented products declared")
+        result.rows(5).key.content mustBe Text("Adjustments to previous returns")
       }
     }
   }

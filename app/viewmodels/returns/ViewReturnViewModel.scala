@@ -23,7 +23,8 @@ import models.checkAndSubmit.AdrTypeOfSpirit._
 import models.returns._
 import models.{RateBand, ReturnPeriod}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Key, Text, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.declareDuty.RateBandHelper.rateBandRecap
 import viewmodels.{Money, TableRowViewModel, TableTotalViewModel, TableViewModel}
@@ -246,7 +247,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       )
     )
 
-  def createTotalDueViewModel(returnDetails: ReturnDetails)(implicit messages: Messages): TableTotalViewModel = {
+  def createTotalDueSummaryList(returnDetails: ReturnDetails)(implicit messages: Messages): SummaryList = {
     val content =
       if (
         returnDetails.totalDutyDue.totalDue == BigDecimal(0) &&
@@ -258,11 +259,19 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         Text(Money.format(returnDetails.totalDutyDue.totalDue))
       }
 
-    TableTotalViewModel(
-      HeadCell(
-        content = Text(messages("viewReturn.dutyDue.total.legend"))
-      ),
-      HeadCell(content = content, classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}")
+    SummaryList(
+      rows = Seq(
+        SummaryListRow(
+          key = Key(
+            content = Text(messages("viewReturn.dutyDue.total.legend")),
+            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
+          ),
+          value = Value(
+            content = content,
+            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass} ${Css.boldFontCssClass}"
+          )
+        )
+      )
     )
   }
 
