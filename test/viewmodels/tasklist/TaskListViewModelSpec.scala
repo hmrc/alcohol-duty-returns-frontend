@@ -60,7 +60,7 @@ class TaskListViewModelSpec extends SpecBase {
       when(mockReturnTaskListCreator.returnQSSection(userAnswersWithSpirits)).thenReturn(completeSection)
       when(mockReturnTaskListCreator.returnCheckAndSubmitSection(4, 4)).thenReturn(notStartedSection)
 
-      val result = taskListViewModel.getTaskList(userAnswersWithSpirits, validUntil, quarterReturnPeriods.head)
+      val result = taskListViewModel.getTaskList(userAnswersWithSpirits, validUntil, returnPeriod)
 
       result mustBe AlcoholDutyTaskList(
         Seq(completeSection, completeSection, completeSection, completeSection, notStartedSection),
@@ -194,9 +194,9 @@ class TaskListViewModelSpec extends SpecBase {
     val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
     implicit val messages: Messages  = getMessages(application)
 
-    val returnId       = emptyUserAnswers.returnId.copy(periodKey = periodKeyJan)
+    val returnId       = emptyUserAnswers.returnId.copy(periodKey = periodKeyJun)
     val userAnswers    = emptyUserAnswers.copy(returnId = returnId)
-    val returnPeriod   = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyJan)
+    val returnPeriod   = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyJun)
     val dateTimeHelper = createDateTimeHelper()
 
     private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)

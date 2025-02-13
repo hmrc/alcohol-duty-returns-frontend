@@ -91,62 +91,6 @@ class ViewReturnViewModelSpec extends SpecBase {
         adjustmentsViewModel.rows(1).cells(3).content mustBe Text("not applicable")
       }
 
-      "should return a model with no entries when a nil return" in new SetUp {
-        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, emptyRateBands)
-
-        adjustmentsViewModel.rows.size mustBe 1
-        adjustmentsViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
-      }
-
-      "should return a model with no entries when a nil return with empty sections" in new SetUp {
-        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails, emptyRateBands)
-
-        adjustmentsViewModel.rows.size mustBe 1
-        adjustmentsViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
-      }
-    }
-
-    "createTotalDueViewModel" - {
-      "should return a model with a total when a total exists" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueViewModel(returnDetails)
-
-        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
-      }
-
-      "should return a model with no entries when a nil return" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueViewModel(nilReturn)
-
-        totalViewModel.total.content mustBe Text(messages("site.nil"))
-      }
-
-      "should return a model with a total when a total exists even if no declarations" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueViewModel(
-          emptyReturnDetails.copy(totalDutyDue = ReturnTotalDutyDue(totalDue = nonZeroAmount))
-        )
-
-        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", nonZeroAmount))
-      }
-
-      "should return a model with a total when a total exists even if no alcohol is declared" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueViewModel(
-          returnDetails.copy(alcoholDeclared =
-            ReturnAlcoholDeclared(alcoholDeclaredDetails = None, total = returnDetails.alcoholDeclared.total)
-          )
-        )
-
-        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
-      }
-
-      "should return a model with a total when a total exists when no adjustments exist" in new SetUp {
-        val totalViewModel = viewModel.createTotalDueViewModel(
-          returnDetails.copy(adjustments =
-            ReturnAdjustments(adjustmentDetails = None, total = returnDetails.adjustments.total)
-          )
-        )
-
-        totalViewModel.total.content mustBe Text(messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue))
-      }
-
       "should return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, emptyRateBands)
 
@@ -159,6 +103,54 @@ class ViewReturnViewModelSpec extends SpecBase {
 
         adjustmentsViewModel.rows.size mustBe 1
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
+      }
+    }
+
+    "createTotalDueSummaryList" - {
+      "should return a summary list with a total when a total exists" in new SetUp {
+        val totalSummaryList = viewModel.createTotalDueSummaryList(returnDetails)
+
+        totalSummaryList.rows.head.value.content mustBe Text(
+          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
+        )
+      }
+
+      "should return a summary list with value 'Nil' when a nil return" in new SetUp {
+        val totalSummaryList = viewModel.createTotalDueSummaryList(nilReturn)
+
+        totalSummaryList.rows.head.value.content mustBe Text(messages("site.nil"))
+      }
+
+      "should return a summary list with a total when a total exists even if no declarations" in new SetUp {
+        val totalSummaryList = viewModel.createTotalDueSummaryList(
+          emptyReturnDetails.copy(totalDutyDue = ReturnTotalDutyDue(totalDue = nonZeroAmount))
+        )
+
+        totalSummaryList.rows.head.value.content mustBe Text(messages("site.currency.2DP", nonZeroAmount))
+      }
+
+      "should return a summary list with a total when a total exists even if no alcohol is declared" in new SetUp {
+        val totalSummaryList = viewModel.createTotalDueSummaryList(
+          returnDetails.copy(alcoholDeclared =
+            ReturnAlcoholDeclared(alcoholDeclaredDetails = None, total = returnDetails.alcoholDeclared.total)
+          )
+        )
+
+        totalSummaryList.rows.head.value.content mustBe Text(
+          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
+        )
+      }
+
+      "should return a summary list with a total when a total exists when no adjustments exist" in new SetUp {
+        val totalSummaryList = viewModel.createTotalDueSummaryList(
+          returnDetails.copy(adjustments =
+            ReturnAdjustments(adjustmentDetails = None, total = returnDetails.adjustments.total)
+          )
+        )
+
+        totalSummaryList.rows.head.value.content mustBe Text(
+          messages("site.currency.2DP", returnDetails.totalDutyDue.totalDue)
+        )
       }
     }
 

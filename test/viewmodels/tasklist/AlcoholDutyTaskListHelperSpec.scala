@@ -99,7 +99,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
       result.completedTasks mustBe 4
     }
 
-    "must return a the quarter spirits task only in Jan, Apr, Jul and Oct" in new SetUp {
+    "must return a the quarter spirits task only in Mar, Jun, Sept and December" in new SetUp {
       val expectedSectionsWithQS = Seq(
         returnTaskListCreator.returnSection(userAnswers),
         returnTaskListCreator.returnAdjustmentSection(userAnswers),
@@ -121,7 +121,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         val result =
           taskListViewModel.getTaskList(userAnswers, validUntil, returnPeriod)(getMessages(application))
 
-        val periodQuarterChars = Set('A', 'D', 'G', 'J')
+        val periodQuarterChars = Set('C', 'F', 'I', 'L')
         val lastChar           = periodKey.last
 
         if (periodQuarterChars.contains(lastChar)) {
@@ -138,7 +138,7 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
     val application: Application     = applicationBuilder().configure(additionalConfig).build()
     val appConfig: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
     implicit val messages: Messages  = getMessages(application)
-    private val periodKey            = periodKeyJan
+    private val periodKey            = periodKeyDec23
     val userAnswers                  = emptyUserAnswers.copy(returnId = emptyUserAnswers.returnId.copy(periodKey = periodKey))
     val returnPeriod                 = ReturnPeriod.fromPeriodKeyOrThrow(periodKey)
     private val dateTimeHelper       = createDateTimeHelper()
