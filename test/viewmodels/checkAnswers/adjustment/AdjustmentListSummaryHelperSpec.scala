@@ -26,6 +26,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.AdjustmentEntryListPage
 import viewmodels.Money
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 
 import java.time.YearMonth
 
@@ -90,9 +91,11 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
     "must return the correct total" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
       val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
-      table.total.map(_.value).get shouldBe Money.format(
-        adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum
-      )(getMessages(app))
+      table.total.map(_.rows.head.value).get.content shouldBe Text(
+        Money.format(
+          adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum
+        )(getMessages(app))
+      )
     }
 
     "must return the correct total if one of the adjustment entries has an undefined duty" in {
@@ -103,7 +106,7 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
         emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList :+ undefinedDutyAdjustmentEntry).success.value
       val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
 
-      table.total.map(_.value).get shouldBe Money.format(expectedSum)(getMessages(app))
+      table.total.map(_.rows.head.value).get.content shouldBe Text(Money.format(expectedSum)(getMessages(app)))
     }
 
     "must throw an exception if adjustment type is missing" in {

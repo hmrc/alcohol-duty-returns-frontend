@@ -33,9 +33,4 @@ object TableViewModel {
 
 case class TableRowViewModel(cells: Seq[TableRow], actions: Seq[TableRowActionViewModel] = Seq.empty)
 
-case class TableTotalViewModel(legend: HeadCell, total: HeadCell) {
-  def toHeadCells(): Seq[HeadCell] =
-    Seq(legend, total)
-}
-
 case class TableRowActionViewModel(label: String, href: Call, visuallyHiddenText: Option[String] = None)

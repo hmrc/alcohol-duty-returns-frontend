@@ -16,6 +16,7 @@
 
 package viewmodels
 
+import config.Constants.Css
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -27,7 +28,8 @@ object TotalsSummary {
   def row(key: String, value: String)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = key,
-      value = ValueViewModel(value),
+      value = ValueViewModel(value)
+        .withCssClass(s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"),
       actions = Seq.empty
     )
 }

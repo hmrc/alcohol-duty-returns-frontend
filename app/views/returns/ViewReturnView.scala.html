@@ -14,19 +14,20 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, PrintPage, TotalsTable}
+@import components.{PageHeading, Paragraph, PrintPage, SubHeading}
 @import config.Constants.Css
-@import viewmodels.{TotalsTableViewModel, TableViewModel}
+@import viewmodels.TableViewModel
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     pageHeading: PageHeading,
+    subHeading: SubHeading,
     paragraph: Paragraph,
     govukTable: GovukTable,
-    printPage: PrintPage,
-    totalsTable: TotalsTable
+    govukSummaryList : GovukSummaryList,
+    printPage: PrintPage
 )
 
 @(
@@ -36,7 +37,7 @@
    submittedAtTime: String,
    dutyToDeclare: TableViewModel,
    adjustments: TableViewModel,
-   totalDue: TotalsTableViewModel,
+   totalDue: SummaryList,
    netDutySuspension: TableViewModel,
    spirits: Seq[TableViewModel]
 )(implicit request: Request[_], messages: Messages)
@@ -60,8 +61,8 @@
         rows = dutyToDeclare.rows.map(_.cells)
     ))
 
-    @{dutyToDeclare.total.map { total =>
-        totalsTable(total)
+    @{dutyToDeclare.total.map { totalSummaryList =>
+        govukSummaryList(totalSummaryList)
     }}
 
     <br>
@@ -73,12 +74,15 @@
         rows = adjustments.rows.map(_.cells)
     ))
 
-    @{adjustments.total.map { total =>
-         totalsTable(total)
+    @{adjustments.total.map { totalSummaryList =>
+         govukSummaryList(totalSummaryList)
     }}
 
     <br>
-        @totalsTable(totalDue, Some(messages("viewReturn.dutyDue.caption")))
+
+    @subHeading(messages("viewReturn.dutyDue.caption"), classes = Css.headingMCssClass)
+    @govukSummaryList(totalDue)
+
     <br>
 
     @govukTable(Table(
