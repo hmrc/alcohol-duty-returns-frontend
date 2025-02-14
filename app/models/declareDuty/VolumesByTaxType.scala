@@ -18,7 +18,7 @@ package models.declareDuty
 
 import play.api.libs.json.{Json, OFormat}
 
-case class VolumesByTaxType(rateBandRecap: String, taxType: String, totalLitres: BigDecimal, pureAlcohol: BigDecimal)
+case class VolumesByTaxType(taxType: String, totalLitres: BigDecimal, pureAlcohol: BigDecimal)
 
 object VolumesByTaxType {
   implicit val format: OFormat[VolumesByTaxType] = Json.format[VolumesByTaxType]

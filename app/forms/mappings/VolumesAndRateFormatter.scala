@@ -33,8 +33,6 @@ class VolumesAndRateFormatter(
 ) extends Formatter[VolumeAndRateByTaxType]
     with Formatters {
 
-  private val rateBandRecapFormatter = stringFormatter(s"$requiredKey.$rateBandRecapField")
-
   private val taxTypeFormatter = stringFormatter(s"$requiredKey.$taxTypeField")
 
   private val volumeFormatter = new BigDecimalFieldFormatter(
@@ -80,8 +78,7 @@ class VolumesAndRateFormatter(
 
   private def formatVolume(
     key: String,
-    data: Map[String, String],
-    rateBandRecap: String
+    data: Map[String, String]
   ): Either[Seq[FormError], VolumeAndRateByTaxType] = {
     val taxType     = taxTypeFormatter.bind(s"$key.$taxTypeField", data)
     val totalLitres = volumeFormatter.bind(s"$key.$totalLitresField", data)
@@ -90,7 +87,7 @@ class VolumesAndRateFormatter(
 
     (taxType, totalLitres, pureAlcohol, dutyRate) match {
       case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue), Right(dutyRate)) =>
-        Right(VolumeAndRateByTaxType(rateBandRecap, taxTypeValue, totalLitresValue, pureAlcoholValue, dutyRate))
+        Right(VolumeAndRateByTaxType(taxTypeValue, totalLitresValue, pureAlcoholValue, dutyRate))
       case (taxTypeError, totalLitresError, pureAlcoholError, dutyRateError)                        =>
         Left(
           taxTypeError.left.getOrElse(Seq.empty)
@@ -106,7 +103,7 @@ class VolumesAndRateFormatter(
     data: Map[String, String],
     rateBandRecap: String
   ): Either[Seq[FormError], VolumeAndRateByTaxType] =
-    formatVolume(key, data, rateBandRecap).fold(
+    formatVolume(key, data).fold(
       errors => Left(errors),
       dutyByTaxType =>
         if (dutyByTaxType.totalLitres < dutyByTaxType.pureAlcohol) {
@@ -152,8 +149,7 @@ class VolumesAndRateFormatter(
     }
 
   override def unbind(key: String, value: VolumeAndRateByTaxType): Map[String, String] =
-    rateBandRecapFormatter.unbind(s"$key.$rateBandRecapField", value.rateBandRecap) ++
-      taxTypeFormatter.unbind(s"$key.$taxTypeField", value.taxType) ++
+    taxTypeFormatter.unbind(s"$key.$taxTypeField", value.taxType) ++
       volumeFormatter.unbind(s"$key.$totalLitresField", value.totalLitres) ++
       pureAlcoholVolumeFormatter.unbind(s"$key.$pureAlcoholField", value.pureAlcohol) ++
       dutyRateFormatter.unbind(s"$key.$dutyRateField", value.dutyRate)

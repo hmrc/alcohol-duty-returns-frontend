@@ -33,8 +33,6 @@ class VolumesFormatter(
 ) extends Formatter[VolumesByTaxType]
     with Formatters {
 
-  private val rateBandRecapFormatter = stringFormatter(s"$requiredKey.$rateBandRecapField")
-
   private val taxTypeFormatter = stringFormatter(s"$requiredKey.$taxTypeField")
 
   private val volumeFormatter = new BigDecimalFieldFormatter(
@@ -68,8 +66,7 @@ class VolumesFormatter(
 
   private def formatVolume(
     key: String,
-    data: Map[String, String],
-    rateBandRecap: String
+    data: Map[String, String]
   ): Either[Seq[FormError], VolumesByTaxType] = {
     val taxType     = taxTypeFormatter.bind(s"$key.$taxTypeField", data)
     val totalLitres = volumeFormatter.bind(s"$key.$totalLitresField", data)
@@ -77,7 +74,7 @@ class VolumesFormatter(
 
     (taxType, totalLitres, pureAlcohol) match {
       case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue)) =>
-        Right(VolumesByTaxType(rateBandRecap, taxTypeValue, totalLitresValue, pureAlcoholValue))
+        Right(VolumesByTaxType(taxTypeValue, totalLitresValue, pureAlcoholValue))
       case (taxTypeError, totalLitresError, pureAlcoholError)                      =>
         Left(
           taxTypeError.left.getOrElse(Seq.empty)
@@ -92,7 +89,7 @@ class VolumesFormatter(
     data: Map[String, String],
     rateBandRecap: String
   ): Either[Seq[FormError], VolumesByTaxType] =
-    formatVolume(key, data, rateBandRecap).fold(
+    formatVolume(key, data).fold(
       errors => Left(errors),
       volumesByTaxType =>
         if (volumesByTaxType.totalLitres < volumesByTaxType.pureAlcohol) {
@@ -134,8 +131,7 @@ class VolumesFormatter(
     }
 
   override def unbind(key: String, value: VolumesByTaxType): Map[String, String] =
-    rateBandRecapFormatter.unbind(s"$key.$rateBandRecapField", value.rateBandRecap) ++
-      taxTypeFormatter.unbind(s"$key.$taxTypeField", value.taxType) ++
+    taxTypeFormatter.unbind(s"$key.$taxTypeField", value.taxType) ++
       volumeFormatter.unbind(s"$key.$totalLitresField", value.totalLitres) ++
       pureAlcoholBigDecimalFormatter.unbind(s"$key.$pureAlcoholField", value.pureAlcohol)
 }
