@@ -32,7 +32,7 @@
     govukFieldset: GovukFieldset
 )
 
-@(form: Form[_], regime:AlcoholRegime, categories:CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], regime:AlcoholRegime, categories: CategoriesByRateTypeViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages(s"tellUsAboutSingleSPRRate.title.$regime"))) {
 
@@ -107,6 +107,15 @@
                   errorMessageField = form(s"volumesWithRate_${index}_taxType"),
                   value = Some(categoryViewModel.id)
                 ).hidden
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[$index]"),
+                  key = "rateBandRecap",
+                  label = LabelViewModel(Text("")),
+                  errorMessageField = form(s"volumes_${index}_rateBandRecap"),
+                  value = Some(categoryViewModel.rateBandRecap)
+                ).hidden
               )
             ))
           ))
@@ -168,6 +177,15 @@
                   label = LabelViewModel(Text("")),
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_taxType"),
                   value = Some(categoryViewModel.id)
+                ).hidden
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+                  key = "rateBandRecap",
+                  label = LabelViewModel(Text("")),
+                  errorMessageField = form(s"volumes_${index + categories.smallProducer.size}_rateBandRecap"),
+                  value = Some(categoryViewModel.rateBandRecap)
                 ).hidden
               )
             ))

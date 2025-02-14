@@ -272,7 +272,7 @@ alcoholType.p1 = Select the types of alcoholic product you need to declare in th
 alcoholType.p2 = Types you do not select will have nil values in your return.
 alcoholType.hint = Select all that apply
 
-return.journey.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
+return.journey.error.lessThanExpected = Litres of pure alcohol in the {0} must be the same or less than the litres of {1}
 
 return.journey.error.allRequired = Select the type of {0}
 return.journey.error.noValue.taxType = Select the type of {0}
@@ -283,17 +283,17 @@ return.journey.error.maximumValue.totalLitres = Litres of {0} must be less than 
 return.journey.error.minimumValue.totalLitres = Litres of {0} must be more than 0.00
 return.journey.error.tooManyDecimalPlaces.totalLitres = Litres of {0} must be a number to 2 decimal places
 
-return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in {0}
-return.journey.error.invalid.pureAlcohol = Litres of pure alcohol must be a number
-return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol must be less than 1 billion
-return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol must be more than 0.0000
-return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol must be a number to 4 decimal places
+return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in the {0}
+return.journey.error.invalid.pureAlcohol = Litres of pure alcohol in the {0} must be a number
+return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol in the {0} must be less than 1 billion
+return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol in the {0} must be more than 0.0000
+return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol in the {0} must be a number to 4 decimal places
 
-return.journey.error.noValue.dutyRate = Enter your Small Producer Relief duty rate
-return.journey.error.invalid.dutyRate = Your Small Producer Relief duty rate must be a number
-return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate must be less than £1 billion
-return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
-return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
+return.journey.error.noValue.dutyRate = Enter your Small Producer Relief duty rate for the {0}
+return.journey.error.invalid.dutyRate = Your Small Producer Relief duty rate for the {0} must be a number
+return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate for the {0} must be less than £1 billion
+return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate for the {0} must be £0.00 or more
+return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate for the {0} must be to 2 decimal places
 
 return.journey.abv.interval.label.Beer = beer
 return.journey.abv.interval.label.Cider = cider

@@ -29,9 +29,11 @@ class VolumesAndRateFormatter(
   minimumValueKey: String,
   maximumValueKey: String,
   lessOrEqualKey: String,
-  args: Seq[String]
+  regimeName: String
 ) extends Formatter[VolumeAndRateByTaxType]
     with Formatters {
+
+  private val rateBandRecapFormatter = stringFormatter(s"$requiredKey.$rateBandRecapField")
 
   private val taxTypeFormatter = stringFormatter(s"$requiredKey.$taxTypeField")
 
@@ -44,7 +46,7 @@ class VolumesAndRateFormatter(
     totalLitresField,
     maximumValue = Constants.volumeMaximumValue,
     minimumValue = Constants.volumeMinimumValue,
-    args = args
+    args = Seq(regimeName)
   )
 
   private val pureAlcoholVolumeFormatter: BigDecimalFieldFormatter = new BigDecimalFieldFormatter(
@@ -58,7 +60,7 @@ class VolumesAndRateFormatter(
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
     exactDecimalPlacesRequired = true,
-    args = args
+    args = Seq(regimeName)
   )
 
   private val dutyRateFormatter = new BigDecimalFieldFormatter(
@@ -70,13 +72,17 @@ class VolumesAndRateFormatter(
     dutyRateField,
     maximumValue = Constants.dutyMaximumValue,
     minimumValue = Constants.dutyMinimumValue,
-    args = args
+    args = Seq(regimeName)
   )
 
-  private def requiredFieldFormError(key: String, field: String): FormError =
-    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", args)
+  private def requiredFieldFormError(key: String, field: String, rateBandRecap: String): FormError =
+    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", Seq(rateBandRecap, regimeName))
 
-  private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
+  private def formatVolume(
+    key: String,
+    data: Map[String, String],
+    rateBandRecap: String
+  ): Either[Seq[FormError], VolumeAndRateByTaxType] = {
     val taxType     = taxTypeFormatter.bind(s"$key.$taxTypeField", data)
     val totalLitres = volumeFormatter.bind(s"$key.$totalLitresField", data)
     val pureAlcohol = pureAlcoholVolumeFormatter.bind(s"$key.$pureAlcoholField", data)
@@ -84,7 +90,7 @@ class VolumesAndRateFormatter(
 
     (taxType, totalLitres, pureAlcohol, dutyRate) match {
       case (Right(taxTypeValue), Right(totalLitresValue), Right(pureAlcoholValue), Right(dutyRate)) =>
-        Right(VolumeAndRateByTaxType(taxTypeValue, totalLitresValue, pureAlcoholValue, dutyRate))
+        Right(VolumeAndRateByTaxType(rateBandRecap, taxTypeValue, totalLitresValue, pureAlcoholValue, dutyRate))
       case (taxTypeError, totalLitresError, pureAlcoholError, dutyRateError)                        =>
         Left(
           taxTypeError.left.getOrElse(Seq.empty)
@@ -95,14 +101,18 @@ class VolumesAndRateFormatter(
     }
   }
 
-  private def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] =
-    formatVolume(key, data).fold(
+  private def checkValues(
+    key: String,
+    data: Map[String, String],
+    rateBandRecap: String
+  ): Either[Seq[FormError], VolumeAndRateByTaxType] =
+    formatVolume(key, data, rateBandRecap).fold(
       errors => Left(errors),
       dutyByTaxType =>
         if (dutyByTaxType.totalLitres < dutyByTaxType.pureAlcohol) {
           Left(
             Seq(
-              FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, args)
+              FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, Seq(rateBandRecap, regimeName))
             )
           )
         } else {
@@ -111,16 +121,21 @@ class VolumesAndRateFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
-    val taxTypeResult     = validateField(taxTypeField, key, data, taxTypeFormatter)
-    val totalLitresResult = validateField(totalLitresField, key, data, volumeFormatter)
-    val pureAlcoholResult = validateField(pureAlcoholField, key, data, pureAlcoholVolumeFormatter)
-    val dutyRateResult    = validateField(dutyRateField, key, data, dutyRateFormatter)
+    val rateBandRecap     = data
+      .getOrElse(
+        s"$key.$rateBandRecapField",
+        regimeName
+      ) // This to support MultipleSPR for which we don't know the rateBand on view creation
+    val taxTypeResult     = validateField(taxTypeField, key, data, taxTypeFormatter, rateBandRecap)
+    val totalLitresResult = validateField(totalLitresField, key, data, volumeFormatter, rateBandRecap)
+    val pureAlcoholResult = validateField(pureAlcoholField, key, data, pureAlcoholVolumeFormatter, rateBandRecap)
+    val dutyRateResult    = validateField(dutyRateField, key, data, dutyRateFormatter, rateBandRecap)
     val allErrors         =
       taxTypeResult.left.toSeq.flatten ++ totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ dutyRateResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
     } else {
-      checkValues(key, data)
+      checkValues(key, data, rateBandRecap)
     }
   }
 
@@ -128,15 +143,17 @@ class VolumesAndRateFormatter(
     field: String,
     key: String,
     data: Map[String, String],
-    formatter: Formatter[T]
+    formatter: Formatter[T],
+    rateBandRecap: String
   ): Either[Seq[FormError], T] =
     data.get(s"$key.$field").filter(_.nonEmpty) match {
       case Some(_) => formatter.bind(s"$key.$field", data)
-      case None    => Left(Seq(requiredFieldFormError(key, field)))
+      case None    => Left(Seq(requiredFieldFormError(key, field, rateBandRecap)))
     }
 
   override def unbind(key: String, value: VolumeAndRateByTaxType): Map[String, String] =
-    taxTypeFormatter.unbind(s"$key.$taxTypeField", value.taxType) ++
+    rateBandRecapFormatter.unbind(s"$key.$rateBandRecapField", value.rateBandRecap) ++
+      taxTypeFormatter.unbind(s"$key.$taxTypeField", value.taxType) ++
       volumeFormatter.unbind(s"$key.$totalLitresField", value.totalLitres) ++
       pureAlcoholVolumeFormatter.unbind(s"$key.$pureAlcoholField", value.pureAlcohol) ++
       dutyRateFormatter.unbind(s"$key.$dutyRateField", value.dutyRate)

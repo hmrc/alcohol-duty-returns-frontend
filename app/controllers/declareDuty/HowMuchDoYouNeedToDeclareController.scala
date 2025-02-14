@@ -117,6 +117,7 @@ class HowMuchDoYouNeedToDeclareController @Inject() (
           rateBand <- rateBands.find(_.taxTypeCode == volumes.taxType)
           dutyRate <- rateBand.rate
         } yield VolumeAndRateByTaxType(
+          rateBandRecap = volumes.rateBandRecap,
           taxType = volumes.taxType,
           totalLitres = volumes.totalLitres,
           pureAlcohol = volumes.pureAlcohol,

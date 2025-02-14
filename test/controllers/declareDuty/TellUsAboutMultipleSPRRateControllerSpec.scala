@@ -219,6 +219,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime, Some(index)).url
 
       val volumeAndRateByTaxType = VolumeAndRateByTaxType(
+        regime.entryName.toLowerCase,
         totalLitres = 1000,
         pureAlcohol = 500,
         dutyRate = 10,
@@ -265,6 +266,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         routes.TellUsAboutMultipleSPRRateController.onPageLoad(CheckMode, regime, Some(index)).url
 
       val volumeAndRateByTaxType = VolumeAndRateByTaxType(
+        rateBandRecap,
         totalLitres = 1000,
         pureAlcohol = 500,
         dutyRate = 10,
@@ -311,6 +313,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime, Some(index)).url
 
       val volumeAndRateByTaxType = VolumeAndRateByTaxType(
+        regime.entryName.toLowerCase,
         totalLitres = 1000,
         pureAlcohol = 500.1234,
         dutyRate = 10,
@@ -357,6 +360,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         routes.TellUsAboutMultipleSPRRateController.onPageLoad(NormalMode, regime, Some(index)).url
 
       val volumeAndRateByTaxType = VolumeAndRateByTaxType(
+        regime.entryName.toLowerCase,
         totalLitres = 1000,
         pureAlcohol = 500.1234,
         dutyRate = 10,

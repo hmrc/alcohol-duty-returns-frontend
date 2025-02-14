@@ -19,12 +19,13 @@ package models.declareDuty
 import play.api.libs.json._
 
 case class VolumeAndRateByTaxType(
+  rateBandRecap: String,
   taxType: String,
   totalLitres: BigDecimal,
   pureAlcohol: BigDecimal,
   dutyRate: BigDecimal
 ) {
-  def toVolumes: VolumesByTaxType = VolumesByTaxType(taxType, totalLitres, pureAlcohol)
+  def toVolumes: VolumesByTaxType = VolumesByTaxType(rateBandRecap, taxType, totalLitres, pureAlcohol)
 }
 
 object VolumeAndRateByTaxType {
