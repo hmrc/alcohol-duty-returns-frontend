@@ -129,10 +129,9 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val validValues = volumeAndRateByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
           Seq(
-            s"volumes[$index].rateBandRecap" -> value.rateBandRecap,
-            s"volumes[$index].taxType"       -> value.taxType,
-            s"volumes[$index].totalLitres"   -> value.totalLitres.toString,
-            s"volumes[$index].pureAlcohol"   -> value.pureAlcohol.toString
+            s"volumes[$index].taxType"     -> value.taxType,
+            s"volumes[$index].totalLitres" -> value.totalLitres.toString,
+            s"volumes[$index].pureAlcohol" -> value.pureAlcohol.toString
           )
         }
 
@@ -252,10 +251,9 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val validValues = volumeAndRateByTaxTypes.map(_.toVolumes).zipWithIndex.flatMap { case (value, index) =>
           Seq(
-            s"volumes[$index].rateBandRecap" -> value.rateBandRecap,
-            s"volumes[$index].taxType"       -> "taxTypeNotInList",
-            s"volumes[$index].totalLitres"   -> value.totalLitres.toString,
-            s"volumes[$index].pureAlcohol"   -> value.pureAlcohol.toString
+            s"volumes[$index].taxType"     -> "taxTypeNotInList",
+            s"volumes[$index].totalLitres" -> value.totalLitres.toString,
+            s"volumes[$index].pureAlcohol" -> value.pureAlcohol.toString
           )
         }
 

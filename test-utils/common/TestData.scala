@@ -1127,35 +1127,30 @@ trait TestData extends ModelGenerators {
   val rateBandRecap = "recap"
 
   val volumeAndRateByTaxType1 = VolumeAndRateByTaxType(
-    rateBandRecap = rateBandRecap,
     taxType = "124",
     totalLitres = BigDecimal(100),
     pureAlcohol = BigDecimal(2.5),
     dutyRate = BigDecimal(1.26)
   )
   val volumeAndRateByTaxType2 = VolumeAndRateByTaxType(
-    rateBandRecap = rateBandRecap,
     taxType = "125",
     totalLitres = BigDecimal(1000),
     pureAlcohol = BigDecimal(3.5),
     dutyRate = BigDecimal(1.46)
   )
   val volumeAndRateByTaxType3 = VolumeAndRateByTaxType(
-    rateBandRecap = rateBandRecap,
     taxType = "126",
     totalLitres = BigDecimal(10000),
     pureAlcohol = BigDecimal(4.5),
     dutyRate = BigDecimal(1.66)
   )
   val volumeAndRateByTaxType4 = VolumeAndRateByTaxType(
-    rateBandRecap = rateBandRecap,
     taxType = "126",
     totalLitres = BigDecimal(20000),
     pureAlcohol = BigDecimal(4.8),
     dutyRate = BigDecimal(1.66)
   )
   val volumeAndRateByTaxType5 = VolumeAndRateByTaxType(
-    rateBandRecap = rateBandRecap,
     taxType = "123",
     totalLitres = BigDecimal(30000),
     pureAlcohol = BigDecimal(4.11),

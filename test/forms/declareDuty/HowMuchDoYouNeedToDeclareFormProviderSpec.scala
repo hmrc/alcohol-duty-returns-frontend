@@ -34,22 +34,20 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
 
     "must bind valid data" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "1",
-        "volumes[0].pureAlcohol"   -> "1.0000"
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "1",
+        "volumes[0].pureAlcohol" -> "1.0000"
       )
       form.bind(data).value.value must contain theSameElementsAs Seq(
-        VolumesByTaxType(rateBandRecap, "taxType", 1, 1)
+        VolumesByTaxType("taxType", 1, 1)
       )
     }
 
     "must unbind valid data" in {
       val data = Seq(
-        VolumesByTaxType(rateBandRecap, "taxType", 1, 1)
+        VolumesByTaxType("taxType", 1, 1)
       )
       form.fill(data).data must contain theSameElementsAs Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
         "volumes[0].taxType"       -> "taxType",
         "volumes[0].totalLitres"   -> "1",
         "volumes[0].pureAlcohol"   -> "1.0000"

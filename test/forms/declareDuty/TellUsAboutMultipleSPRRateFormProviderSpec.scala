@@ -41,11 +41,10 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
       volumeAndRateByTaxTypes.foreach { volumeAndRateByTaxType: VolumeAndRateByTaxType =>
         val result = form.bind(
           Map(
-            "volumesWithRate.rateBandRecap" -> volumeAndRateByTaxType.rateBandRecap,
-            "volumesWithRate.taxType"       -> volumeAndRateByTaxType.taxType,
-            "volumesWithRate.totalLitres"   -> volumeAndRateByTaxType.totalLitres.toString,
-            "volumesWithRate.pureAlcohol"   -> volumeAndRateByTaxType.pureAlcohol.toString,
-            "volumesWithRate.dutyRate"      -> volumeAndRateByTaxType.dutyRate.toString
+            "volumesWithRate.taxType"     -> volumeAndRateByTaxType.taxType,
+            "volumesWithRate.totalLitres" -> volumeAndRateByTaxType.totalLitres.toString,
+            "volumesWithRate.pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString,
+            "volumesWithRate.dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString
           )
         )
         result.value.value mustEqual volumeAndRateByTaxType
@@ -55,7 +54,6 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
     "must unbind a valid data" in {
       volumeAndRateByTaxTypes.foreach { volumeAndRateByTaxType: VolumeAndRateByTaxType =>
         val result = form.fill(volumeAndRateByTaxType).data
-        result("volumesWithRate.rateBandRecap") mustBe volumeAndRateByTaxType.rateBandRecap
         result("volumesWithRate.taxType") mustBe volumeAndRateByTaxType.taxType
         result("volumesWithRate.totalLitres") mustBe volumeAndRateByTaxType.totalLitres.toString
         result("volumesWithRate.pureAlcohol") mustBe volumeAndRateByTaxType.pureAlcohol.toString

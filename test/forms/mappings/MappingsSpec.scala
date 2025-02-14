@@ -786,7 +786,6 @@ class MappingsSpec extends SpecBase with Mappings {
         )
       )
       result.get mustBe VolumeAndRateByTaxType(
-        rateBandRecap,
         "123",
         BigDecimal(1234.45),
         BigDecimal(12.3456),
@@ -805,7 +804,6 @@ class MappingsSpec extends SpecBase with Mappings {
       )
       result.get mustBe
         VolumeAndRateByTaxType(
-          regimeName,
           "123",
           BigDecimal(1234.45),
           BigDecimal(12.3456),
@@ -1216,9 +1214,8 @@ class MappingsSpec extends SpecBase with Mappings {
     "can unbind" in {
       val result =
         mapping.unbind(
-          VolumeAndRateByTaxType(rateBandRecap, "123", BigDecimal(1234.45), BigDecimal(12.3456), BigDecimal(5.31))
+          VolumeAndRateByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456), BigDecimal(5.31))
         )
-      result.get(".rateBandRecap") mustBe Some(rateBandRecap)
       result.get(".taxType") mustBe Some("123")
       result.get(".totalLitres") mustBe Some("1234.45")
       result.get(".pureAlcohol") mustBe Some("12.3456")
@@ -1249,7 +1246,7 @@ class MappingsSpec extends SpecBase with Mappings {
             "value.pureAlcohol"   -> "12.3456"
           )
         )
-      result.get mustBe VolumesByTaxType(rateBandRecap, "123", BigDecimal(1234.45), BigDecimal(12.3456))
+      result.get mustBe VolumesByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456))
     }
 
     "must fallback to regime when missing rateBandRecap" - {
@@ -1262,7 +1259,6 @@ class MappingsSpec extends SpecBase with Mappings {
       )
       result.get mustBe
         VolumesByTaxType(
-          regimeName,
           "123",
           BigDecimal(1234.45),
           BigDecimal(12.3456)
@@ -1588,8 +1584,7 @@ class MappingsSpec extends SpecBase with Mappings {
     }
 
     "can unbind" in {
-      val result = mapping.unbind(VolumesByTaxType(rateBandRecap, "123", BigDecimal(1234.45), BigDecimal(12.3456)))
-      result.get(".rateBandRecap") mustBe Some(rateBandRecap)
+      val result = mapping.unbind(VolumesByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456)))
       result.get(".taxType") mustBe Some("123")
       result.get(".totalLitres") mustBe Some("1234.45")
       result.get(".pureAlcohol") mustBe Some("12.3456")

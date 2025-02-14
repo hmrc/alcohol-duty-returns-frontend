@@ -37,11 +37,10 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
         (volumeAndRateByTaxType, acc: Map[String, String]) =>
           acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].rateBandRecap" -> volumeAndRateByTaxType.rateBandRecap,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres"   -> volumeAndRateByTaxType.totalLitres.toString,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol"   -> volumeAndRateByTaxType.pureAlcohol.toString,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"       -> volumeAndRateByTaxType.taxType,
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"      -> volumeAndRateByTaxType.dutyRate.toString
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> volumeAndRateByTaxType.totalLitres.toString,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> volumeAndRateByTaxType.pureAlcohol.toString,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> volumeAndRateByTaxType.taxType,
+            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> volumeAndRateByTaxType.dutyRate.toString
           )
       }
 
@@ -52,9 +51,6 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
     "must unbind a valid data" in {
       val result = form.fill(volumeAndRateByTaxTypes).data
       volumeAndRateByTaxTypes.foreach { volumeAndRateByTaxType =>
-        result(
-          s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].rateBandRecap"
-        ) mustBe volumeAndRateByTaxType.rateBandRecap
         result(
           s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres"
         ) mustBe volumeAndRateByTaxType.totalLitres.toString
