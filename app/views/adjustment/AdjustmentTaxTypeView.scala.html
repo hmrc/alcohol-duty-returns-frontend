@@ -40,14 +40,6 @@
     }
 }
 
-@headingContent = @{
-    if(adjustmentType == RepackagedDraughtProducts){
-        messages("adjustmentTaxType.repackaged.heading")
-    } else {
-        messages("adjustmentTaxType.heading")
-    }
-}
-
 @layout(pageTitle = title(form, titleContent)) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentTaxTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
@@ -61,12 +53,15 @@
             text = messages(s"section.adjustment.$adjustmentType")
         )
         @formGroupWithError(form.errors.nonEmpty){
-                @pageHeading(headingContent)
+                @pageHeading(titleContent)
 
                 @govukInput(
                     InputViewModel(
                         field = form("adjustment-tax-type-input"),
-                        label = LabelViewModel(headingContent).asVisuallyHidden()
+                        label = if (adjustmentType == RepackagedDraughtProducts)
+                        LabelViewModel(messages("adjustmentTaxType.repackaged.heading")).asVisuallyHidden()
+                        else
+                        LabelViewModel(messages("adjustmentTaxType.heading")).asVisuallyHidden()
                     )
                     .asNumeric()
                     .withWidth(Fixed10)
