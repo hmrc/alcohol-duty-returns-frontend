@@ -35,7 +35,7 @@ case class BeforeStartReturnViewModel(returnDueDate: LocalDate, dueDateString: S
     }
 
     WarningText(
-      iconFallbackText = Some("Warning"),
+      iconFallbackText = Some(messages("site.warning")),
       content = Text(message)
     )
   }
