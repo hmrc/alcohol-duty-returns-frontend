@@ -1,0 +1,15 @@
+unauthorised.title = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
+journeyRecovery.continue.guidance = Rhowch gynnig arall arni yn nes ymlaen.
+journeyRecovery.startAgain.heading = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
+journeyRecovery.continue.heading = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
+unauthorised.p1 = Mae’r gwasanaeth Rheoli’ch Toll Alcohol yn wasanaeth ar gyfer busnesau cymeradwy, megis cwmnïau cyfyngedig, partneriaethau ac unig fasnachwyr sy’n cynhyrchu cynhyrchion alcoholaidd.
+journeyRecovery.continue.title = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
+journeyRecovery.startAgain.guidance.p2 = Gwnaethom gadw’ch atebion. Byddant ar gael am 30 diwrnod.
+unauthorised.heading = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
+returnLocked.heading = Mae’r Datganiad hwn wedi’i gloi dros dro
+journeyRecovery.startAgain.title = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
+journeyRecovery.continue.guidance.p2 = Gwnaethom gadw’ch atebion. Byddant ar gael am 30 diwrnod.
+returnLocked.p1 = Mae’r Datganiad hwn wedi cael ei gloi dros dro, oherwydd bod rhywun arall yn ei olygu.
+journeyRecovery.startAgain.guidance = Rhowch gynnig arall arni yn nes ymlaen.
+returnLocked.p2 = Rhowch gynnig arall arni mewn ychydig o funudau.
+returnLocked.title = Mae’r Datganiad hwn wedi’i gloi dros dro
