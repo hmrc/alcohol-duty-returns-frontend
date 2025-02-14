@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{BulletList, SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{BulletList, Caption, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -23,7 +23,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     bulletList: BulletList,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     subHeading: SubHeading,
     paragraph: Paragraph
@@ -38,7 +38,7 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @sectionHeading(
+        @caption(
             id = "doYouHaveMultipleSPRDutyRates-section",
             text = messages(s"section.return.$regime"))
 

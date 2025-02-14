@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, BulletList}
+@import components.{Caption, PageHeading, Paragraph, BulletList}
 @import config.Constants.Css
 
 @this(
@@ -24,7 +24,7 @@
     govukRadios: GovukRadios,
     paragraph: Paragraph,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     bulletList: BulletList,
     pageHeading: PageHeading
 )
@@ -39,7 +39,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "declare-quarterly-spirits-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )

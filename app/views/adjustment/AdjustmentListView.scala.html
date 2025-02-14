@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 @import config.Constants.Css
 @import viewmodels.{TableViewModel, PaginationViewModel}
 
@@ -24,7 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
@@ -43,7 +43,7 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @sectionHeading(
+    @caption(
         id = "adjustment-list-section",
         text = messages("section.alcoholDutyReturn"),
     )

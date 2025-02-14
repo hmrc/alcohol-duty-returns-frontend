@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, SubHeading, PageHeading, Paragraph}
+@import components.{Caption, SubHeading, PageHeading, Paragraph}
 @import config.Constants.Css
 @import viewmodels.InputWidth._
 @import viewmodels.declareDuty.CategoriesByRateTypeViewModel
@@ -26,7 +26,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     paragraph: Paragraph,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     subHeading: SubHeading,
     pageHeading: PageHeading,
     govukFieldset: GovukFieldset
@@ -42,7 +42,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "tellUsAboutSingleSPRRate-section",
             text = messages(s"section.return.$regime")
         )
