@@ -22,14 +22,14 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-case class TotalsSummary(key: String, value: String)
+case class TotalsSummaryList(key: String, value: String)
 
-object TotalsSummary {
+object TotalsSummaryList {
   def row(key: String, value: String)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = key,
       value = ValueViewModel(value)
-        .withCssClass(s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"),
+        .withCssClass(s"${Css.textAlignRightCssClass} ${Css.numericCellClass} ${Css.boldFontCssClass}"),
       actions = Seq.empty
     )
 }

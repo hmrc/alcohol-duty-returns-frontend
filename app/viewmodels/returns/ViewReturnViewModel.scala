@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.declareDuty.RateBandHelper.rateBandRecap
 import viewmodels.govuk.summarylist._
-import viewmodels.{Money, TableRowViewModel, TableViewModel, TotalsSummary}
+import viewmodels.{Money, TableRowViewModel, TableViewModel, TotalsSummaryList}
 
 import java.time.YearMonth
 import javax.inject.Inject
@@ -132,7 +132,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   private def dutyToDeclareTotal(alcoholDeclared: ReturnAlcoholDeclared)(implicit messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        TotalsSummary.row(messages("viewReturn.alcoholDuty.total.legend"), Money.format(alcoholDeclared.total))
+        TotalsSummaryList.row(messages("viewReturn.alcoholDuty.total.legend"), Money.format(alcoholDeclared.total))
       )
     )
 
@@ -233,7 +233,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   private def adjustmentsTotal(adjustments: ReturnAdjustments)(implicit messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        TotalsSummary.row(messages("viewReturn.adjustments.total.legend"), Money.format(adjustments.total))
+        TotalsSummaryList.row(messages("viewReturn.adjustments.total.legend"), Money.format(adjustments.total))
       )
     )
 
@@ -251,7 +251,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
 
     SummaryListViewModel(
       rows = Seq(
-        TotalsSummary.row(messages("viewReturn.dutyDue.total.legend"), content)
+        TotalsSummaryList.row(messages("viewReturn.dutyDue.total.legend"), content)
       )
     )
   }

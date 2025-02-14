@@ -124,7 +124,7 @@ object AdjustmentListSummaryHelper {
   private def adjustmentsTotal(total: BigDecimal)(implicit messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        TotalsSummary.row(messages("adjustmentList.total"), Money.format(total))
+        TotalsSummaryList.row(messages("adjustmentList.total"), Money.format(total))
       )
     )
 
