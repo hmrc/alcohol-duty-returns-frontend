@@ -48,9 +48,9 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
         VolumesByTaxType("taxType", 1, 1)
       )
       form.fill(data).data must contain theSameElementsAs Map(
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "1",
-        "volumes[0].pureAlcohol"   -> "1.0000"
+        "volumes[0].taxType"     -> "taxType",
+        "volumes[0].totalLitres" -> "1",
+        "volumes[0].pureAlcohol" -> "1.0000"
       )
     }
 
