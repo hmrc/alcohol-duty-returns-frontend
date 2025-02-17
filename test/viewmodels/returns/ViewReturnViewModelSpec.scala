@@ -35,8 +35,11 @@ class ViewReturnViewModelSpec extends SpecBase {
           viewModel.createAlcoholDeclaredViewModel(returnDetails, exampleRateBands(periodKey))
 
         alcoholDeclaredViewModel.rows.size mustBe returnDetails.alcoholDeclared.alcoholDeclaredDetails.get.size
-        alcoholDeclaredViewModel.total.get.total.content mustBe Text(
-          messages("site.currency.2DP", returnDetails.alcoholDeclared.total)
+        alcoholDeclaredViewModel.total.get.rows.head.value.content mustBe Text(
+          messages(
+            "site.currency.2DP",
+            returnDetails.alcoholDeclared.total
+          )
         )
         alcoholDeclaredViewModel.rows.head.cells.head.content mustBe Text("311")
         alcoholDeclaredViewModel.rows(3).cells.head.content mustBe Text(
@@ -64,7 +67,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey3))
 
         adjustmentsViewModel.rows.size mustBe 5
-        adjustmentsViewModel.total.get.total.content mustBe Text(
+        adjustmentsViewModel.total.get.rows.head.value.content mustBe Text(
           s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
         )
 
@@ -82,7 +85,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
 
         adjustmentsViewModel.rows.size mustBe 2
-        adjustmentsViewModel.total.get.total.content mustBe Text(
+        adjustmentsViewModel.total.get.rows.head.value.content mustBe Text(
           s"$minus${messages("site.currency.2DP", returnDetailWithSpoilt.adjustments.total.abs)}"
         )
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text("123")

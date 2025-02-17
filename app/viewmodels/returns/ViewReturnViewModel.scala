@@ -23,11 +23,12 @@ import models.checkAndSubmit.AdrTypeOfSpirit._
 import models.returns._
 import models.{RateBand, ReturnPeriod}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Key, Text, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.declareDuty.RateBandHelper.rateBandRecap
-import viewmodels.{Money, TableRowViewModel, TableTotalViewModel, TableViewModel}
+import viewmodels.govuk.summarylist._
+import viewmodels.{Money, TableRowViewModel, TableViewModel, TotalsSummaryList}
 
 import java.time.YearMonth
 import javax.inject.Inject
@@ -116,7 +117,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       .map(rateBandRecap(_, None))
       .getOrElse(taxType)
 
-  private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel] =
+  private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel]                             =
     Seq(
       TableRowViewModel(cells =
         Seq(
@@ -128,17 +129,10 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         )
       )
     )
-
-  private def dutyToDeclareTotal(alcoholDeclared: ReturnAlcoholDeclared)(implicit
-    messages: Messages
-  ): TableTotalViewModel =
-    TableTotalViewModel(
-      HeadCell(
-        content = Text(messages("viewReturn.alcoholDuty.total.legend"))
-      ),
-      HeadCell(
-        content = Text(Money.format(alcoholDeclared.total)),
-        classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
+  private def dutyToDeclareTotal(alcoholDeclared: ReturnAlcoholDeclared)(implicit messages: Messages): SummaryList =
+    SummaryListViewModel(
+      rows = Seq(
+        TotalsSummaryList.row(messages("viewReturn.alcoholDuty.total.legend"), Money.format(alcoholDeclared.total))
       )
     )
 
@@ -236,14 +230,10 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       )
     )
 
-  private def adjustmentsTotal(adjustments: ReturnAdjustments)(implicit messages: Messages): TableTotalViewModel =
-    TableTotalViewModel(
-      HeadCell(
-        content = Text(messages("viewReturn.adjustments.total.legend"))
-      ),
-      HeadCell(
-        content = Text(Money.format(adjustments.total)),
-        classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass}"
+  private def adjustmentsTotal(adjustments: ReturnAdjustments)(implicit messages: Messages): SummaryList =
+    SummaryListViewModel(
+      rows = Seq(
+        TotalsSummaryList.row(messages("viewReturn.adjustments.total.legend"), Money.format(adjustments.total))
       )
     )
 
@@ -254,23 +244,14 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         returnDetails.alcoholDeclared.alcoholDeclaredDetails.toSeq.flatten.isEmpty &&
         returnDetails.adjustments.adjustmentDetails.toSeq.flatten.isEmpty
       ) {
-        Text(messages("site.nil"))
+        messages("site.nil")
       } else {
-        Text(Money.format(returnDetails.totalDutyDue.totalDue))
+        Money.format(returnDetails.totalDutyDue.totalDue)
       }
 
-    SummaryList(
+    SummaryListViewModel(
       rows = Seq(
-        SummaryListRow(
-          key = Key(
-            content = Text(messages("viewReturn.dutyDue.total.legend")),
-            classes = s"${Css.boldFontCssClass} ${Css.summaryListKeyCssClass}"
-          ),
-          value = Value(
-            content = content,
-            classes = s"${Css.textAlignRightCssClass} ${Css.numericCellClass} ${Css.boldFontCssClass}"
-          )
-        )
+        TotalsSummaryList.row(messages("viewReturn.dutyDue.total.legend"), content)
       )
     )
   }

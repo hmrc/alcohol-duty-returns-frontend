@@ -29,7 +29,8 @@
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
-    govukPagination: GovukPagination
+    govukPagination: GovukPagination,
+    govukSummaryList : GovukSummaryList
 )
 
 
@@ -77,10 +78,8 @@
                 )
     }
 
-    @{adjustmentTable.total.map { total =>
-        govukTable(Table(
-        head = Some(total.toHeadCells())
-        ))
+    @{adjustmentTable.total.map { totalSummaryList =>
+        govukSummaryList(totalSummaryList)
     }}
 
     @govukRadios(
