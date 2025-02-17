@@ -21,7 +21,8 @@ import play.api.i18n.Messages
 
 case class CategoryViewModel(
   category: String,
-  id: String
+  id: String,
+  rateBandRecap: String
 )
 
 case class CategoriesByRateTypeViewModel(
@@ -32,6 +33,10 @@ case class CategoriesByRateTypeViewModel(
 )
 
 object CategoriesByRateTypeHelper {
+  def decapitalize(s: String): String =
+    if (s == null || s.length == 0 || !s.charAt(0).isUpper) s
+    else s.updated(0, s.charAt(0).toLower)
+
   def rateBandCategories(rateBands: Set[RateBand], regime: AlcoholRegime, isRecap: Boolean = false)(implicit
     messages: Messages
   ): CategoriesByRateTypeViewModel = {
@@ -44,7 +49,8 @@ object CategoriesByRateTypeHelper {
             category =
               if (isRecap) RateBandHelper.rateBandRecap(rateBand, Some(regime))
               else RateBandHelper.rateBandContent(rateBand, Some(regime)),
-            id = rateBand.taxTypeCode
+            id = rateBand.taxTypeCode,
+            rateBandRecap = decapitalize(RateBandHelper.rateBandRecap(rateBand, Some(regime)))
           )
         }
       }

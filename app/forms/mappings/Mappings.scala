@@ -127,7 +127,7 @@ trait Mappings extends Formatters with Constraints {
     minimumValueKey: String,
     maximumValueKey: String,
     lessOrEqualKey: String,
-    args: Seq[String] = Seq.empty
+    regimeName: String
   ): FieldMapping[VolumesByTaxType] =
     of(
       new VolumesFormatter(
@@ -137,7 +137,7 @@ trait Mappings extends Formatters with Constraints {
         minimumValueKey,
         maximumValueKey,
         lessOrEqualKey,
-        args
+        regimeName
       )
     )
 
@@ -148,7 +148,7 @@ trait Mappings extends Formatters with Constraints {
     minimumValueKey: String,
     maximumValueKey: String,
     lessOrEqualKey: String,
-    args: Seq[String] = Seq.empty
+    regimeName: String
   ): FieldMapping[VolumeAndRateByTaxType] =
     of(
       new VolumesAndRateFormatter(
@@ -158,7 +158,7 @@ trait Mappings extends Formatters with Constraints {
         minimumValueKey,
         maximumValueKey,
         lessOrEqualKey,
-        args
+        regimeName
       )
     )
 

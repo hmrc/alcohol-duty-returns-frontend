@@ -1124,6 +1124,8 @@ trait TestData extends ModelGenerators {
 
   val allRateBands: Set[RateBand] = allNonSmallProducerReliefRateBands ++ allSmallProducerReliefRateBands
 
+  val rateBandRecap = "recap"
+
   val volumeAndRateByTaxType1 = VolumeAndRateByTaxType(
     taxType = "124",
     totalLitres = BigDecimal(100),

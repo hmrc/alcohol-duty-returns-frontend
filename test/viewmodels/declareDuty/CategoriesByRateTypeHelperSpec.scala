@@ -37,10 +37,34 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
 
     "should return rate band description when all ratebands are passed" in new SetUp {
       CategoriesByRateTypeHelper.rateBandCategories(allRateBands, regime) mustBe CategoriesByRateTypeViewModel(
-        Seq(CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123")),
-        Seq(CategoryViewModel("Beer between 2% and 3% ABV (tax type code 124)", "124")),
-        Seq(CategoryViewModel("Beer between 3% and 4% ABV (tax type code 125)", "125")),
-        Seq(CategoryViewModel("Beer between 4% and 5% ABV (tax type code 126)", "126"))
+        Seq(
+          CategoryViewModel(
+            "Beer between 1% and 2% ABV (tax type code 123)",
+            "123",
+            "non-draught beer between 1% and 2% ABV (123)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 2% and 3% ABV (tax type code 124)",
+            "124",
+            "draught beer between 2% and 3% ABV (124)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 3% and 4% ABV (tax type code 125)",
+            "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 4% and 5% ABV (tax type code 126)",
+            "126",
+            "draught beer between 4% and 5% ABV (126 SPR)"
+          )
+        )
       )
     }
 
@@ -50,10 +74,34 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         regime,
         isRecap = true
       ) mustBe CategoriesByRateTypeViewModel(
-        Seq(CategoryViewModel("Non-draught beer between 1% and 2% ABV (123)", "123")),
-        Seq(CategoryViewModel("Draught beer between 2% and 3% ABV (124)", "124")),
-        Seq(CategoryViewModel("Non-draught beer between 3% and 4% ABV (125 SPR)", "125")),
-        Seq(CategoryViewModel("Draught beer between 4% and 5% ABV (126 SPR)", "126"))
+        Seq(
+          CategoryViewModel(
+            "Non-draught beer between 1% and 2% ABV (123)",
+            "123",
+            "non-draught beer between 1% and 2% ABV (123)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Draught beer between 2% and 3% ABV (124)",
+            "124",
+            "draught beer between 2% and 3% ABV (124)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Non-draught beer between 3% and 4% ABV (125 SPR)",
+            "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Draught beer between 4% and 5% ABV (126 SPR)",
+            "126",
+            "draught beer between 4% and 5% ABV (126 SPR)"
+          )
+        )
       )
     }
 
@@ -63,9 +111,27 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         regime
       ) mustBe CategoriesByRateTypeViewModel(
         Seq.empty,
-        Seq(CategoryViewModel("Beer between 2% and 3% ABV (tax type code 124)", "124")),
-        Seq(CategoryViewModel("Beer between 3% and 4% ABV (tax type code 125)", "125")),
-        Seq(CategoryViewModel("Beer between 4% and 5% ABV (tax type code 126)", "126"))
+        Seq(
+          CategoryViewModel(
+            "Beer between 2% and 3% ABV (tax type code 124)",
+            "124",
+            "draught beer between 2% and 3% ABV (124)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 3% and 4% ABV (tax type code 125)",
+            "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 4% and 5% ABV (tax type code 126)",
+            "126",
+            "draught beer between 4% and 5% ABV (126 SPR)"
+          )
+        )
       )
     }
 
@@ -74,10 +140,28 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         allRateBands - draughtReliefRateBand,
         regime
       ) mustBe CategoriesByRateTypeViewModel(
-        Seq(CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123")),
+        Seq(
+          CategoryViewModel(
+            "Beer between 1% and 2% ABV (tax type code 123)",
+            "123",
+            "non-draught beer between 1% and 2% ABV (123)"
+          )
+        ),
         Seq.empty,
-        Seq(CategoryViewModel("Beer between 3% and 4% ABV (tax type code 125)", "125")),
-        Seq(CategoryViewModel("Beer between 4% and 5% ABV (tax type code 126)", "126"))
+        Seq(
+          CategoryViewModel(
+            "Beer between 3% and 4% ABV (tax type code 125)",
+            "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 4% and 5% ABV (tax type code 126)",
+            "126",
+            "draught beer between 4% and 5% ABV (126 SPR)"
+          )
+        )
       )
     }
 
@@ -86,10 +170,28 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         allRateBands - smallProducerReliefRateBand,
         regime
       ) mustBe CategoriesByRateTypeViewModel(
-        Seq(CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123")),
-        Seq(CategoryViewModel("Beer between 2% and 3% ABV (tax type code 124)", "124")),
+        Seq(
+          CategoryViewModel(
+            "Beer between 1% and 2% ABV (tax type code 123)",
+            "123",
+            "non-draught beer between 1% and 2% ABV (123)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 2% and 3% ABV (tax type code 124)",
+            "124",
+            "draught beer between 2% and 3% ABV (124)"
+          )
+        ),
         Seq.empty,
-        Seq(CategoryViewModel("Beer between 4% and 5% ABV (tax type code 126)", "126"))
+        Seq(
+          CategoryViewModel(
+            "Beer between 4% and 5% ABV (tax type code 126)",
+            "126",
+            "draught beer between 4% and 5% ABV (126 SPR)"
+          )
+        )
       )
     }
 
@@ -98,9 +200,27 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         allRateBands - draughtAndSmallProducerReliefRateBand,
         regime
       ) mustBe CategoriesByRateTypeViewModel(
-        Seq(CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123")),
-        Seq(CategoryViewModel("Beer between 2% and 3% ABV (tax type code 124)", "124")),
-        Seq(CategoryViewModel("Beer between 3% and 4% ABV (tax type code 125)", "125")),
+        Seq(
+          CategoryViewModel(
+            "Beer between 1% and 2% ABV (tax type code 123)",
+            "123",
+            "non-draught beer between 1% and 2% ABV (123)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 2% and 3% ABV (tax type code 124)",
+            "124",
+            "draught beer between 2% and 3% ABV (124)"
+          )
+        ),
+        Seq(
+          CategoryViewModel(
+            "Beer between 3% and 4% ABV (tax type code 125)",
+            "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)"
+          )
+        ),
         Seq.empty
       )
     }
@@ -111,9 +231,21 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
         regime
       ) mustBe CategoriesByRateTypeViewModel(
         Seq(
-          CategoryViewModel("Beer between 1% and 2% ABV (tax type code 123)", "123"),
-          CategoryViewModel("Beer between 1% and 2% ABV (tax type code 124)", "124"),
-          CategoryViewModel("Beer between 1% and 2% ABV (tax type code 125)", "125")
+          CategoryViewModel(
+            "Beer between 1% and 2% ABV (tax type code 123)",
+            "123",
+            "non-draught beer between 1% and 2% ABV (123)"
+          ),
+          CategoryViewModel(
+            "Beer between 1% and 2% ABV (tax type code 124)",
+            "124",
+            "non-draught beer between 1% and 2% ABV (124)"
+          ),
+          CategoryViewModel(
+            "Beer between 1% and 2% ABV (tax type code 125)",
+            "125",
+            "non-draught beer between 1% and 2% ABV (125)"
+          )
         ),
         Seq.empty,
         Seq.empty,

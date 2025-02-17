@@ -33,6 +33,7 @@ object Constants {
     val dutyField: String              = "duty"
     val dutyRateField: String          = "dutyRate"
     val sprDutyRateField: String       = "sprDutyRate"
+    val rateBandRecapField: String     = "rateBandRecap"
   }
 
   val maximumTwoDecimalPlaces: Int                = 2

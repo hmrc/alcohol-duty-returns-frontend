@@ -17,6 +17,7 @@
 package forms.mappings
 
 import config.Constants
+import config.Constants.MappingFields.rateBandRecapField
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
@@ -46,7 +47,14 @@ class BigDecimalFieldFormatter(
 
   private val baseFormatter = stringFormatter(s"$requiredKey.$fieldKey", args)
 
-  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] =
+  private def getKeyPrefix(key: String) = key.dropRight(fieldKey.length + 1)
+
+  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] = {
+    val keyPrefix          = getKeyPrefix(key)
+    val maybeRateBandRecap = data.get(s"$keyPrefix.$rateBandRecapField")
+
+    val allArgs = maybeRateBandRecap.fold(args)(_ +: args)
+
     baseFormatter
       .bind(key, data)
       .map(_.replace(",", ""))
@@ -54,18 +62,19 @@ class BigDecimalFieldFormatter(
         nonFatalCatch
           .either(BigDecimal(s))
           .left
-          .map(_ => Seq(FormError(nameToId(key), s"$invalidKey.$fieldKey", args)))
+          .map(_ => Seq(FormError(nameToId(key), s"$invalidKey.$fieldKey", allArgs)))
           .flatMap {
             case res if !res.toString().matches(decimalRegexp) =>
-              Left(Seq(FormError(nameToId(key), s"$decimalPlacesKey.$fieldKey", args)))
+              Left(Seq(FormError(nameToId(key), s"$decimalPlacesKey.$fieldKey", allArgs)))
             case res if res < minimumValue                     =>
-              Left(Seq(FormError(nameToId(key), s"$minimumValueKey.$fieldKey", args)))
+              Left(Seq(FormError(nameToId(key), s"$minimumValueKey.$fieldKey", allArgs)))
             case res if res > maximumValue                     =>
-              Left(Seq(FormError(nameToId(key), s"$maximumValueKey.$fieldKey", args)))
+              Left(Seq(FormError(nameToId(key), s"$maximumValueKey.$fieldKey", allArgs)))
             case res                                           =>
               Right(res)
           }
       }
+  }
 
   override def unbind(key: String, value: BigDecimal): Map[String, String] =
     if (exactDecimalPlacesRequired) {

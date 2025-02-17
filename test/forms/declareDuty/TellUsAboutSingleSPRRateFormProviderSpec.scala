@@ -68,294 +68,295 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
 
     "must fail to bind when no data is provided" in {
       val result = form.bind(Map.empty[String, String])
-      result.errors must contain(FormError("volumesWithRate", "return.journey.error.allRequired", Seq(List(""))))
+      result.errors must contain(FormError("volumesWithRate", "return.journey.error.allRequired", Seq(Seq(""))))
     }
 
     "must fail when empty data is provided" in {
-      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
-        (volumeAndRateByTaxType, acc: Map[String, String]) =>
-          acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> "",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> ""
+      val values = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
+            s"volumesWithRate[$index].rateBandRecap" -> "",
+            s"volumesWithRate[$index].taxType"       -> "",
+            s"volumesWithRate[$index].totalLitres"   -> "",
+            s"volumesWithRate[$index].pureAlcohol"   -> "",
+            s"volumesWithRate[$index].dutyRate"      -> ""
           )
-      }
+      }.flatten.toMap
 
-      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
-        (volumeAndRateByTaxType, acc: List[FormError]) =>
-          acc ++ List(
+      val expectedErrors = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_taxType",
+              s"volumesWithRate_${index}_taxType",
               "return.journey.error.noValue.taxType",
-              List("")
+              Seq("", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.noValue.totalLitres",
-              List("")
+              Seq("", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.noValue.pureAlcohol",
-              List("")
+              Seq("", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.noValue.dutyRate",
-              List("")
+              Seq("", "")
             )
           )
-      }
+      }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
     }
 
     "must fail when invalid data is provided" in {
-      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
-        (volumeAndRateByTaxType, acc: Map[String, String]) =>
-          acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
-              .indexOf(volumeAndRateByTaxType)}",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "invalid",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "invalid",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "invalid"
+      val values = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
+            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"   -> "invalid",
+            s"volumesWithRate[$index].pureAlcohol"   -> "invalid",
+            s"volumesWithRate[$index].dutyRate"      -> "invalid"
           )
-      }
+      }.flatten.toMap
 
-      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
-        (volumeAndRateByTaxType, acc: List[FormError]) =>
-          acc ++ List(
+      val expectedErrors = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.invalid.totalLitres",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.invalid.pureAlcohol",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.invalid.dutyRate",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
-      }
+      }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
     }
 
     "must fail when data with too many decimal places is provided" in {
-      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
-        (volumeAndRateByTaxType, acc: Map[String, String]) =>
-          acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
-              .indexOf(volumeAndRateByTaxType)}",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "1.123",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "1.12345",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.123"
+      val values = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
+            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"   -> "1.123",
+            s"volumesWithRate[$index].pureAlcohol"   -> "1.12345",
+            s"volumesWithRate[$index].dutyRate"      -> "1.123"
           )
-      }
+      }.flatten.toMap
 
-      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
-        (volumeAndRateByTaxType, acc: List[FormError]) =>
-          acc ++ List(
+      val expectedErrors = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.tooManyDecimalPlaces.totalLitres",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.tooManyDecimalPlaces.pureAlcohol",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.tooManyDecimalPlaces.dutyRate",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
-      }
+      }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
     }
 
     "must fail when data exceeding maximum value is provided" in {
-      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
-        (volumeAndRateByTaxType, acc: Map[String, String]) =>
-          acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
-              .indexOf(volumeAndRateByTaxType)}",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "100000000000",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100000000000.0000",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "100000000000"
+      val values = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
+            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"   -> "100000000000",
+            s"volumesWithRate[$index].pureAlcohol"   -> "100000000000.0000",
+            s"volumesWithRate[$index].dutyRate"      -> "100000000000"
           )
-      }
+      }.flatten.toMap
 
-      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
-        (volumeAndRateByTaxType, acc: List[FormError]) =>
-          acc ++ List(
+      val expectedErrors = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.maximumValue.totalLitres",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.maximumValue.pureAlcohol",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.maximumValue.dutyRate",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
-      }
+      }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
     }
 
     "must fail when data below minimum value is provided" in {
-      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
-        (volumeAndRateByTaxType, acc: Map[String, String]) =>
-          acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
-              .indexOf(volumeAndRateByTaxType)}",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "0",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "0.0000",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "-1"
+      val values = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
+            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"   -> "0",
+            s"volumesWithRate[$index].pureAlcohol"   -> "0.0000",
+            s"volumesWithRate[$index].dutyRate"      -> "-1"
           )
-      }
+      }.flatten.toMap
 
-      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
-        (volumeAndRateByTaxType, acc: List[FormError]) =>
-          acc ++ List(
+      val expectedErrors = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.minimumValue.totalLitres",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.minimumValue.pureAlcohol",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.minimumValue.dutyRate",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
-      }
+      }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
     }
 
     "must fail when pure alcohol is more than total litres" in {
-      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
-        (volumeAndRateByTaxType, acc: Map[String, String]) =>
-          acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
-              .indexOf(volumeAndRateByTaxType)}",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "1.1",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "100.1000",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.1"
+      val values = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
+            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"   -> "1.1",
+            s"volumesWithRate[$index].pureAlcohol"   -> "100.1000",
+            s"volumesWithRate[$index].dutyRate"      -> "1.1"
           )
-      }
+      }.flatten.toMap
 
-      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
-        (volumeAndRateByTaxType, acc: List[FormError]) =>
-          acc ++ List(
+      val expectedErrors = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.lessThanExpected",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
-      }
+      }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
     }
 
     "must fail when pure alcohol volume is empty and total litres value exceeds maximum and and dutyRate is invalid" in {
-      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
-        (volumeAndRateByTaxType, acc: Map[String, String]) =>
-          acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
-              .indexOf(volumeAndRateByTaxType)}",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "999999999999",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "1.1abc"
+      val values = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
+            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"   -> "999999999999",
+            s"volumesWithRate[$index].pureAlcohol"   -> "",
+            s"volumesWithRate[$index].dutyRate"      -> "1.1abc"
           )
-      }
+      }.flatten.toMap
 
-      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
-        (volumeAndRateByTaxType, acc: List[FormError]) =>
-          acc ++ List(
+      val expectedErrors = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.maximumValue.totalLitres",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.noValue.pureAlcohol",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.invalid.dutyRate",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
-      }
+      }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
     }
 
     "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
-      val values: Map[String, String] = volumeAndRateByTaxTypes.foldRight(Map[String, String]()) {
-        (volumeAndRateByTaxType, acc: Map[String, String]) =>
-          acc ++ Map(
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].taxType"     -> s"tax_type_${volumeAndRateByTaxTypes
-              .indexOf(volumeAndRateByTaxType)}",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].totalLitres" -> "9999999999.123",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].pureAlcohol" -> "-671.12345",
-            s"volumesWithRate[${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}].dutyRate"    -> "99999999999.546"
+      val values = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
+            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"   -> "9999999999.123",
+            s"volumesWithRate[$index].pureAlcohol"   -> "-671.12345",
+            s"volumesWithRate[$index].dutyRate"      -> "99999999999.546"
           )
-      }
+      }.flatten.toMap
 
-      val expectedErrors = volumeAndRateByTaxTypes.foldRight(List[FormError]()) {
-        (volumeAndRateByTaxType, acc: List[FormError]) =>
-          acc ++ List(
+      val expectedErrors = {
+        for (index <- 0 until volumeAndRateByTaxTypes.length)
+          yield Seq(
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_totalLitres",
+              s"volumesWithRate_${index}_totalLitres",
               "return.journey.error.tooManyDecimalPlaces.totalLitres",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_pureAlcohol",
+              s"volumesWithRate_${index}_pureAlcohol",
               "return.journey.error.tooManyDecimalPlaces.pureAlcohol",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             ),
             FormError(
-              s"volumesWithRate_${volumeAndRateByTaxTypes.indexOf(volumeAndRateByTaxType)}_dutyRate",
+              s"volumesWithRate_${index}_dutyRate",
               "return.journey.error.tooManyDecimalPlaces.dutyRate",
-              List("")
+              Seq(s"rate_band_recap_$index", "")
             )
           )
-      }
+      }.flatten
 
       val result = form.bind(values)
       result.errors must contain allElementsOf expectedErrors
