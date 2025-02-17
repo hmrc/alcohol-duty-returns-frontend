@@ -16,21 +16,61 @@
 
 package testonly.controllers
 
+import controllers.actions.IdentifyWithEnrolmentAction
+import models.{ReturnId, ReturnPeriod}
+import play.api.Logging
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import testonly.connectors.TestOnlyUserAnswersConnector
+import testonly.views.html.CreatedUserAnswersTestView
+import uk.gov.hmrc.alcoholdutyreturns.models.ReturnAndUserDetails
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class TestOnlyController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  testOnlyConnector: TestOnlyUserAnswersConnector
+  identify: IdentifyWithEnrolmentAction,
+  testOnlyConnector: TestOnlyUserAnswersConnector,
+  createdUserAnswersView: CreatedUserAnswersTestView
 )(implicit val ec: ExecutionContext)
-    extends FrontendBaseController {
+    extends FrontendBaseController
+    with Logging {
 
   def clearAllData(): Action[AnyContent] = Action.async { implicit request =>
     testOnlyConnector.clearAllData().map(httpResponse => Ok(httpResponse.body))
   }
 
+  def createUserAnswers(
+    periodKey: String,
+    beer: Boolean,
+    cider: Boolean,
+    wine: Boolean,
+    spirits: Boolean,
+    OFP: Boolean
+  ): Action[AnyContent] = identify.async { implicit request =>
+    ReturnPeriod.fromPeriodKey(periodKey) match {
+      case None    => Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+      case Some(_) =>
+        if (!(beer | cider | wine | spirits | OFP)) {
+          Future.successful(BadRequest("At least one alcohol regime approval is required."))
+        } else {
+          val returnAndUserDetails =
+            ReturnAndUserDetails(ReturnId(request.appaId, periodKey), request.groupId, request.userId)
+          testOnlyConnector
+            .createUserAnswers(returnAndUserDetails, beer, cider, wine, spirits, OFP)
+            .map {
+              case Right(_)                                  =>
+                logger.info(s"Test userAnswers for ${request.appaId}/$periodKey created")
+                Ok(createdUserAnswersView(request.appaId, periodKey, beer, cider, wine, spirits, OFP))
+              case Left(error) if error.statusCode == LOCKED =>
+                logger.warn(s"Return ${request.appaId}/$periodKey locked for the user")
+                Redirect(controllers.routes.ReturnLockedController.onPageLoad())
+              case Left(error)                               =>
+                logger.warn(s"Unable to create test userAnswers: $error")
+                Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+            }
+        }
+    }
+  }
 }

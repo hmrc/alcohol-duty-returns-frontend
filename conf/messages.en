@@ -258,6 +258,11 @@ beforeStartReturn.text.dueWarning = The deadline for completing this return is t
 beforeStartReturn.text.overdueWarning = The deadline for completing this return was {0}
 beforeStartReturn.text.dueDateWarning = The deadline for completing this return is {0}
 
+serviceUpdated.title = This service has been updated
+serviceUpdated.heading = This service has been updated
+serviceUpdated.guidance1 = Sorry, we were not able to use your previous answers.
+serviceUpdated.guidance2 = You will need to enter them again.
+
 # Beginning of product entry sub-journey
 
 alcoholType.title = Which types of alcoholic products do you need to declare?
