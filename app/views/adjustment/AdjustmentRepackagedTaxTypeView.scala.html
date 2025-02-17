@@ -24,6 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    pageHeading: PageHeading,
     caption: Caption
 )
 
@@ -42,10 +43,12 @@
             text = messages(s"section.adjustment.$adjustmentType")
         )
 
+        @pageHeading(messages("adjustmentRepackagedTaxType.title"))
+
         @govukInput(
             InputViewModel(
                 field = form("new-tax-type-code"),
-                label = LabelViewModel(messages("adjustmentRepackagedTaxType.heading")).asPageHeading()
+                label = LabelViewModel(messages("adjustmentRepackagedTaxType.heading")).asVisuallyHidden()
             )
             .asNumeric()
             .withWidth(Fixed10)
