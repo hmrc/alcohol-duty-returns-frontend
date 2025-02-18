@@ -17,13 +17,16 @@
 package controllers.auth
 
 import base.SpecBase
+import controllers.actions.{FakeIdentifyWithoutEnrolmentFailAction, IdentifyWithoutEnrolmentAction}
 import play.api.test.Helpers._
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 
 class AppaIdAuthControllerSpec extends SpecBase {
 
   "AppaIdAuthController Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and requestAccessUrl for a GET when logged in" in {
       val application = applicationBuilder().build()
 
       running(application) {
@@ -32,6 +35,23 @@ class AppaIdAuthControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual appConfig.requestAccessUrl
+      }
+    }
+
+    "must return OK and unauthorised for a GET when not logged in" in {
+      val application =
+        new GuiceApplicationBuilder()
+          .overrides(
+            bind[IdentifyWithoutEnrolmentAction].to[FakeIdentifyWithoutEnrolmentFailAction]
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.auth.routes.AppaIdAuthController.onPageLoad().url)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
       }
     }
   }
