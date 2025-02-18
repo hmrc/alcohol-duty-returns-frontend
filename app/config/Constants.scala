@@ -16,6 +16,7 @@
 
 package config
 
+import java.time.Month
 import java.time.Month._
 
 object Constants {
@@ -32,6 +33,7 @@ object Constants {
     val dutyField: String              = "duty"
     val dutyRateField: String          = "dutyRate"
     val sprDutyRateField: String       = "sprDutyRate"
+    val rateBandRecapField: String     = "rateBandRecap"
   }
 
   val maximumTwoDecimalPlaces: Int                = 2
@@ -64,7 +66,7 @@ object Constants {
 
   val rowsPerPage = 15
 
-  val quarterlySpiritsMonths = Set(JANUARY, APRIL, JULY, OCTOBER)
+  val quarterlySpiritsMonths: Set[Month] = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
 
   object Format {
     val numeric = "numeric"
@@ -115,8 +117,7 @@ object Constants {
     val labelMCssClass  = "govuk-label--m"
     val labelSCssClass  = "govuk-label--s"
 
-    val hmrcCaptionXLCssClass = "hmrc-caption-xl"
-    val captionXLCssClass     = "govuk-caption-xl"
+    val captionXLCssClass = "govuk-caption-xl"
 
     val fieldsetLegendXLCssClass = "govuk-fieldset__legend--xl"
     val fieldsetLegendLCssClass  = "govuk-fieldset__legend--l"
@@ -141,7 +142,6 @@ object Constants {
     val summaryListActionsListCssClass     = "govuk-summary-list__actions-list"
     val summaryListActionsListItemCssClass = "govuk-summary-list__actions-list-item"
 
-    val marginTop0CssClass    = "govuk-!-margin-top-0"
     val marginTop8CssClass    = "govuk-!-margin-top-8"
     val marginBottom0CssClass = "govuk-!-margin-bottom-0"
 

@@ -19,20 +19,24 @@ package views
 import play.api.data.Form
 import play.api.i18n.Messages
 
-object ViewUtils {
+object TitleUtils {
 
-  def title(form: Form[_], title: String, section: Option[String] = None)(implicit messages: Messages): String =
-    titleNoForm(
-      title = s"${errorPrefix(form)} ${messages(title)}",
-      section = section
-    )
+  /**
+    * Call this one if you have a validated form on your page since it'll prefix the browser title with Error: if one
+    *
+    * title should already been looked up
+    */
+  def title(form: Form[_], title: String)(implicit messages: Messages): String =
+    titleNoForm(s"${errorPrefix(form)} $title")
 
-  def titleNoForm(title: String, section: Option[String] = None)(implicit messages: Messages): String =
-    s"${messages(title)} - ${section.fold("")(messages(_) + " - ")}${messages("service.name")} - ${messages("site.govuk")}"
+  /**
+    * Call this one on a page without a validated form
+    *
+    * title should already been looked up
+    */
+  def titleNoForm(title: String)(implicit messages: Messages): String =
+    s"$title - ${messages("service.name")} - ${messages("site.govuk")}"
 
-  def errorPrefix(form: Form[_])(implicit messages: Messages): String =
+  private def errorPrefix(form: Form[_])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
-
-  def withPercentage(percentage: BigDecimal)(implicit messages: Messages) =
-    s"$percentage${messages("site.unit.percentage")}"
 }

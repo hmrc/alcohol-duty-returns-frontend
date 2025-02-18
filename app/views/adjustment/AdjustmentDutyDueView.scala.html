@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList}
+@import components.{Caption, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList}
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.RepackagedDraughtProducts
 @import viewmodels.Money
@@ -23,7 +23,7 @@
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
+        caption: Caption,
         pageHeadingWithMonetaryValue: PageHeadingWithMonetaryValue,
         pageHeading: PageHeading,
         paragraph: Paragraph,
@@ -38,7 +38,7 @@
 
 @layout(pageTitle = titleNoForm(messages("adjustmentDutyDue.title", Money.format(adjustmentDutyDueViewModel.dutyToShow)))) {
 
-    @sectionHeading(
+    @caption(
         id = "adjustment-duty-due-section",
         text = messages(s"section.adjustment.$adjustmentType"),
     )

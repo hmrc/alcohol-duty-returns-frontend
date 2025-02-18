@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, FormGroupWithError}
+@import components.{Caption, PageHeading, Paragraph, FormGroupWithError}
 @import viewmodels.declareDuty.AlcoholTypeViewModel
 @import models.AlcoholRegimes
 
@@ -25,7 +25,7 @@
     govukCheckboxes: GovukCheckboxes,
     govukButton: GovukButton,
     pageHeading: PageHeading,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     paragraph: Paragraph,
     formGroupWithError: FormGroupWithError
 )
@@ -40,7 +40,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> AlcoholTypeViewModel.checkboxItems(regimes).headOption.flatMap(_.id).getOrElse(""))))
         }
 
-        @sectionHeading(
+        @caption(
             id = "alcoholType-section",
             text = messages("section.alcoholDutyReturn"),
         )
@@ -58,7 +58,7 @@
                         legend = LegendViewModel(messages("alcoholType.heading")).asVisuallyHidden(),
                         items  = AlcoholTypeViewModel.checkboxItems(regimes)
                     )
-                    .withHint(Hint(content =  messages("alcoholType.hint")))
+                    .withHint(Hint(content = messages("alcoholType.hint")))
                 )
         }
         @govukButton(

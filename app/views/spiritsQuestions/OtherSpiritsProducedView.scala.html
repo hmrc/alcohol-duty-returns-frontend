@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, SubHeading}
+@import components.{Caption, SubHeading}
 @import config.Constants
 @import forms.spiritsQuestions.OtherSpiritsProducedFormProvider
 @import viewmodels.InputWidth._
@@ -23,9 +23,9 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukCharacterCount: GovukCharacterCount,
+    hmrcCharacterCount: HmrcCharacterCount,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     subHeading: SubHeading
 )
 
@@ -39,12 +39,12 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "other-spirits-produced-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )
 
-        @govukCharacterCount(
+        @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("otherSpiritsProduced"),
                 label = LabelViewModel(messages("otherSpiritsProduced.heading")).asPageHeading()

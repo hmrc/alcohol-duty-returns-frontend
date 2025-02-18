@@ -24,6 +24,12 @@ site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
 site.year = {0,number,####}
 
+#Welsh helpers - in Welsh y and w are also vowels
+
+#Used in dynamic content ranges "between x% and y%". Vowel form used when y's whole number is 1 or 8
+welsh.and.consonant = and
+welsh.and.vowel = and
+
 date.day = Day
 date.month = Month
 date.year = Year
@@ -102,7 +108,7 @@ section.adjustment.spoilt = Adjust for spoilt alcohol
 section.adjustment.drawback = Adjust for duty drawback
 section.adjustment.repackaged-draught-products = Adjust for repackaged draught products
 section.adjustment.checkAnswers = Adjustment from previous return
-section.dutySuspended = Duty suspended finished alcoholic product deliveries
+section.dutySuspended = Report duty suspended alcohol deliveries
 section.checkAndSubmit = Send return
 
 viewPastReturns.heading = Your returns
@@ -123,7 +129,7 @@ viewPastReturns.noReturns = No outstanding returns
 
 viewReturn.heading = {0} Alcohol Duty Return
 viewReturn.title = {0} Alcohol Duty Return
-viewReturn.chargeReference = Reference: {0}
+viewReturn.chargeReference = Your reference number for this return is {0}
 viewReturn.submittedAt = Submitted on {0} at {1}
 viewReturn.alcoholDuty.caption = Alcohol declared
 viewReturn.alcoholDuty.total.legend = Total declared duty value
@@ -271,28 +277,28 @@ alcoholType.p1 = Select the types of alcoholic product you need to declare in th
 alcoholType.p2 = Types you do not select will have nil values in your return.
 alcoholType.hint = Select all that apply
 
-return.journey.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
+return.journey.error.lessThanExpected = Litres of pure alcohol in the {0} must be the same or less than the total litres of {1}
 
 return.journey.error.allRequired = Select the type of {0}
 return.journey.error.noValue.taxType = Select the type of {0}
 
 return.journey.error.noValue.totalLitres = Enter the total litres of {0}
-return.journey.error.invalid.totalLitres = Litres of {0} must be a number
-return.journey.error.maximumValue.totalLitres = Litres of {0} must be less than 1 billion
-return.journey.error.minimumValue.totalLitres = Litres of {0} must be more than 0.00
-return.journey.error.tooManyDecimalPlaces.totalLitres = Litres of {0} must be a number to 2 decimal places
+return.journey.error.invalid.totalLitres = Total litres of {0} must be a number
+return.journey.error.maximumValue.totalLitres = Total litres of {0} must be less than 1 billion
+return.journey.error.minimumValue.totalLitres = Total litres of {0} must be more than 0.00
+return.journey.error.tooManyDecimalPlaces.totalLitres = Total litres of {0} must be a number to 2 decimal places
 
-return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in {0}
-return.journey.error.invalid.pureAlcohol = Litres of pure alcohol must be a number
-return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol must be less than 1 billion
-return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol must be more than 0.0000
-return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol must be a number to 4 decimal places
+return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in the {0}
+return.journey.error.invalid.pureAlcohol = Litres of pure alcohol in the {0} must be a number
+return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol in the {0} must be less than 1 billion
+return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol in the {0} must be more than 0.0000
+return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol in the {0} must be a number to 4 decimal places
 
-return.journey.error.noValue.dutyRate = Enter your Small Producer Relief duty rate
-return.journey.error.invalid.dutyRate = Your Small Producer Relief duty rate must be a number
-return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate must be less than £1 billion
-return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate must be £0.00 or more
-return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate must be to 2 decimal places
+return.journey.error.noValue.dutyRate = Enter your Small Producer Relief duty rate for the {0}
+return.journey.error.invalid.dutyRate = Your Small Producer Relief duty rate for the {0} must be a number
+return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate for the {0} must be less than £1 billion
+return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate for the {0} must be £0.00 or more
+return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate for the {0} must be to 2 decimal places
 
 return.journey.abv.interval.label.Beer = beer
 return.journey.abv.interval.label.Cider = cider
@@ -302,21 +308,21 @@ return.journey.abv.interval.label.Spirits = spirits
 return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
 
 return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV (tax type code {2})
-return.journey.abv.single.interval = {0} between {1}% and {2}% ABV (tax type code {3})
-return.journey.abv.multi.interval = {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV (tax type code {6})
+return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV (tax type code {4})
+return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV (tax type code {8})
 
 return.journey.abv.recap.interval.exceeding.max.Core = Non-draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% and {2}% ABV ({3})
-return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
 return.journey.abv.recap.interval.exceeding.max.DraughtRelief = Draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV ({3})
-return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6})
+return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
 return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = Non-draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV ({3} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% {2} {3}% ABV ({4} SPR)
+return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
 return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV ({3} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% and {2}% ABV and {3} between {4}% and {5}% ABV ({6} SPR)
+return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% {2} {3}% ABV ({4} SPR)
+return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
 
 return.journey.totalLitres = Total litres of {0}
 return.journey.totalLitres.hint = In litres, up to 2 decimal places
@@ -498,13 +504,13 @@ declareDutySuspendedDeliveriesQuestion.p1 = You need to tell us if you delivered
 dutySuspendedDeliveriesGuidance.title = Calculate the volume of duty suspended finished alcoholic products
 dutySuspendedDeliveriesGuidance.heading = Calculate the volume of duty suspended finished alcoholic products
 dutySuspendedDeliveriesGuidance.p1 = For each type of alcohol you produce you need to tell us the volume of finished alcoholic products and the volume of pure alcohol in those finished alcoholic products.
-dutySuspendedDeliveriesGuidance.p2 = 1. Add together:
-dutySuspendedDeliveriesGuidance.para.list.1 = litres exported outside the UK (for example, ship stores)
-dutySuspendedDeliveriesGuidance.para.list.2 = litres delivered duty suspended to other UK registered premises and excise warehouses
-dutySuspendedDeliveriesGuidance.p3 = 2. Then subtract:
-dutySuspendedDeliveriesGuidance.para.list.3 = litres received under duty suspense from registered premises, excise warehouses and importation
-dutySuspendedDeliveriesGuidance.p4 = Use the same method to calculate the litres of pure alcohol in your duty suspended finished alcoholic products.
-dutySuspendedDeliveriesGuidance.p5 = Your answers will not change your duty calculation.
+dutySuspendedDeliveriesGuidance.item1.addTogether = Add together:
+dutySuspendedDeliveriesGuidance.item1.sublist.1 = litres exported outside the UK (for example, ship stores)
+dutySuspendedDeliveriesGuidance.item1.sublist.2 = litres delivered duty suspended to other UK registered premises and excise warehouses
+dutySuspendedDeliveriesGuidance.item2.thenSubtract = Then subtract:
+dutySuspendedDeliveriesGuidance.item2.sublist.1 = litres received under duty suspense from registered premises, excise warehouses and importation
+dutySuspendedDeliveriesGuidance.p2 = Use the same method to calculate the litres of pure alcohol in your duty suspended finished alcoholic products.
+dutySuspendedDeliveriesGuidance.p3 = Your answers will not change your duty calculation.
 
 dutySuspendedBeer.title = Tell us about your duty suspended beer
 dutySuspendedBeer.heading = Tell us about your duty suspended beer
@@ -748,7 +754,7 @@ spoiltVolumeWithDuty.error.invalid.pureAlcoholVolume = Litres of pure alcohol mu
 spoiltVolumeWithDuty.error.invalid.duty = The amount of duty paid must be a number
 spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Litres of spoilt {0} must be less than 1 billion
 spoiltVolumeWithDuty.error.maximumValue.pureAlcoholVolume = Litres of pure alcohol must be less than 1 billion
-spoiltVolumeWithDuty.error.maximumValue.duty = The amount of duty paid must be less than £1 trillion
+spoiltVolumeWithDuty.error.maximumValue.duty = The amount of duty paid must be less than £100 billion
 spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Litres of spoilt {0} must be more than 0.00
 spoiltVolumeWithDuty.error.minimumValue.pureAlcoholVolume = Litres of pure alcohol must be more than 0.0000
 spoiltVolumeWithDuty.error.minimumValue.duty = The amount of duty paid must be more than £0.00

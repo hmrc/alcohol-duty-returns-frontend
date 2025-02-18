@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 @import models.adjustment.AdjustmentType
 
 @this(
@@ -23,7 +23,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading
+    caption: Caption
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -37,7 +37,7 @@
 
         }
 
-        @sectionHeading(
+        @caption(
             id = "adjustment-type-section",
             text = messages("section.adjustment"),
         )

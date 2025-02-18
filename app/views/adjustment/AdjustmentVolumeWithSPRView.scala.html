@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{Caption, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
 @import models.adjustment.AdjustmentType
 @import viewmodels.InputWidth._
@@ -25,7 +25,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     paragraph: Paragraph,
     subHeading: SubHeading,
@@ -42,7 +42,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "how-much-do-you-need-to-adjust-section",
             text = messages(s"section.adjustment.$adjustmentType"),
         )

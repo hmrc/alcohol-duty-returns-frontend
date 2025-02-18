@@ -86,7 +86,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           val application = applicationBuilder()
             .overrides(
               bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-              bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService)
+              bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
+              bind[Clock].toInstance(clock)
             )
             .build()
 
@@ -112,7 +113,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           val application = applicationBuilder()
             .overrides(
               bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-              bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService)
+              bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
+              bind[Clock].toInstance(clock)
             )
             .build()
 
@@ -136,11 +138,12 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           Left(mockUpstreamErrorResponse)
         )
 
-        val application = applicationBuilder()
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+      val application = applicationBuilder()
+        .overrides(
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[Clock].toInstance(clock)
+        )
+        .build()
 
         running(application) {
           val request = FakeRequest(
@@ -165,12 +168,13 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         }
       }
 
-      "must redirect to the journey recovery controller if a bad period key is supplied" in new SetUp {
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+    "must redirect to the journey recovery controller if a bad period key is supplied" in new SetUp {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[Clock].toInstance(clock)
+        )
+        .build()
 
         running(application) {
           val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(badPeriodKey).url)
@@ -189,11 +193,12 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           Left(mockUpstreamErrorResponse)
         )
 
-        val application = applicationBuilder()
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+      val application = applicationBuilder()
+        .overrides(
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[Clock].toInstance(clock)
+        )
+        .build()
 
         running(application) {
           val request = FakeRequest(
@@ -215,11 +220,12 @@ class BeforeStartReturnControllerSpec extends SpecBase {
           Left(mockUpstreamErrorResponse)
         )
 
-        val application = applicationBuilder()
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+      val application = applicationBuilder()
+        .overrides(
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[Clock].toInstance(clock)
+        )
+        .build()
 
         running(application) {
           val request = FakeRequest(
@@ -244,7 +250,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
+            bind[Clock].toInstance(clock)
           )
           .build()
 
@@ -268,7 +275,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
+            bind[Clock].toInstance(clock)
           )
           .build()
 
@@ -292,7 +300,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
         val application = applicationBuilder()
           .overrides(
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper)
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
+            bind[Clock].toInstance(clock)
           )
           .build()
 

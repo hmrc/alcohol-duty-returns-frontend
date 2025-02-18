@@ -16,17 +16,18 @@
 
 package viewmodels.checkAnswers.adjustment
 
-import config.Constants.Css
-import config.Constants.rowsPerPage
+import config.Constants.{Css, rowsPerPage}
 import models.UserAnswers
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import pages.adjustment.AdjustmentEntryListPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
+import viewmodels._
 import viewmodels.declareDuty.RateBandHelper.rateBandRecap
-import viewmodels.{Money, TableRowActionViewModel, TableRowViewModel, TableTotalViewModel, TableViewModel}
+import viewmodels.govuk.summarylist._
 
 object AdjustmentListSummaryHelper {
 
@@ -120,17 +121,10 @@ object AdjustmentListSummaryHelper {
       )
     }
 
-  private def adjustmentsTotal(total: BigDecimal)(implicit
-    messages: Messages
-  ): TableTotalViewModel =
-    TableTotalViewModel(
-      HeadCell(
-        content = Text(messages("adjustmentList.total")),
-        classes = Css.threeQuartersCssClass
-      ),
-      HeadCell(
-        content = Text(Money.format(total)),
-        classes = s"${Css.oneQuarterCssClass} ${Css.textAlignRightCssClass}"
+  private def adjustmentsTotal(total: BigDecimal)(implicit messages: Messages): SummaryList =
+    SummaryListViewModel(
+      rows = Seq(
+        TotalsSummaryList.row(messages("adjustmentList.total"), Money.format(total))
       )
     )
 

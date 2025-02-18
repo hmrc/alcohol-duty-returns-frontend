@@ -43,7 +43,6 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     val dutyDue           = BigDecimal(34.2)
     val rate              = BigDecimal(9.27)
     val pureAlcoholVolume = BigDecimal(3.69)
-    val taxCode           = "311"
     val volume            = BigDecimal(10)
     val repackagedRate    = BigDecimal(10)
     val repackagedDuty    = BigDecimal(33.2)

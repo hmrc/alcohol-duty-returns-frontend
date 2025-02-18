@@ -29,7 +29,7 @@ class VolumesFormatter(
   minimumValueKey: String,
   maximumValueKey: String,
   lessOrEqualKey: String,
-  args: Seq[String]
+  regimeName: String
 ) extends Formatter[VolumesByTaxType]
     with Formatters {
 
@@ -44,7 +44,7 @@ class VolumesFormatter(
     totalLitresField,
     maximumValue = Constants.volumeMaximumValue,
     minimumValue = Constants.volumeMinimumValue,
-    args = args
+    args = Seq(regimeName)
   )
 
   private val pureAlcoholBigDecimalFormatter = new BigDecimalFieldFormatter(
@@ -58,13 +58,16 @@ class VolumesFormatter(
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
     exactDecimalPlacesRequired = true,
-    args = args
+    args = Seq(regimeName)
   )
 
-  private def requiredFieldFormError(key: String, field: String): FormError =
-    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", args)
+  private def requiredFieldFormError(key: String, field: String, rateBandRecap: String): FormError =
+    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", Seq(rateBandRecap, regimeName))
 
-  private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
+  private def formatVolume(
+    key: String,
+    data: Map[String, String]
+  ): Either[Seq[FormError], VolumesByTaxType] = {
     val taxType     = taxTypeFormatter.bind(s"$key.$taxTypeField", data)
     val totalLitres = volumeFormatter.bind(s"$key.$totalLitresField", data)
     val pureAlcohol = pureAlcoholBigDecimalFormatter.bind(s"$key.$pureAlcoholField", data)
@@ -81,14 +84,18 @@ class VolumesFormatter(
     }
   }
 
-  private def checkValues(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] =
+  private def checkValues(
+    key: String,
+    data: Map[String, String],
+    rateBandRecap: String
+  ): Either[Seq[FormError], VolumesByTaxType] =
     formatVolume(key, data).fold(
       errors => Left(errors),
       volumesByTaxType =>
         if (volumesByTaxType.totalLitres < volumesByTaxType.pureAlcohol) {
           Left(
             Seq(
-              FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, args)
+              FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, Seq(rateBandRecap, regimeName))
             )
           )
         } else {
@@ -97,16 +104,17 @@ class VolumesFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumesByTaxType] = {
-    val taxTypeResult     = validateField(taxTypeField, key, data, taxTypeFormatter)
-    val totalLitresResult = validateField(totalLitresField, key, data, volumeFormatter)
-    val pureAlcoholResult = validateField(pureAlcoholField, key, data, pureAlcoholBigDecimalFormatter)
+    val rateBandRecap     = data.getOrElse(s"$key.$rateBandRecapField", regimeName)
+    val taxTypeResult     = validateField(taxTypeField, key, data, taxTypeFormatter, rateBandRecap)
+    val totalLitresResult = validateField(totalLitresField, key, data, volumeFormatter, rateBandRecap)
+    val pureAlcoholResult = validateField(pureAlcoholField, key, data, pureAlcoholBigDecimalFormatter, rateBandRecap)
 
     val allErrors =
       taxTypeResult.left.toSeq.flatten ++ totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
     } else {
-      checkValues(key, data)
+      checkValues(key, data, rateBandRecap)
     }
   }
 
@@ -114,11 +122,12 @@ class VolumesFormatter(
     field: String,
     key: String,
     data: Map[String, String],
-    formatter: Formatter[T]
+    formatter: Formatter[T],
+    rateBandRecap: String
   ): Either[Seq[FormError], T] =
     data.get(s"$key.$field").filter(_.nonEmpty) match {
       case Some(_) => formatter.bind(s"$key.$field", data)
-      case None    => Left(Seq(requiredFieldFormError(key, field)))
+      case None    => Left(Seq(requiredFieldFormError(key, field, rateBandRecap)))
     }
 
   override def unbind(key: String, value: VolumesByTaxType): Map[String, String] =

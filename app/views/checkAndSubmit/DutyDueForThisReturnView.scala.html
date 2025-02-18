@@ -14,24 +14,21 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList, SubHeading}
+@import components.{Caption, PageHeading, PageHeadingWithMonetaryValue, Paragraph, BulletList, SubHeading}
 @import config.Constants.Css
 @import viewmodels.checkAnswers.checkAndSubmit.DutyDueForThisReturnViewModel
-@import viewmodels.Money
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
+        caption: Caption,
         pageHeading: PageHeading,
         pageHeadingWithMonetaryValue: PageHeadingWithMonetaryValue,
         paragraph: Paragraph,
         subHeading: SubHeading,
         bulletList: BulletList,
-        govukTable: GovukTable,
-        tableRowActionList: components.TableRowActionList,
-        tableRowAction: components.TableRowAction
+        govukSummaryList : GovukSummaryList
 )
 
 @(dutyDueViewModel: DutyDueForThisReturnViewModel)(implicit request: Request[_], messages: Messages)
@@ -54,7 +51,7 @@
 
 @layout(pageTitle = titleNoForm(titleMessage)) {
   @formHelper(action = controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit(), Symbol("autoComplete") -> "off") {
-      @sectionHeading(
+      @caption(
       id = "dutyDueForThisReturn-section",
       text = messages("section.checkAndSubmit"),
     )
@@ -91,47 +88,12 @@
 
     @paragraph(messages("dutyDueForThisReturn.p2"))
 
-    @govukTable(Table(
-      caption = Some(messages("dutyDueForThisReturn.h3")),
-      captionClasses = Css.tableCaptionMCssClass,
-      head = Some(dutyDueViewModel.dutiesBreakdownTable.head),
-      rows = dutyDueViewModel.dutiesBreakdownTable.rows.map(row => {
-        val actions = TableRow(
-            classes = s"${Css.summaryListActionsCssClass} ${Css.textAlignRightCssClass}",
-            content = HtmlContent(tableRowActionList(
-              id = "productList",
-                actions = row.actions.map(action => tableRowAction(
-                  id = "",
-                  text = action.label,
-                  href = action.href,
-                  visuallyHiddenContent = action.visuallyHiddenText,
-              )))))
-            row.cells :+ actions
-          }
-          ))
-    )
+    @subHeading(messages("dutyDueForThisReturn.h3"), classes = Css.headingMCssClass)
+    @govukSummaryList(dutyDueViewModel.dutiesBreakdownSummaryList)
 
     @subHeading(messages("dutyDueForThisReturn.youveAlsoAnswered"), classes = Css.headingMCssClass)
     @paragraph(messages("dutyDueForThisReturn.youveAlsoAnswered.p"))
-
-    @govukTable(Table(
-      caption = None,
-      head = Some(dutyDueViewModel.dutiesBreakdownTable.head),
-      rows = dutyDueViewModel.youveAlsoDeclaredTable.rows.map(row => {
-        val actions = TableRow(
-            classes = s"${Css.summaryListActionsCssClass} ${Css.textAlignRightCssClass}",
-            content = HtmlContent(tableRowActionList(
-              id = "declarationList",
-                actions = row.actions.map(action => tableRowAction(
-                  id = "",
-                  text = action.label,
-                  href = action.href,
-                  visuallyHiddenContent = action.visuallyHiddenText,
-              )))))
-        row.cells :+ actions
-      }
-      ))
-    )
+    @govukSummaryList(dutyDueViewModel.youveAlsoDeclaredSummaryList)
 
     @subHeading(messages("dutyDueForThisReturn.h4"), classes = Css.headingMCssClass)
     @paragraph(messages("dutyDueForThisReturn.p3"))

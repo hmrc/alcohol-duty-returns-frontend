@@ -72,6 +72,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       "no hint must be displayed" in {
         result.taskList.items.head.hint.map(_.content) mustBe None
       }
+
+      "the idPrefix must be set" in {
+        result.taskList.idPrefix mustBe "returns"
+      }
     }
 
     "when the user answers no to the DeclareAlcoholDuty question" - {
@@ -111,6 +115,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
       "no hint must be displayed" in {
         result.taskList.items.head.hint.map(_.content) mustBe None
+      }
+
+      "the idPrefix must be set" in {
+        result.taskList.idPrefix mustBe "returns"
       }
     }
 
@@ -153,6 +161,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "returns"
         }
       }
 
@@ -219,6 +231,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "returns"
+        }
       }
 
       "and has selected a single regime to declare duty on but not started its task" - {
@@ -283,6 +299,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
             "no hint must be displayed" in {
               result.taskList.items.head.hint.map(_.content) mustBe None
+            }
+
+            "the idPrefix must be set" in {
+              result.taskList.idPrefix mustBe "returns"
             }
           }
         }
@@ -354,6 +374,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
             "no hint must be displayed" in {
               result.taskList.items.head.hint.map(_.content) mustBe None
+            }
+
+            "the idPrefix must be set" in {
+              result.taskList.idPrefix mustBe "returns"
             }
           }
         }
@@ -449,6 +473,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
             "no hint must be displayed" in {
               result.taskList.items.head.hint.map(_.content) mustBe None
+            }
+
+            "the idPrefix must be set" in {
+              result.taskList.idPrefix mustBe "returns"
             }
           }
         }
@@ -568,6 +596,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "returns"
         }
       }
 
@@ -707,6 +739,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "returns"
         }
       }
     }
@@ -848,6 +884,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
+        }
       }
 
       "and are in the process of declaring a first adjustment" - {
@@ -911,6 +951,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
         }
       }
 
@@ -979,6 +1023,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
+        }
       }
 
       "and have declared an adjustment, but have not answered that there are no more to declared" - {
@@ -1041,6 +1089,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
         }
       }
 
@@ -1130,6 +1182,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
+        }
       }
 
       "and have declared an adjustment are have no more to declare, and need to add an over-declaration reason" - {
@@ -1217,6 +1273,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
         }
       }
 
@@ -1327,6 +1387,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
         }
       }
 
@@ -1441,6 +1505,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
+        }
       }
 
       "and have declared an adjustment are have no more to declare, and need to add both an under and over-declaration reason, but just the over-declaration reason is added" - {
@@ -1553,6 +1621,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
         }
       }
 
@@ -1711,6 +1783,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
+        }
       }
 
       "and have declared an adjustment are have no more to declare, and have added a required over-declaration reason" - {
@@ -1801,6 +1877,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
         }
       }
 
@@ -1918,6 +1998,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "adjustment"
+        }
       }
     }
   }
@@ -1996,6 +2080,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
       "no hint must be displayed" in {
         result.taskList.items.head.hint.map(_.content) mustBe None
+      }
+
+      "the idPrefix must be set" in {
+        result.taskList.idPrefix mustBe "dutySuspended"
       }
     }
 
@@ -2108,6 +2196,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "dutySuspended"
+        }
       }
 
       "and has started the declaration task but not answered for all the regimes" - {
@@ -2189,6 +2281,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "dutySuspended"
         }
       }
 
@@ -2276,6 +2372,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         "no hint must be displayed" in {
           result.taskList.items.head.hint.map(_.content) mustBe None
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "dutySuspended"
+        }
       }
     }
   }
@@ -2316,6 +2416,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.hint.map(_.content) mustBe Some(
           Text(messages("taskList.section.spirits.hint"))
         )
+      }
+
+      "the idPrefix must be set" in {
+        result.taskList.idPrefix mustBe "spirits"
       }
     }
 
@@ -2358,6 +2462,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
         result.taskList.items.head.hint.map(_.content) mustBe Some(
           Text(messages("taskList.section.spirits.hint"))
         )
+      }
+
+      "the idPrefix must be set" in {
+        result.taskList.idPrefix mustBe "spirits"
       }
     }
 
@@ -2411,6 +2519,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             Text(messages("taskList.section.spirits.hint"))
           )
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "spirits"
+        }
       }
 
       Seq(
@@ -2455,6 +2567,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             result.taskList.items.head.hint.map(_.content) mustBe Some(
               Text(messages("taskList.section.spirits.hint"))
             )
+          }
+
+          "the idPrefix must be set" in {
+            result.taskList.idPrefix mustBe "spirits"
           }
         }
 
@@ -2524,6 +2640,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             Text(messages("taskList.section.spirits.hint"))
           )
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "spirits"
+        }
       }
 
       "and has completed the declaration task but didn't need to declare other spirits" - {
@@ -2589,6 +2709,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           result.taskList.items.head.hint.map(_.content) mustBe Some(
             Text(messages("taskList.section.spirits.hint"))
           )
+        }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "spirits"
         }
       }
 
@@ -2656,6 +2780,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             Text(messages("taskList.section.spirits.hint"))
           )
         }
+
+        "the idPrefix must be set" in {
+          result.taskList.idPrefix mustBe "spirits"
+        }
       }
     }
   }
@@ -2695,6 +2823,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
           Text(messages("taskList.section.checkAndSubmit.hint"))
         )
       }
+
+      "the idPrefix must be set" in {
+        result.taskList.idPrefix mustBe "checkAndSubmit"
+      }
     }
 
     "and the other sections are complete, it should return the task" - {
@@ -2730,6 +2862,10 @@ class ReturnTaskListCreatorSpec extends SpecBase {
 
       "no hint must be displayed" in {
         result.taskList.items.head.hint.map(_.content) mustBe None
+      }
+
+      "the idPrefix must be set" in {
+        result.taskList.idPrefix mustBe "checkAndSubmit"
       }
     }
   }

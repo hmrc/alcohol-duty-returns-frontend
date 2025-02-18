@@ -1,5 +1,5 @@
-@*
- * Copyright 2023 HM Revenue & Customs
+/*
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,15 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.Constants.Css
+package utils
 
-@this()
+object WelshHelper {
 
-@(id: String, text: String)(implicit request: Request[_], messages: Messages)
+  private val numberBeginsWithVowel: Set[BigInt] = Set(BigInt(1), BigInt(8))
 
-<h2 id = @id class="@Css.captionXLCssClass @Css.hmrcCaptionXLCssClass @Css.marginTop0CssClass">
-  <span class="@Css.visuallyHiddenCssClass">@messages("section.visuallyHidden")</span>
-  @text
-</h2>
+  private def beginsWithConsonant(decimal: BigDecimal): Boolean =
+    !numberBeginsWithVowel(decimal.toBigInt)
+
+  def chooseAnd(decimal: BigDecimal): String =
+    if (beginsWithConsonant(decimal)) {
+      "welsh.and.consonant"
+    } else {
+      "welsh.and.vowel"
+    }
+}

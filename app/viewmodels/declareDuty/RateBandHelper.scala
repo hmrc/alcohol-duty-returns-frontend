@@ -18,6 +18,7 @@ package viewmodels.declareDuty
 
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
+import utils.WelshHelper
 
 object RateBandHelper {
 
@@ -59,6 +60,7 @@ object RateBandHelper {
           "return.journey.abv.single.interval",
           messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
           interval.minABV.value,
+          messages(WelshHelper.chooseAnd(interval.maxABV.value)),
           interval.maxABV.value,
           taxType
         ).capitalize
@@ -71,9 +73,11 @@ object RateBandHelper {
       "return.journey.abv.multi.interval",
       messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
       abvRange1.minABV.value,
+      messages(WelshHelper.chooseAnd(abvRange1.maxABV.value)),
       abvRange1.maxABV.value,
       messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
       abvRange2.minABV.value,
+      messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
       abvRange2.maxABV.value,
       taxType
     ).capitalize
@@ -114,6 +118,7 @@ object RateBandHelper {
           s"return.journey.abv.recap.single.interval.$rateType",
           messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
           interval.minABV.value,
+          messages(WelshHelper.chooseAnd(interval.maxABV.value)),
           interval.maxABV.value,
           taxType
         ).capitalize
@@ -126,9 +131,11 @@ object RateBandHelper {
       s"return.journey.abv.recap.multi.interval.$rateType",
       messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
       abvRange1.minABV.value,
+      messages(WelshHelper.chooseAnd(abvRange1.maxABV.value)),
       abvRange1.maxABV.value,
       messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
       abvRange2.minABV.value,
+      messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
       abvRange2.maxABV.value,
       taxType
     ).capitalize

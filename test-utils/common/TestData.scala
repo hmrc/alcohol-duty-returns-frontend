@@ -77,22 +77,22 @@ trait TestData extends ModelGenerators {
   }
 
   val quarterReturnPeriods = Set(
-    ReturnPeriod(YearMonth.of(2024, Month.JANUARY)),
-    ReturnPeriod(YearMonth.of(2024, Month.APRIL)),
-    ReturnPeriod(YearMonth.of(2024, Month.JULY)),
-    ReturnPeriod(YearMonth.of(2024, Month.OCTOBER))
+    ReturnPeriod(YearMonth.of(2024, Month.MARCH)),
+    ReturnPeriod(YearMonth.of(2024, Month.JUNE)),
+    ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
+    ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))
   )
 
   val nonQuarterReturnPeriods =
     Set(
+      ReturnPeriod(YearMonth.of(2024, Month.JANUARY)),
       ReturnPeriod(YearMonth.of(2024, Month.FEBRUARY)),
-      ReturnPeriod(YearMonth.of(2024, Month.MARCH)),
+      ReturnPeriod(YearMonth.of(2024, Month.APRIL)),
       ReturnPeriod(YearMonth.of(2024, Month.MAY)),
-      ReturnPeriod(YearMonth.of(2024, Month.JUNE)),
+      ReturnPeriod(YearMonth.of(2024, Month.JULY)),
       ReturnPeriod(YearMonth.of(2024, Month.AUGUST)),
-      ReturnPeriod(YearMonth.of(2024, Month.SEPTEMBER)),
-      ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER)),
-      ReturnPeriod(YearMonth.of(2024, Month.DECEMBER))
+      ReturnPeriod(YearMonth.of(2024, Month.OCTOBER)),
+      ReturnPeriod(YearMonth.of(2024, Month.NOVEMBER))
     )
 
   val nonQuarterReturnPeriodGen = Gen.oneOf(nonQuarterReturnPeriods.toSeq)
@@ -1123,6 +1123,8 @@ trait TestData extends ModelGenerators {
     Set(smallProducerReliefRateBand, draughtAndSmallProducerReliefRateBand)
 
   val allRateBands: Set[RateBand] = allNonSmallProducerReliefRateBands ++ allSmallProducerReliefRateBands
+
+  val rateBandRecap = "recap"
 
   val volumeAndRateByTaxType1 = VolumeAndRateByTaxType(
     taxType = "124",

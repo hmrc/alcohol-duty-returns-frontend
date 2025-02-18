@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading, FormGroupWithError}
+@import components.{Caption, PageHeading, Paragraph, SubHeading, FormGroupWithError}
 @import config.Constants.Css
 @import viewmodels.declareDuty.TaxBandsViewModel
 
@@ -26,7 +26,7 @@
     govukButton: GovukButton,
     pageHeading: PageHeading,
     paragraph: Paragraph,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     subHeading: SubHeading,
     formGroupWithError: FormGroupWithError
 )
@@ -41,7 +41,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @sectionHeading(
+        @caption(
             id = "whatDoYouNeedToDeclare-section",
             text = messages(s"section.return.$regime")
         )
