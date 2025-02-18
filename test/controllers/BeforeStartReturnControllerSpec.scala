@@ -71,7 +71,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
       val application = applicationBuilder()
         .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[Clock].toInstance(clock)
         )
         .build()
 
@@ -101,7 +102,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
     "must redirect to the journey recovery controller if a bad period key is supplied" in new SetUp {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[Clock].toInstance(clock)
         )
         .build()
 
@@ -124,7 +126,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
       val application = applicationBuilder()
         .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[Clock].toInstance(clock)
         )
         .build()
 
@@ -150,7 +153,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
       val application = applicationBuilder()
         .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+          bind[Clock].toInstance(clock)
         )
         .build()
 
@@ -174,7 +178,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       val application = applicationBuilder()
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService)
+          bind[AuditService].toInstance(mockAuditService),
+          bind[Clock].toInstance(clock)
         )
         .build()
 
@@ -196,7 +201,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       val application = applicationBuilder()
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService)
+          bind[AuditService].toInstance(mockAuditService),
+          bind[Clock].toInstance(clock)
         )
         .build()
 
@@ -221,7 +227,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       val application = applicationBuilder()
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService)
+          bind[AuditService].toInstance(mockAuditService),
+          bind[Clock].toInstance(clock)
         )
         .build()
 
@@ -245,7 +252,8 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       val application = applicationBuilder()
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService)
+          bind[AuditService].toInstance(mockAuditService),
+          bind[Clock].toInstance(clock)
         )
         .build()
 
