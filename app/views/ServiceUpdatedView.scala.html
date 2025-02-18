@@ -14,16 +14,14 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{PageHeading, Paragraph}
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
-        sectionHeading: SectionHeading,
         pageHeading: PageHeading,
-        paragraph: components.Paragraph,
-        govukWarningText: GovukWarningText
+        paragraph: Paragraph
 )
 
 @()(implicit request: Request[_], messages: Messages)
