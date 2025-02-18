@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 @import config.Constants
 @import forms.adjustment.UnderDeclarationReasonFormProvider
 @import viewmodels.InputWidth._
@@ -25,7 +25,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     hmrcCharacterCount: HmrcCharacterCount
 )
 
@@ -39,7 +39,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "under-declaration-reason-section",
             text = messages("section.adjustment.under-declaration"),
         )

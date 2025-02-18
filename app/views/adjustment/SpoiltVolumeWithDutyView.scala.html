@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{Caption, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
 @import viewmodels.InputWidth._
 
@@ -24,7 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     paragraph: Paragraph,
     subHeading: SubHeading,
@@ -41,7 +41,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "spoilt-volume-with-duty-section",
             text = messages("section.adjustment.spoilt"),
         )

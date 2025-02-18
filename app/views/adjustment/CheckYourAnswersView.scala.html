@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, SubHeading}
+@import components.{Caption, PageHeading, SubHeading}
 @import config.Constants.Css
 @import models.adjustment.AdjustmentType
 
@@ -23,7 +23,7 @@
     formHelper: FormWithCSRF,
     govukSummaryList: GovukSummaryList,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     subHeading: SubHeading
 )
@@ -33,7 +33,7 @@
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
      @formHelper(action = controllers.adjustment.routes.CheckYourAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
 
-         @sectionHeading(
+         @caption(
              id = "check-your-answers-section",
              text = messages("section.adjustment.checkAnswers"),
          )

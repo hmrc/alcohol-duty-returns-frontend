@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, SectionHeading, PageHeading, BulletList}
+@import components.{Link, Caption, PageHeading, BulletList}
 @import config.Constants.Css
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 @import viewmodels.InputWidth._
@@ -26,7 +26,7 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     link: Link,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     subheading: components.SubHeading,
     paragraph: components.Paragraph,
@@ -43,7 +43,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "declare-spirits-total-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )

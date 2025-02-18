@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{Caption, PageHeading, Paragraph, SubHeading}
 
 @this(
     layout: templates.Layout,
@@ -23,7 +23,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     paragraph: Paragraph,
     pageHeading: PageHeading,
     subHeading: SubHeading
@@ -39,7 +39,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "duty-suspended-other-fermented-section",
             text = messages("section.dutySuspended"),
         )

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 
 @this(
     layout: templates.Layout,
@@ -22,7 +22,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
 )
 
 @(form: Form[_], regime:AlcoholRegime, index:Int)(implicit request: Request[_], messages: Messages)
@@ -34,7 +34,7 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @sectionHeading(
+        @caption(
             id = "deleteMultipleSPREntry-section",
             text = messages(s"section.return.$regime")
         )

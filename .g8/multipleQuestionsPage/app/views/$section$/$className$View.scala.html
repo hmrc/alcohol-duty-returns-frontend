@@ -1,5 +1,5 @@
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 
 @this(
     layout: templates.Layout,
@@ -7,7 +7,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading
 )
 
@@ -21,7 +21,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "$className;format="decap"$-section",
             text = messages("section.sectionName"),
         )

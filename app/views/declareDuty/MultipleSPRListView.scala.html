@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, SubHeading, PageHeading, TableRowAction, TableRowActionList}
+@import components.{Caption, SubHeading, PageHeading, TableRowAction, TableRowActionList}
 @import viewmodels.TableViewModel
 
 @this(
@@ -26,7 +26,7 @@
     govukTable: GovukTable,
     pageHeading: PageHeading,
     subHeading: SubHeading,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     tableRowActionList: TableRowActionList,
     tableRowAction: TableRowAction
 )
@@ -40,7 +40,7 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @sectionHeading(
+        @caption(
             id = "multipleSPRList-section",
             text = messages(s"section.return.$regime")
         )

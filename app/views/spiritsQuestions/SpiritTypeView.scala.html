@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 
 @this(
     layout: templates.Layout,
@@ -22,7 +22,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukCheckboxes: GovukCheckboxes,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading
+    caption: Caption
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -35,7 +35,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> SpiritType.checkboxItems.headOption.flatMap(_.id).getOrElse(""))))
         }
 
-        @sectionHeading(
+        @caption(
             id = "spiritType-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, Paragraph, SubHeading}
+@import components.{Caption, PageHeading, Paragraph, SubHeading}
 @import config.Constants.Css
 @import viewmodels.declareDuty.CategoriesByRateTypeViewModel
 @import viewmodels.InputWidth._
@@ -25,7 +25,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     subHeading: SubHeading,
     pageHeading: PageHeading,
     paragraph: Paragraph,
@@ -43,7 +43,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "howMuchDoYouNeedToDeclare-section",
             text = messages(s"section.return.$regime")
         )
@@ -102,6 +102,15 @@
                     errorMessageField = form(s"volumes_${index}_taxType"),
                     value = Some(quantityViewModel.id)
                   ).hidden
+                ),
+                govukInput(
+                  InputViewModel(
+                    field = form(s"volumes[$index]"),
+                    key = "rateBandRecap",
+                    label = LabelViewModel(Text("")),
+                    errorMessageField = form(s"volumes_${index}_rateBandRecap"),
+                    value = Some(quantityViewModel.rateBandRecap)
+                  ).hidden
                 )
               ))
            ))
@@ -150,6 +159,15 @@
                     label = LabelViewModel(Text("")),
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_taxType"),
                     value = Some(quantityViewModel.id)
+                  ).hidden
+                ),
+                govukInput(
+                  InputViewModel(
+                    field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
+                    key = "rateBandRecap",
+                    label = LabelViewModel(Text("")),
+                    errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_rateBandRecap"),
+                    value = Some(quantityViewModel.rateBandRecap)
                   ).hidden
                 )
               ))
