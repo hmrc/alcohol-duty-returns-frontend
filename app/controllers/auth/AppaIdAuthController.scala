@@ -17,23 +17,22 @@
 package controllers.auth
 
 import config.FrontendAppConfig
-import controllers.actions.IdentifyWithEnrolmentAction
+import controllers.actions.IdentifyWithoutEnrolmentAction
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
 
-class AppaIdAuthController @Inject()(
+class AppaIdAuthController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifyWithEnrolmentAction,
+  identify: IdentifyWithoutEnrolmentAction,
   appConfig: FrontendAppConfig,
-  val controllerComponents: MessagesControllerComponents,
+  val controllerComponents: MessagesControllerComponents
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify {
-    _ =>
-      Redirect(appConfig.requestAccessUrl)
+  def onPageLoad: Action[AnyContent] = identify { _ =>
+    Redirect(appConfig.requestAccessUrl)
   }
 }
