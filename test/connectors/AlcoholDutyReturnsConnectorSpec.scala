@@ -18,13 +18,14 @@ package connectors
 
 import base.SpecBase
 import config.FrontendAppConfig
+import models.AlcoholRegime.{Beer, Cider}
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
-import play.api.http.Status.{BAD_GATEWAY, CREATED, OK}
+import play.api.http.Status._
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
 import java.time.{Instant, LocalDate}
@@ -112,6 +113,239 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
 
       whenReady(connector.obligationDetails(appaId).failed) { e =>
         e.getMessage mustBe "Unexpected status code: 201"
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+  }
+
+  "getOpenObligation" - {
+    val mockUrl = s"http://alcohol-duty-returns/openObligation/$appaId/$periodKey"
+
+    "successfully retrieve an open obligation" in new SetUp {
+      val jsonResponse = Json.toJson(obligationDataSingleOpen).toString()
+      val httpResponse = HttpResponse(OK, jsonResponse)
+
+      when(mockConfig.adrGetOpenObligationUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getOpenObligation(appaId, periodKey).value) { result =>
+        result mustBe Right(obligationDataSingleOpen)
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when invalid JSON is returned" in new SetUp {
+      val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+
+      when(mockConfig.adrGetOpenObligationUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidJsonResponse)))
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getOpenObligation(appaId, periodKey).value) { result =>
+        result match {
+          case Left(err) => err must include("Invalid JSON format")
+          case Right(_)  => fail("Expected a Left")
+        }
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when no open obligation is found" in new SetUp {
+      val notFoundResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", NOT_FOUND, NOT_FOUND, Map.empty))
+      )
+
+      when(mockConfig.adrGetOpenObligationUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(notFoundResponse)
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getOpenObligation(appaId, periodKey).value) { result =>
+        result mustBe Left("No open obligation found.")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when another unexpected response is returned" in new SetUp {
+      val upstreamErrorResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
+      )
+
+      when(mockConfig.adrGetOpenObligationUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(upstreamErrorResponse)
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getOpenObligation(appaId, periodKey).value) { result =>
+        result mustBe Left("Unexpected response. Status: 502")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when unexpected status code is returned" in new SetUp {
+      val invalidStatusCodeResponse = HttpResponse(CREATED, "")
+
+      when(mockConfig.adrGetOpenObligationUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getOpenObligation(appaId, periodKey).value) { result =>
+        result mustBe Left("Unexpected status code: 201")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+  }
+
+  "getValidSubscriptionRegimes" - {
+    val mockUrl = s"http://alcohol-duty-returns/subscriptionSummary/$appaId"
+
+    "successfully retrieve subscription regimes" in new SetUp {
+      val alcoholRegimes = Set(Beer, Cider)
+      val jsonResponse   = Json.toJson(alcoholRegimes).toString()
+      val httpResponse   = HttpResponse(OK, jsonResponse)
+
+      when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(httpResponse)))
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getValidSubscriptionRegimes(appaId).value) { result =>
+        result mustBe Right(alcoholRegimes)
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when invalid JSON is returned" in new SetUp {
+      val invalidJsonResponse = HttpResponse(OK, """{ "invalid": "json" }""")
+
+      when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidJsonResponse)))
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getValidSubscriptionRegimes(appaId).value) { result =>
+        result match {
+          case Left(err) => err must include("Invalid JSON format")
+          case Right(_)  => fail("Expected a Left")
+        }
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when subscription approval status is invalid" in new SetUp {
+      val forbiddenResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", FORBIDDEN, FORBIDDEN, Map.empty))
+      )
+
+      when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(forbiddenResponse)
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getValidSubscriptionRegimes(appaId).value) { result =>
+        result mustBe Left("Forbidden: Subscription status is not Approved or Insolvent.")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when another unexpected response is returned" in new SetUp {
+      val upstreamErrorResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](UpstreamErrorResponse("", BAD_GATEWAY, BAD_GATEWAY, Map.empty))
+      )
+
+      when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(upstreamErrorResponse)
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getValidSubscriptionRegimes(appaId).value) { result =>
+        result mustBe Left("Unexpected response. Status: 502")
+
+        verify(connector.httpClient, times(1))
+          .get(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "fail when unexpected status code is returned" in new SetUp {
+      val invalidStatusCodeResponse = HttpResponse(CREATED, "")
+
+      when(mockConfig.adrGetValidSubscriptionRegimes(eqTo(appaId))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(Future.successful(Right(invalidStatusCodeResponse)))
+
+      when(connector.httpClient.get(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.getValidSubscriptionRegimes(appaId).value) { result =>
+        result mustBe Left("Unexpected status code: 201")
 
         verify(connector.httpClient, times(1))
           .get(eqTo(url"$mockUrl"))(any())
