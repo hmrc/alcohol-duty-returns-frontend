@@ -24,7 +24,7 @@ import play.api.mvc._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifyWithoutEnrolmentFailAction @Inject()(bodyParsers: PlayBodyParsers)
+class FakeIdentifyWithoutEnrolmentFailAction @Inject() (bodyParsers: PlayBodyParsers)
     extends IdentifyWithoutEnrolmentAction {
 
   override def invokeBlock[A](
