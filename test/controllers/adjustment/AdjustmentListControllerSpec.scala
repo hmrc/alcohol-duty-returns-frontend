@@ -19,18 +19,20 @@ package controllers.adjustment
 import base.SpecBase
 import cats.data.NonEmptySeq
 import config.Constants.rowsPerPage
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import forms.adjustment.AdjustmentListFormProvider
+import models.AlcoholRegime.Beer
+import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
+import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType, UserAnswers}
 import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage}
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.adjustment.{AdjustmentEntryListPage, AdjustmentListPage, AdjustmentTotalPage, CurrentAdjustmentEntryPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
-import models.AlcoholRegime.Beer
-import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
-import models.adjustment.AdjustmentType.Spoilt
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.TableViewModel
 import viewmodels.checkAnswers.adjustment.AdjustmentListSummaryHelper
@@ -43,19 +45,20 @@ class AdjustmentListControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider             = new AdjustmentListFormProvider()
-  val form                     = formProvider()
-  val pageNumber               = 1
-  lazy val adjustmentListRoute = controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
-  val dutyDue                  = BigDecimal(34.2)
-  val rate                     = BigDecimal(9.27)
-  val pureAlcoholVolume        = BigDecimal(3.69)
-  val taxCode                  = "311"
-  val volume                   = BigDecimal(10)
-  val repackagedRate           = BigDecimal(10)
-  val repackagedDuty           = BigDecimal(33.2)
-  val newDuty                  = BigDecimal(1)
-  val rateBand                 = RateBand(
+  val formProvider                              = new AdjustmentListFormProvider()
+  val form: Form[Boolean]                       = formProvider()
+  val pageNumber                                = 1
+  lazy val adjustmentListRoute: String          =
+    controllers.adjustment.routes.AdjustmentListController.onPageLoad(pageNumber).url
+  val dutyDue: BigDecimal                       = BigDecimal(34.2)
+  val rate: BigDecimal                          = BigDecimal(9.27)
+  val pureAlcoholVolume: BigDecimal             = BigDecimal(3.69)
+  val taxCode                                   = "311"
+  val volume: BigDecimal                        = BigDecimal(10)
+  val repackagedRate: BigDecimal                = BigDecimal(10)
+  val repackagedDuty: BigDecimal                = BigDecimal(33.2)
+  val newDuty: BigDecimal                       = BigDecimal(1)
+  val rateBand: RateBand                        = RateBand(
     "310",
     "some band",
     RateType.DraughtRelief,
@@ -73,7 +76,7 @@ class AdjustmentListControllerSpec extends SpecBase {
       )
     )
   )
-  val adjustmentEntry          = AdjustmentEntry(
+  val adjustmentEntry: AdjustmentEntry          = AdjustmentEntry(
     pureAlcoholVolume = Some(pureAlcoholVolume),
     totalLitresVolume = Some(volume),
     rateBand = Some(rateBand),
@@ -82,9 +85,24 @@ class AdjustmentListControllerSpec extends SpecBase {
     adjustmentType = Some(Spoilt),
     period = Some(YearMonth.of(24, 1))
   )
-  val adjustmentEntryList      = List(adjustmentEntry)
-  val userAnswsers             = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
-  val total                    = BigDecimal(0)
+  val adjustmentEntryList: Seq[AdjustmentEntry] = List(adjustmentEntry)
+
+  val userAnswsers: UserAnswers = emptyUserAnswers
+    .set(AdjustmentEntryListPage, adjustmentEntryList)
+    .success
+    .value
+
+  val userAnswersWithCurrent: UserAnswers = userAnswsers
+    .set(CurrentAdjustmentEntryPage, adjustmentEntry)
+    .success
+    .value
+
+  val cleanedUserAnswers: UserAnswers = userAnswsers
+    .set(AdjustmentListPage, true)
+    .success
+    .value
+
+  val total: BigDecimal = BigDecimal(0)
 
   "AdjustmentList Controller" - {
 
@@ -181,6 +199,34 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must clear current adjustment entry when valid data is submitted" in {
+
+      val mockUserAnswersConnector = mock[UserAnswersConnector]
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersWithCurrent))
+          .overrides(
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, adjustmentListRoute)
+            .withFormUrlEncodedBody(("adjustment-list-yes-no-value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(cleanedUserAnswers))(any())
       }
     }
 

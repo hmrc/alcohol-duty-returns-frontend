@@ -225,6 +225,42 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
     }
 
+    "must clear down radio for AdjustmentListPage when valid data is submitted and an index" in new SetUp {
+      val updatedAnswers: UserAnswers = emptyUserAnswers
+        .set(CurrentAdjustmentEntryPage, completedAdjustmentEntryWithIndex)
+        .success
+        .value
+        .set(AdjustmentListPage, true)
+        .success
+        .value
+
+      val cleanedAnswers: UserAnswers = emptyUserAnswers
+        .set(AdjustmentEntryListPage, Seq(completedAdjustmentEntry))
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(updatedAnswers))
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          )
+          .build()
+
+      when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future.successful(mock[HttpResponse]))
+
+      running(application) {
+        val request =
+          FakeRequest(POST, controllers.adjustment.routes.CheckYourAnswersController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        verify(mockUserAnswersConnector, times(1))
+          .set(eqTo(cleanedAnswers))(any())
+      }
+    }
+
     "must redirect to journey recovery no CurrentAdjustmentEntry page found" in new SetUp {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
