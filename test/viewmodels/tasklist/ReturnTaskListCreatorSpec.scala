@@ -2789,7 +2789,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
   }
 
   "on calling checkAndSubmitSection" - {
-    "and the other sections are incomplete, it should return the cannot start section" - {
+    "and the other sections are incomplete, it must return the cannot start section" - {
       val result = returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
 
       "the task's title must be correct" in {
@@ -2829,7 +2829,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       }
     }
 
-    "and the other sections are complete, it should return the task" - {
+    "and the other sections are complete, it must return the task" - {
       val result = returnTaskListCreator.returnCheckAndSubmitSection(4, 4)
 
       "the task's title must be correct" in {

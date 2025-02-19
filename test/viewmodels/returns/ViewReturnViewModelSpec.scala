@@ -30,7 +30,7 @@ class ViewReturnViewModelSpec extends SpecBase {
 
   "ViewReturnViewModelSpec" - {
     "createAlcoholDeclaredViewModel" - {
-      "should return a model with data when alcohol declared" in new SetUp {
+      "must return a model with data when alcohol declared" in new SetUp {
         val alcoholDeclaredViewModel =
           viewModel.createAlcoholDeclaredViewModel(returnDetails, exampleRateBands(periodKey))
 
@@ -47,14 +47,14 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
       }
 
-      "should return a model with no entries when a nil return" in new SetUp {
+      "must return a model with no entries when a nil return" in new SetUp {
         val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(nilReturn, emptyRateBands)
 
         alcoholDeclaredViewModel.rows.size mustBe 1
         alcoholDeclaredViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
       }
 
-      "should return a model with no entries when a nil return with empty sections" in new SetUp {
+      "must return a model with no entries when a nil return with empty sections" in new SetUp {
         val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(emptyReturnDetails, emptyRateBands)
 
         alcoholDeclaredViewModel.rows.size mustBe 1
@@ -63,7 +63,7 @@ class ViewReturnViewModelSpec extends SpecBase {
     }
 
     "createAdjustmentsViewModel" - {
-      "should return a model with data when adjustments declared" in new SetUp {
+      "must return a model with data when adjustments declared" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey3))
 
         adjustmentsViewModel.rows.size mustBe 5
@@ -76,7 +76,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         adjustmentsViewModel.rows(4).cells(3).content mustBe Text("£21.01")
       }
 
-      "should return a model with data when a spoilt adjustment declared where Description is the regime name and duty rate is NA" in new SetUp {
+      "must return a model with data when a spoilt adjustment declared where Description is the regime name and duty rate is NA" in new SetUp {
         when(appConfig.getRegimeNameByTaxTypeCode("333")).thenReturn(Some("Wine"))
         val returnDetailWithSpoilt = returnWithSpoiltAdjustment(periodKey, Instant.now(clock))
         val adjustmentsViewModel   = viewModel.createAdjustmentsViewModel(
@@ -94,14 +94,14 @@ class ViewReturnViewModelSpec extends SpecBase {
         adjustmentsViewModel.rows(1).cells(3).content mustBe Text("not applicable")
       }
 
-      "should return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {
+      "must return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, emptyRateBands)
 
         adjustmentsViewModel.rows.size mustBe 1
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
       }
 
-      "should return a model with no entries when a nil return with empty sections (nothing declared, no total)" in new SetUp {
+      "must return a model with no entries when a nil return with empty sections (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails, emptyRateBands)
 
         adjustmentsViewModel.rows.size mustBe 1
@@ -110,7 +110,7 @@ class ViewReturnViewModelSpec extends SpecBase {
     }
 
     "createTotalDueSummaryList" - {
-      "should return a summary list with a total when a total exists" in new SetUp {
+      "must return a summary list with a total when a total exists" in new SetUp {
         val totalSummaryList = viewModel.createTotalDueSummaryList(returnDetails)
 
         totalSummaryList.rows.head.value.content mustBe Text(
@@ -118,13 +118,13 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
       }
 
-      "should return a summary list with value 'Nil' when a nil return" in new SetUp {
+      "must return a summary list with value 'Nil' when a nil return" in new SetUp {
         val totalSummaryList = viewModel.createTotalDueSummaryList(nilReturn)
 
         totalSummaryList.rows.head.value.content mustBe Text(messages("site.nil"))
       }
 
-      "should return a summary list with a total when a total exists even if no declarations" in new SetUp {
+      "must return a summary list with a total when a total exists even if no declarations" in new SetUp {
         val totalSummaryList = viewModel.createTotalDueSummaryList(
           emptyReturnDetails.copy(totalDutyDue = ReturnTotalDutyDue(totalDue = nonZeroAmount))
         )
@@ -132,7 +132,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         totalSummaryList.rows.head.value.content mustBe Text(messages("site.currency.2DP", nonZeroAmount))
       }
 
-      "should return a summary list with a total when a total exists even if no alcohol is declared" in new SetUp {
+      "must return a summary list with a total when a total exists even if no alcohol is declared" in new SetUp {
         val totalSummaryList = viewModel.createTotalDueSummaryList(
           returnDetails.copy(alcoholDeclared =
             ReturnAlcoholDeclared(alcoholDeclaredDetails = None, total = returnDetails.alcoholDeclared.total)
@@ -144,7 +144,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
       }
 
-      "should return a summary list with a total when a total exists when no adjustments exist" in new SetUp {
+      "must return a summary list with a total when a total exists when no adjustments exist" in new SetUp {
         val totalSummaryList = viewModel.createTotalDueSummaryList(
           returnDetails.copy(adjustments =
             ReturnAdjustments(adjustmentDetails = None, total = returnDetails.adjustments.total)
@@ -158,7 +158,7 @@ class ViewReturnViewModelSpec extends SpecBase {
     }
 
     "createNetDutySuspensionViewModel" - {
-      "should return a model with data when duty suspension is declared" in new SetUp {
+      "must return a model with data when duty suspension is declared" in new SetUp {
         val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(returnDetails)
 
         netDutySuspensionViewModel.head.size mustBe 3
@@ -168,7 +168,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         }
       }
 
-      "should return a model excluding the alcohol types not declared in the return" in new SetUp {
+      "must return a model excluding the alcohol types not declared in the return" in new SetUp {
         val returnDetailsWithoutCider: ReturnDetails = returnDetails
           .copy(netDutySuspension =
             Some(
@@ -186,7 +186,7 @@ class ViewReturnViewModelSpec extends SpecBase {
 
       }
 
-      "should return a model with the right label when nothing declared" in new SetUp {
+      "must return a model with the right label when nothing declared" in new SetUp {
         val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(nilReturn)
 
         netDutySuspensionViewModel.rows.size mustBe 1
@@ -197,7 +197,7 @@ class ViewReturnViewModelSpec extends SpecBase {
     }
 
     "createSpiritsViewModels" - {
-      "should return a model with data when quarterly spirits are declared" in new SetUp {
+      "must return a model with data when quarterly spirits are declared" in new SetUp {
         val spiritsViewModels = viewModel.createSpiritsViewModels(
           returnDetails.copy(spirits =
             Some(returnDetails.spirits.get.copy(typesOfSpirit = AdrTypeOfSpirit.values.toSet))
@@ -239,7 +239,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         spiritsViewModels.last.caption mustBe None
       }
 
-      "should return a model with data when quarterly spirits is declared and handling missing other spirits type name gracefully" in new SetUp {
+      "must return a model with data when quarterly spirits is declared and handling missing other spirits type name gracefully" in new SetUp {
         val spiritsViewModels = viewModel.createSpiritsViewModels(
           returnDetails.copy(spirits =
             Some(
@@ -261,7 +261,7 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
       }
 
-      "should return a model with the right label when nothing declared" in new SetUp {
+      "must return a model with the right label when nothing declared" in new SetUp {
         val spiritsViewModels = viewModel.createSpiritsViewModels(nilReturn)
 
         spiritsViewModels.size mustBe 1

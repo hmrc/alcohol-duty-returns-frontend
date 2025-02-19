@@ -31,7 +31,7 @@ import java.time.YearMonth
 class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyChecks with ModelGenerators {
   "RateType" - {
     "when apply is called" - {
-      "should create correct instances" in {
+      "must create correct instances" in {
         RateType(hasDraughtRelief = false, hasSmallProducerRelief = false) mustEqual RateType.Core
         RateType(hasDraughtRelief = true, hasSmallProducerRelief = false) mustEqual RateType.DraughtRelief
         RateType(hasDraughtRelief = false, hasSmallProducerRelief = true) mustEqual RateType.SmallProducerRelief
@@ -42,7 +42,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       }
     }
     "when writing to json" - {
-      "should return the correct string representation" in {
+      "must return the correct string representation" in {
         Json.toJson[RateType](RateType.Core) mustEqual JsString("Core")
         Json.toJson[RateType](RateType.DraughtRelief) mustEqual JsString("DraughtRelief")
         Json.toJson[RateType](RateType.SmallProducerRelief) mustEqual JsString("SmallProducerRelief")
@@ -52,16 +52,16 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       }
     }
     "when reading from json" - {
-      "should translate from the string rep, to the correct case object" in {
+      "must translate from the string rep, to the correct case object" in {
         JsString("Core").as[RateType] mustEqual RateType.Core
         JsString("DraughtRelief").as[RateType] mustEqual RateType.DraughtRelief
         JsString("SmallProducerRelief").as[RateType] mustEqual RateType.SmallProducerRelief
         JsString("DraughtAndSmallProducerRelief").as[RateType] mustEqual RateType.DraughtAndSmallProducerRelief
       }
-      "should return an exception in response to an unrecognised string" in {
+      "must return an exception in response to an unrecognised string" in {
         JsString("some-other").validate[RateType] mustEqual JsError("error.expected.validenumvalue")
       }
-      "should return a JsError when passed a type that is not a string" in {
+      "must return a JsError when passed a type that is not a string" in {
         val result = Json.fromJson[RateType](JsBoolean(true))
         result mustBe a[JsError]
       }
@@ -70,13 +70,13 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
 
   "AlcoholByVolume" - {
     "when creating an instance" - {
-      "should successfully save the BigDecimal value when the value is in range" in {
+      "must successfully save the BigDecimal value when the value is in range" in {
         forAll(genAlcoholByVolumeValue) { validValue: BigDecimal =>
           AlcoholByVolume(validValue).value mustEqual validValue
         }
       }
 
-      "should throw an exception when the value is not in range" in {
+      "must throw an exception when the value is not in range" in {
         forAll(genAlcoholByVolumeValueOutOfRange) { invalidValue: BigDecimal =>
           val exception = intercept[IllegalArgumentException] {
             AlcoholByVolume(invalidValue)
@@ -85,7 +85,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
         }
       }
 
-      "should throw an exception when the value has more decimal points than 1" in {
+      "must throw an exception when the value has more decimal points than 1" in {
         forAll(genAlcoholByVolumeValueTooBigScale) { invalidValue: BigDecimal =>
           val exception = intercept[IllegalArgumentException] {
             AlcoholByVolume(invalidValue)
@@ -96,7 +96,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     }
 
     "when writing to json" - {
-      "should return the correct number representation with decimal points" in {
+      "must return the correct number representation with decimal points" in {
         forAll(genAlcoholByVolumeValue) { validValue =>
           Json.toJson(AlcoholByVolume(validValue)) mustEqual JsNumber(validValue)
         }
@@ -104,19 +104,19 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     }
 
     "when reading from json" - {
-      "should translate from the number representation when it is a valid Alcohol By Volume value" in {
+      "must translate from the number representation when it is a valid Alcohol By Volume value" in {
         forAll(genAlcoholByVolumeValue) { validValue =>
           JsNumber(validValue).as[AlcoholByVolume] mustEqual AlcoholByVolume(validValue)
         }
       }
 
-      "should return an exception in response to an invalid rate value" in {
+      "must return an exception in response to an invalid rate value" in {
         forAll(genAlcoholByVolumeValueTooBigScale) { invalidValue =>
           JsNumber(invalidValue).validate[AlcoholByVolume] mustBe a[JsError]
         }
       }
 
-      "should return a JsError when passed a type that is not a number" in {
+      "must return a JsError when passed a type that is not a number" in {
         forAll(Gen.oneOf(Gen.alphaStr, Gen.calendar)) { invalidJsValue =>
           val result = Json.fromJson[AlcoholByVolume](JsString(invalidJsValue.toString))
           result mustBe a[JsError]
@@ -126,7 +126,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
   }
 
   "AlcoholType" - {
-    "should convert AlcoholRegimes to AlcoholTypes" in {
+    "must convert AlcoholRegimes to AlcoholTypes" in {
       AlcoholType.fromAlcoholRegime(AlcoholRegime.Beer) mustBe AlcoholType.Beer
       AlcoholType.fromAlcoholRegime(AlcoholRegime.Cider) mustBe AlcoholType.Cider
       AlcoholType.fromAlcoholRegime(AlcoholRegime.Wine) mustBe AlcoholType.Wine
@@ -140,7 +140,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     implicit val yearMonthFormats: Format[YearMonth]               = RatePeriod.yearMonthFormat
     implicit val optionYearMonthFormats: Format[Option[YearMonth]] = RatePeriod.optionYearMonthFormat
 
-    "should serialise and deserialise YearMonth" in {
+    "must serialise and deserialise YearMonth" in {
       forAll { (yearMonth: YearMonth) =>
         val json   = Json.toJson(yearMonth)
         val result = json.validate[YearMonth]
@@ -149,7 +149,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       }
     }
 
-    "should serialise and deserialise Option[YearMonth]" in {
+    "must serialise and deserialise Option[YearMonth]" in {
       forAll { (optionYearMonth: Option[YearMonth]) =>
         val json   = Json.toJson(optionYearMonth)
         val result = json.validate[Option[YearMonth]]
@@ -161,7 +161,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
   }
 
   "Rate Band" - {
-    "should deserialise a json into a RateBand object" in {
+    "must deserialise a json into a RateBand object" in {
       val json =
         """
           |      {
@@ -200,7 +200,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       result.rate mustBe Some(BigDecimal(9.27))
     }
 
-    "should error if the RateBand json is empty" in {
+    "must error if the RateBand json is empty" in {
       val json =
         """
           |      {

@@ -25,7 +25,7 @@ import play.api.test.Helpers.{GET, redirectLocation, route, running, status}
 class ServiceEntryControllerSpec extends SpecBase {
 
   "ServiceEntry controller" - {
-    "should redirect to BTA" in {
+    "must redirect to BTA" in {
 
       val application = applicationBuilder().build()
 

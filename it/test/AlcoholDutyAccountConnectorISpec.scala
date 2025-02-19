@@ -25,7 +25,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
 
   "AlcoholDutyAccountConnector" - {
     "Open Payments" - {
-      "should successfully retrieve open payment details" in new SetUp {
+      "must successfully retrieve open payment details" in new SetUp {
         val jsonResponse         = Json.toJson(openPaymentsData).toString()
 
         server.stubFor(get(urlMatching(openPayments))
@@ -38,7 +38,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when invalid JSON is returned" in new SetUp {
+      "must fail when invalid JSON is returned" in new SetUp {
         val invalidJsonResponse = """{ "invalid": "json" }"""
         server.stubFor(get(urlMatching(openPayments))
           .willReturn(aResponse()
@@ -50,7 +50,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when an unexpected response is returned" in new SetUp {
+      "must fail when an unexpected response is returned" in new SetUp {
         server.stubFor(get(urlMatching(openPayments))
           .willReturn(aResponse()
             .withStatus(BAD_GATEWAY)))
@@ -60,7 +60,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when an unexpected  status code is returned" in new SetUp {
+      "must fail when an unexpected  status code is returned" in new SetUp {
         server.stubFor(get(urlMatching(openPayments))
           .willReturn(aResponse()
             .withStatus(CREATED)))
@@ -73,7 +73,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
 
     "Historic Payments" - {
 
-      "should successfully retrieve historic payment details" in new SetUp {
+      "must successfully retrieve historic payment details" in new SetUp {
         val jsonResponse = Json.toJson(historicPayments).toString()
 
         server.stubFor(get(urlMatching(historicUrl))
@@ -86,7 +86,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when invalid JSON is returned" in new SetUp {
+      "must fail when invalid JSON is returned" in new SetUp {
         val invalidJsonResponse = """{ "invalid": "json" }"""
         server.stubFor(get(urlMatching(historicUrl))
           .willReturn(aResponse()
@@ -98,7 +98,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when an unexpected response is returned" in new SetUp {
+      "must fail when an unexpected response is returned" in new SetUp {
         server.stubFor(get(urlMatching(historicUrl))
           .willReturn(aResponse()
             .withStatus(BAD_GATEWAY)))
@@ -108,7 +108,7 @@ class AlcoholDutyAccountConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "should fail when an unexpected status code is returned" in new SetUp {
+      "must fail when an unexpected status code is returned" in new SetUp {
         server.stubFor(get(urlMatching(historicUrl))
           .willReturn(aResponse()
             .withStatus(CREATED)))

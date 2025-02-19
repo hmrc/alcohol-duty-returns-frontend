@@ -23,7 +23,7 @@ import viewmodels.tasklist.TaskListStatus.{Completed, Incomplete}
 
 class AlcoholDutyTaskListSpec extends SpecBase {
   "AlcoholDutyTaskList" - {
-    "should classify the completed tasks when there aren't any" in new SetUp {
+    "must classify the completed tasks when there aren't any" in new SetUp {
       val taskList = AlcoholDutyTaskList(Seq.empty, "", "", "", "")
 
       taskList.completedTasks mustBe 0
@@ -31,7 +31,7 @@ class AlcoholDutyTaskListSpec extends SpecBase {
       taskList.status mustBe Completed
     }
 
-    "should classify the completed tasks when not all are complete" in new SetUp {
+    "must classify the completed tasks when not all are complete" in new SetUp {
       val taskList = AlcoholDutyTaskList(
         Seq(
           Section(
@@ -71,7 +71,7 @@ class AlcoholDutyTaskListSpec extends SpecBase {
       taskList.status mustBe Incomplete
     }
 
-    "should classify the completed tasks when all are complete" in new SetUp {
+    "must classify the completed tasks when all are complete" in new SetUp {
       val taskList = AlcoholDutyTaskList(
         Seq(
           Section(

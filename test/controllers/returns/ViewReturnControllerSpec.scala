@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 class ViewReturnControllerSpec extends SpecBase {
   "ViewReturnController" - {
-    "should return a view if able to fetch the return and a spirits month" in new SetUp {
+    "must return a view if able to fetch the return and a spirits month" in new SetUp {
       override def periodKeyUnderTest: String = periodKeyForSpirits
 
       when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
@@ -89,7 +89,7 @@ class ViewReturnControllerSpec extends SpecBase {
       verify(mockCalculatorConnector, times(1)).rateBands(any)(any)
     }
 
-    "should return a view if able to fetch the return and not a spirits month" in new SetUp {
+    "must return a view if able to fetch the return and not a spirits month" in new SetUp {
       override def periodKeyUnderTest: String = periodKeyNotForSpirits
 
       when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
@@ -145,7 +145,7 @@ class ViewReturnControllerSpec extends SpecBase {
       verify(mockCalculatorConnector, times(1)).rateBands(any)(any)
     }
 
-    "should not pass a charge reference to the view if a nil return" in new SetUp {
+    "must not pass a charge reference to the view if a nil return" in new SetUp {
       override def periodKeyUnderTest: String = periodKeyForSpirits
 
       when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
@@ -197,7 +197,7 @@ class ViewReturnControllerSpec extends SpecBase {
       verify(mockViewModel, times(1)).createSpiritsViewModels(any)(any)
     }
 
-    "should not look up tax codes if it's a nil return and so there are none" in new SetUp {
+    "must not look up tax codes if it's a nil return and so there are none" in new SetUp {
       override def periodKeyUnderTest: String = periodKeyForSpirits
 
       when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
@@ -252,7 +252,7 @@ class ViewReturnControllerSpec extends SpecBase {
       verify(mockCalculatorConnector, never).rateBands(any)(any)
     }
 
-    "should redirect to the journey recovery page if unable to parse the period key" in new SetUp {
+    "must redirect to the journey recovery page if unable to parse the period key" in new SetUp {
       override def periodKeyUnderTest: String = periodKeyForSpirits
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -271,7 +271,7 @@ class ViewReturnControllerSpec extends SpecBase {
       verify(mockReturnsConnector, never).getReturn(any, any)(any)
     }
 
-    "should redirect to the journey recovery page if unable to fetch the return" in new SetUp {
+    "must redirect to the journey recovery page if unable to fetch the return" in new SetUp {
       override def periodKeyUnderTest: String = periodKeyForSpirits
 
       when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))
@@ -293,7 +293,7 @@ class ViewReturnControllerSpec extends SpecBase {
       verify(mockCalculatorConnector, never).rateBands(any())(any)
     }
 
-    "should redirect to the journey recovery page if the period key on the return doesn't match that of the request" in new SetUp {
+    "must redirect to the journey recovery page if the period key on the return doesn't match that of the request" in new SetUp {
       override def periodKeyUnderTest: String = periodKeyForSpirits
 
       when(mockReturnsConnector.getReturn(eqTo(appaId), eqTo(periodKeyUnderTest))(any))

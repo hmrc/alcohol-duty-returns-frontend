@@ -37,7 +37,7 @@ class DataRequiredActionSpec extends SpecBase {
   val userAnswers = emptyUserAnswers
 
   "Data Required Action" - {
-    "should redirect to the Journey Recovery when User Answers or Return Period are None" in {
+    "must redirect to the Journey Recovery when User Answers or Return Period are None" in {
 
       val harness = new Harness
 
@@ -55,7 +55,7 @@ class DataRequiredActionSpec extends SpecBase {
       result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
     }
 
-    "should redirect to the Journey Recovery when User Answers is None" in {
+    "must redirect to the Journey Recovery when User Answers is None" in {
 
       val harness = new Harness
 
@@ -95,7 +95,7 @@ class DataRequiredActionSpec extends SpecBase {
       result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
     }
 
-    "should return a DataRequest with the correct values" in {
+    "must return a DataRequest with the correct values" in {
 
       val harness = new Harness
 

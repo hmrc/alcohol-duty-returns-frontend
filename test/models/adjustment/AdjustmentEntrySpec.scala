@@ -22,7 +22,6 @@ import generators.ModelGenerators
 import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentType.{RepackagedDraughtProducts, Spoilt}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
@@ -62,40 +61,40 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
       val sprDutyRate     = Some(BigDecimal(1))
       val adjustmentEntry = AdjustmentEntry(sprDutyRate = sprDutyRate)
 
-      adjustmentEntry.rate shouldBe sprDutyRate
+      adjustmentEntry.rate mustBe sprDutyRate
     }
 
     "when taxType doesn't have a rate and spr relief is not applied" in {
       val adjustmentEntry = AdjustmentEntry()
-      adjustmentEntry.rate shouldBe None
+      adjustmentEntry.rate mustBe None
     }
 
     "when taxType has a rate and spr relief is not applied" in {
       val taxRate         = Some(BigDecimal(10.99))
       val adjustmentEntry = AdjustmentEntry(rateBand = Some(rateBand))
 
-      adjustmentEntry.rate shouldBe taxRate
+      adjustmentEntry.rate mustBe taxRate
     }
 
     "when both spr relief is true and taxType has a rate" in {
       val sprDutyRate     = Some(BigDecimal(1))
       val adjustmentEntry = AdjustmentEntry(rateBand = Some(rateBand), sprDutyRate = sprDutyRate)
 
-      adjustmentEntry.rate shouldBe None
+      adjustmentEntry.rate mustBe None
     }
 
     "when repackagedRateband has a rate and spr relief is not applied" in {
       val taxRate         = Some(BigDecimal(10.99))
       val adjustmentEntry = AdjustmentEntry(repackagedRateBand = Some(rateBand))
 
-      adjustmentEntry.repackagedRate shouldBe taxRate
+      adjustmentEntry.repackagedRate mustBe taxRate
     }
 
     "when both repackagedSprRelief is true and repackagedRateband has a rate" in {
       val sprDutyRate     = Some(BigDecimal(1))
       val adjustmentEntry = AdjustmentEntry(repackagedRateBand = Some(rateBand), repackagedSprDutyRate = sprDutyRate)
 
-      adjustmentEntry.repackagedRate shouldBe None
+      adjustmentEntry.repackagedRate mustBe None
     }
     "when repackagedRateband doesn't have a rate and spr relief is applied" in {
       val repackagedSprDutyRate = Some(BigDecimal(1))
@@ -104,18 +103,18 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
         repackagedSprDutyRate = repackagedSprDutyRate
       )
 
-      adjustmentEntry.repackagedRate shouldBe repackagedSprDutyRate
+      adjustmentEntry.repackagedRate mustBe repackagedSprDutyRate
     }
-    "isComplete should return true when all required fields are defined and valid" in {
+    "isComplete must return true when all required fields are defined and valid" in {
 
-      adjustmentEntry.isComplete shouldBe true
+      adjustmentEntry.isComplete mustBe true
     }
-    "isComplete should return false when adjustment type is not defined" in {
+    "isComplete must return false when adjustment type is not defined" in {
       val incompleteAdjustmentEntry = adjustmentEntry.copy(adjustmentType = None)
 
-      incompleteAdjustmentEntry.isComplete shouldBe false
+      incompleteAdjustmentEntry.isComplete mustBe false
     }
-    "isComplete should return true for spr case fields " in {
+    "isComplete must return true for spr case fields " in {
       val sprAdjustmentEntry = adjustmentEntry.copy(
         adjustmentType = Some(RepackagedDraughtProducts),
         rateBand = Some(rateBand.copy(rate = None)),
@@ -123,18 +122,18 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
         repackagedRateBand = Some(rateBand),
         repackagedDuty = Some(BigDecimal(1))
       )
-      sprAdjustmentEntry.isComplete shouldBe true
+      sprAdjustmentEntry.isComplete mustBe true
     }
-    "isComplete should return true when all repackaged fields are defined" in {
+    "isComplete must return true when all repackaged fields are defined" in {
       val repackagedAdjustmentEntry = adjustmentEntry.copy(
         adjustmentType = Some(RepackagedDraughtProducts),
         repackagedRateBand = Some(rateBand),
         repackagedDuty = Some(BigDecimal(1))
       )
 
-      repackagedAdjustmentEntry.isComplete shouldBe true
+      repackagedAdjustmentEntry.isComplete mustBe true
     }
-    "isComplete should return true when all repackaged fields are defined for spr case" in {
+    "isComplete must return true when all repackaged fields are defined for spr case" in {
       val repackagedAdjustmentEntry = adjustmentEntry.copy(
         adjustmentType = Some(RepackagedDraughtProducts),
         repackagedRateBand = Some(rateBand.copy(rate = None)),
@@ -142,14 +141,14 @@ class AdjustmentEntrySpec extends SpecBase with MockitoSugar with ScalaCheckProp
         repackagedDuty = Some(BigDecimal(1))
       )
 
-      repackagedAdjustmentEntry.isComplete shouldBe true
+      repackagedAdjustmentEntry.isComplete mustBe true
     }
-    "isComplete should return false when all repackaged fields are not defined for spr case" in {
+    "isComplete must return false when all repackaged fields are not defined for spr case" in {
       val repackagedAdjustmentEntry = adjustmentEntry.copy(
         adjustmentType = Some(RepackagedDraughtProducts)
       )
 
-      repackagedAdjustmentEntry.isComplete shouldBe false
+      repackagedAdjustmentEntry.isComplete mustBe false
     }
   }
 

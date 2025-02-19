@@ -24,7 +24,7 @@ class AuditReturnSubmittedSpec extends SpecBase {
 
   "AuditReturnSubmitted" - {
 
-    "should be created from UserAnswers with Spirits" in {
+    "must be created from UserAnswers with Spirits" in {
       val auditEvent = AuditReturnSubmitted(fullUserAnswers, fullReturn, Instant.now(clock))
 
       auditEvent.prePopulatedData.appaId mustBe fullUserAnswers.returnId.appaId

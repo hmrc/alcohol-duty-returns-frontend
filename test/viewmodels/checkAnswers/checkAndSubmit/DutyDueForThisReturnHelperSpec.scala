@@ -33,7 +33,7 @@ import scala.concurrent.Future
 
 class DutyDueForThisReturnHelperSpec extends SpecBase {
   "DutyDueForThisReturnHelper" - {
-    "should total both duty due and adjustments" in new SetUp {
+    "must total both duty due and adjustments" in new SetUp {
       val userAnswers = declareAdjustmentTotalPage(
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
@@ -56,7 +56,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       }
     }
 
-    "should total duty due where no adjustments" in new SetUp {
+    "must total duty due where no adjustments" in new SetUp {
       val userAnswers =
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
@@ -77,7 +77,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       }
     }
 
-    "should return adjustments where no duty due" in new SetUp {
+    "must return adjustments where no duty due" in new SetUp {
       val userAnswers = declareAdjustmentTotalPage(
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -100,7 +100,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       }
     }
 
-    "should return a You've Also Answered Table View Model" - {
+    "must return a You've Also Answered Table View Model" - {
       "when no spirits" - {
         "and declared, with the correct label, declared content, and redirect to the appropriate check your answers page" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
@@ -310,7 +310,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       }
     }
 
-    "should error if unable to get duties when required" in new SetUp {
+    "must error if unable to get duties when required" in new SetUp {
       val userAnswers = declareAdjustmentTotalPage(
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(emptyUserAnswers, true),
@@ -324,7 +324,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       }
     }
 
-    "should error if unable to get adjustments when required" in new SetUp {
+    "must error if unable to get adjustments when required" in new SetUp {
       val userAnswers =
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
@@ -349,7 +349,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       result mustBe Left(s"Failed to calculate total duty due: $errorMessage")
     }
     "when everything is declared" - {
-      "the duties should be shown in the correct order (Beer, Cider, Wine, Spirits, OTP, Adjustments)" in new SetUp {
+      "the duties must be shown in the correct order (Beer, Cider, Wine, Spirits, OTP, Adjustments)" in new SetUp {
         val userAnswers: UserAnswers = declareAdjustmentTotalPage(
           declareAdjustmentQuestionPage(
             declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),

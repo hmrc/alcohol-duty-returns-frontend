@@ -37,7 +37,7 @@ class WelshHelperSpec extends SpecBase {
           ""
         } else {
           "n't"
-        }} indicate and $number should be written with a rather than ac" in {
+        }} indicate and $number must be written with a rather than ac" in {
           val expectedAndMessageKey = if (startsConsonantWelsh) {
             "welsh.and.consonant"
           } else {

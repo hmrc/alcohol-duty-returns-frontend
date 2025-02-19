@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class CheckSpiritsAndIngredientsToggleActionSpec extends SpecBase {
   "CheckSpiritsAndIngredientsToggleAction" - {
-    "should redirect to Journey Recovery when the toggle is off" in new SetUp(false) {
+    "must redirect to Journey Recovery when the toggle is off" in new SetUp(false) {
       val result =
         harness
           .actionRefine(
@@ -46,7 +46,7 @@ class CheckSpiritsAndIngredientsToggleActionSpec extends SpecBase {
       result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
     }
 
-    "should return a DataRequest when the toggle is on" in new SetUp(true) {
+    "must return a DataRequest when the toggle is on" in new SetUp(true) {
 
       val dataRequest =
         DataRequest(identifierRequest, appaId, groupId, internalId, returnPeriod, userAnswersWithAllRegimes)

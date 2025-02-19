@@ -116,7 +116,7 @@ class UserAnswersConnectorSpec extends SpecBase {
   }
 
   "releaseLock" - {
-    "should call the release lock endpoint" in new SetUp {
+    "must call the release lock endpoint" in new SetUp {
       val releaseLockUrl = "http://user-answers/release-lock"
 
       when(mockConfig.adrReleaseUserAnswersLockUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(releaseLockUrl)
@@ -139,7 +139,7 @@ class UserAnswersConnectorSpec extends SpecBase {
   }
 
   "keepAlive" - {
-    "should call the keep alive endpoint" in new SetUp {
+    "must call the keep alive endpoint" in new SetUp {
       val keepAliveUrl = s"http://user-answers/keep-alive/$appaId/$periodKey"
 
       when(mockConfig.adrUserAnswersLockKeepAliveUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(keepAliveUrl)

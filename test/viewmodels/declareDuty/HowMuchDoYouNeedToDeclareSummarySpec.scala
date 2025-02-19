@@ -23,7 +23,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
   "HowMuchDoYouNeedToDeclareSummary" - {
-    "should return None if HowMuchDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
+    "must return None if HowMuchDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
       howMuchDoYouNeedToDeclareSummary.summaryList(
         Beer,
         allNonSmallProducerReliefRateBands,
@@ -31,7 +31,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
       ) mustBe None
     }
 
-    "should summarise declarations" in new SetUp {
+    "must summarise declarations" in new SetUp {
       val answers = specifyAllHowMuchDoYouNeedToDeclareUnsorted(userAnswersWithBeer, Beer)
 
       val summaryList = howMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
@@ -55,7 +55,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
         )
     }
 
-    "should return no rows if no ratebands" in new SetUp {
+    "must return no rows if no ratebands" in new SetUp {
       val answers = specifyAllHowMuchDoYouNeedToDeclareUnsorted(userAnswersWithBeer, Beer)
 
       val sumamryList = howMuchDoYouNeedToDeclareSummary.summaryList(Beer, Set.empty, answers)
@@ -63,7 +63,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
       sumamryList.get.rows.map(_.value.content) mustBe Seq.empty
     }
 
-    "should throw an exception if a tax type is not found in the rateBands" in new SetUp {
+    "must throw an exception if a tax type is not found in the rateBands" in new SetUp {
       val badTaxCode                = "555"
       val badVolumeAndRateByTaxType = Seq(
         volumeAndRateByTaxType1,
@@ -72,7 +72,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
 
       val answers = howMuchDoYouNeedToDeclare(userAnswersWithBeer, Beer, badVolumeAndRateByTaxType)
 
-      an[IllegalArgumentException] shouldBe thrownBy(
+      an[IllegalArgumentException] mustBe thrownBy(
         howMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
       )
     }

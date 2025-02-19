@@ -66,7 +66,7 @@ class CheckRegimeActionSpec extends SpecBase {
     )
   ).foreach { case (description, harness, userAnswersWithRegime, userAnswersWithoutRegime) =>
     description - {
-      "should redirect to Journey Recovery when the required regime is not in userAnswers" in {
+      "must redirect to Journey Recovery when the required regime is not in userAnswers" in {
         val result =
           harness
             .actionRefine(
@@ -83,7 +83,7 @@ class CheckRegimeActionSpec extends SpecBase {
         result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
       }
 
-      "should return a DataRequest if the required regime is in UserAnswers" in {
+      "must return a DataRequest if the required regime is in UserAnswers" in {
         val dataRequest =
           DataRequest(identifierRequest, appaId, groupId, internalId, returnPeriod, userAnswersWithRegime)
 

@@ -63,7 +63,7 @@ class ServiceEntryCheckActionSpec extends SpecBase {
       contentAsString(result) mustBe testContent
     }
 
-    "should redirect to enrolment request page if not adr appaId is present" in {
+    "must redirect to enrolment request page if not adr appaId is present" in {
       when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
       when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
@@ -75,7 +75,7 @@ class ServiceEntryCheckActionSpec extends SpecBase {
       redirectLocation(result).value mustBe controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad().url
     }
 
-    "should redirect to enrolment request page if not there are no enrolments" in {
+    "must redirect to enrolment request page if not there are no enrolments" in {
       when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
       when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any())).thenReturn(Future(emptyEnrolments))
@@ -86,7 +86,7 @@ class ServiceEntryCheckActionSpec extends SpecBase {
       redirectLocation(result).value mustBe controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad().url
     }
 
-    "should redirect to enrolment request page if the AppaId is an empty string" in {
+    "must redirect to enrolment request page if the AppaId is an empty string" in {
       when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
       when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       val enrolmentsWithEmptyAppaId =
@@ -100,7 +100,7 @@ class ServiceEntryCheckActionSpec extends SpecBase {
       redirectLocation(result).value mustBe controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad().url
     }
 
-    "should redirect Unauthorised if the authorization method throw an exception" in {
+    "must redirect Unauthorised if the authorization method throw an exception" in {
       when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
       when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))
@@ -112,7 +112,7 @@ class ServiceEntryCheckActionSpec extends SpecBase {
       redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad.url
     }
 
-    "should redirect request access url if the authorization method throw an InsufficientEnrolments exception" in {
+    "must redirect request access url if the authorization method throw an InsufficientEnrolments exception" in {
       when(mockAppConfig.enrolmentServiceName).thenReturn(enrolment)
       when(mockAppConfig.enrolmentIdentifierKey).thenReturn(appaIdKey)
       when(mockAuthConnector.authorise(any(), eqTo(allEnrolments))(any(), any()))

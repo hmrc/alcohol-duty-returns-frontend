@@ -86,7 +86,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
     }
 
     "return details" - {
-      "should deserialise a valid json into a adrReturnCreatedDetails object" in {
+      "must deserialise a valid json into a adrReturnCreatedDetails object" in {
         val json =
           """
             |{
@@ -107,7 +107,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
         result.paymentDueDate mustBe Some(LocalDate.parse("2024-08-25"))
       }
 
-      "should deserialise a valid json into a adrReturnCreatedDetails object with minimal payload" in {
+      "must deserialise a valid json into a adrReturnCreatedDetails object with minimal payload" in {
         val json =
           """
             |{
@@ -126,7 +126,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
         result.paymentDueDate mustBe None
       }
 
-      "should redirect to journey recovery if not valid" in {
+      "must redirect to journey recovery if not valid" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(bind[ReturnSubmittedHelper].toInstance(mockReturnSubmittedHelper))
           .build()

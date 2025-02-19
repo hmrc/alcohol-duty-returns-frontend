@@ -23,7 +23,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class MultipleSPRListSummarySpec extends SpecBase {
   "MultipleSPRListSummary" - {
-    "should summarise declarations" in new SetUp {
+    "must summarise declarations" in new SetUp {
       val answers =
         specifyAllMultipleSPRListUnsorted(
           whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allSmallProducerReliefRateBands),
@@ -51,19 +51,19 @@ class MultipleSPRListSummarySpec extends SpecBase {
         )
     }
 
-    "should return no rows if WhatDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
+    "must return no rows if WhatDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
       val answers = specifyAllMultipleSPRListUnsorted(userAnswersWithBeer, Beer)
 
       MultipleSPRListSummary.rows(Beer, answers) mustBe Seq.empty
     }
 
-    "should return no rows if MultipleSPRList page doesn't have an answer" in new SetUp {
+    "must return no rows if MultipleSPRList page doesn't have an answer" in new SetUp {
       val answers = whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands)
 
       MultipleSPRListSummary.rows(Beer, answers) mustBe Seq.empty
     }
 
-    "should throw an exception if a tax type is not found in the rateBands" in new SetUp {
+    "must throw an exception if a tax type is not found in the rateBands" in new SetUp {
       val badTaxCode                = "555"
       val badVolumeAndRateByTaxType = Seq(
         volumeAndRateByTaxType2,
@@ -76,7 +76,7 @@ class MultipleSPRListSummarySpec extends SpecBase {
         badVolumeAndRateByTaxType
       )
 
-      an[IllegalArgumentException] shouldBe thrownBy(MultipleSPRListSummary.rows(Beer, answers))
+      an[IllegalArgumentException] mustBe thrownBy(MultipleSPRListSummary.rows(Beer, answers))
     }
   }
 
