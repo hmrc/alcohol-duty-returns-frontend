@@ -158,7 +158,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
               mode,
               adjustmentType,
               regime,
-              rateBandContent(rateBand, None)
+              rateBandContent(rateBand, None).capitalize
             )
           )
         )

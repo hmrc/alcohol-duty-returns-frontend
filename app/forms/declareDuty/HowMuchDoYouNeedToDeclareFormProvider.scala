@@ -35,8 +35,8 @@ class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
         "return.journey.error.minimumValue",
         "return.journey.error.maximumValue",
         "return.journey.error.lessThanExpected",
-        messages(s"return.regime.$regime")
+        messages(s"alcoholType.$regime")
       )
-    ).verifying(nonEmptySeq("return.journey.error.allRequired", Seq(messages(s"return.regime.$regime"))))
+    ).verifying(nonEmptySeq("return.journey.error.allRequired", Seq(messages(s"alcoholType.$regime"))))
   )
 }

@@ -29,7 +29,7 @@ object AlcoholTypeViewModel {
     val orderedRegimes = regimesInViewOrder(regimes)
     orderedRegimes.zipWithIndex.map { case (value, index) =>
       CheckboxItemViewModel(
-        content = Text(messages(s"alcoholType.${value.toString}")),
+        content = Text(messages(s"alcoholType.${value.toString}").capitalize),
         fieldId = "value",
         index = index,
         value = value.toString

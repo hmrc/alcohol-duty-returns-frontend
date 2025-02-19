@@ -150,7 +150,8 @@ class DutyDueForThisReturnHelper @Inject() (
       dutiesByRegime.map { case (alcoholRegime, alcoholDuty) =>
         SummaryListRow(
           key = Key(
-            content = Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"alcoholType.$alcoholRegime"))),
+            content =
+              Text(messages("dutyDueForThisReturn.table.dutyDue", messages(s"alcoholType.$alcoholRegime").capitalize)),
             classes = Css.boldFontCssClass
           ),
           value = Value(

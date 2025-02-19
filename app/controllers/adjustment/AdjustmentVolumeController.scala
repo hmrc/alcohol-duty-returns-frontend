@@ -156,7 +156,7 @@ class AdjustmentVolumeController @Inject() (
               mode,
               adjustmentType,
               regime,
-              rateBandContent(rateBand, None)
+              rateBandContent(rateBand, None).capitalize
             )
           )
         )

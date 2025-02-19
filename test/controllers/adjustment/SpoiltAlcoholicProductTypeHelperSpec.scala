@@ -61,10 +61,10 @@ class SpoiltAlcoholicProductTypeHelperSpec extends SpecBase {
           spoiltAlcoholicProductTypeHelper.radioOptions(AlcoholRegimes(Set(Cider, OtherFermentedProduct, Beer)))
 
         radioOptions mustBe Seq(
-          RadioItem(Text(messages("alcoholType.Beer")), Some("Beer"), Some("Beer")),
-          RadioItem(Text(messages("alcoholType.Cider")), Some("Cider"), Some("Cider")),
+          RadioItem(Text("Beer"), Some("Beer"), Some("Beer")),
+          RadioItem(Text("Cider"), Some("Cider"), Some("Cider")),
           RadioItem(
-            Text(messages("alcoholType.OtherFermentedProduct")),
+            Text("Other fermented products"),
             Some("OtherFermentedProduct"),
             Some("OtherFermentedProduct")
           )

@@ -36,7 +36,7 @@ class WhatDoYouNeedToDeclareSummary {
               Text(
                 messages(
                   s"whatDoYouNeedToDeclare.checkYourAnswersLabel.card",
-                  messages(s"return.regime.${regime.toString}")
+                  messages(s"alcoholType.${regime.toString}")
                 ).capitalize
               )
             )
@@ -59,7 +59,7 @@ class WhatDoYouNeedToDeclareSummary {
     SummaryListRowViewModel(
       key = messages(
         s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row",
-        messages(s"return.regime.${regime.toString}").capitalize
+        messages(s"alcoholType.${regime.toString}").capitalize
       ),
       value = ValueViewModel(
         HtmlContent(

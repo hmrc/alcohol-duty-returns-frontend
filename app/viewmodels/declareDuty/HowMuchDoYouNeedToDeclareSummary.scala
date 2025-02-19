@@ -45,7 +45,7 @@ class HowMuchDoYouNeedToDeclareSummary {
                     Text(
                       messages(
                         s"howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle",
-                        messages(s"return.regime.${regime.toString}")
+                        messages(s"alcoholType.${regime.toString}")
                       ).capitalize
                     )
                   )

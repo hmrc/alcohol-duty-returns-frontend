@@ -39,7 +39,7 @@ class SpoiltAlcoholicProductTypeHelper @Inject() (
 
     RateBand(
       appConfig.getTaxTypeCodeByRegime(regime),
-      messages(s"alcoholType.$regime").capitalize,
+      messages(s"alcoholType.$regime"),
       Core,
       Some(rate),
       Set(
