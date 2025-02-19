@@ -45,7 +45,7 @@
             text = messages(s"section.return.$regime")
         )
 
-        @pageHeading(messages("multipleSPRList.heading", messages(s"alcoholType.$regime")))
+        @pageHeading(messages("multipleSPRList.heading", messages(s"alcoholType.$regime")).capitalize)
 
         @govukTable(Table(
           head = Some(sprTable.head),
