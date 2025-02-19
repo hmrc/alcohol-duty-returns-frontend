@@ -23,6 +23,7 @@ site.currency.2DP = £{0,number,#,##0.00}
 site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
 site.year = {0,number,####}
+site.warning = Warning
 
 #Welsh helpers - in Welsh y and w are also vowels
 
