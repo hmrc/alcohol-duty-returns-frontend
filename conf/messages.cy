@@ -1,6 +1,6 @@
 service.name = NOT_FOUND
  
-site.back = NOT_FOUND
+site.back = Yn ôl
 site.remove = NOT_FOUND
 site.change = Newid
 site.no = Na
@@ -83,15 +83,15 @@ unauthorised.p2.first = Er mwyn defnyddio’r gwasanaeth hwn,
 unauthorised.p2.link.text = bydd angen i chi fewngofnodi gan ddefnyddio cyfrif sefydliad ar gyfer Porth y Llywodraeth
 unauthorised.p2.second = , a bydd angen i chi fod wedi’ch ymrestru â’r gwasanaeth.
  
-doYouHaveAnAppaId.title = NOT_FOUND
-doYouHaveAnAppaId.heading = NOT_FOUND
-doYouHaveAnAppaId.hint = NOT_FOUND
-doYouHaveAnAppaId.error.required = NOT_FOUND
+doYouHaveAnAppaId.title = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
+doYouHaveAnAppaId.heading = A oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd?
+doYouHaveAnAppaId.hint = Mae hwn yn 15 o gymeriadau, er enghraifft XMADP0123456789
+doYouHaveAnAppaId.error.required = Dewiswch ‘Iawn’ os oes gennych ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd
  
-noAppaId.title = NOT_FOUND
-noAppaId.heading = NOT_FOUND
-noAppaId.p = NOT_FOUND
-noAppaId.link.text = NOT_FOUND
+noAppaId.title = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd arnoch, er mwyn cael mynediad at y gwasanaeth Toll Alcohol
+noAppaId.heading = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd arnoch, er mwyn cael mynediad at y gwasanaeth Toll Alcohol
+noAppaId.p = Os oeddech yn cynhyrchu cynhyrchion alcoholaidd cyn 1 Chwefror 2025, gallwch ddod o hyd i’ch ID APPA ar y llythyr gwasanaeth ar-lein a gawsoch oddi wrth CThEF.
+noAppaId.link.text = Darllenwch arweiniad ar gael cymeradwyaeth ar gyfer cynhyrchu cynhyrchion alcoholaidd (yn agor tab newydd)
  
 section.visuallyHidden = NOT_FOUND
 section.alcoholDutyReturn = Datganiad Toll Alcohol
@@ -211,7 +211,7 @@ taskList.period = Dyma’ch Datganiad Toll Alcohol ar gyfer y cyfnod {0} i {1}.
 taskList.completion.date = Cwblhewch yr holl dasgau ac anfonwch y Datganiad hwn ar neu cyn {0}.
 taskList.expiry.date = Byddwn yn cadw’ch atebion tan {0}.
 taskList.section.status.completed = Wedi cwblhau
-taskList.section.status.notStarted = Heb ddechrau hyd yn hyn
+taskList.section.status.notStarted = Heb ddechrau eto
 taskList.section.status.inProgress = Ar y gweill
 taskList.section.status.cannotStart = NOT_FOUND
  
@@ -253,7 +253,7 @@ beforeStartReturn.text.guidance3.usecase2 = cynhyrchion alcoholaidd a gafodd eu 
 beforeStartReturn.text.guidance3.usecase3 = cynhyrchion alcoholaidd sydd wedi’u difetha
 beforeStartReturn.text.guidance3.usecase4 = cynhyrchion alcoholaidd o’r gasgen sydd wedi’u hailbecynnu
 beforeStartReturn.text.guidance3.usecase5 = cynhyrchion alcoholaidd rydych chi wedi’u hallforio ac y mae angen i chi hawlio ad-daliad ar eu cyfer
-beforeStartReturn.text.guidance4 = NOT_FOUND
+beforeStartReturn.text.guidance4 = Ar ôl i chi roi’r wybodaeth hon i ni, byddwn yn cyfrifo faint o doll sydd arnoch ar gyfer y cyfnod hwn.
 beforeStartReturn.text.dueWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn yw heddiw
 beforeStartReturn.text.overdueWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn oedd {0}
 beforeStartReturn.text.dueDateWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn yw {0} 
@@ -322,7 +322,7 @@ return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = {0} o’
 return.journey.totalLitres = Cyfanswm y litrau o {0}
 return.journey.totalLitres.hint = Nodwch y litrau, hyd at 2 le degol
 return.journey.pureAlcohol = Litrau o alcohol pur
-return.journey.pureAlcohol.hint = Nodwch y litrau, hyd at 4 lle degol
+return.journey.pureAlcohol.hint = Nodwch y litrau, gan gynnwys 4 lle degol
 return.journey.spr.dutyRate = Eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y {0} hwn
  
 declareAlcoholDutyQuestion.title = Datgan cynhyrchion alcoholaidd at ddiben toll
@@ -389,7 +389,7 @@ howMuchDoYouNeedToDeclare.p1.Spirits = NOT_FOUND
 howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Rhowch wybod i ni am gynhyrchion eplesedig eraill y mae angen i chi eu datgan a’r alcohol pur ynddyn nhw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.warning = Byddwn yn gofyn ynghylch {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
 howMuchDoYouNeedToDeclare.hint = Nodwch y litrau, hyd at 2 le degol
-howMuchDoYouNeedToDeclare.pureAlcohol.hint = Nodwch y litrau, hyd at 4 lle degol
+howMuchDoYouNeedToDeclare.pureAlcohol.hint = Nodwch y litrau, gan gynnwys 4 lle degol
 howMuchDoYouNeedToDeclare.core.heading = NOT_FOUND
 howMuchDoYouNeedToDeclare.draught.heading = NOT_FOUND
  
@@ -442,7 +442,7 @@ tellUsAboutMultipleSPRRate.h3.Spirits = Faint o’r gwirodydd hyn y mae angen i 
 tellUsAboutMultipleSPRRate.h3.Wine = Faint o’r gwin hwn y mae angen i chi ei ddatgan?
 tellUsAboutMultipleSPRRate.h3.OtherFermentedProduct = Faint o’r cynnyrch eplesedig arall hwn y mae angen i chi ei ddatgan?
 tellUsAboutMultipleSPRRate.hint.litres = Nodwch y litrau, hyd at 2 le degol
-tellUsAboutMultipleSPRRate.pureAlcohol.hint = Nodwch y litrau, hyd at 4 lle degol 
+tellUsAboutMultipleSPRRate.pureAlcohol.hint = Nodwch y litrau, gan gynnwys 4 lle degol
 tellUsAboutMultipleSPRRate.hint.currency = Dylech gynnwys punnoedd a cheiniogau
 tellUsAboutMultipleSPRRate.checkYourAnswersLabel.cardTitle = {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach 
  
@@ -816,7 +816,7 @@ adjustmentVolume.change.hidden = NOT_FOUND
 adjustmentVolume.totalLitresVolume.heading = Cyfanswm y litrau
 adjustmentVolume.totalLitresVolume.hint = Nodwch y litrau, hyd at 2 le degol
 adjustmentVolume.pureAlcoholVolume.heading = Litrau o alcohol pur
-adjustmentVolume.pureAlcoholVolume.hint = Nodwch y litrau, hyd at 4 lle degol
+adjustmentVolume.pureAlcoholVolume.hint = Nodwch y litrau, gan gynnwys 4 lle degol
 adjustmentVolume.smallProducerReliefDutyRate.heading = NOT_FOUND
 adjustmentVolume.pureAlcohol = o litrau o alcohol pur (LPA)
 adjustmentVolume.totalLitres = o litrau
@@ -839,7 +839,7 @@ adjustmentSmallProducerReliefDutyRate.error.required = Nodwch eich cyfradd doll 
 adjustmentSmallProducerReliefDutyRate.error.minimumRequired = NOT_FOUND
 adjustmentSmallProducerReliefDutyRate.error.maximumRequired = NOT_FOUND
 adjustmentSmallProducerReliefDutyRate.error.decimalPlaces = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach gynnwys 2 le degol
-adjustmentSmallProducerReliefDutyRate.change.hidden = cyfradd doll SPR
+adjustmentSmallProducerReliefDutyRate.change.hidden = Cyfradd doll SPR
  
 adjustmentDutyDue.title = Gwerth y doll ar gyfer yr addasiad hwn yw {0}
 adjustmentDutyDue.heading = Gwerth y doll ar gyfer yr addasiad hwn yw
