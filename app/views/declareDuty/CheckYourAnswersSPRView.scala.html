@@ -14,14 +14,14 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
         govukSummaryList: GovukSummaryList,
-        sectionHeading: SectionHeading,
+        caption: Caption,
         pageHeading: PageHeading
 )
 
@@ -29,7 +29,7 @@
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
   @formHelper(action = controllers.declareDuty.routes.CheckYourAnswersSPRController.onSubmit(regime, index), Symbol("autoComplete") -> "off") {
-    @sectionHeading(
+    @caption(
       id = "checkYourAnswerSPR-section",
       text = messages(s"section.return.$regime")
     )

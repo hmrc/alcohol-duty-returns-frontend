@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading, SubHeading}
+@import components.{Caption, PageHeading, SubHeading}
 @import config.Constants.Css
 @import viewmodels.InputWidth._
 
@@ -24,7 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     subHeading: SubHeading,
     govukFieldset: GovukFieldset
@@ -40,7 +40,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "whisky-section",
             text = messages("section.alcoholDutyQuarterlySpiritsReturn"),
         )

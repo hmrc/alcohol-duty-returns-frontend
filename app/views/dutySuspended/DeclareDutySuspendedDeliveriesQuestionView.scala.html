@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Link, SectionHeading, PageHeading, FormGroupWithError}
+@import components.{Link, Caption, PageHeading, FormGroupWithError}
 @import config.Constants.Css
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 
@@ -25,7 +25,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     link: Link,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     formGroupWithError: FormGroupWithError
 )
@@ -40,9 +40,9 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @sectionHeading(
+    @caption(
         id = "declare-dsd-question-section",
-        text = messages("section.alcoholDutyReturn"),
+        text = messages("section.dutySuspended"),
     )
 
     @formGroupWithError(form.errors.nonEmpty){

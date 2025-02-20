@@ -14,17 +14,19 @@
  * limitations under the License.
  *@
 
-@import components.{PageHeading, Paragraph, PrintPage}
+@import components.{PageHeading, Paragraph, PrintPage, SubHeading}
 @import config.Constants.Css
-@import viewmodels.{TableTotalViewModel, TableViewModel}
+@import viewmodels.TableViewModel
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     pageHeading: PageHeading,
+    subHeading: SubHeading,
     paragraph: Paragraph,
     govukTable: GovukTable,
+    govukSummaryList : GovukSummaryList,
     printPage: PrintPage
 )
 
@@ -35,7 +37,7 @@
    submittedAtTime: String,
    dutyToDeclare: TableViewModel,
    adjustments: TableViewModel,
-   totalDue: TableTotalViewModel,
+   totalDue: SummaryList,
    netDutySuspension: TableViewModel,
    spirits: Seq[TableViewModel]
 )(implicit request: Request[_], messages: Messages)
@@ -59,10 +61,8 @@
         rows = dutyToDeclare.rows.map(_.cells)
     ))
 
-    @{dutyToDeclare.total.map { total =>
-        govukTable(Table(
-            head = Some(total.toHeadCells())
-        ))
+    @{dutyToDeclare.total.map { totalSummaryList =>
+        govukSummaryList(totalSummaryList)
     }}
 
     <br>
@@ -74,19 +74,14 @@
         rows = adjustments.rows.map(_.cells)
     ))
 
-    @{adjustments.total.map { total =>
-        govukTable(Table(
-            head = Some(total.toHeadCells())
-        ))
+    @{adjustments.total.map { totalSummaryList =>
+         govukSummaryList(totalSummaryList)
     }}
 
     <br>
 
-    @govukTable(Table(
-        caption = Some(messages("viewReturn.dutyDue.caption")),
-        captionClasses = Css.tableCaptionMCssClass,
-        head = Some(totalDue.toHeadCells())
-    ))
+    @subHeading(messages("viewReturn.dutyDue.caption"), classes = Css.headingMCssClass)
+    @govukSummaryList(totalDue)
 
     <br>
 

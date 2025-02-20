@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
-@import components.{SectionHeading, PageHeading, FormGroupWithError}
+@import components.{Caption, PageHeading, FormGroupWithError}
 @import models.adjustment.AdjustmentType
 @import models.adjustment.AdjustmentType.{Underdeclaration, RepackagedDraughtProducts}
 
@@ -25,7 +25,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     formGroupWithError: FormGroupWithError
 )
@@ -40,14 +40,6 @@
     }
 }
 
-@headingContent = @{
-    if(adjustmentType == RepackagedDraughtProducts){
-        messages("adjustmentTaxType.repackaged.heading")
-    } else {
-        messages("adjustmentTaxType.heading")
-    }
-}
-
 @layout(pageTitle = title(form, titleContent)) {
 
     @formHelper(action = controllers.adjustment.routes.AdjustmentTaxTypeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
@@ -56,17 +48,20 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @sectionHeading(
+        @caption(
             id = "adjustment-tax-type-section",
             text = messages(s"section.adjustment.$adjustmentType")
         )
         @formGroupWithError(form.errors.nonEmpty){
-                @pageHeading(headingContent)
+                @pageHeading(titleContent)
 
                 @govukInput(
                     InputViewModel(
                         field = form("adjustment-tax-type-input"),
-                        label = LabelViewModel(messages("adjustmentTaxType.heading")).asVisuallyHidden()
+                        label = if (adjustmentType == RepackagedDraughtProducts)
+                        LabelViewModel(messages("adjustmentTaxType.repackaged.heading")).asVisuallyHidden()
+                        else
+                        LabelViewModel(messages("adjustmentTaxType.heading")).asVisuallyHidden()
                     )
                     .asNumeric()
                     .withWidth(Fixed10)

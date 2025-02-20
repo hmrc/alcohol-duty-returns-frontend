@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{BulletList, SectionHeading, PageHeading, Paragraph, SectionBreak, SubHeading}
+@import components.{BulletList, Caption, PageHeading, Paragraph, SectionBreak, SubHeading}
 @import viewmodels.LegendSize
 
 @this(
@@ -28,7 +28,7 @@
     paragraph: Paragraph,
     sectionBreak: SectionBreak,
     subHeading: SubHeading,
-    sectionHeading: SectionHeading,
+    caption: Caption,
 )
 
 
@@ -41,7 +41,7 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @sectionHeading(
+        @caption(
             id = "declareAlcoholDutyQuestion-section",
             text = messages("section.alcoholDutyReturn"),
         )

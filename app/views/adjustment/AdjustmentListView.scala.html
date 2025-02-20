@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{SectionHeading, PageHeading}
+@import components.{Caption, PageHeading}
 @import config.Constants.Css
 @import viewmodels.{TableViewModel, PaginationViewModel}
 
@@ -24,12 +24,13 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    sectionHeading: SectionHeading,
+    caption: Caption,
     pageHeading: PageHeading,
     govukTable: GovukTable,
     tableRowActionList: components.TableRowActionList,
     tableRowAction: components.TableRowAction,
-    govukPagination: GovukPagination
+    govukPagination: GovukPagination,
+    govukSummaryList : GovukSummaryList
 )
 
 
@@ -43,7 +44,7 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @sectionHeading(
+    @caption(
         id = "adjustment-list-section",
         text = messages("section.alcoholDutyReturn"),
     )
@@ -77,10 +78,8 @@
                 )
     }
 
-    @{adjustmentTable.total.map { total =>
-        govukTable(Table(
-        head = Some(total.toHeadCells())
-        ))
+    @{adjustmentTable.total.map { totalSummaryList =>
+        govukSummaryList(totalSummaryList)
     }}
 
     @govukRadios(
