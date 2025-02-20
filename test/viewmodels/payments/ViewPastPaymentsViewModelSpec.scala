@@ -207,14 +207,14 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       "must present the link to the Gform for an outstanding overpaid payment" in {
         val table            = viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
         val gformExpectedUrl =
-          "http://localhost:9195/submissions/new-form/claim-a-refund-for-an-overpayment-of-alcohol-duty?amount=4773.34"
+          "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=4773.34"
         table.rows.head.actions.head.href.url shouldBe gformExpectedUrl
       }
 
       "must present the link to the Gform for an unallocated payment" in {
         val table            = viewPastPaymentsViewModelToggleOn.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)
         val gformExpectedUrl =
-          "http://localhost:9195/submissions/new-form/claim-a-refund-for-an-overpayment-of-alcohol-duty?amount=123"
+          "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=123"
         table.rows.head.actions.head.href.url shouldBe gformExpectedUrl
       }
 
