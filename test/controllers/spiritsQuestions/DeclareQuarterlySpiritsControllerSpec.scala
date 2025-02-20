@@ -52,7 +52,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DeclareQuarterlySpiritsView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
@@ -68,7 +68,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, getMessages(application)).toString
       }
     }
@@ -94,7 +94,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -142,7 +142,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)           mustEqual SEE_OTHER
         redirectLocation(result) mustEqual Some(controllers.routes.TaskListController.onPageLoad.toString)
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
@@ -165,7 +165,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
@@ -179,7 +179,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -190,7 +190,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -206,7 +206,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -219,7 +219,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

@@ -31,7 +31,7 @@ class MultipleSPRListSummarySpec extends SpecBase {
         )
 
       val rows = MultipleSPRListSummary.rows(Beer, answers)
-      rows.map(_.key.content) mustBe
+      rows.map(_.key.content)   mustBe
         Seq(
           Text("Description"),
           Text("Total volume"),

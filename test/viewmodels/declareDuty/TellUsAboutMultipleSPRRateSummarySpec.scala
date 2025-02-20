@@ -32,7 +32,7 @@ class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
       )
 
       val rows = TellUsAboutMultipleSPRRateSummary.rows(Beer, answers, None)
-      rows.map(_.key.content) mustBe
+      rows.map(_.key.content)   mustBe
         Seq(Text("Description"), Text("Total beer"), Text("Total pure alcohol"), Text("Duty rate"))
       rows.map(_.value.content) mustBe
         Seq(

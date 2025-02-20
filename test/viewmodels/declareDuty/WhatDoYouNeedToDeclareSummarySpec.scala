@@ -27,7 +27,7 @@ class WhatDoYouNeedToDeclareSummarySpec extends SpecBase {
     "must summarise the ratebands for a regime" in new SetUp {
       val summaryList = whatDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands)
 
-      summaryList.rows.map(_.key.content) mustBe
+      summaryList.rows.map(_.key.content)   mustBe
         Seq(
           Text("Selected Beer to declare")
         )

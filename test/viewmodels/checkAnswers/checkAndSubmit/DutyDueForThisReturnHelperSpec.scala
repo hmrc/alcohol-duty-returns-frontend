@@ -52,7 +52,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
         result.toOption.get.totalDue mustBe totalDuty.duty
         result.toOption.get.dutiesBreakdownSummaryList.rows.map(
           _.value.content.toString.filter(c => c.isDigit || c == '.')
-        ) mustBe totalDutiesAndAdjustments.map(total => f"$total%.2f")
+        )                            mustBe totalDutiesAndAdjustments.map(total => f"$total%.2f")
       }
     }
 
@@ -73,7 +73,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
         result.toOption.get.totalDue mustBe totalDutyWithoutAdjustments.duty
         result.toOption.get.dutiesBreakdownSummaryList.rows.map(
           _.value.content.toString.filter(c => c.isDigit || c == '.')
-        ) mustBe totalDuties.map(total => f"$total%.2f") :+ ""
+        )                            mustBe totalDuties.map(total => f"$total%.2f") :+ ""
       }
     }
 
@@ -96,7 +96,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
         result.toOption.get.totalDue mustBe totalAdjustments.duty
         result.toOption.get.dutiesBreakdownSummaryList.rows.map(
           _.value.content.toString.filter(c => c.isDigit || c == '.')
-        ) mustBe "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
+        )                            mustBe "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
       }
     }
 
@@ -128,9 +128,9 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 1
+          result.rows.size                             mustBe 1
           result.rows.head.actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows.head.value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows.head.value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
         }
 
         "and DSD not declared, with the correct label, nothing to declare content, and redirect to the appropriate declaration page" in new SetUp {
@@ -159,9 +159,9 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 1
+          result.rows.size                             mustBe 1
           result.rows.head.actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows.head.value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows.head.value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
         }
       }
 
@@ -194,11 +194,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 2
+          result.rows.size                           mustBe 2
           result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
           result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
+          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
         }
 
         "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate pages" in new SetUp {
@@ -229,11 +229,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 2
+          result.rows.size                           mustBe 2
           result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
           result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
+          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
         }
       }
 
@@ -266,11 +266,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 2
+          result.rows.size                           mustBe 2
           result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
           result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
+          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
         }
 
         "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate declarations pages" in new SetUp {
@@ -301,11 +301,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 2
+          result.rows.size                           mustBe 2
           result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
           result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
+          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
         }
       }
     }
@@ -372,13 +372,13 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           .get
           .dutiesBreakdownSummaryList
 
-        result.rows.size mustBe 6
+        result.rows.size             mustBe 6
         result.rows.head.key.content mustBe Text("Beer declared")
-        result.rows(1).key.content mustBe Text("Cider declared")
-        result.rows(2).key.content mustBe Text("Wine declared")
-        result.rows(3).key.content mustBe Text("Spirits declared")
-        result.rows(4).key.content mustBe Text("Other fermented products declared")
-        result.rows(5).key.content mustBe Text("Adjustments to previous returns")
+        result.rows(1).key.content   mustBe Text("Cider declared")
+        result.rows(2).key.content   mustBe Text("Wine declared")
+        result.rows(3).key.content   mustBe Text("Spirits declared")
+        result.rows(4).key.content   mustBe Text("Other fermented products declared")
+        result.rows(5).key.content   mustBe Text("Adjustments to previous returns")
       }
     }
   }

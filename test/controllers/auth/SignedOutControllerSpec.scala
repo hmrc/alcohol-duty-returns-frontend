@@ -38,7 +38,7 @@ class SignedOutControllerSpec extends SpecBase {
 
         val config = application.injector.instanceOf[FrontendAppConfig]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(config.businessTaxAccountUrl)(request, getMessages(application)).toString
       }
     }

@@ -82,7 +82,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentRepackagedTaxTypeView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
@@ -101,7 +101,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, Spoilt)(
           request,
           getMessages(app)
@@ -134,7 +134,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -177,7 +177,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -209,7 +209,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
@@ -223,7 +223,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -299,7 +299,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
         val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -324,7 +324,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -345,7 +345,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
         val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

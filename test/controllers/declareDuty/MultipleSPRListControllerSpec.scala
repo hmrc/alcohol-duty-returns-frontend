@@ -70,7 +70,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
           .sprTableViewModel(userAnswers, regime)(getMessages(application))
           .getOrElse(fail())
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, regime, sprTable)(request, getMessages(application)).toString
       }
     }
@@ -92,7 +92,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
           .sprTableViewModel(userAnswers, regime)(getMessages(application))
           .getOrElse(fail())
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), regime, sprTable)(
           request,
           getMessages(application)
@@ -121,7 +121,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -145,7 +145,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
           .sprTableViewModel(userAnswers, regime)(getMessages(application))
           .getOrElse(fail())
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, sprTable)(request, getMessages(application)).toString
       }
     }
@@ -159,7 +159,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -173,7 +173,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -189,7 +189,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -205,7 +205,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -238,7 +238,7 @@ class MultipleSPRListControllerSpec extends SpecBase {
 
       sprTable mustBe Left(s"Tax types not found: ${unmatchedTaxType.taxType}")
 
-      status(result) mustEqual SEE_OTHER
+      status(result)                 mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
   }

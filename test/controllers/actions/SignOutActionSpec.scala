@@ -84,7 +84,7 @@ class SignOutActionSpec extends SpecBase {
 
       val result: Future[Result] = signOutAction.invokeBlock(FakeRequest(), testAction(appaIdStore))
 
-      status(result) mustBe SEE_OTHER
+      status(result)           mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(signOutUrl)
 
       appaIdStore.synchronized {
@@ -159,7 +159,7 @@ class SignOutActionSpec extends SpecBase {
 
         val result: Future[Result] = signOutAction.invokeBlock(FakeRequest(), testAction(appaIdStore))
 
-        status(result) mustBe SEE_OTHER
+        status(result)           mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(signOutUrl)
 
         appaIdStore.synchronized {

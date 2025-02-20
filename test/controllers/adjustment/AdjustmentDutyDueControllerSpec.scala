@@ -117,7 +117,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
           repackagedRate,
           repackagedDuty
         )
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           adjustmentDutyDueViewModel,
           Overdeclaration
@@ -158,7 +158,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
           repackagedDuty
         )
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           adjustmentDutyDueViewModel,
           Spoilt
@@ -179,7 +179,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -210,7 +210,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }

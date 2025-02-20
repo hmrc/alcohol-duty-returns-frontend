@@ -28,7 +28,7 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
         specifyTellUsAboutAllSingleSPRRate(whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands), Beer)
 
       val rows = TellUsAboutSingleSPRRateSummary.rows(Beer, answers)
-      rows.map(_.key.content) mustBe
+      rows.map(_.key.content)   mustBe
         Seq(
           Text("Description"),
           Text("Total volume"),

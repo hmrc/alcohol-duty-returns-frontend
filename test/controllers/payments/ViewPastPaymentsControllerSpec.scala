@@ -67,7 +67,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         val historicPaymentsTable         =
           viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           outstandingPaymentsTable,
           unallocatedPaymentsTable,
@@ -114,7 +114,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
           viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
         val historicPaymentsTable         =
           viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           outstandingPaymentsTable,
           unallocatedPaymentsTable,
@@ -140,7 +140,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

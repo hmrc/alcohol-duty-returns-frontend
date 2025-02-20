@@ -68,7 +68,7 @@ class ViewReturnControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[ViewReturnView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           returnPeriodStr,
           Some(chargeReference),
@@ -124,7 +124,7 @@ class ViewReturnControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[ViewReturnView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           returnPeriodStr,
           Some(chargeReference),
@@ -177,7 +177,7 @@ class ViewReturnControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[ViewReturnView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           returnPeriodStr,
           None,
@@ -231,7 +231,7 @@ class ViewReturnControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[ViewReturnView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           returnPeriodStr,
           None,
@@ -264,7 +264,7 @@ class ViewReturnControllerSpec extends SpecBase {
         val request = FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(badPeriodKey).url)
         val result  = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
 
@@ -285,7 +285,7 @@ class ViewReturnControllerSpec extends SpecBase {
           FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKeyUnderTest).url)
         val result  = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
 
@@ -313,7 +313,7 @@ class ViewReturnControllerSpec extends SpecBase {
           FakeRequest(GET, controllers.returns.routes.ViewReturnController.onPageLoad(periodKeyUnderTest).url)
         val result  = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
 

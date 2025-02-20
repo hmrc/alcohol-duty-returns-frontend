@@ -42,7 +42,7 @@ class CheckSpiritsAndIngredientsToggleActionSpec extends SpecBase {
           )
           .header
 
-      result.status mustEqual SEE_OTHER
+      result.status                mustEqual SEE_OTHER
       result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
     }
 

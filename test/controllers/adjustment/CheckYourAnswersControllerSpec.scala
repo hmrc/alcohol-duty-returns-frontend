@@ -60,7 +60,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual content.body
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswers))(any())
@@ -97,7 +97,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual content.body
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswersWithCurrentAdjustmentSet))(any())
@@ -118,7 +118,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
         verify(mockUserAnswersConnector, never).set(any())(any())
@@ -148,7 +148,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
         verify(mockUserAnswersConnector, never).set(any())(any())
@@ -181,7 +181,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
           .onPageLoad(1)
           .url
@@ -216,7 +216,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
           .onPageLoad(1)
           .url
@@ -241,7 +241,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
         verify(mockUserAnswersConnector, never).set(any())(any())
@@ -269,7 +269,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
         verify(mockUserAnswersConnector, never).set(any())(any())

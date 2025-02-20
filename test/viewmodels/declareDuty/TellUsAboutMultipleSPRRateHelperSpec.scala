@@ -43,7 +43,7 @@ class TellUsAboutMultipleSPRRateHelperSpec extends SpecBase {
         Text("Draught beer between 4% and 5% ABV (126 SPR)"),
         Text("Draught beer between 1% and 2% ABV (128 SPR)")
       )
-      result.map(_.value) mustBe Seq(Some("125"), Some("127"), Some("126"), Some("128"))
+      result.map(_.value)   mustBe Seq(Some("125"), Some("127"), Some("126"), Some("128"))
     }
   }
 

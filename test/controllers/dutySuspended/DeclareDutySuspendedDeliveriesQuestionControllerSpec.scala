@@ -64,7 +64,7 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DeclareDutySuspendedDeliveriesQuestionView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(request, getMessages(application)).toString
       }
     }
@@ -82,7 +82,7 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, getMessages(application)).toString
       }
     }
@@ -110,7 +110,7 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -130,7 +130,7 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode)(request, getMessages(application)).toString
       }
     }
@@ -144,7 +144,7 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -160,7 +160,7 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -197,7 +197,7 @@ class DeclareDutySuspendedDeliveriesQuestionControllerSpec extends SpecBase {
             ("declare-duty-suspended-deliveries-input", "false")
           )
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())

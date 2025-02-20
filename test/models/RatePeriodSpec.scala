@@ -33,19 +33,19 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     "when apply is called" - {
       "must create correct instances" in {
         RateType(hasDraughtRelief = false, hasSmallProducerRelief = false) mustEqual RateType.Core
-        RateType(hasDraughtRelief = true, hasSmallProducerRelief = false) mustEqual RateType.DraughtRelief
-        RateType(hasDraughtRelief = false, hasSmallProducerRelief = true) mustEqual RateType.SmallProducerRelief
+        RateType(hasDraughtRelief = true, hasSmallProducerRelief = false)  mustEqual RateType.DraughtRelief
+        RateType(hasDraughtRelief = false, hasSmallProducerRelief = true)  mustEqual RateType.SmallProducerRelief
         RateType(
           hasDraughtRelief = true,
           hasSmallProducerRelief = true
-        ) mustEqual RateType.DraughtAndSmallProducerRelief
+        )                                                                  mustEqual RateType.DraughtAndSmallProducerRelief
       }
     }
     "when writing to json" - {
       "must return the correct string representation" in {
-        Json.toJson[RateType](RateType.Core) mustEqual JsString("Core")
-        Json.toJson[RateType](RateType.DraughtRelief) mustEqual JsString("DraughtRelief")
-        Json.toJson[RateType](RateType.SmallProducerRelief) mustEqual JsString("SmallProducerRelief")
+        Json.toJson[RateType](RateType.Core)                          mustEqual JsString("Core")
+        Json.toJson[RateType](RateType.DraughtRelief)                 mustEqual JsString("DraughtRelief")
+        Json.toJson[RateType](RateType.SmallProducerRelief)           mustEqual JsString("SmallProducerRelief")
         Json.toJson[RateType](RateType.DraughtAndSmallProducerRelief) mustEqual JsString(
           "DraughtAndSmallProducerRelief"
         )
@@ -53,9 +53,9 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
     }
     "when reading from json" - {
       "must translate from the string rep, to the correct case object" in {
-        JsString("Core").as[RateType] mustEqual RateType.Core
-        JsString("DraughtRelief").as[RateType] mustEqual RateType.DraughtRelief
-        JsString("SmallProducerRelief").as[RateType] mustEqual RateType.SmallProducerRelief
+        JsString("Core").as[RateType]                          mustEqual RateType.Core
+        JsString("DraughtRelief").as[RateType]                 mustEqual RateType.DraughtRelief
+        JsString("SmallProducerRelief").as[RateType]           mustEqual RateType.SmallProducerRelief
         JsString("DraughtAndSmallProducerRelief").as[RateType] mustEqual RateType.DraughtAndSmallProducerRelief
       }
       "must return an exception in response to an unrecognised string" in {
@@ -127,10 +127,10 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
 
   "AlcoholType" - {
     "must convert AlcoholRegimes to AlcoholTypes" in {
-      AlcoholType.fromAlcoholRegime(AlcoholRegime.Beer) mustBe AlcoholType.Beer
-      AlcoholType.fromAlcoholRegime(AlcoholRegime.Cider) mustBe AlcoholType.Cider
-      AlcoholType.fromAlcoholRegime(AlcoholRegime.Wine) mustBe AlcoholType.Wine
-      AlcoholType.fromAlcoholRegime(AlcoholRegime.Spirits) mustBe AlcoholType.Spirits
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.Beer)                  mustBe AlcoholType.Beer
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.Cider)                 mustBe AlcoholType.Cider
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.Wine)                  mustBe AlcoholType.Wine
+      AlcoholType.fromAlcoholRegime(AlcoholRegime.Spirits)               mustBe AlcoholType.Spirits
       AlcoholType.fromAlcoholRegime(AlcoholRegime.OtherFermentedProduct) mustBe AlcoholType.OtherFermentedProduct
     }
   }
@@ -144,7 +144,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
       forAll { (yearMonth: YearMonth) =>
         val json   = Json.toJson(yearMonth)
         val result = json.validate[YearMonth]
-        result mustBe a[JsSuccess[_]]
+        result        mustBe a[JsSuccess[_]]
         result.get mustEqual yearMonth
       }
     }
@@ -154,7 +154,7 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
         val json   = Json.toJson(optionYearMonth)
         val result = json.validate[Option[YearMonth]]
 
-        result mustBe a[JsSuccess[_]]
+        result        mustBe a[JsSuccess[_]]
         result.get mustEqual optionYearMonth
       }
     }
@@ -186,18 +186,18 @@ class RatePeriodSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyC
 
       val result = Json.parse(json).validate[RateBand].get
 
-      result mustBe a[RateBand]
-      result.taxTypeCode mustBe "311"
-      result.rateType mustBe Core
-      result.rangeDetails.size mustBe 1
-      result.rangeDetails.head.alcoholRegime mustBe Beer
+      result                                    mustBe a[RateBand]
+      result.taxTypeCode                        mustBe "311"
+      result.rateType                           mustBe Core
+      result.rangeDetails.size                  mustBe 1
+      result.rangeDetails.head.alcoholRegime    mustBe Beer
       result.rangeDetails.head.abvRanges.length mustBe 1
-      result.rangeDetails.head.abvRanges.head mustBe ABVRange(
+      result.rangeDetails.head.abvRanges.head   mustBe ABVRange(
         AlcoholType.Beer,
         AlcoholByVolume(1.3),
         AlcoholByVolume(3.4)
       )
-      result.rate mustBe Some(BigDecimal(9.27))
+      result.rate                               mustBe Some(BigDecimal(9.27))
     }
 
     "must error if the RateBand json is empty" in {

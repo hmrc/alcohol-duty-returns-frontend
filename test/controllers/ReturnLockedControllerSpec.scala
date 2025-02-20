@@ -34,7 +34,7 @@ class ReturnLockedControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[ReturnLockedView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(appConfig.businessTaxAccountUrl)(
           request,
           getMessages(application)

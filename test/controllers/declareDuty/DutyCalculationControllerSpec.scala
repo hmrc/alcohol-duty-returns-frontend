@@ -94,7 +94,7 @@ class DutyCalculationControllerSpec extends SpecBase {
             .toOption
             .get
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(regime, tableViewModel, alcoholDuty.totalDuty)(
           request,
           getMessages(application)
@@ -130,7 +130,7 @@ class DutyCalculationControllerSpec extends SpecBase {
             .toOption
             .get
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(regime, tableViewModel, alcoholDuty.totalDuty)(
           request,
           getMessages(application)
@@ -156,7 +156,7 @@ class DutyCalculationControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -181,7 +181,7 @@ class DutyCalculationControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
       }
     }
@@ -204,7 +204,7 @@ class DutyCalculationControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

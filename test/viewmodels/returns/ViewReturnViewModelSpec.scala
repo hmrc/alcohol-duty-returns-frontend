@@ -34,15 +34,15 @@ class ViewReturnViewModelSpec extends SpecBase {
         val alcoholDeclaredViewModel =
           viewModel.createAlcoholDeclaredViewModel(returnDetails, exampleRateBands(periodKey))
 
-        alcoholDeclaredViewModel.rows.size mustBe returnDetails.alcoholDeclared.alcoholDeclaredDetails.get.size
+        alcoholDeclaredViewModel.rows.size                         mustBe returnDetails.alcoholDeclared.alcoholDeclaredDetails.get.size
         alcoholDeclaredViewModel.total.get.rows.head.value.content mustBe Text(
           messages(
             "site.currency.2DP",
             returnDetails.alcoholDeclared.total
           )
         )
-        alcoholDeclaredViewModel.rows.head.cells.head.content mustBe Text("311")
-        alcoholDeclaredViewModel.rows(3).cells.head.content mustBe Text(
+        alcoholDeclaredViewModel.rows.head.cells.head.content      mustBe Text("311")
+        alcoholDeclaredViewModel.rows(3).cells.head.content        mustBe Text(
           "Non-draught beer between 1% and 2% ABV (123)"
         )
       }
@@ -50,14 +50,14 @@ class ViewReturnViewModelSpec extends SpecBase {
       "must return a model with no entries when a nil return" in new SetUp {
         val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(nilReturn, emptyRateBands)
 
-        alcoholDeclaredViewModel.rows.size mustBe 1
+        alcoholDeclaredViewModel.rows.size                  mustBe 1
         alcoholDeclaredViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
       }
 
       "must return a model with no entries when a nil return with empty sections" in new SetUp {
         val alcoholDeclaredViewModel = viewModel.createAlcoholDeclaredViewModel(emptyReturnDetails, emptyRateBands)
 
-        alcoholDeclaredViewModel.rows.size mustBe 1
+        alcoholDeclaredViewModel.rows.size                  mustBe 1
         alcoholDeclaredViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
       }
     }
@@ -66,14 +66,14 @@ class ViewReturnViewModelSpec extends SpecBase {
       "must return a model with data when adjustments declared" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey3))
 
-        adjustmentsViewModel.rows.size mustBe 5
+        adjustmentsViewModel.rows.size                         mustBe 5
         adjustmentsViewModel.total.get.rows.head.value.content mustBe Text(
           s"$minus${messages("site.currency.2DP", returnDetails.adjustments.total.abs)}"
         )
 
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text("321")
-        adjustmentsViewModel.rows(4).cells(1).content mustBe Text("Non-draught beer between 1% and 2% ABV (125)")
-        adjustmentsViewModel.rows(4).cells(3).content mustBe Text("£21.01")
+        adjustmentsViewModel.rows(4).cells(1).content   mustBe Text("Non-draught beer between 1% and 2% ABV (125)")
+        adjustmentsViewModel.rows(4).cells(3).content   mustBe Text("£21.01")
       }
 
       "must return a model with data when a spoilt adjustment declared where Description is the regime name and duty rate is NA" in new SetUp {
@@ -84,27 +84,27 @@ class ViewReturnViewModelSpec extends SpecBase {
           exampleRateBands(periodKey2)
         )
 
-        adjustmentsViewModel.rows.size mustBe 2
+        adjustmentsViewModel.rows.size                         mustBe 2
         adjustmentsViewModel.total.get.rows.head.value.content mustBe Text(
           s"$minus${messages("site.currency.2DP", returnDetailWithSpoilt.adjustments.total.abs)}"
         )
-        adjustmentsViewModel.rows.head.cells(1).content mustBe Text("123")
-        adjustmentsViewModel.rows.head.cells(3).content mustBe Text("not applicable")
-        adjustmentsViewModel.rows(1).cells(1).content mustBe Text("Wine")
-        adjustmentsViewModel.rows(1).cells(3).content mustBe Text("not applicable")
+        adjustmentsViewModel.rows.head.cells(1).content        mustBe Text("123")
+        adjustmentsViewModel.rows.head.cells(3).content        mustBe Text("not applicable")
+        adjustmentsViewModel.rows(1).cells(1).content          mustBe Text("Wine")
+        adjustmentsViewModel.rows(1).cells(3).content          mustBe Text("not applicable")
       }
 
       "must return a model with no entries when a nil return (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(nilReturn, emptyRateBands)
 
-        adjustmentsViewModel.rows.size mustBe 1
+        adjustmentsViewModel.rows.size                  mustBe 1
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
       }
 
       "must return a model with no entries when a nil return with empty sections (nothing declared, no total)" in new SetUp {
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(emptyReturnDetails, emptyRateBands)
 
-        adjustmentsViewModel.rows.size mustBe 1
+        adjustmentsViewModel.rows.size                  mustBe 1
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text(messages("site.nil"))
       }
     }
@@ -189,7 +189,7 @@ class ViewReturnViewModelSpec extends SpecBase {
       "must return a model with the right label when nothing declared" in new SetUp {
         val netDutySuspensionViewModel = viewModel.createNetDutySuspensionViewModel(nilReturn)
 
-        netDutySuspensionViewModel.rows.size mustBe 1
+        netDutySuspensionViewModel.rows.size                    mustBe 1
         netDutySuspensionViewModel.rows.head.cells.head.content mustBe Text(
           messages("viewReturn.netDutySuspension.noneDeclared")
         )
@@ -204,13 +204,13 @@ class ViewReturnViewModelSpec extends SpecBase {
           )
         )
 
-        spiritsViewModels.size mustBe 2
-        spiritsViewModels.head.head.size mustBe 2
-        spiritsViewModels.head.head.map(_.content) mustBe Seq(
+        spiritsViewModels.size                                mustBe 2
+        spiritsViewModels.head.head.size                      mustBe 2
+        spiritsViewModels.head.head.map(_.content)            mustBe Seq(
           Text(messages("viewReturn.table.description.legend")),
           Text(messages("viewReturn.table.totalVolume.lpa.legend"))
         )
-        spiritsViewModels.head.rows.size mustBe 3
+        spiritsViewModels.head.rows.size                      mustBe 3
         spiritsViewModels.head.rows.foreach { row =>
           row.cells.size mustBe 2
         }
@@ -219,12 +219,12 @@ class ViewReturnViewModelSpec extends SpecBase {
           Text(messages("viewReturn.spirits.scotchWhisky")),
           Text(messages("viewReturn.spirits.irishWhiskey"))
         )
-        spiritsViewModels.head.caption mustBe Some(messages("viewReturn.spirits.caption"))
-        spiritsViewModels.last.head.size mustBe 1
-        spiritsViewModels.last.head.map(_.content) mustBe Seq(Text(messages("viewReturn.table.typesOfSpirits.legend")))
-        spiritsViewModels.last.rows.size mustBe 1
-        spiritsViewModels.last.rows.head.cells.size mustBe 1
-        spiritsViewModels.last.rows.head.cells.head.content mustBe Text(
+        spiritsViewModels.head.caption                        mustBe Some(messages("viewReturn.spirits.caption"))
+        spiritsViewModels.last.head.size                      mustBe 1
+        spiritsViewModels.last.head.map(_.content)            mustBe Seq(Text(messages("viewReturn.table.typesOfSpirits.legend")))
+        spiritsViewModels.last.rows.size                      mustBe 1
+        spiritsViewModels.last.rows.head.cells.size           mustBe 1
+        spiritsViewModels.last.rows.head.cells.head.content   mustBe Text(
           Seq(
             messages("viewReturn.spirits.type.malt"),
             messages("viewReturn.spirits.type.grain"),
@@ -236,7 +236,7 @@ class ViewReturnViewModelSpec extends SpecBase {
             "Coco Pops Vodka"
           ).mkString(", ")
         )
-        spiritsViewModels.last.caption mustBe None
+        spiritsViewModels.last.caption                        mustBe None
       }
 
       "must return a model with data when quarterly spirits is declared and handling missing other spirits type name gracefully" in new SetUp {
@@ -264,12 +264,12 @@ class ViewReturnViewModelSpec extends SpecBase {
       "must return a model with the right label when nothing declared" in new SetUp {
         val spiritsViewModels = viewModel.createSpiritsViewModels(nilReturn)
 
-        spiritsViewModels.size mustBe 1
-        spiritsViewModels.head.rows.size mustBe 1
+        spiritsViewModels.size                              mustBe 1
+        spiritsViewModels.head.rows.size                    mustBe 1
         spiritsViewModels.head.rows.head.cells.head.content mustBe Text(
           messages("viewReturn.spirits.noneDeclared")
         )
-        spiritsViewModels.head.caption mustBe Some(messages("viewReturn.spirits.caption"))
+        spiritsViewModels.head.caption                      mustBe Some(messages("viewReturn.spirits.caption"))
       }
     }
   }

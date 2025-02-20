@@ -48,7 +48,7 @@ class ServiceUpdatedControllerSpec extends SpecBase {
 
           val view = application.injector.instanceOf[ServiceUpdatedView]
 
-          status(result) mustEqual OK
+          status(result)          mustEqual OK
           contentAsString(result) mustEqual view()(
             request,
             getMessages(application)
@@ -77,7 +77,7 @@ class ServiceUpdatedControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
 
           verify(mockUserAnswersConnector).delete(eqTo(appaId), eqTo(periodKey))(any())
@@ -106,7 +106,7 @@ class ServiceUpdatedControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
           verify(mockUserAnswersConnector).delete(eqTo(appaId), eqTo(periodKey))(any())
@@ -128,7 +128,7 @@ class ServiceUpdatedControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
           verify(mockUserAnswersConnector, times(0)).delete(any(), any())(any())

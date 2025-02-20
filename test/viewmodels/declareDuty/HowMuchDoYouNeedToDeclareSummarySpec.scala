@@ -35,7 +35,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
       val answers = specifyAllHowMuchDoYouNeedToDeclareUnsorted(userAnswersWithBeer, Beer)
 
       val summaryList = howMuchDoYouNeedToDeclareSummary.summaryList(Beer, allNonSmallProducerReliefRateBands, answers)
-      summaryList.get.rows.map(_.key.content) mustBe
+      summaryList.get.rows.map(_.key.content)   mustBe
         Seq(
           Text("Description"),
           Text("Total volume"),
@@ -59,7 +59,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
       val answers = specifyAllHowMuchDoYouNeedToDeclareUnsorted(userAnswersWithBeer, Beer)
 
       val sumamryList = howMuchDoYouNeedToDeclareSummary.summaryList(Beer, Set.empty, answers)
-      sumamryList.get.rows.map(_.key.content) mustBe Seq.empty
+      sumamryList.get.rows.map(_.key.content)   mustBe Seq.empty
       sumamryList.get.rows.map(_.value.content) mustBe Seq.empty
     }
 

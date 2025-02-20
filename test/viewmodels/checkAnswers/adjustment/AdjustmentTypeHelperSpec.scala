@@ -42,8 +42,8 @@ class AdjustmentTypeHelperSpec extends SpecBase {
         val updatedAnswers = result.get
         val updatedEntry   = updatedAnswers.get(CurrentAdjustmentEntryPage).value
         updatedEntry.spoiltRegime mustBe Some(Beer)
-        updatedEntry.rateBand mustBe Some(spoiltRateBand)
-        updatedEntry.period mustBe Some(YearMonth.now(clock).minusMonths(1))
+        updatedEntry.rateBand     mustBe Some(spoiltRateBand)
+        updatedEntry.period       mustBe Some(YearMonth.now(clock).minusMonths(1))
       }
 
       "must return the original user answers when there is more than one regime" in new SetUp {

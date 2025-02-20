@@ -75,7 +75,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
           completeDutySuspendedDeliveriesUserAnswers
         )(getMessages(application))
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
       }
     }
@@ -112,7 +112,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
           val checkYourAnswersHelper = new CheckYourAnswersSummaryListHelper()
           val list                   = checkYourAnswersHelper.dutySuspendedDeliveriesSummaryList(userAnswers)(getMessages(application))
 
-          status(result) mustEqual OK
+          status(result)          mustEqual OK
           contentAsString(result) mustEqual view(list)(request, getMessages(application)).toString
         }
       }
@@ -130,7 +130,7 @@ class CheckYourAnswersDutySuspendedDeliveriesControllerSpec extends SpecBase wit
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }

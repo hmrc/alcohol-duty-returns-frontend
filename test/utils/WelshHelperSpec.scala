@@ -58,8 +58,8 @@ class WelshHelperSpec extends SpecBase {
 
       "must handle scientific notation" in { // Note we don't differentiate 11, 16, 17 right now
         WelshHelper.chooseAnd(BigDecimal("8E-1")) mustBe "welsh.and.consonant"
-        WelshHelper.chooseAnd(BigDecimal("8E0")) mustBe "welsh.and.vowel"
-        WelshHelper.chooseAnd(BigDecimal("8E1")) mustBe "welsh.and.consonant"
+        WelshHelper.chooseAnd(BigDecimal("8E0"))  mustBe "welsh.and.vowel"
+        WelshHelper.chooseAnd(BigDecimal("8E1"))  mustBe "welsh.and.consonant"
       }
     }
   }

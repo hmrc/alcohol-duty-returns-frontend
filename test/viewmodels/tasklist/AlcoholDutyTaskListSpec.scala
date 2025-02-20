@@ -27,8 +27,8 @@ class AlcoholDutyTaskListSpec extends SpecBase {
       val taskList = AlcoholDutyTaskList(Seq.empty, "", "", "", "")
 
       taskList.completedTasks mustBe 0
-      taskList.totalTasks mustBe 0
-      taskList.status mustBe Completed
+      taskList.totalTasks     mustBe 0
+      taskList.status         mustBe Completed
     }
 
     "must classify the completed tasks when not all are complete" in new SetUp {
@@ -67,8 +67,8 @@ class AlcoholDutyTaskListSpec extends SpecBase {
       )
 
       taskList.completedTasks mustBe 1
-      taskList.totalTasks mustBe 3
-      taskList.status mustBe Incomplete
+      taskList.totalTasks     mustBe 3
+      taskList.status         mustBe Incomplete
     }
 
     "must classify the completed tasks when all are complete" in new SetUp {
@@ -107,8 +107,8 @@ class AlcoholDutyTaskListSpec extends SpecBase {
       )
 
       taskList.completedTasks mustBe 3
-      taskList.totalTasks mustBe 3
-      taskList.status mustBe Completed
+      taskList.totalTasks     mustBe 3
+      taskList.status         mustBe Completed
     }
   }
 

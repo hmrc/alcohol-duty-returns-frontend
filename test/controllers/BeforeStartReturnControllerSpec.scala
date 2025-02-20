@@ -99,7 +99,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
             val result = route(application, request).value
 
-            status(result) mustEqual SEE_OTHER
+            status(result)                 mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual controllers.routes.ServiceUpdatedController.onPageLoad.url
           }
         }
@@ -126,7 +126,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
             val result = route(application, request).value
 
-            status(result) mustEqual SEE_OTHER
+            status(result)                 mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
           }
         }
@@ -160,7 +160,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
               ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get
             )
 
-          status(result) mustEqual OK
+          status(result)          mustEqual OK
           contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(
             request,
             getMessages(application)
@@ -181,7 +181,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }
@@ -208,7 +208,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.ReturnLockedController.onPageLoad().url
         }
       }
@@ -235,7 +235,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }
@@ -260,7 +260,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
           verify(mockUserAnswersAuditHelper).auditReturnStarted(eqTo(userAnswers))(any())
         }
@@ -285,7 +285,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
           verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
@@ -310,7 +310,7 @@ class BeforeStartReturnControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
           verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())

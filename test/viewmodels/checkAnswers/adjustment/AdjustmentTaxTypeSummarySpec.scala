@@ -28,7 +28,7 @@ class AdjustmentTaxTypeSummarySpec extends SpecBase {
       val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Drawback), rateBand = Some(coreRateBand))
       val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry).get
 
-      result.key.content mustBe Text("Tax type")
+      result.key.content   mustBe Text("Tax type")
       result.value.content mustBe Text("Non-draught beer between 1% and 2% ABV (123)")
     }
 
@@ -37,7 +37,7 @@ class AdjustmentTaxTypeSummarySpec extends SpecBase {
         AdjustmentEntry(adjustmentType = Some(RepackagedDraughtProducts), rateBand = Some(coreRateBand))
       val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry).get
 
-      result.key.content mustBe Text("Original tax type")
+      result.key.content   mustBe Text("Original tax type")
       result.value.content mustBe Text("Non-draught beer between 1% and 2% ABV (123)")
     }
 
