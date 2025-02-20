@@ -59,7 +59,7 @@ class WhatDoYouNeedToDeclareSummary {
     SummaryListRowViewModel(
       key = messages(
         s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row",
-        messages(regime.regimeMessageKey).capitalize
+        messages(regime.regimeMessageKey)
       ),
       value = ValueViewModel(
         HtmlContent(
