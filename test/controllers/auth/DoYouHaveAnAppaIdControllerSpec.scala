@@ -63,19 +63,18 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the request access page when yes is selected" in {
+    "must redirect to the AppaId auth controller check when yes is selected" in {
       val application = applicationBuilder().build()
 
       running(application) {
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-        val request   =
+        val request =
           FakeRequest(POST, doYouHaveAnAppaIdRoute)
             .withFormUrlEncodedBody(("doYouHaveAnAppaId-yesNoValue", "true"))
 
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual appConfig.requestAccessUrl
+        redirectLocation(result).value mustEqual controllers.auth.routes.AppaIdAuthController.onPageLoad().url
       }
     }
 
