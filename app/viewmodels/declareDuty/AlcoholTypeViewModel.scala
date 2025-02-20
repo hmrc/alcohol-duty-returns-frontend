@@ -27,12 +27,12 @@ object AlcoholTypeViewModel {
 
   def checkboxItems(regimes: AlcoholRegimes)(implicit messages: Messages): Seq[CheckboxItem] = {
     val orderedRegimes = regimesInViewOrder(regimes)
-    orderedRegimes.zipWithIndex.map { case (value, index) =>
+    orderedRegimes.zipWithIndex.map { case (regime, index) =>
       CheckboxItemViewModel(
-        content = Text(messages(s"alcoholType.${value.toString}").capitalize),
+        content = Text(messages(regime.regimeMessageKey).capitalize),
         fieldId = "value",
         index = index,
-        value = value.toString
+        value = regime.toString
       )
     }
   }

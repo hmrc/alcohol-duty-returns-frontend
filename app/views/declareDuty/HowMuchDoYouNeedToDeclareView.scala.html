@@ -55,12 +55,12 @@
         @if(howMuchDoYouNeedToDeclareHelper.draughtAndSmallProducer.nonEmpty || howMuchDoYouNeedToDeclareHelper.smallProducer.nonEmpty) {
           @govukWarningText(WarningText(
               iconFallbackText = Some("Warning"),
-              content = Text(messages("howMuchDoYouNeedToDeclare.warning", messages(s"alcoholType.$regime")))
+              content = Text(messages("howMuchDoYouNeedToDeclare.warning", messages(regime.regimeMessageKey)))
           ))
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.core.nonEmpty) {
-          @subHeading(messages("howMuchDoYouNeedToDeclare.core.heading", messages(s"alcoholType.$regime")), classes = Css.headingMCssClass)
+          @subHeading(messages("howMuchDoYouNeedToDeclare.core.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
@@ -72,7 +72,7 @@
                   InputViewModel(
                     field = form(s"volumes[$index]"),
                     key = "totalLitres",
-                    label = LabelViewModel(messages("return.journey.totalLitres", messages(s"alcoholType.$regime"))),
+                    label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageKey))),
                     errorMessageField = form(s"volumes_${index}_totalLitres"),
                     value = form(s"volumes[$index].totalLitres").value
                   )
@@ -118,7 +118,7 @@
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.draught.nonEmpty) {
-          @subHeading(messages("howMuchDoYouNeedToDeclare.draught.heading", messages(s"alcoholType.$regime")), classes = Css.headingMCssClass)
+          @subHeading(messages("howMuchDoYouNeedToDeclare.draught.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
@@ -130,7 +130,7 @@
                   InputViewModel(
                     field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                     key = "totalLitres",
-                    label = LabelViewModel(messages("return.journey.totalLitres", messages(s"alcoholType.$regime"))),
+                    label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageKey))),
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_totalLitres"),
                     value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].totalLitres").value
                   )

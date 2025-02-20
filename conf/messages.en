@@ -93,6 +93,12 @@ noAppaId.heading = You need an Alcoholic Products Producer approval ID to access
 noAppaId.p = If you were producing alcoholic products before 1 February 2025, you can find your APPA ID on the online service letter you received from HMRC.
 noAppaId.link.text = Read guidance on getting approval to produce alcoholic products (opens in a new tab)
 
+regime.beer = beer
+regime.cider = cider
+regime.wine = wine
+regime.spirits = spirits
+regime.otherfermentedproduct = other fermented products
+
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty Return
 section.return.Beer = Declare beer
@@ -262,11 +268,6 @@ beforeStartReturn.text.dueDateWarning = The deadline for completing this return 
 
 alcoholType.title = Which types of alcoholic products do you need to declare?
 alcoholType.heading = Which types of alcoholic products do you need to declare?
-alcoholType.Beer = beer
-alcoholType.Cider = cider
-alcoholType.Wine = wine
-alcoholType.Spirits = spirits
-alcoholType.OtherFermentedProduct = other fermented products
 alcoholType.error.required = Select the types of alcoholic products you need to declare
 alcoholType.p1 = Select the types of alcoholic product you need to declare in this return.
 alcoholType.p2 = Types you do not select will have nil values in your return.

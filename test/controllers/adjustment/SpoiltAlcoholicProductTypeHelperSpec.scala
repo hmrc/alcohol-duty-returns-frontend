@@ -33,7 +33,7 @@ class SpoiltAlcoholicProductTypeHelperSpec extends SpecBase {
         s"create an appropriate rate band for the $regime regime" in new SetUp {
           val expectedRateBand = RateBand(
             expectedRegimeToTaxType(regime),
-            messages(s"alcoholType.$regime"),
+            messages(regime.regimeMessageKey),
             Core,
             Some(expectedSpoiltRate),
             Set(

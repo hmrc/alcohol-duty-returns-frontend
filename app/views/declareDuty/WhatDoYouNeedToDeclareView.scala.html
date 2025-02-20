@@ -55,7 +55,7 @@
                   @govukCheckboxes(CheckboxesViewModel(
                     form   = form,
                     name   = "value",
-                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.core.heading", messages(s"alcoholType.$regime")).capitalize).asSubheading,
+                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.core.heading", messages(regime.regimeMessageKey)).capitalize).asSubheading,
                     items  = taxBandsViewModel.core
                   ))
                 }
@@ -64,7 +64,7 @@
                   @govukCheckboxes(CheckboxesViewModel(
                     form   = form,
                     name   = "value",
-                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.draught.heading", messages(s"alcoholType.$regime")).capitalize).asSubheading,
+                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.draught.heading", messages(regime.regimeMessageKey)).capitalize).asSubheading,
                     items  = taxBandsViewModel.draught
                   ))
                 }
@@ -73,7 +73,7 @@
                   @govukCheckboxes(CheckboxesViewModel(
                     form   = form,
                     name   = "value",
-                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.smallProducerRelief.heading", messages(s"alcoholType.$regime")).capitalize).asSubheading,
+                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.smallProducerRelief.heading", messages(regime.regimeMessageKey)).capitalize).asSubheading,
                     items  = taxBandsViewModel.smallProducerRelief
                   ))
 
@@ -83,7 +83,7 @@
                   @govukCheckboxes(CheckboxesViewModel(
                     form   = form,
                     name   = "value",
-                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading", messages(s"alcoholType.$regime")).capitalize).asSubheading,
+                    legend = LegendViewModel(messages("whatDoYouNeedToDeclare.draughtAndSmallProducerRelief.heading", messages(regime.regimeMessageKey)).capitalize).asSubheading,
                     items  = taxBandsViewModel.draughtAndSmallProducerRelief
                   ))
                 }

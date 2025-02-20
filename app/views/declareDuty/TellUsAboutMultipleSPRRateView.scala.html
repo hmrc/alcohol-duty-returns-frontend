@@ -36,7 +36,7 @@
 
 @(form: Form[_], mode: Mode, regime: AlcoholRegime, rateBandRadioItems: Seq[RadioItem], index: Option[Int])(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("tellUsAboutMultipleSPRRate.title", messages(s"alcoholType.$regime")))) {
+@layout(pageTitle = title(form, messages("tellUsAboutMultipleSPRRate.title", messages(regime.regimeMessageKey)))) {
 
     @formHelper(action = controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onSubmit(mode, regime, index), Symbol("autoComplete") -> "off") {
 
@@ -49,20 +49,20 @@
             text = messages(s"section.return.$regime")
         )
 
-        @pageHeading(messages("tellUsAboutMultipleSPRRate.heading", messages(s"alcoholType.$regime")))
+        @pageHeading(messages("tellUsAboutMultipleSPRRate.heading", messages(regime.regimeMessageKey)))
 
-        @paragraph(messages("tellUsAboutMultipleSPRRate.p1", messages(s"alcoholType.$regime")))
+        @paragraph(messages("tellUsAboutMultipleSPRRate.p1", messages(regime.regimeMessageKey)))
 
         @govukWarningText(WarningText(
             iconFallbackText = Some("Warning"),
-            content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(s"alcoholType.$regime")))
+            content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(regime.regimeMessageKey)))
         ))
 
         @if(rateBandRadioItems.size > 1){
             @govukRadios(
                 RadiosViewModel(
                     field  = form("volumesWithRate.taxType"),
-                    fieldset = FieldsetViewModel(LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(s"alcoholType.$regime"))).withSize(LegendSize.Medium)),
+                    fieldset = FieldsetViewModel(LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(regime.regimeMessageKey))).withSize(LegendSize.Medium)),
                     items  = rateBandRadioItems,
                     errorMessageField = form("volumesWithRate_taxType")
                 )
@@ -82,7 +82,7 @@
                 InputViewModel(
                   field = form("volumesWithRate"),
                   key = "totalLitres",
-                  label = LabelViewModel(messages("return.journey.totalLitres", messages(s"alcoholType.$regime"))),
+                  label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageKey))),
                   errorMessageField = form("volumesWithRate_totalLitres"),
                   value = form("volumesWithRate.totalLitres").value
                 )
@@ -95,7 +95,7 @@
                 InputViewModel(
                   field = form("volumesWithRate"),
                   key = "pureAlcohol",
-                  label = LabelViewModel(messages("return.journey.pureAlcohol", messages(s"alcoholType.$regime"))),
+                  label = LabelViewModel(messages("return.journey.pureAlcohol", messages(regime.regimeMessageKey))),
                   errorMessageField = form("volumesWithRate_pureAlcohol"),
                   value = form("volumesWithRate.pureAlcohol").value
                 )
@@ -108,7 +108,7 @@
                 InputViewModel(
                   field = form("volumesWithRate"),
                   key = "dutyRate",
-                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"alcoholType.$regime"))),
+                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(regime.regimeMessageKey))),
                   errorMessageField = form("volumesWithRate_dutyRate"),
                   value = form("volumesWithRate.dutyRate").value
                 )

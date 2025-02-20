@@ -33,7 +33,7 @@
 
 @(form: Form[_], mode: Mode, regime: AlcoholRegime)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("spoiltVolumeWithDuty.title", messages(s"alcoholType.$regime")))) {
+@layout(pageTitle = title(form, messages("spoiltVolumeWithDuty.title", messages(regime.regimeMessageKey)))) {
 
     @formHelper(action = controllers.adjustment.routes.SpoiltVolumeWithDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -48,7 +48,7 @@
 
         @govukFieldset(Fieldset(
           legend = Some(Legend(
-            content = Text(messages("spoiltVolumeWithDuty.heading", messages(s"alcoholType.$regime"))),
+            content = Text(messages("spoiltVolumeWithDuty.heading", messages(regime.regimeMessageKey))),
             classes = Css.fieldsetLegendXLCssClass,
             isPageHeading = true
           )),
@@ -57,7 +57,7 @@
               InputViewModel(
                 field = form("volumes"),
                 key="totalLitresVolume",
-                label = LabelViewModel(messages("spoiltVolumeWithDuty.totalLitresVolume.heading", messages(s"alcoholType.$regime"))),
+                label = LabelViewModel(messages("spoiltVolumeWithDuty.totalLitresVolume.heading", messages(regime.regimeMessageKey))),
                 errorMessageField = form(s"volumes_totalLitresVolume"),
                 value = form(s"volumes.totalLitresVolume").value
               )
@@ -71,7 +71,7 @@
               InputViewModel(
                 field = form("volumes"),
                 key="pureAlcoholVolume",
-                label = LabelViewModel(visibleText = messages("spoiltVolumeWithDuty.pureAlcoholVolume.heading"), hiddenText = messages("spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText", messages(s"alcoholType.$regime"))),
+                label = LabelViewModel(visibleText = messages("spoiltVolumeWithDuty.pureAlcoholVolume.heading"), hiddenText = messages("spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText", messages(regime.regimeMessageKey))),
                 errorMessageField = form(s"volumes_pureAlcoholVolume"),
                 value = form(s"volumes.pureAlcoholVolume").value
               )

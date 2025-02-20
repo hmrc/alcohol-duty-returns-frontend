@@ -56,7 +56,7 @@ object TellUsAboutMultipleSPRRateSummary {
                 key = KeyViewModel(
                   messages(
                     "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
-                    messages(s"alcoholType.$regime")
+                    messages(regime.regimeMessageKey)
                   )
                 ),
                 value = ValueViewModel(
@@ -72,7 +72,7 @@ object TellUsAboutMultipleSPRRateSummary {
                   regime,
                   messages(
                     "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
-                    messages(s"alcoholType.$regime")
+                    messages(regime.regimeMessageKey)
                   ),
                   index
                 )

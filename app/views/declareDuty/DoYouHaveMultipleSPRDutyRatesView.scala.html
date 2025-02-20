@@ -31,7 +31,7 @@
 
 @(form: Form[_], regime: AlcoholRegime, mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("doYouHaveMultipleSPRDutyRates.title", messages(s"alcoholType.$regime")))) {
+@layout(pageTitle = title(form, messages("doYouHaveMultipleSPRDutyRates.title", messages(regime.regimeMessageKey)))) {
 
     @formHelper(action = controllers.declareDuty.routes.DoYouHaveMultipleSPRDutyRatesController.onSubmit(mode, regime), Symbol("autoComplete") -> "off") {
 
@@ -42,9 +42,9 @@
             id = "doYouHaveMultipleSPRDutyRates-section",
             text = messages(s"section.return.$regime"))
 
-        @pageHeading(messages("doYouHaveMultipleSPRDutyRates.heading", messages(s"alcoholType.$regime")))
+        @pageHeading(messages("doYouHaveMultipleSPRDutyRates.heading", messages(regime.regimeMessageKey)))
 
-        @paragraph(messages("doYouHaveMultipleSPRDutyRates.p1", messages(s"alcoholType.$regime")))
+        @paragraph(messages("doYouHaveMultipleSPRDutyRates.p1", messages(regime.regimeMessageKey)))
 
         @bulletList(Seq(
         messages("doYouHaveMultipleSPRDutyRates.l1"),
@@ -52,7 +52,7 @@
         messages("doYouHaveMultipleSPRDutyRates.l3")
         ))
 
-        @paragraph(messages("doYouHaveMultipleSPRDutyRates.p2", messages(s"alcoholType.$regime")))
+        @paragraph(messages("doYouHaveMultipleSPRDutyRates.p2", messages(regime.regimeMessageKey)))
 
         @govukRadios(
             RadiosViewModel.yesNo(

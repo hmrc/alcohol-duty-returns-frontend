@@ -21,7 +21,7 @@ import config.FrontendAppConfig
 import models.checkAndSubmit.AdrTypeOfSpirit
 import models.checkAndSubmit.AdrTypeOfSpirit._
 import models.returns._
-import models.{RateBand, ReturnPeriod}
+import models.{AlcoholRegime, RateBand, ReturnPeriod}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -188,8 +188,8 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
       val taxType                 = returnAdjustmentsRow.taxType
       val (description, dutyRate) = if (returnAdjustmentsRow.adjustmentTypeKey.equals(ReturnAdjustments.spoiltKey)) {
         (
-          appConfig.getRegimeNameByTaxTypeCode(taxType) match {
-            case Some(regime) => messages(s"alcoholType.$regime").capitalize
+          appConfig.getRegimeNameByTaxTypeCode(taxType).flatMap(AlcoholRegime.withNameOption) match {
+            case Some(regime) => messages(regime.regimeMessageKey).capitalize
             case _            => taxType
           },
           messages("viewReturn.notApplicable")
@@ -292,27 +292,27 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   ): Seq[TableRowViewModel] =
     Seq(
       netDutySuspensionCell(
-        "alcoholType.Beer",
+        AlcoholRegime.Beer.regimeMessageKey,
         netDutySuspension.totalLtsBeer,
         netDutySuspension.totalLtsPureAlcoholBeer
       ),
       netDutySuspensionCell(
-        "alcoholType.Cider",
+        AlcoholRegime.Cider.regimeMessageKey,
         netDutySuspension.totalLtsCider,
         netDutySuspension.totalLtsPureAlcoholCider
       ),
       netDutySuspensionCell(
-        "alcoholType.Spirits",
+        AlcoholRegime.Spirits.regimeMessageKey,
         netDutySuspension.totalLtsSpirit,
         netDutySuspension.totalLtsPureAlcoholSpirit
       ),
       netDutySuspensionCell(
-        "alcoholType.Wine",
+        AlcoholRegime.Wine.regimeMessageKey,
         netDutySuspension.totalLtsWine,
         netDutySuspension.totalLtsPureAlcoholWine
       ),
       netDutySuspensionCell(
-        "alcoholType.OtherFermentedProduct",
+        AlcoholRegime.OtherFermentedProduct.regimeMessageKey,
         netDutySuspension.totalLtsOtherFermented,
         netDutySuspension.totalLtsPureAlcoholOtherFermented
       )

@@ -59,7 +59,7 @@ class SmallProducerReliefSummary {
               content = Text(
                 messages(
                   s"$titleKey.checkYourAnswersLabel.cardTitle",
-                  messages(s"alcoholType.${regime.toString}")
+                  messages(regime.regimeMessageKey)
                 ).capitalize
               )
             )

@@ -52,7 +52,7 @@
         @paragraph(messages(s"tellUsAboutSingleSPRRate.p1.$regime"))
 
       @if(categories.smallProducer.nonEmpty) {
-        @subHeading(messages("tellUsAboutSingleSPRRate.smallProducer.heading", messages(s"alcoholType.$regime")), classes = Css.headingMCssClass)
+        @subHeading(messages("tellUsAboutSingleSPRRate.smallProducer.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.smallProducer.zipWithIndex) {
           @govukFieldset(Fieldset(
             legend = Some(Legend(
@@ -64,7 +64,7 @@
                 InputViewModel(
                   field = form(s"volumesWithRate[$index]"),
                   key = "totalLitres",
-                  label = LabelViewModel(messages("return.journey.totalLitres", messages(s"alcoholType.$regime"))),
+                  label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageKey))),
                   errorMessageField = form(s"volumesWithRate_${index}_totalLitres"),
                   value = form(s"volumesWithRate[$index].totalLitres").value
                 )
@@ -90,7 +90,7 @@
                 InputViewModel(
                   field = form(s"volumesWithRate[$index]"),
                   key = "dutyRate",
-                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"alcoholType.$regime"))),
+                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(regime.regimeMessageKey))),
                   errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
                   value = form(s"volumesWithRate[$index].dutyRate").value
                 )
@@ -123,7 +123,7 @@
       }
 
       @if(categories.draughtAndSmallProducer.nonEmpty) {
-        @subHeading(messages("tellUsAboutSingleSPRRate.draughtSmallProducer.heading", messages(s"alcoholType.$regime")), classes = Css.headingMCssClass)
+        @subHeading(messages("tellUsAboutSingleSPRRate.draughtSmallProducer.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.draughtAndSmallProducer.zipWithIndex) {
           @govukFieldset(Fieldset(
             legend = Some(Legend(
@@ -135,7 +135,7 @@
                 InputViewModel(
                   field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
                   key = "totalLitres",
-                  label = LabelViewModel(messages("return.journey.totalLitres", messages(s"alcoholType.$regime"))),
+                  label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageKey))),
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_totalLitres"),
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].totalLitres").value
                 )
@@ -161,7 +161,7 @@
                 InputViewModel(
                   field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
                   key = "dutyRate",
-                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(s"alcoholType.$regime"))),
+                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(regime.regimeMessageKey))),
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
                 )

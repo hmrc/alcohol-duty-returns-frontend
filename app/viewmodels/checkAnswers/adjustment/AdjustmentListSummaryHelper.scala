@@ -78,7 +78,7 @@ object AdjustmentListSummaryHelper {
       val formattedDutyValue  =
         Money.format(dutyValue.getOrElse(throw new RuntimeException("Couldn't fetch duty value from user answers")))
       val description         = (adjustmentType, adjustmentEntry.spoiltRegime) match {
-        case (Spoilt, Some(spoiltRegime)) => Text(messages(s"alcoholType.$spoiltRegime").capitalize)
+        case (Spoilt, Some(spoiltRegime)) => Text(messages(spoiltRegime.regimeMessageKey).capitalize)
         case _                            =>
           Text(
             rateBandRecap(

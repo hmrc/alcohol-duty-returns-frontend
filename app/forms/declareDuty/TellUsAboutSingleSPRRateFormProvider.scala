@@ -35,8 +35,8 @@ class TellUsAboutSingleSPRRateFormProvider @Inject() extends Mappings {
         "return.journey.error.minimumValue",
         "return.journey.error.maximumValue",
         "return.journey.error.lessThanExpected",
-        messages(s"alcoholType.$regime")
+        messages(regime.regimeMessageKey)
       )
-    ).verifying(nonEmptySeq("return.journey.error.allRequired", Seq(messages(s"alcoholType.$regime"))))
+    ).verifying(nonEmptySeq("return.journey.error.allRequired", Seq(messages(regime.regimeMessageKey))))
   )
 }
