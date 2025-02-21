@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.{Caption, PageHeading, Paragraph, SubHeading, FormGroupWithError}
+@import components.{Caption, PageHeading, Paragraph, SubHeading, FormGroupWithError, ErrorMessageStandalone}
 @import config.Constants.Css
 @import viewmodels.declareDuty.TaxBandsViewModel
 
@@ -28,7 +28,8 @@
     paragraph: Paragraph,
     caption: Caption,
     subHeading: SubHeading,
-    formGroupWithError: FormGroupWithError
+    formGroupWithError: FormGroupWithError,
+    errorMessage: ErrorMessageStandalone
 )
 
 @(form: Form[_], regime: AlcoholRegime, taxBandsViewModel: TaxBandsViewModel, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -38,7 +39,7 @@
     @formHelper(action = controllers.declareDuty.routes.WhatDoYouNeedToDeclareController.onSubmit(mode, regime), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("rateBand" -> taxBandsViewModel.core.headOption.flatMap(_.id).getOrElse(""))))
         }
 
         @caption(
@@ -50,6 +51,13 @@
                 @pageHeading(messages("whatDoYouNeedToDeclare.heading"))
 
                 @paragraph(messages("whatDoYouNeedToDeclare.hint"), classes = Css.hintCssClass)
+
+                @if(form.errors.nonEmpty) {
+                    @errorMessage(
+                        errorText = messages(form.errors.head.messages.headOption.getOrElse("")),
+                        id = Some(s"${form.errors.head.key}-error")
+                    )
+                }
 
                 @if(taxBandsViewModel.core.nonEmpty) {
                   @govukCheckboxes(CheckboxesViewModel(
