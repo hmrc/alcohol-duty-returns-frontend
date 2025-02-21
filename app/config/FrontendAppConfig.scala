@@ -115,8 +115,23 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def adrUserAnswersClearAllUrl(): String =
     s"$adrReturnsHost/alcohol-duty-returns/test-only/user-answers/clear-all"
 
+  def adrUserAnswersTestOnlyCreateUrl(
+    beer: Boolean,
+    cider: Boolean,
+    wine: Boolean,
+    spirits: Boolean,
+    OFP: Boolean
+  ): String =
+    s"$adrReturnsHost/alcohol-duty-returns/test-only/user-answers/$beer/$cider/$wine/$spirits/$OFP"
+
   def adrGetObligationDetailsUrl(appaId: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/obligationDetails/$appaId"
+
+  def adrGetOpenObligationUrl(appaId: String, periodKey: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/openObligation/$appaId/$periodKey"
+
+  def adrGetValidSubscriptionRegimes(appaId: String): String =
+    s"$adrReturnsHost/alcohol-duty-returns/subscriptionSummary/$appaId"
 
   def adrGetReturnsUrl(appaId: String, periodKey: String): String =
     s"$adrReturnsHost/alcohol-duty-returns/producers/$appaId/returns/$periodKey"

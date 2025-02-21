@@ -54,7 +54,7 @@
 
         @if(howMuchDoYouNeedToDeclareHelper.draughtAndSmallProducer.nonEmpty || howMuchDoYouNeedToDeclareHelper.smallProducer.nonEmpty) {
           @govukWarningText(WarningText(
-              iconFallbackText = Some("Warning"),
+   	      iconFallbackText = Some(messages("site.warning")),
               content = Text(messages("howMuchDoYouNeedToDeclare.warning", messages(regime.regimeMessageKey)))
           ))
         }

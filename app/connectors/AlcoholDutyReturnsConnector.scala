@@ -18,16 +18,16 @@ package connectors
 
 import cats.data.EitherT
 import config.FrontendAppConfig
-import models.ObligationData
+import models.{AlcoholRegime, ObligationData}
 import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
-import models.returns.{ReturnDetails}
+import models.returns.ReturnDetails
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
-import play.api.http.Status.{CREATED, OK}
+import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
 
@@ -51,6 +51,64 @@ class AlcoholDutyReturnsConnector @Inject() (
         case Left(errorResponse)                      => Future.failed(new Exception(s"Unexpected response: ${errorResponse.message}"))
         case Right(response)                          => Future.failed(new Exception(s"Unexpected status code: ${response.status}"))
       }
+
+  def getOpenObligation(appaId: String, periodKey: String)(implicit
+    hc: HeaderCarrier
+  ): EitherT[Future, String, ObligationData] =
+    EitherT {
+      httpClient
+        .get(url"${config.adrGetOpenObligationUrl(appaId, periodKey)}")
+        .execute[Either[UpstreamErrorResponse, HttpResponse]]
+        .map {
+          case Right(response) if response.status == OK                     =>
+            Try(response.json.as[ObligationData]) match {
+              case Success(data)      => Right[String, ObligationData](data)
+              case Failure(exception) =>
+                logger.warn(s"Invalid JSON format", exception)
+                Left(s"Invalid JSON format $exception")
+            }
+          case Left(errorResponse) if errorResponse.statusCode == NOT_FOUND =>
+            logger.warn(
+              s"No open obligation found. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
+            )
+            Left("No open obligation found.")
+          case Left(errorResponse)                                          =>
+            logger.warn(s"Unexpected response. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}")
+            Left(s"Unexpected response. Status: ${errorResponse.statusCode}")
+          case Right(response)                                              =>
+            logger.warn(s"Unexpected status code: ${response.status}")
+            Left(s"Unexpected status code: ${response.status}")
+        }
+    }
+
+  def getValidSubscriptionRegimes(
+    appaId: String
+  )(implicit hc: HeaderCarrier): EitherT[Future, String, Set[AlcoholRegime]] =
+    EitherT {
+      httpClient
+        .get(url"${config.adrGetValidSubscriptionRegimes(appaId)}")
+        .execute[Either[UpstreamErrorResponse, HttpResponse]]
+        .map {
+          case Right(response) if response.status == OK                     =>
+            Try(response.json.as[Set[AlcoholRegime]]) match {
+              case Success(data)      => Right[String, Set[AlcoholRegime]](data)
+              case Failure(exception) =>
+                logger.warn(s"Invalid JSON format", exception)
+                Left(s"Invalid JSON format $exception")
+            }
+          case Left(errorResponse) if errorResponse.statusCode == FORBIDDEN =>
+            logger.warn(
+              s"Forbidden: Subscription status is not Approved or Insolvent. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}"
+            )
+            Left("Forbidden: Subscription status is not Approved or Insolvent.")
+          case Left(errorResponse)                                          =>
+            logger.warn(s"Unexpected response. Status: ${errorResponse.statusCode}, Message: ${errorResponse.message}")
+            Left(s"Unexpected response. Status: ${errorResponse.statusCode}")
+          case Right(response)                                              =>
+            logger.warn(s"Unexpected status code: ${response.status}")
+            Left(s"Unexpected status code: ${response.status}")
+        }
+    }
 
   def getReturn(appaId: String, periodKey: String)(implicit hc: HeaderCarrier): Future[ReturnDetails] =
     httpClient

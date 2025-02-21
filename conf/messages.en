@@ -23,6 +23,7 @@ site.currency.2DP = £{0,number,#,##0.00}
 site.nil = Nil
 site.returnToBusinessAccount = Return to your Business Tax Account
 site.year = {0,number,####}
+site.warning = Warning
 
 #Welsh helpers - in Welsh y and w are also vowels
 
@@ -39,7 +40,8 @@ timeout.message = For security reasons, you will be signed out of this service i
 timeout.keepAlive = Stay signed in
 timeout.signOut = Sign out
 
-error.browser.title.prefix = Error:
+error.prefix = Error
+error.title.prefix = Error:
 error.boolean = Please give an answer
 error.invalid_date = Give a correct date
 error.date.day_blank = Enter a day
@@ -263,6 +265,11 @@ beforeStartReturn.text.guidance4 = After you tell us this information, we will c
 beforeStartReturn.text.dueWarning = The deadline for completing this return is today
 beforeStartReturn.text.overdueWarning = The deadline for completing this return was {0}
 beforeStartReturn.text.dueDateWarning = The deadline for completing this return is {0}
+
+serviceUpdated.title = This service has been updated
+serviceUpdated.heading = This service has been updated
+serviceUpdated.guidance1 = Sorry, we were not able to use your previous answers.
+serviceUpdated.guidance2 = You will need to enter them again.
 
 # Beginning of product entry sub-journey
 
@@ -649,12 +656,12 @@ whisky.irishWhiskey.change.hidden = irish whiskey
 whisky.error.scotchWhisky.required = Enter the volume of Scotch Whisky produced
 whisky.error.scotchWhisky.nonNumeric = Scotch Whisky must be a number
 whisky.error.scotchWhisky.maximumRequired = Scotch Whisky must be less than 1 billion litres
-whisky.error.scotchWhisky.minimumRequired = Scotch Whisky must be zero or higher
+whisky.error.scotchWhisky.minimumRequired = Scotch Whisky must be 0 or higher
 whisky.error.scotchWhisky.decimalPlaces = Scotch Whisky must be a number up to 2 decimal places
 whisky.error.irishWhiskey.required = Enter the volume of Irish Whiskey produced
 whisky.error.irishWhiskey.nonNumeric = Irish Whiskey must be a number
 whisky.error.irishWhiskey.maximumRequired = Irish Whiskey must be less than 1 billion litres
-whisky.error.irishWhiskey.minimumRequired = Irish Whiskey must be zero or higher
+whisky.error.irishWhiskey.minimumRequired = Irish Whiskey must be 0 or higher
 whisky.error.irishWhiskey.decimalPlaces = Irish Whiskey must be a number up to 2 decimal places
 
 spiritType.title = Which of these spirits have you produced?
