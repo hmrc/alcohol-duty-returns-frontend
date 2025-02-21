@@ -37,6 +37,6 @@ class HowMuchDoYouNeedToDeclareFormProvider @Inject() extends Mappings {
         "return.journey.error.lessThanExpected",
         messages(regime.regimeMessageKey)
       )
-    ).verifying(nonEmptySeq("return.journey.error.allRequired", Seq(messages(regime.regimeMessageKey))))
+    ).verifying(nonEmptySeq("return.journey.error.allRequired", Seq(messages(regime.regimeMessageSoftMutationKey))))
   )
 }

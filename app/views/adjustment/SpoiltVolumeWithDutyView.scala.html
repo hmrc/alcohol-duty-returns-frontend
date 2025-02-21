@@ -57,7 +57,7 @@
               InputViewModel(
                 field = form("volumes"),
                 key="totalLitresVolume",
-                label = LabelViewModel(messages("spoiltVolumeWithDuty.totalLitresVolume.heading", messages(regime.regimeMessageKey))),
+                label = LabelViewModel(messages("spoiltVolumeWithDuty.totalLitresVolume.heading", messages(regime.regimeMessageSoftMutationKey))),
                 errorMessageField = form(s"volumes_totalLitresVolume"),
                 value = form(s"volumes.totalLitresVolume").value
               )

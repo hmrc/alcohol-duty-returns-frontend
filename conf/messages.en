@@ -99,6 +99,12 @@ regime.wine = wine
 regime.spirits = spirits
 regime.otherfermentedproduct = other fermented products
 
+regime.softMutation.beer = beer
+regime.softMutation.cider = cider
+regime.softMutation.wine = wine
+regime.softMutation.spirits = spirits
+regime.softMutation.otherfermentedproduct = other fermented products
+
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty Return
 section.return.Beer = Declare beer
@@ -397,7 +403,7 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 
 doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?
 doYouHaveMultipleSPRDutyRates.heading = If you have more than one Small Producer Relief duty rate
-doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}, for example:
+doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {1}, for example:
 doYouHaveMultipleSPRDutyRates.l1 = your Small Producer Relief duty rate has changed and you need to report production when a different rate applied
 doYouHaveMultipleSPRDutyRates.l2 = you bottle and pay duty on behalf of more than one small producer, each of whom have their own Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.l3 = you merged with another producer and are reporting pre-merger production using the producer’s own pre-merger Small Producer Relief duty rates

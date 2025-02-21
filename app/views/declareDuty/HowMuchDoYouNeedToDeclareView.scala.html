@@ -72,7 +72,7 @@
                   InputViewModel(
                     field = form(s"volumes[$index]"),
                     key = "totalLitres",
-                    label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageKey))),
+                    label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageSoftMutationKey))),
                     errorMessageField = form(s"volumes_${index}_totalLitres"),
                     value = form(s"volumes[$index].totalLitres").value
                   )
@@ -130,7 +130,7 @@
                   InputViewModel(
                     field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                     key = "totalLitres",
-                    label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageKey))),
+                    label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageSoftMutationKey))),
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_totalLitres"),
                     value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].totalLitres").value
                   )

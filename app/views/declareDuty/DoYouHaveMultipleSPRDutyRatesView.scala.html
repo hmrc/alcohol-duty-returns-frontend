@@ -44,7 +44,7 @@
 
         @pageHeading(messages("doYouHaveMultipleSPRDutyRates.heading", messages(regime.regimeMessageKey)))
 
-        @paragraph(messages("doYouHaveMultipleSPRDutyRates.p1", messages(regime.regimeMessageKey)))
+        @paragraph(messages("doYouHaveMultipleSPRDutyRates.p1", messages(regime.regimeMessageKey), messages(regime.regimeMessageSoftMutationKey)))
 
         @bulletList(Seq(
         messages("doYouHaveMultipleSPRDutyRates.l1"),
@@ -52,7 +52,7 @@
         messages("doYouHaveMultipleSPRDutyRates.l3")
         ))
 
-        @paragraph(messages("doYouHaveMultipleSPRDutyRates.p2", messages(regime.regimeMessageKey)))
+        @paragraph(messages("doYouHaveMultipleSPRDutyRates.p2", messages(regime.regimeMessageSoftMutationKey)))
 
         @govukRadios(
             RadiosViewModel.yesNo(
