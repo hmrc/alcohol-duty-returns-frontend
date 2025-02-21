@@ -740,7 +740,7 @@ alcoholicProductType.title = Which alcoholic product is spoilt?
 alcoholicProductType.heading = Which alcoholic product is spoilt?
 alcoholicProductType.checkYourAnswersLabel = Description
 alcoholicProductType.error.required = Select the type of alcoholic product you are declaring spoilt
-alcoholicProductType.change.hidden = Alcoholic product type
+alcoholicProductType.change.hidden = description
 alcoholicProductType.paragraph = Choose a type of alcoholic product to declare. You will be able to declare others afterwards.
 
 spoiltVolumeWithDuty.title = Tell us about your spoilt {0}

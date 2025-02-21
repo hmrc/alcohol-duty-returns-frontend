@@ -37,7 +37,7 @@ class SpoiltAlcoholicProductTypeSummarySpec extends SpecBase {
                 ActionItem(
                   "/manage-alcohol-duty/complete-return/adjustments/adjustment/change/change/spoilt-product/alcohol-type",
                   Text("Change"),
-                  Some("Alcoholic product type")
+                  Some("description")
                 )
               )
             )
