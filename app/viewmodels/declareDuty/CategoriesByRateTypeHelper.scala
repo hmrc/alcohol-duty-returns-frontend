@@ -22,7 +22,8 @@ import play.api.i18n.Messages
 case class CategoryViewModel(
   category: String,
   id: String,
-  rateBandRecap: String
+  rateBandRecap: String,
+  rateBandRecapSoftMutation: String
 )
 
 case class CategoriesByRateTypeViewModel(
@@ -46,7 +47,8 @@ object CategoriesByRateTypeHelper {
               if (isRecap) RateBandHelper.rateBandRecap(rateBand, Some(regime))
               else RateBandHelper.rateBandContent(rateBand, Some(regime)),
             id = rateBand.taxTypeCode,
-            rateBandRecap = RateBandHelper.rateBandRecap(rateBand, Some(regime))
+            rateBandRecap = RateBandHelper.rateBandRecap(rateBand, Some(regime)),
+            rateBandRecapSoftMutation = RateBandHelper.rateBandRecap(rateBand, Some(regime), true)
           )
         }
       }

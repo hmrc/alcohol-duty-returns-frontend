@@ -116,6 +116,15 @@
                   errorMessageField = form(s"volumes_${index}_rateBandRecap"),
                   value = Some(categoryViewModel.rateBandRecap)
                 ).hidden
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[$index]"),
+                  key = "rateBandRecapSoftMutation",
+                  label = LabelViewModel(Text("")),
+                  errorMessageField = form(s"volumes_${index}_rateBandRecap"),
+                  value = Some(categoryViewModel.rateBandRecapSoftMutation)
+                ).hidden
               )
             ))
           ))
@@ -186,6 +195,15 @@
                   label = LabelViewModel(Text("")),
                   errorMessageField = form(s"volumes_${index + categories.smallProducer.size}_rateBandRecap"),
                   value = Some(categoryViewModel.rateBandRecap)
+                ).hidden
+              ),
+              govukInput(
+                InputViewModel(
+                  field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
+                  key = "rateBandRecapSoftMutation",
+                  label = LabelViewModel(Text("")),
+                  errorMessageField = form(s"volumes_${index + categories.smallProducer.size}_rateBandRecap"),
+                  value = Some(categoryViewModel.rateBandRecapSoftMutation)
                 ).hidden
               )
             ))

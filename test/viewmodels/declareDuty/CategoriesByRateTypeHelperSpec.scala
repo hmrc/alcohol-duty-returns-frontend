@@ -41,6 +41,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 1% and 2% ABV (tax type code 123)",
             "123",
+            "non-draught beer between 1% and 2% ABV (123)",
             "non-draught beer between 1% and 2% ABV (123)"
           )
         ),
@@ -48,6 +49,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 2% and 3% ABV (tax type code 124)",
             "124",
+            "draught beer between 2% and 3% ABV (124)",
             "draught beer between 2% and 3% ABV (124)"
           )
         ),
@@ -55,6 +57,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 3% and 4% ABV (tax type code 125)",
             "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)",
             "non-draught beer between 3% and 4% ABV (125 SPR)"
           )
         ),
@@ -62,6 +65,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 4% and 5% ABV (tax type code 126)",
             "126",
+            "draught beer between 4% and 5% ABV (126 SPR)",
             "draught beer between 4% and 5% ABV (126 SPR)"
           )
         )
@@ -78,6 +82,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "non-draught beer between 1% and 2% ABV (123)",
             "123",
+            "non-draught beer between 1% and 2% ABV (123)",
             "non-draught beer between 1% and 2% ABV (123)"
           )
         ),
@@ -85,6 +90,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "draught beer between 2% and 3% ABV (124)",
             "124",
+            "draught beer between 2% and 3% ABV (124)",
             "draught beer between 2% and 3% ABV (124)"
           )
         ),
@@ -92,6 +98,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "non-draught beer between 3% and 4% ABV (125 SPR)",
             "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)",
             "non-draught beer between 3% and 4% ABV (125 SPR)"
           )
         ),
@@ -99,6 +106,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "draught beer between 4% and 5% ABV (126 SPR)",
             "126",
+            "draught beer between 4% and 5% ABV (126 SPR)",
             "draught beer between 4% and 5% ABV (126 SPR)"
           )
         )
@@ -115,6 +123,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 2% and 3% ABV (tax type code 124)",
             "124",
+            "draught beer between 2% and 3% ABV (124)",
             "draught beer between 2% and 3% ABV (124)"
           )
         ),
@@ -122,6 +131,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 3% and 4% ABV (tax type code 125)",
             "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)",
             "non-draught beer between 3% and 4% ABV (125 SPR)"
           )
         ),
@@ -129,6 +139,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 4% and 5% ABV (tax type code 126)",
             "126",
+            "draught beer between 4% and 5% ABV (126 SPR)",
             "draught beer between 4% and 5% ABV (126 SPR)"
           )
         )
@@ -144,6 +155,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 1% and 2% ABV (tax type code 123)",
             "123",
+            "non-draught beer between 1% and 2% ABV (123)",
             "non-draught beer between 1% and 2% ABV (123)"
           )
         ),
@@ -152,6 +164,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 3% and 4% ABV (tax type code 125)",
             "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)",
             "non-draught beer between 3% and 4% ABV (125 SPR)"
           )
         ),
@@ -159,6 +172,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 4% and 5% ABV (tax type code 126)",
             "126",
+            "draught beer between 4% and 5% ABV (126 SPR)",
             "draught beer between 4% and 5% ABV (126 SPR)"
           )
         )
@@ -174,6 +188,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 1% and 2% ABV (tax type code 123)",
             "123",
+            "non-draught beer between 1% and 2% ABV (123)",
             "non-draught beer between 1% and 2% ABV (123)"
           )
         ),
@@ -181,6 +196,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 2% and 3% ABV (tax type code 124)",
             "124",
+            "draught beer between 2% and 3% ABV (124)",
             "draught beer between 2% and 3% ABV (124)"
           )
         ),
@@ -189,6 +205,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 4% and 5% ABV (tax type code 126)",
             "126",
+            "draught beer between 4% and 5% ABV (126 SPR)",
             "draught beer between 4% and 5% ABV (126 SPR)"
           )
         )
@@ -204,6 +221,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 1% and 2% ABV (tax type code 123)",
             "123",
+            "non-draught beer between 1% and 2% ABV (123)",
             "non-draught beer between 1% and 2% ABV (123)"
           )
         ),
@@ -211,6 +229,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 2% and 3% ABV (tax type code 124)",
             "124",
+            "draught beer between 2% and 3% ABV (124)",
             "draught beer between 2% and 3% ABV (124)"
           )
         ),
@@ -218,6 +237,7 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 3% and 4% ABV (tax type code 125)",
             "125",
+            "non-draught beer between 3% and 4% ABV (125 SPR)",
             "non-draught beer between 3% and 4% ABV (125 SPR)"
           )
         ),
@@ -234,16 +254,19 @@ class CategoriesByRateTypeHelperSpec extends SpecBase {
           CategoryViewModel(
             "beer between 1% and 2% ABV (tax type code 123)",
             "123",
+            "non-draught beer between 1% and 2% ABV (123)",
             "non-draught beer between 1% and 2% ABV (123)"
           ),
           CategoryViewModel(
             "beer between 1% and 2% ABV (tax type code 124)",
             "124",
+            "non-draught beer between 1% and 2% ABV (124)",
             "non-draught beer between 1% and 2% ABV (124)"
           ),
           CategoryViewModel(
             "beer between 1% and 2% ABV (tax type code 125)",
             "125",
+            "non-draught beer between 1% and 2% ABV (125)",
             "non-draught beer between 1% and 2% ABV (125)"
           )
         ),
