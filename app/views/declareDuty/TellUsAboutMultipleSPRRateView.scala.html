@@ -54,7 +54,7 @@
         @paragraph(messages("tellUsAboutMultipleSPRRate.p1", messages(regime.regimeMessageKey)))
 
         @govukWarningText(WarningText(
-            iconFallbackText = Some("Warning"),
+            iconFallbackText = Some(messages("site.warning")),
             content = Text(messages("tellUsAboutMultipleSPRRate.warning", messages(regime.regimeMessageKey)))
         ))
 

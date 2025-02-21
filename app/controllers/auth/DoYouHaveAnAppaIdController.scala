@@ -53,7 +53,7 @@ class DoYouHaveAnAppaIdController @Inject() (
       .fold(
         formWithErrors => BadRequest(view(formWithErrors, wasReferredFromBTA, request.signedIn)),
         if (_) {
-          Redirect(appConfig.requestAccessUrl)
+          Redirect(controllers.auth.routes.AppaIdAuthController.onPageLoad())
         } else {
           Redirect(controllers.auth.routes.NoAppaIdController.onPageLoad(wasReferredFromBTA))
         }
