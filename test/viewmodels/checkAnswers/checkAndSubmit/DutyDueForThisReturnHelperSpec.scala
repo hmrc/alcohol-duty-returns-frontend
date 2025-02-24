@@ -50,9 +50,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalDuty.duty
-        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
-          _.value.content.toString.filter(c => c.isDigit || c == '.')
-        )                            mustBe totalDutiesAndAdjustments.map(total => f"$total%.2f")
+
+        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
+          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
+        val dutyAndAdjustmentTotals          = totalDutiesAndAdjustments.map(total => f"$total%.2f")
+        dutiesBreakdownSummaryListValues mustBe dutyAndAdjustmentTotals
       }
     }
 
@@ -71,9 +73,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalDutyWithoutAdjustments.duty
-        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
-          _.value.content.toString.filter(c => c.isDigit || c == '.')
-        )                            mustBe totalDuties.map(total => f"$total%.2f") :+ ""
+
+        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
+          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
+        val dutyTotals                       = totalDuties.map(total => f"$total%.2f") :+ ""
+        dutiesBreakdownSummaryListValues mustBe dutyTotals
       }
     }
 
@@ -94,9 +98,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalAdjustments.duty
-        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
-          _.value.content.toString.filter(c => c.isDigit || c == '.')
-        )                            mustBe "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
+
+        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
+          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
+        val adjustmentTotals                 = "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
+        dutiesBreakdownSummaryListValues mustBe adjustmentTotals
       }
     }
 
