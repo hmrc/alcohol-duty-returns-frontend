@@ -79,7 +79,7 @@ object DutyCalculationHelper {
   ) =
     TableRowViewModel(
       cells = Seq(
-        TableRow(Text(rateBandRecap(rateBand, Some(regime)))),
+        TableRow(Text(rateBandRecap(rateBand, Some(regime)).capitalize)),
         TableRow(Text(messages("site.4DP", totalByTaxType.pureAlcohol)), format = Some(Format.numeric)),
         TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyRate)), format = Some(Format.numeric)),
         TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)), format = Some(Format.numeric))

@@ -42,7 +42,7 @@ object TellUsAboutMultipleSPRRateSummary {
             val taxTypeRowViewModel =
               SummaryListRowViewModel(
                 key = "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.taxType",
-                value = ValueViewModel(content = rateBandRecap(rateBand, Some(regime))),
+                value = ValueViewModel(content = rateBandRecap(rateBand, Some(regime)).capitalize),
                 actions = actions(
                   "taxType",
                   regime,
@@ -56,7 +56,7 @@ object TellUsAboutMultipleSPRRateSummary {
                 key = KeyViewModel(
                   messages(
                     "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
-                    messages(s"return.regime.$regime")
+                    messages(regime.regimeMessageKey)
                   )
                 ),
                 value = ValueViewModel(
@@ -72,7 +72,7 @@ object TellUsAboutMultipleSPRRateSummary {
                   regime,
                   messages(
                     "tellUsAboutMultipleSPRRate.checkYourAnswersLabel.totalLitres.label",
-                    messages(s"return.regime.$regime")
+                    messages(regime.regimeMessageKey)
                   ),
                   index
                 )

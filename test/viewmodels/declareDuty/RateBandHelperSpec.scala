@@ -44,7 +44,7 @@ class RateBandHelperSpec extends SpecBase {
 
           result mustEqual messages.messages(
             "return.journey.abv.single.interval",
-            alcoholLabel.capitalize,
+            alcoholLabel,
             lowerLimit,
             andText,
             upperLimit,
@@ -60,7 +60,7 @@ class RateBandHelperSpec extends SpecBase {
 
             result mustEqual messages.messages(
               "return.journey.abv.single.interval",
-              alcoholLabel.capitalize,
+              alcoholLabel,
               lowerLimit,
               andText,
               upperLimit,
@@ -83,7 +83,7 @@ class RateBandHelperSpec extends SpecBase {
 
           result mustEqual messages.messages(
             "return.journey.abv.interval.exceeding.max",
-            alcoholLabel.capitalize,
+            alcoholLabel,
             lowerLimit,
             taxType
           )
@@ -103,7 +103,7 @@ class RateBandHelperSpec extends SpecBase {
 
           result mustEqual messages.messages(
             "return.journey.abv.multi.interval",
-            alcoholLabel.capitalize,
+            alcoholLabel,
             lowerLimit1,
             andText,
             upperLimit1,
@@ -123,7 +123,7 @@ class RateBandHelperSpec extends SpecBase {
 
           result mustEqual messages.messages(
             "return.journey.abv.single.interval",
-            alcoholLabel.capitalize,
+            alcoholLabel,
             lowerLimit1,
             andText,
             upperLimit1,
@@ -153,7 +153,6 @@ class RateBandHelperSpec extends SpecBase {
                 upperLimit,
                 taxType
               )
-              .capitalize
           }
 
           "with a known regime" - {
@@ -171,7 +170,6 @@ class RateBandHelperSpec extends SpecBase {
                   upperLimit,
                   taxType
                 )
-                .capitalize
             }
 
             "and doesn't match that of the rate band interval" in new SetUp {
@@ -193,7 +191,6 @@ class RateBandHelperSpec extends SpecBase {
                   lowerLimit,
                   taxType
                 )
-                .capitalize
             }
           }
         }
@@ -222,7 +219,6 @@ class RateBandHelperSpec extends SpecBase {
                 upperLimit2,
                 taxType
               )
-              .capitalize
           }
 
           "with a known regime to select a single range from two regimes" in new SetUp {
@@ -240,7 +236,6 @@ class RateBandHelperSpec extends SpecBase {
                 upperLimit1,
                 taxType
               )
-              .capitalize
           }
         }
       }

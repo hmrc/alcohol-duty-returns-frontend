@@ -94,7 +94,7 @@ object MultipleSPRListHelper {
       val rateBandDescription = rateBandRecap(sprEntry.rateBand, Some(regime))
       TableRowViewModel(
         cells = Seq(
-          TableRow(Text(rateBandDescription)),
+          TableRow(Text(rateBandDescription.capitalize)),
           TableRow(Text(messages("site.2DP", sprEntry.dutyByTaxType.totalLitres)), format = Some(Format.numeric)),
           TableRow(Text(messages("site.4DP", sprEntry.dutyByTaxType.pureAlcohol)), format = Some(Format.numeric)),
           TableRow(Text(messages("site.currency.2DP", sprEntry.dutyByTaxType.dutyRate)), format = Some(Format.numeric))

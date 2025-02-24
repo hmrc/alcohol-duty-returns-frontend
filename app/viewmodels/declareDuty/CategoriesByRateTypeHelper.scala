@@ -33,10 +33,6 @@ case class CategoriesByRateTypeViewModel(
 )
 
 object CategoriesByRateTypeHelper {
-  def decapitalize(s: String): String =
-    if (s == null || s.length == 0 || !s.charAt(0).isUpper) s
-    else s.updated(0, s.charAt(0).toLower)
-
   def rateBandCategories(rateBands: Set[RateBand], regime: AlcoholRegime, isRecap: Boolean = false)(implicit
     messages: Messages
   ): CategoriesByRateTypeViewModel = {
@@ -50,7 +46,7 @@ object CategoriesByRateTypeHelper {
               if (isRecap) RateBandHelper.rateBandRecap(rateBand, Some(regime))
               else RateBandHelper.rateBandContent(rateBand, Some(regime)),
             id = rateBand.taxTypeCode,
-            rateBandRecap = decapitalize(RateBandHelper.rateBandRecap(rateBand, Some(regime)))
+            rateBandRecap = RateBandHelper.rateBandRecap(rateBand, Some(regime))
           )
         }
       }

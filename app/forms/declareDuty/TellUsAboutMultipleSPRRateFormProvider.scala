@@ -34,7 +34,7 @@ class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
         "return.journey.error.minimumValue",
         "return.journey.error.maximumValue",
         "return.journey.error.lessThanExpected",
-        messages(s"return.regime.$regime")
+        messages(regime.regimeMessageKey)
       )
   )
 }
