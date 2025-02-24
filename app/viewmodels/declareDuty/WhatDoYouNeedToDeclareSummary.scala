@@ -36,7 +36,7 @@ class WhatDoYouNeedToDeclareSummary {
               Text(
                 messages(
                   s"whatDoYouNeedToDeclare.checkYourAnswersLabel.card",
-                  messages(s"return.regime.${regime.toString}")
+                  messages(regime.regimeMessageKey)
                 ).capitalize
               )
             )
@@ -59,14 +59,14 @@ class WhatDoYouNeedToDeclareSummary {
     SummaryListRowViewModel(
       key = messages(
         s"whatDoYouNeedToDeclare.checkYourAnswersLabel.row",
-        messages(s"return.regime.${regime.toString}").capitalize
+        messages(regime.regimeMessageKey)
       ),
       value = ValueViewModel(
         HtmlContent(
           "<ul>" +
             rateBands.toSeq
               .sortBy(_.taxTypeCode)
-              .map(rateBand => s"<li>${rateBandRecap(rateBand, Some(regime))}</li>")
+              .map(rateBand => s"<li>${rateBandRecap(rateBand, Some(regime)).capitalize}</li>")
               .mkString("")
             + "</ul>"
         )

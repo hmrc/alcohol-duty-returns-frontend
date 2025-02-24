@@ -59,9 +59,7 @@ class AdjustmentDutyDueController @Inject() (
 
   private def getView(adjustmentEntry: AdjustmentEntry)(implicit request: Request[_]): Result = {
     val result = for {
-      volume            <- adjustmentEntry.totalLitresVolume
       pureAlcoholVolume <- adjustmentEntry.pureAlcoholVolume
-      rateBand          <- adjustmentEntry.rateBand
       duty              <- adjustmentEntry.duty
       rate              <- adjustmentEntry.rate
       adjustmentType    <- adjustmentEntry.adjustmentType

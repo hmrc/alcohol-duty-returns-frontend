@@ -127,7 +127,8 @@ trait Mappings extends Formatters with Constraints {
     minimumValueKey: String,
     maximumValueKey: String,
     lessOrEqualKey: String,
-    regimeName: String
+    regimeName: String,
+    regimeNameSoftMutation: String
   ): FieldMapping[VolumesByTaxType] =
     of(
       new VolumesFormatter(
@@ -137,7 +138,8 @@ trait Mappings extends Formatters with Constraints {
         minimumValueKey,
         maximumValueKey,
         lessOrEqualKey,
-        regimeName
+        regimeName,
+        regimeNameSoftMutation
       )
     )
 
@@ -148,7 +150,8 @@ trait Mappings extends Formatters with Constraints {
     minimumValueKey: String,
     maximumValueKey: String,
     lessOrEqualKey: String,
-    regimeName: String
+    regimeName: String,
+    regimeNameSoftMutation: String
   ): FieldMapping[VolumeAndRateByTaxType] =
     of(
       new VolumesAndRateFormatter(
@@ -158,7 +161,8 @@ trait Mappings extends Formatters with Constraints {
         minimumValueKey,
         maximumValueKey,
         lessOrEqualKey,
-        regimeName
+        regimeName,
+        regimeNameSoftMutation
       )
     )
 
@@ -169,7 +173,8 @@ trait Mappings extends Formatters with Constraints {
     minimumValueKey: String,
     maximumValueKey: String,
     inconsistentKey: String,
-    args: Seq[String] = Seq.empty
+    regimeName: String,
+    regimeNameSoftMutation: String
   ): FieldMapping[SpoiltVolumeWithDuty] =
     of(
       new SpoiltVolumesAndDutyFormatter(
@@ -179,7 +184,8 @@ trait Mappings extends Formatters with Constraints {
         minimumValueKey,
         maximumValueKey,
         inconsistentKey,
-        args
+        regimeName,
+        regimeNameSoftMutation
       )
     )
 }

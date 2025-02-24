@@ -68,7 +68,13 @@ object AlcoholByVolume {
   val MAX: AlcoholByVolume = AlcoholByVolume(100)
 }
 
-sealed trait AlcoholType extends EnumEntry
+sealed trait AlcoholType extends EnumEntry {
+  val alcoholTypeMessageKey: String = s"alcoholType.${entryName.toLowerCase}"
+
+  // Used by Welsh, e.g. following 'of' as in 'of beer'
+  val alcoholTypeMessageSoftMutationKey: String = s"alcoholType.softMutation.${entryName.toLowerCase}"
+}
+
 object AlcoholType extends Enum[AlcoholType] with PlayEnum[AlcoholType] {
   val values = findValues
 

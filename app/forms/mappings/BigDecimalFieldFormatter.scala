@@ -17,7 +17,7 @@
 package forms.mappings
 
 import config.Constants
-import config.Constants.MappingFields.rateBandRecapField
+import config.Constants.MappingFields.{rateBandRecapField, rateBandRecapSoftMutationField}
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
@@ -47,14 +47,14 @@ class BigDecimalFieldFormatter(
 
   private val baseFormatter = stringFormatter(s"$requiredKey.$fieldKey", args)
 
-  private def getKeyPrefix(key: String) = key.dropRight(fieldKey.length + 1)
+  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] =
+    performBindWithArgs(key, data)
 
-  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] = {
-    val keyPrefix          = getKeyPrefix(key)
-    val maybeRateBandRecap = data.get(s"$keyPrefix.$rateBandRecapField")
-
-    val allArgs = maybeRateBandRecap.fold(args)(_ +: args)
-
+  protected def performBindWithArgs(
+    key: String,
+    data: Map[String, String],
+    bindArgs: Seq[String] = args
+  ): Either[Seq[FormError], BigDecimal] =
     baseFormatter
       .bind(key, data)
       .map(_.replace(",", ""))
@@ -62,19 +62,18 @@ class BigDecimalFieldFormatter(
         nonFatalCatch
           .either(BigDecimal(s))
           .left
-          .map(_ => Seq(FormError(nameToId(key), s"$invalidKey.$fieldKey", allArgs)))
+          .map(_ => Seq(FormError(nameToId(key), s"$invalidKey.$fieldKey", bindArgs)))
           .flatMap {
             case res if !res.toString().matches(decimalRegexp) =>
-              Left(Seq(FormError(nameToId(key), s"$decimalPlacesKey.$fieldKey", allArgs)))
+              Left(Seq(FormError(nameToId(key), s"$decimalPlacesKey.$fieldKey", bindArgs)))
             case res if res < minimumValue                     =>
-              Left(Seq(FormError(nameToId(key), s"$minimumValueKey.$fieldKey", allArgs)))
+              Left(Seq(FormError(nameToId(key), s"$minimumValueKey.$fieldKey", bindArgs)))
             case res if res > maximumValue                     =>
-              Left(Seq(FormError(nameToId(key), s"$maximumValueKey.$fieldKey", allArgs)))
+              Left(Seq(FormError(nameToId(key), s"$maximumValueKey.$fieldKey", bindArgs)))
             case res                                           =>
               Right(res)
           }
       }
-  }
 
   override def unbind(key: String, value: BigDecimal): Map[String, String] =
     if (exactDecimalPlacesRequired) {
@@ -85,4 +84,48 @@ class BigDecimalFieldFormatter(
     } else {
       baseFormatter.unbind(key, value.toString)
     }
+}
+
+// Used in dutyDeclaration core/single SPR formatters
+class BigDecimalFieldFormatterWithRatebandRecap(
+  requiredKey: String,
+  invalidKey: String,
+  decimalPlacesKey: String,
+  minimumValueKey: String,
+  maximumValueKey: String,
+  fieldKey: String,
+  args: Seq[String] = Seq.empty,
+  decimalPlaces: Int = Constants.maximumTwoDecimalPlaces,
+  maximumValue: BigDecimal = BigDecimal(999999999.99),
+  minimumValue: BigDecimal = BigDecimal(0.01),
+  exactDecimalPlacesRequired: Boolean = false
+) extends BigDecimalFieldFormatter(
+      requiredKey,
+      invalidKey,
+      decimalPlacesKey,
+      minimumValueKey,
+      maximumValueKey,
+      fieldKey,
+      args,
+      decimalPlaces,
+      maximumValue,
+      minimumValue,
+      exactDecimalPlacesRequired
+    ) {
+  private def getKeyPrefix(key: String) = key.dropRight(fieldKey.length + 1)
+
+  override protected def performBindWithArgs(
+    key: String,
+    data: Map[String, String],
+    bindArgs: Seq[String] = args
+  ): Either[Seq[FormError], BigDecimal] = {
+    val keyPrefix = getKeyPrefix(key)
+
+    val maybeRateBandRecap         = data.get(s"$keyPrefix.$rateBandRecapField")
+    val maybeRateBandRecapSoftened = data.get(s"$keyPrefix.$rateBandRecapSoftMutationField") // Welsh support
+
+    val allArgs = (maybeRateBandRecap +: maybeRateBandRecapSoftened +: args.map(Some(_))).flatten
+
+    super.performBindWithArgs(key, data, allArgs)
+  }
 }

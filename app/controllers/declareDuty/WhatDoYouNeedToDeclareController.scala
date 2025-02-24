@@ -59,7 +59,7 @@ class WhatDoYouNeedToDeclareController @Inject() (
     (identify andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(regime)
 
-      getRateBands(request.userAnswers, request.returnPeriod, regime).map { rateBands: Seq[RateBand] =>
+      getRateBands(request.userAnswers, request.returnPeriod, regime).map { rateBands =>
         val taxBandsViewModel = TaxBandsViewModel(rateBands, regime)
         val preparedForm      = request.userAnswers.getByKey(currentPage, regime) match {
           case None        => form

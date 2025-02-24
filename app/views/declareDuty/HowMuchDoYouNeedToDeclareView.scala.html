@@ -54,17 +54,17 @@
 
         @if(howMuchDoYouNeedToDeclareHelper.draughtAndSmallProducer.nonEmpty || howMuchDoYouNeedToDeclareHelper.smallProducer.nonEmpty) {
           @govukWarningText(WarningText(
-              iconFallbackText = Some(messages("site.warning")),
-              content = Text(messages("howMuchDoYouNeedToDeclare.warning", messages(s"return.regime.$regime")))
+   	      iconFallbackText = Some(messages("site.warning")),
+              content = Text(messages("howMuchDoYouNeedToDeclare.warning", messages(regime.regimeMessageKey)))
           ))
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.core.nonEmpty) {
-          @subHeading(messages("howMuchDoYouNeedToDeclare.core.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
+          @subHeading(messages("howMuchDoYouNeedToDeclare.core.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
-                content = Text(quantityViewModel.category),
+                content = Text(quantityViewModel.category.capitalize),
                 classes = Css.fieldsetLegendSCssClass
               )),
               html = HtmlFormat.fill(List(
@@ -72,7 +72,7 @@
                   InputViewModel(
                     field = form(s"volumes[$index]"),
                     key = "totalLitres",
-                    label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
+                    label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageSoftMutationKey))),
                     errorMessageField = form(s"volumes_${index}_totalLitres"),
                     value = form(s"volumes[$index].totalLitres").value
                   )
@@ -111,6 +111,15 @@
                     errorMessageField = form(s"volumes_${index}_rateBandRecap"),
                     value = Some(quantityViewModel.rateBandRecap)
                   ).hidden
+                ),
+                govukInput(
+                  InputViewModel(
+                    field = form(s"volumes[$index]"),
+                    key = "rateBandRecapSoftMutation",
+                    label = LabelViewModel(Text("")),
+                    errorMessageField = form(s"volumes_${index}_rateBandRecap"),
+                    value = Some(quantityViewModel.rateBandRecapSoftMutation)
+                  ).hidden
                 )
               ))
            ))
@@ -118,11 +127,11 @@
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.draught.nonEmpty) {
-          @subHeading(messages("howMuchDoYouNeedToDeclare.draught.heading", messages(s"return.regime.$regime")), classes = Css.headingMCssClass)
+          @subHeading(messages("howMuchDoYouNeedToDeclare.draught.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
-                content = Text(quantityViewModel.category),
+                content = Text(quantityViewModel.category.capitalize),
                 classes = Css.fieldsetLegendSCssClass
               )),
               html = HtmlFormat.fill(List(
@@ -130,7 +139,7 @@
                   InputViewModel(
                     field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
                     key = "totalLitres",
-                    label = LabelViewModel(messages("return.journey.totalLitres", messages(s"return.regime.$regime"))),
+                    label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageSoftMutationKey))),
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_totalLitres"),
                     value = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}].totalLitres").value
                   )
@@ -168,6 +177,15 @@
                     label = LabelViewModel(Text("")),
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_rateBandRecap"),
                     value = Some(quantityViewModel.rateBandRecap)
+                  ).hidden
+                ),
+                govukInput(
+                  InputViewModel(
+                    field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
+                    key = "rateBandRecapSoftMutation",
+                    label = LabelViewModel(Text("")),
+                    errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_rateBandRecap"),
+                    value = Some(quantityViewModel.rateBandRecapSoftMutation)
                   ).hidden
                 )
               ))

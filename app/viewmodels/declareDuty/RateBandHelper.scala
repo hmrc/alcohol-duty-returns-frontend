@@ -46,24 +46,24 @@ object RateBandHelper {
 
     }
 
-  private def singleInterval(interval: ABVRange, taxType: String)(implicit messages: Messages): String =
-    interval.maxABV match {
+  private def singleInterval(abvRange: ABVRange, taxType: String)(implicit messages: Messages): String =
+    abvRange.maxABV match {
       case AlcoholByVolume.MAX =>
         messages(
           "return.journey.abv.interval.exceeding.max",
-          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
-          interval.minABV.value,
+          messages(abvRange.alcoholType.alcoholTypeMessageKey),
+          abvRange.minABV.value,
           taxType
-        ).capitalize
+        )
       case _                   =>
         messages(
           "return.journey.abv.single.interval",
-          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
-          interval.minABV.value,
-          messages(WelshHelper.chooseAnd(interval.maxABV.value)),
-          interval.maxABV.value,
+          messages(abvRange.alcoholType.alcoholTypeMessageKey),
+          abvRange.minABV.value,
+          messages(WelshHelper.chooseAnd(abvRange.maxABV.value)),
+          abvRange.maxABV.value,
           taxType
-        ).capitalize
+        )
     }
 
   private def multipleIntervals(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String)(implicit
@@ -71,18 +71,22 @@ object RateBandHelper {
   ): String =
     messages(
       "return.journey.abv.multi.interval",
-      messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
+      messages(abvRange1.alcoholType.alcoholTypeMessageKey),
       abvRange1.minABV.value,
       messages(WelshHelper.chooseAnd(abvRange1.maxABV.value)),
       abvRange1.maxABV.value,
-      messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
+      messages(abvRange2.alcoholType.alcoholTypeMessageKey),
       abvRange2.minABV.value,
       messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
       abvRange2.maxABV.value,
       taxType
-    ).capitalize
+    )
 
-  def rateBandRecap(rateBand: RateBand, maybeByRegime: Option[AlcoholRegime])(implicit messages: Messages): String =
+  def rateBandRecap(
+    rateBand: RateBand,
+    maybeByRegime: Option[AlcoholRegime],
+    useSoftMutationForFirstAlcoholType: Boolean = false
+  )(implicit messages: Messages): String =
     abvRangesFromRateBand(rateBand, maybeByRegime).toList match {
       case Nil                        =>
         throw new IllegalArgumentException(
@@ -92,51 +96,83 @@ object RateBandHelper {
         singleIntervalRecap(
           abvRange,
           rateBand.taxTypeCode,
-          rateBand.rateType
+          rateBand.rateType,
+          useSoftMutationForFirstAlcoholType
         )
       case List(abvRange1, abvRange2) =>
-        multipleIntervalsRecap(abvRange1, abvRange2, rateBand.taxTypeCode, rateBand.rateType)
+        multipleIntervalsRecap(
+          abvRange1,
+          abvRange2,
+          rateBand.taxTypeCode,
+          rateBand.rateType,
+          useSoftMutationForFirstAlcoholType
+        )
       case _                          =>
         throw new IllegalArgumentException(
           s"Only 2 ranges supported at present, more found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
         )
     }
 
-  private def singleIntervalRecap(interval: ABVRange, taxType: String, rateType: RateType)(implicit
+  private def singleIntervalRecap(
+    abvRange: ABVRange,
+    taxType: String,
+    rateType: RateType,
+    useSoftMutationForFirstAlcoholType: Boolean
+  )(implicit
     messages: Messages
-  ): String =
-    interval.maxABV match {
+  ): String = {
+    val alcoholTypeMessageKey = if (useSoftMutationForFirstAlcoholType) {
+      abvRange.alcoholType.alcoholTypeMessageSoftMutationKey
+    } else {
+      abvRange.alcoholType.alcoholTypeMessageKey
+    }
+
+    abvRange.maxABV match {
       case AlcoholByVolume.MAX =>
         messages(
           s"return.journey.abv.recap.interval.exceeding.max.$rateType",
-          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
-          interval.minABV.value,
+          messages(alcoholTypeMessageKey),
+          abvRange.minABV.value,
           taxType
-        ).capitalize
+        )
       case _                   =>
         messages(
           s"return.journey.abv.recap.single.interval.$rateType",
-          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
-          interval.minABV.value,
-          messages(WelshHelper.chooseAnd(interval.maxABV.value)),
-          interval.maxABV.value,
+          messages(alcoholTypeMessageKey),
+          abvRange.minABV.value,
+          messages(WelshHelper.chooseAnd(abvRange.maxABV.value)),
+          abvRange.maxABV.value,
           taxType
-        ).capitalize
+        )
+    }
+  }
+
+  private def multipleIntervalsRecap(
+    abvRange1: ABVRange,
+    abvRange2: ABVRange,
+    taxType: String,
+    rateType: RateType,
+    useSoftMutationForFirstAlcoholType: Boolean
+  )(implicit
+    messages: Messages
+  ): String = {
+    val firstAlcoholTypeMessageKey = if (useSoftMutationForFirstAlcoholType) {
+      abvRange1.alcoholType.alcoholTypeMessageSoftMutationKey
+    } else {
+      abvRange1.alcoholType.alcoholTypeMessageKey
     }
 
-  private def multipleIntervalsRecap(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String, rateType: RateType)(
-    implicit messages: Messages
-  ): String =
     messages(
       s"return.journey.abv.recap.multi.interval.$rateType",
-      messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
+      messages(firstAlcoholTypeMessageKey),
       abvRange1.minABV.value,
       messages(WelshHelper.chooseAnd(abvRange1.maxABV.value)),
       abvRange1.maxABV.value,
-      messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
+      messages(abvRange2.alcoholType.alcoholTypeMessageKey),
       abvRange2.minABV.value,
       messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
       abvRange2.maxABV.value,
       taxType
-    ).capitalize
+    )
+  }
 }

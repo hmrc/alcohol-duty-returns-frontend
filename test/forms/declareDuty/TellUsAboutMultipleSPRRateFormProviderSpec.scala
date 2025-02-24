@@ -68,51 +68,54 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         "volumesWithRate_pureAlcohol" -> "return.journey.error.noValue.pureAlcohol",
         "volumesWithRate_taxType"     -> "return.journey.error.noValue.taxType",
         "volumesWithRate_dutyRate"    -> "return.journey.error.noValue.dutyRate"
-      ).map { case (k, v) => FormError(k, v, Seq("", "")) }
+      ).map { case (k, v) => FormError(k, v, Seq("", "", "", "")) }
     }
 
     "must fail to bind when invalid data is provided" in {
       val result = form.bind(
         Map(
-          "volumesWithRate.rateBandRecap" -> rateBandRecap,
-          "volumesWithRate.taxType"       -> "aTaxType",
-          "volumesWithRate.totalLitres"   -> "invalid",
-          "volumesWithRate.pureAlcohol"   -> "invalid",
-          "volumesWithRate.dutyRate"      -> "invalid"
+          "volumesWithRate.rateBandRecap"             -> rateBandRecap,
+          "volumesWithRate.rateBandRecapSoftMutation" -> rateBandRecapSoftMutation,
+          "volumesWithRate.taxType"                   -> "aTaxType",
+          "volumesWithRate.totalLitres"               -> "invalid",
+          "volumesWithRate.pureAlcohol"               -> "invalid",
+          "volumesWithRate.dutyRate"                  -> "invalid"
         )
       )
       result.errors must contain allElementsOf Seq(
         "volumesWithRate_totalLitres" -> "return.journey.error.invalid.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.invalid.pureAlcohol",
         "volumesWithRate_dutyRate"    -> "return.journey.error.invalid.dutyRate"
-      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, "")) }
+      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")) }
     }
 
     "must fail when data with too many decimal places is provided" in {
       val result = form.bind(
         Map(
-          "volumesWithRate.rateBandRecap" -> rateBandRecap,
-          "volumesWithRate.taxType"       -> "123",
-          "volumesWithRate.totalLitres"   -> "1.123",
-          "volumesWithRate.pureAlcohol"   -> "1.12345",
-          "volumesWithRate.dutyRate"      -> "1.123"
+          "volumesWithRate.rateBandRecap"             -> rateBandRecap,
+          "volumesWithRate.rateBandRecapSoftMutation" -> rateBandRecapSoftMutation,
+          "volumesWithRate.taxType"                   -> "123",
+          "volumesWithRate.totalLitres"               -> "1.123",
+          "volumesWithRate.pureAlcohol"               -> "1.12345",
+          "volumesWithRate.dutyRate"                  -> "1.123"
         )
       )
       result.errors must contain allElementsOf Seq(
         "volumesWithRate_totalLitres" -> "return.journey.error.tooManyDecimalPlaces.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.tooManyDecimalPlaces.pureAlcohol",
         "volumesWithRate_dutyRate"    -> "return.journey.error.tooManyDecimalPlaces.dutyRate"
-      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, "")) }
+      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")) }
     }
 
     "must fail when data exceeding maximum value is provided" in {
       val result = form.bind(
         Map(
-          "volumesWithRate.rateBandRecap" -> rateBandRecap,
-          "volumesWithRate.taxType"       -> "123",
-          "volumesWithRate.totalLitres"   -> "100000000000",
-          "volumesWithRate.pureAlcohol"   -> "100000000000.0000",
-          "volumesWithRate.dutyRate"      -> "100000000000"
+          "volumesWithRate.rateBandRecap"             -> rateBandRecap,
+          "volumesWithRate.rateBandRecapSoftMutation" -> rateBandRecapSoftMutation,
+          "volumesWithRate.taxType"                   -> "123",
+          "volumesWithRate.totalLitres"               -> "100000000000",
+          "volumesWithRate.pureAlcohol"               -> "100000000000.0000",
+          "volumesWithRate.dutyRate"                  -> "100000000000"
         )
       )
 
@@ -120,17 +123,18 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         "volumesWithRate_totalLitres" -> "return.journey.error.maximumValue.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.maximumValue.pureAlcohol",
         "volumesWithRate_dutyRate"    -> "return.journey.error.maximumValue.dutyRate"
-      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, "")) }
+      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")) }
     }
 
     "must fail when data below minimum value is provided" in {
       val result = form.bind(
         Map(
-          "volumesWithRate.rateBandRecap" -> rateBandRecap,
-          "volumesWithRate.taxType"       -> "123",
-          "volumesWithRate.totalLitres"   -> "0",
-          "volumesWithRate.pureAlcohol"   -> "0.0000",
-          "volumesWithRate.dutyRate"      -> "-1"
+          "volumesWithRate.rateBandRecap"             -> rateBandRecap,
+          "volumesWithRate.rateBandRecapSoftMutation" -> rateBandRecapSoftMutation,
+          "volumesWithRate.taxType"                   -> "123",
+          "volumesWithRate.totalLitres"               -> "0",
+          "volumesWithRate.pureAlcohol"               -> "0.0000",
+          "volumesWithRate.dutyRate"                  -> "-1"
         )
       )
 
@@ -138,71 +142,78 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
         "volumesWithRate_totalLitres" -> "return.journey.error.minimumValue.totalLitres",
         "volumesWithRate_pureAlcohol" -> "return.journey.error.minimumValue.pureAlcohol",
         "volumesWithRate_dutyRate"    -> "return.journey.error.minimumValue.dutyRate"
-      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, "")) }
+      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")) }
     }
 
     "must fail when pure alcohol is more than total litres" in {
       val result = form.bind(
         Map(
-          "volumesWithRate.rateBandRecap" -> rateBandRecap,
-          "volumesWithRate.taxType"       -> "123",
-          "volumesWithRate.totalLitres"   -> "1.1",
-          "volumesWithRate.pureAlcohol"   -> "100.1000",
-          "volumesWithRate.dutyRate"      -> "1.1"
+          "volumesWithRate.rateBandRecap"             -> rateBandRecap,
+          "volumesWithRate.rateBandRecapSoftMutation" -> rateBandRecapSoftMutation,
+          "volumesWithRate.taxType"                   -> "123",
+          "volumesWithRate.totalLitres"               -> "1.1",
+          "volumesWithRate.pureAlcohol"               -> "100.1000",
+          "volumesWithRate.dutyRate"                  -> "1.1"
         )
       )
 
       result.errors must contain allElementsOf Seq(
         "volumesWithRate_pureAlcohol" -> "return.journey.error.lessThanExpected"
-      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, "")) }
+      ).map { case (k, v) => FormError(k, v, Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")) }
     }
 
     "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum and and dutyRate is invalid" in {
       val data = Map(
-        "volumesWithRate.rateBandRecap" -> rateBandRecap,
-        "volumesWithRate.taxType"       -> "123",
-        "volumesWithRate.totalLitres"   -> "99999999999",
-        "volumesWithRate.pureAlcohol"   -> "",
-        "volumesWithRate.dutyRate"      -> "abc"
+        "volumesWithRate.rateBandRecap"             -> rateBandRecap,
+        "volumesWithRate.rateBandRecapSoftMutation" -> rateBandRecapSoftMutation,
+        "volumesWithRate.taxType"                   -> "123",
+        "volumesWithRate.totalLitres"               -> "99999999999",
+        "volumesWithRate.pureAlcohol"               -> "",
+        "volumesWithRate.dutyRate"                  -> "abc"
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError(
           "volumesWithRate_totalLitres",
           Seq("return.journey.error.maximumValue.totalLitres"),
-          Seq(rateBandRecap, "")
+          Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")
         ),
         FormError(
           "volumesWithRate_pureAlcohol",
           Seq("return.journey.error.noValue.pureAlcohol"),
-          Seq(rateBandRecap, "")
+          Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")
         ),
-        FormError("volumesWithRate_dutyRate", Seq("return.journey.error.invalid.dutyRate"), Seq(rateBandRecap, ""))
+        FormError(
+          "volumesWithRate_dutyRate",
+          Seq("return.journey.error.invalid.dutyRate"),
+          Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")
+        )
       )
     }
 
     "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
       val data = Map(
-        "volumesWithRate.rateBandRecap" -> rateBandRecap,
-        "volumesWithRate.taxType"       -> "123",
-        "volumesWithRate.totalLitres"   -> "111111111111.234",
-        "volumesWithRate.pureAlcohol"   -> "-2.45356",
-        "volumesWithRate.dutyRate"      -> "99999999999.546"
+        "volumesWithRate.rateBandRecap"             -> rateBandRecap,
+        "volumesWithRate.rateBandRecapSoftMutation" -> rateBandRecapSoftMutation,
+        "volumesWithRate.taxType"                   -> "123",
+        "volumesWithRate.totalLitres"               -> "111111111111.234",
+        "volumesWithRate.pureAlcohol"               -> "-2.45356",
+        "volumesWithRate.dutyRate"                  -> "99999999999.546"
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError(
           "volumesWithRate_totalLitres",
           Seq("return.journey.error.tooManyDecimalPlaces.totalLitres"),
-          Seq(rateBandRecap, "")
+          Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")
         ),
         FormError(
           "volumesWithRate_pureAlcohol",
           Seq("return.journey.error.tooManyDecimalPlaces.pureAlcohol"),
-          Seq(rateBandRecap, "")
+          Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")
         ),
         FormError(
           "volumesWithRate_dutyRate",
           Seq("return.journey.error.tooManyDecimalPlaces.dutyRate"),
-          Seq(rateBandRecap, "")
+          Seq(rateBandRecap, rateBandRecapSoftMutation, "", "")
         )
       )
     }

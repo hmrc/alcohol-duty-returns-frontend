@@ -35,7 +35,8 @@ class SpoiltVolumeWithDutyFormProvider @Inject() extends Mappings {
         "spoiltVolumeWithDuty.error.minimumValue",
         "spoiltVolumeWithDuty.error.maximumValue",
         "spoiltVolumeWithDuty.error.lessThanExpected",
-        Seq(messages(s"return.regime.$regime"))
+        messages(regime.regimeMessageKey),
+        messages(regime.regimeMessageSoftMutationKey)
       )
     )
 }

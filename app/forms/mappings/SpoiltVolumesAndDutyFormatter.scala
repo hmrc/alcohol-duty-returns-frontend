@@ -29,9 +29,12 @@ class SpoiltVolumesAndDutyFormatter(
   minimumValueKey: String,
   maximumValueKey: String,
   inconsistentKey: String,
-  args: Seq[String]
+  regimeName: String,
+  regimeNameSoftMutation: String
 ) extends Formatter[SpoiltVolumeWithDuty]
     with Formatters {
+
+  private val regimeArgs = Seq(regimeName, regimeNameSoftMutation)
 
   private val volumeFormatter = new BigDecimalFieldFormatter(
     requiredKey,
@@ -42,7 +45,7 @@ class SpoiltVolumesAndDutyFormatter(
     totalLitresVolumeField,
     maximumValue = Constants.volumeMaximumValue,
     minimumValue = Constants.volumeMinimumValue,
-    args = args
+    args = regimeArgs
   )
 
   private val pureAlcoholVolumeFormatter: BigDecimalFieldFormatter = new BigDecimalFieldFormatter(
@@ -56,7 +59,7 @@ class SpoiltVolumesAndDutyFormatter(
     maximumValue = Constants.lpaMaximumValue,
     minimumValue = Constants.lpaMinimumValue,
     exactDecimalPlacesRequired = true,
-    args = args
+    args = regimeArgs
   )
 
   private val dutyFormatter = new BigDecimalFieldFormatter(
@@ -68,11 +71,11 @@ class SpoiltVolumesAndDutyFormatter(
     dutyField,
     maximumValue = Constants.spoiltDutyMaximumValue,
     minimumValue = Constants.spoiltDutyMinimumValue,
-    args = args
+    args = regimeArgs
   )
 
   private def requiredFieldFormError(key: String, field: String): FormError =
-    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", args)
+    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", regimeArgs)
 
   private def formatVolume(key: String, data: Map[String, String]): Either[Seq[FormError], SpoiltVolumeWithDuty] = {
     val totalLitres = volumeFormatter.bind(s"$key.$totalLitresVolumeField", data)
@@ -96,7 +99,7 @@ class SpoiltVolumesAndDutyFormatter(
       errors => Left(errors),
       volumes =>
         if (volumes.totalLitresVolume < volumes.pureAlcoholVolume) {
-          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholVolumeField"), inconsistentKey, args)))
+          Left(Seq(FormError(nameToId(s"$key.$pureAlcoholVolumeField"), inconsistentKey, regimeArgs)))
         } else {
           Right(volumes)
         }
