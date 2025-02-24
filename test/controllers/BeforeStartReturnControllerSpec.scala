@@ -19,16 +19,15 @@ package controllers
 import base.SpecBase
 import connectors.UserAnswersConnector
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
-import models.{AlcoholRegimes, ObligationData, ReturnPeriod, UserAnswers}
-import models.audit.{AuditContinueReturn, AuditObligationData, AuditReturnStarted}
+import models.{AlcoholRegimes, ErrorModel, ObligationData, ReturnPeriod, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import play.api.http.Status.LOCKED
 import play.api.i18n.Messages
-import play.api.test.Helpers._
 import play.api.inject.bind
-import services.AuditService
+import play.api.test.Helpers._
+import services.BeforeStartReturnService
 import uk.gov.hmrc.http.UpstreamErrorResponse
+import utils.UserAnswersAuditHelper
 import viewmodels.{BeforeStartReturnViewModelFactory, ReturnPeriodViewModelFactory}
 import views.html.BeforeStartReturnView
 
@@ -37,243 +36,294 @@ import scala.concurrent.Future
 
 class BeforeStartReturnControllerSpec extends SpecBase {
   "BeforeStartReturn Controller" - {
-    "must redirect to the TaskList Page if UserAnswers already exist for a GET with audit event" in new SetUp {
-      when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
 
-      val application = applicationBuilder()
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService),
-          bind(classOf[Clock]).toInstance(clock)
-        )
-        .build()
+    "onPageLoad" - {
 
-      running(application) {
-        val request = FakeRequest(
-          GET,
-          controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
-        )
+      "if UserAnswers already exist" - {
 
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        verify(mockAuditService).audit(eqTo(expectedContinueReturnAuditEvent))(any(), any())
-        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
-      }
-    }
-
-    "must return OK and the correct view for a GET if the userAnswer does not exist yet" in new SetUp {
-      when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
-      when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(
-        Left(mockUpstreamErrorResponse)
-      )
-
-      val application = applicationBuilder()
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[Clock].toInstance(clock)
-        )
-        .build()
-
-      running(application) {
-        val request = FakeRequest(
-          GET,
-          controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
-        )
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[BeforeStartReturnView]
-
-        val returnPeriodViewModel =
-          new ReturnPeriodViewModelFactory(createDateTimeHelper())(
-            ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get
+        "must redirect to the TaskList Page with audit event if subscription and obligation status are valid and regimes match the API" in new SetUp {
+          when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
+          when(mockBeforeStartReturnService.handleExistingUserAnswers(any())(any())) thenReturn Future.successful(
+            Right((): Unit)
           )
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(
-          request,
-          getMessages(application)
-        ).toString
+          val application = applicationBuilder()
+            .overrides(
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+              bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
+              bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
+              bind(classOf[Clock]).toInstance(clock)
+            )
+            .build()
+
+          running(application) {
+            val request = FakeRequest(
+              GET,
+              controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+            )
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            verify(mockUserAnswersAuditHelper).auditContinueReturn(
+              eqTo(emptyUserAnswers),
+              eqTo(periodKey),
+              eqTo(appaId),
+              eqTo(internalId),
+              eqTo(groupId)
+            )(any())
+            redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+          }
+        }
+
+        "must redirect to the Service Updated Page if subscription and obligation status are valid but regimes do not match the API" in new SetUp {
+          when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
+          when(mockBeforeStartReturnService.handleExistingUserAnswers(any())(any())) thenReturn Future.successful(
+            Left(ErrorModel(CONFLICT, "Alcohol regimes in existing user answers do not match those from API"))
+          )
+
+          val application = applicationBuilder()
+            .overrides(
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+              bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
+              bind[Clock].toInstance(clock)
+            )
+            .build()
+
+          running(application) {
+            val request = FakeRequest(
+              GET,
+              controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+            )
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual controllers.routes.ServiceUpdatedController.onPageLoad.url
+          }
+        }
+
+        "must redirect to the journey recovery controller if subscription or obligation status is no longer valid or another error occurred" in new SetUp {
+          when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(Right(emptyUserAnswers))
+          when(mockBeforeStartReturnService.handleExistingUserAnswers(any())(any())) thenReturn Future.successful(
+            Left(ErrorModel(INTERNAL_SERVER_ERROR, "No open obligation found."))
+          )
+
+          val application = applicationBuilder()
+            .overrides(
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+              bind[BeforeStartReturnService].toInstance(mockBeforeStartReturnService),
+              bind[Clock].toInstance(clock)
+            )
+            .build()
+
+          running(application) {
+            val request = FakeRequest(
+              GET,
+              controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+            )
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          }
+        }
+      }
+
+      "must return OK and the correct view for a GET if the userAnswer does not exist yet" in new SetUp {
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(NOT_FOUND)
+        when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future.successful(
+          Left(mockUpstreamErrorResponse)
+        )
+
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(
+            GET,
+            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+          )
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[BeforeStartReturnView]
+
+          val returnPeriodViewModel =
+            new ReturnPeriodViewModelFactory(createDateTimeHelper())(
+              ReturnPeriod.fromPeriodKey(emptyUserAnswers.returnId.periodKey).get
+            )
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(returnPeriodViewModel, viewModel)(
+            request,
+            getMessages(application)
+          ).toString
+        }
+      }
+
+      "must redirect to the journey recovery controller if a bad period key is supplied" in new SetUp {
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(badPeriodKey).url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+
+      "must redirect to the return locked controller if the return is locked" in new SetUp {
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(LOCKED)
+
+        when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future(
+          Left(mockUpstreamErrorResponse)
+        )
+
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(
+            GET,
+            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+          )
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.ReturnLockedController.onPageLoad().url
+        }
+      }
+
+      "must redirect to journey recovery controller if the user answers connector return a bad request" in new SetUp {
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(BAD_REQUEST)
+
+        when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future(
+          Left(mockUpstreamErrorResponse)
+        )
+
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(
+            GET,
+            controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
+          )
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
 
-    "must redirect to the journey recovery controller if a bad period key is supplied" in new SetUp {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[Clock].toInstance(clock)
-        )
-        .build()
+    "onSubmit" - {
 
-      running(application) {
-        val request = FakeRequest(GET, controllers.routes.BeforeStartReturnController.onPageLoad(badPeriodKey).url)
+      "must redirect to the TaskList Page when a userAnswers is successfully created for a POST" in new SetUp {
+        val userAnswers = emptyUserAnswers.set(ObligationData, obligationDataSingleOpen).success.value
+        when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
 
-        val result = route(application, request).value
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
+        running(application) {
+          val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
 
-    "must redirect to the return locked controller if the return is locked" in new SetUp {
-      when(mockUpstreamErrorResponse.statusCode).thenReturn(LOCKED)
+          val result = route(application, request).value
 
-      when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future(
-        Left(mockUpstreamErrorResponse)
-      )
-
-      val application = applicationBuilder()
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[Clock].toInstance(clock)
-        )
-        .build()
-
-      running(application) {
-        val request = FakeRequest(
-          GET,
-          controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
-        )
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.ReturnLockedController.onPageLoad().url
-      }
-    }
-
-    "must redirect to journey recovery controller if the user answers connector return a bad request" in new SetUp {
-      when(mockUpstreamErrorResponse.statusCode).thenReturn(BAD_REQUEST)
-
-      when(mockUserAnswersConnector.get(any(), any())(any())) thenReturn Future(
-        Left(mockUpstreamErrorResponse)
-      )
-
-      val application = applicationBuilder()
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[Clock].toInstance(clock)
-        )
-        .build()
-
-      running(application) {
-        val request = FakeRequest(
-          GET,
-          controllers.routes.BeforeStartReturnController.onPageLoad(emptyUserAnswers.returnId.periodKey).url
-        )
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to the TaskList Page when a userAnswers is successfully created for a POST" in new SetUp {
-      val userAnswers = emptyUserAnswers.set(ObligationData, obligationDataSingleOpen).success.value
-      when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
-
-      val application = applicationBuilder()
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService),
-          bind[Clock].toInstance(clock)
-        )
-        .build()
-
-      running(application) {
-        val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
-        verify(mockAuditService).audit(eqTo(expectedReturnStartedAuditEvent))(any(), any())
-      }
-    }
-
-    "must redirect to the TaskList Page when a userAnswers is successfully created for a POST without sending the audit event if the obligation is not available" in new SetUp {
-      val userAnswers = emptyUserAnswers.remove(ObligationData).success.value
-      when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(Right(userAnswers))
-
-      val application = applicationBuilder()
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService),
-          bind[Clock].toInstance(clock)
-        )
-        .build()
-
-      running(application) {
-        val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad.url
+          verify(mockUserAnswersAuditHelper).auditReturnStarted(eqTo(userAnswers))(any())
+        }
       }
 
-      verify(mockAuditService, times(0)).audit(any())(any(), any())
-    }
-
-    "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in new SetUp {
-      when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(
-        Left(mockUpstreamErrorResponse)
-      )
-      when(mockUpstreamErrorResponse.statusCode).thenReturn(INTERNAL_SERVER_ERROR)
-
-      val application = applicationBuilder()
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService),
-          bind[Clock].toInstance(clock)
+      "must redirect to the JourneyRecovery Page when a userAnswers cannot be created for a POST" in new SetUp {
+        when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(
+          Left(mockUpstreamErrorResponse)
         )
-        .build()
+        when(mockUpstreamErrorResponse.statusCode).thenReturn(INTERNAL_SERVER_ERROR)
 
-      running(application) {
-        val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
 
-        val result = route(application, request).value
+        running(application) {
+          val request = FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          val result = route(application, request).value
 
-        verify(mockAuditService, times(0)).audit(any())(any(), any())
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+          verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
+        }
       }
-    }
 
-    "must redirect to the journey recovery controller if the period key is not in the session for a POST" in new SetUp {
-      when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(
-        Right(emptyUserAnswers)
-      )
-
-      val application = applicationBuilder()
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AuditService].toInstance(mockAuditService),
-          bind[Clock].toInstance(clock)
+      "must redirect to the journey recovery controller if the period key is not in the session for a POST" in new SetUp {
+        when(mockUserAnswersConnector.createUserAnswers(any())(any())) thenReturn Future.successful(
+          Right(emptyUserAnswers)
         )
-        .build()
 
-      running(application) {
-        val request = play.api.test.FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
+        val application = applicationBuilder()
+          .overrides(
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[UserAnswersAuditHelper].toInstance(mockUserAnswersAuditHelper),
+            bind[Clock].toInstance(clock)
+          )
+          .build()
 
-        val result = route(application, request).value
+        running(application) {
+          val request = play.api.test.FakeRequest(POST, controllers.routes.BeforeStartReturnController.onSubmit().url)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          val result = route(application, request).value
 
-        verify(mockAuditService, times(0)).audit(any())(any(), any())
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+          verify(mockUserAnswersAuditHelper, times(0)).auditReturnStarted(any())(any())
+        }
       }
     }
   }
 
   class SetUp {
-    val mockUserAnswersConnector       = mock[UserAnswersConnector]
-    val mockAuditService: AuditService = mock[AuditService]
-    val mockUpstreamErrorResponse      = mock[UpstreamErrorResponse]
+    val mockUserAnswersConnector     = mock[UserAnswersConnector]
+    val mockBeforeStartReturnService = mock[BeforeStartReturnService]
+    val mockUserAnswersAuditHelper   = mock[UserAnswersAuditHelper]
+    val mockUpstreamErrorResponse    = mock[UpstreamErrorResponse]
 
     implicit val messages: Messages = getMessages(app)
 
@@ -285,26 +335,6 @@ class BeforeStartReturnControllerSpec extends SpecBase {
       startedTime = Instant.now(clock),
       lastUpdated = Instant.now(clock),
       validUntil = Some(Instant.now(clock))
-    )
-
-    val expectedContinueReturnAuditEvent = AuditContinueReturn(
-      appaId = returnId.appaId,
-      periodKey = returnId.periodKey,
-      credentialId = emptyUserAnswers.internalId,
-      groupId = emptyUserAnswers.groupId,
-      returnContinueTime = Instant.now(clock),
-      returnStartedTime = Instant.now(clock),
-      returnValidUntilTime = Some(Instant.now(clock))
-    )
-
-    val expectedReturnStartedAuditEvent = AuditReturnStarted(
-      appaId = returnId.appaId,
-      periodKey = returnId.periodKey,
-      credentialId = emptyUserAnswers.internalId,
-      groupId = emptyUserAnswers.groupId,
-      obligationData = AuditObligationData(obligationDataSingleOpen),
-      returnStartedTime = Instant.now(clock),
-      returnValidUntilTime = Some(Instant.now(clock))
     )
 
     val currentDate = LocalDate.now(clock)

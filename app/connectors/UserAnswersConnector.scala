@@ -55,6 +55,12 @@ class UserAnswersConnector @Inject() (
       .setHeader("Csrf-Token" -> "nocheck")
       .execute[Either[UpstreamErrorResponse, UserAnswers]]
 
+  def delete(appaId: String, periodKey: String)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    httpClient
+      .delete(url"${config.adrUserAnswersGetUrl(appaId, periodKey)}")
+      .setHeader("Csrf-Token" -> "nocheck")
+      .execute[HttpResponse]
+
   def releaseLock(returnId: ReturnId)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
       .delete(url"${config.adrReleaseUserAnswersLockUrl(returnId.appaId, returnId.periodKey)}")
