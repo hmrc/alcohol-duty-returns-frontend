@@ -18,13 +18,12 @@ package models.declareDuty
 
 import base.SpecBase
 import models.returns.ReturnAdjustmentsRow
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.libs.json.{JsSuccess, Json}
 
 class ReturnAdjustmentsRowSpec extends SpecBase {
 
   "ReturnAdjustmentsRow" - {
-    "should serialize to JSON correctly" in {
+    "must serialize to JSON correctly" in {
       val adjustmentRow = ReturnAdjustmentsRow(
         adjustmentTypeKey = "underdeclaration",
         returnPeriodAffected = periodKey,
@@ -43,10 +42,10 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
         "dutyValue"            -> 125
       )
 
-      Json.toJson(adjustmentRow) shouldEqual expectedJson
+      Json.toJson(adjustmentRow) mustEqual expectedJson
     }
 
-    "should deserialize from JSON correctly" in {
+    "must deserialize from JSON correctly" in {
       val json = Json.obj(
         "adjustmentTypeKey"    -> "underdeclaration",
         "returnPeriodAffected" -> periodKey,
@@ -56,7 +55,7 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
         "dutyValue"            -> 125
       )
 
-      json.validate[ReturnAdjustmentsRow] shouldEqual JsSuccess(
+      json.validate[ReturnAdjustmentsRow] mustEqual JsSuccess(
         ReturnAdjustmentsRow(
           adjustmentTypeKey = "underdeclaration",
           returnPeriodAffected = periodKey,
@@ -68,7 +67,7 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
       )
     }
 
-    "should sort adjustments rows correctly by adjustmentTypeKey and then by taxType" in {
+    "must sort adjustments rows correctly by adjustmentTypeKey and then by taxType" in {
       val row1 =
         ReturnAdjustmentsRow("underdeclaration", periodKeyJan, "311", BigDecimal(50), BigDecimal(2.5), BigDecimal(125))
       val row2 =
@@ -78,7 +77,7 @@ class ReturnAdjustmentsRowSpec extends SpecBase {
       val rows       = Seq(row1, row2, row3)
       val sortedRows = rows.sorted
 
-      sortedRows shouldEqual Seq(row1, row2, row3)
+      sortedRows mustEqual Seq(row1, row2, row3)
     }
   }
 }

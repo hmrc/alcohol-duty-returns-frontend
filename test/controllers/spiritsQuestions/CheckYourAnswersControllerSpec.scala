@@ -72,7 +72,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val spiritsList =
           CheckYourAnswersSummaryListHelper.spiritsSummaryList(completedUserAnswers)(getMessages(application)).get
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(spiritsList)(
           request,
           getMessages(application)
@@ -113,7 +113,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val spiritsList =
           CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(application)).get
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(spiritsList)(
           request,
           getMessages(application)
@@ -157,7 +157,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         val spiritsList =
           CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(application)).get
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(spiritsList)(
           request,
           getMessages(application)
@@ -178,7 +178,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }
@@ -195,7 +195,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         }
       }

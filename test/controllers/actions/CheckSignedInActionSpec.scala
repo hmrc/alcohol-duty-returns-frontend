@@ -63,7 +63,7 @@ class CheckSignedInActionSpec extends SpecBase {
 
       val result: Future[Result] = checkSignedInAction.invokeBlock(FakeRequest(), testAction(signedInStore))
 
-      status(result) mustBe OK
+      status(result)          mustBe OK
       contentAsString(result) mustBe testContent
 
       signedInStore.synchronized {
@@ -91,7 +91,7 @@ class CheckSignedInActionSpec extends SpecBase {
 
         val result: Future[Result] = checkSignedInAction.invokeBlock(FakeRequest(), testAction(signedInStore))
 
-        status(result) mustBe OK
+        status(result)          mustBe OK
         contentAsString(result) mustBe testContent
 
         signedInStore.synchronized {

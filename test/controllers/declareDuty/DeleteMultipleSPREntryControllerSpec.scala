@@ -72,7 +72,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DeleteMultipleSPREntryView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, regime, index)(request, getMessages(application)).toString
       }
     }
@@ -85,7 +85,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -110,7 +110,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.declareDuty.routes.MultipleSPRListController
           .onPageLoad(regime)
           .url
@@ -136,7 +136,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.declareDuty.routes.DoYouHaveMultipleSPRDutyRatesController
           .onPageLoad(NormalMode, regime)
           .url
@@ -154,7 +154,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.declareDuty.routes.MultipleSPRListController
           .onPageLoad(regime)
           .url
@@ -175,7 +175,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, index)(request, getMessages(application)).toString
       }
     }
@@ -189,7 +189,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -202,7 +202,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -218,7 +218,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -233,7 +233,7 @@ class DeleteMultipleSPREntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

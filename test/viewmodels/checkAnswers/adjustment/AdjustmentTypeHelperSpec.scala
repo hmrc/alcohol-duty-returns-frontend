@@ -29,7 +29,7 @@ import scala.util.Success
 class AdjustmentTypeHelperSpec extends SpecBase {
   "AdjustmentTypeHelper" - {
     "checkIfOneRegimeAndSpoiltAndUpdateUserAnswers" - {
-      "should update user answers correctly when there is only one regime and adjustment type is Spoilt" in new SetUp {
+      "must update user answers correctly when there is only one regime and adjustment type is Spoilt" in new SetUp {
         val regimes        = AlcoholRegimes(Set(regime))
         val userAnswers    = emptyUserAnswers
           .copy(regimes = regimes)
@@ -42,18 +42,18 @@ class AdjustmentTypeHelperSpec extends SpecBase {
         val updatedAnswers = result.get
         val updatedEntry   = updatedAnswers.get(CurrentAdjustmentEntryPage).value
         updatedEntry.spoiltRegime mustBe Some(Beer)
-        updatedEntry.rateBand mustBe Some(spoiltRateBand)
-        updatedEntry.period mustBe Some(YearMonth.now(clock).minusMonths(1))
+        updatedEntry.rateBand     mustBe Some(spoiltRateBand)
+        updatedEntry.period       mustBe Some(YearMonth.now(clock).minusMonths(1))
       }
 
-      "should return the original user answers when there is more than one regime" in new SetUp {
+      "must return the original user answers when there is more than one regime" in new SetUp {
         val regimes     = AlcoholRegimes(Set(Beer, Cider))
         val userAnswers = emptyUserAnswers.copy(regimes = regimes)
         val result      = helper.updateIfSingleRegimeAndSpoilt(userAnswers, Spoilt, clock)
         result mustBe Success(userAnswers)
       }
 
-      "should return the original user answers when the adjustment type is not Spoilt" in new SetUp {
+      "must return the original user answers when the adjustment type is not Spoilt" in new SetUp {
         val regimes     = AlcoholRegimes(Set(regime))
         val userAnswers = emptyUserAnswers.copy(regimes = regimes)
         val result      = helper.updateIfSingleRegimeAndSpoilt(userAnswers, AdjustmentType.Drawback, clock)

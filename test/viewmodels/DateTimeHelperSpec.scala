@@ -24,13 +24,13 @@ import java.time.format.DateTimeFormatter
 
 class DateTimeHelperSpec extends SpecBase {
   "DateTimeHelper" - {
-    "should convert an Instant to a LocalDate" in new SetUp {
+    "must convert an Instant to a LocalDate" in new SetUp {
       DateTimeFormatter.ISO_LOCAL_DATE.format(
         dateTimeHelper.instantToLocalDate(Instant.now(clock))
       ) mustBe "2024-06-11"
     }
 
-    "should convert an Instant to a LocalTime" in new SetUp {
+    "must convert an Instant to a LocalTime" in new SetUp {
       DateTimeFormatter.ISO_LOCAL_TIME.format(
         dateTimeHelper.instantToLocalTime(Instant.now(clock))
       ) mustBe "16:07:47.838"

@@ -296,7 +296,7 @@ class MappingsSpec extends SpecBase with Mappings {
     "can unbind" in {
       val result = mapping.unbind(YearMonth.of(2024, 1))
       result.get(".month") mustBe Some("1")
-      result.get(".year") mustBe Some("2024")
+      result.get(".year")  mustBe Some("2024")
     }
   }
 
@@ -590,7 +590,7 @@ class MappingsSpec extends SpecBase with Mappings {
       val result = mapping.unbind(AdjustmentVolumeWithSPR(BigDecimal(1234.45), BigDecimal(12.3456), BigDecimal(5.31)))
       result.get(".totalLitresVolume") mustBe Some("1234.45")
       result.get(".pureAlcoholVolume") mustBe Some("12.3456")
-      result.get(".sprDutyRate") mustBe Some("5.31")
+      result.get(".sprDutyRate")       mustBe Some("5.31")
     }
   }
 
@@ -1216,10 +1216,10 @@ class MappingsSpec extends SpecBase with Mappings {
         mapping.unbind(
           VolumeAndRateByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456), BigDecimal(5.31))
         )
-      result.get(".taxType") mustBe Some("123")
+      result.get(".taxType")     mustBe Some("123")
       result.get(".totalLitres") mustBe Some("1234.45")
       result.get(".pureAlcohol") mustBe Some("12.3456")
-      result.get(".dutyRate") mustBe Some("5.31")
+      result.get(".dutyRate")    mustBe Some("5.31")
     }
   }
 
@@ -1585,7 +1585,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     "can unbind" in {
       val result = mapping.unbind(VolumesByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456)))
-      result.get(".taxType") mustBe Some("123")
+      result.get(".taxType")     mustBe Some("123")
       result.get(".totalLitres") mustBe Some("1234.45")
       result.get(".pureAlcohol") mustBe Some("12.3456")
     }
@@ -1925,7 +1925,7 @@ class MappingsSpec extends SpecBase with Mappings {
         mapping.unbind(SpoiltVolumeWithDuty(BigDecimal(1234.45), BigDecimal(12.3456), BigDecimal(5.31)))
       result.get(".totalLitresVolume") mustBe Some("1234.45")
       result.get(".pureAlcoholVolume") mustBe Some("12.3456")
-      result.get(".duty") mustBe Some("5.31")
+      result.get(".duty")              mustBe Some("5.31")
     }
   }
 }

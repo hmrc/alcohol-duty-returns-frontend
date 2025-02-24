@@ -33,7 +33,7 @@ import scala.concurrent.Future
 
 class DutyDueForThisReturnHelperSpec extends SpecBase {
   "DutyDueForThisReturnHelper" - {
-    "should total both duty due and adjustments" in new SetUp {
+    "must total both duty due and adjustments" in new SetUp {
       val userAnswers = declareAdjustmentTotalPage(
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
@@ -50,13 +50,16 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalDuty.duty
-        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
-          _.value.content.toString.filter(c => c.isDigit || c == '.')
-        ) mustBe totalDutiesAndAdjustments.map(total => f"$total%.2f")
+
+        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
+          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
+        val expectedDutyAndAdjustmentTotals  = totalDutiesAndAdjustments.map(total => f"$total%.2f")
+
+        dutiesBreakdownSummaryListValues mustBe expectedDutyAndAdjustmentTotals
       }
     }
 
-    "should total duty due where no adjustments" in new SetUp {
+    "must total duty due where no adjustments" in new SetUp {
       val userAnswers =
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
@@ -71,13 +74,16 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalDutyWithoutAdjustments.duty
-        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
-          _.value.content.toString.filter(c => c.isDigit || c == '.')
-        ) mustBe totalDuties.map(total => f"$total%.2f") :+ ""
+
+        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
+          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
+        val expectedDutyTotals               = totalDuties.map(total => f"$total%.2f") :+ ""
+
+        dutiesBreakdownSummaryListValues mustBe expectedDutyTotals
       }
     }
 
-    "should return adjustments where no duty due" in new SetUp {
+    "must return adjustments where no duty due" in new SetUp {
       val userAnswers = declareAdjustmentTotalPage(
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(emptyUserAnswers, false),
@@ -94,13 +100,16 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
       whenReady(dutyDueForThisReturnHelper.getDutyDueViewModel(userAnswers, returnPeriod).value) { result =>
         result.toOption.get.totalDue mustBe totalAdjustments.duty
-        result.toOption.get.dutiesBreakdownSummaryList.rows.map(
-          _.value.content.toString.filter(c => c.isDigit || c == '.')
-        ) mustBe "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
+
+        val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
+          .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
+        val expectedAdjustmentTotals         = "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
+
+        dutiesBreakdownSummaryListValues mustBe expectedAdjustmentTotals
       }
     }
 
-    "should return a You've Also Answered Table View Model" - {
+    "must return a You've Also Answered Table View Model" - {
       "when no spirits" - {
         "and declared, with the correct label, declared content, and redirect to the appropriate check your answers page" in new SetUp {
           val userAnswers: UserAnswers = declareAdjustmentTotalPage(
@@ -128,9 +137,9 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 1
+          result.rows.size                             mustBe 1
           result.rows.head.actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows.head.value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows.head.value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
         }
 
         "and DSD not declared, with the correct label, nothing to declare content, and redirect to the appropriate declaration page" in new SetUp {
@@ -159,9 +168,9 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 1
+          result.rows.size                             mustBe 1
           result.rows.head.actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows.head.value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows.head.value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
         }
       }
 
@@ -194,11 +203,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 2
+          result.rows.size                           mustBe 2
           result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
           result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
+          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
         }
 
         "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate pages" in new SetUp {
@@ -229,11 +238,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 2
+          result.rows.size                           mustBe 2
           result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
           result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
+          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.declared"))
         }
       }
 
@@ -266,11 +275,11 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 2
+          result.rows.size                           mustBe 2
           result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
+          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.declared"))
           result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
+          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
         }
 
         "and DSD not declared, with the correct labels, nothing to declare content, and redirect to the appropriate declarations pages" in new SetUp {
@@ -301,16 +310,16 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
             .get
             .youveAlsoDeclaredSummaryList
 
-          result.rows.size mustBe 2
+          result.rows.size                           mustBe 2
           result.rows(0).actions.get.items.head.href mustBe expectedDutySuspendedDeliveriesRedirectUrl
-          result.rows(0).value.content mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
+          result.rows(0).value.content               mustBe Text(messages("dutyDueForThisReturn.dutySuspended.nothingToDeclare"))
           result.rows(1).actions.get.items.head.href mustBe expectedSpiritsRedirectUrl
-          result.rows(1).value.content mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
+          result.rows(1).value.content               mustBe Text(messages("dutyDueForThisReturn.spirits.nothingToDeclare"))
         }
       }
     }
 
-    "should error if unable to get duties when required" in new SetUp {
+    "must error if unable to get duties when required" in new SetUp {
       val userAnswers = declareAdjustmentTotalPage(
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(emptyUserAnswers, true),
@@ -324,7 +333,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       }
     }
 
-    "should error if unable to get adjustments when required" in new SetUp {
+    "must error if unable to get adjustments when required" in new SetUp {
       val userAnswers =
         declareAdjustmentQuestionPage(
           declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
@@ -349,7 +358,7 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
       result mustBe Left(s"Failed to calculate total duty due: $errorMessage")
     }
     "when everything is declared" - {
-      "the duties should be shown in the correct order (Beer, Cider, Wine, Spirits, OTP, Adjustments)" in new SetUp {
+      "the duties must be shown in the correct order (Beer, Cider, Wine, Spirits, OTP, Adjustments)" in new SetUp {
         val userAnswers: UserAnswers = declareAdjustmentTotalPage(
           declareAdjustmentQuestionPage(
             declareAlcoholDutyQuestionPage(specifyAllAlcoholDutiesUnsorted(emptyUserAnswers), true),
@@ -372,13 +381,13 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
           .get
           .dutiesBreakdownSummaryList
 
-        result.rows.size mustBe 6
+        result.rows.size             mustBe 6
         result.rows.head.key.content mustBe Text("Beer declared")
-        result.rows(1).key.content mustBe Text("Cider declared")
-        result.rows(2).key.content mustBe Text("Wine declared")
-        result.rows(3).key.content mustBe Text("Spirits declared")
-        result.rows(4).key.content mustBe Text("Other fermented products declared")
-        result.rows(5).key.content mustBe Text("Adjustments to previous returns")
+        result.rows(1).key.content   mustBe Text("Cider declared")
+        result.rows(2).key.content   mustBe Text("Wine declared")
+        result.rows(3).key.content   mustBe Text("Spirits declared")
+        result.rows(4).key.content   mustBe Text("Other fermented products declared")
+        result.rows(5).key.content   mustBe Text("Adjustments to previous returns")
       }
     }
   }

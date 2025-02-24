@@ -110,8 +110,8 @@ class StartPaymentRequestSpec extends SpecBase with Matchers with ModelGenerator
     "must return a new PaymentStart instance" - {
 
       "when all fields are present & correct" in {
-        startPaymentRequestJson.as[StartPaymentRequest] mustBe startPaymentRequest
-        pastPaymentsStartPaymentRequestJson.as[StartPaymentRequest] mustBe pastPaymentsStartPaymentRequest
+        startPaymentRequestJson.as[StartPaymentRequest]                  mustBe startPaymentRequest
+        pastPaymentsStartPaymentRequestJson.as[StartPaymentRequest]      mustBe pastPaymentsStartPaymentRequest
         startPaymentRequestWithNumericAmountJson.as[StartPaymentRequest] mustBe startPaymentRequest
       }
     }

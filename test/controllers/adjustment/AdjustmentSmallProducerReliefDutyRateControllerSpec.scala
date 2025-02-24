@@ -80,7 +80,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AdjustmentSmallProducerReliefDutyRateView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
@@ -100,7 +100,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, Spoilt)(
           request,
           getMessages(app)
@@ -129,7 +129,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -166,7 +166,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -185,7 +185,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
@@ -199,7 +199,7 @@ class AdjustmentSmallProducerReliefDutyRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

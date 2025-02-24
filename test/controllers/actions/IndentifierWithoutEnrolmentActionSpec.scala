@@ -69,7 +69,7 @@ class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
 
       val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
 
-      status(result) mustBe OK
+      status(result)          mustBe OK
       contentAsString(result) mustBe testContent
     }
 
@@ -129,7 +129,7 @@ class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
 
         val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
 
-        status(result) mustBe SEE_OTHER
+        status(result)                 mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad.url
       }
     }
@@ -147,7 +147,7 @@ class IdentifierWithoutServiceEntryCheckActionSpec extends SpecBase {
 
         val result: Future[Result] = identifierAction.invokeBlock(FakeRequest(), testAction)
 
-        status(result) mustBe SEE_OTHER
+        status(result)                 mustBe SEE_OTHER
         redirectLocation(result).value mustBe s"$loginUrl?continue=$loginContinueUrl"
       }
     }

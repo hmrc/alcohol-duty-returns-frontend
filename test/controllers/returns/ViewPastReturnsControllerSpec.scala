@@ -47,7 +47,7 @@ class ViewPastReturnsControllerSpec extends SpecBase {
           viewModelHelper.getReturnsTable(Seq(obligationDataSingleOpen))(getMessages(application))
         val completedReturnsTable   =
           viewModelHelper.getReturnsTable(Seq(obligationDataSingleFulfilled))(getMessages(application))
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(outstandingReturnsTable, completedReturnsTable)(
           request,
           getMessages(application)
@@ -66,7 +66,7 @@ class ViewPastReturnsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

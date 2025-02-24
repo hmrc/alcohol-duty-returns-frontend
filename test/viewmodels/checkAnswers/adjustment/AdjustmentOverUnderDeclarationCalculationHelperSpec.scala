@@ -21,7 +21,6 @@ import connectors.AlcoholDutyCalculatorConnector
 import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
 import models.adjustment.AdjustmentType.{Overdeclaration, Underdeclaration}
 import org.mockito.ArgumentMatchers.any
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.adjustment.{AdjustmentEntryListPage, OverDeclarationReasonPage, OverDeclarationTotalPage, UnderDeclarationReasonPage, UnderDeclarationTotalPage}
 import play.api.Application
 import play.api.i18n.Messages
@@ -65,7 +64,7 @@ class AdjustmentOverUnderDeclarationCalculationHelperSpec extends SpecBase {
 
       whenReady(adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(userAnswers, false)) {
         result =>
-          result shouldBe expectedUserAnswers
+          result mustBe expectedUserAnswers
       }
     }
 
@@ -86,7 +85,7 @@ class AdjustmentOverUnderDeclarationCalculationHelperSpec extends SpecBase {
         adjustmentOverUnderDeclarationCalculationHelper
           .fetchOverUnderDeclarationTotals(updatedUserAnswersWithReason, false)
       ) { result =>
-        result shouldBe expectedUserAnswers
+        result mustBe expectedUserAnswers
       }
     }
 
@@ -118,7 +117,7 @@ class AdjustmentOverUnderDeclarationCalculationHelperSpec extends SpecBase {
         adjustmentOverUnderDeclarationCalculationHelper
           .fetchOverUnderDeclarationTotals(updatedUserAnswersWithReason, false)
       ) { result =>
-        result shouldBe expectedUserAnswers
+        result mustBe expectedUserAnswers
       }
     }
   }

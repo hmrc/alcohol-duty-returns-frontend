@@ -83,7 +83,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val request = FakeRequest(GET, adjustmentTaxTypeRoute)
         val result  = route(application, request).value
         status(result) mustEqual OK
-        val view    = application.injector.instanceOf[AdjustmentTaxTypeView]
+        val view = application.injector.instanceOf[AdjustmentTaxTypeView]
         contentAsString(result) mustEqual view(form, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
@@ -131,7 +131,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -167,7 +167,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -196,7 +196,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
         val view   = application.injector.instanceOf[AdjustmentTaxTypeView]
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, Spoilt)(request, getMessages(app)).toString
       }
     }
@@ -223,7 +223,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
         val view   = application.injector.instanceOf[AdjustmentTaxTypeView]
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           formProvider()
             .withError("adjustment-tax-type-input", "adjustmentTaxType.error.invalid")
@@ -264,7 +264,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
         val view   = application.injector.instanceOf[AdjustmentTaxTypeView]
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           formProvider()
             .withError("adjustment-tax-type-input", "adjustmentTaxType.error.notDraught")
@@ -283,7 +283,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val request = FakeRequest(GET, adjustmentTaxTypeRoute)
         val result  = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -325,7 +325,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -345,7 +345,7 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
         val request = FakeRequest(POST, adjustmentTaxTypeRoute)
           .withFormUrlEncodedBody(("adjustment-tax-type-input", validAnswer.toString))
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

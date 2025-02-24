@@ -24,15 +24,15 @@ class AuditReturnSubmittedSpec extends SpecBase {
 
   "AuditReturnSubmitted" - {
 
-    "should be created from UserAnswers with Spirits" in {
+    "must be created from UserAnswers with Spirits" in {
       val auditEvent = AuditReturnSubmitted(fullUserAnswers, fullReturn, Instant.now(clock))
 
-      auditEvent.prePopulatedData.appaId mustBe fullUserAnswers.returnId.appaId
-      auditEvent.prePopulatedData.periodKey mustBe fullUserAnswers.returnId.periodKey
-      auditEvent.prePopulatedData.groupId mustBe fullUserAnswers.groupId
+      auditEvent.prePopulatedData.appaId       mustBe fullUserAnswers.returnId.appaId
+      auditEvent.prePopulatedData.periodKey    mustBe fullUserAnswers.returnId.periodKey
+      auditEvent.prePopulatedData.groupId      mustBe fullUserAnswers.groupId
       auditEvent.prePopulatedData.credentialId mustBe fullUserAnswers.internalId
 
-      auditEvent.dutyDeclared mustBe fullReturn.dutyDeclared.declared
+      auditEvent.dutyDeclared      mustBe fullReturn.dutyDeclared.declared
       auditEvent.dutyDeclaredItems mustBe fullReturn.dutyDeclared.dutyDeclaredItems
 
       auditEvent.overDeclarationDeclared mustBe fullReturn.adjustments.overDeclarationDeclared
@@ -42,7 +42,7 @@ class AuditReturnSubmittedSpec extends SpecBase {
       auditEvent.underDeclarationProducts mustBe fullReturn.adjustments.underDeclarationProducts
 
       auditEvent.spoiltProductDeclared mustBe fullReturn.adjustments.spoiltProductDeclared
-      auditEvent.spoiltProducts mustBe fullReturn.adjustments.spoiltProducts
+      auditEvent.spoiltProducts        mustBe fullReturn.adjustments.spoiltProducts
 
       auditEvent.drawbackDeclared mustBe fullReturn.adjustments.drawbackDeclared
       auditEvent.drawbackProducts mustBe fullReturn.adjustments.drawbackProducts
@@ -54,8 +54,8 @@ class AuditReturnSubmittedSpec extends SpecBase {
       auditEvent.dutySuspendedProducts mustBe fullReturn.dutySuspended.dutySuspendedProducts
 
       auditEvent.spiritsProduced.isDefined mustBe true
-      auditEvent.spiritsDeclared mustBe fullReturn.spirits.map(_.spiritsDeclared).get
-      auditEvent.spiritsProduced mustBe fullReturn.spirits.map(_.spiritsProduced).get
+      auditEvent.spiritsDeclared           mustBe fullReturn.spirits.map(_.spiritsDeclared).get
+      auditEvent.spiritsProduced           mustBe fullReturn.spirits.map(_.spiritsProduced).get
 
       auditEvent.totals mustBe fullReturn.totals
     }

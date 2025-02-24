@@ -132,7 +132,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, adjustmentTable, totalPages, pageNumber)(
           request,
           getMessages(app)
@@ -168,7 +168,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), adjustmentTable, totalPages, pageNumber)(
           request,
           getMessages(app)
@@ -197,7 +197,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -250,7 +250,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val totalPages = Math.ceil(userAnswsers.get(AdjustmentEntryListPage).size.toDouble / rowsPerPage).toInt
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, adjustmentTable, totalPages, pageNumber)(
           request,
           getMessages(app)
@@ -267,7 +267,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -283,7 +283,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -311,7 +311,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
           .onPageLoad(1)
           .url
@@ -341,7 +341,7 @@ class AdjustmentListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

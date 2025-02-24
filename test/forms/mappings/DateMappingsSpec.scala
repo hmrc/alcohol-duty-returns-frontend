@@ -329,9 +329,9 @@ class DateMappingsSpec
     forAll(validData -> "valid date") { date =>
       val filledForm = form.fill(date)
 
-      filledForm("value.day").value.value mustEqual date.getDayOfMonth.toString
+      filledForm("value.day").value.value   mustEqual date.getDayOfMonth.toString
       filledForm("value.month").value.value mustEqual date.getMonthValue.toString
-      filledForm("value.year").value.value mustEqual date.getYear.toString
+      filledForm("value.year").value.value  mustEqual date.getYear.toString
     }
   }
 }

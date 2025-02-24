@@ -30,7 +30,7 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
   "WarningTextViewModel" - {
     val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-    "should show the correct message when currentDate is before returnDueDate" in {
+    "must show the correct message when currentDate is before returnDueDate" in {
       val currentDate  = LocalDate.of(2024, 1, 14)
       val returnPeriod = ReturnPeriod.fromPeriodKey("23AL").get
       val application  = applicationBuilder()
@@ -58,7 +58,7 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
       }
     }
 
-    "should show the correct message when currentDate is the same as returnDueDate" in {
+    "must show the correct message when currentDate is the same as returnDueDate" in {
       implicit val messages = getMessages(app)
       val currentDate       = LocalDate.of(2024, 1, 15)
       val returnPeriod      = ReturnPeriod.fromPeriodKey("23AL").get
@@ -83,7 +83,7 @@ class BeforeStartReturnViewModelSpec extends SpecBase {
       }
     }
 
-    "should show the correct message when currentDate is after returnDueDate" in {
+    "must show the correct message when currentDate is after returnDueDate" in {
       implicit val messages = getMessages(app)
       val currentDate       = LocalDate.of(2024, 1, 16)
       val returnPeriod      = ReturnPeriod.fromPeriodKey("23AL").get

@@ -30,7 +30,7 @@ class AlcoholRegimeSpec extends SpecBase {
         ("Spirits", Spirits),
         ("OtherFermentedProduct", OtherFermentedProduct)
       ).foreach { case (alcoholType, regime) =>
-        s"should deserialise $alcoholType correctly" in {
+        s"must deserialise $alcoholType correctly" in {
           Json.parse(s""""$alcoholType"""").as[AlcoholRegime] mustBe regime
         }
       }
@@ -53,7 +53,7 @@ class AlcoholRegimeSpec extends SpecBase {
       ("Spirits", Spirits),
       ("OtherFermentedProduct", OtherFermentedProduct)
     ).foreach { case (alcoholType, regime) =>
-      s"should serialise $alcoholType correctly" in {
+      s"must serialise $alcoholType correctly" in {
         Json.toJson(regime).toString() mustBe s""""$alcoholType""""
       }
     }
@@ -67,12 +67,12 @@ class AlcoholRegimeSpec extends SpecBase {
       ("Spirits", Spirits),
       ("OtherFermentedProduct", OtherFermentedProduct)
     ).foreach { case (alcoholType, regime) =>
-      s"should convert String $alcoholType to the correct regime" in {
+      s"must convert String $alcoholType to the correct regime" in {
         AlcoholRegime.fromString(alcoholType) mustBe Some(regime)
       }
     }
 
-    "should return None for an unknown alcohol type" in {
+    "must return None for an unknown alcohol type" in {
       AlcoholRegime.fromString("Water") mustBe None
     }
   }

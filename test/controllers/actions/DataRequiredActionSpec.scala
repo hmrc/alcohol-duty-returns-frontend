@@ -37,7 +37,7 @@ class DataRequiredActionSpec extends SpecBase {
   val userAnswers = emptyUserAnswers
 
   "Data Required Action" - {
-    "should redirect to the Journey Recovery when User Answers or Return Period are None" in {
+    "must redirect to the Journey Recovery when User Answers or Return Period are None" in {
 
       val harness = new Harness
 
@@ -51,11 +51,11 @@ class DataRequiredActionSpec extends SpecBase {
           )
           .header
 
-      result.status mustEqual SEE_OTHER
+      result.status                mustEqual SEE_OTHER
       result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
     }
 
-    "should redirect to the Journey Recovery when User Answers is None" in {
+    "must redirect to the Journey Recovery when User Answers is None" in {
 
       val harness = new Harness
 
@@ -71,7 +71,7 @@ class DataRequiredActionSpec extends SpecBase {
           )
           .header
 
-      result.status mustEqual SEE_OTHER
+      result.status                mustEqual SEE_OTHER
       result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
     }
 
@@ -91,11 +91,11 @@ class DataRequiredActionSpec extends SpecBase {
           )
           .header
 
-      result.status mustEqual SEE_OTHER
+      result.status                mustEqual SEE_OTHER
       result.headers.get(LOCATION) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
     }
 
-    "should return a DataRequest with the correct values" in {
+    "must return a DataRequest with the correct values" in {
 
       val harness = new Harness
 
@@ -109,11 +109,11 @@ class DataRequiredActionSpec extends SpecBase {
 
       result.isRight mustBe true
       result.map { dataRequest =>
-        dataRequest.request mustEqual identifierRequest
-        dataRequest.userAnswers mustEqual emptyUserAnswers
-        dataRequest.appaId mustEqual appaId
-        dataRequest.groupId mustEqual groupId
-        dataRequest.userId mustEqual internalId
+        dataRequest.request      mustEqual identifierRequest
+        dataRequest.userAnswers  mustEqual emptyUserAnswers
+        dataRequest.appaId       mustEqual appaId
+        dataRequest.groupId      mustEqual groupId
+        dataRequest.userId       mustEqual internalId
         dataRequest.returnPeriod mustEqual returnPeriod
       }
     }

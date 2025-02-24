@@ -47,7 +47,7 @@ class TaskListControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[TaskListView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(taskList, appConfig.businessTaxAccountUrl)(
           request,
           getMessages(application)
@@ -63,7 +63,7 @@ class TaskListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

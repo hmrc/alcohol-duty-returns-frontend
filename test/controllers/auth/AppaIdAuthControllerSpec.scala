@@ -33,7 +33,7 @@ class AppaIdAuthControllerSpec extends SpecBase {
         val request = FakeRequest(GET, controllers.auth.routes.AppaIdAuthController.onPageLoad().url)
         val result  = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual appConfig.requestAccessUrl
       }
     }
@@ -50,7 +50,7 @@ class AppaIdAuthControllerSpec extends SpecBase {
         val request = FakeRequest(GET, controllers.auth.routes.AppaIdAuthController.onPageLoad().url)
         val result  = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.UnauthorisedController.onPageLoad.url
       }
     }

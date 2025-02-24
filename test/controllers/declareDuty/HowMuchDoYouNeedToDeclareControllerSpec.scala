@@ -76,7 +76,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
           CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
         val form                      = formProvider(regime)(getMessages(application))
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, regime, expectedReturnSummaryList, NormalMode)(
           request,
           getMessages(application)
@@ -98,7 +98,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
         val expectedReturnSummaryList =
           CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
         val form                      = formProvider(regime)(getMessages(application))
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(volumeAndRateByTaxTypes.map(_.toVolumes)),
           regime,
@@ -141,7 +141,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -165,7 +165,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val summaryList = CategoriesByRateTypeHelper.rateBandCategories(rateBands, regime)(getMessages(application))
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, summaryList, NormalMode)(
           request,
           getMessages(application)
@@ -182,7 +182,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -196,7 +196,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -212,7 +212,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -228,7 +228,7 @@ class HowMuchDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

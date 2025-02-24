@@ -213,7 +213,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
               _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
             )
 
-            maybeTask mustBe defined
+            maybeTask            mustBe defined
             maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
           }
 
@@ -283,7 +283,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
                 _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
               )
 
-              maybeTask mustBe defined
+              maybeTask            mustBe defined
               maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
             }
 
@@ -358,7 +358,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
                 _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
               )
 
-              maybeTask mustBe defined
+              maybeTask            mustBe defined
               maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
             }
 
@@ -457,7 +457,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
                 _.title.content == Text(messages(s"taskList.section.returns.${regime.entryName}"))
               )
 
-              maybeTask mustBe defined
+              maybeTask            mustBe defined
               maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
             }
 
@@ -561,7 +561,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages(s"taskList.section.returns.${Beer.entryName}"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
@@ -580,7 +580,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages(s"taskList.section.returns.${Cider.entryName}"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -704,7 +704,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages(s"taskList.section.returns.${Beer.entryName}"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -723,7 +723,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages(s"taskList.section.returns.${Cider.entryName}"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -867,7 +867,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
         }
 
@@ -935,7 +935,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
@@ -1006,7 +1006,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
@@ -1073,7 +1073,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
@@ -1146,7 +1146,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1165,7 +1165,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
         }
 
@@ -1238,7 +1238,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1257,7 +1257,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
         }
 
@@ -1333,7 +1333,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1352,7 +1352,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
         }
 
@@ -1371,7 +1371,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
         }
 
@@ -1450,7 +1450,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1469,7 +1469,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1488,7 +1488,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
         }
 
@@ -1567,7 +1567,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1586,7 +1586,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.notStarted
         }
 
@@ -1605,7 +1605,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1675,7 +1675,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1747,7 +1747,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1766,7 +1766,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1842,7 +1842,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1861,7 +1861,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1943,7 +1943,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1962,7 +1962,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.under-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -1981,7 +1981,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.adjustment.over-declaration"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -2179,7 +2179,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -2265,7 +2265,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
@@ -2355,7 +2355,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.dutySuspended"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -2621,7 +2621,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.spirits"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.inProgress
         }
 
@@ -2691,7 +2691,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.spirits"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -2761,7 +2761,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
             _.title.content == Text(messages("taskList.section.spirits"))
           )
 
-          maybeTask mustBe defined
+          maybeTask            mustBe defined
           maybeTask.get.status mustBe AlcoholDutyTaskListItemStatus.completed
         }
 
@@ -2789,7 +2789,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
   }
 
   "on calling checkAndSubmitSection" - {
-    "and the other sections are incomplete, it should return the cannot start section" - {
+    "and the other sections are incomplete, it must return the cannot start section" - {
       val result = returnTaskListCreator.returnCheckAndSubmitSection(0, 4)
 
       "the task's title must be correct" in {
@@ -2829,7 +2829,7 @@ class ReturnTaskListCreatorSpec extends SpecBase {
       }
     }
 
-    "and the other sections are complete, it should return the task" - {
+    "and the other sections are complete, it must return the task" - {
       val result = returnTaskListCreator.returnCheckAndSubmitSection(4, 4)
 
       "the task's title must be correct" in {

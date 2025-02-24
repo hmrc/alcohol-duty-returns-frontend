@@ -68,7 +68,7 @@ class ReturnSubmittedHelperSpec extends SpecBase {
         val result = returnSubmittedHelper.getReturnSubmittedViewModel(testReturnDetails)(identifierRequest, messages)
 
         result.businessTaxAccountUrl mustBe btaUrl
-        result.periodKey mustBe periodKey
+        result.periodKey             mustBe periodKey
       }
     }
   }

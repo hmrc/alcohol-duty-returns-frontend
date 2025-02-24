@@ -54,10 +54,10 @@ class TellUsAboutMultipleSPRRateFormProviderSpec extends StringFieldBehaviours w
     "must unbind a valid data" in {
       volumeAndRateByTaxTypes.foreach { volumeAndRateByTaxType: VolumeAndRateByTaxType =>
         val result = form.fill(volumeAndRateByTaxType).data
-        result("volumesWithRate.taxType") mustBe volumeAndRateByTaxType.taxType
+        result("volumesWithRate.taxType")     mustBe volumeAndRateByTaxType.taxType
         result("volumesWithRate.totalLitres") mustBe volumeAndRateByTaxType.totalLitres.toString
         result("volumesWithRate.pureAlcohol") mustBe volumeAndRateByTaxType.pureAlcohol.toString
-        result("volumesWithRate.dutyRate") mustBe volumeAndRateByTaxType.dutyRate.toString
+        result("volumesWithRate.dutyRate")    mustBe volumeAndRateByTaxType.dutyRate.toString
       }
     }
 

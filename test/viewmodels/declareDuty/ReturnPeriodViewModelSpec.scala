@@ -18,22 +18,21 @@ package viewmodels.declareDuty
 
 import base.SpecBase
 import models.ReturnPeriod
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import viewmodels.ReturnPeriodViewModelFactory
 
 class ReturnPeriodViewModelSpec extends SpecBase {
 
   "ReturnPeriodViewModelSpec" - {
-    "should return a ReturnPeriodViewModel when apply method is called with a valid ReturnPeriod" in {
+    "must return a ReturnPeriodViewModel when apply method is called with a valid ReturnPeriod" in {
       implicit val messages = getMessages(app)
       val yearMonth         = arbitraryYearMonth.arbitrary.sample.get
       val returnPeriod      = ReturnPeriod(yearMonth)
       val result            = new ReturnPeriodViewModelFactory(createDateTimeHelper())(returnPeriod)
       val returnDueMonth    = returnPeriod.period.plusMonths(1)
 
-      result.fromDate      shouldBe createDateTimeHelper().formatDateMonthYear(yearMonth.atDay(1))
-      result.toDate        shouldBe createDateTimeHelper().formatDateMonthYear(yearMonth.atEndOfMonth())
-      result.returnDueDate shouldBe createDateTimeHelper().formatDateMonthYear(returnDueMonth.atDay(15))
+      result.fromDate      mustBe createDateTimeHelper().formatDateMonthYear(yearMonth.atDay(1))
+      result.toDate        mustBe createDateTimeHelper().formatDateMonthYear(yearMonth.atEndOfMonth())
+      result.returnDueDate mustBe createDateTimeHelper().formatDateMonthYear(returnDueMonth.atDay(15))
     }
   }
 }

@@ -24,8 +24,6 @@ import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetai
 import models.adjustment.{AdjustmentDuty, AdjustmentEntry}
 import models.adjustment.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
 import org.mockito.ArgumentMatchers.any
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import services.adjustment.AdjustmentEntryServiceImpl
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -77,11 +75,11 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
       val result = service.createAdjustment(userAnswerWithRate).futureValue
 
-      result                   shouldBe a[AdjustmentEntry]
-      result.rate              shouldBe Some(BigDecimal(10.99))
-      result.totalLitresVolume shouldBe Some(BigDecimal(1))
-      result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
-      result.duty              shouldBe Some(BigDecimal(1))
+      result                   mustBe a[AdjustmentEntry]
+      result.rate              mustBe Some(BigDecimal(10.99))
+      result.totalLitresVolume mustBe Some(BigDecimal(1))
+      result.pureAlcoholVolume mustBe Some(BigDecimal(1))
+      result.duty              mustBe Some(BigDecimal(1))
     }
 
     "must create an adjustment entry when TaxType does not contain rate but the Small Producer Relief duty rate is present" in {
@@ -104,11 +102,11 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
       val result = service.createAdjustment(userAnswerWithRate).futureValue
 
-      result                   shouldBe a[AdjustmentEntry]
-      result.rate              shouldBe Some(BigDecimal(2))
-      result.totalLitresVolume shouldBe Some(BigDecimal(1))
-      result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
-      result.duty              shouldBe Some(BigDecimal(1))
+      result                   mustBe a[AdjustmentEntry]
+      result.rate              mustBe Some(BigDecimal(2))
+      result.totalLitresVolume mustBe Some(BigDecimal(1))
+      result.pureAlcoholVolume mustBe Some(BigDecimal(1))
+      result.duty              mustBe Some(BigDecimal(1))
     }
 
     "must create an adjustment entry for RepackagedDraughtProducts" in {
@@ -130,13 +128,13 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(2))))
       val service            = new AdjustmentEntryServiceImpl(mockConnector)
       val result             = service.createAdjustment(userAnswerWithRate).futureValue
-      result                   shouldBe a[AdjustmentEntry]
-      result.rate              shouldBe Some(BigDecimal(10.99))
-      result.totalLitresVolume shouldBe Some(BigDecimal(1))
-      result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
-      result.duty              shouldBe Some(BigDecimal(1))
-      result.repackagedDuty    shouldBe Some(BigDecimal(1))
-      result.newDuty           shouldBe Some(BigDecimal(2))
+      result                   mustBe a[AdjustmentEntry]
+      result.rate              mustBe Some(BigDecimal(10.99))
+      result.totalLitresVolume mustBe Some(BigDecimal(1))
+      result.pureAlcoholVolume mustBe Some(BigDecimal(1))
+      result.duty              mustBe Some(BigDecimal(1))
+      result.repackagedDuty    mustBe Some(BigDecimal(1))
+      result.newDuty           mustBe Some(BigDecimal(2))
     }
 
     "must create an adjustment entry for Spoilt" in {
@@ -154,11 +152,11 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
       val service            = new AdjustmentEntryServiceImpl(mockConnector)
       val result             = service.createAdjustment(userAnswerWithRate).futureValue
-      result                   shouldBe a[AdjustmentEntry]
-      result.rate              shouldBe Some(BigDecimal(10.99))
-      result.totalLitresVolume shouldBe Some(BigDecimal(1))
-      result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
-      result.duty              shouldBe Some(BigDecimal(1))
+      result                   mustBe a[AdjustmentEntry]
+      result.rate              mustBe Some(BigDecimal(10.99))
+      result.totalLitresVolume mustBe Some(BigDecimal(1))
+      result.pureAlcoholVolume mustBe Some(BigDecimal(1))
+      result.duty              mustBe Some(BigDecimal(1))
     }
 
     "must create an adjustment entry for Drawback" in {
@@ -176,11 +174,11 @@ class AdjustmentEntryServiceSpec extends SpecBase {
         .thenReturn(Future.successful(AdjustmentDuty(BigDecimal(1))))
       val service            = new AdjustmentEntryServiceImpl(mockConnector)
       val result             = service.createAdjustment(userAnswerWithRate).futureValue
-      result                   shouldBe a[AdjustmentEntry]
-      result.rate              shouldBe Some(BigDecimal(10.99))
-      result.totalLitresVolume shouldBe Some(BigDecimal(1))
-      result.pureAlcoholVolume shouldBe Some(BigDecimal(1))
-      result.duty              shouldBe Some(BigDecimal(1))
+      result                   mustBe a[AdjustmentEntry]
+      result.rate              mustBe Some(BigDecimal(10.99))
+      result.totalLitresVolume mustBe Some(BigDecimal(1))
+      result.pureAlcoholVolume mustBe Some(BigDecimal(1))
+      result.duty              mustBe Some(BigDecimal(1))
     }
 
     "must throw an Exception" - {
@@ -312,7 +310,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
       val exception = service.getError(adjustmentEntry)
 
-      exception.getMessage should include("Failed to get rate.")
+      exception.getMessage must include("Failed to get rate.")
     }
 
     "for getRepackagedError default case" in {
@@ -325,7 +323,7 @@ class AdjustmentEntryServiceSpec extends SpecBase {
 
       val exception = service.getRepackagedError(adjustmentEntry)
 
-      exception.getMessage should include("Failed to get rate for repackaged draught products.")
+      exception.getMessage must include("Failed to get rate for repackaged draught products.")
     }
   }
 }

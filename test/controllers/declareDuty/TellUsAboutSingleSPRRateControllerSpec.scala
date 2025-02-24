@@ -70,7 +70,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         val form = formProvider(regime)(getMessages(application))
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, regime, categoriesByRateTypeViewModel, NormalMode)(
           request,
           getMessages(application)
@@ -93,7 +93,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         val form = formProvider(regime)(getMessages(application))
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(volumeAndRateByTaxType),
           regime,
@@ -133,7 +133,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -158,7 +158,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
         val categoriesByRateTypeViewModel =
           CategoriesByRateTypeHelper.rateBandCategories(rateBands.toSet, regime)(getMessages(application))
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, categoriesByRateTypeViewModel, NormalMode)(
           request,
           getMessages(application)
@@ -175,7 +175,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -197,7 +197,7 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

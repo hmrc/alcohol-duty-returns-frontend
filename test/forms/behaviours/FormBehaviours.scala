@@ -29,7 +29,7 @@ trait FormBehaviours extends FormSpec {
   def questionForm[A](expectedResult: A) =
     "bind valid values correctly" in {
       val boundForm = form.bind(validData)
-      boundForm.get mustBe expectedResult
+      boundForm.get    mustBe expectedResult
       boundForm.errors mustBe empty
     }
 

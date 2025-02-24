@@ -54,7 +54,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DutyDueForThisReturnView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(viewModel)(request, getMessages(application)).toString
       }
     }
@@ -76,7 +76,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -98,7 +98,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -133,7 +133,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.checkAndSubmit.routes.ReturnSubmittedController
           .onPageLoad()
           .url
@@ -169,7 +169,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         verify(auditService, times(0)).audit(any())(any(), any())
       }
@@ -196,7 +196,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         verify(auditService, times(0)).audit(any())(any(), any())
       }
@@ -227,7 +227,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
         verify(auditService, times(0)).audit(any())(any(), any())
       }

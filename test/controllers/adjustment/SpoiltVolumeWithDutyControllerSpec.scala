@@ -88,7 +88,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[SpoiltVolumeWithDutyView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, regime)(
           request,
           getMessages(app)
@@ -115,7 +115,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(SpoiltVolumeWithDuty(validTotalLitres, validPureAlcohol, validDuty)),
           NormalMode,
@@ -135,7 +135,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -164,7 +164,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -209,7 +209,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -254,7 +254,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -284,7 +284,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, regime)(
           request,
           getMessages(app)
@@ -300,7 +300,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -310,7 +310,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
       running(application) {
         val request = FakeRequest(GET, spoiltVolumeWithDutyRoute)
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -344,7 +344,7 @@ class SpoiltVolumeWithDutyControllerSpec extends SpecBase {
             ("volumes.duty", validDuty.toString())
           )
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

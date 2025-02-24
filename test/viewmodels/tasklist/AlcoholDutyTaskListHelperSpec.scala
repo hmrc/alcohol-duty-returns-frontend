@@ -52,8 +52,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         validUntilString
       )
 
-      result.status mustBe Incomplete
-      result.totalTasks mustBe expectedSections.size
+      result.status         mustBe Incomplete
+      result.totalTasks     mustBe expectedSections.size
       result.completedTasks mustBe 0
     }
 
@@ -94,8 +94,8 @@ class AlcoholDutyTaskListHelperSpec extends SpecBase with ScalaCheckPropertyChec
         validUntilString
       )
 
-      result.status mustBe Incomplete
-      result.totalTasks mustBe expectedSections.size
+      result.status         mustBe Incomplete
+      result.totalTasks     mustBe expectedSections.size
       result.completedTasks mustBe 4
     }
 
