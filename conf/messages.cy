@@ -23,6 +23,7 @@ site.currency.2DP = £{0,number,#,##0.00}
 site.nil = Dim
 site.returnToBusinessAccount = Yn ôl i’ch Cyfrif Treth Busnes
 site.year = {0,number,####}
+site.warning = NOT_FOUND
  
 #Welsh helpers - in Welsh y and w are also vowels 
  
@@ -39,7 +40,8 @@ timeout.message = Am resymau diogelwch, cewch eich allgofnodi o’r gwasanaeth h
 timeout.keepAlive = Peidio ag allgofnodi
 timeout.signOut = Allgofnodi
  
-error.browser.title.prefix = Gwall:
+error.prefix = Gwall
+error.title.prefix = Gwall:
 error.boolean = NOT_FOUND
 error.invalid_date = NOT_FOUND
 error.date.day_blank = NOT_FOUND
@@ -184,7 +186,7 @@ viewPastPayments.youOwe = Mae arnoch
 viewPastPayments.youAre = NOT_FOUND
 viewPastPayments.duty.value = {0}
 viewPastPayments.negative.duty.value = NOT_FOUND
-viewPastPayments.credit.paragraph = Does gennych chi ddim byd i’w dalu. Gallwch chi ofyn am ad-daliad, neu byddwn ni'n defnyddio’r credyd tuag at daliadau yn y dyfodol.
+viewPastPayments.credit.paragraph = Does gennych chi ddim byd i’w dalu. Gallwch chi ofyn am ad-daliad, neu byddwn ni’n defnyddio’r credyd tuag at daliadau yn y dyfodol.
 viewPastPayments.zeroBalance.paragraph = NOT_FOUND
 viewPastPayments.outstandingPayments.paragraph = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymddangos, yn dibynnu ar sut rydych yn talu. Ar ôl i chi gwblhau’ch Datganiad, bydd eich cyfrifiad treth yn cymryd hyd at 2 ddiwrnod.
 viewPastPayments.Return.description = Taliad ar gyfer Datganiad Toll Alcohol
@@ -257,6 +259,11 @@ beforeStartReturn.text.guidance4 = Ar ôl i chi roi’r wybodaeth hon i ni, bydd
 beforeStartReturn.text.dueWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn yw heddiw
 beforeStartReturn.text.overdueWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn oedd {0}
 beforeStartReturn.text.dueDateWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn yw {0} 
+ 
+serviceUpdated.title = NOT_FOUND
+serviceUpdated.heading = NOT_FOUND
+serviceUpdated.guidance1 = NOT_FOUND
+serviceUpdated.guidance2 = NOT_FOUND
  
 # Beginning of product entry sub-journey 
  
@@ -499,13 +506,13 @@ declareDutySuspendedDeliveriesQuestion.p1 = Mae angen i chi roi gwybod i ni a wn
 dutySuspendedDeliveriesGuidance.title = Cyfrifwch gyfaint y cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt
 dutySuspendedDeliveriesGuidance.heading = Cyfrifwch gyfaint y cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt
 dutySuspendedDeliveriesGuidance.p1 = Ar gyfer pob math o alcohol rydych chi’n ei gynhyrchu, mae angen i chi roi gwybod i ni beth yw cyfaint y cynhyrchion alcoholaidd gorffenedig a faint o alcohol pur sydd yn y cynhyrchion alcoholaidd gorffenedig hynny.
-dutySuspendedDeliveriesGuidance.p2 = Bydd angen adio’r canlynol at ei gilydd:
-dutySuspendedDeliveriesGuidance.para.list.1 = litrau a allforiwyd i’r tu allan i’r DU (er enghraifft, storfeydd nwyddau llongau)
-dutySuspendedDeliveriesGuidance.para.list.2 = litrau y gohiriwyd tollau arnynt, a ddosbarthwyd i warysau ecséis a safleoedd cofrestredig eraill yn y DU
-dutySuspendedDeliveriesGuidance.p3 = Yna tynnwch:
-dutySuspendedDeliveriesGuidance.para.list.3 = litrau o dan ohiriad tollau, a dderbyniwyd oddi wrth safleoedd cofrestredig, warysau ecséis a mewnforio
-dutySuspendedDeliveriesGuidance.p4 = Defnyddiwch yr un dull i gyfrifo’r litrau o alcohol pur sydd yn eich cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt.
-dutySuspendedDeliveriesGuidance.p5 = Ni fydd eich atebion yn newid eich cyfrifiad tollau.
+dutySuspendedDeliveriesGuidance.item1.addTogether = Bydd angen adio’r canlynol at ei gilydd:
+dutySuspendedDeliveriesGuidance.item1.sublist.1 = litrau a allforiwyd i’r tu allan i’r DU (er enghraifft, storfeydd nwyddau llongau)
+dutySuspendedDeliveriesGuidance.item1.sublist.2 = litrau y gohiriwyd tollau arnynt, a ddosbarthwyd i warysau ecséis a safleoedd cofrestredig eraill yn y DU
+dutySuspendedDeliveriesGuidance.item2.thenSubtract = Yna tynnwch:
+dutySuspendedDeliveriesGuidance.item2.sublist.1 = litrau o dan ohiriad tollau, a dderbyniwyd oddi wrth safleoedd cofrestredig, warysau ecséis a mewnforio
+dutySuspendedDeliveriesGuidance.p2 = Defnyddiwch yr un dull i gyfrifo’r litrau o alcohol pur sydd yn eich cynhyrchion alcoholaidd gorffenedig y gohiriwyd tollau arnynt.
+dutySuspendedDeliveriesGuidance.p3 = Ni fydd eich atebion yn newid eich cyfrifiad tollau.
  
 dutySuspendedBeer.title = Rhoi gwybod i ni am eich cwrw y gohiriwyd tollau arno
 dutySuspendedBeer.heading = Rhoi gwybod i ni am eich cwrw y gohiriwyd tollau arno
@@ -839,7 +846,7 @@ adjustmentSmallProducerReliefDutyRate.error.required = Nodwch eich cyfradd doll 
 adjustmentSmallProducerReliefDutyRate.error.minimumRequired = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
 adjustmentSmallProducerReliefDutyRate.error.maximumRequired = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn llai nag £1 biliwn
 adjustmentSmallProducerReliefDutyRate.error.decimalPlaces = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach gynnwys 2 le degol
-adjustmentSmallProducerReliefDutyRate.change.hidden = Cyfradd doll SPR
+adjustmentSmallProducerReliefDutyRate.change.hidden = cyfradd doll SPR
  
 adjustmentDutyDue.title = Gwerth y doll ar gyfer yr addasiad hwn yw {0}
 adjustmentDutyDue.heading = Gwerth y doll ar gyfer yr addasiad hwn yw

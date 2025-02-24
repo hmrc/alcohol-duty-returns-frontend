@@ -33,7 +33,6 @@ taskList.section.returns.Wine = Datgan gwin
 beforeStartReturn.heading = Cyn i chi ddechrau
 site.continue = Parhau
 taskList.section.returns.needToDeclare = Rhoi gwybod i ni a oes gennych gynhyrchion alcoholaidd i’w datgan
-taskList.section.status.notStarted = Heb ddechrau hyd yn hyn
 taskList.title = Cwblhau’ch Datganiad Toll Alcohol
 taskList.section.adjustment.heading = Datgan addasiadau o Ddatganiadau blaenorol
 taskList.section.spirits.needToDeclare = Rhoi gwybod i ni am wirodydd a gynhyrchwyd yn ystod y tri mis diwethaf
