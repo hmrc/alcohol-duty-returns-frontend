@@ -53,8 +53,9 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
         val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
           .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
-        val dutyAndAdjustmentTotals          = totalDutiesAndAdjustments.map(total => f"$total%.2f")
-        dutiesBreakdownSummaryListValues mustBe dutyAndAdjustmentTotals
+        val expectedDutyAndAdjustmentTotals  = totalDutiesAndAdjustments.map(total => f"$total%.2f")
+
+        dutiesBreakdownSummaryListValues mustBe expectedDutyAndAdjustmentTotals
       }
     }
 
@@ -76,8 +77,9 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
         val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
           .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
-        val dutyTotals                       = totalDuties.map(total => f"$total%.2f") :+ ""
-        dutiesBreakdownSummaryListValues mustBe dutyTotals
+        val expectedDutyTotals               = totalDuties.map(total => f"$total%.2f") :+ ""
+
+        dutiesBreakdownSummaryListValues mustBe expectedDutyTotals
       }
     }
 
@@ -101,8 +103,9 @@ class DutyDueForThisReturnHelperSpec extends SpecBase {
 
         val dutiesBreakdownSummaryListValues = result.toOption.get.dutiesBreakdownSummaryList.rows
           .map(_.value.content.toString.filter(c => c.isDigit || c == '.'))
-        val adjustmentTotals                 = "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
-        dutiesBreakdownSummaryListValues mustBe adjustmentTotals
+        val expectedAdjustmentTotals         = "" +: adjustmentsNoDuties.map(total => f"$total%.2f")
+
+        dutiesBreakdownSummaryListValues mustBe expectedAdjustmentTotals
       }
     }
 
