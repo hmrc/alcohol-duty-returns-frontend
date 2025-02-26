@@ -31,7 +31,7 @@ class SpoiltAlcoholicProductTypeSummary {
     adjustmentEntry.spoiltRegime.map { spoiltRegime =>
       val value = ValueViewModel(
         HtmlContent(
-          HtmlFormat.escape(messages(s"alcoholType.$spoiltRegime"))
+          HtmlFormat.escape(messages(spoiltRegime.regimeMessageKey).capitalize)
         )
       )
 

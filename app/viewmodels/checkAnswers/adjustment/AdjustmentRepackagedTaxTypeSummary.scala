@@ -31,7 +31,7 @@ class AdjustmentRepackagedTaxTypeSummary {
     adjustmentEntry.repackagedRateBand.map { repackagedRateBand =>
       SummaryListRowViewModel(
         key = "adjustmentRepackagedTaxType.checkYourAnswersLabel",
-        value = ValueViewModel(rateBandRecap(repackagedRateBand, None)),
+        value = ValueViewModel(rateBandRecap(repackagedRateBand, None).capitalize),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AdjustmentRepackagedTaxTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("adjustmentRepackagedTaxType.change.hidden"))

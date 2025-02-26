@@ -397,8 +397,8 @@ howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Rhowch wybod i ni am gynhyr
 howMuchDoYouNeedToDeclare.warning = Byddwn yn gofyn ynghylch {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
 howMuchDoYouNeedToDeclare.hint = Nodwch y litrau, hyd at 2 le degol
 howMuchDoYouNeedToDeclare.pureAlcohol.hint = Nodwch y litrau, gan gynnwys 4 lle degol
-howMuchDoYouNeedToDeclare.core.heading = NOT_FOUND
-howMuchDoYouNeedToDeclare.draught.heading = NOT_FOUND
+howMuchDoYouNeedToDeclare.core.heading = Faint o {0} nad yw’n dod o’r gasgen (cyfradd safonol) y mae angen i chi ei ddatgan?
+howMuchDoYouNeedToDeclare.draught.heading = Faint o {0} o’r gasgen (cyfradd is) y mae angen i chi ei ddatgan?
  
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = Toll {0}
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Cyfradd safonol
@@ -939,6 +939,6 @@ returnSubmitted.direct.debit.p1 = Gallwch hefyd dalu toll yn awtomatig drwy Ddeb
 returnSubmitted.direct.debit.setupOrManageLink.text = Sefydlwch neu rheolwch eich Debyd Uniongyrchol
 returnSubmitted.negative.p1 = Gallwch hawlio toll sy’n ddyledus nawr neu’n hwyrach drwy’ch cyfrif Toll Alcohol. Os na fyddwch yn ei hawlio’n ôl, bydd yn cael ei defnyddio tuag at unrhyw doll sy’n ddyledus yn sgil eich Datganiad nesaf.
 returnSubmitted.warningText = Mae ein manylion banc wedi newid. Dewiswch ‘Talu nawr’ ac yna ‘Trosglwyddiad banc (BACS/CHAPS)’ er mwyn gweld y manylion newydd.
-returnSubmitted.warningFallbackText = NOT_FOUND
+returnSubmitted.warningFallbackText = Rhybudd
  
 # End of Check and submit sub-journey 

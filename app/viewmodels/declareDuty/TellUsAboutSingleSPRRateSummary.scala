@@ -38,7 +38,7 @@ object TellUsAboutSingleSPRRateSummary {
       Seq(
         SummaryListRowViewModel(
           key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description"),
-          value = ValueViewModel(rateBandRecap(rateBand, Some(regime)))
+          value = ValueViewModel(rateBandRecap(rateBand, Some(regime)).capitalize)
         ).withCssClass(Css.summaryListRowNoBorderCssClass),
         SummaryListRowViewModel(
           key = messages("checkYourAnswersLabel.row.totalLitres"),

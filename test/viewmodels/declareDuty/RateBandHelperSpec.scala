@@ -44,7 +44,7 @@ class RateBandHelperSpec extends SpecBase {
 
           result mustEqual messages.messages(
             "return.journey.abv.single.interval",
-            alcoholLabel.capitalize,
+            alcoholTypeMessageKey,
             lowerLimit,
             andText,
             upperLimit,
@@ -60,7 +60,7 @@ class RateBandHelperSpec extends SpecBase {
 
             result mustEqual messages.messages(
               "return.journey.abv.single.interval",
-              alcoholLabel.capitalize,
+              alcoholTypeMessageKey,
               lowerLimit,
               andText,
               upperLimit,
@@ -83,7 +83,7 @@ class RateBandHelperSpec extends SpecBase {
 
           result mustEqual messages.messages(
             "return.journey.abv.interval.exceeding.max",
-            alcoholLabel.capitalize,
+            alcoholTypeMessageKey,
             lowerLimit,
             taxType
           )
@@ -103,11 +103,11 @@ class RateBandHelperSpec extends SpecBase {
 
           result mustEqual messages.messages(
             "return.journey.abv.multi.interval",
-            alcoholLabel.capitalize,
+            alcoholTypeMessageKey,
             lowerLimit1,
             andText,
             upperLimit1,
-            secondaryAlcoholLabel,
+            secondaryAlcoholTypeMessageKey,
             lowerLimit2,
             andText,
             upperLimit2,
@@ -123,7 +123,7 @@ class RateBandHelperSpec extends SpecBase {
 
           result mustEqual messages.messages(
             "return.journey.abv.single.interval",
-            alcoholLabel.capitalize,
+            alcoholTypeMessageKey,
             lowerLimit1,
             andText,
             upperLimit1,
@@ -147,13 +147,12 @@ class RateBandHelperSpec extends SpecBase {
             result mustEqual messages
               .messages(
                 s"return.journey.abv.recap.single.interval.$rateType",
-                alcoholLabel,
+                alcoholTypeMessageKey,
                 lowerLimit,
                 andText,
                 upperLimit,
                 taxType
               )
-              .capitalize
           }
 
           "with a known regime" - {
@@ -165,13 +164,12 @@ class RateBandHelperSpec extends SpecBase {
               result mustEqual messages
                 .messages(
                   s"return.journey.abv.recap.single.interval.$rateType",
-                  alcoholLabel,
+                  alcoholTypeMessageKey,
                   lowerLimit,
                   andText,
                   upperLimit,
                   taxType
                 )
-                .capitalize
             }
 
             "and doesn't match that of the rate band interval" in new SetUp {
@@ -189,11 +187,10 @@ class RateBandHelperSpec extends SpecBase {
               result mustEqual messages
                 .messages(
                   s"return.journey.abv.recap.interval.exceeding.max.$rateType",
-                  alcoholLabel,
+                  alcoholTypeMessageKey,
                   lowerLimit,
                   taxType
                 )
-                .capitalize
             }
           }
         }
@@ -212,17 +209,16 @@ class RateBandHelperSpec extends SpecBase {
             result mustEqual messages
               .messages(
                 s"return.journey.abv.recap.multi.interval.$rateType",
-                alcoholLabel,
+                alcoholTypeMessageKey,
                 lowerLimit1,
                 andText,
                 upperLimit1,
-                secondaryAlcoholLabel,
+                secondaryAlcoholTypeMessageKey,
                 lowerLimit2,
                 andText,
                 upperLimit2,
                 taxType
               )
-              .capitalize
           }
 
           "with a known regime to select a single range from two regimes" in new SetUp {
@@ -234,13 +230,12 @@ class RateBandHelperSpec extends SpecBase {
             result mustEqual messages
               .messages(
                 s"return.journey.abv.recap.single.interval.$rateType",
-                alcoholLabel,
+                alcoholTypeMessageKey,
                 lowerLimit1,
                 andText,
                 upperLimit1,
                 taxType
               )
-              .capitalize
           }
         }
       }
@@ -248,15 +243,15 @@ class RateBandHelperSpec extends SpecBase {
   }
 
   class SetUp extends ModelGenerators {
-    val regime                = Cider
-    val anotherRegime         = OtherFermentedProduct
-    val taxType               = "001"
-    val description           = "test"
-    val label                 = AlcoholType.Cider
-    val alcoholLabel          = messages(s"return.journey.abv.interval.label.$label")
-    val secondaryLabel        = AlcoholType.SparklingCider
-    val secondaryAlcoholLabel = messages(s"return.journey.abv.interval.label.$secondaryLabel")
-    val andText               = "and"
+    val regime                         = Cider
+    val anotherRegime                  = OtherFermentedProduct
+    val taxType                        = "001"
+    val description                    = "test"
+    val label                          = AlcoholType.Cider
+    val alcoholTypeMessageKey          = messages("alcoholType.cider")
+    val secondaryLabel                 = AlcoholType.SparklingCider
+    val secondaryAlcoholTypeMessageKey = messages("alcoholType.sparklingcider")
+    val andText                        = "and"
 
     val rateTypeStandard = Gen.oneOf(Core, DraughtRelief).sample.value
 

@@ -95,6 +95,32 @@ noAppaId.heading = You need an Alcoholic Products Producer approval ID to access
 noAppaId.p = If you were producing alcoholic products before 1 February 2025, you can find your APPA ID on the online service letter you received from HMRC.
 noAppaId.link.text = Read guidance on getting approval to produce alcoholic products (opens in a new tab)
 
+regime.beer = beer
+regime.cider = cider
+regime.wine = wine
+regime.spirits = spirits
+regime.otherfermentedproduct = other fermented products
+
+regime.softMutation.beer = beer
+regime.softMutation.cider = cider
+regime.softMutation.wine = wine
+regime.softMutation.spirits = spirits
+regime.softMutation.otherfermentedproduct = other fermented products
+
+alcoholType.beer = beer
+alcoholType.cider = cider
+alcoholType.sparklingcider = sparkling cider
+alcoholType.wine = wine
+alcoholType.spirits = spirits
+alcoholType.otherfermentedproduct = other fermented products
+
+alcoholType.softMutation.beer = beer
+alcoholType.softMutation.cider = cider
+alcoholType.softMutation.sparklingcider = sparkling cider
+alcoholType.softMutation.wine = wine
+alcoholType.softMutation.spirits = spirits
+alcoholType.softMutation.otherfermentedproduct = other fermented products
+
 section.visuallyHidden = This section is:
 section.alcoholDutyReturn = Alcohol Duty Return
 section.return.Beer = Declare beer
@@ -269,26 +295,21 @@ serviceUpdated.guidance2 = You will need to enter them again.
 
 alcoholType.title = Which types of alcoholic products do you need to declare?
 alcoholType.heading = Which types of alcoholic products do you need to declare?
-alcoholType.Beer = Beer
-alcoholType.Cider = Cider
-alcoholType.Wine = Wine
-alcoholType.Spirits = Spirits
-alcoholType.OtherFermentedProduct = Other fermented products
 alcoholType.error.required = Select the types of alcoholic products you need to declare
 alcoholType.p1 = Select the types of alcoholic product you need to declare in this return.
 alcoholType.p2 = Types you do not select will have nil values in your return.
 alcoholType.hint = Select all that apply
 
-return.journey.error.lessThanExpected = Litres of pure alcohol in the {0} must be the same or less than the total litres of {1}
+return.journey.error.lessThanExpected = Litres of pure alcohol in the {0} must be the same or less than the total litres of {3}
 
-return.journey.error.allRequired = Select the type of {0}
-return.journey.error.noValue.taxType = Select the type of {0}
+return.journey.error.allRequired = Select the type of {1}
+return.journey.error.noValue.taxType = Select the type of {1}
 
-return.journey.error.noValue.totalLitres = Enter the total litres of {0}
-return.journey.error.invalid.totalLitres = Total litres of {0} must be a number
-return.journey.error.maximumValue.totalLitres = Total litres of {0} must be less than 1 billion
-return.journey.error.minimumValue.totalLitres = Total litres of {0} must be more than 0.00
-return.journey.error.tooManyDecimalPlaces.totalLitres = Total litres of {0} must be a number to 2 decimal places
+return.journey.error.noValue.totalLitres = Enter the total litres of {1}
+return.journey.error.invalid.totalLitres = Total litres of {1} must be a number
+return.journey.error.maximumValue.totalLitres = Total litres of {1} must be less than 1 billion
+return.journey.error.minimumValue.totalLitres = Total litres of {1} must be more than 0.00
+return.journey.error.tooManyDecimalPlaces.totalLitres = Total litres of {1} must be a number to 2 decimal places
 
 return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in the {0}
 return.journey.error.invalid.pureAlcohol = Litres of pure alcohol in the {0} must be a number
@@ -302,29 +323,22 @@ return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rat
 return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate for the {0} must be £0.00 or more
 return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate for the {0} must be to 2 decimal places
 
-return.journey.abv.interval.label.Beer = beer
-return.journey.abv.interval.label.Cider = cider
-return.journey.abv.interval.label.SparklingCider = sparkling cider
-return.journey.abv.interval.label.Wine = wine
-return.journey.abv.interval.label.Spirits = spirits
-return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
-
 return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV (tax type code {2})
 return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV (tax type code {4})
 return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV (tax type code {8})
 
-return.journey.abv.recap.interval.exceeding.max.Core = Non-draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.Core = Non-draught {0} between {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.Core = Non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.DraughtRelief = Draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = Draught {0} between {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.DraughtRelief = Draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = Non-draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = Non-draught {0} between {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = Non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
-return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = Draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = Draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
+return.journey.abv.recap.interval.exceeding.max.Core = non-draught {0} at or above {1}% ABV ({2})
+return.journey.abv.recap.single.interval.Core = non-draught {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.recap.multi.interval.Core = non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
+return.journey.abv.recap.interval.exceeding.max.DraughtRelief = draught {0} at or above {1}% ABV ({2})
+return.journey.abv.recap.single.interval.DraughtRelief = draught {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.recap.multi.interval.DraughtRelief = draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
+return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = non-draught {0} at or above {1}% ABV ({2} SPR)
+return.journey.abv.recap.single.interval.SmallProducerRelief = non-draught {0} between {1}% {2} {3}% ABV ({4} SPR)
+return.journey.abv.recap.multi.interval.SmallProducerRelief = non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
+return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = draught {0} at or above {1}% ABV ({2} SPR)
+return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = draught {0} between {1}% {2} {3}% ABV ({4} SPR)
+return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
 
 return.journey.totalLitres = Total litres of {0}
 return.journey.totalLitres.hint = In litres, up to 2 decimal places
@@ -355,12 +369,6 @@ declareAlcoholDutyQuestion.cider.p2.l1 = sparkling cider between 3.5% and 5.5%
 declareAlcoholDutyQuestion.cider.p2.l2 = sparkling cider between 5.6% and 8.4%
 declareAlcoholDutyQuestion.h4 = Do you need to declare any alcoholic products?
 declareAlcoholDutyQuestion.error.required = Select yes if you need to declare any alcoholic products
-
-return.regime.Beer = beer
-return.regime.Cider = cider
-return.regime.Wine = wine
-return.regime.Spirits = spirits
-return.regime.OtherFermentedProduct = other fermented products
 
 whatDoYouNeedToDeclare.title = What do you need to declare?
 whatDoYouNeedToDeclare.heading = What do you need to declare?
@@ -409,7 +417,7 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
 
 doYouHaveMultipleSPRDutyRates.title = More than one Small Producer Relief duty rate?
 doYouHaveMultipleSPRDutyRates.heading = If you have more than one Small Producer Relief duty rate
-doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {0}, for example:
+doYouHaveMultipleSPRDutyRates.p1 = You may need to declare {0} with more than one Small Producer Relief duty rate for the same type of {1}, for example:
 doYouHaveMultipleSPRDutyRates.l1 = your Small Producer Relief duty rate has changed and you need to report production when a different rate applied
 doYouHaveMultipleSPRDutyRates.l2 = you bottle and pay duty on behalf of more than one small producer, each of whom have their own Small Producer Relief duty rate
 doYouHaveMultipleSPRDutyRates.l3 = you merged with another producer and are reporting pre-merger production using the producer’s own pre-merger Small Producer Relief duty rates
@@ -748,23 +756,23 @@ spoiltVolumeWithDuty.heading = Tell us about your spoilt {0}
 spoiltVolumeWithDuty.totalLitresVolume.heading = Total litres of spoilt {0}
 spoiltVolumeWithDuty.pureAlcoholVolume.heading = Litres of pure alcohol
 spoiltVolumeWithDuty.spoiltDuty.heading = How much duty was paid?
-spoiltVolumeWithDuty.error.noValue.totalLitresVolume = Enter the total litres of spoilt {0}
+spoiltVolumeWithDuty.error.noValue.totalLitresVolume = Enter the total litres of spoilt {1}
 spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume = Enter the litres of pure alcohol in spoilt {0}
 spoiltVolumeWithDuty.error.noValue.duty = Enter the amount of duty paid
-spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Litres of spoilt {0} must be a number
+spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Litres of spoilt {1} must be a number
 spoiltVolumeWithDuty.error.invalid.pureAlcoholVolume = Litres of pure alcohol must be a number
 spoiltVolumeWithDuty.error.invalid.duty = The amount of duty paid must be a number
-spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Litres of spoilt {0} must be less than 1 billion
+spoiltVolumeWithDuty.error.maximumValue.totalLitresVolume = Litres of spoilt {1} must be less than 1 billion
 spoiltVolumeWithDuty.error.maximumValue.pureAlcoholVolume = Litres of pure alcohol must be less than 1 billion
 spoiltVolumeWithDuty.error.maximumValue.duty = The amount of duty paid must be less than £100 billion
-spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Litres of spoilt {0} must be more than 0.00
+spoiltVolumeWithDuty.error.minimumValue.totalLitresVolume = Litres of spoilt {1} must be more than 0.00
 spoiltVolumeWithDuty.error.minimumValue.pureAlcoholVolume = Litres of pure alcohol must be more than 0.0000
 spoiltVolumeWithDuty.error.minimumValue.duty = The amount of duty paid must be more than £0.00
-spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume = Litres of spoilt {0} must be a number to 2 decimal places
+spoiltVolumeWithDuty.error.decimalPlaces.totalLitresVolume = Litres of spoilt {1} must be a number to 2 decimal places
 spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume = Litres of pure alcohol must be a number to 4 decimal places
 spoiltVolumeWithDuty.error.decimalPlaces.duty = The amount of duty paid must include pounds and pence
 spoiltVolumeWithDuty.change.hidden = duty value
-spoiltVolumeWithDuty.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
+spoiltVolumeWithDuty.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {1}
 spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText = in spoilt {0}
 
 whenDidYouPayDuty.default.title = When did you pay duty on this?

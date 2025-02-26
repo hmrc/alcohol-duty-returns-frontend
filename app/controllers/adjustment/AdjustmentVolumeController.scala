@@ -86,7 +86,7 @@ class AdjustmentVolumeController @Inject() (
                 mode,
                 adjustmentType,
                 regime,
-                rateBandContent(rateBand, None)
+                rateBandContent(rateBand, None).capitalize
               )
             )
           case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
@@ -96,7 +96,7 @@ class AdjustmentVolumeController @Inject() (
                 mode,
                 adjustmentType,
                 regime,
-                rateBandContent(rateBand, None)
+                rateBandContent(rateBand, None).capitalize
               )
             )
           case _                                                                                            =>
@@ -156,7 +156,7 @@ class AdjustmentVolumeController @Inject() (
               mode,
               adjustmentType,
               regime,
-              rateBandContent(rateBand, None)
+              rateBandContent(rateBand, None).capitalize
             )
           )
         )
