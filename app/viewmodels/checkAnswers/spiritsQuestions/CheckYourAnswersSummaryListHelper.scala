@@ -21,7 +21,7 @@ import models.UserAnswers
 import pages.spiritsQuestions.SpiritTypePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Card, CardTitle, SummaryList, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Card, CardTitle, SummaryList}
 import viewmodels.govuk.summarylist.SummaryListViewModel
 
 object CheckYourAnswersSummaryListHelper {
