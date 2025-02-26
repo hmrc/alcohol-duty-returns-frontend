@@ -20,6 +20,8 @@ import base.SpecBase
 import models.SpiritType
 import models.spiritsQuestions.Whisky
 import pages.spiritsQuestions.{DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Card, CardTitle}
 
 class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
@@ -51,7 +53,9 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
       summaryListOption match {
         case None              => fail("Expected a Some containing a summary list")
-        case Some(summaryList) => summaryList.rows.map(_.key.content.asHtml.toString) mustBe expectedSummaryListKeys
+        case Some(summaryList) =>
+          summaryList.rows.map(_.key.content.asHtml.toString) mustBe expectedSummaryListKeys
+          summaryList.card                                    mustBe Some(Card(Some(CardTitle(Text("Spirits you’ve produced")))))
       }
     }
 
@@ -73,7 +77,9 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
       summaryListOption match {
         case None              => fail("Expected a Some containing a summary list")
-        case Some(summaryList) => summaryList.rows.map(_.key.content.asHtml.toString) mustBe expectedSummaryListKeys
+        case Some(summaryList) =>
+          summaryList.rows.map(_.key.content.asHtml.toString) mustBe expectedSummaryListKeys
+          summaryList.card                                    mustBe Some(Card(Some(CardTitle(Text("Spirits you’ve produced")))))
       }
     }
 
