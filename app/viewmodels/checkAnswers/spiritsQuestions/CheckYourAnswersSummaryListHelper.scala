@@ -16,7 +16,9 @@
 
 package viewmodels.checkAnswers.spiritsQuestions
 
+import models.SpiritType.Other
 import models.UserAnswers
+import pages.spiritsQuestions.SpiritTypePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Card, CardTitle, SummaryList, SummaryListRow}
@@ -24,26 +26,27 @@ import viewmodels.govuk.summarylist.SummaryListViewModel
 
 object CheckYourAnswersSummaryListHelper {
   def spiritsSummaryList(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryList] = {
-    val otherSpiritSummaryRow = getOptionalRow(OtherSpiritsProducedSummary.row(userAnswers))
-    for {
+    val mandatorySummaryListRows = for {
       totalSpiritsSummaryRow <- DeclareSpiritsTotalSummary.row(userAnswers)
       scotchWhiskySummaryRow <- WhiskySummary.scotchWhiskyRow(userAnswers)
       irishWhiskySummaryRow  <- WhiskySummary.irishWhiskeyRow(userAnswers)
-    } yield SummaryListViewModel(
-      Seq(totalSpiritsSummaryRow) ++
-        Seq(scotchWhiskySummaryRow) ++
-        Seq(irishWhiskySummaryRow) ++
-        SpiritTypeSummary.row(userAnswers) ++
-        otherSpiritSummaryRow
-    ).copy(card =
-      Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card1"))))))
-    )
-  }
+      spiritTypeSummaryRow   <- SpiritTypeSummary.row(userAnswers)
+    } yield Seq(totalSpiritsSummaryRow, scotchWhiskySummaryRow, irishWhiskySummaryRow, spiritTypeSummaryRow)
 
-  private def getOptionalRow(row: Option[SummaryListRow]): Seq[SummaryListRow] =
-    row match {
-      case Some(row) => Seq(row)
-      case None      => Seq.empty
+    val fullSpiritsSummaryList = mandatorySummaryListRows.flatMap { rows =>
+      userAnswers.get(SpiritTypePage).filter(_.contains(Other)) match {
+        case Some(_) =>
+          OtherSpiritsProducedSummary
+            .row(userAnswers)
+            .map(otherSpiritsProducedRow => SummaryListViewModel(rows :+ otherSpiritsProducedRow))
+        case None    => Some(SummaryListViewModel(rows))
+      }
     }
 
+    fullSpiritsSummaryList.map(
+      _.copy(card =
+        Some(Card(title = Some(CardTitle(content = Text(messages("spiritsQuestions.checkYourAnswersLabel.card1"))))))
+      )
+    )
+  }
 }
