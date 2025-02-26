@@ -23,7 +23,7 @@ site.currency.2DP = £{0,number,#,##0.00}
 site.nil = Dim
 site.returnToBusinessAccount = Yn ôl i’ch Cyfrif Treth Busnes
 site.year = {0,number,####}
-site.warning = NOT_FOUND
+site.warning = Rhybudd
  
 #Welsh helpers - in Welsh y and w are also vowels 
  
