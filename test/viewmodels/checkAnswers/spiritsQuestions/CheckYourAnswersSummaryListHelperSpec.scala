@@ -48,19 +48,16 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
       val expectedSummaryListKeys =
         List("Total of all spirits", "Scotch Whisky", "Irish Whiskey", "Type of spirits", "Other spirits produced")
 
-      val summaryListOption =
-        CheckYourAnswersSummaryListHelper.spiritsSummaryList(completedUserAnswers)(getMessages(app))
+      val summaryList = CheckYourAnswersSummaryListHelper
+        .spiritsSummaryList(completedUserAnswers)(getMessages(app))
+        .getOrElse(fail("Expected a Some containing a summary list"))
 
-      summaryListOption match {
-        case None              => fail("Expected a Some containing a summary list")
-        case Some(summaryList) =>
-          summaryList.rows.map(_.key.content.asHtml.toString) mustBe expectedSummaryListKeys
-          summaryList.card                                    mustBe Some(Card(Some(CardTitle(Text("Spirits you’ve produced")))))
-      }
+      summaryList.rows.map(_.key.content.asHtml.toString) mustBe expectedSummaryListKeys
+      summaryList.card                                    mustBe Some(Card(Some(CardTitle(Text("Spirits you’ve produced")))))
     }
 
     "must return a summary list with the correct rows if all required pages are populated (Other spirits is not selected)" in {
-      val userAnswers = completedUserAnswers
+      val userAnswersWithoutOtherSpiritsSelected = completedUserAnswers
         .remove(List(OtherSpiritsProducedPage, SpiritTypePage))
         .success
         .value
@@ -73,36 +70,38 @@ class CheckYourAnswersSummaryListHelperSpec extends SpecBase {
 
       val expectedSummaryListKeys = List("Total of all spirits", "Scotch Whisky", "Irish Whiskey", "Type of spirits")
 
-      val summaryListOption = CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(app))
+      val summaryList = CheckYourAnswersSummaryListHelper
+        .spiritsSummaryList(userAnswersWithoutOtherSpiritsSelected)(getMessages(app))
+        .getOrElse(fail("Expected a Some containing a summary list"))
 
-      summaryListOption match {
-        case None              => fail("Expected a Some containing a summary list")
-        case Some(summaryList) =>
-          summaryList.rows.map(_.key.content.asHtml.toString) mustBe expectedSummaryListKeys
-          summaryList.card                                    mustBe Some(Card(Some(CardTitle(Text("Spirits you’ve produced")))))
-      }
+      summaryList.rows.map(_.key.content.asHtml.toString) mustBe expectedSummaryListKeys
+      summaryList.card                                    mustBe Some(Card(Some(CardTitle(Text("Spirits you’ve produced")))))
     }
 
     "must return None if a required page is not populated" - {
 
       "spirit type page (always required) is not populated" in {
-        val userAnswers = completedUserAnswers
+        val userAnswersWithoutSpiritTypePage = completedUserAnswers
           .remove(List(OtherSpiritsProducedPage, SpiritTypePage))
           .success
           .value
 
-        val summaryListOption = CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(app))
+        val summaryListOption =
+          CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswersWithoutSpiritTypePage)(getMessages(app))
 
         summaryListOption mustBe None
       }
 
       "Other spirits is selected but other spirits produced page is not populated" in {
-        val userAnswers = completedUserAnswers
+        val userAnswersWithoutOtherSpiritsProducedPage = completedUserAnswers
           .remove(List(OtherSpiritsProducedPage))
           .success
           .value
 
-        val summaryListOption = CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswers)(getMessages(app))
+        val summaryListOption =
+          CheckYourAnswersSummaryListHelper.spiritsSummaryList(userAnswersWithoutOtherSpiritsProducedPage)(
+            getMessages(app)
+          )
 
         summaryListOption mustBe None
       }
