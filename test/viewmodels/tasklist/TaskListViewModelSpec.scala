@@ -17,7 +17,6 @@
 package viewmodels.tasklist
 
 import base.SpecBase
-import TaskListStatus.Incomplete
 import config.FrontendAppConfig
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Wine}
 import models.{AlcoholRegimes, ReturnPeriod}
@@ -25,9 +24,9 @@ import play.api.Application
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.TaskListItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskList
+import viewmodels.tasklist.TaskListStatus.Incomplete
 
-import java.time.{Clock, Instant, ZoneId}
-import java.time.temporal.ChronoUnit
+import java.time.Instant
 
 class TaskListViewModelSpec extends SpecBase {
   "getTaskList" - {
@@ -198,9 +197,6 @@ class TaskListViewModelSpec extends SpecBase {
     val userAnswers    = emptyUserAnswers.copy(returnId = returnId)
     val returnPeriod   = ReturnPeriod.fromPeriodKeyOrThrow(periodKeyJun)
     val dateTimeHelper = createDateTimeHelper()
-
-    private val instant      = Instant.now.truncatedTo(ChronoUnit.MILLIS)
-    private val clock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
 
     val fromDate         = returnPeriod.periodFromDate()
     val toDate           = returnPeriod.periodToDate()
