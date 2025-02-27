@@ -45,6 +45,7 @@
     @hmrcHead(
         headBlock = if(timeout) { Some(
             hmrcTimeoutDialog(TimeoutDialog(
+                language            = Some(messages.lang.code),
                 timeout             = Some(appConfig.timeout),
                 countdown           = Some(appConfig.countdown),
                 keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
