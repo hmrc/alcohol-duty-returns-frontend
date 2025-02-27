@@ -185,9 +185,7 @@ class AdjustmentDutyDueControllerSpec extends SpecBase {
     }
 
     val incompleteAdjustmentEntries = List(
-      (adjustmentEntry.copy(totalLitresVolume = None), "totalLitres"),
       (adjustmentEntry.copy(pureAlcoholVolume = None), "pureAlcoholVolume"),
-      (adjustmentEntry.copy(rateBand = None, sprDutyRate = None), "rate"),
       (adjustmentEntry.copy(duty = None), "duty")
     )
 

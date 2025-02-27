@@ -54,7 +54,7 @@ object RateBandHelper {
           messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
           interval.minABV.value,
           taxType
-        ).capitalize
+        )
       case _                   =>
         messages(
           "return.journey.abv.single.interval",
@@ -63,7 +63,7 @@ object RateBandHelper {
           messages(WelshHelper.chooseAnd(interval.maxABV.value)),
           interval.maxABV.value,
           taxType
-        ).capitalize
+        )
     }
 
   private def multipleIntervals(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String)(implicit
@@ -80,7 +80,7 @@ object RateBandHelper {
       messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
       abvRange2.maxABV.value,
       taxType
-    ).capitalize
+    )
 
   def rateBandRecap(rateBand: RateBand, maybeByRegime: Option[AlcoholRegime])(implicit messages: Messages): String =
     abvRangesFromRateBand(rateBand, maybeByRegime).toList match {
@@ -112,7 +112,7 @@ object RateBandHelper {
           messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
           interval.minABV.value,
           taxType
-        ).capitalize
+        )
       case _                   =>
         messages(
           s"return.journey.abv.recap.single.interval.$rateType",
@@ -121,7 +121,7 @@ object RateBandHelper {
           messages(WelshHelper.chooseAnd(interval.maxABV.value)),
           interval.maxABV.value,
           taxType
-        ).capitalize
+        )
     }
 
   private def multipleIntervalsRecap(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String, rateType: RateType)(
@@ -138,5 +138,5 @@ object RateBandHelper {
       messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
       abvRange2.maxABV.value,
       taxType
-    ).capitalize
+    )
 }

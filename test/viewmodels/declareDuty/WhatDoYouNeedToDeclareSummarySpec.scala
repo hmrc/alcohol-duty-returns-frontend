@@ -29,7 +29,7 @@ class WhatDoYouNeedToDeclareSummarySpec extends SpecBase {
 
       summaryList.rows.map(_.key.content)   mustBe
         Seq(
-          Text("Selected Beer to declare")
+          Text("Selected beer to declare")
         )
       summaryList.rows.map(_.value.content) mustBe
         Seq(

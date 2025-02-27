@@ -19,7 +19,10 @@ package models
 import enumeratum.{Enum, EnumEntry, PlayEnum}
 import play.api.libs.json._
 
-sealed trait AlcoholRegime extends EnumEntry
+sealed trait AlcoholRegime extends EnumEntry {
+  val regimeMessageKey: String = s"regime.${entryName.toLowerCase}"
+}
+
 object AlcoholRegime extends Enum[AlcoholRegime] with PlayEnum[AlcoholRegime] {
   val values = findValues
 

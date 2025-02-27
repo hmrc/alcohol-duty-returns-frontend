@@ -45,7 +45,7 @@ class HowMuchDoYouNeedToDeclareSummary {
                     Text(
                       messages(
                         s"howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle",
-                        messages(s"return.regime.${regime.toString}")
+                        messages(regime.regimeMessageKey)
                       ).capitalize
                     )
                   )
@@ -103,7 +103,7 @@ class HowMuchDoYouNeedToDeclareSummary {
           Seq(
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description"),
-              value = ValueViewModel(rateBandRecap(rateBand, Some(regime)))
+              value = ValueViewModel(rateBandRecap(rateBand, Some(regime)).capitalize)
             ).withCssClass(Css.summaryListRowNoBorderCssClass),
             SummaryListRowViewModel(
               key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres"),

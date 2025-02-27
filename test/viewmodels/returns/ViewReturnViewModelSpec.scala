@@ -64,6 +64,8 @@ class ViewReturnViewModelSpec extends SpecBase {
 
     "createAdjustmentsViewModel" - {
       "must return a model with data when adjustments declared" in new SetUp {
+        when(appConfig.getRegimeNameByTaxTypeCode("321")).thenReturn(None) // Needed for the Spoilt row we don't check
+
         val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(returnDetails, exampleRateBands(periodKey3))
 
         adjustmentsViewModel.rows.size                         mustBe 5
@@ -72,14 +74,17 @@ class ViewReturnViewModelSpec extends SpecBase {
         )
 
         adjustmentsViewModel.rows.head.cells(1).content mustBe Text("321")
-        adjustmentsViewModel.rows(4).cells(1).content   mustBe Text("Non-draught beer between 1% and 2% ABV (125)")
-        adjustmentsViewModel.rows(4).cells(3).content   mustBe Text("£21.01")
+
+        adjustmentsViewModel.rows(4).cells(1).content mustBe Text("Non-draught beer between 1% and 2% ABV (125)")
+        adjustmentsViewModel.rows(4).cells(3).content mustBe Text("£21.01")
       }
 
       "must return a model with data when a spoilt adjustment declared where Description is the regime name and duty rate is NA" in new SetUp {
+        when(appConfig.getRegimeNameByTaxTypeCode("123")).thenReturn(None)
         when(appConfig.getRegimeNameByTaxTypeCode("333")).thenReturn(Some("Wine"))
         val returnDetailWithSpoilt = returnWithSpoiltAdjustment(periodKey, Instant.now(clock))
-        val adjustmentsViewModel   = viewModel.createAdjustmentsViewModel(
+
+        val adjustmentsViewModel = viewModel.createAdjustmentsViewModel(
           returnDetailWithSpoilt,
           exampleRateBands(periodKey2)
         )
