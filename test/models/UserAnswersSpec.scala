@@ -50,7 +50,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
     val noRegimesJson =
       s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":[],"data":{},"startedTime":{"$$date":{"$$numberLong":"1718118467838"}},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
 
-    "should add a value to a set for a given page and get the same value" in {
+    "must add a value to a set for a given page and get the same value" in {
 
       val userAnswers =
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
@@ -70,7 +70,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       expectedValue mustBe actualValue
     }
 
-    "should remove a value for a given Page" in {
+    "must remove a value for a given Page" in {
       val userAnswers =
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
           .set(TestSeqPage, Seq("123"))
@@ -85,7 +85,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       actualValueOption mustBe None
     }
 
-    "should serialise to json" in {
+    "must serialise to json" in {
       val userAnswers =
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
@@ -99,7 +99,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         .toString() mustBe json
     }
 
-    "should deserialise from json" in {
+    "must deserialise from json" in {
       val userAnswers =
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
@@ -109,7 +109,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       )
     }
 
-    "should throw an error if no regimes found" in {
+    "must throw an error if no regimes found" in {
       an[IllegalArgumentException] mustBe thrownBy(Json.parse(noRegimesJson).as[UserAnswers])
     }
 
@@ -119,7 +119,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         override def path: JsPath = JsPath \ toString
       }
 
-      "should get the value of an answer for a given page and index" in {
+      "must get the value of an answer for a given page and index" in {
         val userAnswers =
           UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
             .set(TestMapPage, Map("1" -> "123", "2" -> "456", "3" -> "789"))
@@ -131,7 +131,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         userAnswers.getByKey(TestMapPage, "4") mustBe None
       }
 
-      "should set the value of an answer for a given page and index and get the same value" in {
+      "must set the value of an answer for a given page and index and get the same value" in {
         val userAnswers =
           UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
@@ -150,7 +150,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         expectedValue mustBe actualValue
       }
 
-      "should return None when value is not present" in {
+      "must return None when value is not present" in {
         val userAnswers =
           UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
 
@@ -158,7 +158,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         result mustBe None
       }
 
-      "should add value to existing sequence" in {
+      "must add value to existing sequence" in {
         val userAnswers =
           UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
             .set(TestSeqPage, Seq("existingValue"))
@@ -173,7 +173,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         updatedUserAnswer.get(TestSeqPage) mustBe Some(Seq("existingValue", "newValue"))
       }
 
-      "should return None when no value exists at given index" in {
+      "must return None when no value exists at given index" in {
         val userAnswers =
           UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
             .set(TestSeqPage, Seq("value1", "value2"))
@@ -184,7 +184,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
         result mustBe None
       }
     }
-    "should add a value to a sequence by key and append another value" in {
+    "must add a value to a sequence by key and append another value" in {
 
       val userAnswers =
         UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))

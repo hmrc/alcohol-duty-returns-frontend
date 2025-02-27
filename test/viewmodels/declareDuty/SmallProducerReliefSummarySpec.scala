@@ -23,7 +23,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class SmallProducerReliefSummarySpec extends SpecBase {
   "SmallProducerReliefSummary" - {
-    "should return a multiple SPR list summary if has multiple SPR duty rates" in new SetUp {
+    "must return a multiple SPR list summary if has multiple SPR duty rates" in new SetUp {
       val answers = doYouHaveMultipleSPRDutyRatesPage(userAnswersWithBeer, Beer, true)
 
       smallProducerReliefSummary.summaryList(Beer, answers).get.card.get.title.get.content mustBe Text(
@@ -31,7 +31,7 @@ class SmallProducerReliefSummarySpec extends SpecBase {
       )
     }
 
-    "should return a single SPR list summary if has multiple SPR duty rates" in new SetUp {
+    "must return a single SPR list summary if has multiple SPR duty rates" in new SetUp {
       val answers = doYouHaveMultipleSPRDutyRatesPage(userAnswersWithBeer, Beer, false)
 
       smallProducerReliefSummary.summaryList(Beer, answers).get.card.get.title.get.content mustBe Text(
@@ -39,7 +39,7 @@ class SmallProducerReliefSummarySpec extends SpecBase {
       )
     }
 
-    "should return None if the question wasn't answered" in new SetUp {
+    "must return None if the question wasn't answered" in new SetUp {
       smallProducerReliefSummary.summaryList(Beer, userAnswersWithBeer) mustBe None
     }
   }

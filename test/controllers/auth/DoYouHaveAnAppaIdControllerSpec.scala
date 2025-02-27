@@ -41,7 +41,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DoYouHaveAnAppaIdView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, false, true)(request, getMessages(application)).toString
       }
     }
@@ -58,7 +58,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DoYouHaveAnAppaIdView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, true, true)(request, getMessages(application)).toString
       }
     }
@@ -73,7 +73,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.auth.routes.AppaIdAuthController.onPageLoad().url
       }
     }
@@ -89,7 +89,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controllers.auth.routes.NoAppaIdController.onPageLoad(fromBTA).url
         }
       }
@@ -129,7 +129,7 @@ class DoYouHaveAnAppaIdControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, false, true)(request, getMessages(application)).toString
       }
     }

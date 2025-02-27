@@ -304,7 +304,7 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
             ) { result =>
               result.isRight mustBe true
               result.map { res =>
-                res.dutySuspended.declared mustBe true
+                res.dutySuspended.declared                   mustBe true
                 res.dutySuspended.dutySuspendedProducts.size mustBe 4
               }
             }
@@ -347,8 +347,8 @@ class AdrReturnSubmissionServiceSpec extends SpecBase with TestData {
           whenReady(
             adrReturnSubmissionService.getAdrReturnSubmission(fullUserAnswers, returnPeriod).value
           ) { result =>
-            result.toOption.get.spirits.nonEmpty mustBe true
-            result.toOption.get.spirits.get.spiritsDeclared mustBe true
+            result.toOption.get.spirits.nonEmpty                     mustBe true
+            result.toOption.get.spirits.get.spiritsDeclared          mustBe true
             result.toOption.get.spirits.get.spiritsProduced.nonEmpty mustBe true
           }
         }

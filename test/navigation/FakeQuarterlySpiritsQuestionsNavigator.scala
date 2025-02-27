@@ -17,7 +17,7 @@
 package navigation
 
 import models.{Mode, UserAnswers}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import pages._
 import play.api.mvc.Call
 
@@ -25,7 +25,7 @@ class FakeQuarterlySpiritsQuestionsNavigator(desiredRoute: Call, hasValueChanged
     extends QuarterlySpiritsQuestionsNavigator {
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call = {
-    hasValueChanged shouldBe hasChanged
+    hasValueChanged mustBe hasChanged
     desiredRoute
   }
 }

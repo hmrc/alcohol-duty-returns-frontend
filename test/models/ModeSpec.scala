@@ -20,11 +20,11 @@ import base.SpecBase
 
 class ModeSpec extends SpecBase {
   "Mode" - {
-    "should convert from NormalMode to a string" in {
+    "must convert from NormalMode to a string" in {
       Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
     }
 
-    "should convert from CheckMode to a string" in {
+    "must convert from CheckMode to a string" in {
       Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
     }
   }

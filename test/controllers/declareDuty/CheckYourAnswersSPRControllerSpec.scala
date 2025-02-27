@@ -63,7 +63,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
         val summaryList =
           CheckYourAnswersSPRSummaryListHelper.summaryList(regime, userAnswers, None)(getMessages(application)).get
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(regime, summaryList, None)(request, getMessages(application)).toString
       }
     }
@@ -78,7 +78,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -93,7 +93,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -117,7 +117,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.declareDuty.routes.MultipleSPRListController
           .onPageLoad(regime)
           .url
@@ -145,7 +145,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.declareDuty.routes.MultipleSPRListController
           .onPageLoad(regime)
           .url

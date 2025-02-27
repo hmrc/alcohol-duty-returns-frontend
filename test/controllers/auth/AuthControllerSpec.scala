@@ -58,7 +58,7 @@ class AuthControllerSpec extends SpecBase {
           val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
           val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual expectedRedirectUrl
           verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
         }
@@ -91,7 +91,7 @@ class AuthControllerSpec extends SpecBase {
           val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
           val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
 
-          status(result) mustEqual SEE_OTHER
+          status(result)                 mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual expectedRedirectUrl
           verify(mockUserAnswersConnector, times(1)).releaseLock(eqTo(returnId))(any())
         }
@@ -121,7 +121,7 @@ class AuthControllerSpec extends SpecBase {
         val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
         val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
         verify(mockUserAnswersConnector, times(0)).releaseLock(eqTo(returnId))(any())
       }

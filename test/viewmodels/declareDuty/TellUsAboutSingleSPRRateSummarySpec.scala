@@ -23,12 +23,12 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
   "TellUsAboutSingleSPRRateSummary" - {
-    "should summarise tax types" in new SetUp {
+    "must summarise tax types" in new SetUp {
       val answers =
         specifyTellUsAboutAllSingleSPRRate(whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands), Beer)
 
       val rows = TellUsAboutSingleSPRRateSummary.rows(Beer, answers)
-      rows.map(_.key.content) mustBe
+      rows.map(_.key.content)   mustBe
         Seq(
           Text("Description"),
           Text("Total volume"),
@@ -60,19 +60,19 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
         )
     }
 
-    "should return no rows if WhatDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
+    "must return no rows if WhatDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
       val answers = specifyTellUsAboutAllSingleSPRRate(userAnswersWithBeer, Beer)
 
       TellUsAboutSingleSPRRateSummary.rows(Beer, answers) mustBe Seq.empty
     }
 
-    "should return no rows if MultipleSPRListPage page doesn't have an answer" in new SetUp {
+    "must return no rows if MultipleSPRListPage page doesn't have an answer" in new SetUp {
       val answers = whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands)
 
       TellUsAboutSingleSPRRateSummary.rows(Beer, answers) mustBe Seq.empty
     }
 
-    "should throw an exception if a tax type is not found in the rateBands" in new SetUp {
+    "must throw an exception if a tax type is not found in the rateBands" in new SetUp {
       val badTaxCode                = "555"
       val badVolumeAndRateByTaxType = Seq(
         volumeAndRateByTaxType1,
@@ -86,7 +86,7 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
         badVolumeAndRateByTaxType
       )
 
-      an[IllegalArgumentException] shouldBe thrownBy(TellUsAboutSingleSPRRateSummary.rows(Beer, answers))
+      an[IllegalArgumentException] mustBe thrownBy(TellUsAboutSingleSPRRateSummary.rows(Beer, answers))
     }
   }
 

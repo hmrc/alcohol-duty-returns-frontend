@@ -57,7 +57,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DeclareAlcoholDutyQuestionView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         // TODO: make it testable (contains Cider flag depends on regimes)
         contentAsString(result) mustEqual view(form, true, NormalMode)(request, getMessages(application)).toString
       }
@@ -76,7 +76,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), true, NormalMode)(
           request,
           getMessages(application)
@@ -105,7 +105,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -132,7 +132,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -172,7 +172,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
@@ -198,7 +198,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, true, NormalMode)(request, getMessages(application)).toString
       }
     }
@@ -212,7 +212,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -228,7 +228,7 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

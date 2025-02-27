@@ -24,7 +24,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
   "TellUsAboutMultipleSPRRateSummary" - {
-    "should summarise tax types" in new SetUp {
+    "must summarise tax types" in new SetUp {
       val answers = tellUsAboutMultipleSPRRatePage(
         whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands),
         Beer,
@@ -32,7 +32,7 @@ class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
       )
 
       val rows = TellUsAboutMultipleSPRRateSummary.rows(Beer, answers, None)
-      rows.map(_.key.content) mustBe
+      rows.map(_.key.content)   mustBe
         Seq(Text("Description"), Text("Total beer"), Text("Total pure alcohol"), Text("Duty rate"))
       rows.map(_.value.content) mustBe
         Seq(
@@ -43,19 +43,19 @@ class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
         )
     }
 
-    "should return no rows if WhatDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
+    "must return no rows if WhatDoYouNeedToDeclare page doesn't have an answer" in new SetUp {
       val answers = tellUsAboutMultipleSPRRatePage(userAnswersWithBeer, Beer, volumeAndRateByTaxType1)
 
       TellUsAboutMultipleSPRRateSummary.rows(Beer, answers, None) mustBe Seq.empty
     }
 
-    "should return no rows if TellUsAboutMultipleSPRRatePage page doesn't have an answer" in new SetUp {
+    "must return no rows if TellUsAboutMultipleSPRRatePage page doesn't have an answer" in new SetUp {
       val answers = whatDoYouNeedToDeclarePage(userAnswersWithBeer, Beer, allRateBands)
 
       TellUsAboutMultipleSPRRateSummary.rows(Beer, answers, None) mustBe Seq.empty
     }
 
-    "should return no rows if a tax type is not found in the rateBands" in new SetUp {
+    "must return no rows if a tax type is not found in the rateBands" in new SetUp {
       val badTaxCode                = "555"
       val badVolumeAndRateByTaxType = volumeAndRateByTaxType4.copy(taxType = badTaxCode)
       val answers                   = tellUsAboutMultipleSPRRatePage(

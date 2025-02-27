@@ -60,7 +60,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[DeleteAdjustmentView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, index)(request, getMessages(application)).toString
       }
     }
@@ -77,7 +77,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form.fill(true), index)(request, getMessages(application)).toString
       }
     }
@@ -102,7 +102,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
@@ -125,7 +125,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
       }
@@ -152,7 +152,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val request = FakeRequest(POST, deleteAdjustmentRoute)
           .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
@@ -180,7 +180,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val request = FakeRequest(POST, deleteAdjustmentRoute)
           .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
@@ -208,7 +208,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val request = FakeRequest(POST, deleteAdjustmentRoute)
           .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.adjustment.routes.DeclareAdjustmentQuestionController
           .onPageLoad(NormalMode)
           .url
@@ -269,7 +269,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         val request = FakeRequest(POST, deleteAdjustmentRoute)
           .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
         val result  = route(application, request).value
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.adjustment.routes.AdjustmentListController
           .onPageLoad(1)
           .url
@@ -293,7 +293,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, index)(request, getMessages(application)).toString
       }
     }
@@ -307,7 +307,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
@@ -323,7 +323,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

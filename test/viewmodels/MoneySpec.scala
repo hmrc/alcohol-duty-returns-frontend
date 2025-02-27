@@ -22,13 +22,13 @@ class MoneySpec extends SpecBase {
   "Money" - {
     implicit val messages = getMessages(app)
 
-    "should format a positive amount to 2dp" in {
+    "must format a positive amount to 2dp" in {
       val amount = BigDecimal("12345.6789")
 
       Money.format(amount) mustBe "£12,345.68"
     }
 
-    "should format a negative amount to 2dp" in {
+    "must format a negative amount to 2dp" in {
       val amount      = BigDecimal("-12345.6789")
       val minus: Char = 0x2212
 

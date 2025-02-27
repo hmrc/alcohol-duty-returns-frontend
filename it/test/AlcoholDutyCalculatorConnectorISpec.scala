@@ -33,7 +33,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
 
   "AlcoholDutyCalculatorConnector" - {
     "rateBandByRegime" - {
-      "should successfully retrieve rateBandByRegime details" in new SetUp {
+      "must successfully retrieve rateBandByRegime details" in new SetUp {
         val jsonResponse = Json.toJson(rateBands).toString()
         server.stubFor(get(urlPathEqualTo(ratesUrl))
           .withQueryParam("ratePeriod", equalTo(Json.toJson(ratePeriod).toString))
@@ -46,7 +46,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         }
       }
 
-      "should fail when upstream service returns an error" in new SetUp {
+      "must fail when upstream service returns an error" in new SetUp {
         server.stubFor(get(urlPathEqualTo(ratesUrl))
           .withQueryParam("ratePeriod", equalTo(Json.toJson(ratePeriod).toString))
           .withQueryParam("alcoholRegimes", equalTo(regime.toString))
@@ -147,7 +147,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         }
       }
 
-      "should fail when upstream service returns a bad request" in new SetUp {
+      "must fail when upstream service returns a bad request" in new SetUp {
         val volumesAndRates = arbitraryVolumeAndRateByTaxType(
           rateBands.toSeq
         ).arbitrary.sample.value
@@ -175,7 +175,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
           result mustBe AdjustmentDuty(BigDecimal(1))
         }
       }
-      "should fail when upstream service returns an error" in new SetUp {
+      "must fail when upstream service returns an error" in new SetUp {
         val requestJson = Json.toJson(AdjustmentDutyCalculationRequest(AdjustmentTypes.Spoilt, BigDecimal(1), BigDecimal(1))).toString()
         server.stubFor(post(urlMatching(adjustmentDutyUrl))
           .withRequestBody(equalToJson(requestJson))
@@ -201,7 +201,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
         }
       }
 
-      "should fail when upstream service returns an error" in new SetUp {
+      "must fail when upstream service returns an error" in new SetUp {
         val requestJson = Json.toJson(RepackagedDutyChangeRequest(BigDecimal(2), BigDecimal(1))).toString()
         server.stubFor(post(urlMatching(repackagedUrl))
           .withRequestBody(equalToJson(requestJson))
@@ -226,7 +226,7 @@ class AlcoholDutyCalculatorConnectorISpec extends ISpecBase with WireMockHelper 
           result mustBe AdjustmentDuty(BigDecimal(3))
         }
       }
-      "should fail when upstream service returns an error" in new SetUp {
+      "must fail when upstream service returns an error" in new SetUp {
         val requestJson = Json.toJson(AdjustmentTotalCalculationRequest(Seq(BigDecimal(2), BigDecimal(1)))).toString()
         server.stubFor(post(urlMatching(totalAdjustmentUrl))
           .withRequestBody(equalToJson(requestJson))

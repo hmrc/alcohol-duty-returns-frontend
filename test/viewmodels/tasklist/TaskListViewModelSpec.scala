@@ -48,8 +48,8 @@ class TaskListViewModelSpec extends SpecBase {
         validUntilString
       )
 
-      result.status mustBe Incomplete
-      result.totalTasks mustBe 5
+      result.status         mustBe Incomplete
+      result.totalTasks     mustBe 5
       result.completedTasks mustBe 1
     }
 
@@ -70,8 +70,8 @@ class TaskListViewModelSpec extends SpecBase {
         validUntilString
       )
 
-      result.status mustBe Incomplete
-      result.totalTasks mustBe 5
+      result.status         mustBe Incomplete
+      result.totalTasks     mustBe 5
       result.completedTasks mustBe 4
     }
 

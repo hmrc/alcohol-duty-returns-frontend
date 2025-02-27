@@ -114,7 +114,7 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
    }
 
    "releaseLock" - {
-     "should call the release lock endpoint" in new SetUp{
+     "must call the release lock endpoint" in new SetUp{
        server.stubFor(
          delete(urlMatching(releaseLockUrl))
            .willReturn(aResponse().withStatus(OK))
@@ -139,7 +139,7 @@ class UserAnswersConnectorISpec extends ISpecBase with WireMockHelper {
    }
 
   "keepAlive" - {
-    "should call the keep alive endpoint" in new SetUp{
+    "must call the keep alive endpoint" in new SetUp{
          server.stubFor(
            put(urlMatching(keepAliveUrl))
              .willReturn(aResponse().withStatus(OK))

@@ -79,14 +79,14 @@ class ReturnSubmittedControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
 
       }
     }
 
     "return details" - {
-      "should deserialise a valid json into a adrReturnCreatedDetails object" in {
+      "must deserialise a valid json into a adrReturnCreatedDetails object" in {
         val json =
           """
             |{
@@ -100,14 +100,14 @@ class ReturnSubmittedControllerSpec extends SpecBase {
 
         val result = Json.parse(json).validate[AdrReturnCreatedDetails].get
 
-        result mustBe a[AdrReturnCreatedDetails]
-        result.processingDate mustBe Instant.parse("2024-06-11T15:07:47.838Z")
-        result.amount mustBe 10.45
+        result                 mustBe a[AdrReturnCreatedDetails]
+        result.processingDate  mustBe Instant.parse("2024-06-11T15:07:47.838Z")
+        result.amount          mustBe 10.45
         result.chargeReference mustBe Some("XA1527404500736")
-        result.paymentDueDate mustBe Some(LocalDate.parse("2024-08-25"))
+        result.paymentDueDate  mustBe Some(LocalDate.parse("2024-08-25"))
       }
 
-      "should deserialise a valid json into a adrReturnCreatedDetails object with minimal payload" in {
+      "must deserialise a valid json into a adrReturnCreatedDetails object with minimal payload" in {
         val json =
           """
             |{
@@ -119,14 +119,14 @@ class ReturnSubmittedControllerSpec extends SpecBase {
 
         val result = Json.parse(json).validate[AdrReturnCreatedDetails].get
 
-        result mustBe a[AdrReturnCreatedDetails]
-        result.processingDate mustBe Instant.parse("2024-06-11T15:07:47.838Z")
-        result.amount mustBe 10.45
+        result                 mustBe a[AdrReturnCreatedDetails]
+        result.processingDate  mustBe Instant.parse("2024-06-11T15:07:47.838Z")
+        result.amount          mustBe 10.45
         result.chargeReference mustBe None
-        result.paymentDueDate mustBe None
+        result.paymentDueDate  mustBe None
       }
 
-      "should redirect to journey recovery if not valid" in {
+      "must redirect to journey recovery if not valid" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(bind[ReturnSubmittedHelper].toInstance(mockReturnSubmittedHelper))
           .build()
@@ -136,7 +136,7 @@ class ReturnSubmittedControllerSpec extends SpecBase {
             .withSession(returnCreatedDetailsKey -> "{}")
         val result  = route(application, request).get
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }

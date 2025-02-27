@@ -25,7 +25,7 @@ import play.api.test.Helpers.{GET, redirectLocation, route, running, status}
 class ServiceEntryControllerSpec extends SpecBase {
 
   "ServiceEntry controller" - {
-    "should redirect to BTA" in {
+    "must redirect to BTA" in {
 
       val application = applicationBuilder().build()
 
@@ -37,7 +37,7 @@ class ServiceEntryControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)              mustEqual SEE_OTHER
         redirectLocation(result).value mustBe config.businessTaxAccountUrl
       }
     }

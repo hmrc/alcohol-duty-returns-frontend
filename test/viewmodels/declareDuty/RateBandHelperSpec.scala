@@ -31,7 +31,7 @@ class RateBandHelperSpec extends SpecBase {
 
   "RateBandHelper" - {
 
-    "should return the correct message when choosing bands to report" - {
+    "must return the correct message when choosing bands to report" - {
 
       "for a single interval" - {
         val lowerLimit = BigDecimal(1)
@@ -133,7 +133,7 @@ class RateBandHelperSpec extends SpecBase {
       }
     }
 
-    "should return the correct message when creating labels for confirmation lists and tables to report" - {
+    "must return the correct message when creating labels for confirmation lists and tables to report" - {
       RateType.values.foreach { rateType =>
         s"for a single interval for rate type: $rateType" - {
           val lowerLimit = BigDecimal(1)

@@ -19,14 +19,13 @@ package viewmodels.declareDuty
 import base.SpecBase
 import models.declareDuty.{AlcoholDuty, DutyByTaxType}
 import models.AlcoholRegime.Beer
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.declareDuty.WhatDoYouNeedToDeclarePage
 
 class DutyCalculationHelperSpec extends SpecBase {
 
   "dutyDueTableViewModel" - {
     val regime = Beer
-    "should return a TableViewModel with correct rows when user answers are valid" in {
+    "must return a TableViewModel with correct rows when user answers are valid" in {
 
       val volumesAndRates = arbitraryVolumeAndRateByTaxType(
         allRateBands.toSeq
@@ -55,22 +54,22 @@ class DutyCalculationHelperSpec extends SpecBase {
 
       val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, userAnswers, regime)(getMessages(app))
 
-      result.isRight shouldBe true
+      result.isRight mustBe true
 
       val tableViewModel = result.getOrElse(fail("Expected Right(TableViewModel) but got Left"))
-      tableViewModel.head.size shouldBe 5
-      tableViewModel.rows.size shouldBe allRateBands.size
+      tableViewModel.head.size mustBe 5
+      tableViewModel.rows.size mustBe allRateBands.size
     }
 
-    "should return a Left with error message when no rate bands found" in {
+    "must return a Left with error message when no rate bands found" in {
       val alcoholDuty = AlcoholDuty(Seq.empty, BigDecimal(0))
 
       val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, emptyUserAnswers, regime)(getMessages(app))
 
-      result shouldEqual Left("No rate bands found")
+      result mustEqual Left("No rate bands found")
     }
 
-    "should return a Left with error message when no matching rate band for tax type" in {
+    "must return a Left with error message when no matching rate band for tax type" in {
       val unmatchedRateBand = genRateBandForRegimeWithSPR(regime).sample.value
       val unmatchedTaxType  = genVolumeAndRateByTaxTypeRateBand(unmatchedRateBand).arbitrary.sample.value
       val rateBands         = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet

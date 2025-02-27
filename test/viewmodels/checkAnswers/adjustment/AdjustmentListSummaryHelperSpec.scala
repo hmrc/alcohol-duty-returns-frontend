@@ -22,7 +22,6 @@ import generators.ModelGenerators
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.Spoilt
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RateType}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.adjustment.AdjustmentEntryListPage
 import viewmodels.Money
@@ -74,24 +73,24 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
     "must return a table with the correct head" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
       val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
-      table.head.size shouldBe 4
+      table.head.size mustBe 4
     }
 
     "must return a table with the correct rows" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
       val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
-      table.rows.size shouldBe adjustmentEntryList.size
+      table.rows.size mustBe adjustmentEntryList.size
       table.rows.zipWithIndex.foreach { case (row, index) =>
-        row.actions.head.href shouldBe controllers.adjustment.routes.CheckYourAnswersController
+        row.actions.head.href mustBe controllers.adjustment.routes.CheckYourAnswersController
           .onPageLoad(Some(index))
-        row.actions(1).href   shouldBe controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(index)
+        row.actions(1).href   mustBe controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(index)
       }
     }
 
     "must return the correct total" in {
       val userAnswers = emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList).success.value
       val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
-      table.total.map(_.rows.head.value).get.content shouldBe Text(
+      table.total.map(_.rows.head.value).get.content mustBe Text(
         Money.format(
           adjustmentEntryList.flatMap(duty => duty.newDuty.orElse(duty.duty)).sum
         )(getMessages(app))
@@ -106,7 +105,7 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
         emptyUserAnswers.set(AdjustmentEntryListPage, adjustmentEntryList :+ undefinedDutyAdjustmentEntry).success.value
       val table       = AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
 
-      table.total.map(_.rows.head.value).get.content shouldBe Text(Money.format(expectedSum)(getMessages(app)))
+      table.total.map(_.rows.head.value).get.content mustBe Text(Money.format(expectedSum)(getMessages(app)))
     }
 
     "must throw an exception if adjustment type is missing" in {
@@ -116,7 +115,7 @@ class AdjustmentListSummaryHelperSpec extends SpecBase with ScalaCheckPropertyCh
       val exception                      = intercept[RuntimeException] {
         AdjustmentListSummaryHelper.adjustmentEntryTable(userAnswers, total, pageNumber)(getMessages(app))
       }
-      exception.getMessage shouldBe "Couldn't fetch adjustment type value from user answers"
+      exception.getMessage mustBe "Couldn't fetch adjustment type value from user answers"
     }
   }
 

@@ -22,23 +22,23 @@ import utils.ListHelpers._
 class ListHelpersSpec extends SpecBase {
   "ListHelper" - {
     "calling nextItem" - {
-      "should return None if the List is empty" in {
+      "must return None if the List is empty" in {
         List.empty[Int].nextItem(1) mustBe None
       }
 
-      "should return None if the item is not found" in {
+      "must return None if the item is not found" in {
         List(1, 2, 3).nextItem(4) mustBe None
       }
 
-      "should return None if the item is the last" in {
+      "must return None if the item is the last" in {
         List(1, 2, 3).nextItem(3) mustBe None
       }
 
-      "should return the second item if the item is the first" in {
+      "must return the second item if the item is the first" in {
         List(1, 2, 3).nextItem(1) mustBe Some(2)
       }
 
-      "should return the third item if the item is the second" in {
+      "must return the third item if the item is the second" in {
         List(1, 2, 3).nextItem(2) mustBe Some(3)
       }
     }

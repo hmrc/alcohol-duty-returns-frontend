@@ -38,7 +38,7 @@ class NoAppaIdControllerSpec extends SpecBase {
           val view      = application.injector.instanceOf[NoAppaIdView]
           val result    = route(application, request).value
 
-          status(result) mustEqual OK
+          status(result)          mustEqual OK
           contentAsString(result) mustEqual view(appConfig, fromBTA, true)(request, getMessages(application)).toString
         }
       }
@@ -55,7 +55,7 @@ class NoAppaIdControllerSpec extends SpecBase {
           val view      = application.injector.instanceOf[NoAppaIdView]
           val result    = route(application, request).value
 
-          status(result) mustEqual OK
+          status(result)          mustEqual OK
           contentAsString(result) mustEqual view(appConfig, true, signedIn)(request, getMessages(application)).toString
         }
       }

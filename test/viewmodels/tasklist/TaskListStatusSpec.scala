@@ -20,9 +20,9 @@ import base.SpecBase
 
 class TaskListStatusSpec extends SpecBase {
   "taskListStatus" - {
-    "should return the correct message key" in {
+    "must return the correct message key" in {
       TaskListStatus.Incomplete.messageKey mustBe "incomplete"
-      TaskListStatus.Completed.messageKey mustBe "completed"
+      TaskListStatus.Completed.messageKey  mustBe "completed"
     }
   }
 }

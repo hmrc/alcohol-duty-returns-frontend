@@ -17,23 +17,22 @@
 package viewmodels
 
 import base.SpecBase
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import uk.gov.hmrc.govukfrontend.views.viewmodels.pagination.{PaginationItem, PaginationLink}
 
 class PaginationViewModelSpec extends SpecBase {
 
   def createUrl(page: Int): String = s"/adjustment-list?page=$page"
 
-  "PaginationViewModel should" - {
+  "PaginationViewModel must" - {
 
     "create correct pagination with multiple pages and middle current page" in {
       val currentPage         = 2
       val totalPages          = 5
       val paginationViewModel = PaginationViewModel(currentPage, totalPages, createUrl)
       val pagination          = paginationViewModel.paginate
-      pagination.previous shouldBe Some(PaginationLink(href = createUrl(1)))
-      pagination.next     shouldBe Some(PaginationLink(href = createUrl(3)))
-      pagination.items    shouldBe Some(
+      pagination.previous mustBe Some(PaginationLink(href = createUrl(1)))
+      pagination.next     mustBe Some(PaginationLink(href = createUrl(3)))
+      pagination.items    mustBe Some(
         Seq(
           PaginationItem(href = createUrl(1), number = Some("1"), current = Some(false)),
           PaginationItem(href = createUrl(2), number = Some("2"), current = Some(true)),
@@ -50,9 +49,9 @@ class PaginationViewModelSpec extends SpecBase {
       val paginationViewModel = PaginationViewModel(currentPage, totalPages, createUrl)
       val pagination          = paginationViewModel.paginate
 
-      pagination.previous shouldBe None
-      pagination.next     shouldBe Some(PaginationLink(href = createUrl(2)))
-      pagination.items    shouldBe Some(
+      pagination.previous mustBe None
+      pagination.next     mustBe Some(PaginationLink(href = createUrl(2)))
+      pagination.items    mustBe Some(
         Seq(
           PaginationItem(href = createUrl(1), number = Some("1"), current = Some(true)),
           PaginationItem(href = createUrl(2), number = Some("2"), current = Some(false)),
@@ -68,9 +67,9 @@ class PaginationViewModelSpec extends SpecBase {
       val totalPages          = 5
       val paginationViewModel = PaginationViewModel(currentPage, totalPages, createUrl)
       val pagination          = paginationViewModel.paginate
-      pagination.previous shouldBe Some(PaginationLink(href = createUrl(4)))
-      pagination.next     shouldBe None
-      pagination.items    shouldBe Some(
+      pagination.previous mustBe Some(PaginationLink(href = createUrl(4)))
+      pagination.next     mustBe None
+      pagination.items    mustBe Some(
         Seq(
           PaginationItem(href = createUrl(1), number = Some("1"), current = Some(false)),
           PaginationItem(href = createUrl(2), number = Some("2"), current = Some(false)),
@@ -86,9 +85,9 @@ class PaginationViewModelSpec extends SpecBase {
       val totalPages          = 1
       val paginationViewModel = PaginationViewModel(currentPage, totalPages, createUrl)
       val pagination          = paginationViewModel.paginate
-      pagination.previous shouldBe None
-      pagination.next     shouldBe None
-      pagination.items    shouldBe Some(
+      pagination.previous mustBe None
+      pagination.next     mustBe None
+      pagination.items    mustBe Some(
         Seq(
           PaginationItem(href = createUrl(1), number = Some("1"), current = Some(true))
         )
@@ -100,9 +99,9 @@ class PaginationViewModelSpec extends SpecBase {
       val totalPages          = 2
       val paginationViewModel = PaginationViewModel(currentPage, totalPages, createUrl)
       val pagination          = paginationViewModel.paginate
-      pagination.previous shouldBe None
-      pagination.next     shouldBe Some(PaginationLink(href = createUrl(2)))
-      pagination.items    shouldBe Some(
+      pagination.previous mustBe None
+      pagination.next     mustBe Some(PaginationLink(href = createUrl(2)))
+      pagination.items    mustBe Some(
         Seq(
           PaginationItem(href = createUrl(1), number = Some("1"), current = Some(true)),
           PaginationItem(href = createUrl(2), number = Some("2"), current = Some(false))
@@ -115,9 +114,9 @@ class PaginationViewModelSpec extends SpecBase {
       val totalPages          = 2
       val paginationViewModel = PaginationViewModel(currentPage, totalPages, createUrl)
       val pagination          = paginationViewModel.paginate
-      pagination.previous shouldBe Some(PaginationLink(href = createUrl(1)))
-      pagination.next     shouldBe None
-      pagination.items    shouldBe Some(
+      pagination.previous mustBe Some(PaginationLink(href = createUrl(1)))
+      pagination.next     mustBe None
+      pagination.items    mustBe Some(
         Seq(
           PaginationItem(href = createUrl(1), number = Some("1"), current = Some(false)),
           PaginationItem(href = createUrl(2), number = Some("2"), current = Some(true))
