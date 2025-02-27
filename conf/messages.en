@@ -637,7 +637,7 @@ declareSpiritsTotal.para2.list2 = do not include feints remaining at the end of 
 declareSpiritsTotal.checkYourAnswersLabel = Total of all spirits
 declareSpiritsTotal.error.nonNumeric = Total volume of spirits must be a number
 declareSpiritsTotal.error.required = Enter the total volume of spirits taken in litres of pure alcohol
-declareSpiritsTotal.change.hidden = the total volume of spirits you made this quarter
+declareSpiritsTotal.change.hidden = total of all spirits
 declareSpiritsTotal.error.minimumRequired = Total volume of spirits must be more than 0.00 litres
 declareSpiritsTotal.error.maximumRequired = Total volume of spirits must be less than 1 billion litres
 declareSpiritsTotal.error.decimalPlaces = Total volume of spirits must be a number up to 2 decimal places
@@ -677,14 +677,14 @@ spiritType.other = Other spirits
 spiritType.checkYourAnswersLabel = Type of spirits
 spiritType.other.checkYourAnswersLabel = Other spirits produced
 spiritType.error.required = Select the spirits you have produced
-spiritType.change.hidden = which of these spirits you have made
+spiritType.change.hidden = type of spirits
 spiritType.hint = Select all you have produced in the past 3 months
 
 otherSpiritsProduced.title = Which other types of spirits have you produced?
 otherSpiritsProduced.heading = Which other types of spirits have you produced?
 otherSpiritsProduced.error.required = Enter the other types of spirits you have produced
 otherSpiritsProduced.error.length = Other types of spirits you have produced must be 150 characters or less
-otherSpiritsProduced.change.hidden = what other types of spirits have you produced this quarter
+otherSpiritsProduced.change.hidden = other spirits produced
 
 spiritsQuestions.checkYourAnswersLabel.card1 = Spirits you’ve produced
 spiritsQuestions.checkYourAnswersLabel.card2 = Grain ingredients you’ve used
@@ -735,7 +735,7 @@ alcoholicProductType.title = Which alcoholic product is spoilt?
 alcoholicProductType.heading = Which alcoholic product is spoilt?
 alcoholicProductType.checkYourAnswersLabel = Description
 alcoholicProductType.error.required = Select the type of alcoholic product you are declaring spoilt
-alcoholicProductType.change.hidden = Alcoholic product type
+alcoholicProductType.change.hidden = description
 alcoholicProductType.paragraph = Choose a type of alcoholic product to declare. You will be able to declare others afterwards.
 
 spoiltVolumeWithDuty.title = Tell us about your spoilt {0}
