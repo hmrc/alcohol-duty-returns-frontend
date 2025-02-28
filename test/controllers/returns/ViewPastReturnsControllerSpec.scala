@@ -24,18 +24,22 @@ import play.api.test.Helpers._
 import viewmodels.returns.ViewPastReturnsHelper
 import views.html.returns.ViewPastReturnsView
 
+import java.time.Clock
 import scala.concurrent.Future
 
 class ViewPastReturnsControllerSpec extends SpecBase {
   "ViewPastReturns Controller" - {
     "must return OK and the correct view for a GET" in {
-      val viewModelHelper                 = new ViewPastReturnsHelper(createDateTimeHelper())
+      val viewModelHelper                 = new ViewPastReturnsHelper(createDateTimeHelper(), clock)
       val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
       when(mockAlcoholDutyReturnsConnector.obligationDetails(any())(any())) thenReturn Future.successful(
         Seq(obligationDataSingleOpen, obligationDataSingleFulfilled)
       )
       val application                     = applicationBuilder(userAnswers = None)
-        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector))
+        .overrides(
+          bind[AlcoholDutyReturnsConnector].toInstance(mockAlcoholDutyReturnsConnector),
+          bind[Clock].toInstance(clock)
+        )
         .build()
       running(application) {
         val request = FakeRequest(GET, controllers.returns.routes.ViewPastReturnsController.onPageLoad.url)
@@ -53,8 +57,8 @@ class ViewPastReturnsControllerSpec extends SpecBase {
           getMessages(application)
         ).toString
       }
-
     }
+
     "must redirect to Journey Recovery for a GET on Exception" in {
       val mockAlcoholDutyReturnsConnector = mock[AlcoholDutyReturnsConnector]
       val application                     = applicationBuilder(userAnswers = None).build()

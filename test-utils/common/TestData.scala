@@ -17,6 +17,7 @@
 package common
 
 import cats.data.NonEmptySeq
+import config.Constants.ukTimeZoneStringId
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.RateType.Core
@@ -42,7 +43,7 @@ import viewmodels.{DateTimeHelper, ReturnPeriodViewModel, ReturnPeriodViewModelF
 import java.time._
 
 trait TestData extends ModelGenerators {
-  val clock              = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))
+  val clock              = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of(ukTimeZoneStringId))
   val appaId: String     = appaIdGen.sample.get
   val periodKey: String  = periodKeyGen.sample.get
   val groupId: String    = "groupid"
@@ -104,7 +105,9 @@ trait TestData extends ModelGenerators {
     returnId,
     groupId,
     internalId,
-    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct))
+    regimes = AlcoholRegimes(Set(Beer, Cider, Wine, Spirits, OtherFermentedProduct)),
+    startedTime = Instant.now(clock),
+    lastUpdated = Instant.now(clock)
   )
 
   val userAnswersWithBeer: UserAnswers                     = emptyUserAnswers.copy(
@@ -542,7 +545,7 @@ trait TestData extends ModelGenerators {
 
   val emptyHistoricPayment = HistoricPayments(2024, Seq.empty)
 
-  val currentDate    = LocalDate.now()
+  val currentDate    = LocalDate.now(clock)
   val paymentDueDate = LocalDate.of(currentDate.getYear, currentDate.getMonth, 25)
 
   val nilReturn = AdrReturnSubmission(
@@ -880,7 +883,9 @@ trait TestData extends ModelGenerators {
         "grainSpirits"
       ),
       OtherSpiritsProducedPage.toString                   -> "Other Type of Spirit"
-    )
+    ),
+    startedTime = Instant.now(clock),
+    lastUpdated = Instant.now(clock)
   )
 
   val fullReturn =
