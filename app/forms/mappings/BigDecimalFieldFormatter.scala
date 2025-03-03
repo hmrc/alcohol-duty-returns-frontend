@@ -51,9 +51,9 @@ class BigDecimalFieldFormatter(
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] = {
     val keyPrefix                = getKeyPrefix(key)
-    val mayberateBandDescription = data.get(s"$keyPrefix.$rateBandDescriptionField")
+    val maybeRateBandDescription = data.get(s"$keyPrefix.$rateBandDescriptionField")
 
-    val allArgs = mayberateBandDescription.fold(args)(_ +: args)
+    val allArgs = maybeRateBandDescription.fold(args)(_ +: args)
 
     baseFormatter
       .bind(key, data)
