@@ -20,7 +20,7 @@ import models.{AlcoholRegime, UserAnswers}
 import pages.declareDuty.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import RateBandHelper.rateBandRecap
+import RateBandDescription.toDescription
 import config.Constants.Css
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -38,7 +38,7 @@ object TellUsAboutSingleSPRRateSummary {
       Seq(
         SummaryListRowViewModel(
           key = messages("howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description"),
-          value = ValueViewModel(rateBandRecap(rateBand, Some(regime)).capitalize)
+          value = ValueViewModel(toDescription(rateBand, Some(regime)).capitalize)
         ).withCssClass(Css.summaryListRowNoBorderCssClass),
         SummaryListRowViewModel(
           key = messages("checkYourAnswersLabel.row.totalLitres"),

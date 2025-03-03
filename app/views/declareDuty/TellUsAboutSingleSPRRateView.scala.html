@@ -56,7 +56,7 @@
         @for((categoryViewModel, index) <- categories.smallProducer.zipWithIndex) {
           @govukFieldset(Fieldset(
             legend = Some(Legend(
-              content = Text(categoryViewModel.category.capitalize),
+              content = Text(categoryViewModel.description.capitalize),
               classes = Css.fieldsetLegendSCssClass
             )),
             html = HtmlFormat.fill(List(
@@ -105,16 +105,16 @@
                   key = "taxType",
                   label = LabelViewModel(Text("")),
                   errorMessageField = form(s"volumesWithRate_${index}_taxType"),
-                  value = Some(categoryViewModel.id)
+                  value = Some(categoryViewModel.taxTypeCode)
                 ).hidden
               ),
               govukInput(
                 InputViewModel(
                   field = form(s"volumesWithRate[$index]"),
-                  key = "rateBandRecap",
+                  key = "rateBandDescription",
                   label = LabelViewModel(Text("")),
-                  errorMessageField = form(s"volumes_${index}_rateBandRecap"),
-                  value = Some(categoryViewModel.rateBandRecap)
+                  errorMessageField = form(s"volumes_${index}_rateBandDescription"),
+                  value = Some(categoryViewModel.description)
                 ).hidden
               )
             ))
@@ -127,7 +127,7 @@
         @for((categoryViewModel, index) <- categories.draughtAndSmallProducer.zipWithIndex) {
           @govukFieldset(Fieldset(
             legend = Some(Legend(
-              content = Text(categoryViewModel.category.capitalize),
+              content = Text(categoryViewModel.description.capitalize),
               classes = Css.fieldsetLegendSCssClass
             )),
             html = HtmlFormat.fill(List(
@@ -176,16 +176,16 @@
                   key = "taxType",
                   label = LabelViewModel(Text("")),
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_taxType"),
-                  value = Some(categoryViewModel.id)
+                  value = Some(categoryViewModel.taxTypeCode)
                 ).hidden
               ),
               govukInput(
                 InputViewModel(
                   field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
-                  key = "rateBandRecap",
+                  key = "rateBandDescription",
                   label = LabelViewModel(Text("")),
-                  errorMessageField = form(s"volumes_${index + categories.smallProducer.size}_rateBandRecap"),
-                  value = Some(categoryViewModel.rateBandRecap)
+                  errorMessageField = form(s"volumes_${index + categories.smallProducer.size}_rateBandDescription"),
+                  value = Some(categoryViewModel.description)
                 ).hidden
               )
             ))

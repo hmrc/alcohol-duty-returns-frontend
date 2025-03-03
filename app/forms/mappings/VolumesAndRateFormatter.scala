@@ -73,8 +73,8 @@ class VolumesAndRateFormatter(
     args = Seq(regimeName)
   )
 
-  private def requiredFieldFormError(key: String, field: String, rateBandRecap: String): FormError =
-    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", Seq(rateBandRecap, regimeName))
+  private def requiredFieldFormError(key: String, field: String, rateBandDescription: String): FormError =
+    FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", Seq(rateBandDescription, regimeName))
 
   private def formatVolume(
     key: String,
@@ -101,7 +101,7 @@ class VolumesAndRateFormatter(
   private def checkValues(
     key: String,
     data: Map[String, String],
-    rateBandRecap: String
+    rateBandDescription: String
   ): Either[Seq[FormError], VolumeAndRateByTaxType] =
     formatVolume(key, data).fold(
       errors => Left(errors),
@@ -109,7 +109,7 @@ class VolumesAndRateFormatter(
         if (dutyByTaxType.totalLitres < dutyByTaxType.pureAlcohol) {
           Left(
             Seq(
-              FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, Seq(rateBandRecap, regimeName))
+              FormError(nameToId(s"$key.$pureAlcoholField"), lessOrEqualKey, Seq(rateBandDescription, regimeName))
             )
           )
         } else {
@@ -118,21 +118,21 @@ class VolumesAndRateFormatter(
     )
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], VolumeAndRateByTaxType] = {
-    val rateBandRecap     = data
+    val rateBandDescription = data
       .getOrElse(
-        s"$key.$rateBandRecapField",
+        s"$key.$rateBandDescriptionField",
         regimeName
       ) // This to support MultipleSPR for which we don't know the rateBand on view creation
-    val taxTypeResult     = validateField(taxTypeField, key, data, taxTypeFormatter, rateBandRecap)
-    val totalLitresResult = validateField(totalLitresField, key, data, volumeFormatter, rateBandRecap)
-    val pureAlcoholResult = validateField(pureAlcoholField, key, data, pureAlcoholVolumeFormatter, rateBandRecap)
-    val dutyRateResult    = validateField(dutyRateField, key, data, dutyRateFormatter, rateBandRecap)
-    val allErrors         =
+    val taxTypeResult       = validateField(taxTypeField, key, data, taxTypeFormatter, rateBandDescription)
+    val totalLitresResult   = validateField(totalLitresField, key, data, volumeFormatter, rateBandDescription)
+    val pureAlcoholResult   = validateField(pureAlcoholField, key, data, pureAlcoholVolumeFormatter, rateBandDescription)
+    val dutyRateResult      = validateField(dutyRateField, key, data, dutyRateFormatter, rateBandDescription)
+    val allErrors           =
       taxTypeResult.left.toSeq.flatten ++ totalLitresResult.left.toSeq.flatten ++ pureAlcoholResult.left.toSeq.flatten ++ dutyRateResult.left.toSeq.flatten
     if (allErrors.nonEmpty) {
       Left(allErrors)
     } else {
-      checkValues(key, data, rateBandRecap)
+      checkValues(key, data, rateBandDescription)
     }
   }
 
@@ -141,11 +141,11 @@ class VolumesAndRateFormatter(
     key: String,
     data: Map[String, String],
     formatter: Formatter[T],
-    rateBandRecap: String
+    rateBandDescription: String
   ): Either[Seq[FormError], T] =
     data.get(s"$key.$field").filter(_.nonEmpty) match {
       case Some(_) => formatter.bind(s"$key.$field", data)
-      case None    => Left(Seq(requiredFieldFormError(key, field, rateBandRecap)))
+      case None    => Left(Seq(requiredFieldFormError(key, field, rateBandDescription)))
     }
 
   override def unbind(key: String, value: VolumeAndRateByTaxType): Map[String, String] =
