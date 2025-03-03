@@ -21,7 +21,7 @@ import models.adjustment.AdjustmentEntry
 import models.CheckMode
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.declareDuty.RateBandHelper.rateBandRecap
+import viewmodels.declareDuty.RateBandDescription
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -31,7 +31,7 @@ class AdjustmentRepackagedTaxTypeSummary {
     adjustmentEntry.repackagedRateBand.map { repackagedRateBand =>
       SummaryListRowViewModel(
         key = "adjustmentRepackagedTaxType.checkYourAnswersLabel",
-        value = ValueViewModel(rateBandRecap(repackagedRateBand, None).capitalize),
+        value = ValueViewModel(RateBandDescription.toDescription(repackagedRateBand, None).capitalize),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AdjustmentRepackagedTaxTypeController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("adjustmentRepackagedTaxType.change.hidden"))

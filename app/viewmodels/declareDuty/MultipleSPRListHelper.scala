@@ -22,7 +22,7 @@ import pages.declareDuty.{MultipleSPRListPage, WhatDoYouNeedToDeclarePage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
-import RateBandHelper.rateBandRecap
+import RateBandDescription.toDescription
 import config.Constants.{Css, Format}
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
@@ -91,7 +91,7 @@ object MultipleSPRListHelper {
     messages: Messages
   ): Seq[TableRowViewModel] =
     sprList.zipWithIndex.map { case (sprEntry, index) =>
-      val rateBandDescription = rateBandRecap(sprEntry.rateBand, Some(regime))
+      val rateBandDescription = toDescription(sprEntry.rateBand, Some(regime))
       TableRowViewModel(
         cells = Seq(
           TableRow(Text(rateBandDescription.capitalize)),

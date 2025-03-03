@@ -26,7 +26,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels._
-import viewmodels.declareDuty.RateBandHelper.rateBandRecap
+import viewmodels.declareDuty.RateBandDescription
 import viewmodels.govuk.summarylist._
 
 object AdjustmentListSummaryHelper {
@@ -81,12 +81,14 @@ object AdjustmentListSummaryHelper {
         case (Spoilt, Some(spoiltRegime)) => Text(messages(spoiltRegime.regimeMessageKey).capitalize)
         case _                            =>
           Text(
-            rateBandRecap(
-              adjustmentEntry.rateBand.getOrElse(
-                throw new RuntimeException("Couldn't fetch rateBand from user answers")
-              ),
-              None
-            ).capitalize
+            RateBandDescription
+              .toDescription(
+                adjustmentEntry.rateBand.getOrElse(
+                  throw new RuntimeException("Couldn't fetch rateBand from user answers")
+                ),
+                None
+              )
+              .capitalize
           )
       }
       TableRowViewModel(

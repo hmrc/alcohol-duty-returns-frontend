@@ -20,7 +20,7 @@ import models.{AlcoholRegime, CheckMode, RateBand}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Card, CardTitle, SummaryList, SummaryListRow}
-import RateBandHelper.rateBandRecap
+import RateBandDescription.toDescription
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -66,7 +66,7 @@ class WhatDoYouNeedToDeclareSummary {
           "<ul>" +
             rateBands.toSeq
               .sortBy(_.taxTypeCode)
-              .map(rateBand => s"<li>${rateBandRecap(rateBand, Some(regime)).capitalize}</li>")
+              .map(rateBand => s"<li>${toDescription(rateBand, Some(regime)).capitalize}</li>")
               .mkString("")
             + "</ul>"
         )

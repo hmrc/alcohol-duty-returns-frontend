@@ -61,123 +61,143 @@ class HowMuchDoYouNeedToDeclareFormProviderSpec extends StringFieldBehaviours wi
 
     "fail to bind when blank answer provided" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "",
-        "volumes[0].pureAlcohol"   -> ""
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "taxType",
+        "volumes[0].totalLitres"         -> "",
+        "volumes[0].pureAlcohol"         -> ""
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_0_totalLitres", "return.journey.error.noValue.totalLitres", Seq(rateBandRecap, "")),
-        FormError("volumes_0_pureAlcohol", "return.journey.error.noValue.pureAlcohol", Seq(rateBandRecap, ""))
+        FormError("volumes_0_totalLitres", "return.journey.error.noValue.totalLitres", Seq(rateBandDescription, "")),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.noValue.pureAlcohol", Seq(rateBandDescription, ""))
       )
     }
 
     "fail to bind when values with too many decimal places are provided" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "1.112",
-        "volumes[0].pureAlcohol"   -> "1.11234"
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "taxType",
+        "volumes[0].totalLitres"         -> "1.112",
+        "volumes[0].pureAlcohol"         -> "1.11234"
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError(
           "volumes_0_totalLitres",
           s"return.journey.error.tooManyDecimalPlaces.totalLitres",
-          Seq(rateBandRecap, "")
+          Seq(rateBandDescription, "")
         ),
         FormError(
           "volumes_0_pureAlcohol",
           s"return.journey.error.tooManyDecimalPlaces.pureAlcohol",
-          Seq(rateBandRecap, "")
+          Seq(rateBandDescription, "")
         )
       )
     }
 
     "fail to bind when invalid values are provided" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "invalid",
-        "volumes[0].pureAlcohol"   -> "invalid"
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "taxType",
+        "volumes[0].totalLitres"         -> "invalid",
+        "volumes[0].pureAlcohol"         -> "invalid"
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_0_totalLitres", "return.journey.error.invalid.totalLitres", Seq(rateBandRecap, "")),
-        FormError("volumes_0_pureAlcohol", "return.journey.error.invalid.pureAlcohol", Seq(rateBandRecap, ""))
+        FormError("volumes_0_totalLitres", "return.journey.error.invalid.totalLitres", Seq(rateBandDescription, "")),
+        FormError("volumes_0_pureAlcohol", "return.journey.error.invalid.pureAlcohol", Seq(rateBandDescription, ""))
       )
     }
 
     "fail to bind when values below minimum are provided" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "0",
-        "volumes[0].pureAlcohol"   -> "0.0000"
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "taxType",
+        "volumes[0].totalLitres"         -> "0",
+        "volumes[0].pureAlcohol"         -> "0.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_0_totalLitres", "return.journey.error.minimumValue.totalLitres", Seq(rateBandRecap, "")),
-        FormError("volumes_0_pureAlcohol", "return.journey.error.minimumValue.pureAlcohol", Seq(rateBandRecap, ""))
+        FormError(
+          "volumes_0_totalLitres",
+          "return.journey.error.minimumValue.totalLitres",
+          Seq(rateBandDescription, "")
+        ),
+        FormError(
+          "volumes_0_pureAlcohol",
+          "return.journey.error.minimumValue.pureAlcohol",
+          Seq(rateBandDescription, "")
+        )
       )
     }
 
     "fail to bind when values exceed maximum are provided" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "100000000000",
-        "volumes[0].pureAlcohol"   -> "100000000000.0000"
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "taxType",
+        "volumes[0].totalLitres"         -> "100000000000",
+        "volumes[0].pureAlcohol"         -> "100000000000.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_0_totalLitres", "return.journey.error.maximumValue.totalLitres", Seq(rateBandRecap, "")),
-        FormError("volumes_0_pureAlcohol", "return.journey.error.maximumValue.pureAlcohol", Seq(rateBandRecap, ""))
+        FormError(
+          "volumes_0_totalLitres",
+          "return.journey.error.maximumValue.totalLitres",
+          Seq(rateBandDescription, "")
+        ),
+        FormError(
+          "volumes_0_pureAlcohol",
+          "return.journey.error.maximumValue.pureAlcohol",
+          Seq(rateBandDescription, "")
+        )
       )
     }
 
     "fail to bind when pure alcohol volume is higher than total litres value" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "1",
-        "volumes[0].pureAlcohol"   -> "2.0000"
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "taxType",
+        "volumes[0].totalLitres"         -> "1",
+        "volumes[0].pureAlcohol"         -> "2.0000"
       )
       form.bind(data).errors must contain allElementsOf Seq(
-        FormError("volumes_0_pureAlcohol", "return.journey.error.lessThanExpected", Seq(rateBandRecap, ""))
+        FormError("volumes_0_pureAlcohol", "return.journey.error.lessThanExpected", Seq(rateBandDescription, ""))
       )
     }
 
     "fail to bind when pure alcohol volume is empty and total litres value exceeds maximum" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "99999999999",
-        "volumes[0].pureAlcohol"   -> ""
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "taxType",
+        "volumes[0].totalLitres"         -> "99999999999",
+        "volumes[0].pureAlcohol"         -> ""
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError(
           "volumes_0_totalLitres",
           Seq("return.journey.error.maximumValue.totalLitres"),
-          Seq(rateBandRecap, "")
+          Seq(rateBandDescription, "")
         ),
-        FormError("volumes_0_pureAlcohol", Seq("return.journey.error.noValue.pureAlcohol"), Seq(rateBandRecap, ""))
+        FormError(
+          "volumes_0_pureAlcohol",
+          Seq("return.journey.error.noValue.pureAlcohol"),
+          Seq(rateBandDescription, "")
+        )
       )
     }
 
     "fail to bind with decimal places error when pure alcohol volume and total litres have more than expected decimal places and are also out of range" in {
       val data = Map(
-        "volumes[0].rateBandRecap" -> rateBandRecap,
-        "volumes[0].taxType"       -> "taxType",
-        "volumes[0].totalLitres"   -> "111111111111.234",
-        "volumes[0].pureAlcohol"   -> "-2.45356"
+        "volumes[0].rateBandDescription" -> rateBandDescription,
+        "volumes[0].taxType"             -> "taxType",
+        "volumes[0].totalLitres"         -> "111111111111.234",
+        "volumes[0].pureAlcohol"         -> "-2.45356"
       )
       form.bind(data).errors must contain allElementsOf Seq(
         FormError(
           "volumes_0_totalLitres",
           Seq("return.journey.error.tooManyDecimalPlaces.totalLitres"),
-          Seq(rateBandRecap, "")
+          Seq(rateBandDescription, "")
         ),
         FormError(
           "volumes_0_pureAlcohol",
           Seq("return.journey.error.tooManyDecimalPlaces.pureAlcohol"),
-          Seq(rateBandRecap, "")
+          Seq(rateBandDescription, "")
         )
       )
     }
