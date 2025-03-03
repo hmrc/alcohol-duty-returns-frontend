@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import viewmodels.payments.ViewPastPaymentsViewModel
 import views.html.payments.ViewPastPaymentsView
 
-import java.time.LocalDate
+import java.time.{Clock, LocalDate}
 import scala.concurrent.Future
 
 class ViewPastPaymentsControllerSpec extends SpecBase {
@@ -41,7 +41,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         override val claimARefundGformEnabled = false
       }
 
-      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig)
+      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
@@ -49,10 +49,15 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
       when(mockAlcoholDutyAccountsConnector.historicPayments(any(), any())(any())) thenReturn Future.successful(
         historicPayments
       )
-      val application                      = applicationBuilder(userAnswers = None)
-        .overrides(bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector))
-        .overrides(bind[FrontendAppConfig].toInstance(testAppConfig))
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector),
+          bind[FrontendAppConfig].toInstance(testAppConfig),
+          bind[Clock].toInstance(clock)
+        )
         .build()
+
       running(application) {
         val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
         val result  = route(application, request).value
@@ -90,7 +95,7 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         override val claimARefundGformEnabled = true
       }
 
-      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig)
+      val viewModelHelper                  = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
       val mockAlcoholDutyAccountsConnector = mock[AlcoholDutyAccountConnector]
       when(mockAlcoholDutyAccountsConnector.outstandingPayments(any())(any())) thenReturn Future.successful(
         openPaymentsData
@@ -98,9 +103,14 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
       when(mockAlcoholDutyAccountsConnector.historicPayments(any(), any())(any())) thenReturn Future.successful(
         historicPayments
       )
-      val application                      = applicationBuilder(userAnswers = None)
-        .overrides(bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector))
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[AlcoholDutyAccountConnector].toInstance(mockAlcoholDutyAccountsConnector),
+          bind[Clock].toInstance(clock)
+        )
         .build()
+
       running(application) {
         val request = FakeRequest(GET, controllers.payments.routes.ViewPastPaymentsController.onPageLoad.url)
         val result  = route(application, request).value

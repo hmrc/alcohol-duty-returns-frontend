@@ -31,7 +31,7 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   implicit val messages: Messages = getMessages(application)
 
   val invalidPeriodKeyData = obligationDataSingleFulfilled.copy(periodKey = invalidPeriodKeyGen.sample.get)
-  val today                = LocalDate.now()
+  val today                = LocalDate.now(clock)
 
   "ViewPastReturnsHelper" - {
     "must return a table with the correct head size" in new SetUp {
@@ -130,6 +130,6 @@ class ViewPastReturnsHelperSpec extends SpecBase with ScalaCheckPropertyChecks {
   }
 
   class SetUp {
-    val viewPastReturnsHelper = new ViewPastReturnsHelper(createDateTimeHelper())
+    val viewPastReturnsHelper = new ViewPastReturnsHelper(createDateTimeHelper(), clock)
   }
 }

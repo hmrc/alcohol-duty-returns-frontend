@@ -68,6 +68,8 @@ object Constants {
 
   val quarterlySpiritsMonths: Set[Month] = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
 
+  val ukTimeZoneStringId = "Europe/London"
+
   object Format {
     val numeric = "numeric"
   }
