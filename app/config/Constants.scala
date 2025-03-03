@@ -173,5 +173,7 @@ object Constants {
 
     val formGroupCssClass      = "govuk-form-group"
     val formGroupErrorCssClass = "govuk-form-group--error"
+
+    val errorMessageCssClass = "govuk-error-message"
   }
 }
