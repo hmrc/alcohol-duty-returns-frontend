@@ -57,8 +57,8 @@ case class UserAnswers(
   internalId: String,
   regimes: AlcoholRegimes,
   data: JsObject = Json.obj(),
-  startedTime: Instant = Instant.now,
-  lastUpdated: Instant = Instant.now,
+  startedTime: Instant,
+  lastUpdated: Instant,
   validUntil: Option[Instant] = None
 ) {
 
