@@ -20,6 +20,8 @@ import config.Constants.pastPaymentsSessionKey
 import config.FrontendAppConfig
 import connectors.AlcoholDutyAccountConnector
 import controllers.actions.IdentifyWithEnrolmentAction
+import models.CreditAvailablePayment
+import models.TransactionType.RPI
 import models.payments.OutstandingPayments
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -32,6 +34,7 @@ import views.html.payments.ViewPastPaymentsView
 import java.time.{LocalDate, Year}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
+
 class ViewPastPaymentsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
@@ -50,17 +53,22 @@ class ViewPastPaymentsController @Inject() (
     val outstandingPaymentsFuture =
       alcoholDutyAccountConnector.outstandingPayments(appaId).map { outstandingPaymentsData =>
         val sortedOutstandingPaymentsData =
-          outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          outstandingPaymentsData.outstandingPayments
+            .filter(!_.nothingToPay)
+            .sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         val updatedSession                =
           request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
-        val outstandingPaymentsTable =
+        val outstandingPaymentsTable                             =
           viewPastPaymentsModel.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
-        val unallocatedPaymentsTable = viewPastPaymentsModel
-          .getUnallocatedPaymentsTable(outstandingPaymentsData.unallocatedPayments)
+        val creditAvailablePayments: Seq[CreditAvailablePayment] = outstandingPaymentsData.outstandingPayments
+          .flatMap(_.toCreditAvailablePayment) ++ outstandingPaymentsData.unallocatedPayments
+          .map(_.toCreditAvailablePayment)
+        val creditAvailableTable                                 = viewPastPaymentsModel
+          .getCreditAvailableTable(creditAvailablePayments)
 
         OutstandingPayments(
           outstandingPaymentsTable,
-          unallocatedPaymentsTable,
+          creditAvailableTable,
           outstandingPaymentsData.totalOpenPaymentsAmount,
           updatedSession
         )

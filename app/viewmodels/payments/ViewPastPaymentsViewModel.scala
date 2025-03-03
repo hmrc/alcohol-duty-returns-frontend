@@ -20,14 +20,14 @@ import config.Constants.Css
 import config.FrontendAppConfig
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
 import models.TransactionType.RPI
-import models.{HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType, UnallocatedPayment}
+import models.{CreditAvailablePayment, HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType}
 import play.api.Logging
 import play.api.i18n.Messages
+import play.api.mvc.Call
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, HtmlContent, TableRow, Text}
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import viewmodels._
-import play.api.mvc.Call
 
 import java.time.{LocalDate, YearMonth}
 import javax.inject.Inject
@@ -53,11 +53,11 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
       HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.dueDate"))),
       HeadCell(content = Text(messages("viewPastPayments.description"))),
       HeadCell(
-        content = Text(messages("viewPastPayments.outstandingPayments.remainingAmount")),
+        content = Text(messages("viewPastPayments.amount")),
         classes = Css.textAlignRightCssClass
       ),
-      HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.status"))),
-      HeadCell(content = Text(messages("viewPastPayments.outstandingPayments.action")))
+      HeadCell(content = Text(messages("viewPastPayments.status"))),
+      HeadCell(content = Text(messages("viewPastPayments.action")))
     )
 
   private def getOutstandingPaymentsDataTableRows(
@@ -88,14 +88,14 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
       )
     }
 
-  def getUnallocatedPaymentsTable(
-    unallocatedPaymentsData: Seq[UnallocatedPayment]
+  def getCreditAvailableTable(
+    creditAvailableData: Seq[CreditAvailablePayment]
   )(implicit messages: Messages): TableViewModel = {
-    val sortedUnallocatedPaymentsData = unallocatedPaymentsData.sortBy(_.paymentDate)(Ordering[LocalDate].reverse)
-    if (sortedUnallocatedPaymentsData.nonEmpty) {
+    val sortedCreditAvailableData = creditAvailableData.sortBy(_.paymentDate)(Ordering[LocalDate].reverse)
+    if (sortedCreditAvailableData.nonEmpty) {
       TableViewModel(
-        head = getUnallocatedPaymentsHeader("unallocated", frontendAppConfig.claimARefundGformEnabled),
-        rows = getUnallocatedPaymentsDataTableRows(sortedUnallocatedPaymentsData),
+        head = getCreditAvailableHeader("credit", frontendAppConfig.claimARefundGformEnabled),
+        rows = getCreditAvailableTableRows(sortedCreditAvailableData),
         total = None
       )
     } else {
@@ -103,21 +103,23 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
     }
   }
 
-  private def getUnallocatedPaymentsHeader(paymentType: String, claimARefundGformEnabled: Boolean)(implicit
+  private def getCreditAvailableHeader(paymentType: String, claimARefundGformEnabled: Boolean)(implicit
     messages: Messages
   ): Seq[HeadCell] =
     if (claimARefundGformEnabled) {
       Seq(
         HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
         HeadCell(content = Text(messages("viewPastPayments.description"))),
-        HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Css.textAlignRightCssClass),
+        HeadCell(content = Text(messages("viewPastPayments.amount")), classes = Css.textAlignRightCssClass),
+        HeadCell(content = Text(messages("viewPastPayments.status"))),
         HeadCell(content = Text(messages("viewPastPayments.action")))
       )
     } else {
       Seq(
         HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
         HeadCell(content = Text(messages("viewPastPayments.description"))),
-        HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Css.textAlignRightCssClass)
+        HeadCell(content = Text(messages("viewPastPayments.amount")), classes = Css.textAlignRightCssClass),
+        HeadCell(content = Text(messages("viewPastPayments.status")))
       )
     }
 
@@ -125,38 +127,57 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
     Seq(
       HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
       HeadCell(content = Text(messages("viewPastPayments.description"))),
-      HeadCell(content = Text(messages("viewPastPayments.totalAmount")), classes = Css.textAlignRightCssClass)
+      HeadCell(content = Text(messages("viewPastPayments.amount")), classes = Css.textAlignRightCssClass)
     )
 
-  private def getUnallocatedPaymentsDataTableRows(
-    unallocatedPaymentsData: Seq[UnallocatedPayment]
-  )(implicit messages: Messages): Seq[TableRowViewModel] =
-    unallocatedPaymentsData.map { unallocatedPaymentData =>
+  private def getCreditAvailableTableRows(
+    creditAvailableData: Seq[CreditAvailablePayment]
+  )(implicit messages: Messages): Seq[TableRowViewModel] = {
+    val statusTag = createStatusTag(NothingToPay)
+    creditAvailableData.map { creditAvailablePayment =>
       if (frontendAppConfig.claimARefundGformEnabled) {
         TableRowViewModel(
           cells = Seq(
-            TableRow(content = Text(formatDateYearMonth(unallocatedPaymentData.paymentDate))),
-            TableRow(content = Text(messages("viewPastPayments.unallocatedPayments.description"))),
+            TableRow(content = Text(formatDateYearMonth(creditAvailablePayment.paymentDate))),
+            TableRow(content =
+              HtmlContent(
+                formatCreditAvailableDescription(
+                  creditAvailablePayment.transactionType,
+                  creditAvailablePayment.chargeReference,
+                  creditAvailablePayment.amount
+                )
+              )
+            ),
             TableRow(
-              content = Text(Money.format(unallocatedPaymentData.unallocatedAmount)),
+              content = Text(Money.format(creditAvailablePayment.amount)),
               classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
-            )
+            ),
+            TableRow(content = HtmlContent(statusTag))
           ),
-          actions = getActionUnallocatedPayments(unallocatedPaymentData.unallocatedAmount.abs.toString)
+          actions = getClaimRefundAction(creditAvailablePayment.amount.abs.toString)
         )
       } else {
         TableRowViewModel(
           cells = Seq(
-            TableRow(content = Text(formatDateYearMonth(unallocatedPaymentData.paymentDate))),
-            TableRow(content = Text(messages("viewPastPayments.unallocatedPayments.description"))),
+            TableRow(content = Text(formatDateYearMonth(creditAvailablePayment.paymentDate))),
+            TableRow(content =
+              HtmlContent(
+                formatCreditAvailableDescription(
+                  creditAvailablePayment.transactionType,
+                  creditAvailablePayment.chargeReference,
+                  creditAvailablePayment.amount
+                )
+              )
+            ),
             TableRow(
-              content = Text(Money.format(unallocatedPaymentData.unallocatedAmount)),
+              content = Text(Money.format(creditAvailablePayment.amount)),
               classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
             )
           )
         )
       }
     }
+  }
 
   def getHistoricPaymentsTable(
     historicPaymentsData: Seq[HistoricPayment]
@@ -197,7 +218,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
       )
     }
 
-  private def getActionUnallocatedPayments(
+  private def getClaimRefundAction(
     amount: String
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     Seq(
@@ -244,14 +265,37 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
   ): Html = {
     val (description, reference) = (remainingAmount, chargeReference, transactionType) match {
       case (_, Some(chargeReference), transactionType) if transactionType == RPI =>
+        logger.warn("Refund payment interest charge recorded under outstanding payments")
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (remainingAmount, Some(chargeReference), _) if remainingAmount < 0    =>
+        logger.warn("Credit recorded under outstanding payments")
         (messages("viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, Some(chargeReference), _)                                         =>
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, None, _)                                                          =>
         logger.warn("Couldn't fetch chargeReference for outstanding payment")
         (messages(s"viewPastPayments.$transactionType.description"), "")
+    }
+    Html(s"$description<br>$reference")
+  }
+
+  private def formatCreditAvailableDescription(
+    transactionType: Option[TransactionType],
+    chargeReference: Option[String],
+    remainingAmount: BigDecimal
+  )(implicit
+    messages: Messages
+  ): Html = {
+    val (description, reference) = (remainingAmount, chargeReference, transactionType) match {
+      case (_, Some(chargeReference), Some(transactionType)) if transactionType == RPI =>
+        (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
+      case (remainingAmount, Some(chargeReference), Some(_)) if remainingAmount < 0    =>
+        (messages("viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
+      case (_, None, None)                                                             =>
+        (messages(s"viewPastPayments.unallocatedPayments.description"), "")
+      case (_, _, _)                                                                   =>
+        logger.warn("Unexpected chargeReference/transactionType for credit available payment")
+        (messages(s"viewPastPayments.unallocatedPayments.description"), "")
     }
     Html(s"$description<br>$reference")
   }

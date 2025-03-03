@@ -33,7 +33,7 @@
 )
 
 
-@(outstandingPaymentsTable: TableViewModel, unallocatedPaymentsTable: TableViewModel, dutyBalance: BigDecimal, historicPaymentsTable: TableViewModel, year: Int, claimARefundGformEnabled: Boolean)(implicit request: Request[_], messages: Messages)
+@(outstandingPaymentsTable: TableViewModel, creditAvailableTable: TableViewModel, dutyBalance: BigDecimal, historicPaymentsTable: TableViewModel, year: Int, claimARefundGformEnabled: Boolean)(implicit request: Request[_], messages: Messages)
 
     @layout(pageTitle = titleNoForm(messages("viewPastPayments.title")), fullWidth = true) {
 
@@ -48,14 +48,22 @@
                     Css.headingLCssClass
                 }>@messages("viewPastPayments.duty.value", Money.format(dutyBalance))</span>
             </p>
-            @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
+            @paragraph(messages("viewPastPayments.paymentsUpdate.paragraph"))
         }
         @if(dutyBalance < 0) {
+            <p class=@{
+                Css.headingMCssClass
+            }>@messages("viewPastPayments.youHave")
+                <br>
+                <span class=@{
+                    Css.headingLCssClass
+                }>@messages("viewPastPayments.negative.duty.value", Money.format(-dutyBalance))</span>
+            </p>
             @paragraph(messages("viewPastPayments.credit.paragraph"))
-            @paragraph(messages("viewPastPayments.outstandingPayments.paragraph"))
+            @paragraph(messages("viewPastPayments.paymentsUpdate.paragraph"))
         }
         @if(dutyBalance == 0) {
-            @paragraph(messages("viewPastPayments.zeroBalance.paragraph"), Css.headingLCssClass)
+            @paragraph(messages("viewPastPayments.paymentsUpdate.paragraph"))
         }
 
         @if(outstandingPaymentsTable.rows.nonEmpty) {
@@ -80,13 +88,13 @@
             )
         }
 
-        @if(unallocatedPaymentsTable.rows.nonEmpty) {
+        @if(creditAvailableTable.rows.nonEmpty) {
             @if(claimARefundGformEnabled) {
                 @govukTable(Table(
-                    caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
+                    caption = Some(messages("viewPastPayments.creditAvailable.caption")),
                     captionClasses = Css.tableCaptionMCssClass,
-                    head = Some(unallocatedPaymentsTable.head),
-                    rows = unallocatedPaymentsTable.rows.map(row => {
+                    head = Some(creditAvailableTable.head),
+                    rows = creditAvailableTable.rows.map(row => {
                         val actions = TableRow(content = HtmlContent(tableRowActionList(
                             id = "unallocatedPaymentsId",
                             actions = row.actions.map(action => tableRowAction(
@@ -101,13 +109,13 @@
                 ))
             } else {
                 @govukTable(Table(
-                    caption = Some(messages("viewPastPayments.unallocatedPayments.caption")),
+                    caption = Some(messages("viewPastPayments.creditAvailable.caption")),
                     captionClasses = Css.tableCaptionMCssClass,
-                    head = Some(unallocatedPaymentsTable.head),
-                    rows = unallocatedPaymentsTable.rows.map(_.cells),
+                    head = Some(creditAvailableTable.head),
+                    rows = creditAvailableTable.rows.map(_.cells),
                 ))
             }
-            @paragraph(messages("viewPastPayments.unallocatedPayments.paragraph"), Css.paddingBottomCssClass)
+            @paragraph(messages("viewPastPayments.creditAvailable.paragraph"), Css.paddingBottomCssClass)
         }
 
         @if(historicPaymentsTable.rows.nonEmpty) {
