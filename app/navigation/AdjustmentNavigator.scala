@@ -52,53 +52,55 @@ class AdjustmentNavigator @Inject() () {
       _ => routes.TaskListController.onPageLoad
   }
 
-  private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
+  private val checkRouteMap: Page => UserAnswers => Option[Boolean] => Call = {
     case pages.adjustment.DeclareAdjustmentQuestionPage             =>
       userAnswers =>
-        hasChanged =>
-          if (hasChanged) declareAdjustmentQuestionRoute(userAnswers)
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false)) declareAdjustmentQuestionRoute(userAnswers)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentTypePage                        =>
       userAnswers =>
-        hasChanged =>
-          if (hasChanged) adjustmentTypeRoute(userAnswers, CheckMode)
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false)) adjustmentTypeRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AlcoholicProductTypePage                  =>
       _ =>
-        hasChanged =>
-          if (hasChanged) controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false))
+            controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.WhenDidYouPayDutyPage                     =>
       _ =>
-        hasChanged =>
-          if (hasChanged) controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false))
+            controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentTaxTypePage                     =>
       userAnswers =>
-        hasChanged =>
-          if (hasChanged) adjustmentTaxTypePageRoute(userAnswers, CheckMode)
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false)) adjustmentTaxTypePageRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.SpoiltVolumeWithDutyPage                  =>
       _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumePage                      =>
       userAnswers =>
-        hasChanged =>
-          if (hasChanged) adjustmentVolumePageRoute(userAnswers, CheckMode)
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false)) adjustmentVolumePageRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentVolumeWithSPRPage               =>
       userAnswers =>
-        hasChanged =>
-          if (hasChanged) adjustmentVolumePageRoute(userAnswers, CheckMode)
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false)) adjustmentVolumePageRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentRepackagedTaxTypePage           =>
       userAnswers =>
-        hasChanged =>
-          if (hasChanged) repackagedTaxTypeRoute(userAnswers, CheckMode)
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false)) repackagedTaxTypeRoute(userAnswers, CheckMode)
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage =>
       _ =>
-        hasChanged =>
-          if (hasChanged) controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
+        hasAnswerChanged =>
+          if (hasAnswerChanged.getOrElse(false)) controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
           else controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     case _                                                          => _ => _ => controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
   }
@@ -152,12 +154,13 @@ class AdjustmentNavigator @Inject() () {
     }
   }
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean = true): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
-    case CheckMode  =>
-      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
-  }
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Option[Boolean] = None): Call =
+    mode match {
+      case NormalMode =>
+        normalRoutes(page)(userAnswers)
+      case CheckMode  =>
+        checkRouteMap(page)(userAnswers)(hasAnswerChanged)
+    }
 
   private def adjustmentListPageRoute(answers: UserAnswers): Call =
     answers.get(pages.adjustment.AdjustmentListPage) match {

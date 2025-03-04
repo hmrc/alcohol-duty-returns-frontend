@@ -166,9 +166,9 @@ class AdjustmentTaxTypeController @Inject() (
   ): Future[Option[RateBand]] =
     alcoholDutyCalculatorConnector.rateBand(taxTypeCode, period)
 
-  def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
+  def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Option[Boolean]) =
     adjustmentEntry.rateBand.map(_.taxTypeCode) match {
-      case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, false)
+      case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, Some(false))
       case _                                                             =>
         (
           adjustmentEntry.copy(
@@ -181,7 +181,7 @@ class AdjustmentTaxTypeController @Inject() (
             repackagedSprDutyRate = None,
             newDuty = None
           ),
-          true
+          Some(true)
         )
     }
 }

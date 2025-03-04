@@ -98,9 +98,9 @@ class SpoiltAlcoholicProductTypeController @Inject() (
   def updateAlcoholicProductType(
     adjustmentEntry: AdjustmentEntry,
     currentValue: AlcoholRegime
-  ): (AdjustmentEntry, Boolean) =
+  ): (AdjustmentEntry, Option[Boolean]) =
     adjustmentEntry.spoiltRegime match {
-      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, Some(false))
       case _                                                    =>
         (
           adjustmentEntry.copy(
@@ -113,7 +113,7 @@ class SpoiltAlcoholicProductTypeController @Inject() (
             repackagedSprDutyRate = None,
             newDuty = None
           ),
-          true
+          Some(true)
         )
     }
 }

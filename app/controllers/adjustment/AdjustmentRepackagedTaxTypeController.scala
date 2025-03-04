@@ -150,9 +150,9 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
-  def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Boolean) =
+  def updateTaxCode(adjustmentEntry: AdjustmentEntry, currentValue: Int): (AdjustmentEntry, Option[Boolean]) =
     adjustmentEntry.repackagedRateBand.map(_.taxTypeCode) match {
-      case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, false)
+      case Some(existingValue) if currentValue.toString == existingValue => (adjustmentEntry, Some(false))
       case _                                                             =>
         (
           adjustmentEntry.copy(
@@ -161,7 +161,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
             repackagedSprDutyRate = None,
             newDuty = None
           ),
-          true
+          Some(true)
         )
     }
 

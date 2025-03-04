@@ -165,11 +165,14 @@ class AdjustmentVolumeController @Inject() (
         Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 
-  def updateVolume(adjustmentEntry: AdjustmentEntry, currentValue: AdjustmentVolume): (AdjustmentEntry, Boolean) =
+  def updateVolume(
+    adjustmentEntry: AdjustmentEntry,
+    currentValue: AdjustmentVolume
+  ): (AdjustmentEntry, Option[Boolean]) =
     (adjustmentEntry.totalLitresVolume, adjustmentEntry.pureAlcoholVolume) match {
       case (Some(existingTotalLitres), Some(existingPureAlcohol))
           if currentValue.totalLitresVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol =>
-        (adjustmentEntry, false)
+        (adjustmentEntry, Some(false))
       case _ =>
         (
           adjustmentEntry.copy(
@@ -180,7 +183,7 @@ class AdjustmentVolumeController @Inject() (
             newDuty = None,
             sprDutyRate = None
           ),
-          true
+          Some(true)
         )
     }
 

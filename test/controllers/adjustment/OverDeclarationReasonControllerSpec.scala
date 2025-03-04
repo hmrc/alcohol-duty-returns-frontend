@@ -89,7 +89,7 @@ class OverDeclarationReasonControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, true)),
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, None)),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()

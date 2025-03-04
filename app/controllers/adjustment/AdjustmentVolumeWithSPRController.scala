@@ -170,11 +170,11 @@ class AdjustmentVolumeWithSPRController @Inject() (
   def updateVolume(
     adjustmentEntry: AdjustmentEntry,
     currentValue: AdjustmentVolumeWithSPR
-  ): (AdjustmentEntry, Boolean) =
+  ): (AdjustmentEntry, Option[Boolean]) =
     (adjustmentEntry.totalLitresVolume, adjustmentEntry.pureAlcoholVolume, adjustmentEntry.sprDutyRate) match {
       case (Some(existingTotalLitres), Some(existingPureAlcohol), Some(existingSprDutyRate))
           if currentValue.totalLitresVolume == existingTotalLitres && currentValue.pureAlcoholVolume == existingPureAlcohol && currentValue.sprDutyRate == existingSprDutyRate =>
-        (adjustmentEntry, false)
+        (adjustmentEntry, Some(false))
       case _ =>
         (
           adjustmentEntry.copy(
@@ -184,7 +184,7 @@ class AdjustmentVolumeWithSPRController @Inject() (
             repackagedSprDutyRate = None,
             newDuty = None
           ),
-          true
+          Some(true)
         )
     }
 

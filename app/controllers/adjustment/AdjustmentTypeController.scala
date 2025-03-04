@@ -87,9 +87,12 @@ class AdjustmentTypeController @Inject() (
         )
   }
 
-  def updateAdjustmentType(adjustmentEntry: AdjustmentEntry, currentValue: AdjustmentType): (AdjustmentEntry, Boolean) =
+  def updateAdjustmentType(
+    adjustmentEntry: AdjustmentEntry,
+    currentValue: AdjustmentType
+  ): (AdjustmentEntry, Option[Boolean]) =
     adjustmentEntry.adjustmentType match {
-      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, Some(false))
       case _                                                    =>
         (
           adjustmentEntry.copy(
@@ -105,7 +108,7 @@ class AdjustmentTypeController @Inject() (
             repackagedSprDutyRate = None,
             newDuty = None
           ),
-          true
+          Some(true)
         )
     }
 
