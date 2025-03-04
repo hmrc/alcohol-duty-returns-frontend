@@ -59,18 +59,20 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
         val view                          = application.injector.instanceOf[ViewPastPaymentsView]
         val sortedOutstandingPaymentsData =
-          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          openPaymentsData.paymentsForOutstandingTable.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         val outstandingPaymentsTable      =
           viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
-        val unallocatedPaymentsTable      =
-          viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
+        val creditAvailableTable          =
+          viewModelHelper.getCreditAvailableTable(openPaymentsData.paymentsForCreditAvailableTable)(
+            getMessages(application)
+          )
         val historicPaymentsTable         =
           viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           outstandingPaymentsTable,
-          unallocatedPaymentsTable,
+          creditAvailableTable,
           openPaymentsData.totalOpenPaymentsAmount,
           historicPaymentsTable,
           2024,
@@ -107,17 +109,19 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
         val view                          = application.injector.instanceOf[ViewPastPaymentsView]
         val sortedOutstandingPaymentsData =
-          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          openPaymentsData.paymentsForOutstandingTable.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         val outstandingPaymentsTable      =
           viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
-        val unallocatedPaymentsTable      =
-          viewModelHelper.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)(getMessages(application))
+        val creditAvailableTable          =
+          viewModelHelper.getCreditAvailableTable(openPaymentsData.paymentsForCreditAvailableTable)(
+            getMessages(application)
+          )
         val historicPaymentsTable         =
           viewModelHelper.getHistoricPaymentsTable(historicPayments.payments)(getMessages(application))
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           outstandingPaymentsTable,
-          unallocatedPaymentsTable,
+          creditAvailableTable,
           openPaymentsData.totalOpenPaymentsAmount,
           historicPaymentsTable,
           2024,

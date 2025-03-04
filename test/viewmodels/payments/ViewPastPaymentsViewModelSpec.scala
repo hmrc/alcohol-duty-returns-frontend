@@ -53,30 +53,27 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
   val viewPastPaymentsViewModelToggleOn = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfigToggleOn)
 
   "ViewPastPaymentsViewModel" - {
-    "when the gform feature toggle is disabled" - {
+    val paymentsDue             = openPaymentsData.paymentsForOutstandingTable
+    val creditAvailablePayments = openPaymentsData.paymentsForCreditAvailableTable
 
-      "must NOT present the link to the Gform for an outstanding overpaid payment" in {
-        val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
+    "when the claim refund gform feature toggle is disabled" - {
 
-        table.rows.head.actions.headOption mustBe None
-      }
-
-      "must NOT present the link to the Gform for an unallocated payment" in {
-        val table = viewPastPaymentsViewModel.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)
+      "must NOT present the link to the Gform for a payment with credit available" in {
+        val table = viewPastPaymentsViewModel.getCreditAvailableTable(creditAvailablePayments)
 
         table.rows.head.actions.headOption mustBe None
       }
 
       "must return a table with the correct number of rows and head for outstanding payments" in {
-        val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
+        val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(paymentsDue)
         table.head.size mustBe 5
-        table.rows.size mustBe openPaymentsData.outstandingPayments.size
+        table.rows.size mustBe paymentsDue.size
       }
 
-      "must return a table with the correct number of rows and head for unallocated payments" in {
-        val table = viewPastPaymentsViewModel.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)
-        table.head.size mustBe 3
-        table.rows.size mustBe openPaymentsData.unallocatedPayments.size
+      "must return a table with the correct number of rows and head for payments with credit available" in {
+        val table = viewPastPaymentsViewModel.getCreditAvailableTable(creditAvailablePayments)
+        table.head.size mustBe 4
+        table.rows.size mustBe creditAvailablePayments.size
       }
 
       "must return a table with the correct number of rows and head for historic payments" in {
@@ -92,11 +89,13 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         table.rows.size mustBe emptyOutstandingPaymentData.outstandingPayments.size
       }
 
-      "must not return a table when unallocated payments are not present" in {
+      "must not return a table when payments with credit available are not present" in {
         val table =
-          viewPastPaymentsViewModel.getUnallocatedPaymentsTable(openPaymentsWithoutUnallocatedData.unallocatedPayments)
+          viewPastPaymentsViewModel.getCreditAvailableTable(
+            emptyOutstandingPaymentData.paymentsForCreditAvailableTable
+          )
         table.head.size mustBe 0
-        table.rows.size mustBe openPaymentsWithoutUnallocatedData.unallocatedPayments.size
+        table.rows.size mustBe emptyOutstandingPaymentData.paymentsForCreditAvailableTable.size
       }
 
       "must not return a table when historic payments are not present" in {
@@ -166,25 +165,25 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
 
       "must return a sorted table by due date in descending order for outstanding payments" in {
         val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(
-          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          paymentsDue.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         )
-        table.rows.size                                                 mustBe openPaymentsData.outstandingPayments.size
+        table.rows.size                                                 mustBe paymentsDue.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
           Text("25 June 9999").asHtml.toString(),
           Text("25 July 9998").asHtml.toString(),
           Text("25 August 9997").asHtml.toString(),
-          Text("25 October 2024").asHtml.toString(),
-          Text("25 July 2024").asHtml.toString(),
           Text("25 September 2022").asHtml.toString()
         )
       }
 
       "must return a sorted table by due date in descending order for unallocated payments" in {
-        val table = viewPastPaymentsViewModel.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)
-        table.rows.size                                                 mustBe openPaymentsData.unallocatedPayments.size
+        val table = viewPastPaymentsViewModel.getCreditAvailableTable(creditAvailablePayments)
+        table.rows.size                                                 mustBe creditAvailablePayments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
+          Text("25 October 2024").asHtml.toString(),
           Text("25 September 2024").asHtml.toString(),
           Text("25 August 2024").asHtml.toString(),
+          Text("25 July 2024").asHtml.toString(),
           Text("25 July 2024").asHtml.toString()
         )
       }
@@ -201,32 +200,30 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       }
     }
 
-    "when the gform feature toggle is enabled" - {
+    "when the claim refund gform feature toggle is enabled" - {
 
-      "must present the link to the Gform for an outstanding overpaid payment" in {
-        val table            = viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
-        val gformExpectedUrl =
+      "must present the link to the Gform for a payment with credit available" in {
+        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(creditAvailablePayments)
+
+        val gformExpectedUrl1 =
           "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=4773.34"
-        table.rows.head.actions.head.href.url mustBe gformExpectedUrl
-      }
-
-      "must present the link to the Gform for an unallocated payment" in {
-        val table            = viewPastPaymentsViewModelToggleOn.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)
-        val gformExpectedUrl =
+        val gformExpectedUrl2 =
           "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=123"
-        table.rows.head.actions.head.href.url mustBe gformExpectedUrl
+
+        table.rows.head.actions.head.href.url mustBe gformExpectedUrl1
+        table.rows(1).actions.head.href.url   mustBe gformExpectedUrl2
       }
 
       "must return a table with the correct number of rows and head for outstanding payments" in {
-        val table = viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
+        val table = viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(paymentsDue)
         table.head.size mustBe 5
-        table.rows.size mustBe openPaymentsData.outstandingPayments.size
+        table.rows.size mustBe paymentsDue.size
       }
 
-      "must return a table with the correct number of rows and head for unallocated payments" in {
-        val table = viewPastPaymentsViewModelToggleOn.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)
-        table.head.size mustBe 4
-        table.rows.size mustBe openPaymentsData.unallocatedPayments.size
+      "must return a table with the correct number of rows and head for payments with credit available" in {
+        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(creditAvailablePayments)
+        table.head.size mustBe 5
+        table.rows.size mustBe creditAvailablePayments.size
       }
 
       "must return a table with the correct number of rows and head for historic payments" in {
@@ -242,13 +239,13 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         table.rows.size mustBe emptyOutstandingPaymentData.outstandingPayments.size
       }
 
-      "must not return a table when unallocated payments are not present" in {
+      "must not return a table when payments with credit available are not present" in {
         val table =
-          viewPastPaymentsViewModelToggleOn.getUnallocatedPaymentsTable(
-            openPaymentsWithoutUnallocatedData.unallocatedPayments
+          viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(
+            emptyOutstandingPaymentData.paymentsForCreditAvailableTable
           )
         table.head.size mustBe 0
-        table.rows.size mustBe openPaymentsWithoutUnallocatedData.unallocatedPayments.size
+        table.rows.size mustBe emptyOutstandingPaymentData.paymentsForCreditAvailableTable.size
       }
 
       "must not return a table when historic payments are not present" in {
@@ -318,25 +315,25 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
 
       "must return a sorted table by due date in descending order for outstanding payments" in {
         val table = viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(
-          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          paymentsDue.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         )
-        table.rows.size                                                 mustBe openPaymentsData.outstandingPayments.size
+        table.rows.size                                                 mustBe paymentsDue.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
           Text("25 June 9999").asHtml.toString(),
           Text("25 July 9998").asHtml.toString(),
           Text("25 August 9997").asHtml.toString(),
-          Text("25 October 2024").asHtml.toString(),
-          Text("25 July 2024").asHtml.toString(),
           Text("25 September 2022").asHtml.toString()
         )
       }
 
-      "must return a sorted table by due date in descending order for unallocated payments" in {
-        val table = viewPastPaymentsViewModelToggleOn.getUnallocatedPaymentsTable(openPaymentsData.unallocatedPayments)
-        table.rows.size                                                 mustBe openPaymentsData.unallocatedPayments.size
+      "must return a sorted table by due date in descending order for payments with credit available" in {
+        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(creditAvailablePayments)
+        table.rows.size                                                 mustBe creditAvailablePayments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
+          Text("25 October 2024").asHtml.toString(),
           Text("25 September 2024").asHtml.toString(),
           Text("25 August 2024").asHtml.toString(),
+          Text("25 July 2024").asHtml.toString(),
           Text("25 July 2024").asHtml.toString()
         )
       }

@@ -154,7 +154,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
             ),
             TableRow(content = HtmlContent(statusTag))
           ),
-          actions = getClaimRefundAction(creditAvailablePayment.amount.abs.toString)
+          actions = getRequestRepaymentAction(creditAvailablePayment.amount.abs.toString)
         )
       } else {
         TableRowViewModel(
@@ -218,12 +218,12 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
       )
     }
 
-  private def getClaimRefundAction(
+  private def getRequestRepaymentAction(
     amount: String
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
     Seq(
       TableRowActionViewModel(
-        label = messages("viewPastPayments.claimRefund.linkText"),
+        label = messages("viewPastPayments.requestRepayment.linkText"),
         href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount))
       )
     )
@@ -237,7 +237,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
       if (frontendAppConfig.claimARefundGformEnabled) {
         Seq(
           TableRowActionViewModel(
-            label = messages("viewPastPayments.claimRefund.linkText"),
+            label = messages("viewPastPayments.requestRepayment.linkText"),
             href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString))
           )
         )

@@ -17,7 +17,6 @@
 package models
 
 import enumeratum.{Enum, EnumEntry, PlayEnum, PlayJsonEnum}
-import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
@@ -44,13 +43,12 @@ case class OutstandingPayment(
 ) extends OpenPayment {
   val nothingToPay: Boolean = transactionType == TransactionType.RPI || remainingAmount < 0
 
-  def toCreditAvailablePayment: Option[CreditAvailablePayment] = {
+  def toCreditAvailablePayment: Option[CreditAvailablePayment] =
     if (nothingToPay) {
       Some(CreditAvailablePayment(Some(transactionType), dueDate, chargeReference, remainingAmount))
     } else {
       None
     }
-  }
 }
 
 object OutstandingPayment {
@@ -82,7 +80,13 @@ case class OpenPayments(
   unallocatedPayments: Seq[UnallocatedPayment],
   totalUnallocatedPayments: BigDecimal,
   totalOpenPaymentsAmount: BigDecimal
-)
+) {
+  def paymentsForOutstandingTable: Seq[OutstandingPayment] =
+    outstandingPayments.filter(!_.nothingToPay)
+
+  def paymentsForCreditAvailableTable: Seq[CreditAvailablePayment] =
+    outstandingPayments.flatMap(_.toCreditAvailablePayment) ++ unallocatedPayments.map(_.toCreditAvailablePayment)
+}
 
 object OpenPayments {
   implicit val openPaymentsPaymentsFormat: OFormat[OpenPayments] = Json.format[OpenPayments]

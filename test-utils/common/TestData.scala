@@ -479,6 +479,20 @@ trait TestData extends ModelGenerators {
     BigDecimal(-2011)
   )
 
+  val creditAvailablePaymentForOutstandingCredit = CreditAvailablePayment(
+    Some(Return),
+    LocalDate.of(2024, 10, 25),
+    Some(chargeReference),
+    BigDecimal(-4773.34)
+  )
+
+  val creditAvailablePaymentForRPI = CreditAvailablePayment(
+    Some(RPI),
+    LocalDate.of(2024, 7, 25),
+    Some(chargeReference),
+    BigDecimal(-2011)
+  )
+
   val openPaymentsData = OpenPayments(
     outstandingPayments = Seq(
       outstandingCreditPayment,
