@@ -120,9 +120,9 @@ class WhenDidYouPayDutyController @Inject() (
         )
   }
 
-  def updatePeriod(adjustmentEntry: AdjustmentEntry, currentValue: YearMonth): (AdjustmentEntry, Boolean) =
+  def updatePeriod(adjustmentEntry: AdjustmentEntry, currentValue: YearMonth): (AdjustmentEntry, Option[Boolean]) =
     adjustmentEntry.period match {
-      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, Some(false))
       case _                                                    =>
         (
           adjustmentEntry.copy(
@@ -136,7 +136,7 @@ class WhenDidYouPayDutyController @Inject() (
             repackagedSprDutyRate = None,
             newDuty = None
           ),
-          true
+          Some(true)
         )
     }
 }

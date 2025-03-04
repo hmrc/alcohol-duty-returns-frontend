@@ -21,9 +21,9 @@ import pages._
 import models.{Mode, UserAnswers}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 
-class FakeAdjustmentNavigator(desiredRoute: Call, hasValueChanged: Boolean) extends AdjustmentNavigator {
+class FakeAdjustmentNavigator(desiredRoute: Call, hasValueChanged: Option[Boolean]) extends AdjustmentNavigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call = {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Option[Boolean] = None): Call = {
     hasValueChanged mustBe hasChanged
     desiredRoute
   }

@@ -112,9 +112,9 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
         )
   }
 
-  def updateSPRRate(adjustmentEntry: AdjustmentEntry, currentValue: BigDecimal): (AdjustmentEntry, Boolean) =
+  def updateSPRRate(adjustmentEntry: AdjustmentEntry, currentValue: BigDecimal): (AdjustmentEntry, Option[Boolean]) =
     adjustmentEntry.repackagedSprDutyRate match {
-      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, false)
+      case Some(existingValue) if currentValue == existingValue => (adjustmentEntry, Some(false))
       case _                                                    =>
         (
           adjustmentEntry.copy(
@@ -122,7 +122,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
             newDuty = None,
             repackagedDuty = None
           ),
-          true
+          Some(true)
         )
     }
 }
