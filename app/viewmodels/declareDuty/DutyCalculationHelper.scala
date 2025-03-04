@@ -22,7 +22,7 @@ import pages.declareDuty.WhatDoYouNeedToDeclarePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.{HeadCell, TableRow}
-import RateBandHelper.rateBandRecap
+import RateBandDescription.toDescription
 import config.Constants.Format
 import viewmodels.{TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
@@ -79,7 +79,7 @@ object DutyCalculationHelper {
   ) =
     TableRowViewModel(
       cells = Seq(
-        TableRow(Text(rateBandRecap(rateBand, Some(regime)).capitalize)),
+        TableRow(Text(toDescription(rateBand, Some(regime)).capitalize)),
         TableRow(Text(messages("site.4DP", totalByTaxType.pureAlcohol)), format = Some(Format.numeric)),
         TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyRate)), format = Some(Format.numeric)),
         TableRow(Text(messages("site.currency.2DP", totalByTaxType.dutyDue)), format = Some(Format.numeric))
@@ -88,7 +88,7 @@ object DutyCalculationHelper {
         TableRowActionViewModel(
           label = messages("site.change"),
           href = controllers.declareDuty.routes.CheckYourAnswersController.onPageLoad(regime),
-          visuallyHiddenText = Some(rateBandRecap(rateBand, Some(regime)))
+          visuallyHiddenText = Some(toDescription(rateBand, Some(regime)))
         )
       )
     )

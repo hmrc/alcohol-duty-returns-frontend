@@ -24,7 +24,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
-import viewmodels.declareDuty.RateBandHelper.rateBandRecap
+import viewmodels.declareDuty.RateBandDescription
 
 class AdjustmentTaxTypeSummary {
 
@@ -40,7 +40,7 @@ class AdjustmentTaxTypeSummary {
         adjustmentEntry.rateBand.map { rateBand =>
           SummaryListRowViewModel(
             key = label,
-            value = ValueViewModel(rateBandRecap(rateBand, None).capitalize),
+            value = ValueViewModel(RateBandDescription.toDescription(rateBand, None).capitalize),
             actions = Seq(
               ActionItemViewModel("site.change", routes.AdjustmentTaxTypeController.onPageLoad(CheckMode).url)
                 .withVisuallyHiddenText(messages(hiddenText))

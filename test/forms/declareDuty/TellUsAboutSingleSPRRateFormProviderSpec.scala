@@ -75,11 +75,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandRecap" -> "",
-            s"volumesWithRate[$index].taxType"       -> "",
-            s"volumesWithRate[$index].totalLitres"   -> "",
-            s"volumesWithRate[$index].pureAlcohol"   -> "",
-            s"volumesWithRate[$index].dutyRate"      -> ""
+            s"volumesWithRate[$index].rateBandDescription" -> "",
+            s"volumesWithRate[$index].taxType"             -> "",
+            s"volumesWithRate[$index].totalLitres"         -> "",
+            s"volumesWithRate[$index].pureAlcohol"         -> "",
+            s"volumesWithRate[$index].dutyRate"            -> ""
           )
       }.flatten.toMap
 
@@ -117,11 +117,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
-            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"   -> "invalid",
-            s"volumesWithRate[$index].pureAlcohol"   -> "invalid",
-            s"volumesWithRate[$index].dutyRate"      -> "invalid"
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"         -> "invalid",
+            s"volumesWithRate[$index].pureAlcohol"         -> "invalid",
+            s"volumesWithRate[$index].dutyRate"            -> "invalid"
           )
       }.flatten.toMap
 
@@ -154,11 +154,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
-            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"   -> "1.123",
-            s"volumesWithRate[$index].pureAlcohol"   -> "1.12345",
-            s"volumesWithRate[$index].dutyRate"      -> "1.123"
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"         -> "1.123",
+            s"volumesWithRate[$index].pureAlcohol"         -> "1.12345",
+            s"volumesWithRate[$index].dutyRate"            -> "1.123"
           )
       }.flatten.toMap
 
@@ -191,11 +191,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
-            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"   -> "100000000000",
-            s"volumesWithRate[$index].pureAlcohol"   -> "100000000000.0000",
-            s"volumesWithRate[$index].dutyRate"      -> "100000000000"
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"         -> "100000000000",
+            s"volumesWithRate[$index].pureAlcohol"         -> "100000000000.0000",
+            s"volumesWithRate[$index].dutyRate"            -> "100000000000"
           )
       }.flatten.toMap
 
@@ -228,11 +228,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
-            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"   -> "0",
-            s"volumesWithRate[$index].pureAlcohol"   -> "0.0000",
-            s"volumesWithRate[$index].dutyRate"      -> "-1"
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"         -> "0",
+            s"volumesWithRate[$index].pureAlcohol"         -> "0.0000",
+            s"volumesWithRate[$index].dutyRate"            -> "-1"
           )
       }.flatten.toMap
 
@@ -265,11 +265,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
-            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"   -> "1.1",
-            s"volumesWithRate[$index].pureAlcohol"   -> "100.1000",
-            s"volumesWithRate[$index].dutyRate"      -> "1.1"
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"         -> "1.1",
+            s"volumesWithRate[$index].pureAlcohol"         -> "100.1000",
+            s"volumesWithRate[$index].dutyRate"            -> "1.1"
           )
       }.flatten.toMap
 
@@ -292,11 +292,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
-            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"   -> "999999999999",
-            s"volumesWithRate[$index].pureAlcohol"   -> "",
-            s"volumesWithRate[$index].dutyRate"      -> "1.1abc"
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"         -> "999999999999",
+            s"volumesWithRate[$index].pureAlcohol"         -> "",
+            s"volumesWithRate[$index].dutyRate"            -> "1.1abc"
           )
       }.flatten.toMap
 
@@ -329,11 +329,11 @@ class TellUsAboutSingleSPRRateFormProviderSpec extends StringFieldBehaviours {
       val values = {
         for (index <- 0 until volumeAndRateByTaxTypes.length)
           yield Seq(
-            s"volumesWithRate[$index].rateBandRecap" -> s"rate_band_recap_$index",
-            s"volumesWithRate[$index].taxType"       -> s"tax_type_$index",
-            s"volumesWithRate[$index].totalLitres"   -> "9999999999.123",
-            s"volumesWithRate[$index].pureAlcohol"   -> "-671.12345",
-            s"volumesWithRate[$index].dutyRate"      -> "99999999999.546"
+            s"volumesWithRate[$index].rateBandDescription" -> s"rate_band_recap_$index",
+            s"volumesWithRate[$index].taxType"             -> s"tax_type_$index",
+            s"volumesWithRate[$index].totalLitres"         -> "9999999999.123",
+            s"volumesWithRate[$index].pureAlcohol"         -> "-671.12345",
+            s"volumesWithRate[$index].dutyRate"            -> "99999999999.546"
           )
       }.flatten.toMap
 
