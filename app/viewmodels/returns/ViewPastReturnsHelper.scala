@@ -27,10 +27,10 @@ import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 import viewmodels.{DateTimeHelper, TableRowActionViewModel, TableRowViewModel, TableViewModel}
 
-import java.time.{LocalDate, YearMonth}
+import java.time.{Clock, LocalDate, YearMonth}
 import javax.inject.Inject
 
-class ViewPastReturnsHelper @Inject() (dateTimeHelper: DateTimeHelper) extends Logging {
+class ViewPastReturnsHelper @Inject() (dateTimeHelper: DateTimeHelper, clock: Clock) extends Logging {
 
   def getReturnsTable(obligationData: Seq[ObligationData])(implicit messages: Messages): TableViewModel = {
     val sortedObligationData = obligationData.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
@@ -57,7 +57,7 @@ class ViewPastReturnsHelper @Inject() (dateTimeHelper: DateTimeHelper) extends L
   ): Seq[TableRowViewModel] =
     obligationData.map { obligationData =>
       val periodKey = obligationData.periodKey
-      val status    = getObligationStatus(obligationData, LocalDate.now())
+      val status    = getObligationStatus(obligationData, LocalDate.now(clock))
       val statusTag = createStatusTag(status)
       TableRowViewModel(
         cells = Seq(

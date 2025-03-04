@@ -392,7 +392,7 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
 
     "successfully submit a return and receive nil return response" in new SetUp {
       val adrReturnCreatedDetails = AdrReturnCreatedDetails(
-        processingDate = Instant.now(),
+        processingDate = Instant.now(clock),
         amount = BigDecimal(1),
         chargeReference = None,
         paymentDueDate = None

@@ -49,13 +49,13 @@ class DateTimeHelperSpec extends SpecBase {
     "format a LocalTime to the format 'hour:minuteam/pm'" in new SetUp {
       dateTimeHelper.formatHourMinuteMeridiem(
         LocalTime.now(clock)
-      ) mustBe "3:07pm"
+      ) mustBe "4:07pm"
     }
 
     // regression
     "format a LocalTime to the format 'hour:minuteam/pm' when the hour is midday" in new SetUp {
       dateTimeHelper.formatHourMinuteMeridiem(
-        LocalTime.now(clock).minusHours(3)
+        LocalTime.now(clock).minusHours(4)
       ) mustBe "12:07pm"
     }
   }

@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import java.time.LocalDate
+import java.time.{Clock, LocalDate}
 
 class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChecks {
 
@@ -40,17 +40,21 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
   }
 
   val application: Application = applicationBuilder()
-    .overrides(bind[FrontendAppConfig].toInstance(testAppConfig))
+    .overrides(
+      bind[FrontendAppConfig].toInstance(testAppConfig),
+      bind[Clock].toInstance(clock)
+    )
     .build()
 
   implicit val messages: Messages = getMessages(application)
-  val viewPastPaymentsViewModel   = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig)
+  val viewPastPaymentsViewModel   = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfig, clock)
 
   val testAppConfigToggleOn: FrontendAppConfig = new FrontendAppConfig(testConfiguration, testServicesConfig) {
     override val claimARefundGformEnabled = true
   }
 
-  val viewPastPaymentsViewModelToggleOn = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfigToggleOn)
+  val viewPastPaymentsViewModelToggleOn =
+    new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfigToggleOn, clock)
 
   "ViewPastPaymentsViewModel" - {
     "when the gform feature toggle is disabled" - {
