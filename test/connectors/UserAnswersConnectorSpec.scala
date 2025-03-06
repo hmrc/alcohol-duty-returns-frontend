@@ -25,7 +25,6 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 
-import java.time.LocalDateTime
 import scala.concurrent.Future
 
 class UserAnswersConnectorSpec extends SpecBase {
@@ -171,7 +170,6 @@ class UserAnswersConnectorSpec extends SpecBase {
     val mockConfig: FrontendAppConfig  = mock[FrontendAppConfig]
     val httpClient: HttpClientV2       = mock[HttpClientV2]
     val connector                      = new UserAnswersConnector(config = mockConfig, httpClient = httpClient)
-    val dateVal: LocalDateTime         = LocalDateTime.now
     val mockHttpResponse: HttpResponse = mock[HttpResponse]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }

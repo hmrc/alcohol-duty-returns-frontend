@@ -16,17 +16,13 @@
 
 package models
 
-import generators.ModelGenerators
-import org.scalatest.TryValues.convertTryToSuccessOrFailure
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
+import base.SpecBase
 import play.api.libs.json.{JsPath, Json}
 import queries.{Gettable, Settable}
 
-import java.time.Instant
 import scala.util.Success
 
-class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
+class UserAnswersSpec extends SpecBase {
   case object TestSeqPage extends Gettable[Seq[String]] with Settable[Seq[String]] {
     override def path: JsPath = JsPath \ toString
   }
@@ -40,11 +36,6 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
   }
 
   "UserAnswer" - {
-    val appaId: String     = appaIdGen.sample.get
-    val periodKey: String  = periodKeyGen.sample.get
-    val groupId: String    = "groupid"
-    val internalId: String = "id"
-
     val json          =
       s"""{"_id":{"appaId":"$appaId","periodKey":"$periodKey"},"groupId":"$groupId","internalId":"$internalId","regimes":["Spirits","Wine","Cider","OtherFermentedProduct","Beer"],"data":{},"startedTime":{"$$date":{"$$numberLong":"1718118467838"}},"lastUpdated":{"$$date":{"$$numberLong":"1718118467838"}}}"""
     val noRegimesJson =
@@ -52,8 +43,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
 
     "must add a value to a set for a given page and get the same value" in {
 
-      val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
+      val userAnswers = emptyUserAnswers
 
       val expectedValue = "value"
 
@@ -71,11 +61,10 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
     }
 
     "must remove a value for a given Page" in {
-      val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
-          .set(TestSeqPage, Seq("123"))
-          .success
-          .value
+      val userAnswers = emptyUserAnswers
+        .set(TestSeqPage, Seq("123"))
+        .success
+        .value
 
       val updatedUserAnswer = userAnswers.removeBySeqIndex(TestSeqPage, 0) match {
         case Success(ua) => ua
@@ -86,27 +75,11 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
     }
 
     "must serialise to json" in {
-      val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
-
-      Json
-        .toJson(
-          userAnswers.copy(
-            startedTime = Instant.ofEpochMilli(1718118467838L),
-            lastUpdated = Instant.ofEpochMilli(1718118467838L)
-          )
-        )
-        .toString() mustBe json
+      Json.toJson(emptyUserAnswers).toString() mustBe json
     }
 
     "must deserialise from json" in {
-      val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
-
-      Json.parse(json).as[UserAnswers] mustBe userAnswers.copy(
-        startedTime = Instant.ofEpochMilli(1718118467838L),
-        lastUpdated = Instant.ofEpochMilli(1718118467838L)
-      )
+      Json.parse(json).as[UserAnswers] mustBe emptyUserAnswers
     }
 
     "must throw an error if no regimes found" in {
@@ -120,11 +93,10 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       }
 
       "must get the value of an answer for a given page and index" in {
-        val userAnswers =
-          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
-            .set(TestMapPage, Map("1" -> "123", "2" -> "456", "3" -> "789"))
-            .success
-            .value
+        val userAnswers = emptyUserAnswers
+          .set(TestMapPage, Map("1" -> "123", "2" -> "456", "3" -> "789"))
+          .success
+          .value
         userAnswers.getByKey(TestMapPage, "1") mustBe Some("123")
         userAnswers.getByKey(TestMapPage, "2") mustBe Some("456")
         userAnswers.getByKey(TestMapPage, "3") mustBe Some("789")
@@ -132,8 +104,7 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       }
 
       "must set the value of an answer for a given page and index and get the same value" in {
-        val userAnswers =
-          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
+        val userAnswers = emptyUserAnswers
 
         val expectedValue = "value"
 
@@ -151,19 +122,17 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       }
 
       "must return None when value is not present" in {
-        val userAnswers =
-          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
+        val userAnswers = emptyUserAnswers
 
         val result = userAnswers.get(TestSeqPage)
         result mustBe None
       }
 
       "must add value to existing sequence" in {
-        val userAnswers =
-          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
-            .set(TestSeqPage, Seq("existingValue"))
-            .success
-            .value
+        val userAnswers = emptyUserAnswers
+          .set(TestSeqPage, Seq("existingValue"))
+          .success
+          .value
 
         val updatedUserAnswer = userAnswers.addToSeq(TestSeqPage, "newValue") match {
           case Success(value) => value
@@ -174,20 +143,18 @@ class UserAnswersSpec extends AnyFreeSpec with Matchers with ModelGenerators {
       }
 
       "must return None when no value exists at given index" in {
-        val userAnswers =
-          UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
-            .set(TestSeqPage, Seq("value1", "value2"))
-            .success
-            .value
+        val userAnswers = emptyUserAnswers
+          .set(TestSeqPage, Seq("value1", "value2"))
+          .success
+          .value
 
         val result = userAnswers.getByIndex(TestSeqPage, 2)
         result mustBe None
       }
     }
-    "must add a value to a sequence by key and append another value" in {
 
-      val userAnswers =
-        UserAnswers(ReturnId(appaId, periodKey), groupId, internalId, AlcoholRegimes(AlcoholRegime.values.toSet))
+    "must add a value to a sequence by key and append another value" in {
+      val userAnswers = emptyUserAnswers
 
       val updatedUserAnswer1 = userAnswers.addToSeqByKey(TestMapSeqPage, "1", "value1") match {
         case Success(value) => value
