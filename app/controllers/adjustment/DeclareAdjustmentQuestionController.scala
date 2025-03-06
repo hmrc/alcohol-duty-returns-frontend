@@ -68,7 +68,7 @@ class DeclareAdjustmentQuestionController @Inject() (
               updatedAnswers   <- Future.fromTry(request.userAnswers.set(DeclareAdjustmentQuestionPage, value))
               filterUserAnswer <- Future.fromTry(filterAdjustmentQuestionAnswer(updatedAnswers, value))
               _                <- userAnswersConnector.set(filterUserAnswer)
-            } yield Redirect(navigator.nextPage(DeclareAdjustmentQuestionPage, mode, filterUserAnswer))
+            } yield Redirect(navigator.nextPage(DeclareAdjustmentQuestionPage, mode, filterUserAnswer, Some(true)))
         )
   }
 

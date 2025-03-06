@@ -152,11 +152,11 @@ class AdjustmentNavigator @Inject() () {
     }
   }
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean = true): Call = mode match {
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Option[Boolean]): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode  =>
-      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
+      checkRouteMap(page)(userAnswers)(hasAnswerChanged.getOrElse(false))
   }
 
   private def adjustmentListPageRoute(answers: UserAnswers): Call =
