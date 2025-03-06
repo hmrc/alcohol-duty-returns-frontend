@@ -185,7 +185,8 @@ class AdjustmentListControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AdjustmentNavigator]
+              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -211,7 +212,8 @@ class AdjustmentListControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswersWithCurrent))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AdjustmentNavigator]
+              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()

@@ -106,7 +106,9 @@ class AdjustmentListController @Inject() (
               userAnswersWithOverUnderTotals <-
                 adjustmentOverUnderDeclarationCalculationHelper.fetchOverUnderDeclarationTotals(updatedAnswers, value)
               _                              <- userAnswersConnector.set(userAnswersWithOverUnderTotals)
-            } yield Redirect(navigator.nextPage(AdjustmentListPage, NormalMode, userAnswersWithOverUnderTotals))
+            } yield Redirect(
+              navigator.nextPage(AdjustmentListPage, NormalMode, userAnswersWithOverUnderTotals, Some(false))
+            )
         )
   }
 

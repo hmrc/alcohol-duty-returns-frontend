@@ -106,7 +106,7 @@ class AdjustmentSmallProducerReliefDutyRateController @Inject() (
                 )
               _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(
-              navigator.nextPage(AdjustmentSmallProducerReliefDutyRatePage, mode, updatedAnswers, hasChanged)
+              navigator.nextPage(AdjustmentSmallProducerReliefDutyRatePage, mode, updatedAnswers, Some(hasChanged))
             )
           }
         )

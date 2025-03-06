@@ -120,7 +120,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -149,7 +149,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = true)),
+            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = Some(true))),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -180,7 +180,8 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = false)),
+            bind[ReturnsNavigator]
+              .toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = Some(false))),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )

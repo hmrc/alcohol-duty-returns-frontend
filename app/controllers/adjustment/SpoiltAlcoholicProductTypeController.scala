@@ -87,7 +87,7 @@ class SpoiltAlcoholicProductTypeController @Inject() (
                                       )
                                     )
                   _              <- userAnswersConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(AlcoholicProductTypePage, mode, updatedAnswers, hasChanged))
+                } yield Redirect(navigator.nextPage(AlcoholicProductTypePage, mode, updatedAnswers, Some(hasChanged)))
               case _            =>
                 logger.warn(s"Couldn't parse regime $value")
                 Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))

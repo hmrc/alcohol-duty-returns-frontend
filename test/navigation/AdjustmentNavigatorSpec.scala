@@ -52,14 +52,20 @@ class AdjustmentNavigatorSpec extends SpecBase {
     "in Normal mode" - {
       "must go from a page that doesn't exist in the route map to the Task List page" in {
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.TaskListController.onPageLoad
+        navigator.nextPage(
+          UnknownPage,
+          NormalMode,
+          emptyUserAnswers,
+          Some(true)
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "must go from the Adjustment Question Page to the Adjustment Type page if the answer is Yes" in {
         navigator.nextPage(
           pages.adjustment.DeclareAdjustmentQuestionPage,
           NormalMode,
-          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value
+          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
       }
 
@@ -67,7 +73,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareAdjustmentQuestionPage,
           NormalMode,
-          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value
+          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
       }
 
@@ -75,7 +82,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareAdjustmentQuestionPage,
           NormalMode,
-          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, false).success.value
+          emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, false).success.value,
+          Some(false)
         ) mustBe routes.TaskListController.onPageLoad
       }
 
@@ -83,7 +91,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeclareAdjustmentQuestionPage,
           NormalMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(false)
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
@@ -95,7 +104,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .copy(regimes = AlcoholRegimes(Set(Beer, Cider)))
             .set(pages.adjustment.CurrentAdjustmentEntryPage, AdjustmentEntry(adjustmentType = Some(Spoilt)))
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe
           controllers.adjustment.routes.SpoiltAlcoholicProductTypeController.onPageLoad(NormalMode)
       }
@@ -108,7 +118,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
             .copy(regimes = AlcoholRegimes(Set(Beer)))
             .set(pages.adjustment.CurrentAdjustmentEntryPage, AdjustmentEntry(adjustmentType = Some(Spoilt)))
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe
           controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
       }
@@ -117,7 +128,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.adjustment.AdjustmentTypePage,
           NormalMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(true)
         ) mustBe
           controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(NormalMode)
       }
@@ -126,7 +138,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.adjustment.AlcoholicProductTypePage,
           NormalMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(true)
         ) mustBe
           controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
       }
@@ -135,7 +148,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.adjustment.WhenDidYouPayDutyPage,
           NormalMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(true)
         ) mustBe
           controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(NormalMode)
       }
@@ -150,7 +164,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = Core)))
             )
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
       }
 
@@ -164,7 +179,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(rateBand = Some(rateBand))
             )
             .success
-            .value
+            .value,
+          Some(false)
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(NormalMode)
       }
 
@@ -178,7 +194,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = SmallProducerRelief)))
             )
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
       }
 
@@ -192,7 +209,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(rateBand = Some(rateBand.copy(rateType = DraughtAndSmallProducerRelief)))
             )
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(NormalMode)
       }
 
@@ -206,7 +224,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(adjustmentType = Some(RepackagedDraughtProducts))
             )
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode)
       }
 
@@ -220,7 +239,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(repackagedRateBand = Some(rateBand.copy(rateType = DraughtAndSmallProducerRelief)))
             )
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
       }
 
@@ -234,7 +254,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(repackagedRateBand = Some(rateBand.copy(rateType = SmallProducerRelief)))
             )
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(NormalMode)
       }
 
@@ -248,7 +269,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(repackagedRateBand = Some(rateBand.copy(rateType = DraughtRelief)))
             )
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
 
@@ -256,7 +278,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage,
           NormalMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
 
@@ -270,7 +293,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
               AdjustmentEntry(adjustmentType = Some(Spoilt))
             )
             .success
-            .value
+            .value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
       }
 
@@ -278,7 +302,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           pages.adjustment.SpoiltVolumeWithDutyPage,
           NormalMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(true)
         ) mustBe
           controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
       }
@@ -287,7 +312,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           AdjustmentListPage,
           NormalMode,
-          emptyUserAnswers.set(pages.adjustment.AdjustmentListPage, false).success.value
+          emptyUserAnswers.set(pages.adjustment.AdjustmentListPage, false).success.value,
+          Some(false)
         ) mustBe routes.TaskListController.onPageLoad
       }
 
@@ -295,7 +321,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           AdjustmentListPage,
           NormalMode,
-          emptyUserAnswers.set(pages.adjustment.AdjustmentListPage, true).success.value
+          emptyUserAnswers.set(pages.adjustment.AdjustmentListPage, true).success.value,
+          Some(true)
         ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
       }
 
@@ -303,7 +330,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           AdjustmentListPage,
           NormalMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(true)
         ) mustBe controllers.routes.JourneyRecoveryController.onPageLoad()
       }
 
@@ -314,7 +342,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
           emptyUserAnswers
             .set(pages.adjustment.AdjustmentEntryListPage, Seq(AdjustmentEntry(adjustmentType = Some(Spoilt))))
             .success
-            .value
+            .value,
+          Some(false)
         ) mustBe controllers.adjustment.routes.AdjustmentListController.onPageLoad(1)
       }
 
@@ -322,7 +351,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
         navigator.nextPage(
           DeleteAdjustmentPage,
           NormalMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(false)
         ) mustBe controllers.adjustment.routes.DeclareAdjustmentQuestionController.onPageLoad(NormalMode)
       }
     }
@@ -334,7 +364,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         DeclareAdjustmentQuestionPage,
         CheckMode,
         emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value,
-        true
+        Some(true)
       ) mustBe controllers.adjustment.routes.AdjustmentTypeController.onPageLoad(NormalMode)
     }
 
@@ -343,7 +373,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         DeclareAdjustmentQuestionPage,
         CheckMode,
         emptyUserAnswers.set(pages.adjustment.DeclareAdjustmentQuestionPage, true).success.value,
-        false
+        Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
@@ -352,7 +382,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
       navigator.nextPage(
         UnknownPage,
         CheckMode,
-        emptyUserAnswers
+        emptyUserAnswers,
+        Some(true)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
@@ -361,7 +392,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.AdjustmentTypePage,
         CheckMode,
         emptyUserAnswers,
-        true
+        Some(true)
       ) mustBe
         controllers.adjustment.routes.WhenDidYouPayDutyController.onPageLoad(CheckMode)
     }
@@ -371,7 +402,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.AdjustmentTypePage,
         CheckMode,
         emptyUserAnswers,
-        false
+        Some(false)
       ) mustBe
         controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
@@ -381,7 +412,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.AlcoholicProductTypePage,
         CheckMode,
         emptyUserAnswers,
-        true
+        Some(true)
       ) mustBe
         controllers.adjustment.routes.SpoiltVolumeWithDutyController.onPageLoad(NormalMode)
     }
@@ -391,7 +422,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.AlcoholicProductTypePage,
         CheckMode,
         emptyUserAnswers,
-        false
+        Some(false)
       ) mustBe
         controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
@@ -401,7 +432,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.WhenDidYouPayDutyPage,
         CheckMode,
         emptyUserAnswers,
-        true
+        Some(true)
       ) mustBe
         controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
     }
@@ -411,7 +442,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.WhenDidYouPayDutyPage,
         CheckMode,
         emptyUserAnswers,
-        false
+        Some(false)
       ) mustBe
         controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
@@ -427,7 +458,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        true
+        Some(true)
       ) mustBe controllers.adjustment.routes.AdjustmentVolumeController.onPageLoad(CheckMode)
     }
 
@@ -442,7 +473,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        false
+        Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
@@ -457,7 +488,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        true
+        Some(true)
       ) mustBe controllers.adjustment.routes.AdjustmentVolumeWithSPRController.onPageLoad(CheckMode)
     }
 
@@ -465,7 +496,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
       navigator.nextPage(
         pages.adjustment.SpoiltVolumeWithDutyPage,
         CheckMode,
-        emptyUserAnswers
+        emptyUserAnswers,
+        Some(true)
       ) mustBe
         controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
@@ -480,7 +512,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        false
+        Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
@@ -489,7 +521,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.WhenDidYouPayDutyPage,
         CheckMode,
         emptyUserAnswers,
-        true
+        Some(true)
       ) mustBe
         controllers.adjustment.routes.AdjustmentTaxTypeController.onPageLoad(CheckMode)
     }
@@ -499,7 +531,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.WhenDidYouPayDutyPage,
         CheckMode,
         emptyUserAnswers,
-        false
+        Some(false)
       ) mustBe
         controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
@@ -515,7 +547,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        true
+        Some(true)
       ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
 
@@ -530,7 +562,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        false
+        Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
@@ -545,7 +577,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        true
+        Some(true)
       ) mustBe controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(CheckMode)
     }
 
@@ -560,7 +592,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        false
+        Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
@@ -575,7 +607,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        true
+        Some(true)
       ) mustBe controllers.adjustment.routes.AdjustmentSmallProducerReliefDutyRateController.onPageLoad(CheckMode)
     }
 
@@ -590,7 +622,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        false
+        Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
@@ -604,7 +636,8 @@ class AdjustmentNavigatorSpec extends SpecBase {
             AdjustmentEntry(repackagedRateBand = Some(rateBand.copy(rateType = DraughtRelief)))
           )
           .success
-          .value
+          .value,
+        Some(true)
       ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
 
@@ -619,7 +652,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
           )
           .success
           .value,
-        false
+        Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
 
@@ -628,7 +661,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage,
         CheckMode,
         emptyUserAnswers,
-        true
+        Some(true)
       ) mustBe controllers.adjustment.routes.AdjustmentDutyDueController.onPageLoad()
     }
 
@@ -637,7 +670,7 @@ class AdjustmentNavigatorSpec extends SpecBase {
         pages.adjustment.AdjustmentSmallProducerReliefDutyRatePage,
         CheckMode,
         emptyUserAnswers,
-        false
+        Some(false)
       ) mustBe controllers.adjustment.routes.CheckYourAnswersController.onPageLoad()
     }
   }

@@ -120,7 +120,7 @@ class SpoiltAlcoholicProductTypeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswersAfterUpdate))(any())
-        verify(mockAdjustmentNavigator, times(1)).nextPage(any(), any(), eqTo(userAnswersAfterUpdate), eqTo(true))
+        verify(mockAdjustmentNavigator, times(1)).nextPage(any(), any(), eqTo(userAnswersAfterUpdate), eqTo(Some(true)))
       }
     }
 
@@ -176,7 +176,7 @@ class SpoiltAlcoholicProductTypeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswersAfterUpdate))(any())
-        verify(mockAdjustmentNavigator, times(1)).nextPage(any(), any(), eqTo(userAnswersAfterUpdate), eqTo(true))
+        verify(mockAdjustmentNavigator, times(1)).nextPage(any(), any(), eqTo(userAnswersAfterUpdate), eqTo(Some(true)))
       }
     }
 
@@ -223,7 +223,7 @@ class SpoiltAlcoholicProductTypeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswers))(any())
-        verify(mockAdjustmentNavigator, times(1)).nextPage(any(), any(), eqTo(userAnswers), eqTo(false))
+        verify(mockAdjustmentNavigator, times(1)).nextPage(any(), any(), eqTo(userAnswers), eqTo(Some(false)))
       }
     }
 
@@ -282,7 +282,7 @@ class SpoiltAlcoholicProductTypeControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual onwardRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswersAfterUpdate))(any())
-        verify(mockAdjustmentNavigator, times(1)).nextPage(any(), any(), eqTo(userAnswersAfterUpdate), eqTo(true))
+        verify(mockAdjustmentNavigator, times(1)).nextPage(any(), any(), eqTo(userAnswersAfterUpdate), eqTo(Some(true)))
       }
     }
 

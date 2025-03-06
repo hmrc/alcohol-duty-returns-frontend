@@ -37,14 +37,20 @@ class ReturnsNavigatorSpec extends SpecBase {
       "nextPage" - {
         "must go from a page that doesn't exist in the route map to the Task List page" in {
           case object UnknownPage extends Page
-          navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.TaskListController.onPageLoad
+          navigator.nextPage(
+            UnknownPage,
+            NormalMode,
+            emptyUserAnswers,
+            Some(false)
+          ) mustBe routes.TaskListController.onPageLoad
         }
 
         "must go from the Alcohol to declare to the task list page if the answer is Yes" in {
           navigator.nextPage(
             DeclareAlcoholDutyQuestionPage,
             NormalMode,
-            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true).success.value
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true).success.value,
+            Some(false)
           ) mustBe controllers.declareDuty.routes.AlcoholTypeController.onPageLoad(NormalMode)
         }
 
@@ -56,7 +62,8 @@ class ReturnsNavigatorSpec extends SpecBase {
               .copy(regimes = AlcoholRegimes(Set(Beer)))
               .set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true)
               .success
-              .value
+              .value,
+            Some(false)
           ) mustBe routes.TaskListController.onPageLoad
         }
 
@@ -64,7 +71,8 @@ class ReturnsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
-            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, false).success.value
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, false).success.value,
+            Some(false)
           ) mustBe routes.TaskListController.onPageLoad
         }
 
@@ -72,7 +80,8 @@ class ReturnsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.declareDuty.DeclareAlcoholDutyQuestionPage,
             NormalMode,
-            emptyUserAnswers
+            emptyUserAnswers,
+            Some(false)
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -323,14 +332,20 @@ class ReturnsNavigatorSpec extends SpecBase {
       "nextPage" - {
         "must go from a page that doesn't exist in the route map to the Task List page" in {
           case object UnknownPage extends Page
-          navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe routes.TaskListController.onPageLoad
+          navigator.nextPage(
+            UnknownPage,
+            CheckMode,
+            emptyUserAnswers,
+            Some(false)
+          ) mustBe routes.TaskListController.onPageLoad
         }
 
         "must go from the DeclareAlcoholDutyQuestion page to the Task List page" in {
           navigator.nextPage(
             DeclareAlcoholDutyQuestionPage,
             CheckMode,
-            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true).success.value
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true).success.value,
+            Some(false)
           ) mustBe controllers.declareDuty.routes.AlcoholTypeController.onPageLoad(CheckMode)
         }
 
@@ -338,7 +353,8 @@ class ReturnsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             DeclareAlcoholDutyQuestionPage,
             CheckMode,
-            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, false).success.value
+            emptyUserAnswers.set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, false).success.value,
+            Some(false)
           ) mustBe routes.TaskListController.onPageLoad
         }
 
@@ -350,7 +366,8 @@ class ReturnsNavigatorSpec extends SpecBase {
               .copy(regimes = AlcoholRegimes(Set(Beer)))
               .set(pages.declareDuty.DeclareAlcoholDutyQuestionPage, true)
               .success
-              .value
+              .value,
+            Some(false)
           ) mustBe routes.TaskListController.onPageLoad
         }
       }

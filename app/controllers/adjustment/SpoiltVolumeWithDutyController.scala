@@ -127,7 +127,7 @@ class SpoiltVolumeWithDutyController @Inject() (
                                       )
                                     )
                   _              <- userAnswersConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(SpoiltVolumeWithDutyPage, mode, updatedAnswers))
+                } yield Redirect(navigator.nextPage(SpoiltVolumeWithDutyPage, mode, updatedAnswers, Some(true)))
               }
             )
         case _            =>

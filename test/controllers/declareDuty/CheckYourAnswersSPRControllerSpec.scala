@@ -106,7 +106,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+          bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -134,7 +134,7 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute)),
+          bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()

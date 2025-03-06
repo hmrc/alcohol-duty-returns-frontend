@@ -82,7 +82,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = true)),
+              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = Some(true))),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -128,7 +128,7 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
               .toInstance(
                 new FakeQuarterlySpiritsQuestionsNavigator(
                   controllers.routes.TaskListController.onPageLoad,
-                  hasValueChanged = true
+                  hasValueChanged = Some(true)
                 )
               ),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)

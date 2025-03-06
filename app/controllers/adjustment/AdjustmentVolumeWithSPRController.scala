@@ -137,7 +137,9 @@ class AdjustmentVolumeWithSPRController @Inject() (
                                       )
                                     )
                   _              <- userAnswersConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(AdjustmentVolumeWithSPRPage, mode, updatedAnswers, hasChanged))
+                } yield Redirect(
+                  navigator.nextPage(AdjustmentVolumeWithSPRPage, mode, updatedAnswers, Some(hasChanged))
+                )
               }
             )
         case _            =>

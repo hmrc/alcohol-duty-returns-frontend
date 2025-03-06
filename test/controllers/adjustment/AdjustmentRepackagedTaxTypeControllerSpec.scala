@@ -121,7 +121,8 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AdjustmentNavigator]
+              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -164,7 +165,8 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = false)),
+            bind[AdjustmentNavigator]
+              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -192,7 +194,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
@@ -248,7 +250,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val application              = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
@@ -268,7 +270,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
       val application              = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
@@ -290,7 +292,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
       val application              = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
           bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
@@ -312,7 +314,8 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AdjustmentNavigator]
+              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -336,7 +339,8 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       val application              =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AdjustmentNavigator]
+              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )

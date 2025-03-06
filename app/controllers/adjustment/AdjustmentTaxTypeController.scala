@@ -106,7 +106,9 @@ class AdjustmentTaxTypeController @Inject() (
                                   .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(rateBand = Some(rateBand)))
                               )
                             _              <- userAnswersConnector.set(updatedAnswers)
-                          } yield Redirect(navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers, hasChanged))
+                          } yield Redirect(
+                            navigator.nextPage(AdjustmentTaxTypePage, mode, updatedAnswers, Some(hasChanged))
+                          )
                         }
                       case None           =>
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentTaxType.error.invalid")

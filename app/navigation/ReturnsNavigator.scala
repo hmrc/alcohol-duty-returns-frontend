@@ -192,12 +192,12 @@ class ReturnsNavigator @Inject() () {
     page: Page,
     mode: Mode,
     userAnswers: UserAnswers,
-    hasAnswerChanged: Boolean = true
+    hasAnswerChanged: Option[Boolean]
   ): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode  =>
-      checkRouteMap(page)(userAnswers)(hasAnswerChanged)
+      checkRouteMap(page)(userAnswers)(hasAnswerChanged.getOrElse(false))
   }
 
   private def declareAlcoholQuestionRoute(userAnswers: UserAnswers, mode: Mode): Call =

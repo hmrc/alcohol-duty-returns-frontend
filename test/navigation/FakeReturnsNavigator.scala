@@ -21,9 +21,9 @@ import pages._
 import models.{Mode, UserAnswers}
 import org.scalatest.Assertions.fail
 
-class FakeReturnsNavigator(desiredRoute: Call, hasAnswerChangeValue: Boolean = false) extends ReturnsNavigator {
+class FakeReturnsNavigator(desiredRoute: Call, hasAnswerChangeValue: Option[Boolean]) extends ReturnsNavigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, boolean: Boolean): Call =
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, boolean: Option[Boolean]): Call =
     desiredRoute
 
   override def nextPageWithRegime(
@@ -34,7 +34,7 @@ class FakeReturnsNavigator(desiredRoute: Call, hasAnswerChangeValue: Boolean = f
     hasAnswerChanged: Boolean,
     index: Option[Int]
   ): Call =
-    if (hasAnswerChanged == hasAnswerChangeValue) {
+    if (hasAnswerChanged == hasAnswerChangeValue.getOrElse(hasAnswerChanged)) {
       desiredRoute
     } else {
       fail("Answer has not changed")

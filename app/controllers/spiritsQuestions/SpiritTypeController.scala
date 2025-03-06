@@ -73,7 +73,7 @@ class SpiritTypeController @Inject() (
               for {
                 updatedAnswers <- Future.fromTry(intermediateAnswers.set(SpiritTypePage, value))
                 _              <- userAnswersConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, otherSpiritsNowSelected))
+              } yield Redirect(navigator.nextPage(SpiritTypePage, mode, updatedAnswers, Some(otherSpiritsNowSelected)))
             }
           )
       }
