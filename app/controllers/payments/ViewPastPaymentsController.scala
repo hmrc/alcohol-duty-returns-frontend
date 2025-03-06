@@ -29,9 +29,10 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.payments.ViewPastPaymentsViewModel
 import views.html.payments.ViewPastPaymentsView
 
-import java.time.{LocalDate, Year}
+import java.time.{Clock, LocalDate, Year}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
+
 class ViewPastPaymentsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
@@ -39,7 +40,8 @@ class ViewPastPaymentsController @Inject() (
   viewPastPaymentsModel: ViewPastPaymentsViewModel,
   view: ViewPastPaymentsView,
   alcoholDutyAccountConnector: AlcoholDutyAccountConnector,
-  frontendAppConfig: FrontendAppConfig
+  frontendAppConfig: FrontendAppConfig,
+  clock: Clock
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -67,7 +69,7 @@ class ViewPastPaymentsController @Inject() (
       }
 
     val historicPaymentsFuture =
-      alcoholDutyAccountConnector.historicPayments(appaId, Year.now.getValue).map { historicPaymentsData =>
+      alcoholDutyAccountConnector.historicPayments(appaId, Year.now(clock).getValue).map { historicPaymentsData =>
         val historicPaymentsTable = viewPastPaymentsModel.getHistoricPaymentsTable(historicPaymentsData.payments)
         (historicPaymentsTable, historicPaymentsData.year)
       }

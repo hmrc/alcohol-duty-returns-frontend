@@ -16,6 +16,7 @@
 
 package viewmodels
 
+import config.Constants.ukTimeZoneStringId
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.language.LanguageUtils
 
@@ -25,7 +26,7 @@ import java.util.TimeZone
 import javax.inject.Inject
 
 class DateTimeHelper @Inject() (languageUtils: LanguageUtils) {
-  private val ukTimeZone: ZoneId = TimeZone.getTimeZone("Europe/London").toZoneId
+  private val ukTimeZone: ZoneId = TimeZone.getTimeZone(ukTimeZoneStringId).toZoneId
 
   private val hourMinuteFormatter = DateTimeFormatter.ofPattern("h:mm")
   private val meridiemFormatter   = DateTimeFormatter.ofPattern("a")
