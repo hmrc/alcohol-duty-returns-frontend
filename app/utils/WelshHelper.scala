@@ -16,6 +16,8 @@
 
 package utils
 
+import play.api.i18n.Messages
+
 object WelshHelper {
 
   private val numberBeginsWithVowel: Set[BigInt] = Set(BigInt(1), BigInt(8))
@@ -23,10 +25,11 @@ object WelshHelper {
   private def beginsWithConsonant(decimal: BigDecimal): Boolean =
     !numberBeginsWithVowel(decimal.toBigInt)
 
-  def chooseAnd(decimal: BigDecimal): String =
-    if (beginsWithConsonant(decimal)) {
-      "welsh.and.consonant"
-    } else {
-      "welsh.and.vowel"
-    }
+  def fullMessageKey(baseMessageKey: String, minAbv: BigDecimal, maxAbv: BigDecimal)(implicit
+    messages: Messages
+  ): String = {
+    val whichMessageToUse = Math.floor(maxAbv.doubleValue).toInt
+    messages(s"$baseMessageKey.$whichMessageToUse", minAbv, maxAbv)
+  }
+
 }

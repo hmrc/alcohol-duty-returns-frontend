@@ -35,7 +35,7 @@ class RateBandDescriptionSpec extends SpecBase {
       RateType.values.foreach { rateType =>
         s"for a single interval for rate type: $rateType" - {
           val lowerLimit = BigDecimal(1)
-          val upperLimit = BigDecimal(10)
+          val upperLimit = BigDecimal(8)
 
           "without a known regime" in new SetUp {
             val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateType)
@@ -95,9 +95,9 @@ class RateBandDescriptionSpec extends SpecBase {
 
         s"for multiple intervals for rate type: $rateType" - {
           val lowerLimit1 = BigDecimal(1)
-          val upperLimit1 = BigDecimal(10)
+          val upperLimit1 = BigDecimal(3)
           val lowerLimit2 = BigDecimal(11)
-          val upperLimit2 = BigDecimal(20)
+          val upperLimit2 = BigDecimal(5)
 
           "without a known regime" in new SetUp {
             val rateBand = multipleIntervalRateBand(lowerLimit1, upperLimit1, lowerLimit2, upperLimit2, rateType)

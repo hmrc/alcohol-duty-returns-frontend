@@ -59,29 +59,17 @@ object RateBandDescription {
           taxType
         )
       case _                   =>
-        messages(
-          s"return.journey.abv.single.interval.$rateType",
-          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
+        val a = WelshHelper.fullMessageKey(
+          "baseMessageKey",
           interval.minABV.value,
-          messages(WelshHelper.chooseAnd(interval.maxABV.value)),
-          interval.maxABV.value,
-          taxType
+          interval.maxABV.value
         )
+        println("QQQQQQQQQQQQ " + a)
+        a
     }
 
   private def multipleIntervalsText(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String, rateType: RateType)(
     implicit messages: Messages
   ): String =
-    messages(
-      s"return.journey.abv.multi.interval.$rateType",
-      messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
-      abvRange1.minABV.value,
-      messages(WelshHelper.chooseAnd(abvRange1.maxABV.value)),
-      abvRange1.maxABV.value,
-      messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
-      abvRange2.minABV.value,
-      messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
-      abvRange2.maxABV.value,
-      taxType
-    )
+    ???
 }
