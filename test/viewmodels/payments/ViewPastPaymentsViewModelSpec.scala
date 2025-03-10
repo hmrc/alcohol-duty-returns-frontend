@@ -72,7 +72,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
 
       "must return a table with the correct number of rows and head for payments with credit available" in {
         val table = viewPastPaymentsViewModel.getCreditAvailableTable(creditAvailablePayments)
-        table.head.size mustBe 4
+        table.head.size mustBe 3
         table.rows.size mustBe creditAvailablePayments.size
       }
 
@@ -176,7 +176,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         )
       }
 
-      "must return a sorted table by due date in descending order for unallocated payments" in {
+      "must return a sorted table by due date in descending order for payments with credit available" in {
         val table = viewPastPaymentsViewModel.getCreditAvailableTable(creditAvailablePayments)
         table.rows.size                                                 mustBe creditAvailablePayments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
@@ -222,7 +222,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
 
       "must return a table with the correct number of rows and head for payments with credit available" in {
         val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(creditAvailablePayments)
-        table.head.size mustBe 5
+        table.head.size mustBe 4
         table.rows.size mustBe creditAvailablePayments.size
       }
 

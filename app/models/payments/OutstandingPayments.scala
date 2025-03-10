@@ -21,7 +21,8 @@ import viewmodels.TableViewModel
 
 case class OutstandingPayments(
   outstandingPaymentsTable: TableViewModel,
-  unallocatedPaymentsTable: TableViewModel,
-  totalOpenPaymentsAmount: BigDecimal,
+  creditAvailableTable: TableViewModel,
+  totalAmountOwed: BigDecimal,
+  totalCreditAvailable: BigDecimal,
   session: Session
 )

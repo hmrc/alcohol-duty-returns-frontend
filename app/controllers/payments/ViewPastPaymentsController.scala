@@ -62,7 +62,8 @@ class ViewPastPaymentsController @Inject() (
         OutstandingPayments(
           outstandingPaymentsTable,
           creditAvailableTable,
-          outstandingPaymentsData.totalOpenPaymentsAmount,
+          sortedOutstandingPaymentsData.map(_.remainingAmount).sum,
+          -creditAvailablePayments.map(_.amount).sum,
           updatedSession
         )
       }
@@ -79,8 +80,9 @@ class ViewPastPaymentsController @Inject() (
     } yield Ok(
       view(
         pastPaymentsData.outstandingPaymentsTable,
-        pastPaymentsData.unallocatedPaymentsTable,
-        pastPaymentsData.totalOpenPaymentsAmount,
+        pastPaymentsData.creditAvailableTable,
+        pastPaymentsData.totalAmountOwed,
+        pastPaymentsData.totalCreditAvailable,
         historicPaymentsTable,
         year,
         frontendAppConfig.claimARefundGformEnabled

@@ -33,6 +33,11 @@ import scala.concurrent.Future
 class ViewPastPaymentsControllerSpec extends SpecBase {
 
   "ViewPastPaymentsController Controller" - {
+    val paymentsDue             = openPaymentsData.paymentsForOutstandingTable
+    val creditAvailablePayments = openPaymentsData.paymentsForCreditAvailableTable
+    val amountOwed              = paymentsDue.map(_.remainingAmount).sum
+    val creditAvailable         = -creditAvailablePayments.map(_.amount).sum
+
     "must return OK and the correct view for a GET when the claim refund gform feature toggle is disabled" in {
       val testConfiguration  = app.injector.instanceOf[Configuration]
       val testServicesConfig = app.injector.instanceOf[ServicesConfig]
@@ -59,11 +64,11 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
         val view                          = application.injector.instanceOf[ViewPastPaymentsView]
         val sortedOutstandingPaymentsData =
-          openPaymentsData.paymentsForOutstandingTable.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          paymentsDue.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         val outstandingPaymentsTable      =
           viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
         val creditAvailableTable          =
-          viewModelHelper.getCreditAvailableTable(openPaymentsData.paymentsForCreditAvailableTable)(
+          viewModelHelper.getCreditAvailableTable(creditAvailablePayments)(
             getMessages(application)
           )
         val historicPaymentsTable         =
@@ -73,7 +78,8 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(
           outstandingPaymentsTable,
           creditAvailableTable,
-          openPaymentsData.totalOpenPaymentsAmount,
+          amountOwed,
+          creditAvailable,
           historicPaymentsTable,
           2024,
           claimARefundGformEnabled = false
@@ -109,11 +115,11 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
 
         val view                          = application.injector.instanceOf[ViewPastPaymentsView]
         val sortedOutstandingPaymentsData =
-          openPaymentsData.paymentsForOutstandingTable.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          paymentsDue.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         val outstandingPaymentsTable      =
           viewModelHelper.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)(getMessages(application))
         val creditAvailableTable          =
-          viewModelHelper.getCreditAvailableTable(openPaymentsData.paymentsForCreditAvailableTable)(
+          viewModelHelper.getCreditAvailableTable(creditAvailablePayments)(
             getMessages(application)
           )
         val historicPaymentsTable         =
@@ -122,7 +128,8 @@ class ViewPastPaymentsControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(
           outstandingPaymentsTable,
           creditAvailableTable,
-          openPaymentsData.totalOpenPaymentsAmount,
+          amountOwed,
+          creditAvailable,
           historicPaymentsTable,
           2024,
           claimARefundGformEnabled = true

@@ -111,15 +111,13 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
         HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
         HeadCell(content = Text(messages("viewPastPayments.description"))),
         HeadCell(content = Text(messages("viewPastPayments.amount")), classes = Css.textAlignRightCssClass),
-        HeadCell(content = Text(messages("viewPastPayments.status"))),
         HeadCell(content = Text(messages("viewPastPayments.action")))
       )
     } else {
       Seq(
         HeadCell(content = Text(messages(s"viewPastPayments.$paymentType.payments.paymentDate"))),
         HeadCell(content = Text(messages("viewPastPayments.description"))),
-        HeadCell(content = Text(messages("viewPastPayments.amount")), classes = Css.textAlignRightCssClass),
-        HeadCell(content = Text(messages("viewPastPayments.status")))
+        HeadCell(content = Text(messages("viewPastPayments.amount")), classes = Css.textAlignRightCssClass)
       )
     }
 
@@ -132,8 +130,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
 
   private def getCreditAvailableTableRows(
     creditAvailableData: Seq[CreditAvailablePayment]
-  )(implicit messages: Messages): Seq[TableRowViewModel] = {
-    val statusTag = createStatusTag(NothingToPay)
+  )(implicit messages: Messages): Seq[TableRowViewModel] =
     creditAvailableData.map { creditAvailablePayment =>
       if (frontendAppConfig.claimARefundGformEnabled) {
         TableRowViewModel(
@@ -149,10 +146,9 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
               )
             ),
             TableRow(
-              content = Text(Money.format(creditAvailablePayment.amount)),
+              content = Text(Money.format(creditAvailablePayment.amount.abs)),
               classes = s"${Css.boldFontCssClass} ${Css.textAlignRightCssClass}"
-            ),
-            TableRow(content = HtmlContent(statusTag))
+            )
           ),
           actions = getRequestRepaymentAction(creditAvailablePayment.amount.abs.toString)
         )
@@ -177,7 +173,6 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
         )
       }
     }
-  }
 
   def getHistoricPaymentsTable(
     historicPaymentsData: Seq[HistoricPayment]
