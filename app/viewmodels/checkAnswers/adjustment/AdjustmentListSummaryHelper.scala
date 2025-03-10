@@ -39,10 +39,10 @@ object AdjustmentListSummaryHelper {
     TableViewModel(
       head = Seq(
         HeadCell(content = Text(messages("adjustmentEntryList.type")), classes = Css.oneQuarterCssClass),
-        HeadCell(content = Text(messages("adjustmentEntryList.description")), classes = Css.oneQuarterCssClass),
+        HeadCell(content = Text(messages("adjustmentEntryList.description"))),
         HeadCell(
           content = Text(messages("adjustmentEntryList.duty")),
-          classes = s"${Css.oneQuarterCssClass} ${Css.textAlignRightCssClass}"
+          classes = s"${Css.textAlignRightCssClass}"
         ),
         HeadCell(
           content = Text(messages("adjustmentEntryList.action")),

@@ -27,54 +27,96 @@ object RateBandDescription {
       .fold(rateBand.rangeDetails)(regime => rateBand.rangeDetails.filter(_.alcoholRegime == regime))
       .flatMap(_.abvRanges.toSeq)
 
-  def toDescription(rateBand: RateBand, maybeByRegime: Option[AlcoholRegime])(implicit messages: Messages): String =
+  def toDescription(
+    rateBand: RateBand,
+    maybeByRegime: Option[AlcoholRegime],
+    showDraughtStatus: Boolean = true,
+    showSPR: Boolean = true
+  )(implicit messages: Messages): String = {
+    val taxTypeCode = rateBand.taxTypeCode
+
     abvRangesFromRateBand(rateBand, maybeByRegime).toList match {
       case Nil                        =>
         throw new IllegalArgumentException(
-          s"No ranges found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
+          s"No ranges found for tax code $taxTypeCode regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
         )
       case List(abvRange)             =>
         singleIntervalText(
           abvRange,
-          rateBand.taxTypeCode,
-          rateBand.rateType
+          taxTypeCode,
+          rateBand.rateType,
+          showDraughtStatus,
+          showSPR
         )
       case List(abvRange1, abvRange2) =>
-        multipleIntervalsText(abvRange1, abvRange2, rateBand.taxTypeCode, rateBand.rateType)
+        multipleIntervalsText(abvRange1, abvRange2, taxTypeCode, rateBand.rateType, showDraughtStatus, showSPR)
       case _                          =>
         throw new IllegalArgumentException(
-          s"Only 2 ranges supported at present, more found for tax code ${rateBand.taxTypeCode} regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
+          s"Only 2 ranges supported at present, more found for tax code $taxTypeCode regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
         )
     }
+  }
 
-  private def singleIntervalText(interval: ABVRange, taxType: String, rateType: RateType)(implicit
+  private def getAlcoholTypeWithDraughtStatus(interval: ABVRange, rateType: RateType, showDraughtStatus: Boolean)(
+    implicit messages: Messages
+  ): String =
+    if (showDraughtStatus) {
+      val draughtOrNotKey = if (rateType.isDraught) "draught" else "nondraught"
+      messages(s"return.journey.abv.interval.label.${interval.alcoholType}.$draughtOrNotKey")
+    } else {
+      messages(s"return.journey.abv.interval.label.${interval.alcoholType}")
+    }
+
+  private def getTaxType(taxTypeCode: String, rateType: RateType, showSPR: Boolean)(implicit
     messages: Messages
   ): String =
-    interval.maxABV match {
+    if (showSPR && rateType.isSPR) {
+      messages(s"return.journey.abv.taxTypeCode.SPR", taxTypeCode)
+    } else {
+      messages(s"return.journey.abv.taxTypeCode", taxTypeCode)
+    }
+
+  private def singleIntervalText(
+    abvRange: ABVRange,
+    taxTypeCode: String,
+    rateType: RateType,
+    showDraughtStatus: Boolean,
+    showSPR: Boolean
+  )(implicit
+    messages: Messages
+  ): String =
+    abvRange.maxABV match {
       case AlcoholByVolume.MAX =>
         messages(
-          s"return.journey.abv.interval.exceeding.max.$rateType",
-          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
-          interval.minABV.value,
-          taxType
+          s"return.journey.abv.interval.exceeding.max",
+          getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus),
+          abvRange.minABV.value,
+          getTaxType(taxTypeCode, rateType, showSPR)
         )
       case _                   =>
         messages(
-          s"return.journey.abv.single.interval.$rateType",
-          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
-          interval.minABV.value,
-          messages(WelshHelper.chooseAnd(interval.maxABV.value)),
-          interval.maxABV.value,
-          taxType
+          s"return.journey.abv.single.interval",
+          getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus),
+          abvRange.minABV.value,
+          messages(WelshHelper.chooseAnd(abvRange.maxABV.value)),
+          abvRange.maxABV.value,
+          getTaxType(taxTypeCode, rateType, showSPR)
         )
     }
 
-  private def multipleIntervalsText(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String, rateType: RateType)(
-    implicit messages: Messages
+  private def multipleIntervalsText(
+    abvRange1: ABVRange,
+    abvRange2: ABVRange,
+    taxTypeCode: String,
+    rateType: RateType,
+    showDraughtStatus: Boolean,
+    showSPR: Boolean
+  )(implicit
+    messages: Messages
   ): String =
     messages(
-      s"return.journey.abv.multi.interval.$rateType",
-      messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
+      s"return.journey.abv.multi.interval",
+      getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus),
       abvRange1.minABV.value,
       messages(WelshHelper.chooseAnd(abvRange1.maxABV.value)),
       abvRange1.maxABV.value,
@@ -82,6 +124,6 @@ object RateBandDescription {
       abvRange2.minABV.value,
       messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
       abvRange2.maxABV.value,
-      taxType
+      getTaxType(taxTypeCode, rateType, showSPR)
     )
 }
