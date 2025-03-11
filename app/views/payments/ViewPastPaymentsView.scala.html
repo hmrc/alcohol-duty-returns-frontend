@@ -95,27 +95,19 @@
                 ))
             }
             @paragraph(messages("viewPastPayments.creditAvailable.paragraph"), Css.paddingBottomCssClass)
-            @sectionBreak()
         }
     } else {
         @paragraph(messages("viewPastPayments.noPaymentsDue.p1"))
         @paragraph(messages("viewPastPayments.noPaymentsDue.p2"))
-        @sectionBreak()
     }
+
+    @subHeading(messages("viewPastPayments.historic.heading", messages("site.year", year)), Css.headingMCssClass)
+    @paragraph(messages("viewPastPayments.historic.paragraph"))
 
     @if(historicPaymentsTable.rows.nonEmpty) {
         @govukTable(Table(
-            caption = Some(messages("viewPastPayments.historic.caption", messages("site.year", year))),
-            captionClasses = Css.tableCaptionMCssClass,
             head = Some(historicPaymentsTable.head),
             rows = historicPaymentsTable.rows.map(_.cells),
         ))
-        @paragraph(messages("viewPastPayments.historic.paragraph"))
     }
-
-    @if(historicPaymentsTable.rows.size == 0) {
-        @paragraph(messages("viewPastPayments.historic.caption", messages("site.year", year)), Css.headingMCssClass)
-        @paragraph(messages("viewPastPayments.historic.noPayments"))
-    }
-
 }

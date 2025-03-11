@@ -219,7 +219,8 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
     Seq(
       TableRowActionViewModel(
         label = messages("viewPastPayments.requestRepayment.linkText"),
-        href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount))
+        href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount)),
+        visuallyHiddenText = Some(messages("viewPastPayments.requestRepayment.linkText.hidden", amount))
       )
     )
 
@@ -233,7 +234,9 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
         Seq(
           TableRowActionViewModel(
             label = messages("viewPastPayments.requestRepayment.linkText"),
-            href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString))
+            href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString)),
+            visuallyHiddenText =
+              Some(messages("viewPastPayments.requestRepayment.linkText.hidden", amount.abs.toString))
           )
         )
       } else {
@@ -243,7 +246,8 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
       Seq(
         TableRowActionViewModel(
           label = messages("viewPastPayments.payNow.linkText"),
-          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index)
+          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
+          visuallyHiddenText = Some(messages("viewPastPayments.payNow.linkText.hidden", amount))
         )
       )
     }
