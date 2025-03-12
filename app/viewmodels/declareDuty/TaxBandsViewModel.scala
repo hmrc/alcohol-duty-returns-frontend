@@ -37,7 +37,8 @@ object TaxBandsViewModel {
       .mapValues(rateBands =>
         rateBands.map(rateBand =>
           CheckboxGroupedItemViewModel(
-            content = Text(RateBandDescription.toDescription(rateBand, Some(regime)).capitalize),
+            content =
+              Text(RateBandDescription.toDescription(rateBand, Some(regime), showDraughtStatus = false).capitalize),
             fieldId = "rateBand",
             value = rateBand.taxTypeCode
           )

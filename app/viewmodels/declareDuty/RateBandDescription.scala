@@ -30,8 +30,7 @@ object RateBandDescription {
   def toDescription(
     rateBand: RateBand,
     maybeByRegime: Option[AlcoholRegime],
-    showDraughtStatus: Boolean = true,
-    showSPR: Boolean = true
+    showDraughtStatus: Boolean = true
   )(implicit messages: Messages): String = {
     val taxTypeCode = rateBand.taxTypeCode
 
@@ -45,11 +44,10 @@ object RateBandDescription {
           abvRange,
           taxTypeCode,
           rateBand.rateType,
-          showDraughtStatus,
-          showSPR
+          showDraughtStatus
         )
       case List(abvRange1, abvRange2) =>
-        multipleIntervalsText(abvRange1, abvRange2, taxTypeCode, rateBand.rateType, showDraughtStatus, showSPR)
+        multipleIntervalsText(abvRange1, abvRange2, taxTypeCode, rateBand.rateType, showDraughtStatus)
       case _                          =>
         throw new IllegalArgumentException(
           s"Only 2 ranges supported at present, more found for tax code $taxTypeCode regime ${maybeByRegime.map(_.entryName).getOrElse("None")}"
@@ -67,10 +65,10 @@ object RateBandDescription {
       messages(s"return.journey.abv.interval.label.${interval.alcoholType}")
     }
 
-  private def getTaxType(taxTypeCode: String, rateType: RateType, showSPR: Boolean)(implicit
+  private def getTaxType(taxTypeCode: String, rateType: RateType)(implicit
     messages: Messages
   ): String =
-    if (showSPR && rateType.isSPR) {
+    if (rateType.isSPR) {
       messages(s"return.journey.abv.taxTypeCode.SPR", taxTypeCode)
     } else {
       messages(s"return.journey.abv.taxTypeCode", taxTypeCode)
@@ -80,8 +78,7 @@ object RateBandDescription {
     abvRange: ABVRange,
     taxTypeCode: String,
     rateType: RateType,
-    showDraughtStatus: Boolean,
-    showSPR: Boolean
+    showDraughtStatus: Boolean
   )(implicit
     messages: Messages
   ): String =
@@ -91,7 +88,7 @@ object RateBandDescription {
           s"return.journey.abv.interval.exceeding.max",
           getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus),
           abvRange.minABV.value,
-          getTaxType(taxTypeCode, rateType, showSPR)
+          getTaxType(taxTypeCode, rateType)
         )
       case _                   =>
         messages(
@@ -100,7 +97,7 @@ object RateBandDescription {
           abvRange.minABV.value,
           messages(WelshHelper.chooseAnd(abvRange.maxABV.value)),
           abvRange.maxABV.value,
-          getTaxType(taxTypeCode, rateType, showSPR)
+          getTaxType(taxTypeCode, rateType)
         )
     }
 
@@ -109,8 +106,7 @@ object RateBandDescription {
     abvRange2: ABVRange,
     taxTypeCode: String,
     rateType: RateType,
-    showDraughtStatus: Boolean,
-    showSPR: Boolean
+    showDraughtStatus: Boolean
   )(implicit
     messages: Messages
   ): String =
@@ -124,6 +120,6 @@ object RateBandDescription {
       abvRange2.minABV.value,
       messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
       abvRange2.maxABV.value,
-      getTaxType(taxTypeCode, rateType, showSPR)
+      getTaxType(taxTypeCode, rateType)
     )
 }

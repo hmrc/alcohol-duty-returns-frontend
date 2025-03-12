@@ -27,119 +27,149 @@ class RateBandDescriptionSpec extends SpecBase {
   implicit val messages: Messages = getMessages(application)
 
   "RateBandDescription" - {
-
-    "must return the correct description" - {
-      Seq(
-        (AlcoholRegime.Beer, AlcoholType.Beer, "beer"),
-        (AlcoholRegime.Cider, AlcoholType.Cider, "cider"),
-        (AlcoholRegime.Cider, AlcoholType.SparklingCider, "sparkling cider"),
-        (AlcoholRegime.Wine, AlcoholType.Wine, "wine"),
-        (AlcoholRegime.Spirits, AlcoholType.Spirits, "spirits"),
-        (AlcoholRegime.OtherFermentedProduct, AlcoholType.OtherFermentedProduct, "other fermented products")
-      ).foreach { case (alcoholRegime1, alcoholType1, alcoholTypeDescription1) =>
-        s"when the first alcohol type is $alcoholTypeDescription1" - {
+    Seq(true, false).foreach { showDraughtStatus =>
+      s"when ${if (showDraughtStatus) {
+        "showing"
+      } else {
+        "not showing"
+      }} draught status" - {
+        "must return the correct description" - {
           Seq(
-            (RateType.Core, "non-draught ", ""),
-            (RateType.DraughtRelief, "draught ", ""),
-            (RateType.SmallProducerRelief, "non-draught ", " SPR"),
-            (RateType.DraughtAndSmallProducerRelief, "draught ", " SPR")
-          ).foreach { case (rateType, draughtText, sprText) =>
-            s"for a single interval for rate type: $rateType" - {
-              val lowerLimit = BigDecimal(1)
-              val upperLimit = BigDecimal(10)
-
-              "without knowing the regime" in new SetUp {
-                val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateType, alcoholRegime1, alcoholType1)
-
-                val result = RateBandDescription.toDescription(rateBand, None)
-
-                result mustEqual s"$draughtText$alcoholTypeDescription1 between $lowerLimit% and $upperLimit% ABV (tax type code $taxTypeCode$sprText)"
-              }
-
-              "with a knowing the regime" - {
-                "and matches that of the rate band interval" in new SetUp {
-                  val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateType, alcoholRegime1, alcoholType1)
-
-                  val result = RateBandDescription.toDescription(rateBand, Some(alcoholRegime1))
-
-                  result mustEqual s"$draughtText$alcoholTypeDescription1 between $lowerLimit% and $upperLimit% ABV (tax type code $taxTypeCode$sprText)"
-                }
-
-                "and doesn't match that of the rate band interval" in new SetUp {
-                  val rateBand = singleIntervalRateBand(lowerLimit, upperLimit, rateType, alcoholRegime1, alcoholType1)
-
-                  val otherRegime = if (alcoholRegime1 != AlcoholRegime.OtherFermentedProduct) {
-                    AlcoholRegime.OtherFermentedProduct
-                  } else {
-                    AlcoholRegime.Beer
-                  }
-
-                  an[IllegalArgumentException] must be thrownBy RateBandDescription
-                    .toDescription(rateBand, Some(otherRegime))
-                }
-
-                "and has an interval with a MAX value" in new SetUp {
-                  val rateBand = singleIntervalRateBand(
-                    lowerLimit,
-                    AlcoholByVolume.MAX.value.toInt,
-                    rateType,
-                    alcoholRegime1,
-                    alcoholType1
-                  )
-
-                  val result = RateBandDescription.toDescription(rateBand, None)
-
-                  result mustEqual s"$draughtText$alcoholTypeDescription1 at or above $lowerLimit% ABV (tax type code $taxTypeCode$sprText)"
-                }
-              }
-            }
-
-            s"for multiple intervals for rate type: $rateType" - {
-              val lowerLimit1 = BigDecimal(1)
-              val upperLimit1 = BigDecimal(10)
-              val lowerLimit2 = BigDecimal(11)
-              val upperLimit2 = BigDecimal(20)
-
-              "without knowing the regime" in new SetUp {
-                val rateBand = multipleIntervalRateBand(
-                  lowerLimit1,
-                  upperLimit1,
-                  lowerLimit2,
-                  upperLimit2,
-                  rateType,
-                  alcoholRegime1,
-                  alcoholType1
+            (AlcoholRegime.Beer, AlcoholType.Beer, "beer"),
+            (AlcoholRegime.Cider, AlcoholType.Cider, "cider"),
+            (AlcoholRegime.Cider, AlcoholType.SparklingCider, "sparkling cider"),
+            (AlcoholRegime.Wine, AlcoholType.Wine, "wine"),
+            (AlcoholRegime.Spirits, AlcoholType.Spirits, "spirits"),
+            (AlcoholRegime.OtherFermentedProduct, AlcoholType.OtherFermentedProduct, "other fermented products")
+          ).foreach { case (alcoholRegime1, alcoholType1, alcoholTypeDescription1) =>
+            s"when the first alcohol type is $alcoholTypeDescription1" - {
+              Seq(
+                (
+                  RateType.Core,
+                  if (showDraughtStatus) { "non-draught " }
+                  else { "" },
+                  ""
+                ),
+                (
+                  RateType.DraughtRelief,
+                  if (showDraughtStatus) { "draught " }
+                  else { "" },
+                  ""
+                ),
+                (
+                  RateType.SmallProducerRelief,
+                  if (showDraughtStatus) { "non-draught " }
+                  else { "" },
+                  " SPR"
+                ),
+                (
+                  RateType.DraughtAndSmallProducerRelief,
+                  if (showDraughtStatus) { "draught " }
+                  else { "" },
+                  " SPR"
                 )
+              ).foreach { case (rateType, draughtText, sprText) =>
+                s"for a single interval for rate type: $rateType" - {
+                  val lowerLimit = BigDecimal(1)
+                  val upperLimit = BigDecimal(10)
 
-                val result = RateBandDescription.toDescription(rateBand, None)
+                  "without knowing the regime" in new SetUp {
+                    val rateBand =
+                      singleIntervalRateBand(lowerLimit, upperLimit, rateType, alcoholRegime1, alcoholType1)
 
-                result mustEqual s"$draughtText$alcoholTypeDescription1 between $lowerLimit1% and $upperLimit1% ABV and $alcoholDescription2 between $lowerLimit2% and $upperLimit2% ABV (tax type code $taxTypeCode$sprText)"
-              }
+                    val result = RateBandDescription.toDescription(rateBand, None, showDraughtStatus)
 
-              "with a known regime to select a single range from two regimes" in new SetUp {
-                val (otherRegime, otherAlcoholType: AlcoholType) =
-                  if (alcoholRegime1 != AlcoholRegime.OtherFermentedProduct) {
-                    (AlcoholRegime.OtherFermentedProduct, AlcoholType.OtherFermentedProduct)
-                  } else {
-                    (AlcoholRegime.Beer, AlcoholType.Beer)
+                    result mustEqual s"$draughtText$alcoholTypeDescription1 between $lowerLimit% and $upperLimit% ABV (tax type code $taxTypeCode$sprText)"
                   }
 
-                val rateBand =
-                  multipleIntervalRateBandTwoRegimes(
-                    lowerLimit1,
-                    upperLimit1,
-                    lowerLimit2,
-                    upperLimit2,
-                    rateType,
-                    alcoholRegime1,
-                    alcoholType1,
-                    otherRegime,
-                    otherAlcoholType
-                  )
+                  "with a knowing the regime" - {
+                    "and matches that of the rate band interval" in new SetUp {
+                      val rateBand =
+                        singleIntervalRateBand(lowerLimit, upperLimit, rateType, alcoholRegime1, alcoholType1)
 
-                val result = RateBandDescription.toDescription(rateBand, Some(alcoholRegime1))
+                      val result = RateBandDescription.toDescription(rateBand, Some(alcoholRegime1), showDraughtStatus)
 
-                result mustEqual s"$draughtText$alcoholTypeDescription1 between $lowerLimit1% and $upperLimit1% ABV (tax type code $taxTypeCode$sprText)"
+                      result mustEqual s"$draughtText$alcoholTypeDescription1 between $lowerLimit% and $upperLimit% ABV (tax type code $taxTypeCode$sprText)"
+                    }
+
+                    "and doesn't match that of the rate band interval" in new SetUp {
+                      val rateBand =
+                        singleIntervalRateBand(lowerLimit, upperLimit, rateType, alcoholRegime1, alcoholType1)
+
+                      val otherRegime = if (alcoholRegime1 != AlcoholRegime.OtherFermentedProduct) {
+                        AlcoholRegime.OtherFermentedProduct
+                      } else {
+                        AlcoholRegime.Beer
+                      }
+
+                      an[IllegalArgumentException] must be thrownBy RateBandDescription
+                        .toDescription(rateBand, Some(otherRegime), showDraughtStatus)
+                    }
+
+                    "and has an interval with a MAX value" in new SetUp {
+                      val rateBand = singleIntervalRateBand(
+                        lowerLimit,
+                        AlcoholByVolume.MAX.value.toInt,
+                        rateType,
+                        alcoholRegime1,
+                        alcoholType1
+                      )
+
+                      val result = RateBandDescription.toDescription(rateBand, None, showDraughtStatus)
+
+                      result mustEqual s"$draughtText$alcoholTypeDescription1 at or above $lowerLimit% ABV (tax type code $taxTypeCode$sprText)"
+                    }
+                  }
+                }
+
+                s"for multiple intervals for rate type: $rateType" - {
+                  val lowerLimit1 = BigDecimal(1)
+                  val upperLimit1 = BigDecimal(10)
+                  val lowerLimit2 = BigDecimal(11)
+                  val upperLimit2 = BigDecimal(20)
+
+                  "without knowing the regime" in new SetUp {
+                    val rateBand = multipleIntervalRateBand(
+                      lowerLimit1,
+                      upperLimit1,
+                      lowerLimit2,
+                      upperLimit2,
+                      rateType,
+                      alcoholRegime1,
+                      alcoholType1
+                    )
+
+                    val result = RateBandDescription.toDescription(rateBand, None, showDraughtStatus)
+
+                    result mustEqual s"$draughtText$alcoholTypeDescription1 between $lowerLimit1% and $upperLimit1% ABV and $alcoholDescription2 between $lowerLimit2% and $upperLimit2% ABV (tax type code $taxTypeCode$sprText)"
+                  }
+
+                  "with a known regime to select a single range from two regimes" in new SetUp {
+                    val (otherRegime, otherAlcoholType: AlcoholType) =
+                      if (alcoholRegime1 != AlcoholRegime.OtherFermentedProduct) {
+                        (AlcoholRegime.OtherFermentedProduct, AlcoholType.OtherFermentedProduct)
+                      } else {
+                        (AlcoholRegime.Beer, AlcoholType.Beer)
+                      }
+
+                    val rateBand =
+                      multipleIntervalRateBandTwoRegimes(
+                        lowerLimit1,
+                        upperLimit1,
+                        lowerLimit2,
+                        upperLimit2,
+                        rateType,
+                        alcoholRegime1,
+                        alcoholType1,
+                        otherRegime,
+                        otherAlcoholType
+                      )
+
+                    val result = RateBandDescription.toDescription(rateBand, Some(alcoholRegime1), showDraughtStatus)
+
+                    result mustEqual s"$draughtText$alcoholTypeDescription1 between $lowerLimit1% and $upperLimit1% ABV (tax type code $taxTypeCode$sprText)"
+                  }
+                }
               }
             }
           }
