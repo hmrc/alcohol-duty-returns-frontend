@@ -53,27 +53,24 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
   val viewPastPaymentsViewModelToggleOn = new ViewPastPaymentsViewModel(createDateTimeHelper(), testAppConfigToggleOn)
 
   "ViewPastPaymentsViewModel" - {
-    val paymentsDue             = openPaymentsData.paymentsForOutstandingTable
-    val creditAvailablePayments = openPaymentsData.paymentsForCreditAvailableTable
-
     "when the claim refund gform feature toggle is disabled" - {
 
       "must NOT present the link to the Gform for a payment with credit available" in {
-        val table = viewPastPaymentsViewModel.getCreditAvailableTable(creditAvailablePayments)
+        val table = viewPastPaymentsViewModel.getCreditAvailableTable(openPaymentsData.creditAvailablePayments)
 
         table.rows.head.actions.headOption mustBe None
       }
 
       "must return a table with the correct number of rows and head for outstanding payments" in {
-        val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(paymentsDue)
+        val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
         table.head.size mustBe 5
-        table.rows.size mustBe paymentsDue.size
+        table.rows.size mustBe openPaymentsData.outstandingPayments.size
       }
 
       "must return a table with the correct number of rows and head for payments with credit available" in {
-        val table = viewPastPaymentsViewModel.getCreditAvailableTable(creditAvailablePayments)
+        val table = viewPastPaymentsViewModel.getCreditAvailableTable(openPaymentsData.creditAvailablePayments)
         table.head.size mustBe 3
-        table.rows.size mustBe creditAvailablePayments.size
+        table.rows.size mustBe openPaymentsData.creditAvailablePayments.size
       }
 
       "must return a table with the correct number of rows and head for historic payments" in {
@@ -92,10 +89,10 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       "must not return a table when payments with credit available are not present" in {
         val table =
           viewPastPaymentsViewModel.getCreditAvailableTable(
-            emptyOutstandingPaymentData.paymentsForCreditAvailableTable
+            openPaymentsWithoutUnallocatedData.creditAvailablePayments
           )
         table.head.size mustBe 0
-        table.rows.size mustBe emptyOutstandingPaymentData.paymentsForCreditAvailableTable.size
+        table.rows.size mustBe openPaymentsWithoutUnallocatedData.creditAvailablePayments.size
       }
 
       "must not return a table when historic payments are not present" in {
@@ -125,32 +122,12 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         }
       }
 
-      "must return the Nothing to pay status for an outstanding credit payment" in {
-        val table =
-          viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingCreditPayment))
-        table.rows.map { row =>
-          row.cells(3).content.asHtml mustBe new GovukTag()(
-            Tag(content = Text("Nothing to pay"), classes = Css.greyTagCssClass)
-          )
-        }
-      }
-
       "must return the Due status for an outstanding LPI payment" in {
         val table =
           viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(outstandingLPIPayment))
         table.rows.map { row =>
           row.cells(3).content.asHtml mustBe new GovukTag()(
             Tag(content = Text("Due"), classes = Css.blueTagCssClass)
-          )
-        }
-      }
-
-      "must return the Nothing to pay status for an RPI payment" in {
-        val table =
-          viewPastPaymentsViewModel.getOutstandingPaymentsTable(Seq(RPIPayment))
-        table.rows.map { row =>
-          row.cells(3).content.asHtml mustBe new GovukTag()(
-            Tag(content = Text("Nothing to pay"), classes = Css.greyTagCssClass)
           )
         }
       }
@@ -165,9 +142,9 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
 
       "must return a sorted table by due date in descending order for outstanding payments" in {
         val table = viewPastPaymentsViewModel.getOutstandingPaymentsTable(
-          paymentsDue.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         )
-        table.rows.size                                                 mustBe paymentsDue.size
+        table.rows.size                                                 mustBe openPaymentsData.outstandingPayments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
           Text("25 June 9999").asHtml.toString(),
           Text("25 July 9998").asHtml.toString(),
@@ -177,8 +154,8 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       }
 
       "must return a sorted table by due date in descending order for payments with credit available" in {
-        val table = viewPastPaymentsViewModel.getCreditAvailableTable(creditAvailablePayments)
-        table.rows.size                                                 mustBe creditAvailablePayments.size
+        val table = viewPastPaymentsViewModel.getCreditAvailableTable(openPaymentsData.creditAvailablePayments)
+        table.rows.size                                                 mustBe openPaymentsData.creditAvailablePayments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
           Text("25 October 2024").asHtml.toString(),
           Text("25 September 2024").asHtml.toString(),
@@ -203,7 +180,7 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
     "when the claim refund gform feature toggle is enabled" - {
 
       "must present the link to the Gform for a payment with credit available" in {
-        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(creditAvailablePayments)
+        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(openPaymentsData.creditAvailablePayments)
 
         val gformExpectedUrl1 =
           "http://localhost:9195/submissions/new-form/claim-refund-for-overpayment-of-alcohol-duty?amount=4773.34"
@@ -215,15 +192,15 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       }
 
       "must return a table with the correct number of rows and head for outstanding payments" in {
-        val table = viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(paymentsDue)
+        val table = viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(openPaymentsData.outstandingPayments)
         table.head.size mustBe 5
-        table.rows.size mustBe paymentsDue.size
+        table.rows.size mustBe openPaymentsData.outstandingPayments.size
       }
 
       "must return a table with the correct number of rows and head for payments with credit available" in {
-        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(creditAvailablePayments)
+        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(openPaymentsData.creditAvailablePayments)
         table.head.size mustBe 4
-        table.rows.size mustBe creditAvailablePayments.size
+        table.rows.size mustBe openPaymentsData.creditAvailablePayments.size
       }
 
       "must return a table with the correct number of rows and head for historic payments" in {
@@ -242,10 +219,10 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       "must not return a table when payments with credit available are not present" in {
         val table =
           viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(
-            emptyOutstandingPaymentData.paymentsForCreditAvailableTable
+            openPaymentsWithoutUnallocatedData.creditAvailablePayments
           )
         table.head.size mustBe 0
-        table.rows.size mustBe emptyOutstandingPaymentData.paymentsForCreditAvailableTable.size
+        table.rows.size mustBe openPaymentsWithoutUnallocatedData.creditAvailablePayments.size
       }
 
       "must not return a table when historic payments are not present" in {
@@ -275,32 +252,12 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
         }
       }
 
-      "must return the Nothing to pay status for an outstanding credit payment" in {
-        val table =
-          viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(Seq(outstandingCreditPayment))
-        table.rows.map { row =>
-          row.cells(3).content.asHtml mustBe new GovukTag()(
-            Tag(content = Text("Nothing to pay"), classes = Css.greyTagCssClass)
-          )
-        }
-      }
-
       "must return the Due status for an outstanding LPI payment" in {
         val table =
           viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(Seq(outstandingLPIPayment))
         table.rows.map { row =>
           row.cells(3).content.asHtml mustBe new GovukTag()(
             Tag(content = Text("Due"), classes = Css.blueTagCssClass)
-          )
-        }
-      }
-
-      "must return the Nothing to pay status for an RPI payment" in {
-        val table =
-          viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(Seq(RPIPayment))
-        table.rows.map { row =>
-          row.cells(3).content.asHtml mustBe new GovukTag()(
-            Tag(content = Text("Nothing to pay"), classes = Css.greyTagCssClass)
           )
         }
       }
@@ -315,9 +272,9 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
 
       "must return a sorted table by due date in descending order for outstanding payments" in {
         val table = viewPastPaymentsViewModelToggleOn.getOutstandingPaymentsTable(
-          paymentsDue.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          openPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         )
-        table.rows.size                                                 mustBe paymentsDue.size
+        table.rows.size                                                 mustBe openPaymentsData.outstandingPayments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
           Text("25 June 9999").asHtml.toString(),
           Text("25 July 9998").asHtml.toString(),
@@ -327,8 +284,8 @@ class ViewPastPaymentsViewModelSpec extends SpecBase with ScalaCheckPropertyChec
       }
 
       "must return a sorted table by due date in descending order for payments with credit available" in {
-        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(creditAvailablePayments)
-        table.rows.size                                                 mustBe creditAvailablePayments.size
+        val table = viewPastPaymentsViewModelToggleOn.getCreditAvailableTable(openPaymentsData.creditAvailablePayments)
+        table.rows.size                                                 mustBe openPaymentsData.creditAvailablePayments.size
         table.rows.map(row => row.cells.head.content.asHtml.toString()) mustBe Seq(
           Text("25 October 2024").asHtml.toString(),
           Text("25 September 2024").asHtml.toString(),

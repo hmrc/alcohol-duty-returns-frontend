@@ -19,7 +19,7 @@ package viewmodels.payments
 import config.Constants.Css
 import config.FrontendAppConfig
 import models.OutstandingPaymentStatusToDisplay.{Due, NothingToPay, Overdue}
-import models.TransactionType.RPI
+import models.TransactionType.{PaymentOnAccount, RPI}
 import models.{CreditAvailablePayment, HistoricPayment, OutstandingPayment, OutstandingPaymentStatusToDisplay, TransactionType}
 import play.api.Logging
 import play.api.i18n.Messages
@@ -84,7 +84,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
           ),
           TableRow(content = HtmlContent(statusTag))
         ),
-        actions = getActionOutstandingPayments(status, index, outstandingPaymentsData.remainingAmount)
+        actions = getActionOutstandingPayments(index, outstandingPaymentsData.remainingAmount)
       )
     }
 
@@ -138,7 +138,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
             TableRow(content = Text(formatDateYearMonth(creditAvailablePayment.paymentDate))),
             TableRow(content =
               HtmlContent(
-                formatCreditAvailableDescription(
+                formatDescription(
                   creditAvailablePayment.transactionType,
                   creditAvailablePayment.chargeReference,
                   creditAvailablePayment.amount
@@ -158,7 +158,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
             TableRow(content = Text(formatDateYearMonth(creditAvailablePayment.paymentDate))),
             TableRow(content =
               HtmlContent(
-                formatCreditAvailableDescription(
+                formatDescription(
                   creditAvailablePayment.transactionType,
                   creditAvailablePayment.chargeReference,
                   creditAvailablePayment.amount
@@ -225,32 +225,16 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
     )
 
   private def getActionOutstandingPayments(
-    status: OutstandingPaymentStatusToDisplay,
     index: Int,
     amount: BigDecimal
   )(implicit messages: Messages): Seq[TableRowActionViewModel] =
-    if (status.equals(OutstandingPaymentStatusToDisplay.NothingToPay)) {
-      if (frontendAppConfig.claimARefundGformEnabled) {
-        Seq(
-          TableRowActionViewModel(
-            label = messages("viewPastPayments.requestRepayment.linkText"),
-            href = Call("GET", frontendAppConfig.claimRefundGformUrl(amount.abs.toString)),
-            visuallyHiddenText =
-              Some(messages("viewPastPayments.requestRepayment.linkText.hidden", amount.abs.toString))
-          )
-        )
-      } else {
-        Seq.empty
-      }
-    } else {
-      Seq(
-        TableRowActionViewModel(
-          label = messages("viewPastPayments.payNow.linkText"),
-          href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
-          visuallyHiddenText = Some(messages("viewPastPayments.payNow.linkText.hidden", amount))
-        )
+    Seq(
+      TableRowActionViewModel(
+        label = messages("viewPastPayments.payNow.linkText"),
+        href = controllers.payments.routes.StartPaymentController.initiateAndRedirectFromPastPayments(index),
+        visuallyHiddenText = Some(messages("viewPastPayments.payNow.linkText.hidden", amount))
       )
-    }
+    )
 
   private def formatDateYearMonth(date: LocalDate)(implicit messages: Messages): String =
     dateTimeHelper.formatDateMonthYear(date)
@@ -264,37 +248,16 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
   ): Html = {
     val (description, reference) = (remainingAmount, chargeReference, transactionType) match {
       case (_, Some(chargeReference), transactionType) if transactionType == RPI =>
-        logger.warn("Refund payment interest charge recorded under outstanding payments")
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
+      case (_, _, transactionType) if transactionType == PaymentOnAccount        =>
+        (messages(s"viewPastPayments.unallocatedPayments.description"), "")
       case (remainingAmount, Some(chargeReference), _) if remainingAmount < 0    =>
-        logger.warn("Credit recorded under outstanding payments")
         (messages("viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, Some(chargeReference), _)                                         =>
         (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
       case (_, None, _)                                                          =>
         logger.warn("Couldn't fetch chargeReference for outstanding payment")
         (messages(s"viewPastPayments.$transactionType.description"), "")
-    }
-    Html(s"$description<br>$reference")
-  }
-
-  private def formatCreditAvailableDescription(
-    transactionType: Option[TransactionType],
-    chargeReference: Option[String],
-    remainingAmount: BigDecimal
-  )(implicit
-    messages: Messages
-  ): Html = {
-    val (description, reference) = (remainingAmount, chargeReference, transactionType) match {
-      case (_, Some(chargeReference), Some(transactionType)) if transactionType == RPI =>
-        (messages(s"viewPastPayments.$transactionType.description"), messages("viewPastPayments.ref", chargeReference))
-      case (remainingAmount, Some(chargeReference), Some(_)) if remainingAmount < 0    =>
-        (messages("viewPastPayments.credit.description"), messages("viewPastPayments.ref", chargeReference))
-      case (_, None, None)                                                             =>
-        (messages(s"viewPastPayments.unallocatedPayments.description"), "")
-      case (_, _, _)                                                                   =>
-        logger.warn("Unexpected chargeReference/transactionType for credit available payment")
-        (messages(s"viewPastPayments.unallocatedPayments.description"), "")
     }
     Html(s"$description<br>$reference")
   }

@@ -20,7 +20,7 @@ import cats.data.NonEmptySeq
 import generators.ModelGenerators
 import models.AlcoholRegime.{Beer, Cider, OtherFermentedProduct, Spirits, Wine}
 import models.RateType.Core
-import models.TransactionType.{LPI, RPI, Return}
+import models.TransactionType.{LPI, PaymentOnAccount, RPI, Return}
 import models.adjustment.{AdjustmentEntry, AdjustmentType}
 import models.checkAndSubmit._
 import models.declareDuty._
@@ -458,7 +458,7 @@ trait TestData extends ModelGenerators {
     BigDecimal(4773.34)
   )
 
-  val outstandingCreditPayment = OutstandingPayment(
+  val outstandingCreditPayment = CreditAvailablePayment(
     Return,
     LocalDate.of(2024, 10, 25),
     Some(chargeReference),
@@ -472,54 +472,61 @@ trait TestData extends ModelGenerators {
     BigDecimal(3234.18)
   )
 
-  val RPIPayment = OutstandingPayment(
+  val RPIPayment = CreditAvailablePayment(
     RPI,
     LocalDate.of(2024, 7, 25),
     Some(chargeReference),
     BigDecimal(-2011)
   )
 
-  val creditAvailablePaymentForOutstandingCredit = CreditAvailablePayment(
-    Some(Return),
-    LocalDate.of(2024, 10, 25),
-    Some(chargeReference),
-    BigDecimal(-4773.34)
+  val unallocatedPayment1 = CreditAvailablePayment(
+    PaymentOnAccount,
+    LocalDate.of(2024, 9, 25),
+    None,
+    BigDecimal(-123)
   )
 
-  val creditAvailablePaymentForRPI = CreditAvailablePayment(
-    Some(RPI),
+  val unallocatedPayment2 = CreditAvailablePayment(
+    PaymentOnAccount,
+    LocalDate.of(2024, 8, 25),
+    None,
+    BigDecimal(-1273)
+  )
+
+  val unallocatedPayment3 = CreditAvailablePayment(
+    PaymentOnAccount,
     LocalDate.of(2024, 7, 25),
-    Some(chargeReference),
-    BigDecimal(-2011)
+    None,
+    BigDecimal(-1273)
   )
 
   val openPaymentsData = OpenPayments(
     outstandingPayments = Seq(
-      outstandingCreditPayment,
       outstandingPartialPayment,
       outstandingLPIPayment,
-      RPIPayment,
       outstandingOverduePartialPayment,
       outstandingDuePayment
     ),
-    unallocatedPayments = Seq(
-      UnallocatedPayment(LocalDate.of(2024, 9, 25), BigDecimal(-123)),
-      UnallocatedPayment(LocalDate.of(2024, 8, 25), BigDecimal(-1273)),
-      UnallocatedPayment(LocalDate.of(2024, 7, 25), BigDecimal(-1273))
+    creditAvailablePayments = Seq(
+      outstandingCreditPayment,
+      RPIPayment,
+      unallocatedPayment1,
+      unallocatedPayment2,
+      unallocatedPayment3
     ),
     totalOpenPaymentsAmount = BigDecimal(12134.67),
-    totalUnallocatedPayments = BigDecimal(134.67),
+    totalCreditAvailable = BigDecimal(-134.67),
     totalOutstandingPayments = BigDecimal(1234.67)
   )
 
   val openPaymentsWithoutUnallocatedData = OpenPayments(
     outstandingPayments = Seq(
-      outstandingCreditPayment,
-      outstandingPartialPayment
+      outstandingPartialPayment,
+      outstandingLPIPayment
     ),
-    unallocatedPayments = Seq.empty,
-    totalOpenPaymentsAmount = BigDecimal(12134.67),
-    totalUnallocatedPayments = BigDecimal(0),
+    creditAvailablePayments = Seq.empty,
+    totalOpenPaymentsAmount = BigDecimal(3234.12),
+    totalCreditAvailable = BigDecimal(0),
     totalOutstandingPayments = BigDecimal(1234.67)
   )
 
@@ -532,9 +539,9 @@ trait TestData extends ModelGenerators {
 
   val emptyOutstandingPaymentData = OpenPayments(
     outstandingPayments = Seq.empty,
-    unallocatedPayments = Seq.empty,
+    creditAvailablePayments = Seq.empty,
     totalOpenPaymentsAmount = BigDecimal(0),
-    totalUnallocatedPayments = BigDecimal(0),
+    totalCreditAvailable = BigDecimal(0),
     totalOutstandingPayments = BigDecimal(0)
   )
 

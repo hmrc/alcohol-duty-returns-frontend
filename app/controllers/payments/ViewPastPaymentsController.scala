@@ -51,19 +51,19 @@ class ViewPastPaymentsController @Inject() (
     val outstandingPaymentsFuture =
       alcoholDutyAccountConnector.outstandingPayments(appaId).map { outstandingPaymentsData =>
         val sortedOutstandingPaymentsData =
-          outstandingPaymentsData.paymentsForOutstandingTable.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
+          outstandingPaymentsData.outstandingPayments.sortBy(_.dueDate)(Ordering[LocalDate].reverse)
         val updatedSession                =
           request.session + (pastPaymentsSessionKey -> Json.toJson(sortedOutstandingPaymentsData).toString)
         val outstandingPaymentsTable =
           viewPastPaymentsModel.getOutstandingPaymentsTable(sortedOutstandingPaymentsData)
-        val creditAvailablePayments  = outstandingPaymentsData.paymentsForCreditAvailableTable
-        val creditAvailableTable     = viewPastPaymentsModel.getCreditAvailableTable(creditAvailablePayments)
+        val creditAvailableTable     =
+          viewPastPaymentsModel.getCreditAvailableTable(outstandingPaymentsData.creditAvailablePayments)
 
         OutstandingPayments(
           outstandingPaymentsTable,
           creditAvailableTable,
-          sortedOutstandingPaymentsData.map(_.remainingAmount).sum,
-          -creditAvailablePayments.map(_.amount).sum,
+          outstandingPaymentsData.totalOutstandingPayments,
+          -outstandingPaymentsData.totalCreditAvailable,
           updatedSession
         )
       }

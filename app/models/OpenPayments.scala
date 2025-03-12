@@ -28,6 +28,8 @@ object TransactionType extends Enum[TransactionType] with PlayJsonEnum[Transacti
 
   case object Return extends TransactionType
 
+  case object PaymentOnAccount extends TransactionType
+
   case object LPI extends TransactionType
 
   case object RPI extends TransactionType
@@ -40,53 +42,30 @@ case class OutstandingPayment(
   dueDate: LocalDate,
   chargeReference: Option[String],
   remainingAmount: BigDecimal
-) extends OpenPayment {
-  val nothingToPay: Boolean = transactionType == TransactionType.RPI || remainingAmount < 0
-
-  def toCreditAvailablePayment: Option[CreditAvailablePayment] =
-    if (nothingToPay) {
-      Some(CreditAvailablePayment(Some(transactionType), dueDate, chargeReference, remainingAmount))
-    } else {
-      None
-    }
-}
+) extends OpenPayment
 
 object OutstandingPayment {
   implicit val outstandingPaymentFormat: OFormat[OutstandingPayment] = Json.format[OutstandingPayment]
 }
 
-case class UnallocatedPayment(
-  paymentDate: LocalDate,
-  unallocatedAmount: BigDecimal
-) extends OpenPayment {
-  def toCreditAvailablePayment: CreditAvailablePayment =
-    CreditAvailablePayment(None, paymentDate, None, unallocatedAmount)
-}
-
-object UnallocatedPayment {
-  implicit val unallocatedPaymentFormat: OFormat[UnallocatedPayment] = Json.format[UnallocatedPayment]
-}
-
 case class CreditAvailablePayment(
-  transactionType: Option[TransactionType],
+  transactionType: TransactionType,
   paymentDate: LocalDate,
   chargeReference: Option[String],
   amount: BigDecimal
 )
 
+object CreditAvailablePayment {
+  implicit val creditAvailablePaymentFormat: OFormat[CreditAvailablePayment] = Json.format[CreditAvailablePayment]
+}
+
 case class OpenPayments(
   outstandingPayments: Seq[OutstandingPayment],
   totalOutstandingPayments: BigDecimal,
-  unallocatedPayments: Seq[UnallocatedPayment],
-  totalUnallocatedPayments: BigDecimal,
+  creditAvailablePayments: Seq[CreditAvailablePayment],
+  totalCreditAvailable: BigDecimal,
   totalOpenPaymentsAmount: BigDecimal
-) {
-  def paymentsForOutstandingTable: Seq[OutstandingPayment] =
-    outstandingPayments.filter(!_.nothingToPay)
-
-  def paymentsForCreditAvailableTable: Seq[CreditAvailablePayment] =
-    outstandingPayments.flatMap(_.toCreditAvailablePayment) ++ unallocatedPayments.map(_.toCreditAvailablePayment)
-}
+)
 
 object OpenPayments {
   implicit val openPaymentsPaymentsFormat: OFormat[OpenPayments] = Json.format[OpenPayments]
