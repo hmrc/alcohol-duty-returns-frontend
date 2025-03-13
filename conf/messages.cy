@@ -246,10 +246,10 @@ beforeStartReturn.text.dueWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad
 beforeStartReturn.text.overdueWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn oedd {0}
 beforeStartReturn.text.dueDateWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn yw {0}
 
-serviceUpdated.title = NOT_FOUND
-serviceUpdated.heading = NOT_FOUND
-serviceUpdated.guidance1 = NOT_FOUND
-serviceUpdated.guidance2 = NOT_FOUND
+serviceUpdated.title = Mae’r gwasanaeth hwn wedi’i ddiweddaru
+serviceUpdated.heading = Mae’r gwasanaeth hwn wedi’i ddiweddaru
+serviceUpdated.guidance1 = Mae’n ddrwg gennym – nid oeddem yn gallu defnyddio’ch atebion blaenorol.
+serviceUpdated.guidance2 = Bydd angen i chi eu nodi eto.
 
 # Beginning of product entry sub-journey
 
@@ -454,7 +454,7 @@ multipleSPRList.question = A ydych chi eisiau ychwanegu un arall?
 multipleSPRList.error.required = Dewiswch ‘Iawn’ os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
 
 multipleSPRList.description.label = Disgrifiad
-multipleSPRList.totalLitres.label = Cyfanswm y cyfaint wedi’i ddatgan
+multipleSPRList.totalLitres.label = Cyfanswm y cyfaint wedi’i ddatgan (litrau)
 multipleSPRList.pureAlcohol.label = Litrau o alcohol pur (LPA)
 multipleSPRList.dutyRate.label = Cyfradd doll (fesul litr)
 multipleSPRList.action.label = Camau
