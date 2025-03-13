@@ -302,14 +302,14 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         netDutySuspension.totalLtsPureAlcoholCider
       ),
       netDutySuspensionCell(
-        AlcoholRegime.Spirits.regimeMessageKey,
-        netDutySuspension.totalLtsSpirit,
-        netDutySuspension.totalLtsPureAlcoholSpirit
-      ),
-      netDutySuspensionCell(
         AlcoholRegime.Wine.regimeMessageKey,
         netDutySuspension.totalLtsWine,
         netDutySuspension.totalLtsPureAlcoholWine
+      ),
+      netDutySuspensionCell(
+        AlcoholRegime.Spirits.regimeMessageKey,
+        netDutySuspension.totalLtsSpirit,
+        netDutySuspension.totalLtsPureAlcoholSpirit
       ),
       netDutySuspensionCell(
         AlcoholRegime.OtherFermentedProduct.regimeMessageKey,
