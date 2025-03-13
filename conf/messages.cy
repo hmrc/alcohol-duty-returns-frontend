@@ -265,28 +265,28 @@ alcoholType.p1 = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi e
 alcoholType.p2 = Bydd eich Datganiad yn dangos gwerthoedd ‘dim’ ar gyfer y mathau nad ydych yn eu dewis.
 alcoholType.hint = Dewiswch bob un sy’n berthnasol
 
-return.journey.error.lessThanExpected = Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â’r litrau o {0} neu’n llai na hynny
+return.journey.error.lessThanExpected = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â chyfanswm y litrau neu’n llai na hynny
 
 return.journey.error.allRequired = Dewiswch y math o {0}
 return.journey.error.noValue.taxType = Dewiswch y math o {0}
 
-return.journey.error.noValue.totalLitres = Nodwch gyfanswm y litrau o {0}
-return.journey.error.invalid.totalLitres = Mae’n rhaid i’r litrau o {0} fod yn rhif
-return.journey.error.maximumValue.totalLitres = Mae’n rhaid i’r litrau o {0} fod yn llai nag 1 biliwn
-return.journey.error.minimumValue.totalLitres = Mae’n rhaid i’r litrau o {0} fod yn fwy na 0.00
-return.journey.error.tooManyDecimalPlaces.totalLitres = Mae’n rhaid i’r litrau o {0} fod yn rhif sy’n cynnwys 2 le degol
+return.journey.error.noValue.totalLitres = {0} - Nodwch gyfanswm y litrau
+return.journey.error.invalid.totalLitres = {0} - Mae’n rhaid i gyfanswm y litrau fod yn rhif
+return.journey.error.maximumValue.totalLitres = {0} - Mae’n rhaid i gyfanswm y litrau fod yn llai nag 1 biliwn
+return.journey.error.minimumValue.totalLitres = {0} - Mae’n rhaid i gyfanswm y litrau fod yn fwy na 0.00
+return.journey.error.tooManyDecimalPlaces.totalLitres = {0} - Mae’n rhaid i gyfanswm y litrau fod yn rhif hyd at 2 le degol
 
-return.journey.error.noValue.pureAlcohol = Nodwch y litrau o alcohol pur sydd yn y {0}
-return.journey.error.invalid.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif
-return.journey.error.maximumValue.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn llai nag 1 biliwn
-return.journey.error.minimumValue.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn fwy na 0.0000
-return.journey.error.tooManyDecimalPlaces.pureAlcohol = Mae’n rhaid i’r litrau o alcohol pur fod yn rhif sy’n cynnwys 4 lle degol
+return.journey.error.noValue.pureAlcohol = {0} - Nodwch y litrau o alcohol pur
+return.journey.error.invalid.pureAlcohol = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yn rhif
+return.journey.error.maximumValue.pureAlcohol = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yn llai nag 1 biliwn
+return.journey.error.minimumValue.pureAlcohol = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yn fwy na 0.00
+return.journey.error.tooManyDecimalPlaces.pureAlcohol = {0} - Mae’n rhaid i’r litrau o alcohol pur fod yn rhif sy’n cynnwys 4 lle degol
 
-return.journey.error.noValue.dutyRate = Nodwch eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
-return.journey.error.invalid.dutyRate = Mae’n rhaid i’ch cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
-return.journey.error.maximumValue.dutyRate = NOT_FOUND
-return.journey.error.minimumValue.dutyRate = NOT_FOUND
-return.journey.error.tooManyDecimalPlaces.dutyRate = Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach gynnwys 2 le degol
+return.journey.error.noValue.dutyRate = {0} - Nodwch eich cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
+return.journey.error.invalid.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
+return.journey.error.maximumValue.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn llai nag £1 biliwn
+return.journey.error.minimumValue.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach fod yn £0.00 neu fwy
+return.journey.error.tooManyDecimalPlaces.dutyRate = {0} - Mae’n rhaid i’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach gynnwys 2 le degol
 
 return.journey.abv.interval.label.Beer = cwrw
 return.journey.abv.interval.label.Cider = seidr
