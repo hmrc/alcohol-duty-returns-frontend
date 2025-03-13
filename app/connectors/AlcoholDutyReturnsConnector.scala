@@ -18,7 +18,7 @@ package connectors
 
 import cats.data.EitherT
 import config.FrontendAppConfig
-import models.{AlcoholRegime, ObligationData}
+import models.{AlcoholRegime, ErrorModel, ObligationData}
 import models.checkAndSubmit.{AdrReturnCreatedDetails, AdrReturnSubmission}
 import models.returns.ReturnDetails
 import play.api.Logging
@@ -126,26 +126,36 @@ class AlcoholDutyReturnsConnector @Inject() (
 
   def submitReturn(appaId: String, periodKey: String, returnSubmission: AdrReturnSubmission)(implicit
     hc: HeaderCarrier
-  ): EitherT[Future, String, AdrReturnCreatedDetails] =
+  ): EitherT[Future, ErrorModel, AdrReturnCreatedDetails] =
     EitherT {
       httpClient
         .post(url"${config.adrSubmitReturnUrl(appaId, periodKey)}")
         .withBody(Json.toJson(returnSubmission))
         .execute[Either[UpstreamErrorResponse, HttpResponse]]
         .map {
-          case Right(response) if response.status == CREATED =>
+          case Right(response) if response.status == CREATED                 =>
             Try(response.json.as[AdrReturnCreatedDetails]) match {
-              case Success(data)      => Right[String, AdrReturnCreatedDetails](data)
+              case Success(data)      => Right[ErrorModel, AdrReturnCreatedDetails](data)
               case Failure(exception) =>
                 logger.warn(s"Invalid JSON format", exception)
-                Left(s"Invalid JSON format $exception")
+                Left(ErrorModel(INTERNAL_SERVER_ERROR, s"Invalid JSON format $exception"))
             }
-          case Left(errorResponse)                           =>
+          case Left(errorResponse) if errorResponse.statusCode == UNPROCESSABLE_ENTITY =>
+            logger.warn(s"Return already submitted")
+            Left(ErrorModel(UNPROCESSABLE_ENTITY, "Return already submitted"))
+          case Left(errorResponse)                                           =>
             logger.warn(s"Unable to submit return. Unexpected response: ${errorResponse.message}")
-            Left(s"Unable to submit return. Unexpected response: ${errorResponse.message}")
-          case Right(response)                               =>
+            Left(
+              ErrorModel(
+                INTERNAL_SERVER_ERROR,
+                s"Unable to submit return. Unexpected response: ${errorResponse.message}"
+              )
+            )
+          case Right(response)                                               =>
             logger.warn(s"Unable to submit return. Unexpected status code: ${response.status}")
-            Left(s"Unable to submit return. Unexpected status code: ${response.status}")
+            Left(
+              ErrorModel(INTERNAL_SERVER_ERROR, s"Unable to submit return. Unexpected status code: ${response.status}")
+            )
         }
     }
 }
