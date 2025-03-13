@@ -337,12 +337,6 @@ return.journey.pureAlcohol = Litres of pure alcohol
 return.journey.pureAlcohol.hint = In litres, to 4 decimal places
 return.journey.spr.dutyRate = Your Small Producer Relief Duty rate for this {0}
 
-abvRangeKey.3 =  between {0}% and {1}%
-abvRangeKey.4 =   between {0}% and {1}%
-abvRangeKey.5 =  between {0}% and {1}%
-abvRangeKey.8 =  between {0}% and {1}%
-abvRangeKey.22 =  between {0}% and {1}%
-
 declareAlcoholDutyQuestion.title = Declaring alcoholic products for duty
 declareAlcoholDutyQuestion.heading = Declaring alcoholic products for duty
 declareAlcoholDutyQuestion.p1 = If you need to declare alcoholic products for alcohol duty, we will need to know the total amount you have produced and the litres of pure alcohol in that production across the following ABV bandings:

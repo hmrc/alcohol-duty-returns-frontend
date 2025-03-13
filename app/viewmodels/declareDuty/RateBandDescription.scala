@@ -27,13 +27,6 @@ object RateBandDescription {
       .fold(rateBand.rangeDetails)(regime => rateBand.rangeDetails.filter(_.alcoholRegime == regime))
       .flatMap(_.abvRanges.toSeq)
 
-  private def abvRangeMessage(baseMessageKey: String, minAbv: BigDecimal, maxAbv: BigDecimal)(implicit
-                                                                                              messages: Messages
-  ): String = {
-    val rateMessageToUse = Math.floor(maxAbv.doubleValue).toInt
-    messages(s"$baseMessageKey.$rateMessageToUse", minAbv, maxAbv)
-  }
-
   def toDescription(
     rateBand: RateBand,
     maybeByRegime: Option[AlcoholRegime],
@@ -108,27 +101,6 @@ object RateBandDescription {
         )
     }
 
-//  private def singleIntervalText(interval: ABVRange, taxType: String, rateType: RateType)(implicit
-//                                                                                          messages: Messages
-//  ): String =
-//    interval.maxABV match {
-//      case AlcoholByVolume.MAX =>
-//        messages(
-//          s"return.journey.abv.interval.exceeding.max.$rateType",
-//          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
-//          interval.minABV.value,
-//          taxType
-//        )
-//      case _                   =>
-//        messages(
-//          s"return.journey.abv.single.interval.$rateType",
-//          messages(s"return.journey.abv.interval.label.${interval.alcoholType}"),
-//          s"${abvRangeMessage("abvRangeKey", interval.minABV.value, interval.maxABV.value)}",
-//          taxType
-//        )
-//    }
-
-
   private def multipleIntervalsText(
     abvRange1: ABVRange,
     abvRange2: ABVRange,
@@ -151,16 +123,3 @@ object RateBandDescription {
       getTaxType(taxTypeCode, rateType)
     )
 }
-
-//private def multipleIntervalsText(abvRange1: ABVRange, abvRange2: ABVRange, taxType: String, rateType: RateType)(
-//  implicit messages: Messages
-//): String =
-//  messages(
-//    s"return.journey.abv.multi.interval.$rateType",
-//    messages(s"return.journey.abv.interval.label.${abvRange1.alcoholType}"),
-//    s"${abvRangeMessage("abvRangeKey", abvRange1.minABV.value, abvRange1.maxABV.value)}",
-//    messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
-//    s"${abvRangeMessage("abvRangeKey", abvRange2.minABV.value, abvRange2.maxABV.value)}",
-//    taxType
-//  )
-//}
