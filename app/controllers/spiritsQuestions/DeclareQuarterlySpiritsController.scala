@@ -72,7 +72,7 @@ class DeclareQuarterlySpiritsController @Inject() (
                 updatedAnswers      <- Future.fromTry(request.userAnswers.set(DeclareQuarterlySpiritsPage, value))
                 maybeClearedAnswers <- Future.fromTry(clearUserAnswersWhenNoSelected(updatedAnswers, value))
                 _                   <- userAnswersConnector.set(maybeClearedAnswers)
-              } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers))
+              } yield Redirect(navigator.nextPage(DeclareQuarterlySpiritsPage, mode, updatedAnswers, Some(true)))
           )
       }
 
