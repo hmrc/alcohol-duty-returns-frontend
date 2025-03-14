@@ -921,3 +921,5 @@ returnSubmitted.warningText = Our bank details have changed. Choose Pay now and 
 returnSubmitted.warningFallbackText = Warning
 
 # End of Check and submit sub-journey
+
+clearReturn.title = Clear return and start again

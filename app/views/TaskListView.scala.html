@@ -55,5 +55,11 @@
             ))
         )
 
+    @govukButton(
+        ButtonViewModel("clearReturnButton",messages("clearReturn.title"))
+            .withCssClass("govuk-button--secondary")
+            .asLink(routes.ClearReturnAreYouSureQuestionController.onPageLoad().url)
+    )
+
 }
 
