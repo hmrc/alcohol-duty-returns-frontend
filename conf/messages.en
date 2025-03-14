@@ -241,8 +241,7 @@ taskList.section.spirits.hint = Every three months you must tell us about spirit
 taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check duty payable and send your return
 taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return
-
-clearReturn.title = Clear return and start again
+taskList.button.clearReturn = Clear return and start again
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
