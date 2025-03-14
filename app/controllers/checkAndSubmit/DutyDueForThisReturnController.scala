@@ -18,10 +18,10 @@ package controllers.checkAndSubmit
 
 import cats.data.EitherT
 import cats.implicits._
-import config.Constants.returnCreatedDetailsKey
+import config.Constants.{noDetailsValue, returnCreatedDetailsKey}
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
-import models.UserAnswers
+import models.{ErrorModel, UserAnswers}
 import models.audit.AuditReturnSubmitted
 import models.checkAndSubmit.AdrReturnSubmission
 import play.api.Logging
@@ -95,21 +95,32 @@ class DutyDueForThisReturnController @Inject() (
       // The user can have a duplicate tab open, change stuff then use it to submit
       _                           <-
         if (taskListViewModel.checkAllDeclarationSectionsCompleted(userAnswers, returnPeriod)) {
-          EitherT.pure[Future, String](())
+          EitherT.pure[Future, ErrorModel](())
         } else {
-          EitherT.leftT[Future, Unit](s"Submission attempted without completing all tasks $appaId/$periodKey")
+          EitherT.leftT[Future, Unit](
+            ErrorModel(BAD_REQUEST, s"Submission attempted without completing all tasks $appaId/$periodKey")
+          )
         }
-      adrReturnSubmission         <-
-        adrReturnSubmissionService.getAdrReturnSubmission(userAnswers, returnPeriod)
+      adrReturnSubmission         <- adrReturnSubmissionService
+                                       .getAdrReturnSubmission(userAnswers, returnPeriod)
+                                       .leftMap(err => ErrorModel(BAD_REQUEST, err))
       adrSubmissionCreatedDetails <-
         alcoholDutyReturnsConnector.submitReturn(appaId, periodKey, adrReturnSubmission)
-      _                           <- EitherT.rightT[Future, String](auditReturnSubmitted(userAnswers, adrReturnSubmission))
+      _                           <- EitherT.rightT[Future, ErrorModel](auditReturnSubmitted(userAnswers, adrReturnSubmission))
     } yield adrSubmissionCreatedDetails
     result.foldF(
-      error => {
-        logger.warn(error)
-        Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-      },
+      error =>
+        if (error.status == UNPROCESSABLE_ENTITY) {
+          logger.info(error.message)
+          val session = request.session + (returnCreatedDetailsKey -> noDetailsValue)
+          Future.successful(
+            Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedNoDetailsController.onPageLoad())
+              .withSession(session)
+          )
+        } else {
+          logger.warn(error.message)
+          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        },
       adrSubmissionCreatedDetails => {
         logger.info("Successfully submitted return")
         val session =

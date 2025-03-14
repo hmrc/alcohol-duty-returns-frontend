@@ -19,6 +19,7 @@ package controllers.checkAndSubmit
 import base.SpecBase
 import cats.data.EitherT
 import connectors.AlcoholDutyReturnsConnector
+import models.ErrorModel
 import models.audit.AuditReturnSubmitted
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -142,6 +143,43 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       }
     }
 
+    "must redirect to the Return Submitted No Details page if the return has already been submitted" in new SetUp {
+      when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(true)
+
+      when(
+        alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())
+      ).thenReturn(
+        EitherT.leftT(ErrorModel(UNPROCESSABLE_ENTITY, "Return already submitted"))
+      )
+
+      when(adrReturnSubmissionService.getAdrReturnSubmission(any(), any())(any())).thenReturn(
+        EitherT.rightT(fullReturn)
+      )
+
+      val application = applicationBuilder(userAnswers = Some(fullUserAnswers))
+        .overrides(bind[DutyDueForThisReturnHelper].toInstance(dutyDueForThisReturnHelper))
+        .overrides(bind[AdrReturnSubmissionService].toInstance(adrReturnSubmissionService))
+        .overrides(bind[AlcoholDutyReturnsConnector].toInstance(alcoholDutyReturnsConnector))
+        .overrides(bind[TaskListViewModel].toInstance(taskListViewModelMock))
+        .overrides(bind[AuditService].toInstance(auditService))
+        .overrides(bind[Clock].toInstance(clock))
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, controllers.checkAndSubmit.routes.DutyDueForThisReturnController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.checkAndSubmit.routes.ReturnSubmittedNoDetailsController
+          .onPageLoad()
+          .url
+
+        verify(auditService, times(0)).audit(eqTo(expectedAuditEvent))(any(), any())
+      }
+    }
+
     "must redirect in the Journey Recovery screen if any task is not complete" in new SetUp {
       when(taskListViewModelMock.checkAllDeclarationSectionsCompleted(any(), any())(any())).thenReturn(false)
 
@@ -210,7 +248,7 @@ class DutyDueForThisReturnControllerSpec extends SpecBase {
       )
 
       when(alcoholDutyReturnsConnector.submitReturn(any(), any(), any())(any())).thenReturn(
-        EitherT.leftT("Error message")
+        EitherT.leftT(ErrorModel(INTERNAL_SERVER_ERROR, "Error message"))
       )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
