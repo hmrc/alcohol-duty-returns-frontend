@@ -28,7 +28,7 @@ class AdjustmentRepackagedTaxTypeSummarySpec extends SpecBase {
       adjustmentRepackagedTaxTypeSummary.row(adjustmentEntry) mustBe Some(
         SummaryListRow(
           Key(Text("New tax type")),
-          Value(Text("Non-draught beer between 1% and 2% ABV (123)")),
+          Value(Text("Non-draught beer between 1% and 2% ABV (tax type code 123)")),
           "",
           Some(
             Actions(items =

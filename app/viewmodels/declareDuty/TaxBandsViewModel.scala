@@ -20,7 +20,6 @@ import models.{AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import RateBandHelper.rateBandContent
 import viewmodels.govuk.all.CheckboxGroupedItemViewModel
 
 case class TaxBandsViewModel(
@@ -38,7 +37,8 @@ object TaxBandsViewModel {
       .mapValues(rateBands =>
         rateBands.map(rateBand =>
           CheckboxGroupedItemViewModel(
-            content = Text(rateBandContent(rateBand, Some(regime)).capitalize),
+            content =
+              Text(RateBandDescription.toDescription(rateBand, Some(regime), showDraughtStatus = false).capitalize),
             fieldId = "rateBand",
             value = rateBand.taxTypeCode
           )
