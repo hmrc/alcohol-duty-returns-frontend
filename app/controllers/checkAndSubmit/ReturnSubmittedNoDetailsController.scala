@@ -16,20 +16,18 @@
 
 package controllers.checkAndSubmit
 
-import config.Constants.{noDetailsValue, periodKeySessionKey, returnCreatedDetailsKey}
+import config.Constants.{noDetailsValue, returnCreatedDetailsKey}
 import config.FrontendAppConfig
 import controllers.actions._
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.returns.ReturnSubmittedHelper
 import views.html.checkAndSubmit.ReturnSubmittedNoDetailsView
 
 import javax.inject.Inject
 
 class ReturnSubmittedNoDetailsController @Inject() (
-  override val messagesApi: MessagesApi,
   identify: IdentifyWithEnrolmentAction,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnSubmittedNoDetailsView,

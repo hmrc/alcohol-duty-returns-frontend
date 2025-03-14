@@ -112,7 +112,6 @@ class DutyDueForThisReturnController @Inject() (
       error =>
         if (error.status == UNPROCESSABLE_ENTITY) {
           logger.info(error.message)
-          // TODO: backup return submitted page
           val session = request.session + (returnCreatedDetailsKey -> noDetailsValue)
           Future.successful(
             Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedNoDetailsController.onPageLoad())
