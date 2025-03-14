@@ -34,6 +34,9 @@ GET         /view-payments                               controllers.payments.Vi
 
 GET         /complete-return/task-list                   controllers.TaskListController.onPageLoad
 
+GET         /clear-return                                controllers.ClearReturnAreYouSureQuestionController.onPageLoad()
+POST        /clear-return                                controllers.ClearReturnAreYouSureQuestionController.onSubmit()
+
 GET         /before-you-start-your-return/:periodKey     controllers.BeforeStartReturnController.onPageLoad(periodKey: String)
 POST        /before-you-start-your-return                controllers.BeforeStartReturnController.onSubmit()
 
