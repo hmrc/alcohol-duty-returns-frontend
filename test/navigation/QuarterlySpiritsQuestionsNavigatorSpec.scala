@@ -30,7 +30,12 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
     "in Normal mode" - {
       "must go from a page that doesn't exist in the route map to the Task List page" in {
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.TaskListController.onPageLoad
+        navigator.nextPage(
+          UnknownPage,
+          NormalMode,
+          emptyUserAnswers,
+          Some(false)
+        ) mustBe routes.TaskListController.onPageLoad
       }
 
       "the Declare Quarterly Spirits page" - {
@@ -38,7 +43,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
-            emptyUserAnswers.set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, true).success.value
+            emptyUserAnswers.set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, true).success.value,
+            Some(false)
           ) mustBe controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
         }
 
@@ -46,7 +52,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
-            emptyUserAnswers.set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, false).success.value
+            emptyUserAnswers.set(pages.spiritsQuestions.DeclareQuarterlySpiritsPage, false).success.value,
+            Some(false)
           ) mustBe routes.TaskListController.onPageLoad
         }
 
@@ -54,7 +61,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
             NormalMode,
-            emptyUserAnswers
+            emptyUserAnswers,
+            Some(false)
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -64,7 +72,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.DeclareSpiritsTotalPage,
             NormalMode,
-            emptyUserAnswers
+            emptyUserAnswers,
+            Some(false)
           ) mustBe controllers.spiritsQuestions.routes.WhiskyController.onPageLoad(NormalMode)
         }
       }
@@ -74,7 +83,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.WhiskyPage,
             NormalMode,
-            emptyUserAnswers
+            emptyUserAnswers,
+            Some(false)
           ) mustBe controllers.spiritsQuestions.routes.SpiritTypeController.onPageLoad(NormalMode)
         }
       }
@@ -87,7 +97,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
             emptyUserAnswers
               .set(pages.spiritsQuestions.SpiritTypePage, Set[SpiritType](SpiritType.Maltspirits, SpiritType.Other))
               .success
-              .value
+              .value,
+            Some(false)
           ) mustBe controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(NormalMode)
         }
 
@@ -101,7 +112,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
                 Set[SpiritType](SpiritType.Maltspirits, SpiritType.Grainspirits)
               )
               .success
-              .value
+              .value,
+            Some(false)
           ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
         }
 
@@ -109,7 +121,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           navigator.nextPage(
             pages.spiritsQuestions.SpiritTypePage,
             NormalMode,
-            emptyUserAnswers
+            emptyUserAnswers,
+            Some(false)
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -121,7 +134,8 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
         navigator.nextPage(
           UnknownPage,
           CheckMode,
-          emptyUserAnswers
+          emptyUserAnswers,
+          Some(false)
         ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
 
@@ -130,7 +144,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.SpiritTypePage,
           CheckMode,
           emptyUserAnswers,
-          true
+          Some(true)
         ) mustBe controllers.spiritsQuestions.routes.OtherSpiritsProducedController.onPageLoad(CheckMode)
       }
 
@@ -139,7 +153,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.SpiritTypePage,
           CheckMode,
           emptyUserAnswers,
-          false
+          Some(false)
         ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
 
@@ -148,7 +162,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.OtherSpiritsProducedPage,
           CheckMode,
           emptyUserAnswers,
-          false
+          Some(false)
         ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
 
@@ -157,7 +171,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.WhiskyPage,
           CheckMode,
           emptyUserAnswers,
-          false
+          Some(false)
         ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
 
@@ -166,7 +180,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.DeclareSpiritsTotalPage,
           CheckMode,
           emptyUserAnswers,
-          false
+          Some(false)
         ) mustBe controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad()
       }
 
@@ -175,7 +189,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
           CheckMode,
           emptyUserAnswers.set(DeclareQuarterlySpiritsPage, false).success.value,
-          false
+          Some(false)
         ) mustBe routes.TaskListController.onPageLoad
       }
 
@@ -184,7 +198,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
           CheckMode,
           emptyUserAnswers.set(DeclareQuarterlySpiritsPage, true).success.value,
-          false
+          Some(false)
         ) mustBe controllers.spiritsQuestions.routes.DeclareSpiritsTotalController.onPageLoad(NormalMode)
       }
 
@@ -193,7 +207,7 @@ class QuarterlySpiritsQuestionsNavigatorSpec extends SpecBase {
           pages.spiritsQuestions.DeclareQuarterlySpiritsPage,
           CheckMode,
           emptyUserAnswers,
-          false
+          Some(false)
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
     }

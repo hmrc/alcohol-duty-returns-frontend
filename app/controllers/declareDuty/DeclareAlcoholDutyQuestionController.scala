@@ -73,7 +73,7 @@ class DeclareAlcoholDutyQuestionController @Inject() (
               singleRegimeUpdatedUserAnswer <- Future.fromTry(checkIfOneRegimeAndUpdateUserAnswer(updatedAnswers))
               filterUserAnswer              <- Future.fromTry(filterAlcoholDutyQuestionAnswer(singleRegimeUpdatedUserAnswer, value))
               _                             <- userAnswersConnector.set(filterUserAnswer)
-            } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer))
+            } yield Redirect(navigator.nextPage(DeclareAlcoholDutyQuestionPage, mode, filterUserAnswer, Some(false)))
         )
   }
 

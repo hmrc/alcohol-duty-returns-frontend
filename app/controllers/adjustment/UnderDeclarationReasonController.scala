@@ -65,7 +65,7 @@ class UnderDeclarationReasonController @Inject() (
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(UnderDeclarationReasonPage, value))
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(UnderDeclarationReasonPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(UnderDeclarationReasonPage, mode, updatedAnswers, Some(true)))
         )
   }
 

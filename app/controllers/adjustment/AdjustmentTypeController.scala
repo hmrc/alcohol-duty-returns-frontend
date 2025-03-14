@@ -81,7 +81,7 @@ class AdjustmentTypeController @Inject() (
                 Future.fromTry(helper.updateIfSingleRegimeAndSpoilt(updatedAnswers, value, clock))
               _                                         <- userAnswersConnector.set(conditionalUpdateForSingleRegimeAndSpoilt)
             } yield Redirect(
-              navigator.nextPage(AdjustmentTypePage, mode, conditionalUpdateForSingleRegimeAndSpoilt, hasChanged)
+              navigator.nextPage(AdjustmentTypePage, mode, conditionalUpdateForSingleRegimeAndSpoilt, Some(hasChanged))
             )
           }
         )

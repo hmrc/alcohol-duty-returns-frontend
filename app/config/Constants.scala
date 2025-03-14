@@ -68,6 +68,8 @@ object Constants {
 
   val quarterlySpiritsMonths: Set[Month] = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
 
+  val ukTimeZoneStringId = "Europe/London"
+
   object Format {
     val numeric = "numeric"
   }
@@ -173,5 +175,7 @@ object Constants {
 
     val formGroupCssClass      = "govuk-form-group"
     val formGroupErrorCssClass = "govuk-form-group--error"
+
+    val errorMessageCssClass = "govuk-error-message"
   }
 }

@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package navigation
+@import config.Constants.Css
 
-import play.api.mvc.Call
-import pages._
-import models.{Mode, UserAnswers}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+@this()
 
-class FakeAdjustmentNavigator(desiredRoute: Call, hasValueChanged: Option[Boolean]) extends AdjustmentNavigator {
+@(errorText: String, id: Option[String] = None)(implicit messages: Messages)
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Option[Boolean]): Call = {
-    hasValueChanged mustBe hasChanged
-    desiredRoute
-  }
-}
+<p @id.map{id => id="@id"} class="@Css.errorMessageCssClass">
+    <span class="@Css.visuallyHiddenCssClass">@messages("error.prefix"):</span>
+    @errorText
+</p>

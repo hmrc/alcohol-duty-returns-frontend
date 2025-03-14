@@ -70,7 +70,7 @@ class AlcoholTypeController @Inject() (
               updatedAnswers                <- Future.fromTry(request.userAnswers.set(AlcoholTypePage, alcoholRegimes))
               userAnswersWithUpdatedRegimes <- Future.fromTry(clearUserAnswers(updatedAnswers, regimesToRemove))
               _                             <- userAnswersConnector.set(userAnswersWithUpdatedRegimes)
-            } yield Redirect(navigator.nextPage(AlcoholTypePage, mode, userAnswersWithUpdatedRegimes))
+            } yield Redirect(navigator.nextPage(AlcoholTypePage, mode, userAnswersWithUpdatedRegimes, Some(true)))
           }
         )
   }
