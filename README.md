@@ -100,39 +100,6 @@ This is an sbt command alias specific to this project. It will run a scala forma
 check, run a scala style check, run unit tests, run integration tests and produce a coverage report:
 > `sbt runAllChecks`
 
-## Scripts
-
-It is expected these scripts will be run from the scripts directory where they reside
-
-### checkWelshKeys.sh
-
-Checks that every English key entry also has a Welsh one (and v/v). Used to detect added English keys
-or Welsh keys that need removing. Thus helping keep the two files in sync.
-
-### findMessageKeys.pl
-
-Script to list as many (not all) message keys that are in use in the code. A number of known substitutions
-are made to expand dynamic content to actual messages. However due to the nature of the code some message
-keys will not be found by this script. A file 'also_used_keys' should contain keys that this script cannot
-find but we know are in use.
-
-### getUnusedKeys.sh
-
-Script to list all keys that are not in use. Uses findMessageKeys.pl and also_used_keys to output this.
-
-### getNotChangedWelshMessages.sh
-
-Takes a commit id, and tries to pair up any changes to the messages.en file up to and including that
-commit with changes made to messages.cy. The aim is to try to help ensure changes made to the English
-have also been made to the Welsh. Although sorted, the keys are not uniquified so if two changes are
-made to messages.en, but only one to messages.cy, it will show the key once (even though the change to
-the Welsh file might account for both - this will need to be manually checked).
-
-### misc
-
-The file also_used_keys contains keys that we can't 'also_used_keys' should contain keys that the
-findMessageKeys.pl script cannot find automatically from the code, but we know are in use.
-
 ## License
 
 This code is open source software licensed under
