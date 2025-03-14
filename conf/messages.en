@@ -242,6 +242,8 @@ taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check duty payable and send your return
 taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return
 
+clearReturn.title = Clear return and start again
+
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
 beforeStartReturn.text.guidance1 = Use this service to submit your Alcohol Duty Return for {0} to {1}.
@@ -922,4 +924,3 @@ returnSubmitted.warningFallbackText = Warning
 
 # End of Check and submit sub-journey
 
-clearReturn.title = Clear return and start again
