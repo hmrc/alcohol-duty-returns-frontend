@@ -18,7 +18,7 @@ package controllers.checkAndSubmit
 
 import cats.data.EitherT
 import cats.implicits._
-import config.Constants.returnCreatedDetailsKey
+import config.Constants.{noDetailsValue, returnCreatedDetailsKey}
 import connectors.AlcoholDutyReturnsConnector
 import controllers.actions._
 import models.{ErrorModel, UserAnswers}
@@ -109,16 +109,19 @@ class DutyDueForThisReturnController @Inject() (
       _                           <- EitherT.rightT[Future, ErrorModel](auditReturnSubmitted(userAnswers, adrReturnSubmission))
     } yield adrSubmissionCreatedDetails
     result.foldF(
-      error => {
+      error =>
         if (error.status == UNPROCESSABLE_ENTITY) {
           logger.info(error.message)
           // TODO: backup return submitted page
-          Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          val session = request.session + (returnCreatedDetailsKey -> noDetailsValue)
+          Future.successful(
+            Redirect(controllers.checkAndSubmit.routes.ReturnSubmittedNoDetailsController.onPageLoad())
+              .withSession(session)
+          )
         } else {
           logger.warn(error.message)
           Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
-        }
-      },
+        },
       adrSubmissionCreatedDetails => {
         logger.info("Successfully submitted return")
         val session =

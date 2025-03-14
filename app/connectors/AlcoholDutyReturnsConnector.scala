@@ -133,7 +133,7 @@ class AlcoholDutyReturnsConnector @Inject() (
         .withBody(Json.toJson(returnSubmission))
         .execute[Either[UpstreamErrorResponse, HttpResponse]]
         .map {
-          case Right(response) if response.status == CREATED                 =>
+          case Right(response) if response.status == CREATED                           =>
             Try(response.json.as[AdrReturnCreatedDetails]) match {
               case Success(data)      => Right[ErrorModel, AdrReturnCreatedDetails](data)
               case Failure(exception) =>
@@ -143,7 +143,7 @@ class AlcoholDutyReturnsConnector @Inject() (
           case Left(errorResponse) if errorResponse.statusCode == UNPROCESSABLE_ENTITY =>
             logger.warn(s"Return already submitted")
             Left(ErrorModel(UNPROCESSABLE_ENTITY, "Return already submitted"))
-          case Left(errorResponse)                                           =>
+          case Left(errorResponse)                                                     =>
             logger.warn(s"Unable to submit return. Unexpected response: ${errorResponse.message}")
             Left(
               ErrorModel(
@@ -151,7 +151,7 @@ class AlcoholDutyReturnsConnector @Inject() (
                 s"Unable to submit return. Unexpected response: ${errorResponse.message}"
               )
             )
-          case Right(response)                                               =>
+          case Right(response)                                                         =>
             logger.warn(s"Unable to submit return. Unexpected status code: ${response.status}")
             Left(
               ErrorModel(INTERNAL_SERVER_ERROR, s"Unable to submit return. Unexpected status code: ${response.status}")

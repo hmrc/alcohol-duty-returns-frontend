@@ -936,4 +936,12 @@ returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcoh
 returnSubmitted.warningText = Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.
 returnSubmitted.warningFallbackText = Warning
 
+returnSubmitted.noDetails.p1 = We’ve received your return, but we’re unable to show the full details right now. This may be due to a temporary problem with the service.
+returnSubmitted.noDetails.youCan = You can:
+returnSubmitted.noDetails.viewReturn1 = view your full return details
+returnSubmitted.noDetails.viewReturn2 = to confirm your reference number
+returnSubmitted.noDetails.viewPayments = check how much duty you owe
+returnSubmitted.noDetails.p2 = Your details from this return may take up to 2 working days to be updated in our service.
+returnSubmitted.noDetails.p3 = Use your reference number from this return as a payment reference if you need to pay any duty.
+
 # End of Check and submit sub-journey
