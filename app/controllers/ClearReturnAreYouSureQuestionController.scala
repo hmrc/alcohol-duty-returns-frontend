@@ -57,11 +57,11 @@ class ClearReturnAreYouSureQuestionController @Inject() (
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value => handleAnswer(value, request.appaId, request.returnPeriod.toPeriodKey)
+        value => clearUserAnswers(value, request.appaId, request.returnPeriod.toPeriodKey)
       )
   }
 
-  private def handleAnswer(shouldClear: Boolean, appaId: String, periodKey: String)(implicit
+  private def clearUserAnswers(shouldClear: Boolean, appaId: String, periodKey: String)(implicit
     request: DataRequest[AnyContent]
   ): Future[Result] =
     if (shouldClear) {
