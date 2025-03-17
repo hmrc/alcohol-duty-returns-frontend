@@ -11,7 +11,7 @@ site.saveAndReturn = Cadw a mynd yn ôl i’ch Cyfrif Treth Busnes
 site.agreeAndSubmit = Cytuno ac anfon y Datganiad
 site.payNow = Talu nawr
 site.startAgain = Dechrau eto
-site.signIn = NOT_FOUND
+site.signIn = Mewngofnodi
 site.govuk = GOV.UK
 site.unit.litres = o litrau
 site.rate.litre = y litr
@@ -29,7 +29,7 @@ site.warning = Rhybudd
 welsh.and.consonant = a
 welsh.and.vowel = ac
 
-date.day = NOT_FOUND
+date.day = Diwrnod
 date.month = Mis
 date.year = Blwyddyn
 
@@ -40,8 +40,8 @@ timeout.signOut = Allgofnodi
 
 error.prefix = Gwall
 error.title.prefix = Gwall:
-error.boolean = NOT_FOUND
-error.required = NOT_FOUND
+error.boolean = Rhowch ateb
+error.required = Mae angen i chi nodi gwerth
 error.summary.title = Mae problem.
 
 checkYourAnswers.title = Gwirio’ch atebion
@@ -62,9 +62,9 @@ returnLocked.heading = Mae’r Datganiad hwn wedi’i gloi dros dro
 returnLocked.p1 = Mae’r Datganiad hwn wedi cael ei gloi dros dro, oherwydd bod rhywun arall yn ei olygu.
 returnLocked.p2 = Rhowch gynnig arall arni mewn ychydig o funudau.
 
-signedOut.title = NOT_FOUND
-signedOut.heading = NOT_FOUND
-signedOut.guidance = NOT_FOUND
+signedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.guidance = Ni wnaethom gadw’ch atebion.
 
 unauthorised.title = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
@@ -173,7 +173,7 @@ viewPastPayments.outstandingPayments.action = Camau
 viewPastPayments.youOwe = Mae arnoch
 viewPastPayments.duty.value = {0}
 viewPastPayments.credit.paragraph = Does gennych chi ddim byd i’w dalu. Gallwch chi ofyn am ad-daliad, neu byddwn ni’n defnyddio’r credyd tuag at daliadau yn y dyfodol.
-viewPastPayments.zeroBalance.paragraph = NOT_FOUND
+viewPastPayments.zeroBalance.paragraph = Does gennych chi ddim byd i’w dalu.
 viewPastPayments.outstandingPayments.paragraph = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymddangos, yn dibynnu ar sut rydych yn talu. Ar ôl i chi gwblhau’ch Datganiad, bydd eich cyfrifiad treth yn cymryd hyd at 2 ddiwrnod.
 viewPastPayments.Return.description = Taliad ar gyfer Datganiad Toll Alcohol
 viewPastPayments.RPI.description = Llog ar ad-daliad
@@ -391,7 +391,7 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description = Disgrifiad
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Cyfanswm y cyfaint
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Alcohol pur
 
-doYouHaveMultipleSPRDutyRates.title = NOT_FOUND
+doYouHaveMultipleSPRDutyRates.title = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
 doYouHaveMultipleSPRDutyRates.heading = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
 doYouHaveMultipleSPRDutyRates.p1 = Efallai y bydd angen i chi ddatgan {0} sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o {0} – er enghraifft os yw un o’r canlynol yn wir:
 doYouHaveMultipleSPRDutyRates.l1 = mae’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach wedi newid, ac mae angen i chi roi gwybod am waith cynhyrchu a wnaed pan oedd cyfradd wahanol yn berthnasol
@@ -416,7 +416,7 @@ tellUsAboutSingleSPRRate.heading.OtherFermentedProduct = Rhoi gwybod i ni am y c
 tellUsAboutSingleSPRRate.p1.Beer = Rhowch wybod i ni am y cwrw y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y cwrw hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.Cider = Rhowch wybod i ni am y seidr y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y seidr hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.Wine = Rhowch wybod i ni am y gwin y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y gwin hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-tellUsAboutSingleSPRRate.p1.Spirits = NOT_FOUND
+tellUsAboutSingleSPRRate.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y gwin hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Rhowch wybod i ni am y cynnyrch eplesedig arall y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y cynnyrch eplesedig arall hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
 tellUsAboutSingleSPRRate.smallProducer.heading = Faint o {0} nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
@@ -750,9 +750,9 @@ spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText = sydd yn y {0} wedi’i ddife
 whenDidYouPayDuty.default.title = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.default.heading = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.under-declaration.title = Pryd dylech chi fod wedi talu toll?
-whenDidYouPayDuty.spoilt.title = NOT_FOUND
+whenDidYouPayDuty.spoilt.title = I’r mis agosaf, pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.under-declaration.heading = Pryd dylech chi fod wedi talu toll?
-whenDidYouPayDuty.spoilt.heading = NOT_FOUND
+whenDidYouPayDuty.spoilt.heading = I’r mis agosaf, pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.exciseEnquiries.link = Ffoniwch CThEF neu cysylltwch â CThEF drwy’r post (yn agor tab newydd)
 whenDidYouPayDuty.paragraph = os cyhoeddwyd hyn yn wreiddiol cyn mis Awst 2023.
 whenDidYouPayDuty.hint = Er enghraifft, 10 2024
@@ -776,7 +776,7 @@ adjustmentTaxType.checkYourAnswersLabel = Math o dreth
 adjustmentTaxType.error.invalid = Nodwch god dilys ar gyfer y math o dreth
 adjustmentTaxType.error.required = Nodwch god y math o dreth
 adjustmentTaxType.error.notDraught = Mae’n rhaid i god y math o dreth fod yn god ar gyfer cynnyrch alcoholaidd o’r gasgen
-adjustmentTaxType.repackaged.change.hidden = NOT_FOUND
+adjustmentTaxType.repackaged.change.hidden = math gwreiddiol o dreth
 adjustmentTaxType.change.hidden = y math o dreth
 adjustmentTaxType.repackaged.checkYourAnswersLabel = Math gwreiddiol o dreth
 
@@ -817,8 +817,8 @@ adjustmentRepackagedTaxType.error.nonDraught = Mae’n rhaid i god y math o dret
 adjustmentRepackagedTaxType.change.hidden = y math newydd o dreth
 adjustmentRepackagedTaxType.hint = Cod 3 digid y math o dreth ar gyfer cynnyrch nad yw’n dod o’r gasgen
 
-adjustmentSmallProducerReliefDutyRate.title = NOT_FOUND
-adjustmentSmallProducerReliefDutyRate.heading = NOT_FOUND
+adjustmentSmallProducerReliefDutyRate.title = Beth yw’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
+adjustmentSmallProducerReliefDutyRate.heading = Beth yw’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
 adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel = Cyfradd doll SPR
 adjustmentSmallProducerReliefDutyRate.hint = Dylech gynnwys punnoedd a cheiniogau
 adjustmentSmallProducerReliefDutyRate.error.nonNumeric = Mae’n rhaid i’ch cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
@@ -864,12 +864,12 @@ deleteAdjustment.error.required = Dewiswch ‘Iawn’ er mwyn tynnu’r addasiad
 underDeclarationReason.title = Pam na chafodd y cynhyrchion alcoholaidd eu datgan tan nawr?
 underDeclarationReason.heading = Pam na chafodd y cynhyrchion alcoholaidd eu datgan tan nawr?
 underDeclarationReason.error.required = Nodwch y rheswm pam na chafodd y cynhyrchion alcoholaidd eu datgan tan nawr
-underDeclarationReason.error.length = NOT_FOUND
+underDeclarationReason.error.length = Mae’n rhaid i’r rheswm fod yn {0} o gymeriadau neu lai
 
 overDeclarationReason.title = Pam cafodd cynhyrchion alcoholaidd eu gorddatgan?
 overDeclarationReason.heading = Pam cafodd cynhyrchion alcoholaidd eu gorddatgan?
 overDeclarationReason.error.required = Nodwch y rheswm pam cafodd cynhyrchion alcoholaidd eu gorddatgan
-overDeclarationReason.error.length = NOT_FOUND
+overDeclarationReason.error.length = Mae’n rhaid i’r rheswm fod yn {0} o gymeriadau neu lai
 
 # End of adjustments sub-journey
 
