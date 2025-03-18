@@ -24,6 +24,8 @@ object Constants {
   val periodKeySessionKey: String     = "period-key"
   val pastPaymentsSessionKey: String  = "past-payment-amount"
 
+  val noDetailsValue: String = "no-details"
+
   object MappingFields {
     val taxTypeField: String           = "taxType"
     val totalLitresField: String       = "totalLitres"
