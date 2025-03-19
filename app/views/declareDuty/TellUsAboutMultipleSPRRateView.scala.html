@@ -75,7 +75,7 @@
               case Seq(onlyButton) => Text(onlyButton.content.asHtml.toString)
               case _ => Text(messages(s"tellUsAboutMultipleSPRRate.h3.$regime"))
             },
-            classes = Css.fieldsetLegendSCssClass
+            classes = Css.fieldsetLegendMCssClass
           )),
           html = HtmlFormat.fill(List(
             Some(govukInput(

@@ -83,6 +83,11 @@ noAppaId.heading = You need an Alcoholic Products Producer approval ID to access
 noAppaId.p = If you were producing alcoholic products before 1 February 2025, you can find your APPA ID on the online service letter you received from HMRC.
 noAppaId.link.text = Read guidance on getting approval to produce alcoholic products (opens in a new tab)
 
+clearReturnAreYouSureQuestion.title = Are you sure you want to clear your return?
+clearReturnAreYouSureQuestion.heading = Are you sure you want to clear your return?
+clearReturnAreYouSureQuestion.warning = This will delete all the information you have entered for this return.
+clearReturnAreYouSureQuestion.error.required = Select yes if you want to clear your return
+
 regime.beer = beer
 regime.cider = cider
 regime.wine = wine
@@ -236,6 +241,7 @@ taskList.section.spirits.hint = Every three months you must tell us about spirit
 taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check duty payable and send your return
 taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return
+taskList.button.clearReturn = Clear return and start again
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
@@ -924,3 +930,4 @@ returnSubmitted.noDetails.p2 = Your details from this return may take up to 2 wo
 returnSubmitted.noDetails.p3 = Use your reference number from this return as a payment reference if you need to pay any duty.
 
 # End of Check and submit sub-journey
+
