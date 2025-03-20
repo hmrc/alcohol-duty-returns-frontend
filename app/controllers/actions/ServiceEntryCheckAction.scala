@@ -68,7 +68,7 @@ class ServiceEntryCheckActionImpl @Inject() (
       }
     } recover {
       case _: InsufficientEnrolments =>
-        logger.warn(s"Enrolment not found for user")
+        logger.info(s"Enrolment not found for user")
         Redirect(controllers.auth.routes.DoYouHaveAnAppaIdController.onPageLoad())
       case e                         =>
         logger.warn("Enrolment check error: ", e)
