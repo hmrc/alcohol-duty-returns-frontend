@@ -76,7 +76,7 @@ class AdjustmentVolumeControllerSpec extends SpecBase {
   val userAnswersWithoutAdjustmentType =
     emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry.copy(adjustmentType = None)).success.value
 
-  val rateBandContent = "Beer between 0.1% and 5.8% ABV (tax type code 310)"
+  val rateBandContent = "Draught beer between 0.1% and 5.8% ABV (tax type code 310)"
 
   "AdjustmentVolume Controller" - {
     "must return OK and the correct view for a GET" in {

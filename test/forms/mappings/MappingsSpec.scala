@@ -778,11 +778,11 @@ class MappingsSpec extends SpecBase with Mappings {
     "must bind a valid VolumeAndRateByTaxType" in {
       val result = testForm.bind(
         Map(
-          "value.rateBandRecap" -> rateBandRecap,
-          "value.taxType"       -> "123",
-          "value.totalLitres"   -> "1234.45",
-          "value.pureAlcohol"   -> "12.3456",
-          "value.dutyRate"      -> "5.31"
+          "value.rateBandDescription" -> rateBandDescription,
+          "value.taxType"             -> "123",
+          "value.totalLitres"         -> "1234.45",
+          "value.pureAlcohol"         -> "12.3456",
+          "value.dutyRate"            -> "5.31"
         )
       )
       result.get mustBe VolumeAndRateByTaxType(
@@ -793,7 +793,7 @@ class MappingsSpec extends SpecBase with Mappings {
       )
     }
 
-    "must fallback to regime when missing rateBandRecap" - {
+    "must fallback to regime when missing rateBandDescription" - {
       val result = testForm.bind(
         Map(
           "value.taxType"     -> "123",
@@ -815,49 +815,53 @@ class MappingsSpec extends SpecBase with Mappings {
       "taxType" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> "5.31"
           )
         )
-        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandDescription, regimeName)))
       }
 
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> "5.31"
           )
         )
-        result.errors mustBe Seq(FormError("value_totalLitres", "required.totalLitres", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "required.totalLitres", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "pureAlcohol" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.dutyRate"            -> "5.31"
           )
         )
-        result.errors mustBe Seq(FormError("value_pureAlcohol", "required.pureAlcohol", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "required.pureAlcohol", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "dutyRate" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.3456"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.3456"
           )
         )
-        result.errors mustBe Seq(FormError("value_dutyRate", "required.dutyRate", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(FormError("value_dutyRate", "required.dutyRate", Seq(rateBandDescription, regimeName)))
       }
     }
 
@@ -865,53 +869,57 @@ class MappingsSpec extends SpecBase with Mappings {
       "taxType" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> "5.31"
           )
         )
-        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandDescription, regimeName)))
       }
 
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> "5.31"
           )
         )
-        result.errors mustBe Seq(FormError("value_totalLitres", "required.totalLitres", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "required.totalLitres", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "pureAlcohol" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "",
+            "value.dutyRate"            -> "5.31"
           )
         )
-        result.errors mustBe Seq(FormError("value_pureAlcohol", "required.pureAlcohol", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "required.pureAlcohol", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "dutyRate" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> ""
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> ""
           )
         )
-        result.errors mustBe Seq(FormError("value_dutyRate", "required.dutyRate", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(FormError("value_dutyRate", "required.dutyRate", Seq(rateBandDescription, regimeName)))
       }
     }
 
@@ -919,40 +927,44 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "a",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "a",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> "5.31"
           )
         )
-        result.errors mustBe Seq(FormError("value_totalLitres", "invalid.totalLitres", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "invalid.totalLitres", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "pureAlcohol" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "a",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "a",
+            "value.dutyRate"            -> "5.31"
           )
         )
-        result.errors mustBe Seq(FormError("value_pureAlcohol", "invalid.pureAlcohol", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "invalid.pureAlcohol", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "dutyRate" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> "a"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> "a"
           )
         )
-        result.errors mustBe Seq(FormError("value_dutyRate", "invalid.dutyRate", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(FormError("value_dutyRate", "invalid.dutyRate", Seq(rateBandDescription, regimeName)))
       }
     }
 
@@ -960,44 +972,46 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.456",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.456",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "decimalPlaces.totalLitres", Seq(rateBandRecap, regimeName))
+          FormError("value_totalLitres", "decimalPlaces.totalLitres", Seq(rateBandDescription, regimeName))
         )
       }
 
       "pureAlcohol" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.34567",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.34567",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
 
       "dutyRate" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.3456",
-            "value.dutyRate"      -> "5.312"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.3456",
+            "value.dutyRate"            -> "5.312"
           )
         )
-        result.errors mustBe Seq(FormError("value_dutyRate", "decimalPlaces.dutyRate", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_dutyRate", "decimalPlaces.dutyRate", Seq(rateBandDescription, regimeName))
+        )
       }
     }
 
@@ -1005,45 +1019,45 @@ class MappingsSpec extends SpecBase with Mappings {
       "with less than 4 decimal places" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.345",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.345",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
 
       "with no decimal places and trailing decimal point" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
 
       "with no decimal places" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
     }
@@ -1052,11 +1066,11 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "0.01",
-            "value.pureAlcohol"   -> "0.0001",
-            "value.dutyRate"      -> "0"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "0.01",
+            "value.pureAlcohol"         -> "0.0001",
+            "value.dutyRate"            -> "0"
           )
         )
         result.errors mustBe Seq.empty
@@ -1067,44 +1081,46 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "0",
-            "value.pureAlcohol"   -> "0.0001",
-            "value.dutyRate"      -> "0"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "0",
+            "value.pureAlcohol"         -> "0.0001",
+            "value.dutyRate"            -> "0"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "minimumValue.totalLitres", Seq(rateBandRecap, regimeName))
+          FormError("value_totalLitres", "minimumValue.totalLitres", Seq(rateBandDescription, regimeName))
         )
       }
 
       "pureAlcohol" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "0.01",
-            "value.pureAlcohol"   -> "0.0000",
-            "value.dutyRate"      -> "0"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "0.01",
+            "value.pureAlcohol"         -> "0.0000",
+            "value.dutyRate"            -> "0"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "minimumValue.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "minimumValue.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
 
       "dutyRate" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "0.01",
-            "value.pureAlcohol"   -> "0.0001",
-            "value.dutyRate"      -> "-0.01"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "0.01",
+            "value.pureAlcohol"         -> "0.0001",
+            "value.dutyRate"            -> "-0.01"
           )
         )
-        result.errors mustBe Seq(FormError("value_dutyRate", "minimumValue.dutyRate", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_dutyRate", "minimumValue.dutyRate", Seq(rateBandDescription, regimeName))
+        )
       }
     }
 
@@ -1112,15 +1128,15 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "999999999.99",
-            "value.pureAlcohol"   -> "999999999.9999",
-            "value.dutyRate"      -> "999999999.99"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "999999999.99",
+            "value.pureAlcohol"         -> "999999999.9999",
+            "value.dutyRate"            -> "999999999.99"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "lessOrEqual", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "lessOrEqual", Seq(rateBandDescription, regimeName))
         ) // As pure alcohol volume exceeds total litres, but has already passed max check
       }
     }
@@ -1129,44 +1145,46 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1000000000",
-            "value.pureAlcohol"   -> "999999999.9999",
-            "value.dutyRate"      -> "999999999.99"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1000000000",
+            "value.pureAlcohol"         -> "999999999.9999",
+            "value.dutyRate"            -> "999999999.99"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "maximumValue.totalLitres", Seq(rateBandRecap, regimeName))
+          FormError("value_totalLitres", "maximumValue.totalLitres", Seq(rateBandDescription, regimeName))
         )
       }
 
       "pureAlcohol" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "999999999.99",
-            "value.pureAlcohol"   -> "1000000000.0000",
-            "value.dutyRate"      -> "999999999.99"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "999999999.99",
+            "value.pureAlcohol"         -> "1000000000.0000",
+            "value.dutyRate"            -> "999999999.99"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "maximumValue.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "maximumValue.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
 
       "dutyRate" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "999999999.99",
-            "value.pureAlcohol"   -> "999999999.9999",
-            "value.dutyRate"      -> "1000000000"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "999999999.99",
+            "value.pureAlcohol"         -> "999999999.9999",
+            "value.dutyRate"            -> "1000000000"
           )
         )
-        result.errors mustBe Seq(FormError("value_dutyRate", "maximumValue.dutyRate", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_dutyRate", "maximumValue.dutyRate", Seq(rateBandDescription, regimeName))
+        )
       }
     }
 
@@ -1174,22 +1192,22 @@ class MappingsSpec extends SpecBase with Mappings {
       "is greater than or equal to it must bind" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "12.46",
-            "value.pureAlcohol"   -> "12.4500",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "12.46",
+            "value.pureAlcohol"         -> "12.4500",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq.empty
 
         val result2 = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "12.45",
-            "value.pureAlcohol"   -> "12.4500",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "12.45",
+            "value.pureAlcohol"         -> "12.4500",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result2.errors mustBe Seq.empty
@@ -1198,15 +1216,15 @@ class MappingsSpec extends SpecBase with Mappings {
       "is less than it must not bind" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "12.44",
-            "value.pureAlcohol"   -> "12.4500",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "12.44",
+            "value.pureAlcohol"         -> "12.4500",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "lessOrEqual", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "lessOrEqual", Seq(rateBandDescription, regimeName))
         )
       }
     }
@@ -1240,16 +1258,16 @@ class MappingsSpec extends SpecBase with Mappings {
       val result =
         testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.3456"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.3456"
           )
         )
       result.get mustBe VolumesByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456))
     }
 
-    "must fallback to regime when missing rateBandRecap" - {
+    "must fallback to regime when missing rateBandDescription" - {
       val result = testForm.bind(
         Map(
           "value.taxType"     -> "123",
@@ -1270,36 +1288,40 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.totalLitres"   -> "1234.45",
-              "value.pureAlcohol"   -> "12.3456"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.totalLitres"         -> "1234.45",
+              "value.pureAlcohol"         -> "12.3456"
             )
           )
-        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandDescription, regimeName)))
       }
 
       "totalLitres" in {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.pureAlcohol"   -> "12.3456"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.pureAlcohol"         -> "12.3456"
             )
           )
-        result.errors mustBe Seq(FormError("value_totalLitres", "required.totalLitres", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "required.totalLitres", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "pureAlcohol" in {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "1234.45"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "1234.45"
             )
           )
-        result.errors mustBe Seq(FormError("value_pureAlcohol", "required.pureAlcohol", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "required.pureAlcohol", Seq(rateBandDescription, regimeName))
+        )
       }
     }
 
@@ -1308,39 +1330,43 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "",
-              "value.totalLitres"   -> "1234.45",
-              "value.pureAlcohol"   -> "12.3456"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "",
+              "value.totalLitres"         -> "1234.45",
+              "value.pureAlcohol"         -> "12.3456"
             )
           )
-        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandDescription, regimeName)))
       }
 
       "totalLitres" in {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "",
-              "value.pureAlcohol"   -> "12.3456"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "",
+              "value.pureAlcohol"         -> "12.3456"
             )
           )
-        result.errors mustBe Seq(FormError("value_totalLitres", "required.totalLitres", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "required.totalLitres", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "pureAlcohol" in {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "1234.45",
-              "value.pureAlcohol"   -> ""
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "1234.45",
+              "value.pureAlcohol"         -> ""
             )
           )
-        result.errors mustBe Seq(FormError("value_pureAlcohol", "required.pureAlcohol", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "required.pureAlcohol", Seq(rateBandDescription, regimeName))
+        )
       }
     }
 
@@ -1349,26 +1375,30 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "a",
-              "value.pureAlcohol"   -> "12.3456"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "a",
+              "value.pureAlcohol"         -> "12.3456"
             )
           )
-        result.errors mustBe Seq(FormError("value_totalLitres", "invalid.totalLitres", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "invalid.totalLitres", Seq(rateBandDescription, regimeName))
+        )
       }
 
       "pureAlcohol" in {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "1234.45",
-              "value.pureAlcohol"   -> "a"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "1234.45",
+              "value.pureAlcohol"         -> "a"
             )
           )
-        result.errors mustBe Seq(FormError("value_pureAlcohol", "invalid.pureAlcohol", Seq(rateBandRecap, regimeName)))
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "invalid.pureAlcohol", Seq(rateBandDescription, regimeName))
+        )
       }
     }
 
@@ -1376,28 +1406,28 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.456",
-            "value.pureAlcohol"   -> "12.3456"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.456",
+            "value.pureAlcohol"         -> "12.3456"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "decimalPlaces.totalLitres", Seq(rateBandRecap, regimeName))
+          FormError("value_totalLitres", "decimalPlaces.totalLitres", Seq(rateBandDescription, regimeName))
         )
       }
 
       "pureAlcohol" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.34567"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.34567"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
     }
@@ -1406,45 +1436,45 @@ class MappingsSpec extends SpecBase with Mappings {
       "with less than 4 decimal places" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.345",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.345",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
 
       "with no decimal places and trailing decimal point" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12.",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12.",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
 
       "with no decimal places" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1234.45",
-            "value.pureAlcohol"   -> "12",
-            "value.dutyRate"      -> "5.31"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1234.45",
+            "value.pureAlcohol"         -> "12",
+            "value.dutyRate"            -> "5.31"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
     }
@@ -1454,10 +1484,10 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "0.01",
-              "value.pureAlcohol"   -> "0.0001"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "0.01",
+              "value.pureAlcohol"         -> "0.0001"
             )
           )
         result.errors mustBe Seq.empty
@@ -1469,14 +1499,14 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "0",
-              "value.pureAlcohol"   -> "0.0001"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "0",
+              "value.pureAlcohol"         -> "0.0001"
             )
           )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "minimumValue.totalLitres", Seq(rateBandRecap, regimeName))
+          FormError("value_totalLitres", "minimumValue.totalLitres", Seq(rateBandDescription, regimeName))
         )
       }
 
@@ -1484,14 +1514,14 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "0.01",
-              "value.pureAlcohol"   -> "0.0000"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "0.01",
+              "value.pureAlcohol"         -> "0.0000"
             )
           )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "minimumValue.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "minimumValue.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
     }
@@ -1500,14 +1530,14 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "999999999.99",
-            "value.pureAlcohol"   -> "999999999.9999"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "999999999.99",
+            "value.pureAlcohol"         -> "999999999.9999"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "lessOrEqual", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "lessOrEqual", Seq(rateBandDescription, regimeName))
         ) // As pure alcohol volume exceeds total litres, but has already passed max check
       }
     }
@@ -1516,28 +1546,28 @@ class MappingsSpec extends SpecBase with Mappings {
       "totalLitres" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "1000000000",
-            "value.pureAlcohol"   -> "999999999.9999"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "1000000000",
+            "value.pureAlcohol"         -> "999999999.9999"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_totalLitres", "maximumValue.totalLitres", Seq(rateBandRecap, regimeName))
+          FormError("value_totalLitres", "maximumValue.totalLitres", Seq(rateBandDescription, regimeName))
         )
       }
 
       "pureAlcohol" in {
         val result = testForm.bind(
           Map(
-            "value.rateBandRecap" -> rateBandRecap,
-            "value.taxType"       -> "123",
-            "value.totalLitres"   -> "999999999.99",
-            "value.pureAlcohol"   -> "1000000000.0000"
+            "value.rateBandDescription" -> rateBandDescription,
+            "value.taxType"             -> "123",
+            "value.totalLitres"         -> "999999999.99",
+            "value.pureAlcohol"         -> "1000000000.0000"
           )
         )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "maximumValue.pureAlcohol", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "maximumValue.pureAlcohol", Seq(rateBandDescription, regimeName))
         )
       }
     }
@@ -1547,10 +1577,10 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "12.46",
-              "value.pureAlcohol"   -> "12.4500"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "12.46",
+              "value.pureAlcohol"         -> "12.4500"
             )
           )
         result.errors mustBe Seq.empty
@@ -1558,10 +1588,10 @@ class MappingsSpec extends SpecBase with Mappings {
         val result2 =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "12.45",
-              "value.pureAlcohol"   -> "12.4500"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "12.45",
+              "value.pureAlcohol"         -> "12.4500"
             )
           )
         result2.errors mustBe Seq.empty
@@ -1571,14 +1601,14 @@ class MappingsSpec extends SpecBase with Mappings {
         val result =
           testForm.bind(
             Map(
-              "value.rateBandRecap" -> rateBandRecap,
-              "value.taxType"       -> "123",
-              "value.totalLitres"   -> "12.44",
-              "value.pureAlcohol"   -> "12.4567"
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.taxType"             -> "123",
+              "value.totalLitres"         -> "12.44",
+              "value.pureAlcohol"         -> "12.4567"
             )
           )
         result.errors mustBe Seq(
-          FormError("value_pureAlcohol", "lessOrEqual", Seq(rateBandRecap, regimeName))
+          FormError("value_pureAlcohol", "lessOrEqual", Seq(rateBandDescription, regimeName))
         )
       }
     }

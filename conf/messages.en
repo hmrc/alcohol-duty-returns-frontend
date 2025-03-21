@@ -302,22 +302,26 @@ return.journey.abv.interval.label.Wine = wine
 return.journey.abv.interval.label.Spirits = spirits
 return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
 
-return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV (tax type code {2})
-return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV (tax type code {4})
-return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV (tax type code {8})
+return.journey.abv.interval.label.Beer.draught = draught beer
+return.journey.abv.interval.label.Cider.draught = draught cider
+return.journey.abv.interval.label.SparklingCider.draught = draught sparkling cider
+return.journey.abv.interval.label.Wine.draught = draught wine
+return.journey.abv.interval.label.Spirits.draught = draught spirits
+return.journey.abv.interval.label.OtherFermentedProduct.draught = draught other fermented products
 
-return.journey.abv.recap.interval.exceeding.max.Core = non-draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.Core = non-draught {0} between {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.Core = non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.DraughtRelief = draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = draught {0} between {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.DraughtRelief = draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = non-draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = non-draught {0} between {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
-return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = draught {0} between {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
+return.journey.abv.interval.label.Beer.nondraught = non-draught beer
+return.journey.abv.interval.label.Cider.nondraught = non-draught cider
+return.journey.abv.interval.label.SparklingCider.nondraught = non-draught sparkling cider
+return.journey.abv.interval.label.Wine.nondraught = non-draught wine
+return.journey.abv.interval.label.Spirits.nondraught = non-draught spirits
+return.journey.abv.interval.label.OtherFermentedProduct.nondraught = non-draught other fermented products
+
+return.journey.abv.taxTypeCode = tax type code {0}
+return.journey.abv.taxTypeCode.SPR = tax type code {0} SPR
+
+return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV ({2})
+return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
 
 return.journey.totalLitres = Total litres of {0}
 return.journey.totalLitres.hint = In litres, up to 2 decimal places

@@ -31,9 +31,11 @@ class TaxBandsViewModelSpec extends SpecBase {
       val result = TaxBandsViewModel(allRateBands.toSeq, regime)
       result.core.map(_.content)                          mustBe Seq(Text("Beer between 1% and 2% ABV (tax type code 123)"))
       result.draught.map(_.content)                       mustBe Seq(Text("Beer between 2% and 3% ABV (tax type code 124)"))
-      result.smallProducerRelief.map(_.content)           mustBe Seq(Text("Beer between 3% and 4% ABV (tax type code 125)"))
+      result.smallProducerRelief.map(_.content)           mustBe Seq(
+        Text("Beer between 3% and 4% ABV (tax type code 125 SPR)")
+      )
       result.draughtAndSmallProducerRelief.map(_.content) mustBe Seq(
-        Text("Beer between 4% and 5% ABV (tax type code 126)")
+        Text("Beer between 4% and 5% ABV (tax type code 126 SPR)")
       )
       result.core.map(_.value)                            mustBe Seq("123")
       result.draught.map(_.value)                         mustBe Seq("124")
@@ -45,9 +47,11 @@ class TaxBandsViewModelSpec extends SpecBase {
       val result = TaxBandsViewModel((allRateBands - coreRateBand).toSeq, regime)
       result.core.map(_.content)                          mustBe Seq.empty
       result.draught.map(_.content)                       mustBe Seq(Text("Beer between 2% and 3% ABV (tax type code 124)"))
-      result.smallProducerRelief.map(_.content)           mustBe Seq(Text("Beer between 3% and 4% ABV (tax type code 125)"))
+      result.smallProducerRelief.map(_.content)           mustBe Seq(
+        Text("Beer between 3% and 4% ABV (tax type code 125 SPR)")
+      )
       result.draughtAndSmallProducerRelief.map(_.content) mustBe Seq(
-        Text("Beer between 4% and 5% ABV (tax type code 126)")
+        Text("Beer between 4% and 5% ABV (tax type code 126 SPR)")
       )
       result.core.map(_.value)                            mustBe Seq.empty
       result.draught.map(_.value)                         mustBe Seq("124")
@@ -59,9 +63,11 @@ class TaxBandsViewModelSpec extends SpecBase {
       val result = TaxBandsViewModel((allRateBands - draughtReliefRateBand).toSeq, regime)
       result.core.map(_.content)                          mustBe Seq(Text("Beer between 1% and 2% ABV (tax type code 123)"))
       result.draught.map(_.content)                       mustBe Seq.empty
-      result.smallProducerRelief.map(_.content)           mustBe Seq(Text("Beer between 3% and 4% ABV (tax type code 125)"))
+      result.smallProducerRelief.map(_.content)           mustBe Seq(
+        Text("Beer between 3% and 4% ABV (tax type code 125 SPR)")
+      )
       result.draughtAndSmallProducerRelief.map(_.content) mustBe Seq(
-        Text("Beer between 4% and 5% ABV (tax type code 126)")
+        Text("Beer between 4% and 5% ABV (tax type code 126 SPR)")
       )
       result.core.map(_.value)                            mustBe Seq("123")
       result.draught.map(_.value)                         mustBe Seq.empty
@@ -75,7 +81,7 @@ class TaxBandsViewModelSpec extends SpecBase {
       result.draught.map(_.content)                       mustBe Seq(Text("Beer between 2% and 3% ABV (tax type code 124)"))
       result.smallProducerRelief.map(_.content)           mustBe Seq.empty
       result.draughtAndSmallProducerRelief.map(_.content) mustBe Seq(
-        Text("Beer between 4% and 5% ABV (tax type code 126)")
+        Text("Beer between 4% and 5% ABV (tax type code 126 SPR)")
       )
       result.core.map(_.value)                            mustBe Seq("123")
       result.draught.map(_.value)                         mustBe Seq("124")
@@ -87,7 +93,9 @@ class TaxBandsViewModelSpec extends SpecBase {
       val result = TaxBandsViewModel((allRateBands - draughtAndSmallProducerReliefRateBand).toSeq, regime)
       result.core.map(_.content)                          mustBe Seq(Text("Beer between 1% and 2% ABV (tax type code 123)"))
       result.draught.map(_.content)                       mustBe Seq(Text("Beer between 2% and 3% ABV (tax type code 124)"))
-      result.smallProducerRelief.map(_.content)           mustBe Seq(Text("Beer between 3% and 4% ABV (tax type code 125)"))
+      result.smallProducerRelief.map(_.content)           mustBe Seq(
+        Text("Beer between 3% and 4% ABV (tax type code 125 SPR)")
+      )
       result.draughtAndSmallProducerRelief.map(_.content) mustBe Seq.empty
       result.core.map(_.value)                            mustBe Seq("123")
       result.draught.map(_.value)                         mustBe Seq("124")
