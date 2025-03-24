@@ -83,6 +83,12 @@ noAppaId.heading = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion A
 noAppaId.p = Os oeddech yn cynhyrchu cynhyrchion alcoholaidd cyn 1 Chwefror 2025, gallwch ddod o hyd i’ch ID APPA ar y llythyr gwasanaeth ar-lein a gawsoch oddi wrth CThEF.
 noAppaId.link.text = Darllenwch arweiniad ar gael cymeradwyaeth ar gyfer cynhyrchu cynhyrchion alcoholaidd (yn agor tab newydd)
 
+regime.beer = cwrw
+regime.cider = seidr
+regime.wine = gwin
+regime.spirits = gwirodydd
+regime.otherfermentedproduct = cynhyrchion eplesedig eraill
+
 section.visuallyHidden = Yr adran hon yw:
 section.alcoholDutyReturn = Datganiad Toll Alcohol
 section.return.Beer = Datgan cwrw
@@ -255,11 +261,6 @@ serviceUpdated.guidance2 = Bydd angen i chi eu nodi eto.
 
 alcoholType.title = Pa fathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan?
 alcoholType.heading = Pa fathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan?
-alcoholType.Beer = Cwrw
-alcoholType.Cider = Seidr
-alcoholType.Wine = Gwin
-alcoholType.Spirits = Gwirodydd
-alcoholType.OtherFermentedProduct = Cynhyrchion eplesedig eraill
 alcoholType.error.required = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan
 alcoholType.p1 = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan yn y Datganiad hwn.
 alcoholType.p2 = Bydd eich Datganiad yn dangos gwerthoedd ‘dim’ ar gyfer y mathau nad ydych yn eu dewis.
@@ -341,12 +342,6 @@ declareAlcoholDutyQuestion.cider.p2.l1 = seidr pefriog rhwng 3.5% a 5.5%
 declareAlcoholDutyQuestion.cider.p2.l2 = seidr pefriog rhwng 5.6% ac 8.4%
 declareAlcoholDutyQuestion.h4 = A oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd?
 declareAlcoholDutyQuestion.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd
-
-return.regime.Beer = cwrw
-return.regime.Cider = seidr
-return.regime.Wine = gwin
-return.regime.Spirits = gwirodydd
-return.regime.OtherFermentedProduct = cynhyrchion eplesedig eraill
 
 whatDoYouNeedToDeclare.title = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.heading = Beth y mae angen i chi ei ddatgan?
