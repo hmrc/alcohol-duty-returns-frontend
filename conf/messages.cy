@@ -83,6 +83,11 @@ noAppaId.heading = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion A
 noAppaId.p = Os oeddech yn cynhyrchu cynhyrchion alcoholaidd cyn 1 Chwefror 2025, gallwch ddod o hyd i’ch ID APPA ar y llythyr gwasanaeth ar-lein a gawsoch oddi wrth CThEF.
 noAppaId.link.text = Darllenwch arweiniad ar gael cymeradwyaeth ar gyfer cynhyrchu cynhyrchion alcoholaidd (yn agor tab newydd)
 
+clearReturnAreYouSureQuestion.title = NOT_FOUND
+clearReturnAreYouSureQuestion.heading = NOT_FOUND
+clearReturnAreYouSureQuestion.warning = NOT_FOUND
+clearReturnAreYouSureQuestion.error.required = NOT_FOUND
+
 regime.beer = cwrw
 regime.cider = seidr
 regime.wine = gwin
@@ -236,6 +241,7 @@ taskList.section.spirits.hint = Bob tri mis, mae’n rhaid i chi roi gwybod i ni
 taskList.section.checkAndSubmit.heading = Anfon Datganiad
 taskList.section.checkAndSubmit.needToDeclare = Gwirio’r doll sy’n daladwy ac anfon eich Datganiad
 taskList.section.checkAndSubmit.hint = Mae’n rhaid i chi lenwi pob adran cyn i chi allu anfon eich Datganiad.
+taskList.button.clearReturn = Dileu cynnwys y datganiad a dechrau eto
 
 beforeStartReturn.title = Cyn i chi ddechrau
 beforeStartReturn.heading = Cyn i chi ddechrau
@@ -296,22 +302,26 @@ return.journey.abv.interval.label.Wine = gwin
 return.journey.abv.interval.label.Spirits = gwirodydd
 return.journey.abv.interval.label.OtherFermentedProduct = cynhyrchion eplesedig eraill
 
-return.journey.abv.interval.exceeding.max = {0} ar {1}% ABV neu’n uwch (cod y math o dreth: {2})
-return.journey.abv.single.interval = {0} rhwng {1}% {2} {3}% ABV (cod y math o dreth: {4})
-return.journey.abv.multi.interval = {0} rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV (cod y math o dreth: {8})
+return.journey.abv.interval.label.Beer.draught = cwrw o’r gasgen
+return.journey.abv.interval.label.Cider.draught = seidr o’r gasgen
+return.journey.abv.interval.label.SparklingCider.draught = seidr pefriog o’r gasgen
+return.journey.abv.interval.label.Wine.draught = gwin o’r gasgen
+return.journey.abv.interval.label.Spirits.draught = gwirodydd o’r gasgen
+return.journey.abv.interval.label.OtherFermentedProduct.draught = cynhyrchion eplesedig eraill o’r gasgen
 
-return.journey.abv.recap.interval.exceeding.max.Core = {0} nad yw’n dod o’r gasgen ar {1}% ABV neu’n uwch ({2})
-return.journey.abv.recap.single.interval.Core = {0} nad yw’n dod o’r gasgen rhwng {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.Core = {0} nad yw’n dod o’r gasgen rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.DraughtRelief = {0} o’r gasgen ar {1}% ABV neu’n uwch ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = {0} o’r gasgen rhwng {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.DraughtRelief = {0} o’r gasgen rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = {0} nad yw’n dod o’r gasgen ar {1}% ABV neu’n uwch ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = {0} nad yw’n dod o’r gasgen rhwng {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = {0} nad yw’n dod o’r gasgen rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8} SPR)
-return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = {0} o’r gasgen ar {1}% ABV neu’n uwch ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = {0} o’r gasgen rhwng {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = {0} o’r gasgen rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8} SPR)
+return.journey.abv.interval.label.Beer.nondraught = cwrw nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.Cider.nondraught = seidr nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.SparklingCider.nondraught = seidr pefriog nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.Wine.nondraught = gwin nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.Spirits.nondraught = gwirodydd nad ydynt yn dod o’r gasgen
+return.journey.abv.interval.label.OtherFermentedProduct.nondraught = cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen
+
+return.journey.abv.taxTypeCode = cod y math o dreth: {0}
+return.journey.abv.taxTypeCode.SPR = cod y math o dreth: {0} SPR
+
+return.journey.abv.interval.exceeding.max = {0} ar {1}% ABV neu’n uwch ({2})
+return.journey.abv.single.interval = {0} rhwng {1}% {2} {3}% ABV ({4})
+return.journey.abv.multi.interval = {0} rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8})
 
 return.journey.totalLitres = Cyfanswm y litrau o {0}
 return.journey.totalLitres.hint = Nodwch y litrau, hyd at 2 le degol
@@ -914,5 +924,13 @@ returnSubmitted.direct.debit.setupOrManageLink.text = Sefydlwch neu rheolwch eic
 returnSubmitted.negative.p1 = Gallwch hawlio toll sy’n ddyledus nawr neu’n hwyrach drwy’ch cyfrif Toll Alcohol. Os na fyddwch yn ei hawlio’n ôl, bydd yn cael ei defnyddio tuag at unrhyw doll sy’n ddyledus yn sgil eich Datganiad nesaf.
 returnSubmitted.warningText = Mae ein manylion banc wedi newid. Dewiswch ‘Talu nawr’ ac yna ‘Trosglwyddiad banc (BACS/CHAPS)’ er mwyn gweld y manylion newydd.
 returnSubmitted.warningFallbackText = Rhybudd
+
+returnSubmitted.noDetails.p1 = NOT_FOUND
+returnSubmitted.noDetails.youCan = NOT_FOUND
+returnSubmitted.noDetails.viewReturn1 = NOT_FOUND
+returnSubmitted.noDetails.viewReturn2 = NOT_FOUND
+returnSubmitted.noDetails.viewPayments = NOT_FOUND
+returnSubmitted.noDetails.p2 = NOT_FOUND
+returnSubmitted.noDetails.p3 = NOT_FOUND
 
 # End of Check and submit sub-journey
