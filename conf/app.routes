@@ -34,6 +34,9 @@ GET         /view-payments                               controllers.payments.Vi
 
 GET         /complete-return/task-list                   controllers.TaskListController.onPageLoad
 
+GET         /clear-return                                controllers.ClearReturnAreYouSureQuestionController.onPageLoad()
+POST        /clear-return                                controllers.ClearReturnAreYouSureQuestionController.onSubmit()
+
 GET         /before-you-start-your-return/:periodKey     controllers.BeforeStartReturnController.onPageLoad(periodKey: String)
 POST        /before-you-start-your-return                controllers.BeforeStartReturnController.onSubmit()
 
@@ -240,7 +243,8 @@ GET        /complete-return/quarterly-spirits-production/check-your-answers     
 GET        /complete-return/check-return                      controllers.checkAndSubmit.DutyDueForThisReturnController.onPageLoad()
 POST       /complete-return/check-return                      controllers.checkAndSubmit.DutyDueForThisReturnController.onSubmit()
 
-GET        /complete-return/return-sent                    controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
+GET        /complete-return/return-sent                               controllers.checkAndSubmit.ReturnSubmittedController.onPageLoad()
+GET        /complete-return/return-sent-no-details                    controllers.checkAndSubmit.ReturnSubmittedNoDetailsController.onPageLoad()
 
 GET        /start-payment                controllers.payments.StartPaymentController.initiateAndRedirect()
 GET        /start-direct-debit                controllers.payments.StartDirectDebitController.initiateAndRedirect()

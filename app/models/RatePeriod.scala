@@ -24,14 +24,33 @@ import play.api.libs.json._
 import java.time.YearMonth
 import scala.util.{Failure, Success, Try}
 
-sealed trait RateType extends EnumEntry
+sealed trait RateType extends EnumEntry {
+  val isSPR: Boolean
+  val isDraught: Boolean
+}
+
 object RateType extends Enum[RateType] with PlayJsonEnum[RateType] {
   val values = findValues
 
-  case object Core extends RateType
-  case object DraughtRelief extends RateType
-  case object SmallProducerRelief extends RateType
-  case object DraughtAndSmallProducerRelief extends RateType
+  case object Core extends RateType {
+    val isSPR     = false
+    val isDraught = false
+  }
+
+  case object DraughtRelief extends RateType {
+    val isSPR     = false
+    val isDraught = true
+  }
+
+  case object SmallProducerRelief extends RateType {
+    val isSPR     = true
+    val isDraught = false
+  }
+
+  case object DraughtAndSmallProducerRelief extends RateType {
+    val isSPR     = true
+    val isDraught = true
+  }
 
   def apply(hasDraughtRelief: Boolean, hasSmallProducerRelief: Boolean): RateType =
     (hasDraughtRelief, hasSmallProducerRelief) match {

@@ -16,27 +16,33 @@
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalToJson, get, post, urlMatching}
 import connectors.AlcoholDutyReturnsConnector
+import models.ErrorModel
 import models.checkAndSubmit.AdrReturnCreatedDetails
 import org.scalatest.RecoverMethods.recoverToExceptionIf
 import play.api.Application
-import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, CREATED, OK}
+import play.api.http.Status._
 import play.api.libs.json.Json
 
 import java.time.{Instant, LocalDate}
 
-class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
-  override def fakeApplication(): Application = applicationBuilder(None).configure("microservice.services.alcohol-duty-returns.port" -> server.port()).build()
+class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper {
+  override def fakeApplication(): Application =
+    applicationBuilder(None).configure("microservice.services.alcohol-duty-returns.port" -> server.port()).build()
 
   "AlcoholDutyReturnsConnector" - {
     "obligationDetails" - {
       "must successfully retrieve obligation details" in new SetUp {
         val obligationDataResponse = Seq(obligationDataSingleOpen)
-        val jsonResponse = Json.toJson(obligationDataResponse).toString()
+        val jsonResponse           = Json.toJson(obligationDataResponse).toString()
 
-        server.stubFor(get(urlMatching(obligationDeatilsUrl))
-          .willReturn(aResponse()
-            .withStatus(OK)
-            .withBody(jsonResponse)))
+        server.stubFor(
+          get(urlMatching(obligationDeatilsUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody(jsonResponse)
+            )
+        )
 
         whenReady(connector.obligationDetails(appaId)) { result =>
           result mustBe obligationDataResponse
@@ -45,10 +51,14 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
 
       "must fail when invalid JSON is returned" in new SetUp {
         val invalidJsonResponse = """{ "invalid": "json" }"""
-        server.stubFor(get(urlMatching(obligationDeatilsUrl))
-          .willReturn(aResponse()
-            .withStatus(OK)
-            .withBody(invalidJsonResponse)))
+        server.stubFor(
+          get(urlMatching(obligationDeatilsUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody(invalidJsonResponse)
+            )
+        )
 
         whenReady(connector.obligationDetails(appaId).failed) { e =>
           e.getMessage must include("Invalid JSON format")
@@ -56,9 +66,13 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
       }
 
       "must fail when an unexpected response is returned" in new SetUp {
-        server.stubFor(get(urlMatching(obligationDeatilsUrl))
-          .willReturn(aResponse()
-            .withStatus(BAD_GATEWAY)))
+        server.stubFor(
+          get(urlMatching(obligationDeatilsUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(BAD_GATEWAY)
+            )
+        )
 
         whenReady(connector.obligationDetails(appaId).failed) { e =>
           e.getMessage must include("Unexpected response")
@@ -66,9 +80,13 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
       }
 
       "must fail when an unexpected status code is returned" in new SetUp {
-        server.stubFor(get(urlMatching(obligationDeatilsUrl))
-          .willReturn(aResponse()
-            .withStatus(CREATED)))
+        server.stubFor(
+          get(urlMatching(obligationDeatilsUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(CREATED)
+            )
+        )
 
         whenReady(connector.obligationDetails(appaId).failed) { e =>
           e.getMessage must include("Unexpected status code: 201")
@@ -79,28 +97,29 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
     "submitReturn" - {
       "must successfully submit a return" in new SetUp {
         val adrReturnCreatedDetails = AdrReturnCreatedDetails(
-                processingDate = Instant.now(clock),
-                amount = BigDecimal(1),
-                chargeReference = Some("1234567890"),
-                paymentDueDate = Some(LocalDate.now(clock))
+          processingDate = Instant.now(clock),
+          amount = BigDecimal(1),
+          chargeReference = Some("1234567890"),
+          paymentDueDate = Some(LocalDate.now(clock))
         )
-        val jsonResponse = Json.toJson(adrReturnCreatedDetails).toString()
+        val jsonResponse            = Json.toJson(adrReturnCreatedDetails).toString()
 
         server.stubFor(
           post(urlMatching(submitReturnUrl))
-            .willReturn(aResponse()
-              .withStatus(CREATED)
-              .withBody(jsonResponse)))
+            .willReturn(
+              aResponse()
+                .withStatus(CREATED)
+                .withBody(jsonResponse)
+            )
+        )
 
-        whenReady(connector.submitReturn(appaId, periodKey, fullReturn).value) { result =>
-          result match {
-            case Right(details) =>
-                    details.processingDate mustBe adrReturnCreatedDetails.processingDate
-                    details.amount mustBe adrReturnCreatedDetails.amount
-                    details.chargeReference mustBe adrReturnCreatedDetails.chargeReference
-                    details.paymentDueDate mustBe adrReturnCreatedDetails.paymentDueDate
-            case _ => fail("Test failed: result did not match expected value")
-          }
+        whenReady(connector.submitReturn(appaId, periodKey, fullReturn).value) {
+          case Right(details) =>
+            details.processingDate  mustBe adrReturnCreatedDetails.processingDate
+            details.amount          mustBe adrReturnCreatedDetails.amount
+            details.chargeReference mustBe adrReturnCreatedDetails.chargeReference
+            details.paymentDueDate  mustBe adrReturnCreatedDetails.paymentDueDate
+          case _              => fail("Test failed: result did not match expected value")
         }
       }
 
@@ -111,22 +130,24 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
           chargeReference = Some("1234567890"),
           paymentDueDate = Some(LocalDate.now(clock))
         )
-        val jsonResponse = Json.toJson(adrReturnCreatedDetails).toString()
+        val jsonResponse            = Json.toJson(adrReturnCreatedDetails).toString()
 
-        val expectedErrorString = s"Unable to submit return. Unexpected status code: $OK"
+        val expectedErrorModel =
+          ErrorModel(INTERNAL_SERVER_ERROR, s"Unable to submit return. Unexpected status code: $OK")
 
         server.stubFor(
           post(urlMatching(submitReturnUrl))
-            .willReturn(aResponse()
-              .withStatus(OK)
-              .withBody(jsonResponse)))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody(jsonResponse)
+            )
+        )
 
-        whenReady(connector.submitReturn(appaId, periodKey, fullReturn).value) { result =>
-          result match {
-            case Left(errorString) =>
-              errorString mustBe expectedErrorString
-            case _ => fail("Test failed: result did not match expected value")
-          }
+        whenReady(connector.submitReturn(appaId, periodKey, fullReturn).value) {
+          case Left(errorModel) =>
+            errorModel mustBe expectedErrorModel
+          case _                => fail("Test failed: result did not match expected value")
         }
       }
 
@@ -134,19 +155,36 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
         val invalidJsonResponse = """{ "invalid": "json" }"""
         server.stubFor(
           post(urlMatching(submitReturnUrl))
-            .willReturn(aResponse()
-              .withStatus(CREATED)
-              .withBody(invalidJsonResponse)
+            .willReturn(
+              aResponse()
+                .withStatus(CREATED)
+                .withBody(invalidJsonResponse)
             )
         )
 
         whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
-          result.swap.toOption.get must include("Invalid JSON format")
+          result.swap.toOption.get.status mustBe INTERNAL_SERVER_ERROR
+          result.swap.toOption.get.message  must include("Invalid JSON format")
         }
       }
 
-      "fail when submit return returns an error" in new SetUp {
+      "must return an ErrorModel when a duplicate submission response is returned" in new SetUp {
+        server.stubFor(
+          post(urlMatching(submitReturnUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withBody("Return already submitted")
+            )
+        )
 
+        whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
+          result.swap.toOption.get.status mustBe UNPROCESSABLE_ENTITY
+          result.swap.toOption.get.message mustBe "Return already submitted"
+        }
+      }
+
+      "must fail when submit return returns an error" in new SetUp {
         server.stubFor(
           post(urlMatching(submitReturnUrl))
             .withRequestBody(equalToJson(Json.stringify(Json.toJson(nilReturn))))
@@ -160,7 +198,7 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
         }
       }
 
-      "fail when an unexpected status code is returned" in new SetUp {
+      "must fail when an unexpected status code is returned" in new SetUp {
         server.stubFor(
           post(urlMatching(submitReturnUrl))
             .withRequestBody(equalToJson(Json.stringify(Json.toJson(nilReturn))))
@@ -175,45 +213,61 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
     }
 
     "getReturn" - {
-      "must successfully get a return" in new SetUp{
+      "must successfully get a return" in new SetUp {
         val adrReturnDetails = exampleReturnDetails(periodKey, Instant.now(clock))
-        val jsonResponse = Json.toJson(adrReturnDetails).toString()
+        val jsonResponse     = Json.toJson(adrReturnDetails).toString()
 
-        server.stubFor(get(urlMatching(submitReturnUrl))
-          .willReturn(aResponse()
-            .withStatus(OK)
-            .withBody(jsonResponse)))
+        server.stubFor(
+          get(urlMatching(submitReturnUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody(jsonResponse)
+            )
+        )
 
         whenReady(connector.getReturn(appaId, periodKey)) { result =>
-                result mustBe adrReturnDetails
+          result mustBe adrReturnDetails
         }
       }
 
-      "must fail when invalid JSON is returned" in new SetUp{
-        server.stubFor(get(urlMatching(submitReturnUrl))
-          .willReturn(aResponse()
-            .withStatus(OK)
-            .withBody("""{ "invalid": "json" }""")))
+      "must fail when invalid JSON is returned" in new SetUp {
+        server.stubFor(
+          get(urlMatching(submitReturnUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(OK)
+                .withBody("""{ "invalid": "json" }""")
+            )
+        )
 
         whenReady(connector.getReturn(appaId, periodKey).failed) { e =>
-                e.getMessage must include("Invalid JSON format")
+          e.getMessage must include("Invalid JSON format")
         }
       }
 
       "must fail when an unexpected response is returned" in new SetUp {
-        server.stubFor(get(urlMatching(submitReturnUrl))
-          .willReturn(aResponse()
-            .withStatus(BAD_GATEWAY)))
+        server.stubFor(
+          get(urlMatching(submitReturnUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(BAD_GATEWAY)
+            )
+        )
 
         whenReady(connector.getReturn(appaId, periodKey).failed) { e =>
-                e.getMessage must include("Unexpected response")
+          e.getMessage must include("Unexpected response")
         }
       }
 
       "must fail when an unexpected  status code is returned" in new SetUp {
-        server.stubFor(get(urlMatching(submitReturnUrl))
-          .willReturn(aResponse()
-            .withStatus(CREATED)))
+        server.stubFor(
+          get(urlMatching(submitReturnUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(CREATED)
+            )
+        )
 
         whenReady(connector.getReturn(appaId, periodKey).failed) { e =>
           e.getMessage must include("Unexpected status code: 201")
@@ -223,10 +277,8 @@ class AlcoholDutyReturnsConnectorISpec extends ISpecBase with WireMockHelper{
   }
 
   class SetUp {
-    val connector = app.injector.instanceOf[AlcoholDutyReturnsConnector]
+    val connector            = app.injector.instanceOf[AlcoholDutyReturnsConnector]
     val obligationDeatilsUrl = s"/alcohol-duty-returns/obligationDetails/$appaId"
-    val submitReturnUrl = s"/alcohol-duty-returns/producers/$appaId/returns/$periodKey"
+    val submitReturnUrl      = s"/alcohol-duty-returns/producers/$appaId/returns/$periodKey"
   }
 }
-
-

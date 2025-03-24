@@ -124,11 +124,11 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
             .withFormUrlEncodedBody(
-              "volumesWithRate[0].rateBandRecap" -> rateBandRecap,
-              "volumesWithRate[0].totalLitres"   -> "1000",
-              "volumesWithRate[0].pureAlcohol"   -> "500.0000",
-              "volumesWithRate[0].dutyRate"      -> "10",
-              "volumesWithRate[0].taxType"       -> "371"
+              "volumesWithRate[0].rateBandDescription" -> rateBandDescription,
+              "volumesWithRate[0].totalLitres"         -> "1000",
+              "volumesWithRate[0].pureAlcohol"         -> "500.0000",
+              "volumesWithRate[0].dutyRate"            -> "10",
+              "volumesWithRate[0].taxType"             -> "371"
             )
 
         val result = route(application, request).value
@@ -188,11 +188,11 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
         val request =
           FakeRequest(POST, tellUsAboutSingleSPRRateRoute)
             .withFormUrlEncodedBody(
-              "volumesWithRate[0].rateBandRecap" -> rateBandRecap,
-              "volumesWithRate[0].totalLitres"   -> "1000",
-              "volumesWithRate[0].pureAlcohol"   -> "500",
-              "volumesWithRate[0].dutyRate"      -> "10",
-              "volumesWithRate[0].taxType"       -> "371"
+              "volumesWithRate[0].rateBandDescription" -> rateBandDescription,
+              "volumesWithRate[0].totalLitres"         -> "1000",
+              "volumesWithRate[0].pureAlcohol"         -> "500",
+              "volumesWithRate[0].dutyRate"            -> "10",
+              "volumesWithRate[0].taxType"             -> "371"
             )
 
         val result = route(application, request).value
