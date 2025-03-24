@@ -23,12 +23,6 @@ site.returnToBusinessAccount = Return to your business tax account
 site.year = {0,number,####}
 site.warning = Warning
 
-#Welsh helpers - in Welsh y and w are also vowels
-
-#Used in dynamic content ranges "between x% and y%". Vowel form used when y's whole number is 1 or 8
-welsh.and.consonant = and
-welsh.and.vowel = and
-
 date.day = Day
 date.month = Month
 date.year = Year
