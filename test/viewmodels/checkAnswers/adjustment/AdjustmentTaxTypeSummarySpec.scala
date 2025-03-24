@@ -29,7 +29,7 @@ class AdjustmentTaxTypeSummarySpec extends SpecBase {
       val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry).get
 
       result.key.content   mustBe Text("Tax type")
-      result.value.content mustBe Text("Non-draught beer between 1% and 2% ABV (tax type code 123)")
+      result.value.content mustBe Text("Non-draught beer between 1% and 3% ABV (tax type code 123)")
     }
 
     "must create the summary list row view model from the rateBands where adjustmentType is RepackagedDraughtProducts" in new SetUp {
@@ -38,7 +38,7 @@ class AdjustmentTaxTypeSummarySpec extends SpecBase {
       val result          = new AdjustmentTaxTypeSummary().row(adjustmentEntry).get
 
       result.key.content   mustBe Text("Original tax type")
-      result.value.content mustBe Text("Non-draught beer between 1% and 2% ABV (tax type code 123)")
+      result.value.content mustBe Text("Non-draught beer between 1% and 3% ABV (tax type code 123)")
     }
 
     "must not create the summary list row view model from the rateBands for Spoilt adjustment" in new SetUp {

@@ -46,7 +46,7 @@ class HowMuchDoYouNeedToDeclareSummarySpec extends SpecBase {
         )
       summaryList.get.rows.map(_.value.content) mustBe
         Seq(
-          Text("Non-draught beer between 1% and 2% ABV (tax type code 123)"),
+          Text("Non-draught beer between 1% and 3% ABV (tax type code 123)"),
           Text("30,000.00 litres"),
           Text("4.1100 litres"),
           Text("Draught beer between 2% and 3% ABV (tax type code 124)"),

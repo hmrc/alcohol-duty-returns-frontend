@@ -158,11 +158,20 @@ trait ModelGenerators {
     Gen.oneOf(AlcoholType.values)
   }
 
+  val abvRanges = Seq(
+    (AlcoholByVolume(1.3), AlcoholByVolume(3.4)),
+    (AlcoholByVolume(3.5), AlcoholByVolume(5.5)),
+    (AlcoholByVolume(3.5), AlcoholByVolume(8.4)),
+    (AlcoholByVolume(5.6), AlcoholByVolume(8.4)),
+    (AlcoholByVolume(8.5), AlcoholByVolume(22.0)),
+    (AlcoholByVolume(22.1), AlcoholByVolume(100.0))
+  )
+
   implicit val abvIntervalGen: Arbitrary[ABVRange] = Arbitrary {
     (for {
-      label  <- arbitrary[AlcoholType]
-      minABV <- arbitrary[AlcoholByVolume]
-      maxABV <- arbitrary[AlcoholByVolume]
+      label           <- arbitrary[AlcoholType]
+      range           <- Gen.oneOf(abvRanges)
+      (minABV, maxABV) = range
     } yield ABVRange(label, minABV, maxABV)).suchThat(interval => interval.minABV.value < interval.maxABV.value)
   }
 
