@@ -45,15 +45,15 @@ class TellUsAboutSingleSPRRateSummarySpec extends SpecBase {
         )
       rows.map(_.value.content) mustBe
         Seq(
-          Text("Non-draught beer between 3% and 4% ABV (125 SPR)"),
+          Text("Non-draught beer between 3% and 4% ABV (tax type code 125 SPR)"),
           Text("1,000.00 litres"),
           Text("3.5000 litres"),
           Text("£1.46"),
-          Text("Draught beer between 4% and 5% ABV (126 SPR)"),
+          Text("Draught beer between 4% and 5% ABV (tax type code 126 SPR)"),
           Text("10,000.00 litres"),
           Text("4.5000 litres"),
           Text("£1.66"),
-          Text("Draught beer between 4% and 5% ABV (126 SPR)"),
+          Text("Draught beer between 4% and 5% ABV (tax type code 126 SPR)"),
           Text("20,000.00 litres"),
           Text("4.8000 litres"),
           Text("£1.66")

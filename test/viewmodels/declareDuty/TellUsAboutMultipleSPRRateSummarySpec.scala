@@ -36,7 +36,7 @@ class TellUsAboutMultipleSPRRateSummarySpec extends SpecBase {
         Seq(Text("Description"), Text("Total beer"), Text("Total pure alcohol"), Text("Duty rate"))
       rows.map(_.value.content) mustBe
         Seq(
-          Text("Draught beer between 2% and 3% ABV (124)"),
+          Text("Draught beer between 2% and 3% ABV (tax type code 124)"),
           HtmlContent("100.00 litres"),
           HtmlContent("2.5000 LPA"),
           HtmlContent("£1.26 per litre")

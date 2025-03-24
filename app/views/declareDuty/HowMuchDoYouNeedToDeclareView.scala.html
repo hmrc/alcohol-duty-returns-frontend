@@ -64,7 +64,7 @@
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
-                content = Text(quantityViewModel.category.capitalize),
+                content = Text(quantityViewModel.description.capitalize),
                 classes = Css.fieldsetLegendSCssClass
               )),
               html = HtmlFormat.fill(List(
@@ -100,16 +100,16 @@
                     key = "taxType",
                     label = LabelViewModel(Text("")),
                     errorMessageField = form(s"volumes_${index}_taxType"),
-                    value = Some(quantityViewModel.id)
+                    value = Some(quantityViewModel.taxTypeCode)
                   ).hidden
                 ),
                 govukInput(
                   InputViewModel(
                     field = form(s"volumes[$index]"),
-                    key = "rateBandRecap",
+                    key = "rateBandDescription",
                     label = LabelViewModel(Text("")),
-                    errorMessageField = form(s"volumes_${index}_rateBandRecap"),
-                    value = Some(quantityViewModel.rateBandRecap)
+                    errorMessageField = form(s"volumes_${index}_rateBandDescription"),
+                    value = Some(quantityViewModel.description)
                   ).hidden
                 )
               ))
@@ -122,7 +122,7 @@
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
-                content = Text(quantityViewModel.category.capitalize),
+                content = Text(quantityViewModel.description.capitalize),
                 classes = Css.fieldsetLegendSCssClass
               )),
               html = HtmlFormat.fill(List(
@@ -158,16 +158,16 @@
                     key = "taxType",
                     label = LabelViewModel(Text("")),
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_taxType"),
-                    value = Some(quantityViewModel.id)
+                    value = Some(quantityViewModel.taxTypeCode)
                   ).hidden
                 ),
                 govukInput(
                   InputViewModel(
                     field = form(s"volumes[${index + howMuchDoYouNeedToDeclareHelper.core.size}]"),
-                    key = "rateBandRecap",
+                    key = "rateBandDescription",
                     label = LabelViewModel(Text("")),
-                    errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_rateBandRecap"),
-                    value = Some(quantityViewModel.rateBandRecap)
+                    errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_rateBandDescription"),
+                    value = Some(quantityViewModel.description)
                   ).hidden
                 )
               ))

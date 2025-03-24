@@ -17,7 +17,7 @@
 package forms.mappings
 
 import config.Constants
-import config.Constants.MappingFields.rateBandRecapField
+import config.Constants.MappingFields.rateBandDescriptionField
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
@@ -50,10 +50,10 @@ class BigDecimalFieldFormatter(
   private def getKeyPrefix(key: String) = key.dropRight(fieldKey.length + 1)
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] = {
-    val keyPrefix          = getKeyPrefix(key)
-    val maybeRateBandRecap = data.get(s"$keyPrefix.$rateBandRecapField")
+    val keyPrefix                = getKeyPrefix(key)
+    val maybeRateBandDescription = data.get(s"$keyPrefix.$rateBandDescriptionField")
 
-    val allArgs = maybeRateBandRecap.fold(args)(_ +: args)
+    val allArgs = maybeRateBandDescription.fold(args)(_ +: args)
 
     baseFormatter
       .bind(key, data)
