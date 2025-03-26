@@ -105,18 +105,14 @@ object AdjustmentListSummaryHelper {
             label = messages("site.change"),
             href = controllers.adjustment.routes.CheckYourAnswersController.onPageLoad(Some(adjustmentIndex)),
             visuallyHiddenText = Some(
-              messages(
-                "adjustmentEntryList.change.hidden",
-                adjustmentTypeLabel,
-                formattedDutyValue
-              )
+              messages(s"adjustmentEntryList.change.$adjustmentType.hidden", formattedDutyValue)
             )
           ),
           TableRowActionViewModel(
             label = messages("site.remove"),
             href = controllers.adjustment.routes.DeleteAdjustmentController.onPageLoad(adjustmentIndex),
             visuallyHiddenText = Some(
-              messages("adjustmentEntryList.remove.hidden", adjustmentTypeLabel, formattedDutyValue)
+              messages(s"adjustmentEntryList.remove.$adjustmentType.hidden", formattedDutyValue)
             )
           )
         )
