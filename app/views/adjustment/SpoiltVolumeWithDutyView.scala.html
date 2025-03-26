@@ -33,7 +33,7 @@
 
 @(form: Form[_], mode: Mode, regime: AlcoholRegime)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("spoiltVolumeWithDuty.title", messages(regime.regimeMessageKey)))) {
+@layout(pageTitle = title(form, messages(s"spoiltVolumeWithDuty.title.${regime.regimeMessageKey}"))) {
 
     @formHelper(action = controllers.adjustment.routes.SpoiltVolumeWithDutyController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -48,7 +48,7 @@
 
         @govukFieldset(Fieldset(
           legend = Some(Legend(
-            content = Text(messages("spoiltVolumeWithDuty.heading", messages(regime.regimeMessageKey))),
+            content = Text(messages(s"spoiltVolumeWithDuty.heading.${regime.regimeMessageKey}")),
             classes = Css.fieldsetLegendXLCssClass,
             isPageHeading = true
           )),
@@ -57,7 +57,7 @@
               InputViewModel(
                 field = form("volumes"),
                 key="totalLitresVolume",
-                label = LabelViewModel(messages("spoiltVolumeWithDuty.totalLitresVolume.heading", messages(regime.regimeMessageKey))),
+                label = LabelViewModel(messages(s"spoiltVolumeWithDuty.totalLitresVolume.heading.${regime.regimeMessageKey}")),
                 errorMessageField = form(s"volumes_totalLitresVolume"),
                 value = form(s"volumes.totalLitresVolume").value
               )

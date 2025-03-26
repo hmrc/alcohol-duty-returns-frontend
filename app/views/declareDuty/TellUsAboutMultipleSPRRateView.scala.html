@@ -51,7 +51,7 @@
 
         @pageHeading(messages("tellUsAboutMultipleSPRRate.heading", messages(regime.regimeMessageKey)))
 
-        @paragraph(messages("tellUsAboutMultipleSPRRate.p1", messages(regime.regimeMessageKey)))
+        @paragraph(messages(s"tellUsAboutMultipleSPRRate.p1.${regime.regimeMessageKey}"))
 
         @govukWarningText(WarningText(
             iconFallbackText = Some(messages("site.warning")),
@@ -62,7 +62,7 @@
             @govukRadios(
                 RadiosViewModel(
                     field  = form("volumesWithRate.taxType"),
-                    fieldset = FieldsetViewModel(LegendViewModel(messages("tellUsAboutMultipleSPRRate.radioHeading", messages(regime.regimeMessageKey))).withSize(LegendSize.Medium)),
+                    fieldset = FieldsetViewModel(LegendViewModel(messages(s"tellUsAboutMultipleSPRRate.radioHeading.${regime.regimeMessageKey}")).withSize(LegendSize.Medium)),
                     items  = rateBandRadioItems,
                     errorMessageField = form("volumesWithRate_taxType")
                 )
@@ -82,7 +82,7 @@
                 InputViewModel(
                   field = form("volumesWithRate"),
                   key = "totalLitres",
-                  label = LabelViewModel(messages("return.journey.totalLitres", messages(regime.regimeMessageKey))),
+                  label = LabelViewModel(messages(s"return.journey.totalLitres.${regime.regimeMessageKey}")),
                   errorMessageField = form("volumesWithRate_totalLitres"),
                   value = form("volumesWithRate.totalLitres").value
                 )
