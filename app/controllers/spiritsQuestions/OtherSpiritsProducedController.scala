@@ -71,7 +71,7 @@ class OtherSpiritsProducedController @Inject() (
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(OtherSpiritsProducedPage, value))
                 _              <- userAnswersConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(OtherSpiritsProducedPage, mode, updatedAnswers))
+              } yield Redirect(navigator.nextPage(OtherSpiritsProducedPage, mode, updatedAnswers, Some(true)))
           )
       }
 }

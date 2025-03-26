@@ -20,9 +20,8 @@ import models.{AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
 
 case class CategoryViewModel(
-  category: String,
-  id: String,
-  rateBandRecap: String
+  taxTypeCode: String,
+  description: String
 )
 
 case class CategoriesByRateTypeViewModel(
@@ -33,7 +32,7 @@ case class CategoriesByRateTypeViewModel(
 )
 
 object CategoriesByRateTypeHelper {
-  def rateBandCategories(rateBands: Set[RateBand], regime: AlcoholRegime, isRecap: Boolean = false)(implicit
+  def rateBandCategories(rateBands: Set[RateBand], regime: AlcoholRegime)(implicit
     messages: Messages
   ): CategoriesByRateTypeViewModel = {
     val rateBandsByType = rateBands.toSeq
@@ -42,11 +41,8 @@ object CategoriesByRateTypeHelper {
       .mapValues { rateBands =>
         rateBands.sortBy(_.taxTypeCode).map { rateBand =>
           CategoryViewModel(
-            category =
-              if (isRecap) RateBandHelper.rateBandRecap(rateBand, Some(regime))
-              else RateBandHelper.rateBandContent(rateBand, Some(regime)),
-            id = rateBand.taxTypeCode,
-            rateBandRecap = RateBandHelper.rateBandRecap(rateBand, Some(regime))
+            taxTypeCode = rateBand.taxTypeCode,
+            description = RateBandDescription.toDescription(rateBand, Some(regime))
           )
         }
       }

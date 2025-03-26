@@ -83,6 +83,11 @@ noAppaId.heading = You need an Alcoholic Products Producer approval ID to access
 noAppaId.p = If you were producing alcoholic products before 1 February 2025, you can find your APPA ID on the online service letter you received from HMRC.
 noAppaId.link.text = Read guidance on getting approval to produce alcoholic products (opens in a new tab)
 
+clearReturnAreYouSureQuestion.title = Are you sure you want to clear your return?
+clearReturnAreYouSureQuestion.heading = Are you sure you want to clear your return?
+clearReturnAreYouSureQuestion.warning = This will delete all the information you have entered for this return.
+clearReturnAreYouSureQuestion.error.required = Select yes if you want to clear your return
+
 regime.beer = beer
 regime.cider = cider
 regime.wine = wine
@@ -236,6 +241,7 @@ taskList.section.spirits.hint = Every three months you must tell us about spirit
 taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check duty payable and send your return
 taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return
+taskList.button.clearReturn = Clear return and start again
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
@@ -296,22 +302,26 @@ return.journey.abv.interval.label.Wine = wine
 return.journey.abv.interval.label.Spirits = spirits
 return.journey.abv.interval.label.OtherFermentedProduct = other fermented products
 
-return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV (tax type code {2})
-return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV (tax type code {4})
-return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV (tax type code {8})
+return.journey.abv.interval.label.Beer.draught = draught beer
+return.journey.abv.interval.label.Cider.draught = draught cider
+return.journey.abv.interval.label.SparklingCider.draught = draught sparkling cider
+return.journey.abv.interval.label.Wine.draught = draught wine
+return.journey.abv.interval.label.Spirits.draught = draught spirits
+return.journey.abv.interval.label.OtherFermentedProduct.draught = draught other fermented products
 
-return.journey.abv.recap.interval.exceeding.max.Core = non-draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.Core = non-draught {0} between {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.Core = non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.DraughtRelief = draught {0} at or above {1}% ABV ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = draught {0} between {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.DraughtRelief = draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = non-draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = non-draught {0} between {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = non-draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
-return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = draught {0} at or above {1}% ABV ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = draught {0} between {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = draught {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8} SPR)
+return.journey.abv.interval.label.Beer.nondraught = non-draught beer
+return.journey.abv.interval.label.Cider.nondraught = non-draught cider
+return.journey.abv.interval.label.SparklingCider.nondraught = non-draught sparkling cider
+return.journey.abv.interval.label.Wine.nondraught = non-draught wine
+return.journey.abv.interval.label.Spirits.nondraught = non-draught spirits
+return.journey.abv.interval.label.OtherFermentedProduct.nondraught = non-draught other fermented products
+
+return.journey.abv.taxTypeCode = tax type code {0}
+return.journey.abv.taxTypeCode.SPR = tax type code {0} SPR
+
+return.journey.abv.interval.exceeding.max = {0} at or above {1}% ABV ({2})
+return.journey.abv.single.interval = {0} between {1}% {2} {3}% ABV ({4})
+return.journey.abv.multi.interval = {0} between {1}% {2} {3}% ABV and {4} between {5}% {6} {7}% ABV ({8})
 
 return.journey.totalLitres = Total litres of {0}
 return.journey.totalLitres.hint = In litres, up to 2 decimal places
@@ -915,4 +925,13 @@ returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcoh
 returnSubmitted.warningText = Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.
 returnSubmitted.warningFallbackText = Warning
 
+returnSubmitted.noDetails.p1 = We’ve received your return, but we’re unable to show the full details right now. This may be due to a temporary problem with the service.
+returnSubmitted.noDetails.youCan = You can:
+returnSubmitted.noDetails.viewReturn1 = view your full return details
+returnSubmitted.noDetails.viewReturn2 = to confirm your reference number
+returnSubmitted.noDetails.viewPayments = check how much duty you owe
+returnSubmitted.noDetails.p2 = Your details from this return may take up to 2 working days to be updated in our service.
+returnSubmitted.noDetails.p3 = Use your reference number from this return as a payment reference if you need to pay any duty.
+
 # End of Check and submit sub-journey
+

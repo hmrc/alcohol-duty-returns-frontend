@@ -21,10 +21,10 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import pages._
 import play.api.mvc.Call
 
-class FakeQuarterlySpiritsQuestionsNavigator(desiredRoute: Call, hasValueChanged: Boolean)
+class FakeQuarterlySpiritsQuestionsNavigator(desiredRoute: Call, hasValueChanged: Option[Boolean])
     extends QuarterlySpiritsQuestionsNavigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Boolean = true): Call = {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasChanged: Option[Boolean]): Call = {
     hasValueChanged mustBe hasChanged
     desiredRoute
   }

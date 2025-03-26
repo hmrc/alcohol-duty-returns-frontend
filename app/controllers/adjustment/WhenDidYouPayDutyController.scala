@@ -115,7 +115,7 @@ class WhenDidYouPayDutyController @Inject() (
                     .set(CurrentAdjustmentEntryPage, updatedAdjustment.copy(period = Some(value)))
                 )
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(WhenDidYouPayDutyPage, mode, updatedAnswers, hasChanged))
+            } yield Redirect(navigator.nextPage(WhenDidYouPayDutyPage, mode, updatedAnswers, Some(hasChanged)))
           }
         )
   }

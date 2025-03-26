@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HeadCell, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
-import viewmodels.declareDuty.RateBandHelper.rateBandRecap
+import viewmodels.declareDuty.RateBandDescription.toDescription
 import viewmodels.govuk.summarylist._
 import viewmodels.{Money, TableRowViewModel, TableViewModel, TotalsSummaryList}
 
@@ -114,7 +114,7 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
   )(implicit messages: Messages): String =
     maybeRatePeriod
       .flatMap(ratePeriod => ratePeriodsAndTaxCodesToRateBands.get((ratePeriod, taxType)))
-      .map(rateBandRecap(_, None).capitalize)
+      .map(toDescription(_, None).capitalize)
       .getOrElse(taxType)
 
   private def nilDeclarationRow()(implicit messages: Messages): Seq[TableRowViewModel]                             =
@@ -302,14 +302,14 @@ class ViewReturnViewModel @Inject() (appConfig: FrontendAppConfig) {
         netDutySuspension.totalLtsPureAlcoholCider
       ),
       netDutySuspensionCell(
-        AlcoholRegime.Spirits.regimeMessageKey,
-        netDutySuspension.totalLtsSpirit,
-        netDutySuspension.totalLtsPureAlcoholSpirit
-      ),
-      netDutySuspensionCell(
         AlcoholRegime.Wine.regimeMessageKey,
         netDutySuspension.totalLtsWine,
         netDutySuspension.totalLtsPureAlcoholWine
+      ),
+      netDutySuspensionCell(
+        AlcoholRegime.Spirits.regimeMessageKey,
+        netDutySuspension.totalLtsSpirit,
+        netDutySuspension.totalLtsPureAlcoholSpirit
       ),
       netDutySuspensionCell(
         AlcoholRegime.OtherFermentedProduct.regimeMessageKey,

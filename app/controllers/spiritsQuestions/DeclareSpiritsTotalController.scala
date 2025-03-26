@@ -78,7 +78,7 @@ class DeclareSpiritsTotalController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DeclareSpiritsTotalPage, value))
                 _              <- userAnswersConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(DeclareSpiritsTotalPage, mode, updatedAnswers))
+              } yield Redirect(navigator.nextPage(DeclareSpiritsTotalPage, mode, updatedAnswers, Some(true)))
           )
       }
 }

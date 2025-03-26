@@ -31,7 +31,7 @@ import models.requests.DataRequest
 import play.api.Logging
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.declareDuty.RateBandHelper.rateBandContent
+import viewmodels.declareDuty.RateBandDescription
 import views.html.adjustment.AdjustmentVolumeView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -86,7 +86,7 @@ class AdjustmentVolumeController @Inject() (
                 mode,
                 adjustmentType,
                 regime,
-                rateBandContent(rateBand, None).capitalize
+                RateBandDescription.toDescription(rateBand, None).capitalize
               )
             )
           case Some(AdjustmentEntry(_, Some(adjustmentType), _, _, Some(rateBand), _, _, _, _, _, _, _, _)) =>
@@ -96,7 +96,7 @@ class AdjustmentVolumeController @Inject() (
                 mode,
                 adjustmentType,
                 regime,
-                rateBandContent(rateBand, None).capitalize
+                RateBandDescription.toDescription(rateBand, None).capitalize
               )
             )
           case _                                                                                            =>
@@ -135,7 +135,7 @@ class AdjustmentVolumeController @Inject() (
                       )
                     )
                   _              <- userAnswersConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers, hasChanged))
+                } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers, Some(hasChanged)))
               }
             )
         case _            =>
@@ -156,7 +156,7 @@ class AdjustmentVolumeController @Inject() (
               mode,
               adjustmentType,
               regime,
-              rateBandContent(rateBand, None).capitalize
+              RateBandDescription.toDescription(rateBand, None).capitalize
             )
           )
         )

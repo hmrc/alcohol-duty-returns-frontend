@@ -50,7 +50,7 @@ class CheckYourAnswersSPRController @Inject() (
     (identify andThen getData andThen requireData) { implicit request =>
       CheckYourAnswersSPRSummaryListHelper.summaryList(regime, request.userAnswers, index) match {
         case None              =>
-          logger.warn("Impossible to retrieve summary list")
+          logger.warn("No SPR summary list items found")
           Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
         case Some(summaryList) =>
           Ok(view(regime, summaryList, index))

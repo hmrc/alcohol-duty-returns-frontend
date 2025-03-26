@@ -65,7 +65,7 @@ class OverDeclarationReasonController @Inject() (
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(OverDeclarationReasonPage, value))
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(OverDeclarationReasonPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(OverDeclarationReasonPage, mode, updatedAnswers, Some(true)))
         )
   }
 }
