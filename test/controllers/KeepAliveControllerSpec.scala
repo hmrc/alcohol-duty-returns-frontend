@@ -50,6 +50,8 @@ class KeepAliveControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual OK
+
+          verify(mockUserAnswersConnector, times(1)).keepAlive(eqTo(returnId))(any())
         }
       }
     }
@@ -71,6 +73,8 @@ class KeepAliveControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual OK
+
+          verify(mockUserAnswersConnector, times(1)).keepAlive(eqTo(returnId))(any())
         }
       }
     }
