@@ -77,17 +77,13 @@ class KeepAliveControllerSpec extends SpecBase {
 
     "when there is no period key in the session" - {
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      when(mockUserAnswersConnector.keepAlive(eqTo(returnId))(any())).thenReturn(Future.successful(mock[HttpResponse]))
-
       "must return OK" in {
         val application = applicationBuilder(None)
-          .overrides(bind[UserAnswersConnector].toInstance(mockUserAnswersConnector))
           .build()
 
         running(application) {
 
-          val request = FakeRequestWithoutSession(GET, routes.KeepAliveController.keepAlive.url)
+          val request = FakeRequestNoPeriodKey(GET, routes.KeepAliveController.keepAlive.url)
 
           val result = route(application, request).value
 
