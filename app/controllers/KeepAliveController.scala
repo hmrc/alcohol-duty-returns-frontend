@@ -34,9 +34,9 @@ class KeepAliveController @Inject() (
     extends FrontendBaseController {
 
   def keepAlive: Action[AnyContent] = identify.async { implicit request =>
-    val periodKey: Option[String] = request.session.get(periodKeySessionKey)
-    periodKey match {
-      case Some(pk) => userAnswersConnector.keepAlive(ReturnId(request.appaId, pk)).map(_ => Ok)
+    val maybePeriodKey: Option[String] = request.session.get(periodKeySessionKey)
+    maybePeriodKey match {
+      case Some(periodKey) => userAnswersConnector.keepAlive(ReturnId(request.appaId, periodKey)).map(_ => Ok)
       case None     => Future.successful(Ok)
     }
   }
