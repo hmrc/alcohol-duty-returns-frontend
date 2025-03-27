@@ -37,7 +37,7 @@ class KeepAliveController @Inject() (
     val maybePeriodKey: Option[String] = request.session.get(periodKeySessionKey)
     maybePeriodKey match {
       case Some(periodKey) => userAnswersConnector.keepAlive(ReturnId(request.appaId, periodKey)).map(_ => Ok)
-      case None     => Future.successful(Ok)
+      case None            => Future.successful(Ok)
     }
   }
 }
