@@ -162,6 +162,27 @@ trait Mappings extends Formatters with Constraints {
       )
     )
 
+  protected def volumesWithRateMultipleSPRSelection(
+    invalidKey: String,
+    requiredKey: String,
+    decimalPlacesKey: String,
+    minimumValueKey: String,
+    maximumValueKey: String,
+    lessOrEqualKey: String,
+    regimeName: String
+  ): FieldMapping[VolumeAndRateByTaxType] =
+    of(
+      new VolumesAndRateFormatterMultipleSPRSelect(
+        invalidKey,
+        requiredKey,
+        decimalPlacesKey,
+        minimumValueKey,
+        maximumValueKey,
+        lessOrEqualKey,
+        regimeName
+      )
+    )
+
   protected def spoiltVolumesWithDuty(
     invalidKey: String,
     requiredKey: String,

@@ -27,7 +27,7 @@ class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
 
   def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[VolumeAndRateByTaxType] = Form(
     "volumesWithRate" ->
-      volumesWithRate(
+      volumesWithRateMultipleSPRSelection(
         "return.journey.error.invalid",
         "return.journey.error.noValue",
         "return.journey.error.tooManyDecimalPlaces",
