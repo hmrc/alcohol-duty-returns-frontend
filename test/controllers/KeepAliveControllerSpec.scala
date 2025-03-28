@@ -50,6 +50,8 @@ class KeepAliveControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual OK
+
+          verify(mockUserAnswersConnector, times(1)).keepAlive(eqTo(returnId))(any())
         }
       }
     }
@@ -67,6 +69,25 @@ class KeepAliveControllerSpec extends SpecBase {
         running(application) {
 
           val request = FakeRequest(GET, routes.KeepAliveController.keepAlive.url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+
+          verify(mockUserAnswersConnector, times(1)).keepAlive(eqTo(returnId))(any())
+        }
+      }
+    }
+
+    "when there is no period key in the session" - {
+
+      "must return OK" in {
+        val application = applicationBuilder(None)
+          .build()
+
+        running(application) {
+
+          val request = FakeRequestNoPeriodKey(GET, routes.KeepAliveController.keepAlive.url)
 
           val result = route(application, request).value
 

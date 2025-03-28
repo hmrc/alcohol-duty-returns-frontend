@@ -24,7 +24,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class KeepAliveController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -34,6 +34,10 @@ class KeepAliveController @Inject() (
     extends FrontendBaseController {
 
   def keepAlive: Action[AnyContent] = identify.async { implicit request =>
-    userAnswersConnector.keepAlive(ReturnId(request.appaId, request.session(periodKeySessionKey))).map(_ => Ok)
+    val maybePeriodKey: Option[String] = request.session.get(periodKeySessionKey)
+    maybePeriodKey match {
+      case Some(periodKey) => userAnswersConnector.keepAlive(ReturnId(request.appaId, periodKey)).map(_ => Ok)
+      case None            => Future.successful(Ok)
+    }
   }
 }
