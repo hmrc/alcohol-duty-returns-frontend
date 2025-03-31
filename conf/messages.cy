@@ -11,7 +11,7 @@ site.saveAndReturn = Cadw a mynd yn ôl i’ch Cyfrif Treth Busnes
 site.agreeAndSubmit = Cytuno ac anfon y Datganiad
 site.payNow = Talu nawr
 site.startAgain = Dechrau eto
-site.signIn = NOT_FOUND
+site.signIn = Mewngofnodi
 site.govuk = GOV.UK
 site.unit.litres = o litrau
 site.rate.litre = y litr
@@ -29,7 +29,7 @@ site.warning = Rhybudd
 welsh.and.consonant = a
 welsh.and.vowel = ac
 
-date.day = NOT_FOUND
+date.day = Diwrnod
 date.month = Mis
 date.year = Blwyddyn
 
@@ -40,8 +40,8 @@ timeout.signOut = Allgofnodi
 
 error.prefix = Gwall
 error.title.prefix = Gwall:
-error.boolean = NOT_FOUND
-error.required = NOT_FOUND
+error.boolean = Rhowch ateb
+error.required = Mae angen i chi nodi gwerth
 error.summary.title = Mae problem.
 
 checkYourAnswers.title = Gwirio’ch atebion
@@ -62,9 +62,9 @@ returnLocked.heading = Mae’r Datganiad hwn wedi’i gloi dros dro
 returnLocked.p1 = Mae’r Datganiad hwn wedi cael ei gloi dros dro, oherwydd bod rhywun arall yn ei olygu.
 returnLocked.p2 = Rhowch gynnig arall arni mewn ychydig o funudau.
 
-signedOut.title = NOT_FOUND
-signedOut.heading = NOT_FOUND
-signedOut.guidance = NOT_FOUND
+signedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.guidance = Ni wnaethom gadw’ch atebion.
 
 unauthorised.title = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Mae’n ddrwg gennym – ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
@@ -82,6 +82,17 @@ noAppaId.title = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alc
 noAppaId.heading = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion Alcoholaidd arnoch, er mwyn cael mynediad at y gwasanaeth Toll Alcohol
 noAppaId.p = Os oeddech yn cynhyrchu cynhyrchion alcoholaidd cyn 1 Chwefror 2025, gallwch ddod o hyd i’ch ID APPA ar y llythyr gwasanaeth ar-lein a gawsoch oddi wrth CThEF.
 noAppaId.link.text = Darllenwch arweiniad ar gael cymeradwyaeth ar gyfer cynhyrchu cynhyrchion alcoholaidd (yn agor tab newydd)
+
+clearReturnAreYouSureQuestion.title = NOT_FOUND
+clearReturnAreYouSureQuestion.heading = NOT_FOUND
+clearReturnAreYouSureQuestion.warning = NOT_FOUND
+clearReturnAreYouSureQuestion.error.required = NOT_FOUND
+
+regime.beer = cwrw
+regime.cider = seidr
+regime.wine = gwin
+regime.spirits = gwirodydd
+regime.otherfermentedproduct = cynhyrchion eplesedig eraill
 
 section.visuallyHidden = Yr adran hon yw:
 section.alcoholDutyReturn = Datganiad Toll Alcohol
@@ -173,7 +184,7 @@ viewPastPayments.outstandingPayments.action = Camau
 viewPastPayments.youOwe = Mae arnoch
 viewPastPayments.duty.value = {0}
 viewPastPayments.credit.paragraph = Does gennych chi ddim byd i’w dalu. Gallwch chi ofyn am ad-daliad, neu byddwn ni’n defnyddio’r credyd tuag at daliadau yn y dyfodol.
-viewPastPayments.zeroBalance.paragraph = NOT_FOUND
+viewPastPayments.zeroBalance.paragraph = Does gennych chi ddim byd i’w dalu.
 viewPastPayments.outstandingPayments.paragraph = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymddangos, yn dibynnu ar sut rydych yn talu. Ar ôl i chi gwblhau’ch Datganiad, bydd eich cyfrifiad treth yn cymryd hyd at 2 ddiwrnod.
 viewPastPayments.Return.description = Taliad ar gyfer Datganiad Toll Alcohol
 viewPastPayments.RPI.description = Llog ar ad-daliad
@@ -230,6 +241,7 @@ taskList.section.spirits.hint = Bob tri mis, mae’n rhaid i chi roi gwybod i ni
 taskList.section.checkAndSubmit.heading = Anfon Datganiad
 taskList.section.checkAndSubmit.needToDeclare = Gwirio’r doll sy’n daladwy ac anfon eich Datganiad
 taskList.section.checkAndSubmit.hint = Mae’n rhaid i chi lenwi pob adran cyn i chi allu anfon eich Datganiad.
+taskList.button.clearReturn = Dileu cynnwys y datganiad a dechrau eto
 
 beforeStartReturn.title = Cyn i chi ddechrau
 beforeStartReturn.heading = Cyn i chi ddechrau
@@ -246,20 +258,15 @@ beforeStartReturn.text.dueWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad
 beforeStartReturn.text.overdueWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn oedd {0}
 beforeStartReturn.text.dueDateWarning = Y dyddiad cau ar gyfer cwblhau’r Datganiad hwn yw {0}
 
-serviceUpdated.title = NOT_FOUND
-serviceUpdated.heading = NOT_FOUND
-serviceUpdated.guidance1 = NOT_FOUND
-serviceUpdated.guidance2 = NOT_FOUND
+serviceUpdated.title = Mae’r gwasanaeth hwn wedi’i ddiweddaru
+serviceUpdated.heading = Mae’r gwasanaeth hwn wedi’i ddiweddaru
+serviceUpdated.guidance1 = Mae’n ddrwg gennym – nid oeddem yn gallu defnyddio’ch atebion blaenorol.
+serviceUpdated.guidance2 = Bydd angen i chi eu nodi eto.
 
 # Beginning of product entry sub-journey
 
 alcoholType.title = Pa fathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan?
 alcoholType.heading = Pa fathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan?
-alcoholType.Beer = Cwrw
-alcoholType.Cider = Seidr
-alcoholType.Wine = Gwin
-alcoholType.Spirits = Gwirodydd
-alcoholType.OtherFermentedProduct = Cynhyrchion eplesedig eraill
 alcoholType.error.required = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan
 alcoholType.p1 = Dewiswch y mathau o gynhyrchion alcoholaidd y mae angen i chi eu datgan yn y Datganiad hwn.
 alcoholType.p2 = Bydd eich Datganiad yn dangos gwerthoedd ‘dim’ ar gyfer y mathau nad ydych yn eu dewis.
@@ -295,22 +302,26 @@ return.journey.abv.interval.label.Wine = gwin
 return.journey.abv.interval.label.Spirits = gwirodydd
 return.journey.abv.interval.label.OtherFermentedProduct = cynhyrchion eplesedig eraill
 
-return.journey.abv.interval.exceeding.max = {0} ar {1}% ABV neu’n uwch (cod y math o dreth: {2})
-return.journey.abv.single.interval = {0} rhwng {1}% {2} {3}% ABV (cod y math o dreth: {4})
-return.journey.abv.multi.interval = {0} rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV (cod y math o dreth: {8})
+return.journey.abv.interval.label.Beer.draught = cwrw o’r gasgen
+return.journey.abv.interval.label.Cider.draught = seidr o’r gasgen
+return.journey.abv.interval.label.SparklingCider.draught = seidr pefriog o’r gasgen
+return.journey.abv.interval.label.Wine.draught = gwin o’r gasgen
+return.journey.abv.interval.label.Spirits.draught = gwirodydd o’r gasgen
+return.journey.abv.interval.label.OtherFermentedProduct.draught = cynhyrchion eplesedig eraill o’r gasgen
 
-return.journey.abv.recap.interval.exceeding.max.Core = {0} nad yw’n dod o’r gasgen ar {1}% ABV neu’n uwch ({2})
-return.journey.abv.recap.single.interval.Core = {0} nad yw’n dod o’r gasgen rhwng {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.Core = {0} nad yw’n dod o’r gasgen rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.DraughtRelief = {0} o’r gasgen ar {1}% ABV neu’n uwch ({2})
-return.journey.abv.recap.single.interval.DraughtRelief = {0} o’r gasgen rhwng {1}% {2} {3}% ABV ({4})
-return.journey.abv.recap.multi.interval.DraughtRelief = {0} o’r gasgen rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8})
-return.journey.abv.recap.interval.exceeding.max.SmallProducerRelief = {0} nad yw’n dod o’r gasgen ar {1}% ABV neu’n uwch ({2} SPR)
-return.journey.abv.recap.single.interval.SmallProducerRelief = {0} nad yw’n dod o’r gasgen rhwng {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.SmallProducerRelief = {0} nad yw’n dod o’r gasgen rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8} SPR)
-return.journey.abv.recap.interval.exceeding.max.DraughtAndSmallProducerRelief = {0} o’r gasgen ar {1}% ABV neu’n uwch ({2} SPR)
-return.journey.abv.recap.single.interval.DraughtAndSmallProducerRelief = {0} o’r gasgen rhwng {1}% {2} {3}% ABV ({4} SPR)
-return.journey.abv.recap.multi.interval.DraughtAndSmallProducerRelief = {0} o’r gasgen rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8} SPR)
+return.journey.abv.interval.label.Beer.nondraught = cwrw nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.Cider.nondraught = seidr nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.SparklingCider.nondraught = seidr pefriog nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.Wine.nondraught = gwin nad yw’n dod o’r gasgen
+return.journey.abv.interval.label.Spirits.nondraught = gwirodydd nad ydynt yn dod o’r gasgen
+return.journey.abv.interval.label.OtherFermentedProduct.nondraught = cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen
+
+return.journey.abv.taxTypeCode = cod y math o dreth: {0}
+return.journey.abv.taxTypeCode.SPR = cod y math o dreth: {0} SPR
+
+return.journey.abv.interval.exceeding.max = {0} ar {1}% ABV neu’n uwch ({2})
+return.journey.abv.single.interval = {0} rhwng {1}% {2} {3}% ABV ({4})
+return.journey.abv.multi.interval = {0} rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8})
 
 return.journey.totalLitres = Cyfanswm y litrau o {0}
 return.journey.totalLitres.hint = Nodwch y litrau, hyd at 2 le degol
@@ -342,20 +353,14 @@ declareAlcoholDutyQuestion.cider.p2.l2 = seidr pefriog rhwng 5.6% ac 8.4%
 declareAlcoholDutyQuestion.h4 = A oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd?
 declareAlcoholDutyQuestion.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddatgan unrhyw gynhyrchion alcoholaidd
 
-return.regime.Beer = cwrw
-return.regime.Cider = seidr
-return.regime.Wine = gwin
-return.regime.Spirits = gwirodydd
-return.regime.OtherFermentedProduct = cynhyrchion eplesedig eraill
-
 whatDoYouNeedToDeclare.title = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.heading = Beth y mae angen i chi ei ddatgan?
 whatDoYouNeedToDeclare.hint = Dewiswch bob un sy’n berthnasol
-whatDoYouNeedToDeclare.error.required.Beer = NOT_FOUND
-whatDoYouNeedToDeclare.error.required.Cider = NOT_FOUND
-whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = NOT_FOUND
-whatDoYouNeedToDeclare.error.required.Spirits = NOT_FOUND
-whatDoYouNeedToDeclare.error.required.Wine = NOT_FOUND
+whatDoYouNeedToDeclare.error.required.Beer = Dewiswch y cwrw y mae angen i chi ei ddatgan
+whatDoYouNeedToDeclare.error.required.Cider = Dewiswch y seidr y mae angen i chi ei ddatgan
+whatDoYouNeedToDeclare.error.required.Wine = Dewiswch y gwin y mae angen i chi ei ddatgan
+whatDoYouNeedToDeclare.error.required.Spirits = Dewiswch y gwirodydd y mae angen i chi eu datgan
+whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Dewiswch y cynhyrchion eplesedig eraill y mae angen i chi eu datgan
 whatDoYouNeedToDeclare.core.heading = {0} (cyfradd safonol)
 whatDoYouNeedToDeclare.draught.heading = {0} o’r gasgen (cyfradd is)
 whatDoYouNeedToDeclare.smallProducerRelief.heading = {0} nad yw’n dod o’r gasgen sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach
@@ -378,7 +383,7 @@ howMuchDoYouNeedToDeclare.heading.OtherFermentedProduct = Rhoi gwybod i ni am y 
 howMuchDoYouNeedToDeclare.p1.Beer = Rhowch wybod i ni am y cwrw y mae angen i chi ei ddatgan a’r alcohol pur yn y cwrw hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.p1.Cider = Rhowch wybod i ni am y seidr y mae angen i chi ei ddatgan a’r alcohol pur yn y seidr hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.p1.Wine = Rhowch wybod i ni am y gwin y mae angen i chi ei ddatgan a’r alcohol pur yn y gwin hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-howMuchDoYouNeedToDeclare.p1.Spirits = NOT_FOUND
+howMuchDoYouNeedToDeclare.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan a’r alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.p1.OtherFermentedProduct = Rhowch wybod i ni am gynhyrchion eplesedig eraill y mae angen i chi eu datgan a’r alcohol pur ynddyn nhw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 howMuchDoYouNeedToDeclare.warning = Byddwn yn gofyn ynghylch {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach ar y dudalen nesaf.
 howMuchDoYouNeedToDeclare.hint = Nodwch y litrau, hyd at 2 le degol
@@ -391,7 +396,7 @@ howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description = Disgrifiad
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Cyfanswm y cyfaint
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Alcohol pur
 
-doYouHaveMultipleSPRDutyRates.title = NOT_FOUND
+doYouHaveMultipleSPRDutyRates.title = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
 doYouHaveMultipleSPRDutyRates.heading = Os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach
 doYouHaveMultipleSPRDutyRates.p1 = Efallai y bydd angen i chi ddatgan {0} sydd â mwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer yr un math o {0} – er enghraifft os yw un o’r canlynol yn wir:
 doYouHaveMultipleSPRDutyRates.l1 = mae’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach wedi newid, ac mae angen i chi roi gwybod am waith cynhyrchu a wnaed pan oedd cyfradd wahanol yn berthnasol
@@ -416,7 +421,7 @@ tellUsAboutSingleSPRRate.heading.OtherFermentedProduct = Rhoi gwybod i ni am y c
 tellUsAboutSingleSPRRate.p1.Beer = Rhowch wybod i ni am y cwrw y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y cwrw hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.Cider = Rhowch wybod i ni am y seidr y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y seidr hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.Wine = Rhowch wybod i ni am y gwin y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y gwin hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
-tellUsAboutSingleSPRRate.p1.Spirits = NOT_FOUND
+tellUsAboutSingleSPRRate.p1.Spirits = Rhowch wybod i ni am y gwirodydd y mae angen i chi eu datgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y gwirodydd hynny, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.p1.OtherFermentedProduct = Rhowch wybod i ni am y cynnyrch eplesedig arall y mae angen i chi ei ddatgan sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, ac am yr alcohol pur yn y cynnyrch eplesedig arall hwnnw, ar draws y bandiau cryfder Alcohol yn ôl Cyfaint (ABV) canlynol.
 tellUsAboutSingleSPRRate.checkYourAnswersLabel.cardTitle = {0} sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach (mwy nag un gyfradd doll)
 tellUsAboutSingleSPRRate.smallProducer.heading = Faint o {0} nad yw’n dod o’r gasgen, sy’n gymwys ar gyfer Rhyddhad i Gynhyrchwyr Bach, y mae angen i chi ei ddatgan?
@@ -454,7 +459,7 @@ multipleSPRList.question = A ydych chi eisiau ychwanegu un arall?
 multipleSPRList.error.required = Dewiswch ‘Iawn’ os oes gennych fwy nag un gyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach i’w datgan
 
 multipleSPRList.description.label = Disgrifiad
-multipleSPRList.totalLitres.label = Cyfanswm y cyfaint wedi’i ddatgan
+multipleSPRList.totalLitres.label = Cyfanswm y cyfaint wedi’i ddatgan (litrau)
 multipleSPRList.pureAlcohol.label = Litrau o alcohol pur (LPA)
 multipleSPRList.dutyRate.label = Cyfradd doll (fesul litr)
 multipleSPRList.action.label = Camau
@@ -750,9 +755,9 @@ spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText = sydd yn y {0} wedi’i ddife
 whenDidYouPayDuty.default.title = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.default.heading = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.under-declaration.title = Pryd dylech chi fod wedi talu toll?
-whenDidYouPayDuty.spoilt.title = NOT_FOUND
+whenDidYouPayDuty.spoilt.title = I’r mis agosaf, pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.under-declaration.heading = Pryd dylech chi fod wedi talu toll?
-whenDidYouPayDuty.spoilt.heading = NOT_FOUND
+whenDidYouPayDuty.spoilt.heading = I’r mis agosaf, pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.exciseEnquiries.link = Ffoniwch CThEF neu cysylltwch â CThEF drwy’r post (yn agor tab newydd)
 whenDidYouPayDuty.paragraph = os cyhoeddwyd hyn yn wreiddiol cyn mis Awst 2023.
 whenDidYouPayDuty.hint = Er enghraifft, 10 2024
@@ -776,7 +781,7 @@ adjustmentTaxType.checkYourAnswersLabel = Math o dreth
 adjustmentTaxType.error.invalid = Nodwch god dilys ar gyfer y math o dreth
 adjustmentTaxType.error.required = Nodwch god y math o dreth
 adjustmentTaxType.error.notDraught = Mae’n rhaid i god y math o dreth fod yn god ar gyfer cynnyrch alcoholaidd o’r gasgen
-adjustmentTaxType.repackaged.change.hidden = NOT_FOUND
+adjustmentTaxType.repackaged.change.hidden = math gwreiddiol o dreth
 adjustmentTaxType.change.hidden = y math o dreth
 adjustmentTaxType.repackaged.checkYourAnswersLabel = Math gwreiddiol o dreth
 
@@ -817,8 +822,8 @@ adjustmentRepackagedTaxType.error.nonDraught = Mae’n rhaid i god y math o dret
 adjustmentRepackagedTaxType.change.hidden = y math newydd o dreth
 adjustmentRepackagedTaxType.hint = Cod 3 digid y math o dreth ar gyfer cynnyrch nad yw’n dod o’r gasgen
 
-adjustmentSmallProducerReliefDutyRate.title = NOT_FOUND
-adjustmentSmallProducerReliefDutyRate.heading = NOT_FOUND
+adjustmentSmallProducerReliefDutyRate.title = Beth yw’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
+adjustmentSmallProducerReliefDutyRate.heading = Beth yw’ch cyfradd doll yn sgil Rhyddhad i Gynhyrchwyr Bach ar gyfer y cynhyrchion sydd newydd gael eu hailbecynnu?
 adjustmentSmallProducerReliefDutyRate.checkYourAnswersLabel = Cyfradd doll SPR
 adjustmentSmallProducerReliefDutyRate.hint = Dylech gynnwys punnoedd a cheiniogau
 adjustmentSmallProducerReliefDutyRate.error.nonNumeric = Mae’n rhaid i’ch cyfradd doll yn Sgil Rhyddhad i Gynhyrchwyr Bach fod yn rhif
@@ -864,12 +869,12 @@ deleteAdjustment.error.required = Dewiswch ‘Iawn’ er mwyn tynnu’r addasiad
 underDeclarationReason.title = Pam na chafodd y cynhyrchion alcoholaidd eu datgan tan nawr?
 underDeclarationReason.heading = Pam na chafodd y cynhyrchion alcoholaidd eu datgan tan nawr?
 underDeclarationReason.error.required = Nodwch y rheswm pam na chafodd y cynhyrchion alcoholaidd eu datgan tan nawr
-underDeclarationReason.error.length = NOT_FOUND
+underDeclarationReason.error.length = Mae’n rhaid i’r rheswm fod yn {0} o gymeriadau neu lai
 
 overDeclarationReason.title = Pam cafodd cynhyrchion alcoholaidd eu gorddatgan?
 overDeclarationReason.heading = Pam cafodd cynhyrchion alcoholaidd eu gorddatgan?
 overDeclarationReason.error.required = Nodwch y rheswm pam cafodd cynhyrchion alcoholaidd eu gorddatgan
-overDeclarationReason.error.length = NOT_FOUND
+overDeclarationReason.error.length = Mae’n rhaid i’r rheswm fod yn {0} o gymeriadau neu lai
 
 # End of adjustments sub-journey
 
@@ -919,5 +924,13 @@ returnSubmitted.direct.debit.setupOrManageLink.text = Sefydlwch neu rheolwch eic
 returnSubmitted.negative.p1 = Gallwch hawlio toll sy’n ddyledus nawr neu’n hwyrach drwy’ch cyfrif Toll Alcohol. Os na fyddwch yn ei hawlio’n ôl, bydd yn cael ei defnyddio tuag at unrhyw doll sy’n ddyledus yn sgil eich Datganiad nesaf.
 returnSubmitted.warningText = Mae ein manylion banc wedi newid. Dewiswch ‘Talu nawr’ ac yna ‘Trosglwyddiad banc (BACS/CHAPS)’ er mwyn gweld y manylion newydd.
 returnSubmitted.warningFallbackText = Rhybudd
+
+returnSubmitted.noDetails.p1 = NOT_FOUND
+returnSubmitted.noDetails.youCan = NOT_FOUND
+returnSubmitted.noDetails.viewReturn1 = NOT_FOUND
+returnSubmitted.noDetails.viewReturn2 = NOT_FOUND
+returnSubmitted.noDetails.viewPayments = NOT_FOUND
+returnSubmitted.noDetails.p2 = NOT_FOUND
+returnSubmitted.noDetails.p3 = NOT_FOUND
 
 # End of Check and submit sub-journey

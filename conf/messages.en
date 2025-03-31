@@ -358,9 +358,9 @@ whatDoYouNeedToDeclare.heading = What do you need to declare?
 whatDoYouNeedToDeclare.hint = Select all that apply
 whatDoYouNeedToDeclare.error.required.Beer = Select the beers you need to declare
 whatDoYouNeedToDeclare.error.required.Cider = Select the ciders you need to declare
-whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other fermented products you need to declare
-whatDoYouNeedToDeclare.error.required.Spirits = Select the spirits you need to declare
 whatDoYouNeedToDeclare.error.required.Wine = Select the wines you need to declare
+whatDoYouNeedToDeclare.error.required.Spirits = Select the spirits you need to declare
+whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other fermented products you need to declare
 whatDoYouNeedToDeclare.core.heading = {0} (standard rate)
 whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)
 whatDoYouNeedToDeclare.smallProducerRelief.heading = Non-draught {0} eligible for Small Producer Relief
@@ -934,4 +934,3 @@ returnSubmitted.noDetails.p2 = Your details from this return may take up to 2 wo
 returnSubmitted.noDetails.p3 = Use your reference number from this return as a payment reference if you need to pay any duty.
 
 # End of Check and submit sub-journey
-
