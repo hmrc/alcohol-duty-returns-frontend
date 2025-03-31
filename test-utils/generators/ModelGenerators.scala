@@ -219,8 +219,7 @@ trait ModelGenerators {
   } yield s"${year}A${(month + 'A').toChar}"
 
   def invalidPeriodKeyGen: Gen[String] = Gen.alphaStr
-    .suchThat(_.nonEmpty)
-    .suchThat(!_.matches(ReturnPeriod.returnPeriodPattern.toString()))
+    .retryUntil(s => s.nonEmpty && !s.matches(ReturnPeriod.returnPeriodPattern.toString))
 
   def returnPeriodGen: Gen[ReturnPeriod] = periodKeyGen.map(ReturnPeriod.fromPeriodKey(_).get)
 
