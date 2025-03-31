@@ -73,7 +73,7 @@ class VolumesAndRateFormatter(
     args = Seq(regimeName)
   )
 
-  private def requiredFieldFormError(key: String, field: String, rateBandDescription: String): FormError =
+  protected def requiredFieldFormError(key: String, field: String, rateBandDescription: String): FormError =
     FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", Seq(rateBandDescription, regimeName))
 
   private def formatVolume(
@@ -153,4 +153,38 @@ class VolumesAndRateFormatter(
       volumeFormatter.unbind(s"$key.$totalLitresField", value.totalLitres) ++
       pureAlcoholVolumeFormatter.unbind(s"$key.$pureAlcoholField", value.pureAlcohol) ++
       dutyRateFormatter.unbind(s"$key.$dutyRateField", value.dutyRate)
+}
+
+class VolumesAndRateFormatterMultipleSPRSelect(
+  invalidKey: String,
+  requiredKey: String,
+  decimalPlacesKey: String,
+  minimumValueKey: String,
+  maximumValueKey: String,
+  lessOrEqualKey: String,
+  regimeName: String
+) extends VolumesAndRateFormatter(
+      invalidKey,
+      requiredKey,
+      decimalPlacesKey,
+      minimumValueKey,
+      maximumValueKey,
+      lessOrEqualKey,
+      regimeName.capitalize
+    ) {
+  def decapitalise(s: String): String =
+    if (s == null || s.length == 0 || !s.charAt(0).isUpper) {
+      s
+    } else {
+      val sb = new StringBuilder(s.length).append(s)
+      sb.setCharAt(0, s.charAt(0).toLower)
+      sb.toString
+    }
+
+  override protected def requiredFieldFormError(key: String, field: String, rateBandDescription: String): FormError =
+    if (field == taxTypeField) {
+      FormError(nameToId(s"$key.$field"), s"$requiredKey.$field", Seq(decapitalise(rateBandDescription), regimeName))
+    } else {
+      super.requiredFieldFormError(key, field, rateBandDescription)
+    }
 }
