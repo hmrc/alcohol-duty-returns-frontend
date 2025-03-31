@@ -858,8 +858,17 @@ adjustmentEntryList.action = Camau
 adjustmentList.total = Cyfanswm sy’n ddyledus
 adjustmentList.question = A oes angen i chi roi gwybod i ni am unrhyw addasiadau eraill?
 adjustmentList.error.required = Dewiswch ‘Iawn’ os oes gennych addasiad arall i’w ddatgan
-adjustmentEntryList.change.hidden = NOT_FOUND
-adjustmentEntryList.remove.hidden = NOT_FOUND
+
+adjustmentEntryList.change.under-declaration.hidden = Addasiad ar gyfer tanddatganiad lle gwerth y doll yw {0}
+adjustmentEntryList.change.over-declaration.hidden = Addasiad ar gyfer gorddatganiad lle gwerth y doll yw {0}
+adjustmentEntryList.change.repackaged-draught-products.hidden = Addasiad ar gyfer cynhyrchion o’r gasgen wedi’u hailbecynnu lle gwerth y doll yw {0}
+adjustmentEntryList.change.spoilt.hidden = Addasiad ar gyfer cynhyrchion wedi’u difetha lle gwerth y doll yw {0}
+adjustmentEntryList.change.drawback.hidden = Addasiad ar gyfer ad-daliad lle gwerth y doll yw {0}
+adjustmentEntryList.remove.under-declaration.hidden = Addasiad ar gyfer tanddatganiad lle gwerth y doll yw {0}
+adjustmentEntryList.remove.over-declaration.hidden = Addasiad ar gyfer gorddatganiad lle gwerth y doll yw {0}
+adjustmentEntryList.remove.repackaged-draught-products.hidden = Addasiad ar gyfer cynhyrchion o’r gasgen wedi’u hailbecynnu lle gwerth y doll yw {0}
+adjustmentEntryList.remove.spoilt.hidden = Addasiad ar gyfer cynhyrchion wedi’u difetha lle gwerth y doll yw {0}
+adjustmentEntryList.remove.drawback.hidden = Addasiad ar gyfer ad-daliad lle gwerth y doll yw {0}
 
 deleteAdjustment.title = Tynnu’r addasiad hwn?
 deleteAdjustment.heading = Tynnu’r addasiad hwn?
