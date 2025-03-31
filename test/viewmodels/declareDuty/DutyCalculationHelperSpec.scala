@@ -66,11 +66,11 @@ class DutyCalculationHelperSpec extends SpecBase {
 
       val result = DutyCalculationHelper.dutyDueTableViewModel(alcoholDuty, emptyUserAnswers, regime)(getMessages(app))
 
-      result mustEqual Left("No rate bands found")
+      result mustBe Left("No rate bands found")
     }
 
     "must return a Left with error message when no matching rate band for tax type" in {
-      val unmatchedRateBand = genRateBandForRegimeWithSPR(regime).sample.value
+      val unmatchedRateBand = genSingleUnmatchedRateBandForRegimeWithSPR(regime).sample.value
       val unmatchedTaxType  = genVolumeAndRateByTaxTypeRateBand(unmatchedRateBand).arbitrary.sample.value
       val rateBands         = genListOfRateBandForRegimeWithSPR(regime).sample.value.toSet
       val totalDuty         = unmatchedTaxType.dutyRate * unmatchedTaxType.pureAlcohol
