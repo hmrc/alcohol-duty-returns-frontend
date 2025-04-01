@@ -392,7 +392,7 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
 
     "successfully submit a return and receive nil return response" in new SetUp {
       val adrReturnCreatedDetails = AdrReturnCreatedDetails(
-        processingDate = Instant.now(),
+        processingDate = Instant.now(clock),
         amount = BigDecimal(1),
         chargeReference = None,
         paymentDueDate = None
@@ -439,7 +439,41 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
-        result.swap.toOption.get must include("Invalid JSON format")
+        result.swap.toOption.get.status mustBe INTERNAL_SERVER_ERROR
+        result.swap.toOption.get.message  must include("Invalid JSON format")
+
+        verify(connector.httpClient, times(1))
+          .post(eqTo(url"$mockUrl"))(any())
+
+        verify(requestBuilder, times(1))
+          .execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any())
+      }
+    }
+
+    "return an ErrorModel when a duplicate submission response is returned" in new SetUp {
+      val duplicateSubmissionResponse = Future.successful(
+        Left[UpstreamErrorResponse, HttpResponse](
+          UpstreamErrorResponse("Return already submitted", UNPROCESSABLE_ENTITY, UNPROCESSABLE_ENTITY, Map.empty)
+        )
+      )
+
+      when(mockConfig.adrSubmitReturnUrl(eqTo(appaId), eqTo(periodKey))).thenReturn(mockUrl)
+
+      when(requestBuilder.execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+        .thenReturn(duplicateSubmissionResponse)
+
+      when(
+        requestBuilder.withBody(
+          eqTo(Json.toJson(nilReturn))
+        )(any(), any(), any())
+      )
+        .thenReturn(requestBuilder)
+
+      when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
+
+      whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
+        result.swap.toOption.get.status  mustBe UNPROCESSABLE_ENTITY
+        result.swap.toOption.get.message mustBe "Return already submitted"
 
         verify(connector.httpClient, times(1))
           .post(eqTo(url"$mockUrl"))(any())
@@ -469,7 +503,8 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
-        result.swap.toOption.get must include("Unexpected response")
+        result.swap.toOption.get.status mustBe INTERNAL_SERVER_ERROR
+        result.swap.toOption.get.message  must include("Unexpected response")
 
         verify(connector.httpClient, times(1))
           .post(eqTo(url"$mockUrl"))(any())
@@ -497,7 +532,8 @@ class AlcoholDutyReturnsConnectorSpec extends SpecBase with ScalaFutures {
       when(connector.httpClient.post(any())(any())).thenReturn(requestBuilder)
 
       whenReady(connector.submitReturn(appaId, periodKey, nilReturn).value) { result =>
-        result.swap.toOption.get must include("Unexpected status code: 200")
+        result.swap.toOption.get.status mustBe INTERNAL_SERVER_ERROR
+        result.swap.toOption.get.message  must include("Unexpected status code: 200")
 
         verify(connector.httpClient, times(1))
           .post(eqTo(url"$mockUrl"))(any())

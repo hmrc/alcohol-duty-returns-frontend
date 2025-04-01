@@ -69,10 +69,12 @@ class DeleteAdjustmentController @Inject() (
                 userAnswersDeclarationUpdate          <- Future.fromTry(emptyListCheck(userAnswersWithUpdatedOverUnderReason))
                 _                                     <- userAnswersConnector.set(userAnswersDeclarationUpdate)
               } yield Redirect(
-                navigator.nextPage(DeleteAdjustmentPage, NormalMode, userAnswersDeclarationUpdate)
+                navigator.nextPage(DeleteAdjustmentPage, NormalMode, userAnswersDeclarationUpdate, Some(true))
               )
             } else {
-              Future.successful(Redirect(navigator.nextPage(DeleteAdjustmentPage, NormalMode, request.userAnswers)))
+              Future.successful(
+                Redirect(navigator.nextPage(DeleteAdjustmentPage, NormalMode, request.userAnswers, Some(true)))
+              )
             }
         )
   }

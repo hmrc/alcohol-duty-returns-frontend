@@ -9,13 +9,11 @@ site.continue = Continue
 site.saveAndContinue = Save and continue
 site.saveAndReturn = Save and return to your business tax account
 site.agreeAndSubmit = Agree and send return
-site.start = Start now
 site.payNow = Pay now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
 site.unit.litres = litres
-site.unit.percentage = %
 site.rate.litre = per litre
 site.2DP = {0,number,#,##0.00}
 site.4DP = {0,number,#,##0.0000##}
@@ -43,16 +41,6 @@ timeout.signOut = Sign out
 error.prefix = Error
 error.title.prefix = Error:
 error.boolean = Please give an answer
-error.invalid_date = Give a correct date
-error.date.day_blank = Enter a day
-error.date.day_invalid = Give a correct day using numbers 1 to 31
-error.date.month_blank = Enter a month
-error.date.month_invalid = Give a correct month using numbers 1 to 12
-error.date.year_blank = Enter a year
-error.date.year_invalid = Give a correct year
-error.integer = Give an answer in whole numbers
-error.non_numeric = Give a value using only numbers
-error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
@@ -94,6 +82,11 @@ noAppaId.title = You need an Alcoholic Products Producer approval ID to access A
 noAppaId.heading = You need an Alcoholic Products Producer approval ID to access Alcohol Duty
 noAppaId.p = If you were producing alcoholic products before 1 February 2025, you can find your APPA ID on the online service letter you received from HMRC.
 noAppaId.link.text = Read guidance on getting approval to produce alcoholic products (opens in a new tab)
+
+clearReturnAreYouSureQuestion.title = Are you sure you want to clear your return?
+clearReturnAreYouSureQuestion.heading = Are you sure you want to clear your return?
+clearReturnAreYouSureQuestion.warning = This will delete all the information you have entered for this return.
+clearReturnAreYouSureQuestion.error.required = Select yes if you want to clear your return
 
 regime.beer = beer
 regime.cider = cider
@@ -189,9 +182,7 @@ viewPastPayments.outstandingPayments.remainingAmount = Left to pay
 viewPastPayments.outstandingPayments.status = Status
 viewPastPayments.outstandingPayments.action = Action
 viewPastPayments.youOwe = You owe
-viewPastPayments.youAre = You are
 viewPastPayments.duty.value = {0}
-viewPastPayments.negative.duty.value = {0} in credit
 viewPastPayments.credit.paragraph = You have nothing to pay. You can request a refund or we will use the credit toward future payments.
 viewPastPayments.zeroBalance.paragraph = You have nothing to pay.
 viewPastPayments.outstandingPayments.paragraph = Payments take up to 7 working days to show, depending on how you pay. After you complete your return your tax calculation will take up to 2 days.
@@ -250,6 +241,7 @@ taskList.section.spirits.hint = Every three months you must tell us about spirit
 taskList.section.checkAndSubmit.heading = Send return
 taskList.section.checkAndSubmit.needToDeclare = Check duty payable and send your return
 taskList.section.checkAndSubmit.hint = You must complete every section before you can send your return
+taskList.button.clearReturn = Clear return and start again
 
 beforeStartReturn.title = Before you start
 beforeStartReturn.heading = Before you start
@@ -280,28 +272,28 @@ alcoholType.p1 = Select the types of alcoholic product you need to declare in th
 alcoholType.p2 = Types you do not select will have nil values in your return.
 alcoholType.hint = Select all that apply
 
-return.journey.error.lessThanExpected = Litres of pure alcohol in the {0} must be the same or less than the total litres of {1}
+return.journey.error.lessThanExpected = {0} - Litres of pure alcohol must be the same or less than the total litres
 
 return.journey.error.allRequired = Select the type of {0}
 return.journey.error.noValue.taxType = Select the type of {0}
 
-return.journey.error.noValue.totalLitres = Enter the total litres of {0}
-return.journey.error.invalid.totalLitres = Total litres of {0} must be a number
-return.journey.error.maximumValue.totalLitres = Total litres of {0} must be less than 1 billion
-return.journey.error.minimumValue.totalLitres = Total litres of {0} must be more than 0.00
-return.journey.error.tooManyDecimalPlaces.totalLitres = Total litres of {0} must be a number to 2 decimal places
+return.journey.error.noValue.totalLitres = {0} - Enter the total litres
+return.journey.error.invalid.totalLitres = {0} - Total litres must be a number
+return.journey.error.maximumValue.totalLitres = {0} - Total litres must be less than 1 billion
+return.journey.error.minimumValue.totalLitres = {0} - Total litres must be more than 0.00
+return.journey.error.tooManyDecimalPlaces.totalLitres = {0} - Total litres must be a number up to 2 decimal places
 
-return.journey.error.noValue.pureAlcohol = Enter the litres of pure alcohol in the {0}
-return.journey.error.invalid.pureAlcohol = Litres of pure alcohol in the {0} must be a number
-return.journey.error.maximumValue.pureAlcohol = Litres of pure alcohol in the {0} must be less than 1 billion
-return.journey.error.minimumValue.pureAlcohol = Litres of pure alcohol in the {0} must be more than 0.0000
-return.journey.error.tooManyDecimalPlaces.pureAlcohol = Litres of pure alcohol in the {0} must be a number to 4 decimal places
+return.journey.error.noValue.pureAlcohol = {0} - Enter the litres of pure alcohol
+return.journey.error.invalid.pureAlcohol = {0} - Litres of pure alcohol must be a number
+return.journey.error.maximumValue.pureAlcohol = {0} - Litres of pure alcohol must be less than 1 billion
+return.journey.error.minimumValue.pureAlcohol = {0} - Litres of pure alcohol must be more than 0.0000
+return.journey.error.tooManyDecimalPlaces.pureAlcohol = {0} - Litres of pure alcohol must be a number to 4 decimal places
 
-return.journey.error.noValue.dutyRate = Enter your Small Producer Relief duty rate for the {0}
-return.journey.error.invalid.dutyRate = Your Small Producer Relief duty rate for the {0} must be a number
-return.journey.error.maximumValue.dutyRate = Your Small Producer Relief duty rate for the {0} must be less than £1 billion
-return.journey.error.minimumValue.dutyRate = Your Small Producer Relief duty rate for the {0} must be £0.00 or more
-return.journey.error.tooManyDecimalPlaces.dutyRate = Your Small Producer Relief duty rate for the {0} must be to 2 decimal places
+return.journey.error.noValue.dutyRate = {0} - Enter your Small Producer Relief duty rate
+return.journey.error.invalid.dutyRate = {0} - Your Small Producer Relief duty rate must be a number
+return.journey.error.maximumValue.dutyRate = {0} - Your Small Producer Relief duty rate must be less than £1 billion
+return.journey.error.minimumValue.dutyRate = {0} - Your Small Producer Relief duty rate must be £0.00 or more
+return.journey.error.tooManyDecimalPlaces.dutyRate = {0} - Your Small Producer Relief duty rate must be to 2 decimal places
 
 return.journey.abv.interval.label.Beer = beer
 return.journey.abv.interval.label.Cider = cider
@@ -366,9 +358,9 @@ whatDoYouNeedToDeclare.heading = What do you need to declare?
 whatDoYouNeedToDeclare.hint = Select all that apply
 whatDoYouNeedToDeclare.error.required.Beer = Select the beers you need to declare
 whatDoYouNeedToDeclare.error.required.Cider = Select the ciders you need to declare
-whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other fermented products you need to declare
-whatDoYouNeedToDeclare.error.required.Spirits = Select the spirits you need to declare
 whatDoYouNeedToDeclare.error.required.Wine = Select the wines you need to declare
+whatDoYouNeedToDeclare.error.required.Spirits = Select the spirits you need to declare
+whatDoYouNeedToDeclare.error.required.OtherFermentedProduct = Select the other fermented products you need to declare
 whatDoYouNeedToDeclare.core.heading = {0} (standard rate)
 whatDoYouNeedToDeclare.draught.heading = Draught {0} (reduced rate)
 whatDoYouNeedToDeclare.smallProducerRelief.heading = Non-draught {0} eligible for Small Producer Relief
@@ -400,8 +392,6 @@ howMuchDoYouNeedToDeclare.core.heading = How much non-draught {0} (standard rate
 howMuchDoYouNeedToDeclare.draught.heading = How much draught {0} (reduced rate) do you need to declare?
 
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.cardTitle = {0} duty
-howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.Core = Standard rate
-howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.head.DraughtRelief = Reduced rate
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.description = Description
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.totalLitres = Total volume
 howMuchDoYouNeedToDeclare.checkYourAnswersLabel.row.pureAlcohol = Pure alcohol
@@ -626,7 +616,6 @@ declareQuarterlySpirits.paragraph2.bulletList.1 = malt spirits or grain spirits
 declareQuarterlySpirits.paragraph2.bulletList.2 = neutral spirits of agricultural or industrial origin
 declareQuarterlySpirits.paragraph2.bulletList.3 = spirits produced from beer, wine or made-wine or from cider or perry
 declareQuarterlySpirits.paragraph2.bulletList.4 = any other spirits made from raw ingredients
-declareQuarterlySpirits.checkYourAnswersLabel = declareQuarterlySpirits
 declareQuarterlySpirits.error.required = Select yes if you have made any spirits from raw ingredients in the past 3 months
 
 declareSpiritsTotal.title = What is the total of all spirits taken this quarter?
@@ -691,9 +680,6 @@ otherSpiritsProduced.error.length = Other types of spirits you have produced mus
 otherSpiritsProduced.change.hidden = other spirits produced
 
 spiritsQuestions.checkYourAnswersLabel.card1 = Spirits you’ve produced
-spiritsQuestions.checkYourAnswersLabel.card2 = Grain ingredients you’ve used
-spiritsQuestions.checkYourAnswersLabel.card3 = Alcohol ingredients you’ve used
-spiritsQuestions.checkYourAnswersLabel.card4 = Other ingredients you’ve used
 
 spiritsQuestions.checkYourAnswers.lpa.units = litres of pure alcohol
 
@@ -933,11 +919,18 @@ returnSubmitted.viewReturnLink.text = View your return
 returnSubmitted.positive.h1 = What happens next
 returnSubmitted.positive.p1 = You can pay your duty now or later from your business tax account, but you must pay it by {0}. You will be charged interest if you do not pay by this date.
 returnSubmitted.positive.p2 = Your reference number can be used as a payment reference when you pay this return.
-returnSubmitted.direct.debit.h2 = Direct Debit
 returnSubmitted.direct.debit.p1 = You can also pay duty automatically by direct debit.
 returnSubmitted.direct.debit.setupOrManageLink.text = Set up or manage your Direct Debit
 returnSubmitted.negative.p1 = You can claim duty owed now or later in your Alcohol Duty account. If you do not claim it back then it will be used toward any duty due from your next return.
 returnSubmitted.warningText = Our bank details have changed. Choose Pay now and then Bank transfer (BACS/CHAPS) to see the new details.
 returnSubmitted.warningFallbackText = Warning
+
+returnSubmitted.noDetails.p1 = We’ve received your return, but we’re unable to show the full details right now. This may be due to a temporary problem with the service.
+returnSubmitted.noDetails.youCan = You can:
+returnSubmitted.noDetails.viewReturn1 = view your full return details
+returnSubmitted.noDetails.viewReturn2 = to confirm your reference number
+returnSubmitted.noDetails.viewPayments = check how much duty you owe
+returnSubmitted.noDetails.p2 = Your details from this return may take up to 2 working days to be updated in our service.
+returnSubmitted.noDetails.p3 = Use your reference number from this return as a payment reference if you need to pay any duty.
 
 # End of Check and submit sub-journey

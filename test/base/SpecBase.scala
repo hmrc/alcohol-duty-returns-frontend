@@ -75,6 +75,8 @@ trait SpecBase
   def FakeRequest()                                          = play.api.test.FakeRequest().withSession((periodKeySessionKey, periodKey))
   def FakeRequest(verb: String, route: String)               =
     play.api.test.FakeRequest(verb, route).withSession((periodKeySessionKey, periodKey))
+  def FakeRequestNoPeriodKey(verb: String, route: String)    =
+    play.api.test.FakeRequest(verb, route).withSession()
   def FakeRequestWithoutSession()                            = play.api.test.FakeRequest()
   def FakeRequestWithoutSession(verb: String, route: String) = play.api.test.FakeRequest(verb, route)
 

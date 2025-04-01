@@ -90,7 +90,8 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+            bind[AdjustmentNavigator]
+              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -114,7 +115,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true))
+            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true)))
           )
           .build()
 
@@ -144,7 +145,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
       val application              = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
           bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
         )
         .build()
@@ -172,7 +173,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
       val application              = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = true)),
+          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
           bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
         )
         .build()

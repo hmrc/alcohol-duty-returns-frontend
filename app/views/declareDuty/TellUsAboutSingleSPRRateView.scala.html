@@ -114,7 +114,7 @@
                   key = "rateBandDescription",
                   label = LabelViewModel(Text("")),
                   errorMessageField = form(s"volumes_${index}_rateBandDescription"),
-                  value = Some(categoryViewModel.description)
+                  value = Some(categoryViewModel.description.capitalize)
                 ).hidden
               )
             ))
@@ -185,7 +185,7 @@
                   key = "rateBandDescription",
                   label = LabelViewModel(Text("")),
                   errorMessageField = form(s"volumes_${index + categories.smallProducer.size}_rateBandDescription"),
-                  value = Some(categoryViewModel.description)
+                  value = Some(categoryViewModel.description.capitalize)
                 ).hidden
               )
             ))

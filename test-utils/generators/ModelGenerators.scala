@@ -158,11 +158,19 @@ trait ModelGenerators {
     Gen.oneOf(AlcoholType.values)
   }
 
+  val abvRanges = Seq(
+    (AlcoholByVolume(1.3), AlcoholByVolume(3.4)),
+    (AlcoholByVolume(3.5), AlcoholByVolume(5.5)),
+    (AlcoholByVolume(3.5), AlcoholByVolume(8.4)),
+    (AlcoholByVolume(5.6), AlcoholByVolume(8.4)),
+    (AlcoholByVolume(8.5), AlcoholByVolume(22.0))
+  )
+
   implicit val abvIntervalGen: Arbitrary[ABVRange] = Arbitrary {
     (for {
-      label  <- arbitrary[AlcoholType]
-      minABV <- arbitrary[AlcoholByVolume]
-      maxABV <- arbitrary[AlcoholByVolume]
+      label           <- arbitrary[AlcoholType]
+      range           <- Gen.oneOf(abvRanges)
+      (minABV, maxABV) = range
     } yield ABVRange(label, minABV, maxABV)).suchThat(interval => interval.minABV.value < interval.maxABV.value)
   }
 
@@ -183,7 +191,7 @@ trait ModelGenerators {
 
   implicit val arbitraryRateBand: Arbitrary[RateBand] = Arbitrary {
     for {
-      taxType        <- Gen.alphaStr.suchThat(_.nonEmpty)
+      taxType        <- Gen.alphaStr.retryUntil(_.nonEmpty)
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
       alcoholRegimes <- arbitrarySetOfAlcoholRegimes.arbitrary
@@ -211,8 +219,7 @@ trait ModelGenerators {
   } yield s"${year}A${(month + 'A').toChar}"
 
   def invalidPeriodKeyGen: Gen[String] = Gen.alphaStr
-    .suchThat(_.nonEmpty)
-    .suchThat(!_.matches(ReturnPeriod.returnPeriodPattern.toString()))
+    .retryUntil(s => s.nonEmpty && !s.matches(ReturnPeriod.returnPeriodPattern.toString))
 
   def returnPeriodGen: Gen[ReturnPeriod] = periodKeyGen.map(ReturnPeriod.fromPeriodKey(_).get)
 
@@ -231,7 +238,7 @@ trait ModelGenerators {
 
   def genRateBandForRegime(alcoholRegime: AlcoholRegime): Gen[RateBand] =
     for {
-      taxType        <- Gen.alphaStr.suchThat(_.nonEmpty)
+      taxType        <- Gen.alphaStr.retryUntil(_.nonEmpty)
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
       alcoholRegimes <- genAlcoholRegime(alcoholRegime)
@@ -240,7 +247,15 @@ trait ModelGenerators {
 
   def genRateBandForRegimeWithSPR(alcoholRegime: AlcoholRegime): Gen[RateBand] =
     for {
-      taxType        <- Gen.alphaStr.suchThat(_.nonEmpty)
+      taxType        <- Gen.alphaStr.retryUntil(_.nonEmpty)
+      description    <- Gen.alphaStr
+      rateType       <- arbitraryRateType.arbitrary
+      alcoholRegimes <- genAlcoholRegime(alcoholRegime)
+    } yield RateBand(taxType, description, rateType, None, Set(alcoholRegimes))
+
+  def genSingleUnmatchedRateBandForRegimeWithSPR(alcoholRegime: AlcoholRegime): Gen[RateBand] =
+    for {
+      taxType        <- Gen.oneOf(Seq("123", "124", "125", "126"))
       description    <- Gen.alphaStr
       rateType       <- arbitraryRateType.arbitrary
       alcoholRegimes <- genAlcoholRegime(alcoholRegime)

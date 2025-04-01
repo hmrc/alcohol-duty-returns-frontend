@@ -114,7 +114,7 @@ class AdjustmentRepackagedTaxTypeController @Inject() (
                             )
                           _              <- userAnswersConnector.set(updatedAnswers)
                         } yield Redirect(
-                          navigator.nextPage(AdjustmentRepackagedTaxTypePage, mode, updatedAnswers, hasChanged)
+                          navigator.nextPage(AdjustmentRepackagedTaxTypePage, mode, updatedAnswers, Some(hasChanged))
                         )
                       case None                     =>
                         rateBandResponseError(mode, value, adjustmentType, "adjustmentRepackagedTaxType.error.invalid")

@@ -135,7 +135,7 @@ class AdjustmentVolumeController @Inject() (
                       )
                     )
                   _              <- userAnswersConnector.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers, hasChanged))
+                } yield Redirect(navigator.nextPage(AdjustmentVolumePage, mode, updatedAnswers, Some(hasChanged)))
               }
             )
         case _            =>

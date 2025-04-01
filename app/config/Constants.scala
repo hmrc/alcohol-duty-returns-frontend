@@ -24,6 +24,8 @@ object Constants {
   val periodKeySessionKey: String     = "period-key"
   val pastPaymentsSessionKey: String  = "past-payment-amount"
 
+  val noDetailsValue: String = "no-details"
+
   object MappingFields {
     val taxTypeField: String             = "taxType"
     val totalLitresField: String         = "totalLitres"
@@ -67,6 +69,8 @@ object Constants {
   val rowsPerPage = 15
 
   val quarterlySpiritsMonths: Set[Month] = Set(MARCH, JUNE, SEPTEMBER, DECEMBER)
+
+  val ukTimeZoneStringId = "Europe/London"
 
   object Format {
     val numeric = "numeric"
@@ -173,5 +177,7 @@ object Constants {
 
     val formGroupCssClass      = "govuk-form-group"
     val formGroupErrorCssClass = "govuk-form-group--error"
+
+    val errorMessageCssClass = "govuk-error-message"
   }
 }

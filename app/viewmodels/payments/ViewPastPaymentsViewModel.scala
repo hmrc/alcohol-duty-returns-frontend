@@ -29,11 +29,14 @@ import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTag, Tag}
 import viewmodels._
 import play.api.mvc.Call
 
-import java.time.{LocalDate, YearMonth}
+import java.time.{Clock, LocalDate, YearMonth}
 import javax.inject.Inject
 
-class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, frontendAppConfig: FrontendAppConfig)
-    extends Logging {
+class ViewPastPaymentsViewModel @Inject() (
+  dateTimeHelper: DateTimeHelper,
+  frontendAppConfig: FrontendAppConfig,
+  clock: Clock
+) extends Logging {
 
   def getOutstandingPaymentsTable(
     outstandingPaymentsData: Seq[OutstandingPayment]
@@ -276,7 +279,7 @@ class ViewPastPaymentsViewModel @Inject() (dateTimeHelper: DateTimeHelper, front
   ): OutstandingPaymentStatusToDisplay =
     if (outstandingPaymentsData.transactionType == RPI || outstandingPaymentsData.remainingAmount <= 0) {
       NothingToPay
-    } else if (outstandingPaymentsData.dueDate.isBefore(LocalDate.now())) {
+    } else if (outstandingPaymentsData.dueDate.isBefore(LocalDate.now(clock))) {
       Overdue
     } else {
       Due

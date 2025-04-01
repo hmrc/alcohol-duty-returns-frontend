@@ -50,7 +50,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       .success
       .value
 
-    "must return OK and the correct view for a GET if all necessary questions are answered" in new SetUp {
+    "must return OK and the correct view for a GET if all necessary questions are answered (Other spirits is selected)" in new SetUp {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -80,7 +80,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
       }
     }
 
-    "must return OK and the correct view for a GET if any optional questions are not answered" in new SetUp {
+    "must return OK and the correct view for a GET if any optional questions are not required (Other spirits is not selected)" in new SetUp {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -171,10 +171,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         running(application) {
           val request =
-            FakeRequest(
-              GET,
-              controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
-            )
+            FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
 
           val result = route(application, request).value
 
@@ -188,10 +185,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
 
         running(application) {
           val request =
-            FakeRequest(
-              GET,
-              controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url
-            )
+            FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
 
           val result = route(application, request).value
 
@@ -200,39 +194,83 @@ class CheckYourAnswersControllerSpec extends SpecBase with ModelGenerators {
         }
       }
 
-      "if one of the necessary pages has not been populated" in new SetUp {
-        val mockUserAnswersConnector = mock[UserAnswersConnector]
+      "if one of the necessary pages has not been populated" - {
+        "whisky page is not populated" in new SetUp {
+          val mockUserAnswersConnector = mock[UserAnswersConnector]
 
-        when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+          when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
 
-        val userAnswers = completedUserAnswers
-          .remove(List(OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage))
-          .success
-          .value
-          .set(
-            SpiritTypePage,
-            Set[SpiritType](SpiritType.NeutralAgriculturalOrigin)
-          )
-          .success
-          .value
+          val userAnswers = completedUserAnswers
+            .remove(List(OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage))
+            .success
+            .value
+            .set(
+              SpiritTypePage,
+              Set[SpiritType](SpiritType.NeutralAgriculturalOrigin)
+            )
+            .success
+            .value
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .configure(additionalConfig)
-          .overrides(
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .configure(additionalConfig)
+            .overrides(
+              bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            )
+            .build()
 
-        running(application) {
-          val request =
-            FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
+          running(application) {
+            val request =
+              FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
+            status(result)                 mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          }
+        }
+
+        "spirit type page is not populated" in new SetUp {
+          val userAnswers = completedUserAnswers
+            .remove(List(OtherSpiritsProducedPage, SpiritTypePage))
+            .success
+            .value
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .configure(additionalConfig)
+            .build()
+
+          running(application) {
+            val request =
+              FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
+
+            val result = route(application, request).value
+
+            status(result)                 mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          }
+        }
+
+        "Other spirits is selected but other spirits produced page is not populated" in new SetUp {
+          val userAnswers = completedUserAnswers
+            .remove(List(OtherSpiritsProducedPage))
+            .success
+            .value
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .configure(additionalConfig)
+            .build()
+
+          running(application) {
+            val request =
+              FakeRequest(GET, controllers.spiritsQuestions.routes.CheckYourAnswersController.onPageLoad().url)
+
+            val result = route(application, request).value
+
+            status(result)                 mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          }
         }
       }
-
     }
   }
 

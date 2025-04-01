@@ -70,7 +70,7 @@ class WhiskyController @Inject() (
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(WhiskyPage, value))
                 _              <- userAnswersConnector.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(WhiskyPage, mode, updatedAnswers))
+              } yield Redirect(navigator.nextPage(WhiskyPage, mode, updatedAnswers, Some(true)))
           )
       }
 }
