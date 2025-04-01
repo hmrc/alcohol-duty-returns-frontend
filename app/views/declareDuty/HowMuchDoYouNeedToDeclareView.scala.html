@@ -60,7 +60,7 @@
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.core.nonEmpty) {
-          @subHeading(messages("howMuchDoYouNeedToDeclare.core.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
+          @subHeading(messages(s"howMuchDoYouNeedToDeclare.core.heading.${regime.regimeMessageKey}"), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.core.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(
@@ -118,7 +118,7 @@
         }
 
         @if(howMuchDoYouNeedToDeclareHelper.draught.nonEmpty) {
-          @subHeading(messages("howMuchDoYouNeedToDeclare.draught.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
+          @subHeading(messages(s"howMuchDoYouNeedToDeclare.draught.heading.${regime.regimeMessageKey}"), classes = Css.headingMCssClass)
           @for((quantityViewModel, index) <- howMuchDoYouNeedToDeclareHelper.draught.zipWithIndex) {
             @govukFieldset(Fieldset(
               legend = Some(Legend(

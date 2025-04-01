@@ -36,7 +36,7 @@
 
 @(form: Form[_], mode: Mode, regime: AlcoholRegime, rateBandRadioItems: Seq[RadioItem], index: Option[Int])(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("tellUsAboutMultipleSPRRate.title", messages(regime.regimeMessageKey)))) {
+@layout(pageTitle = title(form, messages(s"tellUsAboutMultipleSPRRate.title.${regime.regimeMessageKey}"))) {
 
     @formHelper(action = controllers.declareDuty.routes.TellUsAboutMultipleSPRRateController.onSubmit(mode, regime, index), Symbol("autoComplete") -> "off") {
 
@@ -49,7 +49,7 @@
             text = messages(s"section.return.$regime")
         )
 
-        @pageHeading(messages("tellUsAboutMultipleSPRRate.heading", messages(regime.regimeMessageKey)))
+        @pageHeading(messages(s"tellUsAboutMultipleSPRRate.heading.${regime.regimeMessageKey}"))
 
         @paragraph(messages(s"tellUsAboutMultipleSPRRate.p1.${regime.regimeMessageKey}"))
 
@@ -108,7 +108,7 @@
                 InputViewModel(
                   field = form("volumesWithRate"),
                   key = "dutyRate",
-                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(regime.regimeMessageKey))),
+                  label = LabelViewModel(messages(s"return.journey.spr.dutyRate.${regime.regimeMessageKey}")),
                   errorMessageField = form("volumesWithRate_dutyRate"),
                   value = form("volumesWithRate.dutyRate").value
                 )

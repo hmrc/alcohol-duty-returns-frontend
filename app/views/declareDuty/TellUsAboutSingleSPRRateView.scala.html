@@ -52,7 +52,7 @@
         @paragraph(messages(s"tellUsAboutSingleSPRRate.p1.$regime"))
 
       @if(categories.smallProducer.nonEmpty) {
-        @subHeading(messages("tellUsAboutSingleSPRRate.smallProducer.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
+        @subHeading(messages(s"tellUsAboutSingleSPRRate.smallProducer.heading.${regime.regimeMessageKey}"), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.smallProducer.zipWithIndex) {
           @govukFieldset(Fieldset(
             legend = Some(Legend(
@@ -90,7 +90,7 @@
                 InputViewModel(
                   field = form(s"volumesWithRate[$index]"),
                   key = "dutyRate",
-                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(regime.regimeMessageKey))),
+                  label = LabelViewModel(messages(s"return.journey.spr.dutyRate.${regime.regimeMessageKey}")),
                   errorMessageField = form(s"volumesWithRate_${index}_dutyRate"),
                   value = form(s"volumesWithRate[$index].dutyRate").value
                 )
@@ -123,7 +123,7 @@
       }
 
       @if(categories.draughtAndSmallProducer.nonEmpty) {
-        @subHeading(messages("tellUsAboutSingleSPRRate.draughtSmallProducer.heading", messages(regime.regimeMessageKey)), classes = Css.headingMCssClass)
+        @subHeading(messages(s"tellUsAboutSingleSPRRate.draughtSmallProducer.heading.${regime.regimeMessageKey}"), classes = Css.headingMCssClass)
         @for((categoryViewModel, index) <- categories.draughtAndSmallProducer.zipWithIndex) {
           @govukFieldset(Fieldset(
             legend = Some(Legend(
@@ -161,7 +161,7 @@
                 InputViewModel(
                   field = form(s"volumesWithRate[${index + categories.smallProducer.size}]"),
                   key = "dutyRate",
-                  label = LabelViewModel(messages("return.journey.spr.dutyRate", messages(regime.regimeMessageKey))),
+                  label = LabelViewModel(messages(s"return.journey.spr.dutyRate.${regime.regimeMessageKey}")),
                   errorMessageField = form(s"volumesWithRate_${index + categories.smallProducer.size}_dutyRate"),
                   value = form(s"volumesWithRate[${index + categories.smallProducer.size}].dutyRate").value
                 )
