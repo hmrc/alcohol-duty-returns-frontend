@@ -16,9 +16,8 @@
 
 package viewmodels.declareDuty
 
-import models.{ABVRange, AlcoholByVolume, AlcoholRegime, RateBand, RateType}
+import models.{ABVRange, AlcoholRegime, RateBand, RateType}
 import play.api.i18n.Messages
-import utils.WelshHelper
 
 object RateBandDescription {
 
@@ -65,6 +64,20 @@ object RateBandDescription {
       messages(s"return.journey.abv.interval.label.${interval.alcoholType}")
     }
 
+  private def getAbvRange(minAbv: BigDecimal, maxAbv: BigDecimal)(implicit messages: Messages): String = {
+    val rateMessageToUse = maxAbv.toInt
+
+    val messageKey = s"return.journey.abv.rangeKey.$rateMessageToUse"
+
+    val text = messages(messageKey, minAbv, maxAbv)
+
+    if (text == messageKey) {
+      throw new IllegalArgumentException(s"Cannot find message key $messageKey")
+    }
+
+    text
+  }
+
   private def getTaxType(taxTypeCode: String, rateType: RateType)(implicit
     messages: Messages
   ): String =
@@ -82,24 +95,12 @@ object RateBandDescription {
   )(implicit
     messages: Messages
   ): String =
-    abvRange.maxABV match {
-      case AlcoholByVolume.MAX =>
-        messages(
-          s"return.journey.abv.interval.exceeding.max",
-          getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus),
-          abvRange.minABV.value,
-          getTaxType(taxTypeCode, rateType)
-        )
-      case _                   =>
-        messages(
-          s"return.journey.abv.single.interval",
-          getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus),
-          abvRange.minABV.value,
-          messages(WelshHelper.chooseAnd(abvRange.maxABV.value)),
-          abvRange.maxABV.value,
-          getTaxType(taxTypeCode, rateType)
-        )
-    }
+    messages(
+      s"return.journey.abv.single.interval",
+      getAlcoholTypeWithDraughtStatus(abvRange, rateType, showDraughtStatus),
+      getAbvRange(abvRange.minABV.value, abvRange.maxABV.value),
+      getTaxType(taxTypeCode, rateType)
+    )
 
   private def multipleIntervalsText(
     abvRange1: ABVRange,
@@ -113,13 +114,9 @@ object RateBandDescription {
     messages(
       s"return.journey.abv.multi.interval",
       getAlcoholTypeWithDraughtStatus(abvRange1, rateType, showDraughtStatus),
-      abvRange1.minABV.value,
-      messages(WelshHelper.chooseAnd(abvRange1.maxABV.value)),
-      abvRange1.maxABV.value,
+      getAbvRange(abvRange1.minABV.value, abvRange1.maxABV.value),
       messages(s"return.journey.abv.interval.label.${abvRange2.alcoholType}"),
-      abvRange2.minABV.value,
-      messages(WelshHelper.chooseAnd(abvRange2.maxABV.value)),
-      abvRange2.maxABV.value,
+      getAbvRange(abvRange2.minABV.value, abvRange2.maxABV.value),
       getTaxType(taxTypeCode, rateType)
     )
 }

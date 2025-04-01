@@ -70,8 +70,8 @@ class RateBandDescriptionSpec extends SpecBase {
                 )
               ).foreach { case (rateType, draughtText, sprText) =>
                 s"for a single interval for rate type: $rateType" - {
-                  val lowerLimit = BigDecimal(1)
-                  val upperLimit = BigDecimal(10)
+                  val lowerLimit = BigDecimal(3.5)
+                  val upperLimit = BigDecimal(8.4)
 
                   "without knowing the regime" in new SetUp {
                     val rateBand =
@@ -106,10 +106,12 @@ class RateBandDescriptionSpec extends SpecBase {
                         .toDescription(rateBand, Some(otherRegime), showDraughtStatus)
                     }
 
-                    "and has an interval with a MAX value" in new SetUp {
+                    "and has an interval with 100% upper bound" in new SetUp {
+                      val lowerLimit = BigDecimal(22.1)
+
                       val rateBand = singleIntervalRateBand(
                         lowerLimit,
-                        AlcoholByVolume.MAX.value.toInt,
+                        BigDecimal(100.0),
                         rateType,
                         alcoholRegime1,
                         alcoholType1
@@ -123,10 +125,10 @@ class RateBandDescriptionSpec extends SpecBase {
                 }
 
                 s"for multiple intervals for rate type: $rateType" - {
-                  val lowerLimit1 = BigDecimal(1)
-                  val upperLimit1 = BigDecimal(10)
-                  val lowerLimit2 = BigDecimal(11)
-                  val upperLimit2 = BigDecimal(20)
+                  val lowerLimit1 = BigDecimal(3.5)
+                  val upperLimit1 = BigDecimal(8.4)
+                  val lowerLimit2 = BigDecimal(8.5)
+                  val upperLimit2 = BigDecimal(22)
 
                   "without knowing the regime" in new SetUp {
                     val rateBand = multipleIntervalRateBand(
@@ -175,6 +177,17 @@ class RateBandDescriptionSpec extends SpecBase {
           }
         }
       }
+    }
+
+    "getABVRange should throw an exception if the appropriate range message is not found" in new SetUp {
+      val lowerLimit     = BigDecimal(1.3)
+      val upperLimit     = BigDecimal(2.4)
+      val rateType       = RateType.Core
+      val alcoholRegime1 = AlcoholRegime.Beer
+      val alcoholType1   = AlcoholType.Beer
+      val rateBand       = singleIntervalRateBand(lowerLimit, upperLimit, rateType, alcoholRegime1, alcoholType1)
+
+      an[IllegalArgumentException] mustBe thrownBy(RateBandDescription.toDescription(rateBand, Some(alcoholRegime1)))
     }
   }
 
