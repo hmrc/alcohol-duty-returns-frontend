@@ -23,12 +23,6 @@ site.returnToBusinessAccount = Yn ôl i’ch Cyfrif Treth Busnes
 site.year = {0,number,####}
 site.warning = Rhybudd
 
-#Welsh helpers - in Welsh y and w are also vowels
-
-#Used in dynamic content ranges "between x% and y%". Vowel form used when y's whole number is 1 or 8
-welsh.and.consonant = a
-welsh.and.vowel = ac
-
 date.day = Diwrnod
 date.month = Mis
 date.year = Blwyddyn
@@ -316,12 +310,18 @@ return.journey.abv.interval.label.Wine.nondraught = gwin nad yw’n dod o’r ga
 return.journey.abv.interval.label.Spirits.nondraught = gwirodydd nad ydynt yn dod o’r gasgen
 return.journey.abv.interval.label.OtherFermentedProduct.nondraught = cynhyrchion eplesedig eraill nad ydynt yn dod o’r gasgen
 
+return.journey.abv.rangeKey.3 = rhwng {0}% a {1}%
+return.journey.abv.rangeKey.4 = rhwng {0}% ac {1}%
+return.journey.abv.rangeKey.5 = rhwng {0}% ac {1}%
+return.journey.abv.rangeKey.8 = rhwng {0}% ac {1}%
+return.journey.abv.rangeKey.22 = rhwng {0}% a {1}%
+return.journey.abv.rangeKey.100 = {0}% neu’n uwch
+
 return.journey.abv.taxTypeCode = cod y math o dreth: {0}
 return.journey.abv.taxTypeCode.SPR = cod y math o dreth: {0} SPR
 
-return.journey.abv.interval.exceeding.max = {0} ar {1}% ABV neu’n uwch ({2})
-return.journey.abv.single.interval = {0} rhwng {1}% {2} {3}% ABV ({4})
-return.journey.abv.multi.interval = {0} rhwng {1}% {2} {3}% ABV a {4} rhwng {5}% {6} {7}% ABV ({8})
+return.journey.abv.single.interval = {0} {1} ABV ({2})
+return.journey.abv.multi.interval = {0} {1} ABV and {2} {3} ABV ({4})
 
 return.journey.totalLitres = Cyfanswm y litrau o {0}
 return.journey.totalLitres.hint = Nodwch y litrau, hyd at 2 le degol
