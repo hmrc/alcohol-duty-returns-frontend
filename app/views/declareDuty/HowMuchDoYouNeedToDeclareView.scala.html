@@ -109,7 +109,7 @@
                     key = "rateBandDescription",
                     label = LabelViewModel(Text("")),
                     errorMessageField = form(s"volumes_${index}_rateBandDescription"),
-                    value = Some(quantityViewModel.description)
+                    value = Some(quantityViewModel.description.capitalize)
                   ).hidden
                 )
               ))
@@ -167,7 +167,7 @@
                     key = "rateBandDescription",
                     label = LabelViewModel(Text("")),
                     errorMessageField = form(s"volumes_${index + howMuchDoYouNeedToDeclareHelper.core.size}_rateBandDescription"),
-                    value = Some(quantityViewModel.description)
+                    value = Some(quantityViewModel.description.capitalize)
                   ).hidden
                 )
               ))
