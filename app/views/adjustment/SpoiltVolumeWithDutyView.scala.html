@@ -71,7 +71,7 @@
               InputViewModel(
                 field = form("volumes"),
                 key="pureAlcoholVolume",
-                label = LabelViewModel(visibleText = messages("spoiltVolumeWithDuty.pureAlcoholVolume.heading"), hiddenText = messages("spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText", messages(regime.regimeMessageKey))),
+                label = LabelViewModel(messages("spoiltVolumeWithDuty.pureAlcoholVolume.heading")),
                 errorMessageField = form(s"volumes_pureAlcoholVolume"),
                 value = form(s"volumes.pureAlcoholVolume").value
               )

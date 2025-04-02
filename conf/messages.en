@@ -839,7 +839,6 @@ spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume = Litres of pure alco
 spoiltVolumeWithDuty.error.decimalPlaces.duty = The amount of duty paid must include pounds and pence
 spoiltVolumeWithDuty.change.hidden = duty value
 spoiltVolumeWithDuty.error.lessThanExpected = Litres of pure alcohol must be the same or less than the litres of {0}
-spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText = in spoilt {0}
 
 whenDidYouPayDuty.default.title = When did you pay duty on this?
 whenDidYouPayDuty.default.heading = When did you pay duty on this?

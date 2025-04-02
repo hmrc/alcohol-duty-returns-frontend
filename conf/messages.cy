@@ -839,7 +839,6 @@ spoiltVolumeWithDuty.error.decimalPlaces.pureAlcoholVolume = Mae’n rhaid i’r
 spoiltVolumeWithDuty.error.decimalPlaces.duty = Mae’n rhaid i swm y doll a dalwyd gynnwys punnoedd a cheiniogau
 spoiltVolumeWithDuty.change.hidden = gwerth y doll
 spoiltVolumeWithDuty.error.lessThanExpected = Mae’n rhaid i’r litrau o alcohol pur fod yr un peth â’r litrau o {0} neu’n llai na hynny
-spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText = sydd yn y {0} wedi’i ddifetha
 
 whenDidYouPayDuty.default.title = Pryd gwnaethoch chi dalu toll ar hyn?
 whenDidYouPayDuty.default.heading = Pryd gwnaethoch chi dalu toll ar hyn?
