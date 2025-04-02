@@ -83,10 +83,10 @@ noAppaId.heading = Mae angen ID Cymeradwyaeth ar gyfer Cynhyrchwyr Cynhyrchion A
 noAppaId.p = Os oeddech yn cynhyrchu cynhyrchion alcoholaidd cyn 1 Chwefror 2025, gallwch ddod o hyd i’ch ID APPA ar y llythyr gwasanaeth ar-lein a gawsoch oddi wrth CThEF.
 noAppaId.link.text = Darllenwch arweiniad ar gael cymeradwyaeth ar gyfer cynhyrchu cynhyrchion alcoholaidd (yn agor tab newydd)
 
-clearReturnAreYouSureQuestion.title = NOT_FOUND
-clearReturnAreYouSureQuestion.heading = NOT_FOUND
-clearReturnAreYouSureQuestion.warning = NOT_FOUND
-clearReturnAreYouSureQuestion.error.required = NOT_FOUND
+clearReturnAreYouSureQuestion.title = A ydych yn siŵr eich bod am ddileu cynnwys eich datganiad?
+clearReturnAreYouSureQuestion.heading = A ydych yn siŵr eich bod am ddileu cynnwys eich datganiad?
+clearReturnAreYouSureQuestion.warning = Bydd gwneud hyn yn dileu’r holl wybodaeth yr ydych wedi’u nodi yn y datganiad hwn.
+clearReturnAreYouSureQuestion.error.required = Dewiswch ‘Iawn’ os hoffech glirio’ch datganiad
 
 regime.beer = cwrw
 regime.cider = seidr
@@ -925,12 +925,12 @@ returnSubmitted.negative.p1 = Gallwch hawlio toll sy’n ddyledus nawr neu’n h
 returnSubmitted.warningText = Mae ein manylion banc wedi newid. Dewiswch ‘Talu nawr’ ac yna ‘Trosglwyddiad banc (BACS/CHAPS)’ er mwyn gweld y manylion newydd.
 returnSubmitted.warningFallbackText = Rhybudd
 
-returnSubmitted.noDetails.p1 = NOT_FOUND
-returnSubmitted.noDetails.youCan = NOT_FOUND
-returnSubmitted.noDetails.viewReturn1 = NOT_FOUND
-returnSubmitted.noDetails.viewReturn2 = NOT_FOUND
-returnSubmitted.noDetails.viewPayments = NOT_FOUND
-returnSubmitted.noDetails.p2 = NOT_FOUND
-returnSubmitted.noDetails.p3 = NOT_FOUND
+returnSubmitted.noDetails.p1 = Mae eich datganiad wedi dod i law, ond ni allwn ddangos y manylion llawn ar hyn o bryd. Gallai hyn fod o ganlyniad i broblem dros dro gyda’r gwasanaeth.
+returnSubmitted.noDetails.youCan = Gallwch wneud y canlynol:
+returnSubmitted.noDetails.viewReturn1 = bwrw golwg dros fanylion llawn
+returnSubmitted.noDetails.viewReturn2 = i gadarnhau’ch cyfeirnod
+returnSubmitted.noDetails.viewPayments = gwirio faint o doll sydd arnoch
+returnSubmitted.noDetails.p2 = Gall y manylion a nodwyd gennych yn y datganiad hwn gymryd hyd at 2 diwrnod gwaith i gael eu diweddaru yn ein gwasanaeth.
+returnSubmitted.noDetails.p3 = Defnyddiwch eich cyfeirnod o’r datganiad hwn fel cyfeirnod talu os oes angen i chi dalu unrhyw doll.
 
 # End of Check and submit sub-journey
