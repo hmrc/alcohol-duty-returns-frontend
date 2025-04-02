@@ -18,23 +18,20 @@ package forms.declareDuty
 
 import javax.inject.Inject
 import forms.mappings.Mappings
-import models.AlcoholRegime
 import play.api.data.Form
 import models.declareDuty.VolumeAndRateByTaxType
-import play.api.i18n.Messages
 
 class TellUsAboutMultipleSPRRateFormProvider @Inject() extends Mappings {
 
-  def apply(regime: AlcoholRegime)(implicit messages: Messages): Form[VolumeAndRateByTaxType] = Form(
+  def apply(): Form[VolumeAndRateByTaxType] = Form(
     "volumesWithRate" ->
-      volumesWithRateMultipleSPRSelection(
-        "return.journey.error.invalid",
-        "return.journey.error.noValue",
-        "return.journey.error.tooManyDecimalPlaces",
-        "return.journey.error.minimumValue",
-        "return.journey.error.maximumValue",
-        "return.journey.error.lessThanExpected",
-        messages(regime.regimeMessageKey)
+      multipleSPRVolumesWithRate(
+        "return.journey.multipleSPR.error.invalid",
+        "return.journey.multipleSPR.error.noValue",
+        "return.journey.multipleSPR.error.tooManyDecimalPlaces",
+        "return.journey.multipleSPR.error.minimumValue",
+        "return.journey.multipleSPR.error.maximumValue",
+        "return.journey.multipleSPR.error.lessThanExpected"
       )
   )
 }

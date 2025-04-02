@@ -793,37 +793,35 @@ class MappingsSpec extends SpecBase with Mappings {
       )
     }
 
-    "must fallback to regime when missing rateBandDescription" - {
-      val result = testForm.bind(
-        Map(
-          "value.taxType"     -> "123",
-          "value.totalLitres" -> "1234.45",
-          "value.pureAlcohol" -> "12.3456",
-          "value.dutyRate"    -> "5.31"
+    "must throw an exception when missing" - {
+      "rateBandDescription" in {
+        an[IllegalArgumentException] mustBe thrownBy(
+          testForm.bind(
+            Map(
+              "value.taxType"     -> "123",
+              "value.totalLitres" -> "1234.45",
+              "value.pureAlcohol" -> "12.3456",
+              "value.dutyRate"    -> "5.31"
+            )
+          )
         )
-      )
-      result.get mustBe
-        VolumeAndRateByTaxType(
-          "123",
-          BigDecimal(1234.45),
-          BigDecimal(12.3456),
-          BigDecimal(5.31)
+      }
+
+      "taxType" in {
+        an[IllegalArgumentException] mustBe thrownBy(
+          testForm.bind(
+            Map(
+              "value.rateBandDescription" -> rateBandDescription,
+              "value.totalLitres"         -> "1234.45",
+              "value.pureAlcohol"         -> "12.3456",
+              "value.dutyRate"            -> "5.31"
+            )
+          )
         )
+      }
     }
 
     "must not bind when missing" - {
-      "taxType" in {
-        val result = testForm.bind(
-          Map(
-            "value.rateBandDescription" -> rateBandDescription,
-            "value.totalLitres"         -> "1234.45",
-            "value.pureAlcohol"         -> "12.3456",
-            "value.dutyRate"            -> "5.31"
-          )
-        )
-        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandDescription, regimeName)))
-      }
-
       "totalLitres" in {
         val result = testForm.bind(
           Map(
@@ -866,19 +864,6 @@ class MappingsSpec extends SpecBase with Mappings {
     }
 
     "must not bind an empty" - {
-      "taxType" in {
-        val result = testForm.bind(
-          Map(
-            "value.rateBandDescription" -> rateBandDescription,
-            "value.taxType"             -> "",
-            "value.totalLitres"         -> "1234.45",
-            "value.pureAlcohol"         -> "12.3456",
-            "value.dutyRate"            -> "5.31"
-          )
-        )
-        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandDescription, regimeName)))
-      }
-
       "totalLitres" in {
         val result = testForm.bind(
           Map(
@@ -1241,6 +1226,441 @@ class MappingsSpec extends SpecBase with Mappings {
     }
   }
 
+  "multipleSPRVolumesWithRate" - {
+    val mapping = multipleSPRVolumesWithRate(
+      "invalid",
+      "required",
+      "decimalPlaces",
+      "minimumValue",
+      "maximumValue",
+      "lessOrEqual"
+    )
+
+    val testForm: Form[VolumeAndRateByTaxType] = Form("value" -> mapping)
+
+    "must bind a valid VolumeAndRateByTaxType" in {
+      val result = testForm.bind(
+        Map(
+          "value.taxType"     -> "123",
+          "value.totalLitres" -> "1234.45",
+          "value.pureAlcohol" -> "12.3456",
+          "value.dutyRate"    -> "5.31"
+        )
+      )
+      result.get mustBe VolumeAndRateByTaxType(
+        "123",
+        BigDecimal(1234.45),
+        BigDecimal(12.3456),
+        BigDecimal(5.31)
+      )
+    }
+
+    "must not bind when missing" - {
+      "taxType" in {
+        val result = testForm.bind(
+          Map(
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_taxType", "required.taxType", Seq.empty)
+        )
+      }
+
+      "totalLitres" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "required.totalLitres", Seq.empty)
+        )
+      }
+
+      "pureAlcohol" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "required.pureAlcohol", Seq.empty)
+        )
+      }
+
+      "dutyRate" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.3456"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_dutyRate", "required.dutyRate", Seq.empty))
+      }
+    }
+
+    "must not bind an empty" - {
+      "taxType" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_taxType", "required.taxType", Seq.empty)
+        )
+      }
+
+      "totalLitres" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "required.totalLitres", Seq.empty)
+        )
+      }
+
+      "pureAlcohol" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "required.pureAlcohol", Seq.empty)
+        )
+      }
+
+      "dutyRate" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> ""
+          )
+        )
+        result.errors mustBe Seq(FormError("value_dutyRate", "required.dutyRate", Seq.empty))
+      }
+    }
+
+    "must not bind non-numeric value" - {
+      "totalLitres" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "a",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "invalid.totalLitres", Seq.empty)
+        )
+      }
+
+      "pureAlcohol" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "a",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "invalid.pureAlcohol", Seq.empty)
+        )
+      }
+
+      "dutyRate" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> "a"
+          )
+        )
+        result.errors mustBe Seq(FormError("value_dutyRate", "invalid.dutyRate", Seq.empty))
+      }
+    }
+
+    "must not bind values with too many decimal places" - {
+      "totalLitres" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.456",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "decimalPlaces.totalLitres", Seq.empty)
+        )
+      }
+
+      "pureAlcohol" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.34567",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty)
+        )
+      }
+
+      "dutyRate" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.3456",
+            "value.dutyRate"    -> "5.312"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_dutyRate", "decimalPlaces.dutyRate", Seq.empty)
+        )
+      }
+    }
+
+    "must not bind pureAlcohol values" - {
+      "with less than 4 decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.345",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty)
+        )
+      }
+
+      "with no decimal places and trailing decimal point" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12.",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty)
+        )
+      }
+
+      "with no decimal places" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1234.45",
+            "value.pureAlcohol" -> "12",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "decimalPlaces.pureAlcohol", Seq.empty)
+        )
+      }
+    }
+
+    "must bind the smallest values" - {
+      "totalLitres" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "0.01",
+            "value.pureAlcohol" -> "0.0001",
+            "value.dutyRate"    -> "0"
+          )
+        )
+        result.errors mustBe Seq.empty
+      }
+    }
+
+    "must not bind values that are too small" - {
+      "totalLitres" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "0",
+            "value.pureAlcohol" -> "0.0001",
+            "value.dutyRate"    -> "0"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "minimumValue.totalLitres", Seq.empty)
+        )
+      }
+
+      "pureAlcohol" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "0.01",
+            "value.pureAlcohol" -> "0.0000",
+            "value.dutyRate"    -> "0"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "minimumValue.pureAlcohol", Seq.empty)
+        )
+      }
+
+      "dutyRate" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "0.01",
+            "value.pureAlcohol" -> "0.0001",
+            "value.dutyRate"    -> "-0.01"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_dutyRate", "minimumValue.dutyRate", Seq.empty)
+        )
+      }
+    }
+
+    "must bind the largest values" - {
+      "totalLitres" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "999999999.99",
+            "value.pureAlcohol" -> "999999999.9999",
+            "value.dutyRate"    -> "999999999.99"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "lessOrEqual", Seq.empty)
+        ) // As pure alcohol volume exceeds total litres, but has already passed max check
+      }
+    }
+
+    "must not bind values that are too large" - {
+      "totalLitres" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "1000000000",
+            "value.pureAlcohol" -> "999999999.9999",
+            "value.dutyRate"    -> "999999999.99"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_totalLitres", "maximumValue.totalLitres", Seq.empty)
+        )
+      }
+
+      "pureAlcohol" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "999999999.99",
+            "value.pureAlcohol" -> "1000000000.0000",
+            "value.dutyRate"    -> "999999999.99"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "maximumValue.pureAlcohol", Seq.empty)
+        )
+      }
+
+      "dutyRate" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "999999999.99",
+            "value.pureAlcohol" -> "999999999.9999",
+            "value.dutyRate"    -> "1000000000"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_dutyRate", "maximumValue.dutyRate", Seq.empty)
+        )
+      }
+    }
+
+    "when totalLitres compared to pureAlcohol" - {
+      "is greater than or equal to it must bind" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "12.46",
+            "value.pureAlcohol" -> "12.4500",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq.empty
+
+        val result2 = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "12.45",
+            "value.pureAlcohol" -> "12.4500",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result2.errors mustBe Seq.empty
+      }
+
+      "is less than it must not bind" in {
+        val result = testForm.bind(
+          Map(
+            "value.taxType"     -> "123",
+            "value.totalLitres" -> "12.44",
+            "value.pureAlcohol" -> "12.4500",
+            "value.dutyRate"    -> "5.31"
+          )
+        )
+        result.errors mustBe Seq(
+          FormError("value_pureAlcohol", "lessOrEqual", Seq.empty)
+        )
+      }
+    }
+
+    "can unbind" in {
+      val result =
+        mapping.unbind(
+          VolumeAndRateByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456), BigDecimal(5.31))
+        )
+      result.get(".taxType")     mustBe Some("123")
+      result.get(".totalLitres") mustBe Some("1234.45")
+      result.get(".pureAlcohol") mustBe Some("12.3456")
+      result.get(".dutyRate")    mustBe Some("5.31")
+    }
+  }
+
   "volumes" - {
     val mapping = volumes(
       "invalid",
@@ -1267,25 +1687,21 @@ class MappingsSpec extends SpecBase with Mappings {
       result.get mustBe VolumesByTaxType("123", BigDecimal(1234.45), BigDecimal(12.3456))
     }
 
-    "must fallback to regime when missing rateBandDescription" - {
-      val result = testForm.bind(
-        Map(
-          "value.taxType"     -> "123",
-          "value.totalLitres" -> "1234.45",
-          "value.pureAlcohol" -> "12.3456"
+    "must throw an exception when missing" - {
+      "rateBandDescription" in {
+        an[IllegalArgumentException] mustBe thrownBy(
+          testForm.bind(
+            Map(
+              "value.taxType"     -> "123",
+              "value.totalLitres" -> "1234.45",
+              "value.pureAlcohol" -> "12.3456"
+            )
+          )
         )
-      )
-      result.get mustBe
-        VolumesByTaxType(
-          "123",
-          BigDecimal(1234.45),
-          BigDecimal(12.3456)
-        )
-    }
+      }
 
-    "must not bind when missing" - {
       "taxType" in {
-        val result =
+        an[IllegalArgumentException] mustBe thrownBy(
           testForm.bind(
             Map(
               "value.rateBandDescription" -> rateBandDescription,
@@ -1293,9 +1709,11 @@ class MappingsSpec extends SpecBase with Mappings {
               "value.pureAlcohol"         -> "12.3456"
             )
           )
-        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandDescription, regimeName)))
+        )
       }
+    }
 
+    "must not bind when missing" - {
       "totalLitres" in {
         val result =
           testForm.bind(
@@ -1326,19 +1744,6 @@ class MappingsSpec extends SpecBase with Mappings {
     }
 
     "must not bind an empty" - {
-      "taxType" in {
-        val result =
-          testForm.bind(
-            Map(
-              "value.rateBandDescription" -> rateBandDescription,
-              "value.taxType"             -> "",
-              "value.totalLitres"         -> "1234.45",
-              "value.pureAlcohol"         -> "12.3456"
-            )
-          )
-        result.errors mustBe Seq(FormError("value_taxType", "required.taxType", Seq(rateBandDescription, regimeName)))
-      }
-
       "totalLitres" in {
         val result =
           testForm.bind(
@@ -1628,8 +2033,7 @@ class MappingsSpec extends SpecBase with Mappings {
       "decimalPlaces",
       "minimumValue",
       "maximumValue",
-      "inconsistentKey",
-      Seq.empty
+      "inconsistentKey"
     )
 
     val testForm: Form[SpoiltVolumeWithDuty] = Form("value" -> mapping)
