@@ -34,7 +34,7 @@ class WhatDoYouNeedToDeclareSummarySpec extends SpecBase {
       summaryList.rows.map(_.value.content) mustBe
         Seq(
           HtmlContent(
-            "<ul><li>Non-draught beer between 1% and 2% ABV (tax type code 123)</li><li>Draught beer between 2% and 3% ABV (tax type code 124)</li></ul>"
+            "<ul><li>Non-draught beer between 1% and 3% ABV (tax type code 123)</li><li>Draught beer between 2% and 3% ABV (tax type code 124)</li></ul>"
           )
         )
     }

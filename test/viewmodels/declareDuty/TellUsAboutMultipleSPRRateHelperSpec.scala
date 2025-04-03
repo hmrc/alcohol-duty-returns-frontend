@@ -39,9 +39,9 @@ class TellUsAboutMultipleSPRRateHelperSpec extends SpecBase {
 
       result.map(_.content) mustBe Seq(
         Text("Non-draught beer between 3% and 4% ABV (tax type code 125 SPR)"),
-        Text("Non-draught beer between 6% and 7% ABV (tax type code 127 SPR)"),
+        Text("Non-draught beer between 6% and 8% ABV (tax type code 127 SPR)"),
         Text("Draught beer between 4% and 5% ABV (tax type code 126 SPR)"),
-        Text("Draught beer between 1% and 2% ABV (tax type code 128 SPR)")
+        Text("Draught beer between 1% and 3% ABV (tax type code 128 SPR)")
       )
       result.map(_.value)   mustBe Seq(Some("125"), Some("127"), Some("126"), Some("128"))
     }
