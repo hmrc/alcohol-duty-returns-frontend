@@ -40,8 +40,6 @@ timeout.signOut = Sign out
 
 error.prefix = Error
 error.title.prefix = Error:
-error.boolean = Please give an answer
-error.required = Please enter a value
 error.summary.title = There is a problem
 
 checkYourAnswers.title = Check your answers
@@ -61,10 +59,6 @@ returnLocked.title = This return is temporarily locked
 returnLocked.heading = This return is temporarily locked
 returnLocked.p1 = This return has been temporarily locked because someone else is editing it.
 returnLocked.p2 = Please try again in a few minutes.
-
-signedOut.title = For your security, we signed you out
-signedOut.heading = For your security, we signed you out
-signedOut.guidance = We did not save your answers.
 
 unauthorised.title = Sorry, you cannot access this service with this account
 unauthorised.heading = Sorry, you cannot access this service with this account
@@ -755,9 +749,7 @@ spoiltVolumeWithDuty.pureAlcoholVolume.hiddenText = in spoilt {0}
 whenDidYouPayDuty.default.title = When did you pay duty on this?
 whenDidYouPayDuty.default.heading = When did you pay duty on this?
 whenDidYouPayDuty.under-declaration.title = When should you have paid duty?
-whenDidYouPayDuty.spoilt.title = To the nearest month, when did you pay duty on this?
 whenDidYouPayDuty.under-declaration.heading = When should you have paid duty?
-whenDidYouPayDuty.spoilt.heading = To the nearest month, when did you pay duty on this?
 whenDidYouPayDuty.exciseEnquiries.link = Call or contact HMRC by post (opens in new tab)
 whenDidYouPayDuty.paragraph = if this was originally declared before August 2023.
 whenDidYouPayDuty.hint = For example, 10 2024

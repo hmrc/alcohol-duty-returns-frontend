@@ -16,11 +16,11 @@
 
 package forms.adjustment
 
-import forms.behaviours.OptionFieldBehaviours
+import forms.behaviours.EnumFieldBehaviours
 import models.adjustment.AdjustmentType
 import play.api.data.FormError
 
-class AdjustmentTypeFormProviderSpec extends OptionFieldBehaviours {
+class AdjustmentTypeFormProviderSpec extends EnumFieldBehaviours {
 
   val form = new AdjustmentTypeFormProvider()()
 
@@ -29,11 +29,10 @@ class AdjustmentTypeFormProviderSpec extends OptionFieldBehaviours {
     val fieldName   = "adjustment-type-value"
     val requiredKey = "adjustmentType.error.required"
 
-    behave like optionsField[AdjustmentType](
+    behave like enumField[AdjustmentType](
       form,
       fieldName,
-      validValues = AdjustmentType.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      validValues = AdjustmentType.values
     )
 
     behave like mandatoryField(
