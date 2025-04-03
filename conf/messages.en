@@ -753,7 +753,7 @@ spoiltVolumeWithDuty.totalLitresVolume.heading = Total litres of spoilt {0}
 spoiltVolumeWithDuty.pureAlcoholVolume.heading = Litres of pure alcohol
 spoiltVolumeWithDuty.spoiltDuty.heading = How much duty was paid?
 
-spoiltVolumeWithDuty.error.noValue.totalLitresVolume = Enter the total litres of spoilt product
+spoiltVolumeWithDuty.error.noValue.totalLitresVolume = Enter the total litres of spoilt alcoholic product
 spoiltVolumeWithDuty.error.noValue.pureAlcoholVolume = Enter the litres of pure alcohol
 spoiltVolumeWithDuty.error.noValue.duty = Enter the amount of duty paid
 spoiltVolumeWithDuty.error.invalid.totalLitresVolume = Litres of spoilt alcohol must be a number
