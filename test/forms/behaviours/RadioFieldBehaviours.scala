@@ -18,9 +18,9 @@ package forms.behaviours
 
 import play.api.data.Form
 
-class EnumFieldBehaviours extends FieldBehaviours {
+class RadioFieldBehaviours extends FieldBehaviours {
 
-  def enumField[T](form: Form[_], fieldName: String, validValues: Seq[T]): Unit = {
+  def radioField[T](form: Form[_], fieldName: String, validValues: Seq[T]): Unit = {
     "bind all valid values" in {
       for (value <- validValues) {
 

@@ -16,11 +16,11 @@
 
 package forms.adjustment
 
-import forms.behaviours.EnumFieldBehaviours
+import forms.behaviours.RadioFieldBehaviours
 import models.adjustment.AdjustmentType
 import play.api.data.FormError
 
-class AdjustmentTypeFormProviderSpec extends EnumFieldBehaviours {
+class AdjustmentTypeFormProviderSpec extends RadioFieldBehaviours {
 
   val form = new AdjustmentTypeFormProvider()()
 
@@ -29,7 +29,7 @@ class AdjustmentTypeFormProviderSpec extends EnumFieldBehaviours {
     val fieldName   = "adjustment-type-value"
     val requiredKey = "adjustmentType.error.required"
 
-    behave like enumField[AdjustmentType](
+    behave like radioField[AdjustmentType](
       form,
       fieldName,
       validValues = AdjustmentType.values

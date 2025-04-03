@@ -16,10 +16,10 @@
 
 package forms.adjustment
 
-import forms.behaviours.EnumFieldBehaviours
+import forms.behaviours.RadioFieldBehaviours
 import play.api.data.FormError
 
-class AlcoholicProductTypeFormProviderSpec extends EnumFieldBehaviours {
+class AlcoholicProductTypeFormProviderSpec extends RadioFieldBehaviours {
 
   val form = new AlcoholicProductTypeFormProvider()()
 
