@@ -18,18 +18,19 @@ package controllers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
-import forms.adjustment.DeleteAdjustmentFormProvider
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
-import org.mockito.ArgumentMatchers.any
-import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.Helpers._
 import connectors.UserAnswersConnector
+import forms.adjustment.DeleteAdjustmentFormProvider
 import models.AlcoholRegime.Beer
 import models.adjustment.AdjustmentEntry
 import models.adjustment.AdjustmentType.{Overdeclaration, Spoilt}
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
+import navigation.AdjustmentNavigator
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.checkAnswers.adjustment.AdjustmentOverUnderDeclarationCalculationHelper
 import views.html.adjustment.DeleteAdjustmentView
@@ -64,6 +65,7 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(form, index)(request, getMessages(application)).toString
       }
     }
+
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers.set(DeleteAdjustmentPage, true).success.value
@@ -81,18 +83,28 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view(form.fill(true), index)(request, getMessages(application)).toString
       }
     }
+
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockHelper               = mock[AdjustmentOverUnderDeclarationCalculationHelper]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
+      when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
+        emptyUserAnswers
+          .set(OverDeclarationTotalPage, BigDecimal(500))
+          .success
+          .value
+      )
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAdjustmentNavigator.nextPage(eqTo(DeleteAdjustmentPage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
+            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
+            bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
           )
           .build()
 
@@ -106,16 +118,23 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
+        verify(mockHelper, times(1)).fetchOverUnderDeclarationTotals(any(), any())(any())
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(DeleteAdjustmentPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
     "must redirect to the next page when No is selected on remove radio button" in {
 
+      val mockAdjustmentNavigator = mock[AdjustmentNavigator]
+
+      when(mockAdjustmentNavigator.nextPage(eqTo(DeleteAdjustmentPage), any(), any(), any())) thenReturn onwardRoute
+
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true)))
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator)
           )
           .build()
 
@@ -129,62 +148,8 @@ class DeleteAdjustmentControllerSpec extends SpecBase {
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
-      }
-    }
-
-    "must not clear if total UnderDeclaration is above threshold" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      val mockHelper               = mock[AdjustmentOverUnderDeclarationCalculationHelper]
-      when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
-        emptyUserAnswers
-          .set(UnderDeclarationTotalPage, BigDecimal(1500))
-          .success
-          .value
-      )
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val application              = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-          bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
-        )
-        .build()
-      running(application) {
-        val request = FakeRequest(POST, deleteAdjustmentRoute)
-          .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
-        val result  = route(application, request).value
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
-      }
-    }
-
-    "must clear if total UnderDeclaration is not defined or is below threshold" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      val mockHelper               = mock[AdjustmentOverUnderDeclarationCalculationHelper]
-      when(mockHelper.fetchOverUnderDeclarationTotals(any(), any())(any())) thenReturn Future.successful(
-        emptyUserAnswers
-          .set(OverDeclarationTotalPage, BigDecimal(1500))
-          .success
-          .value
-      )
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val application              = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector),
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-          bind[AdjustmentOverUnderDeclarationCalculationHelper].toInstance(mockHelper)
-        )
-        .build()
-      running(application) {
-        val request = FakeRequest(POST, deleteAdjustmentRoute)
-          .withFormUrlEncodedBody(("delete-adjustment-yes-no-value", "true"))
-        val result  = route(application, request).value
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-
-        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(DeleteAdjustmentPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 

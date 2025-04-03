@@ -18,17 +18,18 @@ package controllers.adjustment
 
 import base.SpecBase
 import config.FrontendAppConfig
+import connectors.UserAnswersConnector
 import forms.adjustment.WhenDidYouPayDutyFormProvider
 import models.NormalMode
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
+import models.adjustment.AdjustmentType.Spoilt
+import models.adjustment.{AdjustmentEntry, AdjustmentType}
+import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.adjustment.{CurrentAdjustmentEntryPage, WhenDidYouPayDutyPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import models.adjustment.AdjustmentType.Spoilt
-import models.adjustment.{AdjustmentEntry, AdjustmentType}
-import pages.adjustment.CurrentAdjustmentEntryPage
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.WhenDidYouPayDutyView
 
@@ -117,14 +118,15 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAdjustmentNavigator.nextPage(eqTo(WhenDidYouPayDutyPage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(validEmptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -141,20 +143,25 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(WhenDidYouPayDutyPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
     "must redirect to the next page when valid data is submitted and the user answers are empty" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAdjustmentNavigator.nextPage(eqTo(WhenDidYouPayDutyPage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -171,6 +178,10 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(WhenDidYouPayDutyPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
@@ -188,14 +199,15 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
           .value
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockAdjustmentNavigator  = mock[AdjustmentNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(mockAdjustmentNavigator.nextPage(eqTo(WhenDidYouPayDutyPage), any(), any(), any())) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -212,6 +224,10 @@ class WhenDidYouPayDutyControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(WhenDidYouPayDutyPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 

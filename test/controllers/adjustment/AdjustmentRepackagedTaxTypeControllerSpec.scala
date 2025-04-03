@@ -18,17 +18,18 @@ package controllers.adjustment
 
 import base.SpecBase
 import cats.data.NonEmptySeq
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import forms.adjustment.AdjustmentRepackagedTaxTypeFormProvider
+import models.adjustment.AdjustmentEntry
+import models.adjustment.AdjustmentType.Spoilt
 import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode, RangeDetailsByRegime, RateBand, RateType}
-import navigation.{AdjustmentNavigator, FakeAdjustmentNavigator}
+import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
-import pages.adjustment.CurrentAdjustmentEntryPage
+import org.mockito.ArgumentMatchersSugar.eqTo
+import pages.adjustment.{AdjustmentRepackagedTaxTypePage, CurrentAdjustmentEntryPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
-import models.adjustment.AdjustmentEntry
-import models.adjustment.AdjustmentType.Spoilt
 import uk.gov.hmrc.http.HttpResponse
 import views.html.adjustment.AdjustmentRepackagedTaxTypeView
 
@@ -69,6 +70,16 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
   lazy val adjustmentRepackagedTaxTypeRoute   =
     controllers.adjustment.routes.AdjustmentRepackagedTaxTypeController.onPageLoad(NormalMode).url
   lazy val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+  lazy val mockUserAnswersConnector           = mock[UserAnswersConnector]
+  lazy val mockAdjustmentNavigator            = mock[AdjustmentNavigator]
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockAlcoholDutyCalculatorConnector)
+    reset(mockUserAnswersConnector)
+    reset(mockAdjustmentNavigator)
+  }
+
   "AdjustmentRepackagedTaxType Controller" - {
 
     "must return OK and the correct view for a GET" in {
@@ -113,16 +124,15 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
         Some(rateBand)
       )
-
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(AdjustmentRepackagedTaxTypePage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -137,6 +147,11 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(AdjustmentRepackagedTaxTypePage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
@@ -144,6 +159,11 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
       when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
         Some(rateBand)
       )
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockAdjustmentNavigator.nextPage(eqTo(AdjustmentRepackagedTaxTypePage), any(), any(), any())
+      ) thenReturn onwardRoute
+
       val userAnswers =
         emptyUserAnswers
           .set(
@@ -158,15 +178,10 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
           .success
           .value
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(false))),
+            bind[AdjustmentNavigator].toInstance(mockAdjustmentNavigator),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -181,24 +196,16 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockAdjustmentNavigator, times(1))
+          .nextPage(eqTo(AdjustmentRepackagedTaxTypePage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
-        None
-      )
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =
@@ -241,87 +248,71 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
     "must handle non-draught rate band response error" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      val application              = applicationBuilder(userAnswers = Some(userAnswers))
+      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
+        Some(rateBand.copy(rateType = RateType.DraughtRelief))
+      )
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
+
       running(application) {
-        when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
-          Some(rateBand.copy(rateType = RateType.DraughtRelief))
-        )
         val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
         val result  = route(application, request).value
-        status(result) mustEqual BAD_REQUEST
+        val view    = application.injector.instanceOf[AdjustmentRepackagedTaxTypeView]
+        status(result)          mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(
+          formProvider()
+            .withError("new-tax-type-code", "adjustmentRepackagedTaxType.error.nonDraught")
+            .fill(validAnswer),
+          NormalMode,
+          Spoilt
+        )(request, getMessages(app)).toString
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
       }
     }
 
     "must handle invalid rate band response error" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      val application              = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-        )
-        .build()
-      running(application) {
-        when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(None)
-        val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
-          .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
-        val result  = route(application, request).value
-        status(result) mustEqual BAD_REQUEST
-      }
-    }
+      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(None)
 
-    "must update user answers and redirect on valid rate band response" in {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
-        Some(rateBand)
-      )
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
-      val application              = applicationBuilder(userAnswers = Some(userAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AdjustmentNavigator].toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
+
       running(application) {
         val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
         val result  = route(application, request).value
-        status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        val view    = application.injector.instanceOf[AdjustmentRepackagedTaxTypeView]
+        status(result)          mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(
+          formProvider()
+            .withError("new-tax-type-code", "adjustmentRepackagedTaxType.error.invalid")
+            .fill(validAnswer),
+          NormalMode,
+          Spoilt
+        )(request, getMessages(app)).toString
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
       }
     }
 
     "must redirect to Journey Recovery currentAdjustmentEntry returns None" in {
-      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(None)
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
       running(application) {
-
         val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
 
@@ -333,18 +324,11 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
     }
 
     "must redirect to Journey Recovery when adjustment period is missing" in {
-      val adjustmentEntry          = AdjustmentEntry(adjustmentType = Some(Spoilt))
-      val userAnswers              = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
-      val application              =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[AdjustmentNavigator]
-              .toInstance(new FakeAdjustmentNavigator(onwardRoute, hasValueChanged = Some(true))),
-            bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-            bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
-          )
-          .build()
+      val adjustmentEntry = AdjustmentEntry(adjustmentType = Some(Spoilt))
+      val userAnswers     = emptyUserAnswers.set(CurrentAdjustmentEntryPage, adjustmentEntry).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
       running(application) {
         val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
