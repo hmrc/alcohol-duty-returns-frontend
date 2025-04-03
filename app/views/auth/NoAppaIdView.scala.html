@@ -49,7 +49,7 @@
         @if(wasReferredFromBTA) {
             @govukButton(
                 ButtonViewModel("return-to-business-account",messages("site.returnToBusinessAccount"))
-                .withCssClass("govuk-button--secondary")
+                .withCssClass(Css.secondaryButtonCssClass)
             )
         }
     }
