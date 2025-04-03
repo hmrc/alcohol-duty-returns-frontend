@@ -858,8 +858,17 @@ adjustmentEntryList.action = Action
 adjustmentList.total = Total due
 adjustmentList.question = Do you need to tell us about any other adjustments?
 adjustmentList.error.required = Select yes if you have another adjustment to declare
-adjustmentEntryList.change.hidden = {0} adjustment with duty value {1}
-adjustmentEntryList.remove.hidden = {0} adjustment with duty value {1}
+
+adjustmentEntryList.change.under-declaration.hidden = Under-declared adjustment with duty value {0}
+adjustmentEntryList.change.over-declaration.hidden = Over-declared adjustment with duty value {0}
+adjustmentEntryList.change.repackaged-draught-products.hidden = Repackaged adjustment with duty value {0}
+adjustmentEntryList.change.spoilt.hidden = Spoilt adjustment with duty value {0}
+adjustmentEntryList.change.drawback.hidden = Drawback adjustment with duty value {0}
+adjustmentEntryList.remove.under-declaration.hidden = Under-declared adjustment with duty value {0}
+adjustmentEntryList.remove.over-declaration.hidden = Over-declared adjustment with duty value {0}
+adjustmentEntryList.remove.repackaged-draught-products.hidden = Repackaged adjustment with duty value {0}
+adjustmentEntryList.remove.spoilt.hidden = Spoilt adjustment with duty value {0}
+adjustmentEntryList.remove.drawback.hidden = Drawback adjustment with duty value {0}
 
 deleteAdjustment.title = Remove this adjustment?
 deleteAdjustment.heading = Remove this adjustment?
