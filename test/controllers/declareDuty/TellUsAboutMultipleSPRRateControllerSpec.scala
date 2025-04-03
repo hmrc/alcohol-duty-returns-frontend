@@ -67,7 +67,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         val rateBandRadioButton =
           TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
-        val form = formProvider(regime)(getMessages(application))
+        val form = formProvider()
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode, regime, rateBandRadioButton, None)(
@@ -91,7 +91,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         val rateBandRadioButton =
           TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
-        val form = formProvider(regime)(getMessages(application))
+        val form = formProvider()
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
@@ -129,7 +129,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         val rateBandRadioButton =
           TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
-        val form = formProvider(regime)(getMessages(application))
+        val form = formProvider()
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
@@ -164,7 +164,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
         val rateBandRadioButton =
           TellUsAboutMultipleSPRRateHelper.radioItems(rateBands, regime)(getMessages(application))
 
-        val form = formProvider(regime)(getMessages(application))
+        val form = formProvider()
 
         status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
@@ -401,7 +401,7 @@ class TellUsAboutMultipleSPRRateControllerSpec extends SpecBase {
           FakeRequest(POST, tellUsAboutMultipleSPRRateRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val form = formProvider(regime)(getMessages(application))
+        val form = formProvider()
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 

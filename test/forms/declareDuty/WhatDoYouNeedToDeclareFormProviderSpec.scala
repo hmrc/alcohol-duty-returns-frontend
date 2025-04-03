@@ -16,10 +16,10 @@
 
 package forms.declareDuty
 
+import base.SpecBase
 import forms.behaviours.CheckboxFieldBehaviours
-import generators.ModelGenerators
 
-class WhatDoYouNeedToDeclareFormProviderSpec extends CheckboxFieldBehaviours with ModelGenerators {
+class WhatDoYouNeedToDeclareFormProviderSpec extends CheckboxFieldBehaviours with SpecBase {
 
   val regime = regimeGen.sample.value
 

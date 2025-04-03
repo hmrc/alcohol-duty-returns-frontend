@@ -58,7 +58,7 @@ class SpoiltVolumeWithDutyController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     getRegime match {
       case Some(regime) =>
-        val form = formProvider(regime)
+        val form = formProvider()
         request.userAnswers
           .get(CurrentAdjustmentEntryPage) match {
           case None =>
@@ -104,7 +104,7 @@ class SpoiltVolumeWithDutyController @Inject() (
     implicit request =>
       getRegime match {
         case Some(regime) =>
-          val form = formProvider(regime)
+          val form = formProvider()
           form
             .bindFromRequest()
             .fold(
