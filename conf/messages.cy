@@ -81,7 +81,8 @@ doYouHaveAnAppaId.error.required = Dewiswch ‘Iawn’ os oes gennych ID Cymerad
 noAppaId.title = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
 noAppaId.heading = Mae angen ID cymeradwyaeth ar gyfer cynhyrchwyr cynhyrchion alcoholaidd (APPA) arnoch er mwyn cael mynediad at y gwasanaeth hwn
 noAppaId.p = Gallwch ddod o hyd i’ch ID APPA ar lythyrau oddi wrth CThEF ynghylch y gwasanaeth ar-lein ar gyfer Toll Alcohol.
-noAppaId.link.text = Dysgwch sut i wneud cais am ID APPA (yn agor mewn tab newydd) os nad oes gennych un.
+noAppaId.link.text = Dysgwch sut i wneud cais am ID APPA (yn agor mewn tab newydd)
+noAppaId.p2 = os nad oes gennych un.
 
 clearReturnAreYouSureQuestion.title = NOT_FOUND
 clearReturnAreYouSureQuestion.heading = NOT_FOUND
