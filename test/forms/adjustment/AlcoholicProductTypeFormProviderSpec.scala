@@ -16,10 +16,10 @@
 
 package forms.adjustment
 
-import forms.behaviours.OptionFieldBehaviours
+import forms.behaviours.RadioFieldBehaviours
 import play.api.data.FormError
 
-class AlcoholicProductTypeFormProviderSpec extends OptionFieldBehaviours {
+class AlcoholicProductTypeFormProviderSpec extends RadioFieldBehaviours {
 
   val form = new AlcoholicProductTypeFormProvider()()
 

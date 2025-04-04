@@ -88,7 +88,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     val testForm: Form[Boolean] =
       Form(
-        "value" -> boolean()
+        "value" -> boolean("error.required")
       )
 
     "must bind true" in {
@@ -101,9 +101,8 @@ class MappingsSpec extends SpecBase with Mappings {
       result.get mustEqual false
     }
 
-    "must not bind a non-boolean" in {
-      val result = testForm.bind(Map("value" -> "not a boolean"))
-      result.errors must contain(FormError("value", "error.boolean"))
+    "must throw an exception if non-boolean" in {
+      an[IllegalArgumentException] mustBe thrownBy(testForm.bind(Map("value" -> "not a boolean")))
     }
 
     "must not bind an empty value" in {
@@ -126,7 +125,7 @@ class MappingsSpec extends SpecBase with Mappings {
 
     val testForm: Form[Int] =
       Form(
-        "value" -> int()
+        "value" -> int("error.required", "error.wholeNumber", "error.nonNumeric")
       )
 
     "must bind a valid integer" in {
@@ -137,6 +136,16 @@ class MappingsSpec extends SpecBase with Mappings {
     "must not bind an empty value" in {
       val result = testForm.bind(Map("value" -> ""))
       result.errors must contain(FormError("value", "error.required"))
+    }
+
+    "must not bind a decimal" in {
+      val result = testForm.bind(Map("value" -> "1.2"))
+      result.errors must contain(FormError("value", "error.wholeNumber"))
+    }
+
+    "must not bind a non-integer" in {
+      val result = testForm.bind(Map("value" -> "a"))
+      result.errors must contain(FormError("value", "error.nonNumeric"))
     }
 
     "must not bind an empty map" in {
@@ -153,7 +162,7 @@ class MappingsSpec extends SpecBase with Mappings {
   "enumerable" - {
 
     val testForm = Form(
-      "value" -> enumerable[Foo]()
+      "value" -> enumerable[Foo]("error.required")
     )
 
     "must bind a valid option" in {
@@ -161,9 +170,8 @@ class MappingsSpec extends SpecBase with Mappings {
       result.get mustEqual Bar
     }
 
-    "must not bind an invalid option" in {
-      val result = testForm.bind(Map("value" -> "Not Bar"))
-      result.errors must contain(FormError("value", "error.invalid"))
+    "must throw an exception if data is invalid" in {
+      an[IllegalArgumentException] mustBe thrownBy(testForm.bind(Map("value" -> "Not Bar")))
     }
 
     "must not bind an empty map" in {
@@ -176,7 +184,13 @@ class MappingsSpec extends SpecBase with Mappings {
 
     val testForm: Form[BigDecimal] =
       Form(
-        "value" -> bigDecimal()
+        "value" -> bigDecimal(
+          decimalPlaces = 2,
+          requiredKey = "error.required",
+          nonNumericKey = "error.nonNumeric",
+          decimalPlacesKey = "error.decimalPlaces",
+          args = Seq.empty
+        )
       )
 
     "must bind a valid bigDecimal" - {
@@ -217,7 +231,6 @@ class MappingsSpec extends SpecBase with Mappings {
       val result = testForm.bind(Map("value" -> "1.349"))
       result.errors must contain(FormError("value", "error.decimalPlaces"))
     }
-
   }
 
   "yearMonth" - {
