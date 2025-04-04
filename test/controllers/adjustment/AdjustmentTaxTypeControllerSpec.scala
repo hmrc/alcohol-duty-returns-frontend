@@ -214,7 +214,15 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
     }
 
     "must return a Bad Request and errors when invalid tax type is submitted" in {
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockAlcoholDutyCalculatorConnector.rateBand(any(), any())(any())) thenReturn Future.successful(
+        None
+      )
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
+        )
+        .build()
 
       running(application) {
         val request =
@@ -232,6 +240,8 @@ class AdjustmentTaxTypeControllerSpec extends SpecBase {
           NormalMode,
           Spoilt
         )(request, getMessages(app)).toString
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1)).rateBand(any(), any())(any())
       }
     }
 
