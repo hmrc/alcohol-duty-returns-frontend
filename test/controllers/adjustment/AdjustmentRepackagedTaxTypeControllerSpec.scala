@@ -269,6 +269,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
         val result  = route(application, request).value
         val view    = application.injector.instanceOf[AdjustmentRepackagedTaxTypeView]
+
         status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           formProvider()
@@ -296,6 +297,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
         val result  = route(application, request).value
         val view    = application.injector.instanceOf[AdjustmentRepackagedTaxTypeView]
+
         status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           formProvider()
@@ -333,6 +335,7 @@ class AdjustmentRepackagedTaxTypeControllerSpec extends SpecBase {
         val request = FakeRequest(POST, adjustmentRepackagedTaxTypeRoute)
           .withFormUrlEncodedBody(("new-tax-type-code", validAnswer.toString))
         val result  = route(application, request).value
+
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
