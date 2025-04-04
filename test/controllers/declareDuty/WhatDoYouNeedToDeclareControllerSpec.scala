@@ -17,15 +17,16 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import forms.declareDuty.WhatDoYouNeedToDeclareFormProvider
 import models.{CheckMode, NormalMode}
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.declareDuty.{AlcoholTypePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.{AlcoholDutyCalculatorConnector, UserAnswersConnector}
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.TaxBandsViewModel
 import views.html.declareDuty.WhatDoYouNeedToDeclareView
@@ -40,20 +41,30 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
   lazy val whatDoYouNeedToDeclareRoute       = routes.WhatDoYouNeedToDeclareController.onPageLoad(NormalMode, regime).url
   lazy val whatDoYouNeedToDeclareChangeRoute = routes.WhatDoYouNeedToDeclareController.onPageLoad(CheckMode, regime).url
 
-  val formProvider                       = new WhatDoYouNeedToDeclareFormProvider()
-  val form                               = formProvider(regime)
-  val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+  val formProvider = new WhatDoYouNeedToDeclareFormProvider()
+  val form         = formProvider(regime)
 
   val rateBandList = genListOfRateBandForRegime(regime).sample.value
 
-  when(mockAlcoholDutyCalculatorConnector.rateBandByRegime(any(), any())(any())) thenReturn Future.successful(
-    rateBandList
-  )
-
-  val mockUserAnswersConnector = mock[UserAnswersConnector]
-  when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+  val mockAlcoholDutyCalculatorConnector = mock[AlcoholDutyCalculatorConnector]
+  val mockUserAnswersConnector           = mock[UserAnswersConnector]
+  val mockReturnsNavigator               = mock[ReturnsNavigator]
 
   val userAnswersWithAlcoholType = emptyUserAnswers.set(AlcoholTypePage, emptyUserAnswers.regimes.regimes).success.value
+
+  override def beforeEach(): Unit = {
+    reset(mockAlcoholDutyCalculatorConnector)
+    reset(mockUserAnswersConnector)
+    reset(mockReturnsNavigator)
+
+    when(mockAlcoholDutyCalculatorConnector.rateBandByRegime(any(), any())(any())) thenReturn Future.successful(
+      rateBandList
+    )
+    when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+    when(
+      mockReturnsNavigator.nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), any(), any(), any(), any(), any())
+    ) thenReturn onwardRoute
+  }
 
   "WhatDoYouNeedToDeclare Controller" - {
 
@@ -61,8 +72,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
 
@@ -71,14 +81,18 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList, regime)(getMessages(application))
+
         val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
 
-        status(result) mustEqual OK
-        val taxBandsViewModel = TaxBandsViewModel(rateBandList, regime)(getMessages(application))
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, regime, taxBandsViewModel, NormalMode)(
           request,
           getMessages(application)
         ).toString
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1))
+          .rateBandByRegime(any(), eqTo(userAnswersWithAlcoholType.regimes.regimes.toSeq))(any())
       }
     }
 
@@ -89,8 +103,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
 
@@ -99,10 +112,11 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
 
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList, regime)(getMessages(application))
+
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        val taxBandsViewModel = TaxBandsViewModel(rateBandList, regime)(getMessages(application))
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(rateBandList.map(_.taxTypeCode).toSet),
           regime,
@@ -112,6 +126,9 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
           request,
           getMessages(application)
         ).toString
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1))
+          .rateBandByRegime(any(), eqTo(userAnswers.regimes.regimes.toSeq))(any())
       }
     }
 
@@ -120,7 +137,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -138,6 +155,12 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1))
+          .rateBandByRegime(any(), eqTo(userAnswersWithAlcoholType.regimes.regimes.toSeq))(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(NormalMode), any(), any(), eqTo(false), eqTo(None))
       }
     }
 
@@ -149,7 +172,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = Some(true))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -167,6 +190,12 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1))
+          .rateBandByRegime(any(), eqTo(userAnswers.regimes.regimes.toSeq))(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(CheckMode), any(), any(), eqTo(true), eqTo(None))
       }
     }
 
@@ -180,8 +209,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator]
-              .toInstance(new FakeReturnsNavigator(onwardRoute, hasAnswerChangeValue = Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
@@ -197,6 +225,12 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1))
+          .rateBandByRegime(any(), eqTo(userAnswers.regimes.regimes.toSeq))(any())
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(eqTo(WhatDoYouNeedToDeclarePage), eqTo(CheckMode), any(), any(), eqTo(false), eqTo(None))
       }
     }
 
@@ -204,8 +238,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
 
@@ -218,14 +251,18 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[WhatDoYouNeedToDeclareView]
 
+        val taxBandsViewModel = TaxBandsViewModel(rateBandList, regime)(getMessages(application))
+
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        val taxBandsViewModel = TaxBandsViewModel(rateBandList, regime)(getMessages(application))
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, regime, taxBandsViewModel, NormalMode)(
           request,
           getMessages(application)
         ).toString
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1))
+          .rateBandByRegime(any(), eqTo(userAnswersWithAlcoholType.regimes.regimes.toSeq))(any())
       }
     }
 
@@ -235,8 +272,7 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithAlcoholType))
         .overrides(
-          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector),
-          bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
+          bind[AlcoholDutyCalculatorConnector].toInstance(mockAlcoholDutyCalculatorConnector)
         )
         .build()
 
@@ -247,7 +283,11 @@ class WhatDoYouNeedToDeclareControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+
+        verify(mockAlcoholDutyCalculatorConnector, times(1))
+          .rateBandByRegime(any(), eqTo(userAnswersWithAlcoholType.regimes.regimes.toSeq))(any())
       }
     }
 

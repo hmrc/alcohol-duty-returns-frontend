@@ -17,16 +17,17 @@
 package controllers.declareDuty
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.declareDuty.TellUsAboutSingleSPRRateFormProvider
+import models.declareDuty.VolumeAndRateByTaxType
 import models.{AlcoholRegime, NormalMode, RateBand}
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.declareDuty.{TellUsAboutSingleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import models.declareDuty.VolumeAndRateByTaxType
 import uk.gov.hmrc.http.HttpResponse
 import viewmodels.declareDuty.CategoriesByRateTypeHelper
 import views.html.declareDuty.TellUsAboutSingleSPRRateView
@@ -109,13 +110,17 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator.nextPageWithRegime(eqTo(TellUsAboutSingleSPRRatePage), any(), any(), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -135,6 +140,17 @@ class TellUsAboutSingleSPRRateControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPageWithRegime(
+            eqTo(TellUsAboutSingleSPRRatePage),
+            eqTo(NormalMode),
+            any(),
+            any(),
+            eqTo(false),
+            eqTo(None)
+          )
       }
     }
 
