@@ -21,7 +21,7 @@ import connectors.UserAnswersConnector
 import forms.declareDuty.DeclareAlcoholDutyQuestionFormProvider
 import models.AlcoholRegime.{Beer, Cider, Wine}
 import models.{AlcoholRegimes, NormalMode, ReturnId, UserAnswers}
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
+import navigation.ReturnsNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.declareDuty.{DeclareAlcoholDutyQuestionPage, sectionPages}
@@ -31,8 +31,8 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import views.html.declareDuty.DeclareAlcoholDutyQuestionView
 
-import scala.util.Success
 import scala.concurrent.Future
+import scala.util.Success
 
 class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
@@ -87,13 +87,17 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator.nextPage(eqTo(DeclareAlcoholDutyQuestionPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -107,20 +111,29 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPage(eqTo(DeclareAlcoholDutyQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
     "must redirect to the next page when valid data is submitted and user is approved for a single regime" in {
 
-      val userAnswers              = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
+      val userAnswers = emptyUserAnswers.copy(regimes = AlcoholRegimes(Set(Beer)))
+
       val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockReturnsNavigator     = mock[ReturnsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockReturnsNavigator.nextPage(eqTo(DeclareAlcoholDutyQuestionPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -134,14 +147,22 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockReturnsNavigator, times(1))
+          .nextPage(eqTo(DeclareAlcoholDutyQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
-    "must redirect to the index page when valid question is answered as No" in {
+    "must redirect to the Task List when valid question is answered as No" in {
+      val taskListRoute = controllers.routes.TaskListController.onPageLoad
+
       val mockUserAnswersConnector              = mock[UserAnswersConnector]
       val mockUserAnswers: UserAnswers          = mock[UserAnswers]
       val mockAlcoholRegimesSet: AlcoholRegimes = mock[AlcoholRegimes]
       val mockReturnId                          = mock[ReturnId]
+      val mockReturnsNavigator                  = mock[ReturnsNavigator]
+
       when(mockReturnId.periodKey) thenReturn "2025-01"
       when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -156,11 +177,14 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
       )
       when(mockUserAnswers.regimes) thenReturn mockAlcoholRegimesSet
       when(mockAlcoholRegimesSet.regimes) thenReturn Set(Cider, Wine)
+      when(
+        mockReturnsNavigator.nextPage(eqTo(DeclareAlcoholDutyQuestionPage), any(), any(), any())
+      ) thenReturn taskListRoute
 
       val application =
         applicationBuilder(userAnswers = Some(mockUserAnswers))
           .overrides(
-            bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
+            bind[ReturnsNavigator].toInstance(mockReturnsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -173,13 +197,15 @@ class DeclareAlcoholDutyQuestionControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual taskListRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockUserAnswers, times(1)).set(eqTo(DeclareAlcoholDutyQuestionPage), eqTo(false))(any())
         verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
         verify(mockUserAnswers, times(1)).regimes
         verify(mockAlcoholRegimesSet, times(1)).regimes
+        verify(mockReturnsNavigator, times(1))
+          .nextPage(eqTo(DeclareAlcoholDutyQuestionPage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 

@@ -20,10 +20,10 @@ import base.SpecBase
 import connectors.UserAnswersConnector
 import forms.spiritsQuestions.DeclareQuarterlySpiritsFormProvider
 import models.{AlcoholRegimes, NormalMode, ReturnId, UserAnswers}
-import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import navigation.QuarterlySpiritsQuestionsNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.spiritsQuestions.{DeclareQuarterlySpiritsPage, DeclareSpiritsTotalPage, OtherSpiritsProducedPage, SpiritTypePage, WhiskyPage}
+import pages.spiritsQuestions._
 import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -74,15 +74,18 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers), true) {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector               = mock[UserAnswersConnector]
+      val mockQuarterlySpiritsQuestionsNavigator = mock[QuarterlySpiritsQuestionsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockQuarterlySpiritsQuestionsNavigator.nextPage(eqTo(DeclareQuarterlySpiritsPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[QuarterlySpiritsQuestionsNavigator].toInstance(mockQuarterlySpiritsQuestionsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -96,6 +99,10 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockQuarterlySpiritsQuestionsNavigator, times(1))
+          .nextPage(eqTo(DeclareQuarterlySpiritsPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
@@ -105,9 +112,13 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
     ) {
       val pagesToDelete = List(DeclareSpiritsTotalPage, SpiritTypePage, OtherSpiritsProducedPage, WhiskyPage)
 
+      val taskListRoute = controllers.routes.TaskListController.onPageLoad
+
       val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
       val mockAlcoholRegimesSet: AlcoholRegimes          = mock[AlcoholRegimes]
       val mockReturnId                                   = mock[ReturnId]
+      val mockQuarterlySpiritsQuestionsNavigator         = mock[QuarterlySpiritsQuestionsNavigator]
+
       when(mockReturnId.periodKey) thenReturn "2025-01"
       when(mockUserAnswers.returnId) thenReturn mockReturnId
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
@@ -120,17 +131,14 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
       )
       when(mockUserAnswers.regimes) thenReturn mockAlcoholRegimesSet
       when(mockAlcoholRegimesSet.hasRegime(any())) thenReturn true
+      when(
+        mockQuarterlySpiritsQuestionsNavigator.nextPage(eqTo(DeclareQuarterlySpiritsPage), any(), any(), any())
+      ) thenReturn taskListRoute
 
       override val application =
         applicationBuilder(userAnswers = Some(mockUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(
-                new FakeQuarterlySpiritsQuestionsNavigator(
-                  controllers.routes.TaskListController.onPageLoad,
-                  hasValueChanged = Some(true)
-                )
-              ),
+            bind[QuarterlySpiritsQuestionsNavigator].toInstance(mockQuarterlySpiritsQuestionsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -142,14 +150,16 @@ class DeclareQuarterlySpiritsControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result)           mustEqual SEE_OTHER
-        redirectLocation(result) mustEqual Some(controllers.routes.TaskListController.onPageLoad.toString)
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual taskListRoute.url
 
         verify(mockUserAnswersConnector, times(1)).set(any())(any())
         verify(mockUserAnswers, times(1)).set(eqTo(DeclareQuarterlySpiritsPage), eqTo(false))(any())
         verify(mockUserAnswers, times(1)).remove(eqTo(pagesToDelete))
         verify(mockUserAnswers, times(1)).regimes
         verify(mockAlcoholRegimesSet, times(1)).hasRegime(any())
+        verify(mockQuarterlySpiritsQuestionsNavigator, times(1))
+          .nextPage(eqTo(DeclareQuarterlySpiritsPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 

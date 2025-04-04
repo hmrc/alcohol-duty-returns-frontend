@@ -18,7 +18,6 @@ package controllers.declareDuty
 
 import base.SpecBase
 import connectors.UserAnswersConnector
-import navigation.{FakeReturnsNavigator, ReturnsNavigator}
 import org.mockito.ArgumentMatchers.any
 import pages.declareDuty.{TellUsAboutMultipleSPRRatePage, WhatDoYouNeedToDeclarePage}
 import play.api.inject.bind
@@ -106,7 +105,6 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -121,6 +119,8 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.declareDuty.routes.MultipleSPRListController
           .onPageLoad(regime)
           .url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
       }
     }
 
@@ -134,7 +134,6 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[ReturnsNavigator].toInstance(new FakeReturnsNavigator(onwardRoute, Some(false))),
           bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
         )
         .build()
@@ -149,6 +148,8 @@ class CheckYourAnswersSPRControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual controllers.declareDuty.routes.MultipleSPRListController
           .onPageLoad(regime)
           .url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
       }
     }
   }
