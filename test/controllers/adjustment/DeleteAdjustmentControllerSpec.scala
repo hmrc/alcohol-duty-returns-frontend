@@ -27,7 +27,7 @@ import models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, NormalMode
 import navigation.AdjustmentNavigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationTotalPage, UnderDeclarationTotalPage}
+import pages.adjustment.{AdjustmentEntryListPage, DeleteAdjustmentPage, OverDeclarationTotalPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
