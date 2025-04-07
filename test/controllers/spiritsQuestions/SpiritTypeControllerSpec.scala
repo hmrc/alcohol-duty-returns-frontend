@@ -17,18 +17,19 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.spiritsQuestions.SpiritTypeFormProvider
 import models.{NormalMode, SpiritType, UserAnswers}
-import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
+import navigation.QuarterlySpiritsQuestionsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.spiritsQuestions.SpiritTypePage
+import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import play.api.Application
-import views.html.spiritsQuestions.SpiritTypeView
 import uk.gov.hmrc.http.HttpResponse
+import views.html.spiritsQuestions.SpiritTypeView
 
 import scala.concurrent.Future
 
@@ -69,15 +70,18 @@ class SpiritTypeControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector               = mock[UserAnswersConnector]
+      val mockQuarterlySpiritsQuestionsNavigator = mock[QuarterlySpiritsQuestionsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockQuarterlySpiritsQuestionsNavigator.nextPage(eqTo(SpiritTypePage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[QuarterlySpiritsQuestionsNavigator].toInstance(mockQuarterlySpiritsQuestionsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -91,21 +95,28 @@ class SpiritTypeControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockQuarterlySpiritsQuestionsNavigator, times(1))
+          .nextPage(eqTo(SpiritTypePage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
     "must redirect to the next page when valid data is submitted and Other spirit type is unselected" in new SetUp(
       Some(emptyUserAnswers)
     ) {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector               = mock[UserAnswersConnector]
+      val mockQuarterlySpiritsQuestionsNavigator = mock[QuarterlySpiritsQuestionsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockQuarterlySpiritsQuestionsNavigator.nextPage(eqTo(SpiritTypePage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = Some(false))),
+            bind[QuarterlySpiritsQuestionsNavigator].toInstance(mockQuarterlySpiritsQuestionsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -119,6 +130,10 @@ class SpiritTypeControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockQuarterlySpiritsQuestionsNavigator, times(1))
+          .nextPage(eqTo(SpiritTypePage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 
@@ -130,15 +145,18 @@ class SpiritTypeControllerSpec extends SpecBase {
         .success
         .value
 
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector               = mock[UserAnswersConnector]
+      val mockQuarterlySpiritsQuestionsNavigator = mock[QuarterlySpiritsQuestionsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockQuarterlySpiritsQuestionsNavigator.nextPage(eqTo(SpiritTypePage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       override val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = Some(false))),
+            bind[QuarterlySpiritsQuestionsNavigator].toInstance(mockQuarterlySpiritsQuestionsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -152,6 +170,10 @@ class SpiritTypeControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockQuarterlySpiritsQuestionsNavigator, times(1))
+          .nextPage(eqTo(SpiritTypePage), eqTo(NormalMode), any(), eqTo(Some(false)))
       }
     }
 

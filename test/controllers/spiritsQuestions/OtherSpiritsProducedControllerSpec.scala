@@ -17,16 +17,17 @@
 package controllers.spiritsQuestions
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import forms.spiritsQuestions.OtherSpiritsProducedFormProvider
 import models.{NormalMode, UserAnswers}
+import navigation.QuarterlySpiritsQuestionsNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import pages.spiritsQuestions.OtherSpiritsProducedPage
+import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.Helpers._
-import connectors.UserAnswersConnector
-import navigation.{FakeQuarterlySpiritsQuestionsNavigator, QuarterlySpiritsQuestionsNavigator}
-import play.api.Application
 import uk.gov.hmrc.http.HttpResponse
 import views.html.spiritsQuestions.OtherSpiritsProducedView
 
@@ -70,15 +71,18 @@ class OtherSpiritsProducedControllerSpec extends SpecBase {
     }
 
     "must redirect to the next page when valid data is submitted" in new SetUp(Some(emptyUserAnswers)) {
-      val mockUserAnswersConnector = mock[UserAnswersConnector]
+      val mockUserAnswersConnector               = mock[UserAnswersConnector]
+      val mockQuarterlySpiritsQuestionsNavigator = mock[QuarterlySpiritsQuestionsNavigator]
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(mock[HttpResponse])
+      when(
+        mockQuarterlySpiritsQuestionsNavigator.nextPage(eqTo(OtherSpiritsProducedPage), any(), any(), any())
+      ) thenReturn onwardRoute
 
       override val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[QuarterlySpiritsQuestionsNavigator]
-              .toInstance(new FakeQuarterlySpiritsQuestionsNavigator(onwardRoute, hasValueChanged = Some(true))),
+            bind[QuarterlySpiritsQuestionsNavigator].toInstance(mockQuarterlySpiritsQuestionsNavigator),
             bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
           )
           .build()
@@ -92,6 +96,10 @@ class OtherSpiritsProducedControllerSpec extends SpecBase {
 
         status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(any())(any())
+        verify(mockQuarterlySpiritsQuestionsNavigator, times(1))
+          .nextPage(eqTo(OtherSpiritsProducedPage), eqTo(NormalMode), any(), eqTo(Some(true)))
       }
     }
 
